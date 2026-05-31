@@ -1,16 +1,21 @@
 # BUILD CROSS-PLATFORM — Il Relitto Silente
-# Compila automaticamente .exe (Windows), .AppImage (Linux) e .dmg (macOS)
-# e produce ZIP di distribuzione completi (eseguibile + documentazione)
-# quando viene pubblicata una release con tag v*
-# oppure manualmente dal pannello "Actions" su GitHub.
+# Compila .exe (Windows), .AppImage (Linux) e .dmg (macOS) e produce ZIP di
+# distribuzione completi (eseguibile + documentazione).
+#
+# AVVIO ESCLUSIVAMENTE MANUALE: GitHub → Actions → "Build Cross-Platform Release"
+# → "Run workflow". Nessun avvio automatico al push di tag o commit.
+# La versione viene letta da package.json; se "create_release" è true il workflow
+# pubblica anche una GitHub Release con tag vX.Y.Z (creato al momento del run).
 
 name: Build Cross-Platform Release
 
 on:
-  push:
-    tags:
-      - 'v*'           # es. git tag v1.2.6 && git push origin v1.2.6
-  workflow_dispatch:   # Pulsante manuale su GitHub → Actions
+  workflow_dispatch:   # SOLO pulsante manuale su GitHub → Actions
+    inputs:
+      create_release:
+        description: 'Pubblica anche una GitHub Release (tag vX.Y.Z da package.json)'
+        type: boolean
+        default: true
 
 jobs:
   build:
@@ -154,16 +159,27 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-  # ─── Release automatica su GitHub ───────────────────────────────────────
-  # Si esegue solo quando il trigger è un tag v* (non su workflow_dispatch)
+  # ─── Release su GitHub (manuale) ────────────────────────────────────────
+  # Si esegue solo se l'input "create_release" è true. La versione è letta da
+  # package.json e il tag vX.Y.Z viene creato al momento del run sul commit
+  # corrente (di norma master).
   release:
     needs: build
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/')
+    if: ${{ inputs.create_release }}
     permissions:
       contents: write
 
     steps:
+      # Checkout: serve a leggere la versione da package.json
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Legge la versione da package.json
+      - name: Read version from package.json
+        id: version
+        run: echo "VERSION=$(node -e "process.stdout.write(require('./package.json').version)")" >> $GITHUB_OUTPUT
+
       # Scarica tutti gli artifact dai 3 job precedenti
       - name: Download all artifacts
         uses: actions/download-artifact@v4
@@ -175,18 +191,14 @@ jobs:
       - name: List artifacts
         run: find artifacts/ -type f | sort
 
-      # Legge la versione dal tag
-      - name: Get version from tag
-        id: tag_version
-        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
-
-      # Crea la GitHub Release e allega gli ZIP
+      # Crea la GitHub Release (e il tag vX.Y.Z) e allega gli ZIP
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: "Il Relitto Silente ${{ github.ref_name }}"
+          tag_name: "v${{ steps.version.outputs.VERSION }}"
+          name: "Il Relitto Silente v${{ steps.version.outputs.VERSION }}"
           body: |
-            ## Il Relitto Silente ${{ github.ref_name }}
+            ## Il Relitto Silente v${{ steps.version.outputs.VERSION }}
 
             Avventura testuale fantascientifica ambientata su una nave aliena abbandonata.
 
@@ -198,9 +210,9 @@ jobs:
 
             | Piattaforma | File |
             |---|---|
-            | Windows | `IlRelittoSilente-${{ steps.tag_version.outputs.VERSION }}-win.zip` |
-            | Linux | `IlRelittoSilente-${{ steps.tag_version.outputs.VERSION }}-linux.zip` |
-            | macOS | `IlRelittoSilente-${{ steps.tag_version.outputs.VERSION }}-mac.zip` |
+            | Windows | `IlRelittoSilente-${{ steps.version.outputs.VERSION }}-win.zip` |
+            | Linux | `IlRelittoSilente-${{ steps.version.outputs.VERSION }}-linux.zip` |
+            | macOS | `IlRelittoSilente-${{ steps.version.outputs.VERSION }}-mac.zip` |
 
             > **Nota macOS:** la build non è firmata con Apple Developer ID.
             > Se macOS blocca l'apertura: **tasto destro → Apri** e conferma.
