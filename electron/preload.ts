@@ -13,4 +13,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
         ipcRenderer.invoke('storage:writeSettings', data),
     readSettings: (): Promise<string | null> =>
         ipcRenderer.invoke('storage:readSettings'),
+    quit: (): void =>
+        ipcRenderer.send('app:quit'),
 });

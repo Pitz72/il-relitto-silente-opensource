@@ -19,6 +19,7 @@ declare global {
             readSlot:      (id: number) => Promise<string | null>;
             writeSettings: (data: string) => Promise<void>;
             readSettings:  () => Promise<string | null>;
+            quit:          () => void;
         };
     }
 }
@@ -77,6 +78,17 @@ function scheduleSettingsFlush(): void {
 }
 
 /** Forza subito su disco le preferenze in sospeso (es. prima di chiudere). */
+/* ─── Uscita applicazione ─────────────────────────────────────────────────
+   In Electron chiude l'app via IPC; nel browser non c'è una chiusura
+   affidabile (window.close è no-op per le finestre non aperte da script). */
+export function quitApp(): void {
+    if (isElectron()) {
+        window.electronAPI!.quit();
+    } else {
+        window.close();
+    }
+}
+
 export function flushSettings(): void {
     if (settingsFlushTimer) { clearTimeout(settingsFlushTimer); settingsFlushTimer = null; }
     if (isElectron()) {

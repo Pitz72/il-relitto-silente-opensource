@@ -53,8 +53,9 @@ const KNOWN_VERBS = [
    Visualizza lo stato corrente della matrice di traduzione ogni volta che
    translationProgress viene aggiornato da un'analisi.                    */
 function progressBar(pct: number): string {
-    const filled = Math.round(pct / 10);
-    return `[ MATRICE TRADUZIONE: ${'█'.repeat(filled)}${'░'.repeat(10 - filled)} ${pct}% ]`;
+    const safePct = Math.max(0, Math.min(100, Math.round(pct)));
+    const filled = Math.round(safePct / 10);
+    return `[ MATRICE TRADUZIONE: ${'█'.repeat(filled)}${'░'.repeat(10 - filled)} ${safePct}% ]`;
 }
 
 const getHelpText = (): string => {
@@ -802,7 +803,8 @@ export const processCommand = (command: string, currentState: PlayerState): { re
             .filter(x => x.dist <= 2 && x.dist < firstWord.length)
             .sort((a, b) => a.dist - b.dist)[0];
         if (closest) {
-            const suggestion = normalizedCommand.replace(firstWord, closest.verb);
+            // Sostituisce SOLO il primo token (non un'eventuale occorrenza successiva)
+            const suggestion = closest.verb + normalizedCommand.slice(firstWord.length);
             response = {
                 description: `Non capisco "${command.trim()}". Intendevi "${suggestion.toUpperCase()}"?`,
                 eventType: 'error',

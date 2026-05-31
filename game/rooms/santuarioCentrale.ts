@@ -13,7 +13,7 @@ export const santuarioCentraleRoom: Room = {
             regex: "^(parla|parla su|parla con)( anziano| ologramma| figura)?$", handler: (state) => {
                 state.flags.hasHeardMonologue = true;
                 return {
-                    description: `(La figura non move le labbra, ma le parole non sono un suono. Sono un pensiero che fiorisce direttamente nella tua mente, limpido e completo.)
+                    description: `(La figura non muove le labbra, ma le parole non sono un suono. Sono un pensiero che fiorisce direttamente nella tua mente, limpido e completo.)
 "Creatura di carbonio... Figlio delle Stelle... Benvenuto."
 "So cosa cerchi. Una risposta. Ma io non sono che la memoria di una domanda. Sono ciò che resta quando il cantastorie è svanito. L'ultima frase, scritta nella luce."
 "Il nostro tempo era un cerchio che si chiudeva. Il grande fuoco del nostro universo si stava riducendo a brace, e noi eravamo le ultime scintille. Ma la vita... la vita è una fiamma che non deve mai essere lasciata spegnere del tutto."

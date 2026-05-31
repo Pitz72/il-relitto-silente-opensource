@@ -63,7 +63,7 @@ export const arcaDellaMemoriaRoom: Room = {
         { regex: "^((vai|va) )?(nord|est|ovest|n|e|o)$", handler: () => ({ description: "Non puoi andare in quella direzione. L'unica via d'uscita è a SUD.", eventType: 'error' }) },
         // TOCCA
         { regex: "^(tocca) (pilastri|monoliti|cristalli|pilastro)$", handler: () => ({ description: "La superficie cristallina è stranamente tiepida sotto le dita. Una singola scintilla quasi impercettibile risponde al tuo tocco — un arco di luce ambrata, piccolo come un'emozione soppressa — poi si spegne. Come l'ultima scintilla di un fuoco morente." }) },
-        { regex: "^(tocca) (terminale|console)$", handler: () => ({ description: "Il pannello del terminale è liscio e privo di reazione. Le fibre energetiche dentro sono dormient, in attesa di uno shock che le risvegli." }) },
+        { regex: "^(tocca) (terminale|console)$", handler: () => ({ description: "Il pannello del terminale è liscio e privo di reazione. Le fibre energetiche dentro sono dormienti, in attesa di uno shock che le risvegli." }) },
         { regex: "^tocca$", handler: () => ({ description: "Sei nell'Arca della Memoria. I pilastri di cristallo si ergono nel buio intorno a te. Puoi toccarli." }) },
         // USA
         {

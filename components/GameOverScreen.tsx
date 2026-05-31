@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import { playKeystrokeSound } from '../services/audioService';
+import { quitApp } from '../services/storageService';
+import { getAppVersion } from '../version';
 
 interface GameOverScreenProps {
     onRestart: () => void;
@@ -14,7 +16,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({ onRestart }) => {
                 onRestart();
             } else if (key === 'escape' || key === 'e') {
                 playKeystrokeSound();
-                window.close();
+                quitApp();
             }
         };
         window.addEventListener('keydown', handleKeyDown);
@@ -46,7 +48,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({ onRestart }) => {
             </div>
 
             <div style={{ fontSize: '0.7rem', color: 'var(--p-dim)', marginTop: '1rem' }}>
-                IL RELITTO SILENTE  v1.0.17
+                IL RELITTO SILENTE  v{getAppVersion()}
             </div>
         </div>
     );

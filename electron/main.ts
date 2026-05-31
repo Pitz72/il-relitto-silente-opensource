@@ -72,6 +72,11 @@ ipcMain.handle('storage:readSettings', (): string | null => {
     }
 });
 
+// Uscita pulita dell'applicazione (fire-and-forget dal renderer)
+ipcMain.on('app:quit', () => {
+    app.quit();
+});
+
 /* ─── Finestra principale ──────────────────────────────────────────────── */
 function createWindow() {
     const isDev = !app.isPackaged;

@@ -6,6 +6,22 @@ interface TerminalOutputProps {
   output: OutputLine[];
 }
 
+/* ─── Key stabili per le righe ─────────────────────────────────────────────
+   Ogni OutputLine mantiene la propria identità tra i render (setOutput usa
+   lo spread), quindi associamo una key univoca al riferimento dell'oggetto.
+   Evita i rimontaggi spuri di TypewriterLine causati da key={index} quando
+   la coda dell'output viene rimossa (slice) e sostituita.                 */
+const lineKeys = new WeakMap<object, number>();
+let lineKeyCounter = 0;
+const keyFor = (line: object): number => {
+    let k = lineKeys.get(line);
+    if (k === undefined) {
+        k = lineKeyCounter++;
+        lineKeys.set(line, k);
+    }
+    return k;
+};
+
 /* ─── Rilevamento titolo stanza ────────────────────────────────────────────
    Solo stringhe composte esclusivamente da lettere maiuscole italiane,
    spazi, apostrofi e trattini (lunghezza 4-40). Esclude simboli come
@@ -102,12 +118,12 @@ const TerminalOutput: React.FC<TerminalOutputProps> = ({ output }) => {
 
   return (
     <div className="flex-grow overflow-y-auto pr-2 no-scrollbar">
-      {output.map((line, index) =>
+      {output.map((line) =>
         line.kind === 'html'
-          ? <div key={index} className="whitespace-pre-wrap" style={{ color: 'var(--p-main)' }} dangerouslySetInnerHTML={{ __html: line.content }} />
+          ? <div key={keyFor(line)} className="whitespace-pre-wrap" style={{ color: 'var(--p-main)' }} dangerouslySetInnerHTML={{ __html: line.content }} />
           : line.kind === 'typewriter'
-            ? <div key={index} className="whitespace-pre-wrap" style={{ color: 'var(--p-main)' }}><TypewriterLine content={line.content} /></div>
-            : <div key={index} className="whitespace-pre-wrap" style={{ color: 'var(--p-main)' }}>{renderTextContent(line.content)}</div>
+            ? <div key={keyFor(line)} className="whitespace-pre-wrap" style={{ color: 'var(--p-main)' }}><TypewriterLine content={line.content} /></div>
+            : <div key={keyFor(line)} className="whitespace-pre-wrap" style={{ color: 'var(--p-main)' }}>{renderTextContent(line.content)}</div>
       )}
       <div ref={endOfMessagesRef} />
     </div>
