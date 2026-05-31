@@ -1,6 +1,5 @@
 import { Room } from '../../types';
 import { gameData } from '../gameData';
-import { normalizeCommand } from '../gameLogic';
 
 export const santuarioDelSilenzioRoom: Room = {
     description: (state) => {
@@ -39,7 +38,10 @@ export const santuarioDelSilenzioRoom: Room = {
         {
             id: 'stele_item',
             name: 'Stele del Ricordo',
-            synonyms: ['stele', 'tavoletta', 'lastra'],
+            // Solo 'stele': 'tavoletta' e 'lastra' collidevano con "Tavoletta Incisa"
+            // (Serra) e "Lastra Dati" (Corridoio), rendendo ESAMINA/ANALIZZA ambigui
+            // quando più di questi oggetti erano in inventario (BUG B21).
+            synonyms: ['stele'],
             description: "Una lastra di materiale sconosciuto, densa di informazioni.",
             isPickable: true,
             onUse: (_state) => {

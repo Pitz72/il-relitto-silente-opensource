@@ -407,18 +407,26 @@ const App: React.FC = () => {
     void initStorageSettings();
   }, []);
 
-  // ── Ambient audio + autosave ad ogni cambio stanza ──
+  // ── Ambient audio: cambia solo al cambio stanza ──
   useEffect(() => {
-    if (gameState === GameState.Playing) {
-      if (isAmbienceEnabled()) startAmbience(ROOM_AMBIENCE[playerState.location] ?? null);
-      // Autosave non bloccante: un errore di scrittura non deve generare
-      // unhandled rejection né interrompere il gioco (BUG B4).
-      void writeAutosave(playerState).catch(err => {
-        console.error('[autosave] scrittura fallita:', err);
-      });
+    if (gameState === GameState.Playing && isAmbienceEnabled()) {
+      startAmbience(ROOM_AMBIENCE[playerState.location] ?? null);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playerState.location, gameState]);
+
+  // ── Autosave: ad OGNI variazione di stato (pickup, analisi, flag), non solo
+  //    al cambio stanza (BUG B17). Debounce 800ms per coalizzare comandi rapidi.
+  //    Non bloccante: un errore di scrittura non interrompe il gioco (BUG B4). ──
+  useEffect(() => {
+    if (gameState !== GameState.Playing) return;
+    const t = setTimeout(() => {
+      void writeAutosave(playerState).catch(err => {
+        console.error('[autosave] scrittura fallita:', err);
+      });
+    }, 800);
+    return () => clearTimeout(t);
+  }, [playerState, gameState]);
 
   /* ── Chiudi infoOverlay con ESC o INVIO ──────────────────────── */
   useEffect(() => {

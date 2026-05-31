@@ -83,7 +83,10 @@ const getHelpText = (): string => {
    il suggerimento più rilevante per il prossimo passo.               */
 function getContextualHint(state: PlayerState): string {
     const inv = state.inventory;
-    const has = (name: string) => inv.some(i => normalizeCommand(i).includes(normalizeCommand(name)));
+    // Uguaglianza esatta (normalizzata), non sottostringa: tutte le query has()
+    // usano nomi oggetto completi. La vecchia includes() poteva produrre falsi
+    // positivi in stati limite e quindi hint errati (BUG B18).
+    const has = (name: string) => inv.some(i => normalizeCommand(i) === normalizeCommand(name));
     const flags = state.flags;
     const loc = state.location;
 

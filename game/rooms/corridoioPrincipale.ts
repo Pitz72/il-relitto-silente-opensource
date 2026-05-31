@@ -6,7 +6,8 @@ export const corridoioPrincipaleRoom: Room = {
         let desc = "CORRIDOIO PRINCIPALE\n\nIl sibilo della porta che si chiude alle tue spalle è l'ultimo suono familiare che senti. Ora sei nel cuore del relitto. Ti trovi in un corridoio immenso, molto più vasto di quanto le dimensioni esterne della nave lasciassero presagire. Le pareti non sono piane, ma si curvano dolcemente verso un soffitto che non riesci a distinguere nell'oscurità.\nNon ci sono lampade, eppure l'ambiente è immerso in una debole e fredda luminescenza bluastra che sembra emanare direttamente dalle pareti. L'aria è immobile. Il silenzio è assoluto.";
 
         // Controllo flag lastra (picked_Corridoio Principale_lastra_dati) o inventario
-        if (!state.flags['picked_Corridoio Principale_lastra_dati'] && !state.inventory.includes("Lastra Dati") && !state.flags.lastraPresa) {
+        // (lastraPresa era un flag morto, mai scritto: rimosso — BUG B20)
+        if (!state.flags['picked_Corridoio Principale_lastra_dati'] && !state.inventory.includes("Lastra Dati")) {
             desc += "\nAppoggiata in una piccola nicchia poco profonda in una parete, noti una piccola lastra di un materiale liscio e scuro, simile a onice.";
         }
 

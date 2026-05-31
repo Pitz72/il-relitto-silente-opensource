@@ -16,8 +16,9 @@ export const serraMorenteRoom: Room = {
             desc += "\nAl centro della sala, i resti del contenitore del seme giacciono inattivi.";
         }
 
-        // Controllo flag picked_Serra Morente_tavoletta_incisa
-        if (!state.flags['picked_Serra Morente_tavoletta_incisa'] && !state.inventory.includes("Tavoletta Incisa") && !state.flags.tavolettaPresa) {
+        // Controllo flag picked_Serra Morente_tavoletta_incisa (tavolettaPresa era
+        // un flag morto, mai scritto: rimosso — BUG B20)
+        if (!state.flags['picked_Serra Morente_tavoletta_incisa'] && !state.inventory.includes("Tavoletta Incisa")) {
             desc += "\nMentre osservi la stanza, noti che dietro un ammasso di funghi cristallizzati sulla parete OVEST, una sezione del muro sembra diversa. Inoltre, nascosta tra i resti di un grosso arbusto, intravedi una forma geometrica regolare: una tavoletta.";
         } else {
             desc += "\nMentre osservi la stanza, noti che dietro un ammasso di funghi cristallizzati sulla parete OVEST, una sezione del muro sembra diversa, più scura, come se fosse un passaggio.";

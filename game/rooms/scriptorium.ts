@@ -5,8 +5,9 @@ export const scriptoriumRoom: Room = {
     description: (state) => {
         let desc = "SCRIPTORIUM\n\nEntri in una biblioteca circolare, ma al posto dei libri, le pareti sono costellate di nicchie scure. Dalla maggior parte di esse, un proiettore olografico proietta a mezz'aria globi di testo alieno che turbinano lentamente, illeggibili e complessi. L'aria è tesa, carica di una quiete che sembra trattenere il respiro.\n\nAl centro della stanza, quasi nascosta dall'alone dei globi, c'è una superficie orizzontale bassa — non una console. Una lastra di materiale scuro, opaco, leggermente inclinata verso chi la usa. I bordi sono consunti. Intorno, in un ordine preciso che parla di abitudine, giacciono utensili con punte di varie dimensioni.";
 
-        // Controllo flag picked_Scriptorium_disco_pietra
-        if (!state.flags['picked_Scriptorium_disco_pietra'] && !state.inventory.includes("Disco di Pietra") && !state.flags.discoPreso) {
+        // Controllo flag picked_Scriptorium_disco_pietra (discoPreso era un flag
+        // morto, mai scritto: rimosso — BUG B20)
+        if (!state.flags['picked_Scriptorium_disco_pietra'] && !state.inventory.includes("Disco di Pietra")) {
             desc += "\nUna delle nicchie sulla parete nord è buia. Il suo proiettore è spento e tremola debolmente.";
         } else {
             desc += "\nUna delle nicchie sulla parete nord è buia. Il proiettore, ora libero dall'ostruzione, è spento e inerte.";

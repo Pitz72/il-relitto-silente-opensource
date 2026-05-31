@@ -11,6 +11,22 @@ export const arcaBiologicaRoom: Room = {
             desc += "\nIl cadavere dell'antico astronauta giace ancora lì, testimone silenzioso della tragedia.";
         }
 
+        // Una volta esaminato il cadavere, gli oggetti che stringe diventano
+        // esplicitamente raccoglibili: prima non erano nominati nella descrizione
+        // e si potevano prendere solo a tentativi (BUG B22).
+        if (state.flags.cadavereEsaminatoFirst) {
+            const recuperabili: string[] = [];
+            if (!state.flags['picked_Arca Biologica_dispositivo_medico'] && !state.inventory.includes("Dispositivo Medico Alieno")) {
+                recuperabili.push("un Dispositivo Medico Alieno");
+            }
+            if (!state.flags['picked_Arca Biologica_cristallo_dati_opaco'] && !state.inventory.includes("Cristallo Dati Opaco")) {
+                recuperabili.push("un Cristallo Dati Opaco");
+            }
+            if (recuperabili.length > 0) {
+                desc += `\nTra le mani irrigidite del cadavere, allentati nella presa, distingui ${recuperabili.join(" e ")}: puoi PRENDERLI.`;
+            }
+        }
+
         desc += "\nL'unica uscita è a EST, verso la serra.";
         return desc;
     },
