@@ -3,7 +3,7 @@ import { gameData } from '../gameData';
 
 export const serraMorenteRoom: Room = {
     description: (state) => {
-        let desc = "SERRA MORENTE\n\nApri la porta a sud e un'aria innaturalmente secca ti investe. La luce bluastra del corridoio lascia il posto a una debole luminescenza verdastra, malata. Sei in una vasta serra a cupola. Enormi piante aliene, simili a felci scheletriche e funghi contorti, pendono dalle pareti come spettri. Tutto è secco, morto, coperto da uno strato di polvere che sembra neve grigia.";
+        let desc = "SERRA MORENTE\n\nApri la porta a sud e un'aria innaturalmente secca ti investe. La luce bluastra del corridoio lascia il posto a una debole luminescenza verdastra, malata. Sei in una vasta serra a cupola. Enormi piante aliene, simili a felci scheletriche e funghi contorti, pendono dalle pareti, rinsecchite nella posa in cui sono morte. Tutto è secco, morto, coperto da uno strato di polvere che sembra neve grigia.";
         if (state.flags.semeLiberato) {
             desc += "\nIl campo di contenimento si è spento. Il silenzio ora è completo.";
         } else {
@@ -64,7 +64,7 @@ export const serraMorenteRoom: Room = {
             id: 'passaggio',
             name: 'passaggio',
             synonyms: ['muro ovest', 'apertura'],
-            description: "È un'apertura non contrassegnata, quasi nascosta dalla vegetazione morta. Conduce in un'area ancora più buia e fredda.",
+            description: "È un'apertura non contrassegnata, nascosta dalla vegetazione morta. Conduce in un'area ancora più buia e fredda.",
             isFixed: true
         }
     ],
@@ -121,13 +121,13 @@ export const serraMorenteRoom: Room = {
                 let pickupDesc = "Allunghi la mano e chiudi le dita attorno al Seme Vivente. È caldo, quasi febbrile, e senti una vibrazione costante che risale lungo il tuo braccio. Hai recuperato la prima chiave.";
                 if (!state.flags.semeMonologo) {
                     state.flags.semeMonologo = true;
-                    pickupDesc += "\n\n(La luce verde pulsa sul tuo guanto. Pensi a cosa tieni in mano — non un oggetto, non una 'chiave', ma una promessa. L'ultima di una civiltà che è morta credendo nel futuro. Una responsabilità che non hai chiesto, e che non puoi ignorare.)";
+                    pickupDesc += "\n\n(La luce verde pulsa sul tuo guanto. Pensi a cosa tieni in mano — non un oggetto, non una 'chiave'. Una promessa: l'ultima di una civiltà che è morta credendo nel futuro. Una responsabilità che non hai chiesto, e che non puoi ignorare.)";
                 }
                 return { description: pickupDesc, eventType: 'item_pickup' };
             }
         },
         // TOCCA
-        { regex: "^(tocca) (piante|felci|funghi|vegetazione)$", handler: () => ({ description: "Sfiori una delle felci scheletriche. Si sbriciola in una nuvola di polvere fine che si disperde nell'aria immobile. Ogni cosa qui è morta, ma morta con una tale lentezza che quasi sembra ancora in attesa." }) },
+        { regex: "^(tocca) (piante|felci|funghi|vegetazione)$", handler: () => ({ description: "Sfiori una delle felci scheletriche. Si sbriciola in una nuvola di polvere fine che si disperde nell'aria immobile. Ogni cosa qui è morta, ma morta con una tale lentezza che sembra ancora in attesa." }) },
         { regex: "^(tocca) (polvere|spore|neve)$", handler: () => ({ description: "La polvere si solleva al minimo contatto e galleggia nell'aria come coriandoli di cenere. Il tuo filtro respiratorio registra un picco di particolato organico inerte." }) },
         { regex: "^(tocca) (teca|contenitore|cristallo)$", handler: (state) => {
             if (state.flags.semeLiberato) {

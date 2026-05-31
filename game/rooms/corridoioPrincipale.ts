@@ -38,14 +38,14 @@ export const corridoioPrincipaleRoom: Room = {
             name: 'pareti',
             synonyms: ['muro', 'soffitto', 'pavimento'],
             description: "Le pareti non sembrano costruite, ma... cresciute. La superficie è liscia ma con una micro-trama simile all'osso o alla madreperla. È da qui che proviene la debole luce bluastra.",
-            details: "Il tuo scanner emette un crepitio a bassa frequenza. L'analisi conferma una struttura organica complessa e tracce di bioluminescenza. È un materiale sconosciuto, un biopolimero cristallizzato. L'energia emessa è trascurabile, ma costante e incredibilmente antica.",
+            details: "Il tuo scanner emette un crepitio a bassa frequenza. L'analisi conferma una struttura organica complessa e tracce di bioluminescenza. È un materiale sconosciuto, un biopolimero cristallizzato. L'energia emessa è trascurabile, ma costante e antica.",
             isFixed: true
         },
         {
             id: 'luce',
             name: 'luminescenza',
             synonyms: ['luce'],
-            description: "La luce non ha una fonte. Le pareti stesse brillano debolmente, proiettando ombre lunghe e incerte. È una luce fredda, quasi spettrale.",
+            description: "La luce non ha una fonte. Le pareti stesse brillano debolmente, proiettando ombre lunghe e incerte. È una luce fredda, spettrale.",
             isFixed: true
         },
         {
@@ -214,7 +214,7 @@ export const corridoioPrincipaleRoom: Room = {
             }
         },
         { regex: "^(apri|usa|tocca) (porta ovest)$", handler: () => ({ description: "Appoggi la mano sul complesso simbolo a stella. A differenza delle altre, questa porta non reagisce. Rimane fredda, inerte e sigillata. I tre incavi alla base suggeriscono che serva qualcos'altro.", eventType: 'error' }) },
-        { regex: "^(tocca) (pareti|muro|soffitto|pavimento)$", handler: () => ({ description: "La superficie è liscia e stranamente tiepida, quasi come pelle. Senti una debolissima, quasi impercettibile vibrazione, come un respiro lentissimo." }) },
+        { regex: "^(tocca) (pareti|muro|soffitto|pavimento)$", handler: () => ({ description: "La superficie è liscia e stranamente tiepida, come pelle. Senti una vibrazione debolissima, come un respiro lentissimo." }) },
         { regex: "^(tocca) (tacche|segni|incisioni|marchi|graffi)$", handler: () => ({ description: "Le tacche sono poco profonde ma precise. Il materiale intorno non si è sgretolato — chi le ha fatte sapeva quanto premere. Tre colpi. Non uno di più." }) },
         {
             regex: "^(esamina|guarda|analizza) porta$", handler: () => ({

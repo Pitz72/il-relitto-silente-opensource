@@ -40,7 +40,7 @@ export const cameraDiCompensazioneRoom: Room = {
         { regex: "^(esamina|guarda) (pannello|pannello di controllo|controlli)$", handler: () => ({ description: "È una piccola superficie liscia e scura incassata nella parete. Non ci sono schermi, pulsanti o interruttori visibili. Sembra inerte." }) },
         { regex: "^(esamina|guarda) (muro|pareti|soffitto|pavimento)$", handler: () => ({ description: "Le pareti della stanza sono curve e senza giunture. La geometria è strana, quasi organica. Toccarle trasmette una sensazione di freddo assoluto." }) },
         // ANALIZZA
-        { regex: "^(analizza) (incisione|simbolo)$", handler: () => ({ description: "Lo scanner rileva tracce infinitesimali di bio-luminescenza all'interno dei solchi. Sembra che l'incisione fosse progettata per brillare debolmente, forse come un segnale di benvenuto o un promemoria. L'energia residua è quasi incalcolabilmente antica.", eventType: 'magic' }) },
+        { regex: "^(analizza) (incisione|simbolo)$", handler: () => ({ description: "Lo scanner rileva tracce infinitesimali di bio-luminescenza all'interno dei solchi. Sembra che l'incisione fosse progettata per brillare debolmente, forse come un segnale di benvenuto o un promemoria. L'energia residua è antica oltre ogni calcolo dello scanner.", eventType: 'magic' }) },
         { regex: "^(analizza) (porta)$", handler: () => ({ description: "L'analisi rivela un complesso meccanismo di chiusura magnetico all'interno della porta. È completamente privo di energia.", eventType: 'magic' }) },
         {
             regex: "^(analizza) (pannello|pannello di controllo)$", handler: (state) => {
@@ -49,7 +49,7 @@ export const cameraDiCompensazioneRoom: Room = {
             }
         },
         // USA / TOCCA
-        { regex: "^(tocca) (pareti|muro|soffitto|pavimento)$", handler: () => ({ description: "Appoggi una mano sulla parete. È fredda come il ghiaccio e liscia come il vetro. Non senti alcuna vibrazione, solo una quiete profonda e antica." }) },
+        { regex: "^(tocca) (pareti|muro|soffitto|pavimento)$", handler: () => ({ description: "Appoggi una mano sulla parete. È fredda e liscia, senza un solo difetto sotto i guanti. Non senti alcuna vibrazione, solo una quiete profonda e antica." }) },
         {
             regex: "^(usa) (batteria|batteria di emergenza) su (pannello|pannello di controllo)$", handler: (state) => {
                 if (!state.inventory.includes("Batteria di Emergenza")) {
@@ -66,7 +66,7 @@ export const cameraDiCompensazioneRoom: Room = {
                 if (batteryIndex > -1) {
                     state.inventory.splice(batteryIndex, 1);
                 }
-                return { description: "Seguendo le indicazioni del tuo scanner, trovi un piccolo incavo quasi invisibile sul pannello. Inserisci il connettore della batteria di emergenza. Il pannello si anima con un debole ronzio e una singola linea di luce ambrata appare sulla sua superficie. Senti un 'clack' sordo provenire dalla porta a est. Sembra che ora sia possibile aprirla.", eventType: 'item_use' };
+                return { description: "Seguendo le indicazioni del tuo scanner, trovi un piccolo incavo nascosto sul pannello. Inserisci il connettore della batteria di emergenza. Il pannello si anima con un debole ronzio e una singola linea di luce ambrata appare sulla sua superficie. Senti un 'clack' sordo provenire dalla porta a est. Sembra che ora sia possibile aprirla.", eventType: 'item_use' };
             }
         },
         { regex: "^(usa) (taglierina|taglierina al plasma) su (porta)$", handler: () => ({ description: "La tua taglierina al plasma graffia a malapena la superficie. Questo materiale è molto più resistente di quello dello scafo esterno. Non puoi aprirla con la forza.", eventType: 'error' }) },
@@ -80,7 +80,7 @@ export const cameraDiCompensazioneRoom: Room = {
                     return { description: "La porta è sigillata e non si muove. Non c'è alcun meccanismo di apertura visibile.", eventType: 'error' };
                 }
                 state.flags.isAirlockDoorOpen = true;
-                return { description: "Appoggi una mano sulla linea di luce ambrata del pannello. Con un sibilo quasi impercettibile, la porta si ritrae silenziosamente nella parete, rivelando un lungo corridoio a EST.", eventType: 'magic' };
+                return { description: "Appoggi una mano sulla linea di luce ambrata del pannello. Con un sibilo appena udibile, la porta si ritrae nella parete, rivelando un lungo corridoio a EST.", eventType: 'magic' };
             }
         },
     ]

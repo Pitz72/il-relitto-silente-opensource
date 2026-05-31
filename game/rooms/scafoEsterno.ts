@@ -39,7 +39,7 @@ export const scafoEsternoRoom: Room = {
         }},
         { regex: "^((vai|va) )?(sud|s|ovest|o|est|e)$", handler: () => ({ description: "Ti muovi per qualche metro lungo lo scafo, ma il panorama non cambia. È una distesa monotona e infinita. Meglio non allontanarsi troppo dalla tua nave." }) },
         // TOCCA
-        { regex: "^(tocca) (scafo|superficie|muro|parete|nave|relitto)$", handler: () => ({ description: "Appoggi la mano guantata sullo scafo. Il materiale è liscio come vetro e assorbe ogni fotone senza restituire nulla. Zero vibrazioni, zero calore. È come toccare il nulla solidificato. La tua mano appare stranamente enorme contro quella perfezione oscura." }) },
+        { regex: "^(tocca) (scafo|superficie|muro|parete|nave|relitto)$", handler: () => ({ description: "Appoggi la mano guantata sullo scafo. Il materiale è liscio sotto il guanto e assorbe ogni fotone senza restituire nulla. Zero vibrazioni, zero calore. È come toccare il nulla solidificato. La tua mano appare stranamente enorme contro quella perfezione oscura." }) },
         { regex: "^tocca$", handler: () => ({ description: "Sei agganciato allo scafo alieno. Puoi toccare la superficie della nave o le stelle di spazio intorno a te. O quasi." }) },
         // ESAMINA
         { regex: "^(esamina|guarda) (scafo|nave|superficie|muro|parete)$", handler: () => ({ description: "Lo scafo è una distesa infinita di un materiale nero opaco, liscio al tatto anche attraverso i guanti della tuta. Non c'è un singolo rivetto, saldatura o pannello visibile. Sembra un unico, solido pezzo di oscurità." }) },
@@ -47,14 +47,14 @@ export const scafoEsternoRoom: Room = {
         { regex: "^(esamina|guarda) (stelle|spazio)$", handler: () => ({ description: "Le stelle sono fredde e immobili. La loro luce non riesce a scalfire la tenebra dello scafo alieno." }) },
         { regex: "^(esamina|guarda) (crepa|giuntura|discontinuita|fessura)$", handler: (state) => {
             if (state.flags.knowsAboutCrack) {
-                return { description: "Osservando da vicino il punto indicato dal tuo scanner, noti una linea sottilissima, quasi impercettibile. Non è una crepa da danno, sembra più una giuntura di manutenzione sigillata con una precisione disumana. È l'unica imperfezione che riesci a trovare su questo scafo altrimenti perfetto." };
+                return { description: "Osservando da vicino il punto indicato dal tuo scanner, noti una linea sottilissima, al limite del visibile. Non è una crepa da danno, sembra più una giuntura di manutenzione sigillata con una precisione disumana. È l'unica imperfezione che riesci a trovare su questo scafo altrimenti perfetto." };
             }
             return { description: "Giri intorno, ispezionando lo scafo, ma non vedi nessuna crepa o giuntura evidente. La superficie è perfettamente liscia.", eventType: 'error' };
         }},
         // ANALIZZA
         { regex: "^(analizza) (scafo|nave|superficie)$", handler: (state) => {
             state.flags.knowsAboutCrack = true;
-            return { description: "Il tuo multiscanner emette un debole segnale. L'analisi della superficie indica che è composta da una lega di carbonio e metalli sconosciuti, estremamente densa. Tuttavia, il sensore rileva una sottile discontinuità strutturale a pochi passi da te, quasi come una giuntura sigillata dall'interno. È quasi invisibile a occhio nudo.", eventType: 'magic' };
+            return { description: "Il tuo multiscanner emette un debole segnale. L'analisi della superficie indica che è composta da una lega di carbonio e metalli sconosciuti, estremamente densa. Tuttavia, il sensore rileva una sottile discontinuità strutturale a pochi passi da te, come una giuntura sigillata dall'interno. È invisibile a occhio nudo.", eventType: 'magic' };
         }},
         { regex: "^(analizza) (crepa|giuntura|discontinuita|fessura)$", handler: (state) => {
             if (state.flags.knowsAboutCrack) {

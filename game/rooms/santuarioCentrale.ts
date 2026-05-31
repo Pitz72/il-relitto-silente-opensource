@@ -14,17 +14,17 @@ export const santuarioCentraleRoom: Room = {
                 state.flags.hasHeardMonologue = true;
                 return {
                     description: `(La figura non muove le labbra, ma le parole non sono un suono. Sono un pensiero che fiorisce direttamente nella tua mente, limpido e completo.)
-"Creatura di carbonio... Figlio delle Stelle... Benvenuto."
-"So cosa cerchi. Una risposta. Ma io non sono che la memoria di una domanda. Sono ciò che resta quando il cantastorie è svanito. L'ultima frase, scritta nella luce."
-"Il nostro tempo era un cerchio che si chiudeva. Il grande fuoco del nostro universo si stava riducendo a brace, e noi eravamo le ultime scintille. Ma la vita... la vita è una fiamma che non deve mai essere lasciata spegnere del tutto."
+«Creatura di carbonio... Figlio delle Stelle... Benvenuto.»
+«So cosa cerchi. Una risposta. Ma io non sono che la memoria di una domanda. Sono ciò che resta quando il cantastorie è svanito. L'ultima frase, scritta nella luce.»
+«Il nostro tempo era un cerchio che si chiudeva. Il grande fuoco del nostro universo si stava riducendo a brace, e noi eravamo le ultime scintille. Ma la vita... la vita è una fiamma che non deve mai essere lasciata spegnere del tutto.»
 [PAUSE]
-"Così intraprendemmo il 'Grande Salto'. Non per conquistare, ma per comporre. Intrecciammo le note del nostro stesso essere nella trama silenziosa di mondi giovani, sperando che una nuova, imprevedibile sinfonia potesse un giorno iniziare."
-"Tu... sei quella nuova musica."
-"Nel tuo sangue, porti il fantasma dei nostri tre soli. Siamo solo il ricordo della prima nota."
+«Così intraprendemmo il 'Grande Salto'. Non per conquistare, ma per comporre. Intrecciammo le note del nostro stesso essere nella trama silenziosa di mondi giovani, sperando che una nuova, imprevedibile sinfonia potesse un giorno iniziare.»
+«Tu... sei quella nuova musica.»
+«Nel tuo sangue, porti il fantasma dei nostri tre soli. Siamo solo il ricordo della prima nota.»
 [PAUSE]
 (La figura luminosa ti osserva, e per un istante senti il peso di un tempo incalcolabile)
-"La nostra canzone è finita. Le sue ultime armonie si dissolvono ora, in questo istante. Tutto ciò che abbiamo sempre chiesto alla musica a venire... è che venisse suonata, con forza, fino all'ultima nota."
-"Vivi. Sarà il suono più bello."`,
+«La nostra canzone è finita. Le sue ultime armonie si dissolvono ora, in questo istante. Tutto ciò che abbiamo sempre chiesto alla musica a venire... è che venisse suonata, con forza, fino all'ultima nota.»
+«Vivi. Sarà il suono più bello.»`,
                     eventType: 'magic',
                     typewriter: true,
                     gameOver: `Ti risvegli di soprassalto.

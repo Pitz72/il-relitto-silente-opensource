@@ -77,8 +77,8 @@ export const santuarioDelSilenzioRoom: Room = {
             }
         },
         // TOCCA
-        { regex: "^(tocca) (bassorilievi|muri|pareti|incisioni|scene)$", handler: () => ({ description: "Le dita seguono i solchi delle incisioni. La pietra è levigata come seta, ogni taglio perfetto. Senti sotto le dita la storia di una civiltà morta — creature che guardano tre soli, semi che germogliano tra le stelle, navi che partono verso l'infinito. Un epitaffio scolpito nell'eternità." }) },
-        { regex: "^(tocca) (altare|pietra|cilindro|incavo|centro)$", handler: () => ({ description: "Appoggi la mano sull'altare. La pietra nera assorbe la luce e il calore. È fredda, ma c'è qualcosa sotto — una risonanza quasi impercettibile, come se la pietra ricordasse tutte le mani che l'hanno toccata prima di te." }) },
+        { regex: "^(tocca) (bassorilievi|muri|pareti|incisioni|scene)$", handler: () => ({ description: "Le dita seguono i solchi delle incisioni. La pietra è levigata, ogni taglio perfetto. Senti sotto le dita la storia di una civiltà morta — creature che guardano tre soli, semi che germogliano tra le stelle, navi che partono verso l'infinito. Un epitaffio scolpito nell'eternità." }) },
+        { regex: "^(tocca) (altare|pietra|cilindro|incavo|centro)$", handler: () => ({ description: "Appoggi la mano sull'altare. La pietra nera assorbe la luce e il calore. È fredda, ma c'è qualcosa sotto — una risonanza appena percettibile, come se la pietra ricordasse tutte le mani che l'hanno toccata prima di te." }) },
         { regex: "^tocca$", handler: () => ({ description: "Sei nel Santuario del Silenzio. Puoi toccare i bassorilievi o l'altare al centro della stanza." }) },
         // USA DISCO SU ALTARE
         {

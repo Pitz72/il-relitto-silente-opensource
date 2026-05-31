@@ -62,7 +62,7 @@ export const arcaDellaMemoriaRoom: Room = {
         },
         { regex: "^((vai|va) )?(nord|est|ovest|n|e|o)$", handler: () => ({ description: "Non puoi andare in quella direzione. L'unica via d'uscita è a SUD.", eventType: 'error' }) },
         // TOCCA
-        { regex: "^(tocca) (pilastri|monoliti|cristalli|pilastro)$", handler: () => ({ description: "La superficie cristallina è stranamente tiepida sotto le dita. Una singola scintilla quasi impercettibile risponde al tuo tocco — un arco di luce ambrata, piccolo come un'emozione soppressa — poi si spegne. Come l'ultima scintilla di un fuoco morente." }) },
+        { regex: "^(tocca) (pilastri|monoliti|cristalli|pilastro)$", handler: () => ({ description: "La superficie cristallina è stranamente tiepida sotto le dita. Una singola scintilla, appena percettibile, risponde al tuo tocco — un arco di luce ambrata, piccolo come un'emozione soppressa — poi si spegne. Come l'ultima scintilla di un fuoco morente." }) },
         { regex: "^(tocca) (terminale|console)$", handler: () => ({ description: "Il pannello del terminale è liscio e privo di reazione. Le fibre energetiche dentro sono dormienti, in attesa di uno shock che le risvegli." }) },
         { regex: "^tocca$", handler: () => ({ description: "Sei nell'Arca della Memoria. I pilastri di cristallo si ergono nel buio intorno a te. Puoi toccarli." }) },
         // USA
@@ -76,7 +76,7 @@ export const arcaDellaMemoriaRoom: Room = {
                 }
                 state.flags.isTerminalActive = true;
                 return {
-                    description: "Capisci cosa devi fare. È un'idea folle, ma è l'unica che hai. Imposti la tua taglierina al plasma sulla massima potenza e, per una frazione di secondo, dirigi il getto energetico sul pannello di bypass.[PAUSE]Il terminale sfrigola, un odore acre di metallo fuso sale nell'aria per un istante. Per un istante temi di averlo distrutto. Poi, lo schermo si accende con un'unica parola nella lingua aliena e un piccolo scomparto si apre alla base del terminale, rivelando un cristallo poliedrico.",
+                    description: "È un'idea folle, ma è l'unica che hai. Imposti la tua taglierina al plasma sulla massima potenza e, per una frazione di secondo, dirigi il getto energetico sul pannello di bypass.[PAUSE]Il terminale sfrigola, un odore acre di metallo fuso sale nell'aria per un istante. Per un istante temi di averlo distrutto. Poi, lo schermo si accende con un'unica parola nella lingua aliena e un piccolo scomparto si apre alla base del terminale, rivelando un cristallo poliedrico.",
                     eventType: 'item_use'
                 };
             }

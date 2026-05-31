@@ -3,7 +3,7 @@ import { gameData } from '../gameData';
 
 export const alloggiEquipaggioRoom: Room = {
     description: (state) => {
-        let desc = "ALLOGGI DELL'EQUIPAGGIO\n\nVarchi la soglia ed entri in un ambiente pervaso da un silenzio quasi reverenziale. La stanza è circolare, simile al ponte, ma più piccola. Le pareti sono suddivise in una serie di alcove a nido d'ape, disposte su più livelli. Non ci sono letti o arredi, solo queste nicchie lisce che emanano la stessa, debole luce bluastra del resto della nave. L'atmosfera è di una serenità quasi monastica.";
+        let desc = "ALLOGGI DELL'EQUIPAGGIO\n\nVarchi la soglia ed entri in un ambiente pervaso da un silenzio reverenziale. La stanza è circolare, simile al ponte, ma più piccola. Le pareti sono suddivise in una serie di alcove a nido d'ape, disposte su più livelli. Non ci sono letti o arredi, solo queste nicchie lisce che emanano la stessa, debole luce bluastra del resto della nave. L'atmosfera è di una serenità monastica.";
         if (!state.flags.cilindroPreso) {
             desc += "\nIn una delle alcove più basse, riesci a scorgere una forma immobile.";
         } else {
@@ -24,7 +24,7 @@ export const alloggiEquipaggioRoom: Room = {
             id: 'cadavere',
             name: 'cadavere',
             synonyms: ['forma', 'forma immobile', 'resti', 'corpo', 'alieno', 'creatura'],
-            description: "Il corpo è incredibilmente ben conservato. La creatura era alta, sottile e allungata, con arti a doppia articolazione. La pelle traslucida, simile a pergamena, è tesa su una struttura ossea delicata. Non c'è alcun segno di violenza o sofferenza. La sua posa è serena, quasi di attesa.",
+            description: "Il corpo è conservato fino al dettaglio. La creatura era alta, sottile e allungata, con arti a doppia articolazione. La pelle traslucida, simile a pergamena, è tesa su una struttura ossea delicata. Non c'è alcun segno di violenza o sofferenza. La sua posa è serena, quasi di attesa.",
             details: "L'analisi biologica conferma che il processo di mummificazione è avvenuto in un arco di tempo lunghissimo. La causa del decesso sembra essere semplicemente la vecchiaia o un arresto metabolico volontario. Non ci sono patogeni o segni di lotta.",
             isFixed: true
         },
@@ -41,7 +41,7 @@ export const alloggiEquipaggioRoom: Room = {
                     state.flags.translationProgress = 18;
                     state.flags.cilindroAnalizzato = true;
                     return {
-                        description: "Inserisci il cilindro nello scanner. È un'altra registrazione. La tua matrice di traduzione si aggiorna.[PAUSE]Stato traduzione: 18%\nLa voce tradotta è più chiara, più personale:\n...il legame-collettivo si affievolisce. I cicli sono quasi compiuti. Il 'Grande Salto' è stato un successo, ma il nostro tempo finisce. Lasciamo questa eco... questo (parola intraducibile: 'seme-dell-anima')... perché chi verrà dopo possa conoscere il motivo. Non la fine, ma la continuazione...",
+                        description: "Inserisci il cilindro nello scanner. È un'altra registrazione. La tua matrice di traduzione si aggiorna.[PAUSE]Stato traduzione: 18%\nLa voce tradotta è più chiara, più personale:\n...il legame-collettivo si affievolisce. I cicli sono quasi compiuti. Il 'Grande Salto' è stato un successo, ma il nostro tempo finisce. Lasciamo questa eco... questo (parola intraducibile: 'seme-dell-anima')... perché chi verrà dopo possa conoscere il motivo. Non la fine. La continuazione...",
                         eventType: 'magic'
                     };
                 }
@@ -52,7 +52,7 @@ export const alloggiEquipaggioRoom: Room = {
                     state.flags.translationProgress = 18;
                     state.flags.cilindroAnalizzato = true;
                     return {
-                        description: "Inserisci il cilindro nello scanner. È un'altra registrazione. La tua matrice di traduzione si aggiorna.[PAUSE]Stato traduzione: 18%\nLa voce tradotta è più chiara, più personale:\n...il legame-collettivo si affievolisce. I cicli sono quasi compiuti. Il 'Grande Salto' è stato un successo, ma il nostro tempo finisce. Lasciamo questa eco... questo (parola intraducibile: 'seme-dell-anima')... perché chi verrà dopo possa conoscere il motivo. Non la fine, ma la continuazione...",
+                        description: "Inserisci il cilindro nello scanner. È un'altra registrazione. La tua matrice di traduzione si aggiorna.[PAUSE]Stato traduzione: 18%\nLa voce tradotta è più chiara, più personale:\n...il legame-collettivo si affievolisce. I cicli sono quasi compiuti. Il 'Grande Salto' è stato un successo, ma il nostro tempo finisce. Lasciamo questa eco... questo (parola intraducibile: 'seme-dell-anima')... perché chi verrà dopo possa conoscere il motivo. Non la fine. La continuazione...",
                         eventType: 'magic'
                     };
                 }
@@ -71,7 +71,7 @@ export const alloggiEquipaggioRoom: Room = {
         // ESAMINA EXTRA (per gestire descrizioni dinamiche del corpo)
         {
             regex: "^(esamina|guarda) (forma|forma immobile|resti|corpo|alieno|creatura)$", handler: (state) => {
-                let desc = "Il corpo è incredibilmente ben conservato. La creatura era alta, sottile e allungata, con arti a doppia articolazione. La pelle traslucida, simile a pergamena, è tesa su una struttura ossea delicata. Non c'è alcun segno di violenza o sofferenza. La sua posa è serena, quasi di attesa.";
+                let desc = "Il corpo è conservato fino al dettaglio. La creatura era alta, sottile e allungata, con arti a doppia articolazione. La pelle traslucida, simile a pergamena, è tesa su una struttura ossea delicata. Non c'è alcun segno di violenza o sofferenza. La sua posa è serena, quasi di attesa.";
                 if (!state.flags.cilindroPreso) {
                     desc += " Una delle sue mani a tre dita stringe debolmente un piccolo cilindro metallico.";
                 }
@@ -94,7 +94,7 @@ export const alloggiEquipaggioRoom: Room = {
         },
         { regex: "^(prendi) (resti|corpo|alieno)$", handler: () => ({ description: "No. Mostri rispetto per i morti, chiunque essi siano." }) },
         // TOCCA
-        { regex: "^(tocca) (alcove|nicchie|letti|pareti|celle|muro)$", handler: () => ({ description: "Le alcove sono lisce e fredde come porcellana. Il contatto trasmette una quiete strana, quasi sedativa. Pensi ai corpi che ci dormivano, alle menti che ci riposavano prima dell'ultimo ciclo." }) },
+        { regex: "^(tocca) (alcove|nicchie|letti|pareti|celle|muro)$", handler: () => ({ description: "Le alcove sono lisce e fredde come porcellana. Il contatto trasmette una quiete sedativa. Pensi ai corpi che ci dormivano, alle menti che ci riposavano prima dell'ultimo ciclo." }) },
         { regex: "^(tocca) (cadavere|corpo|alieno|creatura|forma)$", handler: () => ({ description: "No. C'è qualcosa di sbagliato nel disturbare quella posa serena. Lascia il suo riposo intatto." }) },
         { regex: "^tocca$", handler: () => ({ description: "Sei negli alloggi dell'equipaggio. Puoi toccare le alcove o i resti della creatura che riposa qui." }) },
     ]

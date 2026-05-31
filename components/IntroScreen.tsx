@@ -134,7 +134,7 @@ const INTRO_PAGES: IntroPage[] = [
       },
       { html: `<div style="line-height:1.5;">&nbsp;</div>`, beep: false },
       {
-        html: `<div style="font-size:0.75rem;color:var(--p-main);line-height:1.9;">È enorme. Scuro come il vuoto. E completamente, assolutamente <span style="color:var(--p-bright);letter-spacing:0.06em;">silenzioso</span>.</div>`,
+        html: `<div style="font-size:0.75rem;color:var(--p-main);line-height:1.9;">È enorme. Scuro come il vuoto. E <span style="color:var(--p-bright);letter-spacing:0.06em;">silenzioso</span>.</div>`,
         beep: false,
       },
       { html: `<div style="line-height:1.5;">&nbsp;</div>`, beep: false },

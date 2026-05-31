@@ -42,7 +42,7 @@ export const arcaBiologicaRoom: Room = {
                 }
                 state.flags['capsulaAnalizzata'] = true;
                 return {
-                    description: `Punti lo scanner verso la capsula più vicina. L'apparecchio emette un 'bip' lento e malinconico.[PAUSE]LETTURA CAMPIONE: [SPECIE K'THARR: PREDATORE ALFA]\nSTATO: deceduto. Integrità genomica: 0.02%.\nCAUSA: guasto catastrofico dei sistemi di supporto vitale nel ciclo 9.875.342.[PAUSE]Provi con un'altra capsula. E un'altra ancora. La risposta è sempre la stessa, una litania di fallimenti.\n[FLORA DI XYLOS: SIMBIONTE]... deceduto.\n[FORMA DI VITA SILICEA: COSTRUTTORE]... deceduto.[PAUSE]Capisci la terribile verità. Questa non era una stiva. Era un'arca. Un intero ecosistema, forse di un intero mondo, conservato qui. E ora è tutto perduto.[PAUSE](Rimani immobile per un lungo momento. Non è solo tristezza — è la vertigine di capire il gesto. Qualcuno ha tentato di salvare tutto: non per sé stesso, ma per il futuro. E il futuro non è arrivato in tempo. O forse... forse il futuro è ancora in cammino. Forse è ancora possibile.)`,
+                    description: `Punti lo scanner verso la capsula più vicina. L'apparecchio emette un 'bip' lento e malinconico.[PAUSE]LETTURA CAMPIONE: [SPECIE K'THARR: PREDATORE ALFA]\nSTATO: deceduto. Integrità genomica: 0.02%.\nCAUSA: guasto catastrofico dei sistemi di supporto vitale nel ciclo 9.875.342.[PAUSE]Provi con un'altra capsula. E un'altra ancora. La risposta è sempre la stessa, una litania di fallimenti.\n[FLORA DI XYLOS: SIMBIONTE]... deceduto.\n[FORMA DI VITA SILICEA: COSTRUTTORE]... deceduto.[PAUSE]Questa non era una stiva. Era un'arca. Un intero ecosistema, forse di un intero mondo, conservato qui. E ora è tutto perduto.[PAUSE](Rimani immobile a lungo. Qualcuno ha provato a salvare un mondo intero per chi sarebbe venuto dopo. E chi sarebbe venuto dopo non è arrivato in tempo. O forse è ancora in cammino. Forse è ancora possibile.)`,
                     eventType: 'magic',
                     typewriter: true
                 };
@@ -70,7 +70,7 @@ export const arcaBiologicaRoom: Room = {
                     return { description: "Hai già analizzato l'astronauta. I dati sono già nel tuo scanner.", eventType: null };
                 }
                 return {
-                    description: `Lo scanner emette un tono lento e quasi reverenziale mentre elabora i dati.
+                    description: `Lo scanner emette un tono lento, reverenziale, mentre elabora i dati.
 [PAUSE]
 ANALISI BIOMETRICA — SOGGETTO ANONIMO
 SPECIE: Homo sapiens — compatibilità genomica 99.97%

@@ -13,7 +13,7 @@ export const scriptoriumRoom: Room = {
             desc += "\nUna delle nicchie sulla parete nord è buia. Il proiettore, ora libero dall'ostruzione, è spento e inerte.";
         }
 
-        desc += "\nL'unica uscita visibile è a EST. Tuttavia, dietro la postazione del proiettore olografico, noti una porta sottile, quasi invisibile, che conduce più in profondità in quest'ala della nave, verso NORD.";
+        desc += "\nL'unica uscita visibile è a EST. Tuttavia, dietro la postazione del proiettore olografico, noti una porta sottile, che a un primo sguardo ti era sfuggita, e che conduce più in profondità in quest'ala della nave, verso NORD.";
         return desc;
     },
     items: [

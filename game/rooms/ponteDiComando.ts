@@ -14,7 +14,7 @@ export const ponteDiComandoRoom: Room = {
         if (state.flags.isFinalDoorOpen) {
             desc += "\nDietro la postazione del comandante, la porta circolare è aperta, rivelando un passaggio verso l'oscurità sacra del Santuario Centrale.";
         } else {
-            desc += "\nUna sottile porta circolare, quasi invisibile, è incassata nella parete dietro la postazione del comandante. È l'unica altra uscita oltre a quella da cui sei entrato a SUD.";
+            desc += "\nUna sottile porta circolare, a malapena distinguibile, è incassata nella parete dietro la postazione del comandante. È l'unica altra uscita oltre a quella da cui sei entrato a SUD.";
         }
 
         return desc;
@@ -148,7 +148,7 @@ export const ponteDiComandoRoom: Room = {
                 if (!state.flags.isHologramActive) {
                     return { description: "Non c'è nessuna mappa attiva da analizzare.", eventType: 'error' };
                 }
-                return { description: "Lo scanner analizza i dati sovrapposti alla proiezione olografica. Oltre alla rotta principale emergono annotazioni in simboli alieni — alcune le riconosci già, altre sono ancora al limite della comprensione del traduttore.\n\nUna di esse è ripetuta accanto al punto di arrivo, il tuo sistema solare, con maggiore enfasi rispetto alle altre. Il traduttore propone: 'Proto-fertile. Firma amino-acida confermata. Candidato primario — classe Giardino.'\n\nCapisci: non hanno scelto questo sistema a caso. Lo stavano studiando da prima ancora di partire. Il sistema solare era già nei loro registri come il luogo più promettente — quello in cui la vita avrebbe attecchito.", eventType: 'magic' };
+                return { description: "Lo scanner analizza i dati sovrapposti alla proiezione olografica. Oltre alla rotta principale emergono annotazioni in simboli alieni — alcune le riconosci già, altre sono ancora al limite della comprensione del traduttore.\n\nUna di esse è ripetuta accanto al punto di arrivo, il tuo sistema solare, con maggiore enfasi rispetto alle altre. Il traduttore propone: 'Proto-fertile. Firma amino-acida confermata. Candidato primario — classe Giardino.'\n\nNon hanno scelto questo sistema a caso: lo stavano studiando da prima ancora di partire. Il sistema solare era già nei loro registri come il luogo più promettente — quello in cui la vita avrebbe attecchito.", eventType: 'magic' };
             }
         },
         // PUZZLE FINALE — regex espansa per coprire varianti naturali di input
@@ -161,7 +161,7 @@ export const ponteDiComandoRoom: Room = {
                     return { description: "La porta è già aperta.", eventType: 'error' };
                 }
                 state.flags.isFinalDoorOpen = true;
-                return { description: "Ricordando la mappa stellare, la culla a tre soli, capisci. Appoggi la mano sul pannello e attivi tre delle punte luminose.[PAUSE]Un 'clic' armonioso risuona nel silenzio. La porta circolare si apre con un movimento fluido e silenzioso, rivelando una stanza avvolta in un'oscurità totale e sacra.", eventType: 'magic' };
+                return { description: "Ricordando la mappa stellare, la culla a tre soli, appoggi la mano sul pannello e attivi tre delle punte luminose.[PAUSE]Un 'clic' armonioso risuona nel silenzio. La porta circolare si apre con un movimento fluido e silenzioso, rivelando una stanza avvolta in un'oscurità totale e sacra.", eventType: 'magic' };
             }
         },
         // TOCCA — oggetti specifici e handler generico
