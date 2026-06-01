@@ -1,7 +1,7 @@
 # STATO DEL PROGETTO — IL RELITTO SILENTE
-**Data:** 2026-03-28
-**Versione corrente:** 1.2.5
-**Fase:** Distribuzione attiva · build cross-platform operative (Windows / macOS / Linux)
+**Data:** 2026-06-01
+**Versione corrente:** 1.5.1
+**Fase:** Pre-pubblicazione · codice e gameplay congelati e verificati end-to-end · build cross-platform operative (Windows / macOS / Linux)
 
 ---
 
@@ -46,7 +46,9 @@ Il refactoring principale effettuato durante questa fase (v1.1.18) ha estratto i
 | PARLA | Santuario Centrale ✅ |
 
 ### Sintonizzatore (echi temporali)
-11 stanze su 15 totali hanno un eco captabile. Le 4 prive di eco sono: Plancia della Santa Maria (stanza umana), Scafo Esterno, Arca della Memoria, Santuario Centrale — ciascuna con giustificazione narrativa esplicita nel codice.
+11 stanze su 15 totali hanno un eco captabile. Le 4 prive di eco sono: Scafo Esterno, Arca della Memoria, Santuario Centrale e Anticamera del Santuario — ciascuna con giustificazione narrativa esplicita nel codice. La **Plancia** *ha* un eco (`echo_plancia`): insieme a Stiva e Camera di Compensazione fa parte delle `SEALED_ECHO_ROOMS`, i cui echi vengono catturati **retroattivamente** alla prima attivazione del Sintonizzatore (BUG B2), poiché quelle stanze si sigillano prima che il dispositivo sia disponibile.
+
+A partire da v1.5.0, 4 stanze offrono anche un **eco profondo** (secondo strato): Laboratori (traduzione ≥75%), Serra (dopo aver liberato il Seme), Alloggi (dopo aver preso il Cilindro), Santuario del Silenzio (traduzione 100%). Tracciati separatamente (`echo_*_deep`), fuori dal conteggio 11/11 e dal punteggio.
 
 ### Parser normalizeCommand
 Rimuove: accenti · articoli determinativi/indeterminativi · dimostrativi (quel/questo/…) · normalizza preposizioni (con/sopra→su) · rimuove preposizioni articolate dopo entra/vai · alias movimento (n/s/e/o/u/d/giu) · alias azione (x/l/i/inv/leggi→analizza/indossa→usa) · collassa spazi.
@@ -111,7 +113,11 @@ Il sistema audio usa esclusivamente Web Audio API procedurale (nessun file .ogg/
 | Voce umana — traccia RF nelle tacche (N9) | ✅ Completo (v1.1.32) |
 | Eco corridoio — identità deliberata (N10) | ✅ Completo (v1.1.31) |
 | Porta ovest — forme in ANALIZZA non in ESAMINA (N11) | ✅ Completo (v1.1.33) |
-| Echi temporali | ✅ 11/15 stanze (4 senza eco: Plancia S.M., Scafo Esterno, Arca Memoria, Santuario Centrale) |
+| Echi temporali | ✅ 11/15 stanze (4 senza eco: Scafo Esterno, Arca Memoria, Santuario Centrale, Anticamera Santuario; Plancia/Stiva/Camera catturati retroattivamente) |
+| Echi profondi (WS2, v1.5.0) | ✅ 4/4 — Laboratori (tp≥75), Serra (Seme), Alloggi (Cilindro), Santuario del Silenzio (tp=100); fuori dal punteggio |
+| Traduzione come lente — verbo TRADUCI (WS1, v1.4.0) | ✅ Bassorilievi, proiettori, lastra, mappa; soglie 18/75/100 |
+| Traccia del giocatore — verbo INCIDI (WS3, v1.5.0) | ✅ Corridoio, Arca (accanto a L.V.), Santuario del Silenzio; riflesso nell'epilogo |
+| Soluzioni multiple Porta a Tre Punte (WS5, v1.4.0) | ✅ Deducibile da mappa stellare o da ANALIZZA STELE; energia comunque obbligatoria (`isHologramActive`) |
 | K'tharr individualità (D4) | ✅ echo_lab espanso, Navarca riconoscibile, lista nomi ingegnere |
 | Perché questo sistema solare (D5) | ✅ ANALIZZA MAPPA → "classe Giardino" |
 | Traduzione 100% (D7) | ✅ Tono scanner + "Non sei più uno scopritore. Sei un testimone." |
@@ -125,10 +131,9 @@ Il sistema audio usa esclusivamente Web Audio API procedurale (nessun file .ogg/
 
 ## 7. Simulazione e verifica walkthrough
 
-**Simulazione integrale effettuata il 2026-03-21** (v1.1.33 post-narrativa).
-Documento completo: `VERIFICA_WALKTHROUGH.md`
+**Verifica corrente (v1.5.1, 2026-06-01):** simulazione integrale **eseguibile** del motore (`processCommand` è puro) tramite l'harness `sim/playthrough.ts`. Referto completo: `../verifica/SIMULAZIONE-INTEGRALE.md`. Esito: 104 passi + 9 micro-test di branch, 15/15 stanze, 11/11 echi, 4/4 echi profondi, traduzione 100%, 3/3 tracce INCIDI, finale e rating massimo, **0 fallimenti**. Riproducibile come test di non-regressione (`npx tsc -p sim/tsconfig.sim.json` → `node sim/build/sim/playthrough.js`).
 
-**Risultato:** nessun blocco critico sul percorso principale. Tutti i rami convergono correttamente al finale.
+**Verifica storica (v1.1.33, 2026-03-21):** simulazione mentale del percorso critico in `../storico/VERIFICA_WALKTHROUGH.md` [STORICO]. Nessun blocco critico; tutti i rami convergono al finale. I 4 bug emersi sono stati corretti in v1.1.34–v1.1.37 (tabella sotto).
 
 **Bug trovati e risolti durante la simulazione:**
 
@@ -161,16 +166,18 @@ Nessuno di critico. Note minori:
 | 🍎 macOS | `.dmg` | ✅ Ufficiale (da v1.2.5) | Non firmato — tasto destro → Apri |
 
 **Pipeline CI/CD:** GitHub Actions (`.github/workflows/build-release.yml`)
-- Build automatica su push tag `vX.Y.Z`
-- Build manuale dal pannello GitHub Actions
-- Artifact: `IlRelittoSilente-${version}-${os}.${ext}`
+- Avvio **esclusivamente manuale** (`workflow_dispatch`) dal pannello GitHub Actions — nessun trigger automatico su push di tag o commit
+- Versione letta da `package.json`; con `create_release` attivo crea il tag `vX.Y.Z` sul commit corrente e pubblica la Release
+- Artifact: ZIP per piattaforma (`IlRelittoSilente-${version}-${os}.zip`) contenenti eseguibile + documentazione giocatore
 
 **Percorsi salvataggi nativi (cross-platform via `app.getPath('userData')`):**
 - Windows: `%APPDATA%\Il Relitto Silente\saves\`
 - macOS: `~/Library/Application Support/Il Relitto Silente/saves/`
 - Linux: `~/.config/Il Relitto Silente/saves/`
 
-**Extra-files distribuiti:** `LEGGIMI.txt` (win e linux). Escluso dal .app bundle macOS.
+**Documentazione distribuita:** lo step *Assemble distribution ZIP* del workflow copia l'intera cartella `docs/giocatore/` (LEGGIMI.txt, MANUALE.md, SOLUZIONE.md, CARATTERISTICHE.txt, manuale PDF) accanto all'eseguibile in ogni ZIP di release, per tutte e tre le piattaforme. *(In aggiunta, l'`extraFiles` di `package.json` affianca il solo `LEGGIMI.txt` all'eseguibile non impacchettato su win/linux.)*
+
+> ⚠ **Nota:** `il_relitto_silente_manuale.pdf` non è rigenerato automaticamente: la versione PDF resta indietro rispetto al `MANUALE.md` sorgente (non copre TRADUCI / echi profondi / INCIDI). Va rigenerato dal manuale aggiornato prima della pubblicazione, oppure escluso dallo ZIP.
 
 ---
 
@@ -222,7 +229,13 @@ Nessuno di critico. Note minori:
 | v1.2.3 | HINT: copertura in-room per Serra Morente, Santuario del Silenzio, Scriptorium, Arca della Memoria, Laboratori di Risonanza |
 | v1.2.4 | Tipografia italiana: trattini em dash, virgolette «» in santuarioDelSilenzio e arcaDellaMemoria, separatori scanner in arcaBiologica |
 | v1.2.5 | Revisione testuale: eliminazione cliché LLM (ozono, ronzio ×4, pungente, pesante) in 8 file stanza · **CI/CD: GitHub Actions cross-platform, macOS e Linux versioni ufficiali** |
+| v1.2.6 | Allineamento versione mostrata e rifiniture pre-fixing |
+| v1.3.0–v1.3.3 | **Fixing audit 2026-05-31**: corretti tutti i 26 bug (7 gravissimi, 9 gravi, 6 medi, 4 lievi); versioni UI lette da `package.json` |
+| v1.3.4 | Revisione editoriale della prosa: sistema virgolette a 3 livelli formalizzato, sfoltiti i tic stilistici |
+| v1.4.0 | **WS1** — verbo `TRADUCI`/`DECIFRA` (lettura stratificata, soglie 18/75/100) · **WS5** — Stele insegna il sistema trino (secondo percorso per la Porta a Tre Punte), gate energia preservato · alias verbi |
+| v1.5.0 | **WS2** — 4 echi profondi (Sintonizzatore a strati, fuori dal punteggio) · **WS3** — verbo `INCIDI`/`SCRIVI`/`MARCA`/`FIRMA` (3 tracce + riflesso nell'epilogo) |
+| v1.5.1 | Rifinitura parser (fuzzy, `ESAMINA/GUARDA <stanza>`, epilogo nomina L.V.) + **simulazione integrale eseguibile** (104 passi, 0 fallimenti) |
 
 ---
 
-*Documento aggiornato il 2026-03-28.*
+*Documento aggiornato il 2026-06-01.*

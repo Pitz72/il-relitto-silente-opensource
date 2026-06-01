@@ -85,7 +85,7 @@ Tutti e quattro i problemi sono stati risolti, ma senza quella simulazione siste
 
 ### Oltre il Browser: Il traguardo finale
 
-Oggi *Il Relitto Silente* ha raggiunto la versione **1.2.5**.
+Oggi *Il Relitto Silente* ha raggiunto la versione **1.5.1**.
 
 Non è più una semplice pagina web. Grazie all'implementazione di un wrapper *Electron*, il gioco è un eseguibile desktop standalone per Windows. L'assenza della barra degli indirizzi, dei menu e delle distrazioni del browser cambia psicologicamente l'approccio dell'utente. Ora ci sono solo il giocatore, il buio e il cursore.
 

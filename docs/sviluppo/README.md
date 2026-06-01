@@ -1,6 +1,6 @@
 # IL RELITTO SILENTE
-**Versione:** 1.1.37
-**Stato:** Pre-distribuzione · test umano in corso
+**Versione:** 1.5.1
+**Stato:** Pre-pubblicazione · codice e gameplay congelati, verificati end-to-end
 
 Un'avventura testuale di fantascienza con parser di comandi in linguaggio naturale, ispirata ai classici degli anni '80. L'intera esperienza è progettata per emulare l'estetica di un monitor a fosfori verdi.
 
@@ -16,7 +16,9 @@ Sei il solitario pilota di una nave da carico che si imbatte in un'antica nave s
 
 - **Parser in linguaggio naturale italiano** con normalizzazione (articoli, dimostrativi, accenti, abbreviazioni, preposizioni articolate)
 - **15 stanze** esplorabili, ognuna con TOCCA, ESAMINA, ANALIZZA coperti
-- **Sistema Echi Temporali**: il Sintonizzatore di Frequenza capta le ultime voci dell'equipaggio in 11/15 stanze
+- **Sistema Echi Temporali**: il Sintonizzatore di Frequenza capta le ultime voci dell'equipaggio in 11/15 stanze, più **4 echi profondi** (secondo strato, fuori dal punteggio)
+- **Verbo TRADUCI** (alias DECIFRA): lettura stratificata dei testi alieni a soglie 18/75/100
+- **Verbo INCIDI** (alias SCRIVI/MARCA/FIRMA): traccia del giocatore in 3 punti, richiamata nell'epilogo
 - **5 profili audio ambientali procedurali** (Web Audio API): nave umana, alieno quieto, alieno freddo, alieno elettrico, sacro — con fade-in/fade-out puliti
 - **Impostazioni audio** persistenti: toggle e volume separati per effetti e ambience (`IMPOSTAZIONI` in-game)
 - **Sistema di salvataggio** a 5 slot + autosave su filesystem nativo via IPC Electron
@@ -105,6 +107,9 @@ App.tsx                 — orchestrazione stato, F-key, overlay
 | Comando | Descrizione |
 |---|---|
 | `AIUTO` / `SUGGERIMENTO` | Hint contestuale adattivo |
+| `TRADUCI [oggetto]` / `DECIFRA` | Legge i testi alieni a strati (soglie 18/75/100) |
+| `INCIDI [bersaglio]` / `SCRIVI` / `MARCA` / `FIRMA` | Lascia un segno del giocatore (richiede la Taglierina) |
+| `ECHI` | Riascolta gli echi temporali (di superficie e profondi) |
 | `NOTA` / `DIARIO` | Log scoperte con barre di progressione |
 | `MAPPA` | Mappa ASCII delle stanze esplorate |
 | `INVENTARIO` / `I` | Lista oggetti in possesso |
@@ -120,4 +125,4 @@ App.tsx                 — orchestrazione stato, F-key, overlay
 
 - `npx tsc --noEmit`: **zero errori**
 - `npm audit`: **zero vulnerabilità**
-- Simulazione walkthrough integrale v1.1.37: **nessun blocco critico, percorso completo verificato**
+- Simulazione integrale **eseguibile** v1.5.1 (`sim/playthrough.ts`): **104 passi + 9 micro-test, 0 fallimenti** — 15/15 stanze, 11/11 echi, 4/4 echi profondi, traduzione 100%, 3/3 INCIDI, finale e rating massimo. Referto: `docs/verifica/SIMULAZIONE-INTEGRALE.md`

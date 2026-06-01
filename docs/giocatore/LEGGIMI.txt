@@ -1,27 +1,39 @@
 IL RELITTO SILENTE
-v1.2.5
+v1.5.1
 
 GRAZIE PER AVER SCARICATO IL GIOCO!
 Un'avventura testuale fantascientifica ispirata ai classici degli anni '80.
 
 ISTRUZIONI RAPIDE:
-1. Avvia il gioco eseguendo il file .exe (Windows).
+1. Avvia il gioco eseguendo l'installer per il tuo sistema:
+   .exe (Windows), .dmg (macOS), .AppImage (Linux).
 2. Usa la tastiera per digitare i comandi in italiano.
    Es: "guarda", "vai nord", "prendi tuta", "usa taglierina su crepa"
-3. Se ti blocchi, scrivi AIUTO o SUGGERIMENTO nel gioco
-   oppure consulta il file SOLUZIONE.md incluso in questa cartella.
+3. Se ti blocchi, scrivi AIUTO o SUGGERIMENTO nel gioco: il suggerimento
+   contestuale ti indica il passo successivo senza rivelare tutto.
+   Per la soluzione completa consulta SOLUZIONE.md, incluso in questo archivio.
 
 COMANDI ESSENZIALI:
 - GUARDA (L)       : Ridescrive la stanza in cui ti trovi
 - VAI [DIREZIONE]  : N, S, E, O, VAI ALTO (U), VAI BASSO (D)
 - PRENDI [oggetto] : Raccoglie un oggetto
-- ESAMINA (X)      : Esamina visivamente un oggetto
-- ANALIZZA         : Scanner avanzato — usa su oggetti sospetti
+- ESAMINA (X)      : Esamina visivamente un oggetto (o una stanza)
+- ANALIZZA [ogg.]  : Scanner avanzato — rivela dati tecnici e indizi
+- TOCCA [oggetto]  : Risposta tattile e atmosferica
+- TRADUCI [ogg.]   : Legge i testi alieni a strati (alias DECIFRA)
+- INCIDI [bers.]   : Lascia un tuo segno (richiede la Taglierina)
 - USA [oggetto]    : Usa un oggetto o combinalo (USA X SU Y)
+- APRI [oggetto]   : Apre porte e contenitori
 - INVENTARIO (I)   : Lista oggetti in possesso
 - MAPPA            : Mappa delle stanze esplorate
+- ECHI             : Riascolta gli echi temporali registrati
+- NOTA / DIARIO    : Log delle scoperte con barre di progressione
 - AIUTO            : Suggerisce cosa fare in base alla situazione attuale
 - ASPETTA (Z)      : Lascia trascorrere il tempo
+
+ALIAS NATURALI (sinonimi accettati dal parser):
+- ISPEZIONA=ESAMINA · OSSERVA=GUARDA · STUDIA=ANALIZZA
+- AFFERRA=PRENDI · DECIFRA=TRADUCI · SCRIVI/MARCA/FIRMA=INCIDI
 
 COMANDI DI SISTEMA:
 - SALVA / CARICA   : Apre il pannello di salvataggio (5 slot + autosave)

@@ -1,6 +1,6 @@
 # Il Relitto Silente
 
-**v1.2.6** — Avventura testuale fantascientifica con parser in italiano
+**v1.5.1** — Avventura testuale fantascientifica con parser in italiano
 
 ---
 
@@ -26,7 +26,9 @@ Gli installer precompilati per ogni piattaforma si trovano nella sezione [Releas
 
 - **Parser in linguaggio naturale italiano** — normalizzazione articoli, accenti, abbreviazioni, preposizioni articolate, fuzzy match con distanza di Levenshtein
 - **15 stanze** esplorabili, ognuna con descrizioni dinamiche basate sullo stato del giocatore
-- **Sistema Echi Temporali** — il Sintonizzatore di Frequenza capta le ultime voci dell'equipaggio in 11 stanze su 15
+- **Sistema Echi Temporali** — il Sintonizzatore di Frequenza capta le ultime voci dell'equipaggio in 11 stanze su 15, più 4 *echi profondi* sbloccabili a condizioni correlate (fuori dal punteggio)
+- **Traduzione come lente** — il verbo `TRADUCI` rilegge i testi alieni a strati (soglie 18/75/100) man mano che la matrice di traduzione avanza
+- **Traccia del giocatore** — il verbo `INCIDI` lascia un tuo segno in tre punti della nave, richiamato nell'epilogo
 - **Audio procedurale** — 5 profili ambientali (Web Audio API): nave umana, alieno quieto, alieno freddo, alieno elettrico, sacro
 - **Sistema salvataggio** — 5 slot manuali + autosave su filesystem nativo via IPC Electron
 - **HINT contestuale** — suggerimenti adattivi allo stato corrente (posizione, inventario, flag)
@@ -44,6 +46,9 @@ Gli installer precompilati per ogni piattaforma si trovano nella sezione [Releas
 | `VAI NORD / SUD / EST / OVEST` | Navigazione (anche `N S E O`) |
 | `GUARDA` / `ESAMINA [oggetto]` | Osserva la stanza o un oggetto |
 | `ANALIZZA [oggetto]` | Analisi tecnica con lo scanner |
+| `TOCCA [oggetto]` | Risposta tattile e atmosferica |
+| `TRADUCI [oggetto]` | Legge i testi alieni a strati (alias `DECIFRA`) |
+| `INCIDI [bersaglio]` | Lascia un tuo segno in alcuni luoghi (alias `SCRIVI` / `MARCA` / `FIRMA`) |
 | `PRENDI [oggetto]` | Aggiunge l'oggetto all'inventario |
 | `USA [oggetto] SU [bersaglio]` | Usa o combina oggetti |
 | `APRI [oggetto]` | Apre contenitori e accessi |
@@ -129,16 +134,13 @@ docs/
 
 ---
 
-## Build automatica (GitHub Actions)
+## Build di release (GitHub Actions)
 
-Il workflow `.github/workflows/build-release.yml` compila automaticamente per tutte e tre le piattaforme quando viene pubblicato un tag `v*`:
+Il workflow `.github/workflows/build-release.yml` compila per tutte e tre le piattaforme **solo su avvio manuale** — nessun trigger automatico al push di tag o commit:
 
-```bash
-git tag v1.2.6
-git push origin v1.2.6
-```
+> GitHub → **Actions** → *Build Cross-Platform Release* → **Run workflow**
 
-Questo crea una GitHub Release con i tre installer allegati. Il build manuale è disponibile anche dal pannello Actions.
+La versione viene letta da `package.json`. Se l'input `create_release` è attivo (default), il workflow crea il tag `vX.Y.Z` sul commit corrente e pubblica una GitHub Release. Ogni archivio è uno ZIP che contiene l'eseguibile e la documentazione completa per il giocatore (`LEGGIMI.txt`, `MANUALE.md`, `SOLUZIONE.md`, `CARATTERISTICHE.txt`, manuale PDF).
 
 ---
 

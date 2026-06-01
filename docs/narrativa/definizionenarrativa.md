@@ -1,6 +1,8 @@
 # DEFINIZIONE NARRATIVA — IL RELITTO SILENTE
 ## Roadmap di rifinitura finale · pre-chiusura progetto
 
+> **[STORICO — piano narrativo v1.1.x]** Questo è il piano di rifinitura narrativa N1–N11, redatto su v1.1.25 e chiuso a v1.1.33/v1.1.37 (2026-03-21). È un documento di progettazione, non lo stato corrente. Lo sviluppo è poi proseguito con meccaniche narrative successive (verbo `TRADUCI`, echi profondi, verbo `INCIDI`, secondo percorso WS5): vedi `../changelog/1.4.0.md`, `1.5.0.md`, `1.5.1.md` e lo stato in `../sviluppo/STATO_PROGETTO.md`.
+
 *Documento redatto dopo valutazione narrativa completa del testo di gioco (v1.1.25).*
 *Le voci sono ordinate per priorità e impatto sull'esperienza.*
 

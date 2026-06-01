@@ -1,4 +1,7 @@
 # VERIFICA WALKTHROUGH — IL RELITTO SILENTE
+
+> **[STORICO — snapshot 2026-03-21, v1.1.33]** Verifica del percorso critico di una versione intermedia. Non riflette il codice corrente (v1.5.1): non copre `TRADUCI`, gli echi profondi, `INCIDI` né il secondo percorso WS5. Per la verifica end-to-end del codice attuale vedi `../verifica/SIMULAZIONE-INTEGRALE.md` (2026-06-01). I 4 bug qui elencati sono stati risolti in v1.1.34–v1.1.37.
+
 **Data:** 2026-03-21
 **Versione simulata:** 1.1.33 (post-implementazione narrativa N1–N11)
 **Metodo:** simulazione mentale integrale basata su lettura completa di tutti i file di stanza, gameLogic.ts e types.ts

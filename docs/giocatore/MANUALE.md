@@ -1,4 +1,4 @@
-# MANUALE OPERATIVO — IL RELITTO SILENTE (v1.2.5)
+# MANUALE OPERATIVO — IL RELITTO SILENTE (v1.5.1)
 
 Benvenuto, pilota. Questo documento contiene tutte le informazioni necessarie per navigare nel relitto e completare la tua missione.
 
@@ -39,9 +39,11 @@ Durante il gioco, F9 o ESC apre la pausa con le opzioni: **Continua · Salva · 
 | Comando | Abbreviazione | Descrizione |
 |---|---|---|
 | **GUARDA** | **L** | Ridescrive la stanza attuale |
-| **ESAMINA** [oggetto] | **X** [oggetto] | Descrizione visiva di un oggetto |
+| **ESAMINA** [oggetto] | **X** [oggetto] | Descrizione visiva di un oggetto (o di una stanza: `ESAMINA CORRIDOIO`) |
 | **ANALIZZA** [oggetto] | — | Scanner avanzato: dati tecnici e indizi nascosti |
 | **TOCCA** [oggetto] | — | Feedback tattile e atmosferico |
+| **TRADUCI** [oggetto] | **DECIFRA** | Legge i testi alieni a strati: più la traduzione è avanzata, più riveli |
+| **INCIDI** [bersaglio] | **SCRIVI / MARCA / FIRMA** | Lascia un tuo segno (richiede la Taglierina al Plasma) |
 | **VAI** [direzione] | **N S E O** | Spostamento |
 | **VAI ALTO / VAI BASSO** | **U / D** | Spostamento verticale tra livelli |
 | **PRENDI** [oggetto] | — | Raccoglie un oggetto nell'inventario |
@@ -52,6 +54,8 @@ Durante il gioco, F9 o ESC apre la pausa con le opzioni: **Continua · Salva · 
 | **NOTA** / **DIARIO** | — | Log delle scoperte con barre di progressione |
 | **ASPETTA** / **Z** | — | Lascia trascorrere il tempo |
 | **AIUTO** / **SUGGERIMENTO** | — | Hint contestuale: suggerisce cosa fare dopo |
+
+> **Sinonimi naturali.** Il parser accetta anche varianti dei verbi base, così non devi indovinare la parola esatta: **ISPEZIONA** = ESAMINA, **OSSERVA** = GUARDA, **STUDIA** = ANALIZZA, **AFFERRA** = PRENDI, **DECIFRA** = TRADUCI, **SCRIVI / MARCA / FIRMA** = INCIDI.
 
 ### Comandi di Sistema
 
@@ -75,8 +79,10 @@ Durante il gioco, F9 o ESC apre la pausa con le opzioni: **Continua · Salva · 
 ### Gli Echi Temporali
 Il **Sintonizzatore di Frequenza** (trovato nei Laboratori di Risonanza) capta le ultime voci dell'equipaggio scomparso in 11 stanze della nave. Usa `USA SINTONIZZATORE` dopo averlo raccolto. Gli echi contengono lore importante e a volte indizi.
 
+Quattro stanze nascondono un **secondo strato** — un *eco profondo* — sotto l'eco di superficie. Si rivela solo se hai soddisfatto una condizione correlata in quella stanza (traduzione avanzata, o un oggetto/atto già compiuto lì): il dispositivo te lo segnala e, se sei pronto, scende di frequenza per svelarlo. Gli echi profondi sono un extra narrativo: compaiono a parte in `ECHI` e nel resoconto, ma **non entrano nel punteggio**.
+
 ### Progressione Traduzione
-Ogni volta che `ANALIZZA` decodifica un artefatto alieno, la barra di progressione avanza. Raggiungere il 100% nel momento giusto porta a un riconoscimento speciale.
+Ogni volta che `ANALIZZA` decodifica un artefatto alieno (Lastra, Cilindro, Stele, Nucleo), la barra di progressione avanza. La comprensione è anche una **lente**: con `TRADUCI [oggetto]` (alias `DECIFRA`) rileggi i testi alieni della nave, e ciò che leggi cambia a soglie — sotto il 18% i glifi restano muti, dal 18% affiorano frammenti, dal 75% il testo si scioglie in lingua, al 100% compare una riga nascosta in più. Conviene tornare sui testi man mano che capisci di più. Raggiungere il 100% nel momento giusto porta a un riconoscimento speciale.
 
 ### Sistema HINT
 Se sei bloccato, scrivi `AIUTO` o `SUGGERIMENTO`. Il sistema analizza la tua posizione, l'inventario e i flag di avanzamento per fornirti il suggerimento più preciso possibile per la stanza in cui ti trovi — senza mai rivelare la soluzione completa.
@@ -115,6 +121,6 @@ Il gioco genera suoni procedurali in tempo reale tramite Web Audio API (nessun f
 ## 7. CREDITS
 
 **Autore:** Simone Pizzi
-**Versione:** 1.2.5
+**Versione:** 1.5.1
 
 *Fine del Manuale.*

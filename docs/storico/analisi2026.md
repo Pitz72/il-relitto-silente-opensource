@@ -1,5 +1,8 @@
 # ANALISI COMPLETA: "IL RELITTO SILENTE"
 ## Audit di Codice, Documentazione e Repository
+
+> **[STORICO — audit 2026-03-20, v1.0.1]** Tutte le 21 criticità qui descritte sono state risolte entro v1.1.0 (vedi marcature ✅ RISOLTO nel testo). Documento conservato come record storico: non riflette il codice corrente (v1.5.1) né le meccaniche aggiunte dopo (1.4.0–1.5.1). Per lo stato attuale vedi `../sviluppo/STATO_PROGETTO.md` e `../verifica/SIMULAZIONE-INTEGRALE.md`.
+
 **Data:** 2026-03-20
 **Versione analizzata:** 1.0.1 (Gold Master)
 **Obiettivo:** Identificare tutti i problemi del progetto in preparazione alla revisione completa, al miglioramento estetico e alla nuova redistribuzione.

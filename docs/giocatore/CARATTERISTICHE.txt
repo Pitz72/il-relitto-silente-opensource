@@ -1,5 +1,5 @@
 IL RELITTO SILENTE — CARATTERISTICHE DEL GIOCO
-v1.2.5
+v1.5.1
 
 Un'avventura testuale fantascientifica in italiano.
 Un relitto. Un segreto millenario. Una scelta impossibile.
@@ -18,8 +18,14 @@ NARRATIVA
 · Monologhi interiori del protagonista: il gioco si ferma nei momenti che lo meritano
 · 11 echi temporali captabili con il Sintonizzatore di Frequenza: le ultime voci
   dell'equipaggio ricostruite stanza per stanza
+· 4 echi profondi: un secondo strato d'ascolto che si svela solo a chi torna con più
+  comprensione o con l'indizio giusto in mano — extra narrativo, fuori dal punteggio
 · Sistema di traduzione progressivo: ogni scoperta avanza la comprensione della lingua
   aliena fino alla decodifica completa al 100%
+· Verbo TRADUCI (alias DECIFRA): rileggi i testi alieni a strati — bassorilievi, archivi,
+  mappa stellare cambiano significato man mano che la tua matrice di traduzione avanza
+· Verbo INCIDI (alias SCRIVI/MARCA/FIRMA): lascia un tuo segno in tre punti della nave;
+  non sblocca enigmi, ma l'epilogo lo ricorda
 · Racconto prequel gratuito incluso: «Frequenza di Servizio»
 
 AUDIO
@@ -32,8 +38,10 @@ AUDIO
 SISTEMA DI GIOCO
 · Parser in italiano con riconoscimento flessibile dei comandi:
   varianti, articoli, sinonimi e abbreviazioni vengono tutti accettati
-· Tre verbi di esplorazione con risposte diverse: ESAMINA (vista), ANALIZZA (scanner),
-  TOCCA (sensazione)
+· Verbi di esplorazione con risposte diverse: ESAMINA (vista), ANALIZZA (scanner),
+  TOCCA (sensazione), TRADUCI (lettura dei testi alieni), INCIDI (lascia un segno)
+· Sinonimi naturali accettati per ridurre il "guess-the-verb": ISPEZIONA, OSSERVA,
+  STUDIA, AFFERRA, DECIFRA, SCRIVI, MARCA, FIRMA
 · Sistema HINT contestuale: analizza posizione, inventario e avanzamento per suggerire
   il passo successivo senza mai rovinare la sorpresa
 · Easter egg nascosto nella Stiva
@@ -53,9 +61,9 @@ FINE PARTITA
   Archivista Stellare · Custode della Memoria
 
 REQUISITI
-· Solo Windows — nessuna installazione, nessuna connessione internet richiesta
-· Avvia il file .exe e gioca
-· Zero dipendenze esterne
+· Versioni per Windows (.exe), macOS (.dmg) e Linux (.AppImage)
+· Nessuna connessione internet richiesta · Zero dipendenze esterne
+· Avvia l'eseguibile per il tuo sistema e gioca
 
 ---
 
