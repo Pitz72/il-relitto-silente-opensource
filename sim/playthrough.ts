@@ -247,12 +247,15 @@ function mk(location: string, inventory: string[], flags: Record<string, any>): 
     return s;
 }
 function probe(label: string, st: PlayerState, cmd: string,
-               exp: { contains?: string; error?: boolean; flagAfter?: [string, any] }) {
+               exp: { contains?: string; error?: boolean; flagAfter?: [string, any]; locAfter?: string; itemAfter?: string; itemCountAfter?: [string, number] }) {
     const { response, newState } = processCommand(cmd, st);
     const text = (response.description || '') + (response.continueText || '');
     if (exp.contains && !text.includes(exp.contains)) failures.push(`[micro] ${label}: manca "${exp.contains}" → "${text.slice(0, 70)}"`);
     if (exp.error !== undefined && (response.eventType === 'error') !== exp.error) failures.push(`[micro] ${label}: error atteso=${exp.error}, eventType=${response.eventType}`);
     if (exp.flagAfter) { const [k, v] = exp.flagAfter; if (newState.flags[k] !== v) failures.push(`[micro] ${label}: flag ${k}=${JSON.stringify(newState.flags[k])} atteso ${JSON.stringify(v)}`); }
+    if (exp.locAfter && newState.location !== exp.locAfter) failures.push(`[micro] ${label}: loc "${newState.location}" attesa "${exp.locAfter}"`);
+    if (exp.itemAfter && !newState.inventory.includes(exp.itemAfter)) failures.push(`[micro] ${label}: manca in inventario "${exp.itemAfter}"`);
+    if (exp.itemCountAfter) { const [name, n] = exp.itemCountAfter; const c = newState.inventory.filter(i => i === name).length; if (c !== n) failures.push(`[micro] ${label}: "${name}" x${c} in inventario, atteso x${n}`); }
 }
 
 // WS5 — la porta a tre punte: il sapere può venire dalla Stele, ma SERVE l'energia (isHologramActive).
@@ -277,6 +280,74 @@ probe('WS3 INCIDI Arca senza esame', mk('Arca Biologica', ['Taglierina al Plasma
 
 // Robustezza: comando vuoto e ignoto non devono crashare.
 probe('input ignoto', mk('Corridoio Principale', [], {}), 'qwerty zxcvb', { contains: 'Non capisco' });
+
+// ═══ REGRESSIONI AUDIT 2026-07-11 (v1.5.2) ══════════════════════════════════
+// A2 — RACCOGLI non deve scavalcare il gate della Stele (puzzle del Disco)…
+probe('A2 raccogli stele senza reveal', mk('Santuario del Silenzio', [], {}),
+      'raccogli stele', { error: true, contains: 'Non vedi nessuna stele', flagAfter: ['stelePresa', undefined] });
+// …né duplicarla quando è già stata presa.
+probe('A2 raccogli stele duplicato', mk('Santuario del Silenzio', ['Stele del Ricordo'], { steleRevealed: true, stelePresa: true }),
+      'raccogli stele', { error: true, itemCountAfter: ['Stele del Ricordo', 1] });
+// A3 — "prendi oggetto" (sinonimo del Cilindro) deve passare dal room command gated.
+probe('A3 prendi oggetto = cilindro', mk("Alloggi dell'Equipaggio", [], {}),
+      'prendi oggetto', { error: false, contains: 'cilindro', flagAfter: ['cilindroPreso', true], itemAfter: 'Cilindro Mnemonico' });
+probe('A3 raccogli cilindro duplicato', mk("Alloggi dell'Equipaggio", ['Cilindro Mnemonico'], { cilindroPreso: true }),
+      'raccogli cilindro', { error: true, itemCountAfter: ['Cilindro Mnemonico', 1] });
+// B-a — oggetti d'inventario "fantasma" ora esaminabili/analizzabili ovunque.
+probe('B-a esamina taglierina', mk('Corridoio Principale', ['Taglierina al Plasma'], {}),
+      'esamina taglierina', { error: false, contains: 'plasma' });
+probe('B-a esamina batteria', mk('Corridoio Principale', ['Batteria di Emergenza'], {}),
+      'esamina batteria', { error: false, contains: 'cella' });
+probe('B-a esamina seme fuori Serra', mk('Corridoio Principale', ['Seme Vivente'], {}),
+      'esamina seme', { error: false, contains: 'pulsa' });
+probe('B-a esamina cristallo attivato', mk('Corridoio Principale', ['Cristallo Dati Attivato'], {}),
+      'esamina cristallo', { error: false, contains: 'filamenti' });
+probe('B-a usa taglierina da sola', mk('Corridoio Principale', ['Taglierina al Plasma'], {}),
+      'usa taglierina', { error: true, contains: 'su qualcosa' });
+// B-b — l'item system gira anche nelle stanze SENZA items (Camera di Compensazione).
+probe('B-b esamina inventario in Camera', mk('Camera di Compensazione', ['Taglierina al Plasma'], {}),
+      'esamina taglierina', { error: false, contains: 'plasma' });
+probe('B-b esamina tuta in Santuario Centrale', mk('Santuario Centrale', ['Tuta Spaziale'], { santuarioDescritto: true }),
+      'esamina tuta', { error: false, contains: 'extraveicolare' });
+// B-c — articoli elisi: "esamina l'altare".
+probe("B-c esamina l'altare", mk('Santuario del Silenzio', [], {}),
+      "esamina l'altare", { error: false, contains: 'incavo' });
+probe("B-c usa disco su l'altare (elisione+prep)", mk('Santuario del Silenzio', ['Disco di Pietra'], {}),
+      "usa disco sull'altare", { error: false, flagAfter: ['steleRevealed', true] });
+// B-d — "vai a nord", "torna indietro".
+probe('B-d vai a nord', mk('Corridoio Principale', [], {}),
+      'vai a nord', { error: false, locAfter: 'Santuario del Silenzio' });
+probe('B-d torna indietro', mk('Serra Morente', [], {}),
+      'torna indietro', { error: false, locAfter: 'Corridoio Principale' });
+// C — fallback omogenei: direzioni, verbi nudi, parla, esamina/prendi ignoti.
+probe('C direzione non gestita', mk('Plancia della Santa Maria', [], {}),
+      'alto', { error: true, contains: 'direzione' });
+probe('C parla senza interlocutore', mk('Corridoio Principale', [], {}),
+      'parla', { contains: 'Nessuno risponde' });
+probe('C parla con X senza interlocutore', mk('Corridoio Principale', [], {}),
+      'parla con navarca', { contains: 'Nessuno risponde' });
+probe('C prendi nudo', mk('Corridoio Principale', [], {}),
+      'prendi', { contains: 'Cosa vuoi prendere' });
+probe('C entra nudo', mk('Corridoio Principale', [], {}),
+      'entra', { contains: 'Entra dove' });
+probe('C esamina oggetto ignoto', mk('Corridoio Principale', [], {}),
+      'esamina sedia', { contains: 'Non vedi' });
+probe('C prendi oggetto ignoto', mk('Corridoio Principale', [], {}),
+      'prendi sedia', { error: true, contains: 'da prendere' });
+probe('C usa oggetto non posseduto', mk('Corridoio Principale', [], {}),
+      'usa chiave inglese', { error: true, contains: 'Non hai' });
+// C13 — nome completo del dispositivo medico nel comando globale del Cristallo.
+probe('C13 usa dispositivo medico alieno su cristallo',
+      mk('Corridoio Principale', ['Dispositivo Medico Alieno', 'Cristallo Dati Opaco'], {}),
+      'usa dispositivo medico alieno su cristallo', { error: false, itemAfter: 'Cristallo Dati Attivato' });
+// C17 — sinonimi del Nucleo nel pickup gated.
+probe('C17 prendi cristallo poliedrico', mk('Arca della Memoria', [], { isTerminalActive: true }),
+      'prendi cristallo poliedrico', { error: false, itemAfter: 'Nucleo di Memoria' });
+probe('C17 raccogli nucleo sigillato', mk('Arca della Memoria', [], {}),
+      'raccogli nucleo', { error: true, contains: 'sigillato' });
+// Ce l'hai già: PRENDI su oggetto già posseduto risponde onestamente.
+probe('prendi tuta già presa', mk('Stiva', ['Tuta Spaziale'], { 'picked_Stiva_tuta_spaziale': true }),
+      'prendi tuta', { error: true, contains: 'già' });
 
 // ═══ REPORT ═════════════════════════════════════════════════════════════════
 console.log('\n' + '═'.repeat(70));

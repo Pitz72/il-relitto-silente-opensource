@@ -118,7 +118,7 @@ export const serraMorenteRoom: Room = {
                     return { description: "Non puoi prenderlo. È sigillato all'interno della teca di cristallo.", eventType: 'error' };
                 }
                 state.inventory.push("Seme Vivente");
-                let pickupDesc = "Allunghi la mano e chiudi le dita attorno al Seme Vivente. È caldo, quasi febbrile, e senti una vibrazione costante che risale lungo il tuo braccio. Hai recuperato la prima chiave.";
+                let pickupDesc = "Allunghi la mano e chiudi le dita attorno al Seme Vivente. È caldo, quasi febbrile, e senti una vibrazione costante che risale lungo il tuo braccio. Hai recuperato una delle tre chiavi.";
                 if (!state.flags.semeMonologo) {
                     state.flags.semeMonologo = true;
                     pickupDesc += "\n\n(La luce verde pulsa sul tuo guanto. Pensi a cosa tieni in mano — non un oggetto, non una 'chiave'. Una promessa: l'ultima di una civiltà che è morta credendo nel futuro. Una responsabilità che non hai chiesto, e che non puoi ignorare.)";

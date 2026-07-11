@@ -148,7 +148,7 @@ export const corridoioPrincipaleRoom: Room = {
         },
         // APRI / USA / TOCCA (Logica complessa mantenuta qui)
         {
-            regex: "^(usa|inserisci) (seme vivente|seme|stele del ricordo|stele|nucleo di memoria|nucleo) su (porta|porta ovest|incavo)$",
+            regex: "^(usa|inserisci) (seme vivente|seme|stele del ricordo|stele|nucleo di memoria|nucleo) su (porta|porta ovest|grande porta|incavo|incavi)$",
             handler: (state, match) => {
                 const itemUsed = match[2];
                 let itemKey = '';
@@ -209,11 +209,11 @@ export const corridoioPrincipaleRoom: Room = {
             }
         },
         {
-            regex: "^(usa|inserisci) (.+) su (porta|porta ovest|incavo)$", handler: (state, match) => {
+            regex: "^(usa|inserisci) (.+) su (porta|porta ovest|grande porta|incavo|incavi)$", handler: (state, match) => {
                 return { description: `Provi a usare ${match[2]} sulla porta, ma non sembra avere alcun effetto.`, eventType: 'error' };
             }
         },
-        { regex: "^(apri|usa|tocca) (porta ovest)$", handler: () => ({ description: "Appoggi la mano sul complesso simbolo a stella. A differenza delle altre, questa porta non reagisce. Rimane fredda, inerte e sigillata. I tre incavi alla base suggeriscono che serva qualcos'altro.", eventType: 'error' }) },
+        { regex: "^(apri|usa|tocca) (porta ovest|grande porta)$", handler: () => ({ description: "Appoggi la mano sul complesso simbolo a stella. A differenza delle altre, questa porta non reagisce. Rimane fredda, inerte e sigillata. I tre incavi alla base suggeriscono che serva qualcos'altro.", eventType: 'error' }) },
         { regex: "^(tocca) (pareti|muro|soffitto|pavimento)$", handler: () => ({ description: "La superficie è liscia e stranamente tiepida, come pelle. Senti una vibrazione debolissima, come un respiro lentissimo." }) },
         { regex: "^(tocca) (tacche|segni|incisioni|marchi|graffi)$", handler: () => ({ description: "Le tacche sono poco profonde ma precise. Il materiale intorno non si è sgretolato — chi le ha fatte sapeva quanto premere. Tre colpi. Non uno di più." }) },
         // INCIDI (WS3) — la quarta tacca accanto alle tre umane. Non sblocca nulla:

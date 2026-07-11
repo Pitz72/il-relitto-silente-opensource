@@ -1,7 +1,7 @@
 {
   "name": "il-relitto-silente",
   "private": true,
-  "version": "1.5.1",
+  "version": "1.5.2",
   "type": "module",
   "main": "dist-electron/main.js",
   "scripts": {

@@ -84,7 +84,7 @@ export const arcaDellaMemoriaRoom: Room = {
         { regex: "^(usa) (.+) su (terminale|pannello)$", handler: () => ({ description: "Non ha alcun effetto. Il terminale ha bisogno di un potente shock energetico.", eventType: 'error' }) },
         // PRENDI
         {
-            regex: "^(prendi) (nucleo|cristallo|nucleo di memoria)$", handler: (state) => {
+            regex: "^(prendi) (nucleo|cristallo|nucleo di memoria|cristallo poliedrico)$", handler: (state) => {
                 if (!state.flags.isTerminalActive) {
                     return { description: "È sigillato all'interno del terminale.", eventType: 'error' };
                 }

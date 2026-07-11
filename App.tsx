@@ -7,9 +7,9 @@ import TerminalOutput from './components/TerminalOutput';
 import StartScreen from './components/StartScreen';
 import GameOverScreen from './components/GameOverScreen';
 import BootScreen from './components/BootScreen';
-import SaveLoadOverlay, { loadSlotState, writeAutosave } from './components/SaveLoadOverlay';
+import SaveLoadOverlay, { writeAutosave } from './components/SaveLoadOverlay';
 import IntroScreen from './components/IntroScreen';
-import { initStorageSettings } from './services/storageService';
+import { initStorageSettings, quitApp } from './services/storageService';
 import { getAppVersion } from './version';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import {
@@ -73,6 +73,14 @@ const paginateText = (text: string | null): { visible: string; remaining: string
   }
   return { visible: text, remaining: null };
 };
+
+/* Kind di rendering per le pagine di continuazione: se il segmento contiene
+   markup (es. lo <span> del "FINE" nell'epilogo) va renderizzato come html,
+   altrimenti lo <span> apparirebbe come testo letterale a schermo — è ciò
+   che accadeva nel finale, dove ogni pagina era emessa con kind 'text'
+   (audit 2026-07-11). Il testo di gioco è dato interno, mai input utente. */
+const kindForSegment = (segment: string): OutputLine['kind'] =>
+  /<\/?[a-z][^>]*>/i.test(segment) ? 'html' : 'text';
 
 const BlinkingPrompt: React.FC<{ text: string }> = ({ text }) => (
   <div style={{ display: 'flex', alignItems: 'center', marginTop: '1.5rem' }}>
@@ -402,6 +410,12 @@ const App: React.FC = () => {
   const [showPause, setShowPause] = useState(false);
   // Ref per posticipare la transizione a GameOver dopo le continuations del finale
   const pendingGameOver = useRef(false);
+  // True quando l'ULTIMA pagina del finale è a schermo: la transizione a
+  // GameOver aspetta un INVIO esplicito. Prima avveniva in modo sincrono
+  // nello stesso INVIO che mostrava l'ultima pagina, che quindi non era MAI
+  // leggibile — il paragrafo dei segni INCIDI e il "FINE" sparivano subito,
+  // sostituiti dalla schermata di chiusura (audit 2026-07-11).
+  const [awaitGameOverKey, setAwaitGameOverKey] = useState(false);
 
   // ── Inizializza storage (filesystem IPC) al boot ──────────────────
   useEffect(() => {
@@ -475,11 +489,32 @@ const App: React.FC = () => {
         // Ci sono ancora pagine da leggere: la transizione avviene dopo l'ultima continuation
         pendingGameOver.current = true;
       } else {
-        // Tutto in una pagina sola: aspetta 3s per permettere la lettura
-        setTimeout(() => setGameState(GameState.GameOver), 3000);
+        // Tutto in una pagina sola: transizione su INVIO esplicito
+        setAwaitGameOverKey(true);
       }
     }
   }, []);
+
+  /* ── Ultima pagina del finale: attende un INVIO prima di passare alla
+        schermata di GameOver, così il testo resta leggibile. ─────────── */
+  useEffect(() => {
+    if (!awaitGameOverKey) return;
+    setOutput(prev => [...prev, {
+      kind: 'html',
+      content: `<span style="color:var(--p-bright);" class="animate-blink">[ PREMI INVIO ]</span>`
+    }]);
+    let consumed = false;
+    const handleFinalKey = (event: KeyboardEvent) => {
+      if (event.key !== 'Enter' || consumed) return;
+      consumed = true;
+      event.preventDefault();
+      playKeystrokeSound();
+      setAwaitGameOverKey(false);
+      setGameState(GameState.GameOver);
+    };
+    window.addEventListener('keydown', handleFinalKey);
+    return () => window.removeEventListener('keydown', handleFinalKey);
+  }, [awaitGameOverKey]);
 
   useEffect(() => {
     if (!continuation) return;
@@ -488,21 +523,30 @@ const App: React.FC = () => {
       content: `<span style="color:var(--p-bright);" class="animate-blink">[ PREMI INVIO PER CONTINUARE ]</span>`
     };
     setOutput(prev => [...prev, continuePrompt]);
+    /* NIENTE { once: true }: il listener once veniva consumato dal PRIMO tasto
+       qualunque — anche non-INVIO (una lettera, la barra spaziatrice) — e il
+       return-early lo lasciava morto. Da lì in poi INVIO non aveva più alcun
+       listener: continuazione bloccata per sempre con l'input disabilitato,
+       gioco irrecuperabile (deadlock riprodotto dal vivo, audit 2026-07-11).
+       Il flag `consumed` evita il doppio-avanzamento se due INVIO arrivano
+       prima che React ri-esegua l'effect con la continuation successiva.    */
+    let consumed = false;
     const handleContinue = (event: KeyboardEvent) => {
-      if (event.key !== 'Enter') return;
+      if (event.key !== 'Enter' || consumed) return;
+      consumed = true;
       event.preventDefault();
       playKeystrokeSound();
       const textToPaginate = continuation;
       setOutput(prev => prev.slice(0, -1));
       const { visible, remaining } = paginateText(textToPaginate);
-      setOutput(prev => [...prev, { kind: 'text', content: visible }]);
+      setOutput(prev => [...prev, { kind: kindForSegment(visible), content: visible }]);
       setContinuation(remaining);
       if (!remaining && pendingGameOver.current) {
         pendingGameOver.current = false;
-        setGameState(GameState.GameOver);
+        setAwaitGameOverKey(true);
       }
     };
-    window.addEventListener('keydown', handleContinue, { once: true });
+    window.addEventListener('keydown', handleContinue);
     return () => { window.removeEventListener('keydown', handleContinue); };
   }, [continuation]);
 
@@ -571,7 +615,7 @@ const App: React.FC = () => {
         break;
       case 'F5':
         playKeystrokeSound();
-        window.close();
+        quitApp();
         break;
       case 'F6':
         if (gameState === GameState.Playing) {
@@ -631,8 +675,15 @@ const App: React.FC = () => {
       setOutput(prev => [...prev, { kind: 'text', content: `> Audio ambientale: ${nowOn ? 'ATTIVATO' : 'DISATTIVATO'}.` }]);
       return;
     }
-    if (trimmedCommand === 'salva')  { openSaveMenu(); return; }
-    if (trimmedCommand === 'carica') { openLoadMenu(); return; }
+    // Anche "salva partita", "carica gioco" ecc.: prima solo il match esatto
+    // apriva gli overlay e le varianti naturali cadevano nel motore, che non
+    // conosce questi comandi (audit 2026-07-11).
+    if (/^salva( .*)?$/.test(trimmedCommand))  { openSaveMenu(); return; }
+    if (/^carica( .*)?$/.test(trimmedCommand)) { openLoadMenu(); return; }
+    if (trimmedCommand === 'esci' || trimmedCommand === 'quit' || trimmedCommand === 'exit') {
+      setOutput(prev => [...prev, { kind: 'text', content: `> Per uscire dal gioco premi F5. Per la pausa premi F9 o ESC.` }]);
+      return;
+    }
     if (trimmedCommand === 'pulisci' || trimmedCommand === 'clear') {
       const { response } = processCommand('guarda', playerState);
       handleGameResponse({ ...response, clearScreen: true });
@@ -690,7 +741,7 @@ const App: React.FC = () => {
             <TerminalOutput output={output} />
             <CommandLine
               onSubmit={submitCommand}
-              isLoading={isLoading || !!continuation}
+              isLoading={isLoading || !!continuation || awaitGameOverKey}
               history={history}
               historyIndex={historyIndex}
               setHistoryIndex={setHistoryIndex}
@@ -770,7 +821,7 @@ const App: React.FC = () => {
               onSave={    () => { setShowPause(false); openSaveMenu(); }}
               onLoad={    () => { setShowPause(false); openLoadMenu(); }}
               onRestart={ () => { setShowPause(false); setGameState(GameState.StartMenu); }}
-              onQuit={    () => { setShowPause(false); window.close(); }}
+              onQuit={    () => { setShowPause(false); quitApp(); }}
             />
           )}
 
@@ -837,7 +888,7 @@ const App: React.FC = () => {
             onF2={() => { playKeystrokeSound(); setGameState(GameState.Intro); }}
             onF3={() => { playKeystrokeSound(); openLoadMenu(); }}
             onF4={() => { playKeystrokeSound(); openSaveMenu(); }}
-            onF5={() => { playKeystrokeSound(); window.close(); }}
+            onF5={() => { playKeystrokeSound(); quitApp(); }}
             onF6={() => { playKeystrokeSound(); setInfoOverlay({ content: getInventarioHtml(playerState), isHtml: true }); }}
             onF7={() => { playKeystrokeSound(); setInfoOverlay({ content: getMappa(playerState), isHtml: false }); }}
             onF8={() => { playKeystrokeSound(); setGameState(GameState.Credits); }}

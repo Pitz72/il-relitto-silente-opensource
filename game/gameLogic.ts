@@ -2,6 +2,7 @@ import { PlayerState, GameResponse, Item } from '../types';
 import { gameData } from './gameData';
 import cloneDeep from 'lodash.clonedeep';
 import { ECHO_TEXTS, DEEP_ECHOES, DEEP_ECHO_TEXTS } from './echoData';
+import { INVENTORY_ITEMS } from './inventoryItems';
 
 // Cache regex compilate a livello di modulo: ogni pattern viene compilato una sola volta.
 const regexCache = new Map<string, RegExp>();
@@ -47,6 +48,11 @@ const KNOWN_VERBS = [
     'tocca', 'parla', 'entra', 'inventario', 'aiuto', 'echi', 'nord', 'sud',
     'est', 'ovest', 'alto', 'basso', 'apri', 'leggi', 'indossa', 'pulisci',
     'nota', 'diario',
+    // Comandi/alias aggiunti al fuzzy (audit 2026-07-11): senza di questi un
+    // refuso su VAI, MAPPA, SALVA ecc. cadeva nel "Non capisco" secco.
+    'vai', 'mappa', 'salva', 'carica', 'hint', 'suggerimento', 'aspetta',
+    'premi', 'inserisci', 'ispeziona', 'osserva', 'studia', 'afferra',
+    'decifra', 'scrivi', 'marca', 'firma', 'torna', 'sali', 'scendi',
 ];
 
 /* ─── Barra di progresso traduzione ───────────────────────────────────────
@@ -445,11 +451,22 @@ export const normalizeCommand = (command: string): string => {
         .toLowerCase()
         .trim()
         .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Rimuove accenti
-        .replace(/\b(il|lo|la|i|gli|le|un|uno|una|un'|l')\s+/g, '') // Rimuove articoli
+        .replace(/^va' /, 'vai ') // "va' a nord" \u2192 "vai a nord"
+        /* Forme ELISE ("l'altare", "sull'altare", "nell'apertura"): il vecchio
+           pattern richiedeva uno spazio dopo l'articolo, quindi le forme
+           apostrofate \u2014 frequentissime in italiano \u2014 non venivano mai gestite e
+           il comando falliva (audit 2026-07-11). Tre casi, in quest'ordine:
+           1. dopo ENTRA/VAI sono preposizioni di moto \u2192 si eliminano;
+           2. altrove SULL'/NELL'/ALL' introducono un bersaglio \u2192 diventano "su";
+           3. gli articoli/aggettivi elisi restanti si eliminano.             */
+        .replace(/^(entra|vai|va) (nell|all|dall)['']\s*/, '$1 ')
+        .replace(/\b(sull|nell|all)['']\s*/g, 'su ')
+        .replace(/\b(dell|dall|quell|quest|un|l)['']\s*/g, '')
+        .replace(/\b(il|lo|la|i|gli|le|un|uno|una)\s+/g, '') // Rimuove articoli
         .replace(/\b(quel|quello|quella|quei|quegli|quelle|questo|questa|questi|queste)\s+/g, '') // Rimuove dimostrativi
         .replace(/\b(con|sopra)\b/g, 'su') // Normalizza preposizioni
         .replace(/\s+/g, ' ') // Collassa spazi multipli
-        .replace(/^(entra|vai) (nel|nella|nell'|nello|nelle|in) /, '$1 '); // Rimuove prep. articolate dopo entra/vai
+        .replace(/^(entra|vai|va) (nel|nella|nello|nelle|in|a|al|alla|allo|verso) /, '$1 '); // Rimuove prep. (anche "vai a nord") dopo entra/vai
 
     // Gestione Abbreviazioni — Movimento
     if (normalized === 'n') return 'nord';
@@ -458,9 +475,13 @@ export const normalizeCommand = (command: string): string => {
     if (normalized === 'o' || normalized === 'w') return 'ovest';
     if (normalized === 'u') return 'alto';
     if (normalized === 'd' || normalized === 'giu') return 'basso'; // giu = giù dopo rimozione accento
+    if (normalized === 'sali' || normalized === 'salgo') return 'alto';
+    if (normalized === 'scendi' || normalized === 'scendo') return 'basso';
+    if (normalized === 'torna' || normalized === 'torna indietro' || normalized === 'ritorna' || normalized === 'torno indietro') return 'indietro';
 
     // Azioni
     if (normalized === 'l') return 'guarda';
+    if (normalized === 'x') return 'esamina';
     if (normalized === 'i' || normalized === 'inv') return 'inventario';
 
     // Alias verbi: INDOSSA → USA, LEGGI → ANALIZZA
@@ -477,6 +498,12 @@ export const normalizeCommand = (command: string): string => {
     if (normalized.startsWith('studia '))    return normalized.replace(/^studia /, 'analizza ');
     if (normalized.startsWith('decifra '))   return normalized.replace(/^decifra /, 'traduci ');
     if (normalized.startsWith('afferra '))   return normalized.replace(/^afferra /, 'prendi ');
+    // RACCOGLI → PRENDI: convogliare TUTTI i pickup sul solo verbo "prendi" fa sì
+    // che i room command con gate (Stele, Cilindro, Seme, Nucleo) abbiano SEMPRE
+    // la precedenza. Prima, "raccogli stele" scavalcava il puzzle del Disco via
+    // item-system generico e permetteva duplicati in inventario (audit 2026-07-11).
+    if (normalized.startsWith('raccogli ')) return normalized.replace(/^raccogli /, 'prendi ');
+    if (normalized === 'raccogli') return 'prendi';
     // Verbo della traccia del giocatore (WS3): INCIDI e i suoi sinonimi.
     if (normalized.startsWith('scrivi '))    return normalized.replace(/^scrivi /, 'incidi ');
     if (normalized.startsWith('marca '))     return normalized.replace(/^marca /, 'incidi ');
@@ -591,7 +618,7 @@ export const processCommand = (command: string, currentState: PlayerState): { re
        Funziona in qualsiasi stanza: entrambi gli item sono in inventario.
        Precedentemente era un Room Command di corridoioPrincipale.ts,
        causando un fallimento silenzioso se tentato in altre stanze.      */
-    const crystalActivateMatch = normalizedCommand.match(/^(usa|attiva) (dispositivo|dispositivo medico|strumento) (su|con) (cristallo|cristallo dati|cristallo dati opaco)$/);
+    const crystalActivateMatch = normalizedCommand.match(/^(usa|attiva) (dispositivo|dispositivo medico|dispositivo medico alieno|strumento|medico) (su|con) (cristallo|cristallo dati|cristallo dati opaco|cristallo opaco|cristallo scuro)$/);
     if (crystalActivateMatch) {
         if (newState.inventory.includes("Cristallo Dati Attivato")) {
             response = { description: "Il cristallo dati è già attivo.", eventType: 'error' };
@@ -691,9 +718,23 @@ export const processCommand = (command: string, currentState: PlayerState): { re
     /* ── Item System ─────────────────────────────────────────────────────
        Due percorsi nettamente separati per evitare ambiguità:
        1. USA X SU Y  — combinazione oggetto+bersaglio (onCombine)
-       2. VERBO X     — azione semplice su oggetto (room o inventario)     */
-    if (currentRoomData.items) {
-        const allItems = getAllItems();
+       2. VERBO X     — azione semplice su oggetto (room o inventario)
+       Gira SEMPRE, anche nelle stanze prive di `items`: prima il blocco era
+       dentro `if (currentRoomData.items)` e in Camera di Compensazione,
+       Anticamera e Santuario Centrale nemmeno gli oggetti dell'INVENTARIO
+       erano esaminabili/usabili (audit 2026-07-11).                        */
+    {
+        const roomItems = currentRoomData.items ?? [];
+
+        /* Ricerca unificata: stanza → registro inventario (Taglierina, Batteria,
+           Seme, Cristallo Attivato) → item di altre stanze posseduti. I due
+           rami "inventario" richiedono che l'oggetto sia davvero posseduto. */
+        const inInventory = (name: string): boolean =>
+            newState.inventory.some(inv => normalizeCommand(inv) === normalizeCommand(name));
+        const findKnownItem = (targetName: string): Item | undefined =>
+            roomItems.find(i => matchesItemName(i, targetName)) ??
+            INVENTORY_ITEMS.find(i => matchesItemName(i, targetName) && inInventory(i.name)) ??
+            getAllItems().find(i => matchesItemName(i, targetName) && inInventory(i.name));
 
         /* — Percorso 1: USA / ATTIVA  X  SU/CON/CONTRO  Y ————————————— */
         const combineMatch = normalizedCommand.match(/^(usa|attiva) (.+?) (su|con|contro) (.+)$/);
@@ -701,15 +742,10 @@ export const processCommand = (command: string, currentState: PlayerState): { re
             const sourceName = combineMatch[2].trim();
             const targetName = combineMatch[4].trim();
 
-            // Sorgente: stanza prima, poi ricerca globale tra item in inventario
-            const sourceItem =
-                currentRoomData.items.find(i => matchesItemName(i, sourceName)) ??
-                allItems.find(i =>
-                    matchesItemName(i, sourceName) &&
-                    newState.inventory.some(inv => normalizeCommand(inv) === normalizeCommand(i.name))
-                );
+            // Sorgente: stanza prima, poi registro/ricerca globale tra item posseduti
+            const sourceItem = findKnownItem(sourceName);
             // Bersaglio: solo nella stanza corrente
-            const targetItem = currentRoomData.items.find(i => matchesItemName(i, targetName));
+            const targetItem = roomItems.find(i => matchesItemName(i, targetName));
 
             if (sourceItem && targetItem) {
                 if (sourceItem.onCombine) {
@@ -721,8 +757,7 @@ export const processCommand = (command: string, currentState: PlayerState): { re
                 return { response, newState };
             }
             // Sorgente trovata ma non nell'inventario e non fissa
-            if (sourceItem && !sourceItem.isFixed &&
-                !newState.inventory.some(inv => normalizeCommand(inv) === normalizeCommand(sourceItem.name))) {
+            if (sourceItem && !sourceItem.isFixed && !inInventory(sourceItem.name)) {
                 response = { description: `Non hai ${sourceItem.name}.`, eventType: 'error' };
                 return { response, newState };
             }
@@ -738,13 +773,9 @@ export const processCommand = (command: string, currentState: PlayerState): { re
             // Non processare "usa X su Y" qui: già gestito nel Percorso 1
             if (!targetName.includes(' su ') && !targetName.includes(' con ') && !targetName.includes(' contro ')) {
 
-                // Cerca nella stanza; se non trovato, cerca tra gli item in inventario (globale)
-                const item =
-                    currentRoomData.items.find(i => matchesItemName(i, targetName)) ??
-                    allItems.find(i =>
-                        matchesItemName(i, targetName) &&
-                        newState.inventory.some(inv => normalizeCommand(inv) === normalizeCommand(i.name))
-                    );
+                // Cerca nella stanza; se non trovato, nel registro inventario e
+                // infine tra gli item delle altre stanze posseduti
+                const item = findKnownItem(targetName);
 
                 if (item) {
                     if (verb === 'esamina' || verb === 'guarda') {
@@ -767,7 +798,9 @@ export const processCommand = (command: string, currentState: PlayerState): { re
                     }
 
                     if (verb === 'prendi' || verb === 'raccogli') {
-                        if (item.isFixed) {
+                        if (inInventory(item.name)) {
+                            response = { description: `Hai già ${item.name} nell'inventario.`, eventType: 'error' };
+                        } else if (item.isFixed) {
                             response = { description: "Non puoi prenderlo.", eventType: 'error' };
                         } else if (item.isPickable) {
                             const flagId = `picked_${newState.location}_${item.id}`;
@@ -857,8 +890,12 @@ export const processCommand = (command: string, currentState: PlayerState): { re
         const infinitive = verbInfinitive[action] ?? action;
         if (hasItem) {
             response = { description: `Cosa vuoi ${infinitive} con '${itemName}'? Devi essere più specifico (es. USA ${itemName.toUpperCase()} SU ...).`, eventType: 'error' };
-            return { response, newState };
+        } else {
+            // Prima questo ramo cadeva nel vuoto e l'input finiva in un
+            // "Non capisco quel comando" fuorviante (audit 2026-07-11).
+            response = { description: `Non hai '${itemName}', e qui non vedi niente del genere da ${infinitive}.`, eventType: 'error' };
         }
+        return { response, newState };
     }
 
     // ESAMINA/GUARDA <nome stanza> o <parola generica> → descrizione stanza.
@@ -879,6 +916,68 @@ export const processCommand = (command: string, currentState: PlayerState): { re
     const genericAnalizza = normalizedCommand.match(/^(analizza) (.+)$/);
     if (genericAnalizza) {
         response = { description: `Analizzi ${genericAnalizza[2]}, ma non c'è nulla di anormale o interessante da segnalare.`, eventType: null };
+        return { response, newState };
+    }
+
+    // ESAMINA/GUARDA generico — oggetto non trovato (dopo il fallback stanza).
+    // Prima cadeva nel "Non capisco quel comando" (audit 2026-07-11).
+    const genericEsamina = normalizedCommand.match(/^(esamina|guarda) (.+)$/);
+    if (genericEsamina) {
+        response = { description: `Non vedi nessun '${genericEsamina[2].trim()}' qui.`, eventType: null };
+        return { response, newState };
+    }
+
+    // PRENDI generico — oggetto non trovato
+    const genericPrendi = normalizedCommand.match(/^(prendi|raccogli) (.+)$/);
+    if (genericPrendi) {
+        response = { description: `Non vedi nessun '${genericPrendi[2].trim()}' da prendere qui.`, eventType: 'error' };
+        return { response, newState };
+    }
+
+    // PARLA generico — nelle stanze senza interlocutore (il Santuario Centrale
+    // ha il suo room command, che ha già avuto la precedenza)
+    if (/^parla( (su|a|verso) .+| .+)?$/.test(normalizedCommand)) {
+        response = { description: "Parli nel silenzio della nave. Nessuno risponde. Non c'è nessuno, qui, con cui parlare.", eventType: null };
+        return { response, newState };
+    }
+
+    // TRADUCI X — la stanza non ha quell'oggetto (il verbo globale ha già
+    // gestito le stanze con item traducibili)
+    // (gestito sopra dal blocco TRADUCI: qui non arriva mai un "traduci ...")
+
+    // Direzioni non gestite dalla stanza corrente: prima rispondevano
+    // "Non capisco quel comando" invece di un onesto rifiuto di movimento
+    // (es. ALTO sulla Plancia) — audit 2026-07-11.
+    if (/^((vai|va) )?(nord|sud|est|ovest|alto|basso|su|giu|indietro|avanti|dentro|fuori)$/.test(normalizedCommand)) {
+        response = { description: "Non puoi andare in quella direzione da qui.", eventType: 'error' };
+        return { response, newState };
+    }
+
+    // VAI/ENTRA con destinazione non riconosciuta
+    const genericVai = normalizedCommand.match(/^(vai|va|entra) (.+)$/);
+    if (genericVai) {
+        response = { description: `Non c'è nessun passaggio verso '${genericVai[2].trim()}' da qui. Prova con le direzioni: NORD, SUD, EST, OVEST, ALTO, BASSO.`, eventType: 'error' };
+        return { response, newState };
+    }
+
+    // Verbi nudi senza argomento: chiedi il complemento invece di "Non capisco".
+    const bareVerbPrompts: Record<string, string> = {
+        prendi:    "Cosa vuoi prendere?",
+        analizza:  "Cosa vuoi analizzare? Prova ANALIZZA [oggetto].",
+        usa:       "Cosa vuoi usare? Prova USA [oggetto] oppure USA [oggetto] SU [bersaglio].",
+        attiva:    "Cosa vuoi attivare?",
+        apri:      "Cosa vuoi aprire?",
+        tocca:     "Cosa vuoi toccare?",
+        vai:       "Vai dove? Le direzioni sono NORD, SUD, EST, OVEST, ALTO, BASSO.",
+        va:        "Vai dove? Le direzioni sono NORD, SUD, EST, OVEST, ALTO, BASSO.",
+        entra:     "Entra dove? Se c'è un varco aperto, prova semplicemente ENTRA quando sei davanti.",
+        indossa:   "Cosa vuoi indossare?",
+        leggi:     "Cosa vuoi leggere?",
+        inserisci: "Cosa vuoi inserire, e dove? Prova INSERISCI [oggetto] SU [bersaglio].",
+        premi:     "Cosa vuoi premere?",
+    };
+    if (bareVerbPrompts[normalizedCommand]) {
+        response = { description: bareVerbPrompts[normalizedCommand], eventType: null };
         return { response, newState };
     }
 

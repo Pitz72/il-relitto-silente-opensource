@@ -83,7 +83,10 @@ export const alloggiEquipaggioRoom: Room = {
         },
         // PRENDI
         {
-            regex: "^(prendi) (cilindro|cilindro mnemonico)$", handler: (state) => {
+            // 'oggetto' incluso: è un sinonimo dell'item Cilindro e senza di esso
+            // "prendi oggetto" passava dal pickup generico dell'item-system, che
+            // non setta cilindroPreso e lasciava lo stato incoerente (audit 2026-07-11).
+            regex: "^(prendi) (cilindro|cilindro mnemonico|oggetto)$", handler: (state) => {
                 if (state.flags.cilindroPreso) {
                     return { description: "L'hai già preso.", eventType: 'error' };
                 }
