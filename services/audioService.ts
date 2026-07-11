@@ -7,7 +7,7 @@ import { getSettingSync, setSetting } from './storageService';
 let audioCtx: AudioContext | null = null;
 /** True se l'inizializzazione audio è già fallita: evita di ritentare a ogni
     keystroke (e di rilanciare la stessa eccezione) quando Web Audio non è
-    disponibile o è stato bloncato dalla piattaforma (BUG B3). */
+    disponibile o è stato bloccato dalla piattaforma (BUG B3). */
 let audioUnavailable = false;
 
 const initializeAudio = () => {
@@ -39,7 +39,13 @@ const ensureAudioInitialized = () => {
 
 /* ─── Sistema SFX (effetti sonori) ────────────────────────────────────────
    Toggle e volume indipendenti dall'ambience.
-   Lettura sempre sincrona dalla cache di storageService.               */
+   Lettura sempre sincrona dalla cache di storageService.
+
+   SET v2 (approvato 2026-07-12): niente più onde quadre/denti di sega nudi.
+   Ogni suono ha un attacco morbido (nessun click digitale), decadimento
+   esponenziale, filtri e — dove serve — una leggera variazione casuale di
+   intonazione perché la ripetizione non stanchi. Il progetto sonoro completo
+   e ascoltabile è in docs (demo "prova audio v2").                        */
 
 const SFX_ON_KEY  = 'relitto_sfx_on';
 const SFX_VOL_KEY = 'relitto_sfx_vol';
@@ -64,89 +70,161 @@ export const setSfxVol = (val: number): void => {
     setSetting(SFX_VOL_KEY, String(Math.max(0.01, Math.min(1, val))));
 };
 
-// Helper: oscillatore breve per SFX
-const playTone = (frequency: number, duration: number, type: OscillatorType = 'sine') => {
+/* I picchi di gain del set v2 sono calibrati sul volume di default (0.7):
+   questo fattore riscala l'intero set quando l'utente muove lo slider.   */
+const sfxScale = (): number => getSfxVol() / 0.7;
+
+/* Inviluppo standard: attacco esponenziale breve (evita i click) + coda. */
+const envGain = (g: GainNode, t0: number, peak: number, attack: number, decay: number): void => {
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(Math.max(peak, 0.0002), t0 + attack);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + attack + decay);
+};
+
+/* Oscillatore one-shot con inviluppo, detune e pitch-bend opzionali.
+   I nodi vengono disconnessi a fine suono (BUG B13).                     */
+const playOsc = (
+    type: OscillatorType, freq: number, t0: number, dur: number,
+    peak: number, attack: number, detune = 0, bendTo: number | null = null,
+): void => {
     if (!audioCtx || !isSfxEnabled()) return;
-
-    const oscillator = audioCtx.createOscillator();
-    const gainNode = audioCtx.createGain();
-
-    oscillator.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
-
-    oscillator.type = type;
-    oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime);
-    gainNode.gain.setValueAtTime(0.1 * getSfxVol(), audioCtx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
-
-    oscillator.start(audioCtx.currentTime);
-    oscillator.stop(audioCtx.currentTime + duration);
-    // Libera i nodi a fine suono: senza disconnect i GainNode/Oscillator si
-    // accumulavano nel grafo ad ogni keystroke (BUG B13).
-    oscillator.onended = () => {
-        try { oscillator.disconnect(); } catch { /* già disconnesso */ }
-        try { gainNode.disconnect(); } catch { /* già disconnesso */ }
+    const c = audioCtx;
+    const o = c.createOscillator();
+    const g = c.createGain();
+    o.type = type;
+    o.frequency.setValueAtTime(freq, t0);
+    o.detune.value = detune;
+    if (bendTo) o.frequency.exponentialRampToValueAtTime(bendTo, t0 + dur);
+    envGain(g, t0, peak * sfxScale(), attack, dur - attack);
+    o.connect(g); g.connect(c.destination);
+    o.start(t0); o.stop(t0 + dur + 0.05);
+    o.onended = () => {
+        try { o.disconnect(); } catch { /* già disconnesso */ }
+        try { g.disconnect(); } catch { /* già disconnesso */ }
     };
 };
 
-// Helper: rumore filtrato per suoni di movimento
-const playNoise = (duration: number) => {
+const makeNoiseBuffer = (dur: number): AudioBuffer => {
+    const c = audioCtx!;
+    const buffer = c.createBuffer(1, Math.ceil(c.sampleRate * dur), c.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+    return buffer;
+};
+
+/* Rumore one-shot filtrato con inviluppo; f1 opzionale = sweep del filtro. */
+const playNoiseFx = (
+    t0: number, dur: number, peak: number, attack: number,
+    filterType: BiquadFilterType, f0: number, f1: number | null, q: number,
+): void => {
     if (!audioCtx || !isSfxEnabled()) return;
-    const bufferSize = audioCtx.sampleRate * duration;
-    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-    const output = buffer.getChannelData(0);
-
-    for (let i = 0; i < bufferSize; i++) {
-        output[i] = Math.random() * 2 - 1;
-    }
-
-    const noise = audioCtx.createBufferSource();
-    noise.buffer = buffer;
-
-    const bandpass = audioCtx.createBiquadFilter();
-    bandpass.type = 'bandpass';
-    bandpass.frequency.value = 800;
-    bandpass.Q.value = 0.5;
-
-    const gainNode = audioCtx.createGain();
-    gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-
-    noise.connect(bandpass);
-    bandpass.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
-
-    noise.start();
-    noise.stop(audioCtx.currentTime + duration);
-    // Libera l'intera catena a fine suono (BUG B13).
-    noise.onended = () => {
-        try { noise.disconnect(); } catch { /* già disconnesso */ }
-        try { bandpass.disconnect(); } catch { /* già disconnesso */ }
-        try { gainNode.disconnect(); } catch { /* già disconnesso */ }
+    const c = audioCtx;
+    const src = c.createBufferSource();
+    src.buffer = makeNoiseBuffer(dur + 0.05);
+    const fl = c.createBiquadFilter();
+    fl.type = filterType; fl.Q.value = q;
+    fl.frequency.setValueAtTime(f0, t0);
+    if (f1) fl.frequency.exponentialRampToValueAtTime(f1, t0 + dur);
+    const g = c.createGain();
+    envGain(g, t0, peak * sfxScale(), attack, dur - attack);
+    src.connect(fl); fl.connect(g); g.connect(c.destination);
+    src.start(t0); src.stop(t0 + dur + 0.05);
+    src.onended = () => {
+        try { src.disconnect(); } catch { /* già disconnesso */ }
+        try { fl.disconnect(); } catch { /* già disconnesso */ }
+        try { g.disconnect(); } catch { /* già disconnesso */ }
     };
 };
 
-export const playKeystrokeSound = () => { ensureAudioInitialized(); playTone(220, 0.05, 'square'); };
-export const playSubmitSound    = () => { ensureAudioInitialized(); playTone(440, 0.1,  'square'); };
-export const playItemSound      = () => {
+/* Tasto premuto: click meccanico — soffio filtrato + micro-blip con
+   intonazione variabile a ogni battuta (il suono più frequente del gioco). */
+export const playKeystrokeSound = (): void => {
     ensureAudioInitialized();
-    playTone(880, 0.05, 'triangle');
-    setTimeout(() => { if (audioCtx) playTone(1046, 0.05, 'triangle'); }, 60);
+    if (!audioCtx) return;
+    const t = audioCtx.currentTime;
+    const jitter = 1 + (Math.random() - 0.5) * 0.18;
+    playNoiseFx(t, 0.030, 0.05, 0.002, 'highpass', 2600, null, 0.8);
+    playOsc('sine', 1500 * jitter, t, 0.030, 0.025, 0.002);
 };
-export const playMagicSound = () => {
+
+/* Invio comando: conferma a due note morbide, il "ricevuto" del terminale. */
+export const playSubmitSound = (): void => {
     ensureAudioInitialized();
-    playTone(1046.50, 0.1, 'sine');
-    setTimeout(() => { if (audioCtx) playTone(1396.91, 0.1, 'sine'); }, 100);
-    setTimeout(() => { if (audioCtx) playTone(1567.98, 0.2, 'sine'); }, 200);
+    if (!audioCtx) return;
+    const t = audioCtx.currentTime;
+    playOsc('sine', 523, t, 0.09, 0.06, 0.006);
+    playOsc('sine', 784, t + 0.07, 0.14, 0.05, 0.008);
 };
-export const playMoveSound  = () => { ensureAudioInitialized(); playNoise(0.15); };
-export const playErrorSound = () => { ensureAudioInitialized(); playTone(110, 0.15, 'sawtooth'); };
-export const playTerminalBeep = () => { ensureAudioInitialized(); playTone(1320, 0.04, 'sine'); };
+
+/* Oggetto raccolto/usato: arpeggio caldo con seconda voce scordata. */
+export const playItemSound = (): void => {
+    ensureAudioInitialized();
+    if (!audioCtx) return;
+    const t = audioCtx.currentTime;
+    ([[659, 0], [830, 0.07], [988, 0.14]] as const).forEach(([f, dt]) => {
+        playOsc('triangle', f, t + dt, 0.22, 0.05, 0.010);
+        playOsc('sine', f, t + dt, 0.22, 0.03, 0.010, 8);
+    });
+};
+
+/* Scoperta/magia: accordo che fiorisce con attacco lento e coda luminosa. */
+export const playMagicSound = (): void => {
+    ensureAudioInitialized();
+    if (!audioCtx) return;
+    const t = audioCtx.currentTime;
+    ([[523, 0.030], [659, 0.024], [784, 0.020], [1046, 0.012]] as const).forEach(([f, p], i) => {
+        playOsc('sine', f, t + i * 0.05, 1.1 - i * 0.1, p, 0.12, i % 2 ? 6 : -6);
+    });
+    playNoiseFx(t + 0.1, 0.7, 0.008, 0.15, 'bandpass', 3200, 4200, 2.5);
+};
+
+/* Movimento: sbuffo pneumatico — filtro che scende, una porta che scorre. */
+export const playMoveSound = (): void => {
+    ensureAudioInitialized();
+    if (!audioCtx) return;
+    const t = audioCtx.currentTime;
+    playNoiseFx(t, 0.34, 0.09, 0.03, 'lowpass', 1100, 240, 0.9);
+    playOsc('sine', 70, t, 0.30, 0.035, 0.02, 0, 46);
+};
+
+/* Errore: un "no" basso e rotondo con calo di intonazione. */
+export const playErrorSound = (): void => {
+    ensureAudioInitialized();
+    if (!audioCtx) return;
+    const t = audioCtx.currentTime;
+    playOsc('sine', 150, t, 0.20, 0.09, 0.006, 0, 96);
+    playOsc('triangle', 300, t, 0.12, 0.03, 0.006, 0, 190);
+};
+
+/* Eco temporale: l'aggancio di frequenza del Sintonizzatore — glissando
+   discendente a due voci scordate con soffio in coda. */
+export const playEchoSound = (): void => {
+    ensureAudioInitialized();
+    if (!audioCtx) return;
+    const t = audioCtx.currentTime;
+    playOsc('sine', 1900, t, 0.45, 0.035, 0.02, 0, 620);
+    playOsc('sine', 1900, t + 0.02, 0.45, 0.022, 0.02, 9, 626);
+    playNoiseFx(t, 0.4, 0.012, 0.05, 'bandpass', 1400, 700, 3);
+};
+
+/* Beep dati (IntroScreen): blip brevissimo, ora con inviluppo morbido. */
+export const playTerminalBeep = (): void => {
+    ensureAudioInitialized();
+    if (!audioCtx) return;
+    playOsc('sine', 1320, audioCtx.currentTime, 0.05, 0.03, 0.004);
+};
 
 /* ─── Sistema Ambience ─────────────────────────────────────────────────────
    Loop procedurali per atmosfera per stanza. Il master GainNode gestisce
    fade-in/fade-out puliti per eliminare click e pop audio.
-   Toggle e volume persistono tramite storageService.                    */
+   Toggle e volume persistono tramite storageService.
+
+   SET v2 (approvato 2026-07-12): niente più droni statici. Ogni profilo è
+   costruito su strati che respirano — oscillatori vicini che battono
+   lentamente tra loro, filtri che vagano, LFO indipendenti su ampiezza e
+   intonazione con cicli di 10–30 secondi: nessun momento è identico al
+   precedente. Solo sinusoidi/triangolari filtrate passa-basso + rumore
+   filtrato; volumi calibrati per stare sotto il testo del gioco.         */
 
 const AMBIENCE_ON_KEY  = 'relitto_ambience_on';
 const AMBIENCE_VOL_KEY = 'relitto_ambience_vol';
@@ -177,6 +255,8 @@ export const toggleAmbience = (): boolean => {
 };
 
 let ambienceGain: GainNode | null = null;
+/* Tutti i nodi con .stop() — sorgenti E oscillatori LFO — finiscono qui:
+   fermarli allo stop libera l'intero sottografo (gain/filtri inclusi). */
 let ambienceStoppable: Array<OscillatorNode | AudioBufferSourceNode> = [];
 
 export const stopAmbience = (): void => {
@@ -199,39 +279,60 @@ export const stopAmbience = (): void => {
     }
 };
 
-const addAmbienceOsc = (freq: number, type: OscillatorType, gainVal: number): void => {
-    if (!audioCtx || !ambienceGain) return;
-    const osc  = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = type;
-    osc.frequency.value = freq;
-    gain.gain.value = gainVal;
-    osc.connect(gain);
-    gain.connect(ambienceGain);
-    osc.start();
-    ambienceStoppable.push(osc);
+/* — Mattoni dei profili ambientali — */
+
+/** Oscillatore continuo con proprio gain, collegato a dest. */
+const ambOsc = (
+    dest: AudioNode, type: OscillatorType, freq: number, gainVal: number, detune = 0,
+): { o: OscillatorNode; g: GainNode } => {
+    const c = audioCtx!;
+    const o = c.createOscillator();
+    const g = c.createGain();
+    o.type = type; o.frequency.value = freq; o.detune.value = detune;
+    g.gain.value = gainVal;
+    o.connect(g); g.connect(dest);
+    o.start();
+    ambienceStoppable.push(o);
+    return { o, g };
 };
 
-const addAmbienceNoise = (gainVal: number, filterFreq: number, filterQ: number): void => {
-    if (!audioCtx || !ambienceGain) return;
-    const bufferSize = audioCtx.sampleRate * 4;
-    const buffer     = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-    const data       = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-    const src    = audioCtx.createBufferSource();
-    src.buffer   = buffer;
-    src.loop     = true;
-    const filter = audioCtx.createBiquadFilter();
-    filter.type  = 'bandpass';
-    filter.frequency.value = filterFreq;
-    filter.Q.value         = filterQ;
-    const gain   = audioCtx.createGain();
-    gain.gain.value = gainVal;
-    src.connect(filter);
-    filter.connect(gain);
-    gain.connect(ambienceGain);
+/** Rumore in loop filtrato con proprio gain, collegato a dest. */
+const ambNoise = (
+    dest: AudioNode, gainVal: number, filterType: BiquadFilterType, freq: number, q: number,
+): { src: AudioBufferSourceNode; fl: BiquadFilterNode; g: GainNode } => {
+    const c = audioCtx!;
+    const src = c.createBufferSource();
+    src.buffer = makeNoiseBuffer(4);
+    src.loop = true;
+    const fl = c.createBiquadFilter();
+    fl.type = filterType; fl.frequency.value = freq; fl.Q.value = q;
+    const g = c.createGain();
+    g.gain.value = gainVal;
+    src.connect(fl); fl.connect(g); g.connect(dest);
     src.start();
     ambienceStoppable.push(src);
+    return { src, fl, g };
+};
+
+/** LFO sinusoidale su un AudioParam (ampiezza, frequenza filtro, detune...). */
+const ambLfo = (param: AudioParam, rate: number, depth: number): void => {
+    const c = audioCtx!;
+    const lfo = c.createOscillator();
+    const lg = c.createGain();
+    lfo.type = 'sine'; lfo.frequency.value = rate;
+    lg.gain.value = depth;
+    lfo.connect(lg); lg.connect(param);
+    lfo.start();
+    ambienceStoppable.push(lfo);
+};
+
+/** Passa-basso condiviso verso il master (ammorbidisce l'intero profilo). */
+const ambLowpass = (dest: AudioNode, freq: number, q = 0.7): BiquadFilterNode => {
+    const c = audioCtx!;
+    const fl = c.createBiquadFilter();
+    fl.type = 'lowpass'; fl.frequency.value = freq; fl.Q.value = q;
+    fl.connect(dest);
+    return fl;
 };
 
 export const startAmbience = (type: 'ship' | 'alien_quiet' | 'alien_cold' | 'alien_electric' | 'sacred' | null): void => {
@@ -243,50 +344,74 @@ export const startAmbience = (type: 'ship' | 'alien_quiet' | 'alien_cold' | 'ali
     ambienceGain = audioCtx.createGain();
     const targetVol = getAmbienceVol();
     ambienceGain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
-    ambienceGain.gain.exponentialRampToValueAtTime(targetVol, audioCtx.currentTime + 1.5);
+    ambienceGain.gain.exponentialRampToValueAtTime(targetVol, audioCtx.currentTime + 2.0);
     ambienceGain.connect(audioCtx.destination);
+    const m = ambienceGain;
 
     switch (type) {
-        case 'ship':
-            addAmbienceOsc(55,  'sawtooth', 0.04);
-            addAmbienceOsc(110, 'sawtooth', 0.02);
-            addAmbienceNoise(0.03, 300, 0.8);
-            break;
-        case 'alien_quiet': {
-            const osc     = audioCtx.createOscillator();
-            const gain    = audioCtx.createGain();
-            const lfo     = audioCtx.createOscillator();
-            const lfoGain = audioCtx.createGain();
-            osc.type = 'sine'; osc.frequency.value = 432;
-            lfo.type = 'sine'; lfo.frequency.value = 0.1;
-            lfoGain.gain.value = 10; gain.gain.value = 0.03;
-            lfo.connect(lfoGain); lfoGain.connect(osc.frequency);
-            osc.connect(gain); gain.connect(ambienceGain);
-            lfo.start(); osc.start();
-            ambienceStoppable.push(osc, lfo);
+        /* NAVE UMANA — motore caldo che respira: due sinusoidi quasi unisone
+           (battimento 0.4 Hz) + ventilazione d'aria con marea lenta. */
+        case 'ship': {
+            const lp = ambLowpass(m, 260);
+            ambOsc(lp, 'sine', 55, 0.055);
+            ambOsc(lp, 'sine', 55.4, 0.045);
+            ambOsc(lp, 'triangle', 110.2, 0.014);
+            const vent = ambNoise(m, 0.020, 'lowpass', 420, 0.5);
+            ambLfo(vent.g.gain, 0.07, 0.008);        // la ventola "respira"
+            const sub = ambOsc(lp, 'sine', 27.5, 0.025);
+            ambLfo(sub.g.gain, 0.05, 0.010);
             break;
         }
-        case 'alien_cold':
-            addAmbienceNoise(0.04, 180, 1.2);
-            addAmbienceOsc(28, 'sine', 0.05);
+        /* QUIETE ALIENA — bioluminescenza: accordo basso di sinusoidi
+           leggermente scordate, ciascuna con la propria marea d'ampiezza. */
+        case 'alien_quiet': {
+            const lp = ambLowpass(m, 700);
+            const a = ambOsc(lp, 'sine', 108, 0.030);
+            const b = ambOsc(lp, 'sine', 162.3, 0.020);
+            const d = ambOsc(lp, 'sine', 216.8, 0.012);
+            ambLfo(a.g.gain, 0.043, 0.014);
+            ambLfo(b.g.gain, 0.031, 0.010);
+            ambLfo(d.g.gain, 0.057, 0.007);
+            ambLfo(b.o.detune, 0.021, 5);            // deriva d'intonazione lentissima
+            ambNoise(m, 0.005, 'bandpass', 480, 1.0);
             break;
-        case 'alien_electric':
-            addAmbienceOsc(60,  'square', 0.025);
-            addAmbienceOsc(120, 'square', 0.015);
-            addAmbienceNoise(0.02, 600, 2.0);
+        }
+        /* VUOTO / GELO — vento che vaga: il filtro del rumore si sposta da
+           solo su un ciclo di ~17 secondi; sub-basso quasi impercettibile. */
+        case 'alien_cold': {
+            const wind = ambNoise(m, 0.042, 'bandpass', 240, 1.6);
+            ambLfo(wind.fl.frequency, 0.058, 110);   // il vento gira
+            ambLfo(wind.g.gain, 0.037, 0.015);
+            ambOsc(m, 'sine', 30, 0.035);
+            const ice = ambNoise(m, 0.0035, 'highpass', 5800, 0.7); // cristalli lontani
+            ambLfo(ice.g.gain, 0.11, 0.0030);
             break;
+        }
+        /* ENERGIA RESIDUA — ronzio rotondo filtrato + statica elettrica che
+           pulsa in modo irregolare (due LFO sovrapposti sul crepitio). */
+        case 'alien_electric': {
+            const lp = ambLowpass(m, 800, 2.5);
+            ambOsc(lp, 'triangle', 50, 0.030);
+            ambOsc(lp, 'triangle', 100.6, 0.015);
+            const hum = ambOsc(lp, 'sine', 150.2, 0.010);
+            ambLfo(hum.g.gain, 0.083, 0.006);
+            const crackle = ambNoise(m, 0.007, 'highpass', 2600, 0.8);
+            ambLfo(crackle.g.gain, 5.7, 0.005);      // sfrigolio veloce...
+            ambLfo(crackle.g.gain, 0.13, 0.004);     // ...che va e viene
+            break;
+        }
+        /* SACRO — coro grave in serie armonica con deriva di scordatura;
+           un solo armonico alto affiora e svanisce su ciclo lungo. */
         case 'sacred': {
-            const osc     = audioCtx.createOscillator();
-            const gain    = audioCtx.createGain();
-            const lfo     = audioCtx.createOscillator();
-            const lfoGain = audioCtx.createGain();
-            osc.type = 'sine'; osc.frequency.value = 528;
-            lfo.type = 'sine'; lfo.frequency.value = 0.05;
-            lfoGain.gain.value = 8; gain.gain.value = 0.04;
-            lfo.connect(lfoGain); lfoGain.connect(osc.frequency);
-            osc.connect(gain); gain.connect(ambienceGain);
-            lfo.start(); osc.start();
-            ambienceStoppable.push(osc, lfo);
+            const lp = ambLowpass(m, 520);
+            const f1 = ambOsc(lp, 'sine', 66, 0.034);
+            const f2 = ambOsc(lp, 'sine', 99.2, 0.024);
+            const f3 = ambOsc(lp, 'sine', 132.5, 0.014);
+            ambLfo(f1.g.gain, 0.037, 0.012);
+            ambLfo(f2.g.gain, 0.026, 0.009);
+            ambLfo(f3.o.detune, 0.019, 7);
+            const halo = ambOsc(m, 'sine', 1056, 0.0035);
+            ambLfo(halo.g.gain, 0.055, 0.0032);      // l'alone affiora e svanisce
             break;
         }
     }

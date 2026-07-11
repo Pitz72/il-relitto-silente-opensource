@@ -18,6 +18,7 @@ import {
   playMagicSound,
   playMoveSound,
   playErrorSound,
+  playEchoSound,
   playKeystrokeSound,
   startAmbience,
   toggleAmbience,
@@ -464,6 +465,9 @@ const App: React.FC = () => {
       case 'magic':                        playMagicSound(); break;
       case 'movement':                     playMoveSound();  break;
       case 'error':                        playErrorSound(); break;
+      // Prima gli eventi 'echo'/'tech' (Sintonizzatore) erano muti: ora hanno
+      // il glissando di "aggancio di frequenza" del set audio v2.
+      case 'echo': case 'tech':            playEchoSound();  break;
     }
     /* Componi l'INTERO flusso di testo in un'unica catena paginabile:
        descrizione + eventuale continuazione (res.continueText, con i suoi
