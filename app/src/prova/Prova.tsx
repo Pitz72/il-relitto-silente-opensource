@@ -2,7 +2,8 @@
 //  La schermata della prova tecnica (fase 1).
 //  Grezza per scelta: gioca la partita con i soli pulsanti del motore, misura
 //  l'avvio, i turni, l'audio di Rust e le venature, e scrive un rapporto.
-//  Con RELITTO_PROVA=completa (o =esci) fa tutto da sola e, con =esci, chiude.
+//  Con RELITTO_PROVA=completa (o =esci) fa tutto da sola e, con =esci, chiude;
+//  con RELITTO_PROVA=mondo misura il prototipo del suono (ProvaSuono.tsx).
 // ============================================================================
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
@@ -11,6 +12,7 @@ import type { Evento, Pulsanti, SceltaPulsante, Turno } from "../motore/tipi";
 import { comando, dentroTauri, type AvvioAudio, type InfoSistema, type MisureAudio } from "../lib/tauri";
 import { Venature, zoneSchermata, type Atmosfera } from "./venature";
 import { arrotonda, attesa, media, prossimoFotogramma, riassumi, type MisuraFotogrammi, type Riassunto } from "./statistiche";
+import ProvaSuono from "./ProvaSuono";
 import "./prova.css";
 
 const VERSIONE = __VERSIONE__;
@@ -535,6 +537,7 @@ export default function Prova() {
               Prova completa e rapporto
             </button>
           </div>
+          <ProvaSuono sistema={sistema} scrivi={scrivi} />
           {percorso && (
             <p className="esito">
               «{percorso.percorso}»: {percorso.giocati}/{percorso.comandi} a pulsanti ({percorso.modi.uguale} uguali, {percorso.modi.equivalente} equivalenti,{" "}

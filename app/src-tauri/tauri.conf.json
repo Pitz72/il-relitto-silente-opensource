@@ -52,7 +52,8 @@
       "icons/icon.ico"
     ],
     "resources": {
-      "risorse/audio/prova-ventilazione.ogg": "risorse/audio/prova-ventilazione.ogg"
+      "risorse/audio/prova-ventilazione.ogg": "risorse/audio/prova-ventilazione.ogg",
+      "risorse/audio/prototipo/": "risorse/audio/prototipo/"
     },
     "linux": {
       "appimage": {

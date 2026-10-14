@@ -1,0 +1,547 @@
+{
+ "letti/ventilazione.ogg": {
+  "origine": "P2",
+  "secondi": 61.0,
+  "lufs": -28.0
+ },
+ "letti/pompe.ogg": {
+  "origine": "P1",
+  "secondi": 67.0,
+  "lufs": -28.0
+ },
+ "letti/ventola.ogg": {
+  "origine": "C5",
+  "secondi": 29.0,
+  "lufs": -28.0
+ },
+ "fiato/calmo-1.ogg": {
+  "origine": "C4",
+  "secondi": 2.2,
+  "lufs": -30.0
+ },
+ "fiato/sospiro-1.ogg": {
+  "origine": "C4",
+  "secondi": 3.22,
+  "lufs": -28.0
+ },
+ "fiato/teso-1.ogg": {
+  "origine": "C2",
+  "secondi": 2.35,
+  "lufs": -27.0
+ },
+ "fiato/teso-2.ogg": {
+  "origine": "C2",
+  "secondi": 2.35,
+  "lufs": -27.0
+ },
+ "fiato/pesante-1.ogg": {
+  "origine": "C3",
+  "secondi": 0.9,
+  "lufs": -24.0
+ },
+ "fiato/pesante-2.ogg": {
+  "origine": "C3",
+  "secondi": 0.85,
+  "lufs": -24.0
+ },
+ "fiato/pesante-3.ogg": {
+  "origine": "C3",
+  "secondi": 0.9,
+  "lufs": -24.0
+ },
+ "fiato/pesante-4.ogg": {
+  "origine": "C3",
+  "secondi": 0.8,
+  "lufs": -24.0
+ },
+ "fiato/pesante-5.ogg": {
+  "origine": "C3",
+  "secondi": 0.5,
+  "lufs": -24.0
+ },
+ "fiato/veloce-1.ogg": {
+  "origine": "C1",
+  "secondi": 1.07,
+  "lufs": -24.0
+ },
+ "fiato/veloce-2.ogg": {
+  "origine": "C1",
+  "secondi": 0.93,
+  "lufs": -24.0
+ },
+ "fiato/veloce-3.ogg": {
+  "origine": "C1",
+  "secondi": 1.05,
+  "lufs": -24.0
+ },
+ "fiato/veloce-4.ogg": {
+  "origine": "C1",
+  "secondi": 1.0,
+  "lufs": -24.0
+ },
+ "fiato/veloce-5.ogg": {
+  "origine": "C1",
+  "secondi": 1.1,
+  "lufs": -24.0
+ },
+ "fiato/sorpresa-1.ogg": {
+  "origine": "C1",
+  "secondi": 0.56,
+  "lufs": -24.0
+ },
+ "colpi/colpo-01.ogg": {
+  "origine": "P3",
+  "secondi": 1.405,
+  "lufs": -17.5
+ },
+ "colpi/colpo-02.ogg": {
+  "origine": "P3",
+  "secondi": 1.405,
+  "lufs": -23.0
+ },
+ "colpi/colpo-03.ogg": {
+  "origine": "P3",
+  "secondi": 1.405,
+  "lufs": -21.3
+ },
+ "colpi/colpo-04.ogg": {
+  "origine": "P3",
+  "secondi": 0.636,
+  "lufs": -26.9
+ },
+ "colpi/colpo-05.ogg": {
+  "origine": "P3",
+  "secondi": 1.293,
+  "lufs": -24.8
+ },
+ "colpi/colpo-06.ogg": {
+  "origine": "P3",
+  "secondi": 0.916,
+  "lufs": -19.3
+ },
+ "colpi/colpo-07.ogg": {
+  "origine": "P3",
+  "secondi": 1.405,
+  "lufs": -23.3
+ },
+ "colpi/colpo-08.ogg": {
+  "origine": "P3",
+  "secondi": 0.63,
+  "lufs": -25.8
+ },
+ "colpi/colpo-09.ogg": {
+  "origine": "P3",
+  "secondi": 1.282,
+  "lufs": -22.4
+ },
+ "colpi/colpo-10.ogg": {
+  "origine": "P3",
+  "secondi": 0.412,
+  "lufs": -19.9
+ },
+ "colpi/colpo-11.ogg": {
+  "origine": "P3",
+  "secondi": 0.968,
+  "lufs": -23.1
+ },
+ "colpi/colpo-12.ogg": {
+  "origine": "P3",
+  "secondi": 1.405,
+  "lufs": -14.8
+ },
+ "colpi/colpo-13.ogg": {
+  "origine": "P3",
+  "secondi": 1.405,
+  "lufs": -17.7
+ },
+ "colpi/colpo-14.ogg": {
+  "origine": "P3",
+  "secondi": 1.405,
+  "lufs": -20.4
+ },
+ "colpi/colpo-15.ogg": {
+  "origine": "P3",
+  "secondi": 1.405,
+  "lufs": -16.9
+ },
+ "colpi/colpo-16.ogg": {
+  "origine": "P3",
+  "secondi": 1.405,
+  "lufs": -19.1
+ },
+ "colpi/cigolio-01.ogg": {
+  "origine": "C6",
+  "secondi": 3.505,
+  "lufs": -14.0
+ },
+ "colpi/cigolio-02.ogg": {
+  "origine": "C6",
+  "secondi": 3.505,
+  "lufs": -16.4
+ },
+ "colpi/cigolio-03.ogg": {
+  "origine": "C6",
+  "secondi": 3.505,
+  "lufs": -15.4
+ },
+ "colpi/cigolio-04.ogg": {
+  "origine": "C6",
+  "secondi": 3.505,
+  "lufs": -19.1
+ },
+ "colpi/cigolio-05.ogg": {
+  "origine": "C6",
+  "secondi": 3.336,
+  "lufs": -21.1
+ },
+ "colpi/cigolio-06.ogg": {
+  "origine": "C6",
+  "secondi": 3.505,
+  "lufs": -21.5
+ },
+ "gocce/goccia-01.ogg": {
+  "origine": "V2",
+  "secondi": 0.942,
+  "lufs": -22.7
+ },
+ "gocce/goccia-02.ogg": {
+  "origine": "V2",
+  "secondi": 0.377,
+  "lufs": -70.0
+ },
+ "gocce/goccia-03.ogg": {
+  "origine": "V2",
+  "secondi": 0.514,
+  "lufs": -21.0
+ },
+ "gocce/goccia-04.ogg": {
+  "origine": "V2",
+  "secondi": 0.374,
+  "lufs": -70.0
+ },
+ "gocce/goccia-05.ogg": {
+  "origine": "V2",
+  "secondi": 0.496,
+  "lufs": -19.6
+ },
+ "gocce/goccia-06.ogg": {
+  "origine": "V2",
+  "secondi": 0.389,
+  "lufs": -70.0
+ },
+ "gocce/goccia-07.ogg": {
+  "origine": "V2",
+  "secondi": 0.682,
+  "lufs": -21.5
+ },
+ "gocce/goccia-08.ogg": {
+  "origine": "V2",
+  "secondi": 1.005,
+  "lufs": -22.5
+ },
+ "gocce/goccia-09.ogg": {
+  "origine": "V2",
+  "secondi": 0.84,
+  "lufs": -26.0
+ },
+ "gocce/goccia-10.ogg": {
+  "origine": "V2",
+  "secondi": 1.005,
+  "lufs": -32.1
+ },
+ "gocce/goccia-11.ogg": {
+  "origine": "V2",
+  "secondi": 0.549,
+  "lufs": -22.6
+ },
+ "gocce/goccia-12.ogg": {
+  "origine": "V2",
+  "secondi": 0.746,
+  "lufs": -26.6
+ },
+ "gocce/goccia-13.ogg": {
+  "origine": "V2",
+  "secondi": 0.705,
+  "lufs": -28.0
+ },
+ "gocce/goccia-14.ogg": {
+  "origine": "V2",
+  "secondi": 1.005,
+  "lufs": -21.9
+ },
+ "gocce/goccia-15.ogg": {
+  "origine": "V2",
+  "secondi": 1.005,
+  "lufs": -24.1
+ },
+ "gocce/goccia-16.ogg": {
+  "origine": "V2",
+  "secondi": 0.395,
+  "lufs": -70.0
+ },
+ "gocce/goccia-17.ogg": {
+  "origine": "V2",
+  "secondi": 1.005,
+  "lufs": -24.9
+ },
+ "ghiaccio/crepa-01.ogg": {
+  "origine": "V3",
+  "secondi": 0.246,
+  "lufs": -70.0
+ },
+ "ghiaccio/crepa-02.ogg": {
+  "origine": "V3",
+  "secondi": 0.9,
+  "lufs": -19.7
+ },
+ "ghiaccio/crepa-03.ogg": {
+  "origine": "V3",
+  "secondi": 0.261,
+  "lufs": -70.0
+ },
+ "ghiaccio/crepa-04.ogg": {
+  "origine": "V3",
+  "secondi": 0.905,
+  "lufs": -18.3
+ },
+ "ghiaccio/crepa-05.ogg": {
+  "origine": "V3",
+  "secondi": 0.905,
+  "lufs": -11.4
+ },
+ "ghiaccio/crepa-06.ogg": {
+  "origine": "V3",
+  "secondi": 0.758,
+  "lufs": -14.3
+ },
+ "ghiaccio/crepa-07.ogg": {
+  "origine": "V3",
+  "secondi": 0.3,
+  "lufs": -70.0
+ },
+ "ghiaccio/crepa-08.ogg": {
+  "origine": "V3",
+  "secondi": 0.248,
+  "lufs": -70.0
+ },
+ "ghiaccio/crepa-09.ogg": {
+  "origine": "V3",
+  "secondi": 0.667,
+  "lufs": -16.3
+ },
+ "ghiaccio/crepa-10.ogg": {
+  "origine": "V3",
+  "secondi": 0.41,
+  "lufs": -12.0
+ },
+ "ghiaccio/crepa-11.ogg": {
+  "origine": "V3",
+  "secondi": 0.461,
+  "lufs": -21.1
+ },
+ "ghiaccio/crepa-12.ogg": {
+  "origine": "V3",
+  "secondi": 0.265,
+  "lufs": -70.0
+ },
+ "ghiaccio/crepa-13.ogg": {
+  "origine": "V3",
+  "secondi": 0.575,
+  "lufs": -18.2
+ },
+ "ghiaccio/crepa-14.ogg": {
+  "origine": "V3",
+  "secondi": 0.905,
+  "lufs": -12.3
+ },
+ "ghiaccio/crepa-15.ogg": {
+  "origine": "V3",
+  "secondi": 0.905,
+  "lufs": -16.4
+ },
+ "ghiaccio/crepa-16.ogg": {
+  "origine": "V3",
+  "secondi": 0.666,
+  "lufs": -13.9
+ },
+ "ghiaccio/crepa-17.ogg": {
+  "origine": "V3",
+  "secondi": 0.585,
+  "lufs": -19.3
+ },
+ "ghiaccio/crepa-18.ogg": {
+  "origine": "V3",
+  "secondi": 0.905,
+  "lufs": -22.1
+ },
+ "ghiaccio/crepa-19.ogg": {
+  "origine": "V3",
+  "secondi": 0.304,
+  "lufs": -70.0
+ },
+ "ghiaccio/crepa-20.ogg": {
+  "origine": "V3",
+  "secondi": 0.245,
+  "lufs": -70.0
+ },
+ "ghiaccio/crepa-21.ogg": {
+  "origine": "V3",
+  "secondi": 0.905,
+  "lufs": -20.0
+ },
+ "ghiaccio/crepa-22.ogg": {
+  "origine": "V3",
+  "secondi": 0.905,
+  "lufs": -14.5
+ },
+ "ghiaccio/crepa-23.ogg": {
+  "origine": "V3",
+  "secondi": 0.905,
+  "lufs": -14.6
+ },
+ "ghiaccio/crepa-24.ogg": {
+  "origine": "V3",
+  "secondi": 0.905,
+  "lufs": -17.0
+ },
+ "ghiaccio/gemito-01.ogg": {
+  "origine": "V3",
+  "secondi": 7.071,
+  "lufs": -19.5
+ },
+ "ghiaccio/gemito-02.ogg": {
+  "origine": "V3",
+  "secondi": 7.071,
+  "lufs": -18.7
+ },
+ "ghiaccio/gemito-03.ogg": {
+  "origine": "V3",
+  "secondi": 7.071,
+  "lufs": -17.4
+ },
+ "ghiaccio/gemito-04.ogg": {
+  "origine": "V3",
+  "secondi": 7.071,
+  "lufs": -18.0
+ },
+ "ghiaccio/gemito-05.ogg": {
+  "origine": "V3",
+  "secondi": 7.071,
+  "lufs": -19.1
+ },
+ "ghiaccio/gemito-06.ogg": {
+  "origine": "V3",
+  "secondi": 7.071,
+  "lufs": -18.1
+ },
+ "ghiaccio/gemito-07.ogg": {
+  "origine": "V3",
+  "secondi": 7.071,
+  "lufs": -23.1
+ },
+ "ghiaccio/gemito-08.ogg": {
+  "origine": "V3",
+  "secondi": 7.071,
+  "lufs": -19.3
+ },
+ "voci/voce-01.ogg": {
+  "origine": "V1 afrikaans_oktobermaand_leipoldt_cdb_64kb",
+  "secondi": 40.0,
+  "lufs": -23.0
+ },
+ "voci/voce-02.ogg": {
+  "origine": "V1 braport_cancao_do_exilio_dias_sv_64kb",
+  "secondi": 40.0,
+  "lufs": -23.0
+ },
+ "voci/voce-03.ogg": {
+  "origine": "V1 braport_coracaoperdido_assis_rla_64kb",
+  "secondi": 40.0,
+  "lufs": -23.0
+ },
+ "voci/voce-04.ogg": {
+  "origine": "V1 braport_flordamocidade_assis_kbmo_64kb",
+  "secondi": 40.0,
+  "lufs": -23.0
+ },
+ "voci/voce-05.ogg": {
+  "origine": "V1 chinese_qingzhouduanzhao_ouyang_64kb",
+  "secondi": 34.649,
+  "lufs": -23.0
+ },
+ "voci/voce-06.ogg": {
+  "origine": "V1 esperanto_al_kavaliroj_de_la_paco_baghy_ac_64kb",
+  "secondi": 40.0,
+  "lufs": -23.0
+ },
+ "voci/voce-07.ogg": {
+  "origine": "V1 french_le_lac_lamartine_ezwa_64kb",
+  "secondi": 40.0,
+  "lufs": -23.5
+ },
+ "voci/voce-08.ogg": {
+  "origine": "V1 german_der_panther_rilke_sk_64kb",
+  "secondi": 40.0,
+  "lufs": -23.0
+ },
+ "voci/voce-09.ogg": {
+  "origine": "V1 german_erists_moerike_s_64kb",
+  "secondi": 32.51,
+  "lufs": -24.1
+ },
+ "voci/voce-10.ogg": {
+  "origine": "V1 german_erlkoenig_goethe_robu_64kb",
+  "secondi": 40.0,
+  "lufs": -23.5
+ },
+ "voci/voce-11.ogg": {
+  "origine": "V1 german_zauberlehrling_goethe_robu_64kb",
+  "secondi": 40.0,
+  "lufs": -23.5
+ },
+ "voci/voce-12.ogg": {
+  "origine": "V1 hebrew_axarey_moti_bialik_ab_64kb",
+  "secondi": 40.0,
+  "lufs": -23.2
+ },
+ "voci/voce-13.ogg": {
+  "origine": "V1 hebrew_rak_al_atzmi_blubstein_ab_64kb",
+  "secondi": 40.0,
+  "lufs": -24.4
+ },
+ "voci/voce-14.ogg": {
+  "origine": "V1 japanese_kouennoisu_sakutaro_kk_64kb",
+  "secondi": 40.0,
+  "lufs": -23.0
+ },
+ "voci/voce-15.ogg": {
+  "origine": "V1 latin_eclogue_iv_vergil_knf_64kb",
+  "secondi": 40.0,
+  "lufs": -23.2
+ },
+ "voci/voce-16.ogg": {
+  "origine": "V1 old_norse_voluspa_anonymous_jcj_64kb",
+  "secondi": 40.0,
+  "lufs": -23.0
+ },
+ "voci/voce-17.ogg": {
+  "origine": "V1 portuguese_escreve-me_espanca_rc_64kb",
+  "secondi": 40.0,
+  "lufs": -23.0
+ },
+ "voci/voce-18.ogg": {
+  "origine": "V1 portuguese_se_tu_viesses_ver-me_espanca_rc_64kb",
+  "secondi": 39.482,
+  "lufs": -23.0
+ },
+ "voci/voce-19.ogg": {
+  "origine": "V1 spanish_enpaz_nervo_krs_64kb",
+  "secondi": 40.0,
+  "lufs": -26.1
+ },
+ "voci/voce-20.ogg": {
+  "origine": "V1 tagalog_araw_ng_kamusmusan_maderal_alnl_64kb",
+  "secondi": 30.446,
+  "lufs": -23.0
+ }
+}

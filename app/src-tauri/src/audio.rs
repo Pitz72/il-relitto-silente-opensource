@@ -14,6 +14,7 @@
 
 use std::f64::consts::TAU;
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
+use std::sync::mpsc::Sender;
 use std::sync::{Arc, OnceLock};
 use std::time::Instant;
 
@@ -23,6 +24,9 @@ use kira::sound::static_sound::{StaticSoundData, StaticSoundHandle};
 use kira::sound::{Sound, SoundData};
 use kira::{AudioManager, AudioManagerSettings, Decibels, Frame, Tween};
 use serde::Serialize;
+
+use crate::mondo::campioni::Banca;
+use crate::mondo::{Comando, DatiMondo, Istantanea, Mondo, StatoMondo};
 
 /// L'istante in cui il processo è partito: l'origine di tutti i tempi.
 pub static EPOCA: OnceLock<Instant> = OnceLock::new();
@@ -47,7 +51,7 @@ pub struct Telemetria {
 }
 
 impl Telemetria {
-    fn blocco(&self, frame: usize) {
+    pub(crate) fn blocco(&self, frame: usize) {
         let ora = adesso_ns();
         let prima = self.ultimo_ns.swap(ora, Ordering::Relaxed);
         self.chiamate.fetch_add(1, Ordering::Relaxed);
@@ -257,6 +261,8 @@ pub struct MotoreAudio {
     errori: u64,
     errori_tipi: Vec<String>,
     buffer_richiesto: u32,
+    /// il mondo sonoro del prototipo: il canale dei comandi e quello che si può leggere
+    mondo: Option<(Sender<Comando>, Arc<StatoMondo>)>,
 }
 
 impl MotoreAudio {
@@ -297,6 +303,7 @@ impl MotoreAudio {
         let mut m = Self {
             manager, telemetria, re: None, campione: None, dati_campione: None, info,
             cpu_somma: 0.0, cpu_max: 0.0, cpu_n: 0, errori: 0, errori_tipi: Vec::new(), buffer_richiesto,
+            mondo: None,
         };
         m.info.frequenza = m.frequenza();
         Ok(m)
@@ -403,6 +410,33 @@ impl MotoreAudio {
                 .then(|| (render - comando) as f64 / 1e6),
             re_acceso: self.re.is_some(),
             campione_acceso: self.campione.is_some(),
+        }
+    }
+
+    /// Avvia il mondo sonoro con i campioni già caricati. Se c’era, il vecchio sfuma.
+    pub fn mondo_avvia(&mut self, banca: &Banca) -> Result<(), String> {
+        self.mondo_ferma();
+        let seme = adesso_ns() ^ 0x5EED;
+        let (mondo, tx, stato) = Mondo::nuovo(banca, self.info.frequenza.max(1) as f32, seme)?;
+        let telemetria = self.telemetria.clone();
+        let dati = DatiMondo { mondo, prima_del_blocco: Some(Box::new(move |n| telemetria.blocco(n))) };
+        self.manager.play(dati).map_err(|e| format!("{e:?}"))?;
+        self.mondo = Some((tx, stato));
+        Ok(())
+    }
+
+    pub fn mondo_comando(&mut self, c: Comando) -> Result<(), String> {
+        let (tx, _) = self.mondo.as_ref().ok_or("il mondo sonoro non è avviato")?;
+        tx.send(c).map_err(|e| e.to_string())
+    }
+
+    pub fn mondo_stato(&self) -> Option<Istantanea> {
+        self.mondo.as_ref().map(|(_, s)| s.istantanea())
+    }
+
+    pub fn mondo_ferma(&mut self) {
+        if let Some((tx, _)) = self.mondo.take() {
+            let _ = tx.send(Comando::Ferma);
         }
     }
 

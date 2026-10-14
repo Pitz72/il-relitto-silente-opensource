@@ -42,3 +42,34 @@ export interface MisureAudio {
   re_acceso: boolean;
   campione_acceso: boolean;
 }
+
+// --- il mondo sonoro del prototipo (src-tauri/src/mondo) ------------------------
+export type AmbienteMondo = "silenzio" | "plancia" | "scafo" | "vestibolo";
+export type NaveMondo = "libera" | "accostata" | "agganciata";
+export type EventoMondo = "primo_contatto" | "tocca_venature" | "sala_tace" | "gemito" | "goccia" | "sorpresa";
+
+export type ComandoMondo =
+  | { tipo: "ambiente"; valore: AmbienteMondo }
+  | { tipo: "aria"; valore: number }
+  | { tipo: "nave"; valore: NaveMondo }
+  | { tipo: "rampa"; valore: number }
+  | { tipo: "cammina"; valore: boolean }
+  | { tipo: "sforzo"; valore: boolean }
+  | { tipo: "evento"; valore: EventoMondo }
+  | { tipo: "volume"; valore: number }
+  | { tipo: "solo"; valore: string | null }
+  | { tipo: "ferma" };
+
+export interface AvvioMondo {
+  campioni: number;
+  memoria_mb: number;
+  caricamento_ms: number;
+}
+
+export interface IstantaneaMondo {
+  fase: number;
+  respiri_al_minuto: number;
+  livello_db: number;
+  protezione: boolean;
+  voci: number;
+}
