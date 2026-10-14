@@ -19,3 +19,6 @@ app/dist/
 app/public/pyodide/
 app/src-tauri/target/
 app/src-tauri/gen/
+
+# Suoni: le sorgenti grezze restano fuori da git (registro in audio/LICENZE.md)
+audio/sorgenti/
