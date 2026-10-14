@@ -10,7 +10,7 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { caricaMotore, type Motore, type TempiAvvio } from "../motore/runtime";
 import type { Evento, Pulsanti, SceltaPulsante, Turno } from "../motore/tipi";
 import { comando, dentroTauri, type AvvioAudio, type InfoSistema, type MisureAudio } from "../lib/tauri";
-import { Venature, zoneSchermata, type Atmosfera } from "./venature";
+import { Venature, zoneSchermata, type Atmosfera } from "../gioco/vene/venature";
 import { arrotonda, attesa, media, prossimoFotogramma, riassumi, type MisuraFotogrammi, type Riassunto } from "./statistiche";
 import ProvaSuono from "./ProvaSuono";
 import "./prova.css";

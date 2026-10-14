@@ -1,10 +1,11 @@
 // ============================================================================
-//  Le venature della membrana, portate da progettazione/06-proposta-membrana.html.
+//  Le venature della membrana (06-app-desktop.md, §3; 06-proposta-membrana.html).
 //  Crescono dai bordi e dagli angoli, girano intorno alle zone vietate (il
 //  testo, la lente, la cellula, gli strumenti, il ramo) senza attraversarle;
-//  una luce le percorre una alla volta. Nella fuga si lacerano e lampeggiano.
-//  Stesso algoritmo e stesso seme della tavola: qui serve a misurare i
-//  fotogrammi, su Windows (WebView2) e su Linux (WebKitGTK).
+//  una luce le percorre una alla volta. Nella protezione vitale si spengono;
+//  nella fuga si lacerano e lampeggiano; nell'ipossia sbiadiscono.
+//  Stesso algoritmo e stesso seme della tavola. Lo usano il gioco (Vene.tsx) e
+//  la pagina di prova, che ne misura i fotogrammi su Windows e su Linux.
 // ============================================================================
 
 export type Atmosfera = "contatto" | "relitto" | "protezione" | "fuga" | "ipossia";
@@ -22,6 +23,14 @@ interface Vena {
   inizio: number;
   fase: number;
   rotta: number;
+}
+
+/** Come disegnare: i colori del clima (le variabili --vena e --vena-2) e
+ *  quanto sono accese (prima che torni l'energia, meno). */
+export interface Tinta {
+  colori?: [string, string];
+  /** 0–1: l'intensità delle vene e della luce che scorre */
+  luce?: number;
 }
 
 const COLORI: Record<Atmosfera, [string, string]> = {
@@ -61,12 +70,13 @@ export class Venature {
   /** quante volte le radici della tavola: 1 normale, 3 per la prova sotto sforzo */
   densita = 1;
 
-  genera(W: number, H: number, zone: Zona[], densita = 1) {
+  /** `u`: l'unità del passo (un centesimo del palco); di base, della larghezza disegnata. */
+  genera(W: number, H: number, zone: Zona[], densita = 1, u = W / 100) {
     this.W = W;
     this.H = H;
     this.densita = densita;
+    this.cache = null;
     const r = generatore(11);
-    const u = W / 100;
     const vietato = (x: number, y: number) => zone.some((z) => x > z.x0 && x < z.x1 && y > z.y0 && y < z.y1);
     const vene: Vena[] = [];
     const radici: [number, number, number, number][] = [];
@@ -115,12 +125,13 @@ export class Venature {
     return this.vene.reduce((n, v) => n + v.pts.length, 0);
   }
 
-  /** Disegna tutto, ogni fotogramma: il modo della tavola, il caso peggiore. */
-  disegna(g: CanvasRenderingContext2D, t: number, crescita: number, atm: Atmosfera, dpr: number) {
+  /** Disegna tutto, ogni fotogramma: la crescita, la fuga, l'ipossia. */
+  disegna(g: CanvasRenderingContext2D, t: number, crescita: number, atm: Atmosfera, dpr: number, tinta: Tinta = {}) {
     g.setTransform(dpr, 0, 0, dpr, 0, 0);
     g.clearRect(0, 0, this.W, this.H);
     if (crescita <= 0.001) return;
-    const [c1, c2] = COLORI[atm];
+    const [c1, c2] = tinta.colori ?? COLORI[atm];
+    const luce = tinta.luce ?? 1;
     const fuga = atm === "fuga" || atm === "ipossia";
     const spente = atm === "protezione";
     const fioca = atm === "ipossia" ? 0.5 : 1;
@@ -147,44 +158,55 @@ export class Venature {
           else g.moveTo(x, y);
         }
         g.strokeStyle = c1;
-        g.globalAlpha = alfa * lampo * (spente ? 0.4 : 1) * fioca;
+        g.globalAlpha = alfa * lampo * (spente ? 0.4 : 1) * fioca * (0.55 + 0.45 * luce);
         g.lineWidth = larg * spess;
         g.stroke();
       }
-      if (!spente && quota > 0.97 && v.prof === 0) {
-        const ciclo = 5200;
-        const k = ((t + idx * 1300) % (ciclo * 3)) / ciclo;
-        if (k < 1) {
-          const i = Math.floor(k * (n - 1));
-          const [x, y] = v.pts[i];
-          g.globalAlpha = 0.9 * Math.sin(k * Math.PI) * fioca;
-          g.fillStyle = c2;
-          g.beginPath();
-          g.arc(x, y, 2, 0, 7);
-          g.fill();
-          g.globalAlpha *= 0.22;
-          g.beginPath();
-          g.arc(x, y, 9, 0, 7);
-          g.fill();
-        }
+      // in crescita, la punta di ogni vena è accesa: la membrana che avanza
+      if (quota < 1 && n > 2) {
+        const [x, y] = v.pts[n - 1];
+        g.globalAlpha = 0.7 * fioca;
+        g.fillStyle = c2;
+        g.beginPath();
+        g.arc(x, y, 1.6, 0, 7);
+        g.fill();
       }
+      if (!spente && quota > 0.97 && v.prof === 0) this.luceCheScorre(g, t, idx, v, n, c2, fioca * luce);
     });
     g.globalAlpha = 1;
   }
 
+  /** La luce che percorre le vene, una alla volta, a turno. */
+  private luceCheScorre(g: CanvasRenderingContext2D, t: number, idx: number, v: Vena, n: number, c2: string, intensita: number) {
+    const ciclo = 5200;
+    const k = ((t + idx * 1300) % (ciclo * 3)) / ciclo;
+    if (k >= 1 || intensita <= 0) return;
+    const [x, y] = v.pts[Math.floor(k * (n - 1))];
+    g.globalAlpha = 0.9 * Math.sin(k * Math.PI) * intensita;
+    g.fillStyle = c2;
+    g.beginPath();
+    g.arc(x, y, 2, 0, 7);
+    g.fill();
+    g.globalAlpha *= 0.22;
+    g.beginPath();
+    g.arc(x, y, 9, 0, 7);
+    g.fill();
+  }
+
   /** Il modo economico: le venature ferme dipinte una volta, a ogni fotogramma
-   *  solo la copia e le luci che scorrono. Vale fuori dalla fuga. */
+   *  solo la copia e le luci che scorrono. Vale fuori dalla fuga e dalla crescita. */
   private cache: HTMLCanvasElement | null = null;
   private cacheChiave = "";
 
-  disegnaConCache(g: CanvasRenderingContext2D, t: number, atm: Atmosfera, dpr: number) {
-    const chiave = `${atm}|${this.W}|${this.H}|${dpr}|${this.vene.length}`;
+  disegnaConCache(g: CanvasRenderingContext2D, t: number, atm: Atmosfera, dpr: number, tinta: Tinta = {}) {
+    const [c1, c2] = tinta.colori ?? COLORI[atm];
+    const luce = tinta.luce ?? 1;
+    const chiave = `${atm}|${this.W}|${this.H}|${dpr}|${this.vene.length}|${c1}|${luce}`;
     if (!this.cache || this.cacheChiave !== chiave) {
       const c = document.createElement("canvas");
       c.width = Math.round(this.W * dpr);
       c.height = Math.round(this.H * dpr);
-      const gc = c.getContext("2d")!;
-      this.disegnaFerme(gc, atm, dpr);
+      this.ferme(c.getContext("2d")!, atm, dpr, tinta, false);
       this.cache = c;
       this.cacheChiave = chiave;
     }
@@ -192,31 +214,21 @@ export class Venature {
     g.clearRect(0, 0, g.canvas.width, g.canvas.height);
     g.drawImage(this.cache, 0, 0);
     g.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const [, c2] = COLORI[atm];
     if (atm === "protezione") return;
     this.vene.forEach((v, idx) => {
-      if (v.prof !== 0) return;
-      const ciclo = 5200;
-      const k = ((t + idx * 1300) % (ciclo * 3)) / ciclo;
-      if (k >= 1) return;
-      const [x, y] = v.pts[Math.floor(k * (v.pts.length - 1))];
-      g.globalAlpha = 0.9 * Math.sin(k * Math.PI);
-      g.fillStyle = c2;
-      g.beginPath();
-      g.arc(x, y, 2, 0, 7);
-      g.fill();
-      g.globalAlpha *= 0.22;
-      g.beginPath();
-      g.arc(x, y, 9, 0, 7);
-      g.fill();
+      if (v.prof === 0) this.luceCheScorre(g, t, idx, v, v.pts.length, c2, luce);
     });
     g.globalAlpha = 1;
   }
 
-  private disegnaFerme(g: CanvasRenderingContext2D, atm: Atmosfera, dpr: number) {
+  /** Le venature ferme, cresciute del tutto: il movimento ridotto, e la copia in memoria. */
+  ferme(g: CanvasRenderingContext2D, atm: Atmosfera, dpr: number, tinta: Tinta = {}, pulisci = true) {
     g.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const [c1] = COLORI[atm];
+    if (pulisci) g.clearRect(0, 0, this.W, this.H);
+    const [c1] = tinta.colori ?? COLORI[atm];
+    const luce = tinta.luce ?? 1;
     const spente = atm === "protezione";
+    const fioca = atm === "ipossia" ? 0.5 : 1;
     g.lineCap = "round";
     g.lineJoin = "round";
     for (const v of this.vene) {
@@ -228,7 +240,7 @@ export class Venature {
         g.beginPath();
         v.pts.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y)));
         g.strokeStyle = c1;
-        g.globalAlpha = alfa * (spente ? 0.4 : 1);
+        g.globalAlpha = alfa * (spente ? 0.4 : 1) * fioca * (0.55 + 0.45 * luce);
         g.lineWidth = larg * spess;
         g.stroke();
       }

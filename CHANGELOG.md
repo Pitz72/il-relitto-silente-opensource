@@ -58,6 +58,12 @@ documenti di `progettazione/`.
   Carica sono dell’app. La pagina del gioco è quella principale; la pagina di prova resta su `?prova`
   e per le prove automatiche (`RELITTO_PROVA`); `RELITTO_PROVA=salvataggi` prova i salvataggi
   nell’eseguibile vero e scrive un rapporto.
+- **La crescita della membrana al primo contatto** (06, §3): le venature entrano dai bordi e crescono
+  in cinque secondi intorno al testo e agli strumenti, con le zone vietate prese dalle misure vere
+  dello schermo; prima dell’energia sono fioche, con l’energia si accendono; nella protezione vitale si
+  spengono, nella fuga si lacerano e lampeggiano, nell’ipossia sbiadiscono. Con il movimento ridotto
+  sono ferme e compaiono in dissolvenza. Il generatore della prova tecnica è passato al gioco
+  (`app/src/gioco/vene/`), e la pagina di prova lo misura da lì.
 - **L’animatic dell’intro** (`app/src/intro/`, §10 di `progettazione/09-intro-storyboard.md`): tutte
   le scene sulla scaletta di 2:40,75, calcolata con la regola di lettura e provata contro la tabella
   dello storyboard; il motore della scala in un modulo (la scena E definitiva, e il margine di B); i

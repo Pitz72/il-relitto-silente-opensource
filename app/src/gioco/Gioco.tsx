@@ -21,6 +21,7 @@ import { accesiDa, attrezzoDelVerbo, bersagli, NESSUNA, type Azione, type Selezi
 import type { Filo } from "./ramo/geometria";
 import Visore, { CartelloAtto, useCartelloAtto } from "./visore/Visore";
 import Dialogo from "./dialogo/Dialogo";
+import Vene from "./vene/Vene";
 import { Avviso, Conferma, PannelloOpzioni, Pausa, Salvataggi, useAvviso, type Domanda } from "./pannelli/Pannelli";
 import { archivio, type IdPosto, type Posto } from "./salvataggi";
 import "../stile/base.css";
@@ -87,6 +88,9 @@ export default function Gioco({ prova }: { prova?: "salvataggi" } = {}) {
   const ultimoPosto = useRef<IdPosto>("1");
   /** la stanza dell'ultimo turno: il salvataggio automatico scatta quando cambia */
   const stanzaRef = useRef<string | null>(null);
+  /** il contatto dell'ultimo turno: quando diventa «avvenuto», la membrana cresce */
+  const contattoRef = useRef<string | null>(null);
+  const [crescita, setCrescita] = useState(0);
 
   const modello = useMemo(() => (turno ? costruisciModello(turno) : null), [turno]);
 
@@ -95,6 +99,7 @@ export default function Gioco({ prova }: { prova?: "salvataggi" } = {}) {
     (primo: Turno) => {
       const m = costruisciModello(primo);
       stanzaRef.current = primo.stato.stanza;
+      contattoRef.current = primo.stato.contatto;
       setTurno(primo);
       setSelezione(NESSUNA);
       setAltri(null);
@@ -163,6 +168,7 @@ export default function Gioco({ prova }: { prova?: "salvataggi" } = {}) {
         }
         const mod = costruisciModello(r.turno);
         stanzaRef.current = r.turno.stato.stanza;
+        contattoRef.current = r.turno.stato.contatto;
         setTurno(r.turno);
         setSelezione(NESSUNA);
         setAltri(null);
@@ -197,6 +203,9 @@ export default function Gioco({ prova }: { prova?: "salvataggi" } = {}) {
       const prima = stanzaRef.current;
       const t = m.comando(comando);
       stanzaRef.current = t.stato.stanza;
+      // il primo contatto: la membrana entra dai bordi (§3)
+      if (contattoRef.current === "nuovo" && t.stato.contatto === "avvenuto") setCrescita((n) => n + 1);
+      contattoRef.current = t.stato.contatto;
       const mod = costruisciModello(t);
       const differenza = differenzaAria(t);
       // D16: quanto costa un tipo di azione lo si sa dopo averla provata
@@ -453,6 +462,7 @@ export default function Gioco({ prova }: { prova?: "salvataggi" } = {}) {
       data-in-mano={inMano ? "" : undefined}
       {...attributiSchermo(opzioni, ridotto)}
     >
+      {clima && <Vene clima={clima} energia={turno?.stato.energia === "ripristinata"} ridotto={ridotto} crescita={crescita} />}
       <main className="palco" aria-label="Il Relitto Silente" ref={palcoRef} onClick={() => (selezione.tipo !== "nessuna" || altri) && chiudi()}>
         <div className="esplorazione" aria-hidden={inDialogo || !!pannello || !!domanda ? true : undefined}>
           {turno && (
