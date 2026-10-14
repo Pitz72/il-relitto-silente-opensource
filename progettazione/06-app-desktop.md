@@ -1,6 +1,7 @@
 # Il Relitto Silente — l'app desktop
 
-**Visione, stile, design e piano di fattibilità.** Versione 0.2, 14 ottobre 2026.
+**Visione, stile, design e piano di fattibilità.** Versione 0.3, 14 ottobre 2026. Le decisioni
+prese dopo le tavole sono nel §17 e valgono su tutto il resto del documento.
 
 Due tavole visive accompagnano questo documento. `06-proposte-visive.html`: le tre direzioni di
 stile, lo schermo della direzione B nelle sue atmosfere, il visore dell'aria, il dialogo con Yusuf
@@ -30,7 +31,7 @@ la cifra dell'aria è il cuore dello schermo: lo colora, lo fa respirare, e quan
 | Piattaforma | Tauri 2 (Rust) + React 19 + TypeScript + Vite; il motore FAVELLA 1.4.4 in Python, dentro Pyodide |
 | Sistemi | Windows 10/11 (installer e versione portatile), Linux (AppImage, .deb; Ubuntu 22.04 e successive) |
 | Interazione | Solo pulsanti. Prova fatta: i 1.294 comandi dei 14 percorsi di collaudo si giocano tutti con i pulsanti del motore |
-| Stile proposto | «Membrana» (C, rivista): sulla Santa Maria l'interfaccia è acciaio; al primo contatto il relitto la colonizza e la fa crescere a modo suo. Da confermare (D11) |
+| Stile | **Deciso: «Membrana»** (C, rivista): sulla Santa Maria l'interfaccia è acciaio; al primo contatto il relitto la colonizza e la fa crescere a modo suo |
 | Suono | Motore audio in Rust (`kira`): ambienti, respiro legato all'aria, il re del reattore come filo musicale |
 | Intro e outro | Animate in codice (canvas e WebGL), sincronizzate alla colonna sonora; l'intro nasconde il caricamento del motore |
 | Stima | 17–22 sessioni di lavoro, in undici fasi (§14). Il rischio maggiore è Linux (WebKitGTK), e la fase 1 serve a toglierlo per primo |
@@ -397,7 +398,7 @@ Il multiscanner scrive «MATERIALE NON IN ARCHIVIO»: del relitto non esistono i
 
 | Dove | Che cosa si vede | Da dove viene |
 |---|---|---|
-| Plancia, cuccetta, sala macchine, stiva, boccaporto | la telecamera di bordo: l'immagine, una grana di sensore, una data in sovrimpressione, la luce al sodio | le scene della Santa Maria del sequel (`s_01` plancia, `s_03` cuccetta, `s_05` sala macchine, `s_04` stiva, `s_10` boccaporto e tute), trattate in codice. La cuccetta del Relitto ha due brande, una mai usata: l'immagine va rifatta o ritoccata |
+| Plancia, cuccetta, sala macchine, stiva, boccaporto | la telecamera di bordo: l'immagine, una grana di sensore, una data in sovrimpressione, la luce al sodio | le scene della Santa Maria del sequel (`s_01_b` plancia, `s_03` cuccetta, `s_05` sala macchine, `s_04` stiva, `s_10` boccaporto e tute), trattate in codice. Mai `s_01` né `zoom_s01_teca`, che mostrano il seme nella teca del sequel; mai `s_10_b`, che ha una cassa del sequel (§17). La cuccetta del Relitto ha due brande, una mai usata: l'immagine va rifatta o ritoccata |
 | Scafo | la telecamera esterna, la sagoma nera dove le stelle mancano | la Santa Maria del sequel (`still_3-4_canonico`) più il disegno in codice della massa |
 | Relitto, 18 stanze | la ricostruzione del multiscanner: nuvole di punti, curve di livello, oggetti marcati, campi che il sensore non legge | **in codice**: una scena per stanza, disegnata da una piccola descrizione (forme, altezze, oggetti). Cambia con lo stato (la teca dissolta, la nicchia vuota, il pilastro acceso) |
 | Yusuf | il comunicatore: il ritratto, il canale, l'onda della voce | il ritratto del sequel (`YUSUF_COM`), lo stesso volto del secondo gioco |
@@ -457,6 +458,9 @@ opzioni. L'ipossia è un filtro sul canale generale; la protezione vitale ammuto
 ---
 
 ## 10. La sequenza d'apertura
+
+*Questa scaletta è la prima bozza: l'intro va ripensata con un respiro cinematografico e con la
+massa enormemente più grande della Santa Maria (§17).*
 
 Non un trailer: l'inizio del gioco. Dura circa 75 secondi, si salta con Esc, e mentre scorre il
 motore si carica. Finisce sulla plancia, dove la partita comincia, senza stacco.
@@ -619,7 +623,7 @@ Si aggiunge a quello del gioco, che resta com'è.
 
 | # | Domanda | Proposta |
 |---|---|---|
-| D11 | Quale stile? | C, «Membrana», rivista: la membrana cresce dal primo contatto (preferita dall'autore). B come alternativa prudente |
+| D11 | Quale stile? | **Decisa: C, «Membrana», rivista**, come nelle schermate di `06-proposta-membrana.html` (§17) |
 | D12 | I riferimenti visivi | telecamere di bordo con le immagini del sequel per la Santa Maria; ricostruzioni dello scanner in codice per il relitto |
 | D13 | L'audio | in Rust con `kira`; il Web Audio come piano B |
 | D14 | La musica | un tema composto per intro, Anziano e outro (come il brano del Viaggiatore), tutto il resto in codice; il re come nota base |
@@ -629,3 +633,34 @@ Si aggiunge a quello del gioco, che resta com'è.
 | D18 | Le voci | nessuna voce recitata nella 1.0; la scatola nera di L.V. recitata è il primo candidato per una 1.1 |
 | D19 | Linux minimo | Ubuntu 22.04 e derivate, Debian 12, Fedora 38 |
 | D20 | Il campo di testo | solo nelle build di sviluppo |
+
+---
+
+## 17. Decisioni prese dopo le tavole (14 ottobre 2026)
+
+Dall'autore, dopo aver visto le due tavole. Valgono su tutto il resto del documento.
+
+1. **Lo stile è la C, «Membrana», come nelle schermate di `06-proposta-membrana.html`**: look,
+   colori e animazioni approvati. La B non si porta avanti.
+2. **Le immagini del sequel vanno controllate una per una contro il canone del Relitto**, che è
+   l'episodio precedente. La plancia è `s_01_b` (lo stesso ambiente senza teca); `s_01` e
+   `zoom_s01_teca` sono escluse, perché mostrano il seme nella teca, cioè quello che in questo
+   gioco si deve ancora trovare. `s_10_b` è esclusa (c'è una cassa del sequel); `s_10` va bene.
+   `s_03` ha una branda sola, il Relitto ne vuole due (una mai usata); `s_04` ha pallet e casse,
+   il Relitto ha la stiva vuota da sei settimane: tutte e due da rifare o ritoccare. Le due tavole
+   usano già `s_01_b`.
+3. **Il suono deve essere credibile e realistico il più possibile.** Ambienti e atmosfere costruiti
+   su registrazioni vere (librerie con licenza compatibile con la distribuzione), elaborate e
+   stratificate; la sintesi solo dove serve (il re del reattore, il brusio). Con la fisica giusta:
+   nel vuoto non c'è suono, sullo scafo si sente solo quello che arriva per contatto (i magneti
+   degli stivali, il cavo, il proprio corpo dentro la tuta).
+4. **L'intro dell'abbozzo è solo una bozza.** Serve un'animazione di livello molto più alto, con
+   un respiro cinematografico: i testi restano sullo schermo il tempo di leggerli, e un po' di più;
+   niente è compresso per stare in un minutaggio. La durata la decide il ritmo, non il contrario.
+5. **La nave aliena è enormemente più grande della Santa Maria**, e l'intro deve farlo sentire: la
+   Santa Maria è una cosa piccola davanti a un muro nero che occupa il cielo. (Il gioco dice
+   «trecentoquaranta metri» e «massa: stima incerta, il doppio della Santa Maria»: la stima è
+   dello scanner, che non sa leggere quel materiale; la scala visiva segue l'autore.)
+6. Le prossime sessioni lavorano con lo sforzo al massimo, soprattutto sul design.
+
+Il prompt della prossima sessione è in `07-prompt-prossima-sessione.md`.
