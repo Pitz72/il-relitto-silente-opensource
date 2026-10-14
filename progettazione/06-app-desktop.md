@@ -676,3 +676,15 @@ Dall'autore, dopo aver visto le due tavole. Valgono su tutto il resto del docume
 6. Le prossime sessioni lavorano con lo sforzo al massimo, soprattutto sul design.
 
 Il prompt della prossima sessione è in `07-prompt-prossima-sessione.md`.
+
+---
+
+## 18. Decisioni prese dopo la seconda sessione (14 ottobre 2026, sera)
+
+L’autore ha delegato le decisioni tecniche, pratiche e stilistiche di questa fase: si prendono adesso e si correggono dopo, se serve. Valgono sul resto del documento, come quelle del §17.
+
+1. **Lo storyboard 2 dell’intro è approvato** (`09-intro-storyboard.md`), con le cinque scelte del suo §8 come consigliate: il prologo diviso in due, il faro che si perde, il soffio di brusio alla radio, tutte le scene (2:40), la musica del punto 2.
+2. **La musica (D14) è fatta con i materiali del gioco.** Il re del reattore come radice, il sonaglio, il tam-tam strofinato, le voci del brusio: una musica d’ambiente scritta e generata nel motore audio, senza brani di libreria. Si compone sul montaggio bloccato dell’intro, poi per l’Anziano e per le chiusure. Le macchine del relitto stanno intorno al sol diesis, a un tritono dal re (bibbia sonora, §1.3); la musica dell’Anziano va dal sol diesis al re. Un compositore resta possibile più avanti, e questa musica gli farebbe da traccia guida.
+3. **Le licenze stanno in una schermata prima del gioco.** «Riconoscimenti e licenze» compare prima del gioco al primo avvio e dopo ogni aggiornamento che aggiunge nomi; si salta dopo tre secondi e resta sempre raggiungibile dal menu. Elenca i suoni (autore, fonte, licenza, anche quando la licenza non chiede niente), i caratteri (SIL OFL), le librerie (Pyodide, lark, Tauri, React, kira e le altre) con le loro licenze, le immagini. Si genera da `audio/LICENZE.md` e dagli elenchi delle dipendenze, così non resta mai indietro.
+4. **I suoni si prendono dalle librerie.** Freesound in CC0 per primo, con l’account dell’autore (che entra da sé, nel pannello del browser); l’archivio Sonniss solo dove non c’è un’alternativa CC0 o di pubblico dominio, e nel registro i suoi file hanno «ridistribuibile: no». Nessuna registrazione è a carico dell’autore.
+5. **I documenti vecchi passano agli apostrofi tipografici**, solo nella prosa, mai nel codice.

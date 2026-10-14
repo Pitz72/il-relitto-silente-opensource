@@ -46,7 +46,7 @@ Che cosa si sente in ogni stanza e in ogni evento del gioco, da quali registrazi
 - Sulla Santa Maria nessun altro suono deve avere un’altezza che litighi con il re. Le registrazioni di macchine si puliscono dai toni di rete (50 e 60 Hz con le armoniche) e dai giri dei motori, con filtri notch stretti.
 - Nel relitto il re non c’è. L’orecchio del giocatore lo ha avuto sotto i piedi per tutto l’Atto I, e adesso gli manca. Quando il sonaglio del Nido suona il suo re, l’orecchio lo riconosce prima della frase.
 - Il sonaglio suona re₅, 587,33 Hz: esattamente l’ottavo armonico del reattore. Quando la nota è «riconosciuta», ogni volta che il re del reattore torna (la stiva e la plancia della fine) il suo ottavo armonico è un poco più forte. È così che il re «risuona in due».
-- **Proposta, da decidere con la musica (D14).** Le macchine del relitto girano intorno al sol diesis, a un tritono dal re: la distanza più grande che ci sia fra due note. Il generatore, i pilastri dell’archivio e il «clic armonioso» stanno lì. La nave suona lontana da casa, e il re del sonaglio, in mezzo a lei, è un’anomalia che si sente. L’Anziano dice che sono stati «la prima nota di qualcosa»: la musica dell’Anziano potrebbe andare dal sol diesis al re.
+- **Deciso con la musica (D14, 06 §18).** Le macchine del relitto girano intorno al sol diesis, a un tritono dal re: la distanza più grande che ci sia fra due note. Il generatore, i pilastri dell’archivio e il «clic armonioso» stanno lì. La nave suona lontana da casa, e il re del sonaglio, in mezzo a lei, è un’anomalia che si sente. L’Anziano dice che sono stati «la prima nota di qualcosa»: la musica dell’Anziano va dal sol diesis al re.
 
 ### 1.4 Vero, e sintetico dove serve
 
@@ -328,7 +328,7 @@ Per ogni stanza: gli strati con la loro strada, la fonte e la lavorazione; le va
 
 | Strato | Strada | Fonte | Lavorazione |
 |---|---|---|---|
-| l’ultimo pilastro | cuffia | da cercare: un ronzio elettrico | pulsa con la luce ambrata, «intermittente, come se aspettasse qualcosa»; nella proposta del §1.3, intorno al sol diesis |
+| l’ultimo pilastro | cuffia | da cercare: un ronzio elettrico | pulsa con la luce ambrata, «intermittente, come se aspettasse qualcosa»; intorno al sol diesis (§1.3) |
 | i pilastri incrinati | cuffia | da cercare: vetro sotto sforzo | tic di cristallo, radi |
 
 - **Forzato:** il terminale «sfrigola», poi la scintilla dell’ultimo pilastro, «più forte delle altre», e il suo ronzio muore. Da quel momento la caverna è muta: nessun ronzio, mai più.
@@ -369,7 +369,7 @@ Il respiro si condensa sul vetro: il suono del fiato non cambia, cambia l’imma
 | le interferenze | cuffia | da cercare: disturbi radio veri | «il multiscanner crepita di interferenze» |
 | la luce irregolare | cuffia | da cercare: un ronzio elettrico | un tic che segue il pulsare irregolare del banco |
 
-- **L’energia:** «Con un rombo che sale, i macchinari si svegliano dopo secoli». Poi «archi di elettricità corrono fra le bobine» e «L’aria vibra»: un ronzio denso, nella proposta del §1.3 intorno al sol diesis.
+- **L’energia:** «Con un rombo che sale, i macchinari si svegliano dopo secoli». Poi «archi di elettricità corrono fra le bobine» e «L’aria vibra»: un ronzio denso, intorno al sol diesis (§1.3).
 
 #### 3.18 Alloggio dell’equipaggio
 
@@ -648,7 +648,7 @@ Ogni eco ha il suo filo:
 
 ### 5.5 Il clic armonioso
 
-Il gioco usa due volte le stesse parole: i simboli della teca della serra si accendono «con un clic armonioso», e la porta tonda del Ponte si apre con «Un clic armonioso». Diventano un motivo: tre scatti vetrosi che formano un accordo. Nella proposta del §1.3 l’accordo sta intorno al sol diesis (415 Hz, 484 Hz, 622 Hz: una terza minore settimale e una quinta), lontano dal re. È lo stesso suono tutte e due le volte, perché è la stessa mano che li ha costruiti.
+Il gioco usa due volte le stesse parole: i simboli della teca della serra si accendono «con un clic armonioso», e la porta tonda del Ponte si apre con «Un clic armonioso». Diventano un motivo: tre scatti vetrosi che formano un accordo. Come vuole il §1.3, l’accordo sta intorno al sol diesis (415 Hz, 484 Hz, 622 Hz: una terza minore settimale e una quinta), lontano dal re. È lo stesso suono tutte e due le volte, perché è la stessa mano che li ha costruiti.
 
 ### 5.6 Il groviglio
 
@@ -759,7 +759,7 @@ Gli script della catena staranno in `strumenti/audio/`, come quelli dell’intro
 
 ### 7.4 Le registrazioni da fare in casa
 
-Sono le più vere e quelle con la licenza più pulita: l’autore ne è il proprietario. Basta un registratore portatile o un buon telefono, a 48 kHz e 24 bit, in una stanza sorda (un armadio pieno di vestiti funziona).
+Facoltative: l’autore ha deciso che nessuna registrazione è a suo carico (06, §18), e le fonti vengono dalle librerie. Restano qui come strada possibile, perché sono le più vere e quelle con la licenza più pulita. Basta un registratore portatile o un buon telefono, a 48 kHz e 24 bit, in una stanza sorda (un armadio pieno di vestiti funziona).
 
 1. **Il fiato (venti minuti).** Microfono a 10–15 cm, di lato alla bocca, per evitare i colpi d’aria. Quaranta respiri calmi dal naso, quaranta dalla bocca, quaranta dopo trenta piegamenti, trenta di fame d’aria, venti spezzati, dieci sospiri, dieci inspirazioni di sorpresa, dieci fiati trattenuti e lasciati, cinque ultimi respiri. Fra un gruppo e l’altro, una pausa. **Mai iperventilare fino a girare la testa**: le parti spezzate e affannate si recitano, seduti.
 2. **Il fiato dentro un casco.** Gli stessi gruppi, più corti, con un casco da moto in testa e la visiera chiusa, il microfono dentro, vicino all’orecchio. È il suono vero del fiato in una bolla.
@@ -817,10 +817,12 @@ LibriVox si scarica da archive.org senza account.
 
 In attesa del permesso. Nessun file scaricato.
 
-## 9. Che cosa serve dall’autore
+## 9. Decisioni dell’autore
 
-1. Il permesso per i file del §8.2, tutti o in parte, e la strada (gli originali o le anteprime).
-2. Se registrare in casa il fiato, il casco, la tuta e il sonaglio (§7.4).
-3. Quali annate dell’archivio Sonniss GDC scaricare, quando servirà (sono grandi).
-4. La musica (D14): il suono è pronto ad accoglierla; la proposta del sol diesis (§1.3) dipende da lei.
-5. Prima di pubblicare il repository: dove tenere i suoni derivati da Sonniss (§7.1).
+Il 14 ottobre, la sera, l’autore ha delegato le decisioni di questa fase (06, §18):
+
+1. i file del §8.2 si scaricano, con il suo account Freesound: l’autore entra da sé nel pannello del browser;
+2. nessuna registrazione in casa: il fiato, la tuta e il sonaglio si cercano nelle librerie;
+3. l’archivio Sonniss solo dove manca un’alternativa CC0 o di pubblico dominio;
+4. la musica (D14) è fatta con i materiali del gioco, e il sol diesis del §1.3 è deciso;
+5. le licenze vanno in una schermata «Riconoscimenti e licenze» prima del gioco, generata dal registro.

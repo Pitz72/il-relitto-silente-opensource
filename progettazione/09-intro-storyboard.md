@@ -289,7 +289,9 @@ conterebbe come fallito.
 
 ---
 
-## 8. Le scelte da approvare
+## 8. Le scelte, approvate il 14 ottobre 2026
+
+L’autore ha approvato lo storyboard con le cinque scelte come consigliate (06, §18).
 
 1. **Il prologo diviso in due** (A e F). Si perde la lettura tutta d’un fiato; si guadagna la seconda
    metà sul fuso, che dice da dove viene la voce. Consiglio: sì.
@@ -300,10 +302,12 @@ conterebbe come fallito.
 4. **La durata, 2:40.** Per scendere verso i due minuti bisogna togliere testo o scene. Togliere D:
    2:31. Togliere anche B2 e B5–B6 (che resterebbero nel diario): circa 2:12; si perdono l’acqua e il
    riscaldamento, e la frase su chi parte da solo, che è il ponte fra L.V. e William. Consiglio:
-   tenere tutto.
+   tenere tutto. **Deciso: 2:40, tutte le scene.**
 5. **La musica (D14).** La mia proposta: un tema breve composto sul montaggio bloccato, con il re
    come radice; nell’attesa, come traccia provvisoria, il re sintetizzato con i suoi armonici, che
    resta comunque il fondo del gioco.
+   **Deciso** (06, §18): la musica è fatta con i materiali del gioco, il re, il sonaglio, il tam-tam
+   strofinato e le voci del brusio, scritta e generata nel motore audio.
 
 ---
 
