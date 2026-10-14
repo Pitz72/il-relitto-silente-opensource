@@ -79,7 +79,7 @@
 .tema *::-webkit-scrollbar { display: none; }
 
 /* I pulsanti del gioco: nessuno stile del sistema. */
-.tema button {
+:where(.tema) button {
   font: inherit;
   color: inherit;
   background: none;
@@ -90,7 +90,7 @@
   -webkit-appearance: none;
   appearance: none;
 }
-.tema button:disabled { cursor: default; }
+:where(.tema) button:disabled { cursor: default; }
 
 /* Il fuoco sempre visibile, con lo stile del visore (§6.2): nell'acciaio un
    filo squadrato, nella membrana un alone che segue la forma. */

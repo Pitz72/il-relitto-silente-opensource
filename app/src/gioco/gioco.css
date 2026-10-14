@@ -1,0 +1,73 @@
+/* ==========================================================================
+   Lo schermo del gioco: il palco 16:9 (riferimento 1920×1080, fino a
+   1280×720); sugli schermi più larghi o più alti crescono i margini, non la
+   colonna del testo (06-app-desktop.md, §4). Le misure dentro il palco sono in
+   unità del palco (cqw), come nella tavola della membrana.
+   ========================================================================== */
+.gioco { display: grid; place-items: center; }
+.palco {
+  position: relative;
+  width: min(100vw, calc(100vh * 16 / 9));
+  aspect-ratio: 16 / 9;
+  container-type: size;
+  /* il corpo del testo: 21 px a 1920, mai sotto 16 */
+  --corpo: max(16px, 1.1cqw);
+}
+[data-testo="grande"] .palco { --corpo: max(19px, 1.32cqw); }
+
+.palco .atto {
+  position: absolute;
+  left: 4.4cqw;
+  top: 1.7cqw;
+  z-index: 3;
+  font-style: italic;
+  font-size: max(13px, .95cqw);
+  color: var(--tenue);
+  letter-spacing: .02em;
+}
+.gioco[data-forma="acciaio"] .palco .atto {
+  font-style: normal;
+  font-family: var(--stencil);
+  font-weight: 700;
+  font-size: max(13px, 1.05cqw);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+}
+
+.palco .lamina { left: 4cqw; top: 4.4cqw; width: 54cqw; height: 35.6cqw; z-index: 3; }
+
+.avvio {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--tenue);
+}
+.avvio.errore { color: var(--rosso); white-space: pre-wrap; text-transform: none; letter-spacing: 0; padding: 24px; user-select: text; }
+
+/* solo per il passo 2: la fila provvisoria dei comandi */
+.provvisorie {
+  position: absolute;
+  left: 4cqw;
+  right: 4cqw;
+  bottom: 1.6cqw;
+  max-height: 12cqw;
+  overflow-y: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  z-index: 4;
+}
+.provvisorie button {
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 4px 10px;
+  border: 1px solid var(--bordo);
+  border-radius: 999px;
+  color: var(--testo);
+}
+.provvisorie button:hover { border-color: var(--accento-2); }

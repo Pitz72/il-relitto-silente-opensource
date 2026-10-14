@@ -17,45 +17,14 @@
 // In più: ogni suggerimento in maiuscolo del gioco deve accendere un pulsante
 // dei menu (o, se non nomina una cosa, almeno l'attrezzo del suo verbo).
 
-import { spawn } from "node:child_process";
 import { readdirSync, readFileSync } from "node:fs";
-import { createInterface } from "node:readline";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { comandiDelModello, costruisciModello } from "../app/src/azione/modello.ts";
+import { Ponte, RADICE, STORIA } from "./ponte.mjs";
 
 const QUI = dirname(fileURLToPath(import.meta.url));
-const RADICE = dirname(QUI);
-const STORIA = join(RADICE, "relitto-silente", "relitto.fav");
 const FINALI = ["vivi", "prima-nota", "stiva-piena", "doppio-fondo", "mani-vuote", "due-lettere"];
-
-/** Il ponte in CPython, a richiesta (collaudo/servizio_ponte.py). */
-class Ponte {
-  constructor() {
-    this.attese = new Map();
-    this.prossimo = 1;
-    this.processo = spawn(process.env.PYTHON ?? "python", ["-X", "utf8", join(QUI, "servizio_ponte.py")], {
-      stdio: ["pipe", "pipe", "inherit"],
-    });
-    createInterface({ input: this.processo.stdout }).on("line", (riga) => {
-      const r = JSON.parse(riga);
-      const attesa = this.attese.get(r.id);
-      this.attese.delete(r.id);
-      if (r.errore) attesa.rifiuta(new Error(r.errore));
-      else attesa.risolvi(r.r);
-    });
-  }
-  chiama(f, ...a) {
-    const id = this.prossimo++;
-    return new Promise((risolvi, rifiuta) => {
-      this.attese.set(id, { risolvi, rifiuta });
-      this.processo.stdin.write(JSON.stringify({ id, f, a }) + "\n");
-    });
-  }
-  chiudi() {
-    this.processo.stdin.end();
-  }
-}
 
 const norm = (s) => s.replace(/’/g, "'").toLowerCase().split(/\s+/).filter(Boolean).join(" ").replace(/\.$/, "");
 

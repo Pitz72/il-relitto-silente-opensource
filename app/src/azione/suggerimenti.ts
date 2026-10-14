@@ -66,6 +66,9 @@ export function verboDi(parola: string, verbi: ReadonlySet<string>): { verbo: st
   if (verbi.has(p)) return { verbo: p, pronome: false };
   const daInfinito = infinito(p);
   if (daInfinito && verbi.has(daInfinito)) return { verbo: daInfinito, pronome: false };
+  // «Lo studi meglio se lo ANALIZZI»: il congiuntivo dei verbi in -are, con il
+  // pronome davanti (la cosa è quella del comando appena dato)
+  if (p.endsWith("i") && p.length > 4 && verbi.has(p.slice(0, -1) + "a")) return { verbo: p.slice(0, -1) + "a", pronome: true };
   for (const c of CLITICI) {
     if (!p.endsWith(c) || p.length < c.length + 3) continue;
     const base = p.slice(0, -c.length);
@@ -77,11 +80,14 @@ export function verboDi(parola: string, verbi: ReadonlySet<string>): { verbo: st
   return null;
 }
 
-interface Frase {
+export interface Frase {
   parole: string[];
   testo: string;
   /** le parole minuscole che seguono, fino alla punteggiatura */
   seguito: string;
+  /** dove sta la frase nel testo (la lamina la sostituisce con il suo pulsante) */
+  inizio: number;
+  fine: number;
 }
 
 /** Le frasi in maiuscolo di un testo: parole senza minuscole, una dopo l'altra,
@@ -96,7 +102,7 @@ export function frasiMaiuscole(testo: string): Frase[] {
     if (parole.length) {
       const resto = testo.slice(fine);
       const seguito = /^ [a-zàèéìòù]/.test(resto) ? resto.slice(1).split(/[.,;:!?()«»—]/)[0] : "";
-      out.push({ parole, testo: testo.slice(inizio, fine), seguito });
+      out.push({ parole, testo: testo.slice(inizio, fine), seguito, inizio, fine });
     }
     parole = [];
     aperta = false;

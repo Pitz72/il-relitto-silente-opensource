@@ -18,12 +18,30 @@ documenti di `progettazione/`.
   ogni testo in 54 climi provati sopra 4,5:1 (`app/prove/atmosfere.test.ts`); il movimento ridotto
   come attributo unico della radice; le opzioni di chi gioca (movimento, carattere, testo grande); il
   campionario delle misure (`?campionario`).
+- **La lamina del testo con la grammatica tipografica** (06, §4.1 e §4.2): il riconoscimento di ogni
+  tipo di testo del gioco in TypeScript (`app/src/gioco/lamina/grammatica.ts`): la stanza, la prosa,
+  le voci del relitto, la scatola nera di L.V. e il prologo, le letture dello scanner, il dialogo, la
+  riga del registro dei finali, e dentro la prosa i suggerimenti (pulsanti), la protezione vitale, ciò
+  che è scritto sugli schermi, le etichette, la matrice, gli intraducibili, le scritte a stampo e
+  quelle graffiate, i nomi delle cose toccabili. Ogni blocco ricostruisce il testo del motore
+  carattere per carattere; l’unica trasformazione è l’apostrofo tipografico, solo a schermo. Il
+  collaudo `collaudo/tipografia.mjs` lo prova sui 14 percorsi (1.308 turni) e sulle 1.131 stringhe dei
+  `.fav`. La lamina (`Lamina.tsx`): il comando sopra la risposta con il costo in aria, la rivelazione a
+  righe che Spazio o un clic completano, il turno di prima spento sopra, l’acciaio e la membrana.
+  La pagina del gioco in costruzione (`?gioco`).
 - **L’animatic dell’intro** (`app/src/intro/`, §10 di `progettazione/09-intro-storyboard.md`): tutte
   le scene sulla scaletta di 2:40,75, calcolata con la regola di lettura e provata contro la tabella
   dello storyboard; il motore della scala in un modulo (la scena E definitiva, e il margine di B); i
   glifi del titolo; il radar, la spia rossa e le stelle che si spengono disegnati dal vivo sui quadri
   della plancia; il salto, il movimento ridotto scena per scena, i sottotitoli dei suoni; una barra di
   revisione (`?intro&revisione`).
+
+### Cambiato
+
+- I suggerimenti riconoscono anche «se lo ANALIZZI» (il congiuntivo, con il pronome davanti): la
+  proiezione del Ponte accende il suo Analizza.
+- `collaudo/menu.mjs` prende il ponte in Node da `collaudo/ponte.mjs`, che usa anche il collaudo della
+  tipografia.
 
 ## [0.2.0] - 2026-10-14
 

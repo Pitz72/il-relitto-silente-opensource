@@ -11,16 +11,19 @@ addEventListener("keydown", (e) => {
 // Le pagine, ognuna con i suoi stili (si caricano solo quando servono):
 //   ?intro            l'intro (con &revisione, la barra per rivedere l'animatic)
 //   ?campionario      il campionario del sistema visivo: caratteri, atmosfere, contrasti
+//   ?gioco            il gioco (fase 3, in costruzione)
 //   altrimenti        la pagina di prova della fase 1
 const Intro = lazy(() => import("./intro/Intro"));
 const Prova = lazy(() => import("./prova/Prova"));
 const Campionario = lazy(() => import("./campionario/Campionario"));
+const Gioco = lazy(() => import("./gioco/Gioco"));
 
 const parametri = new URLSearchParams(location.search);
 
 function Pagina() {
   if (parametri.has("intro")) return <Intro revisione={parametri.has("revisione")} />;
   if (parametri.has("campionario")) return <Campionario />;
+  if (parametri.has("gioco")) return <Gioco />;
   return <Prova />;
 }
 

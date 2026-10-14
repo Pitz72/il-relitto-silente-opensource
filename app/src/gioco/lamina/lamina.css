@@ -1,0 +1,303 @@
+/* ==========================================================================
+   La lamina del testo (06-app-desktop.md, §4.1, §4.2, §4.7).
+   La posizione la decide lo schermo (gioco.css); qui la forma e la tipografia.
+   Contrasti: tutti i colori di testo vengono da atmosfere.ts e sono provati
+   sopra 4,5:1 sulla lamina (prove/atmosfere.test.ts).
+   ========================================================================== */
+.lamina {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  font-size: var(--corpo);
+  line-height: 1.58;
+  background: radial-gradient(ellipse at 30% 18%, color-mix(in srgb, var(--lamina-1) 86%, var(--vena) 4%), var(--lamina-2));
+  border: 1px solid var(--bordo);
+  border-radius: 3.6cqw 5.6cqw 3.2cqw 6.4cqw / 4.8cqw 3.4cqw 5.8cqw 4cqw;
+  box-shadow: 0 0 7cqw var(--alone), inset 0 0 4cqw color-mix(in srgb, var(--vena) 5%, transparent);
+  transition: border-radius 3.2s cubic-bezier(.6, 0, .2, 1), box-shadow 2.4s;
+  overflow: hidden;
+  cursor: default;
+}
+/* la membrana respira, solo ai bordi, in diciotto secondi (§3) */
+[data-movimento="pieno"] .lamina[data-forma="membrana"] { animation: lamina-respira 18s ease-in-out 3.2s infinite alternate; }
+@keyframes lamina-respira {
+  0% { border-radius: 3.6cqw 5.6cqw 3.2cqw 6.4cqw / 4.8cqw 3.4cqw 5.8cqw 4cqw; }
+  50% { border-radius: 5.2cqw 4cqw 4.6cqw 5cqw / 3.6cqw 5cqw 4.2cqw 5.4cqw; }
+  100% { border-radius: 4.2cqw 6.2cqw 3.8cqw 5.4cqw / 5.4cqw 3.8cqw 5cqw 4.6cqw; }
+}
+/* l'acciaio: il registro di bordo, gli angoli, la targa a stampo */
+.lamina[data-forma="acciaio"] {
+  border-radius: .25cqw;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--testo) 5%, transparent);
+  background: linear-gradient(180deg, var(--lamina-1), var(--lamina-2));
+}
+.lamina-targa {
+  position: absolute;
+  left: 3.6cqw;
+  top: 1.25cqw;
+  font-family: var(--stencil);
+  font-weight: 700;
+  font-size: max(11px, .78cqw);
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--targa);
+  pointer-events: none;
+}
+
+.lamina-scorre {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 3.4cqw 3.6cqw 2.2cqw 3.8cqw;
+  /* il testo che sale esce sfumando */
+  -webkit-mask-image: linear-gradient(transparent, #000 2.8em);
+  mask-image: linear-gradient(transparent, #000 2.8em);
+  display: flex;
+  flex-direction: column;
+}
+/* nell'acciaio il testo che sale sparisce prima della targa */
+.lamina[data-forma="acciaio"] .lamina-scorre {
+  padding-top: 3.9cqw;
+  -webkit-mask-image: linear-gradient(transparent 2.6cqw, #000 calc(2.6cqw + 2.2em));
+  mask-image: linear-gradient(transparent 2.6cqw, #000 calc(2.6cqw + 2.2em));
+}
+/* corto: in fondo; lungo: dall'alto, e si scorre */
+.lamina-colonna { margin-top: auto; max-width: 34em; }
+
+.turno.passato { font-size: .86em; line-height: 1.5; transition: opacity .6s; }
+.turno.passato + .turno { margin-top: .4em; }
+.turno.attuale { padding-bottom: .2em; }
+
+/* il comando dato, sopra la risposta (§4.1) */
+.comando {
+  font-family: var(--mono);
+  font-size: max(12px, .64em);
+  letter-spacing: .14em;
+  color: var(--tenue);
+  margin: 0 0 .5em;
+  display: flex;
+  gap: 1.2em;
+  align-items: baseline;
+}
+.lamina[data-forma="membrana"] .comando-testo { font-style: italic; }
+.comando-aria { color: var(--aria); letter-spacing: .06em; }
+
+/* la stanza: display grande, poi una riga sottile */
+.b-stanza h2 {
+  margin: 0;
+  font-weight: 300;
+  font-style: italic;
+  font-size: 2.05em;
+  line-height: 1.08;
+  letter-spacing: -.005em;
+  color: color-mix(in srgb, var(--testo) 76%, var(--vena-2));
+}
+.lamina[data-forma="acciaio"] .b-stanza h2 { font-style: normal; font-weight: 400; font-size: 1.9em; color: var(--testo); }
+.vena-titolo {
+  height: 2px;
+  width: 58%;
+  margin: .32em 0 .7em;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--vena-2), transparent 65%);
+  opacity: .55;
+}
+.lamina[data-forma="acciaio"] .vena-titolo { height: 1px; background: linear-gradient(90deg, var(--accento-2), transparent 70%); opacity: .6; }
+.turno.passato .b-stanza h2 { font-size: 1.35em; }
+.turno.passato .vena-titolo { margin: .2em 0 .4em; }
+
+/* la prosa */
+.b-paragrafo, .b-dialogo, .b-sistema, .b-registro { margin: 0 0 .62em; }
+.stacco { margin-top: .5em; }
+.b-sistema { font-family: var(--mono); font-size: max(12px, .7em); letter-spacing: .06em; color: var(--tenue); }
+
+/* la voce del relitto: rientro, corsivo, filo verticale; il nome in maiuscoletto */
+.b-voce {
+  position: relative;
+  margin: .5em 0 .8em;
+  padding: .05em 0 .05em 1.15em;
+  color: color-mix(in srgb, var(--testo) 90%, var(--accento));
+}
+.b-voce.stessa-riga { margin-top: .15em; }
+.b-voce::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .3em;
+  bottom: .3em;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(var(--vena), var(--vena-2));
+  box-shadow: 0 0 .7em color-mix(in srgb, var(--vena) 70%, transparent);
+}
+.lamina[data-forma="acciaio"] .b-voce::before { box-shadow: none; }
+.b-voce .chi, .b-dialogo .chi {
+  display: block;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: max(11.5px, .6em);
+  letter-spacing: .2em;
+  color: var(--accento);
+  margin-bottom: .15em;
+}
+.b-voce .inciso { display: block; font-style: italic; color: var(--tenue); font-size: .92em; margin-bottom: .1em; }
+.b-voce .detto { display: block; }
+.s-parlato { font-style: italic; }
+.b-voce .s-didascalia { color: var(--tenue); }
+
+/* il dialogo, quando sta nella lamina */
+.b-dialogo .chi { display: inline; margin-right: .4em; }
+.b-dialogo .s-didascalia { font-style: italic; color: var(--tenue); }
+
+/* la registrazione di L.V.: grana, buchi come pause grafiche, filo verde spento */
+.b-registrazione {
+  position: relative;
+  margin: .55em 0 .85em;
+  padding: .55em .9em .6em 1.15em;
+  border-radius: .3em;
+  background:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .07 0'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>"),
+    color-mix(in srgb, var(--lamina-2) 70%, #000);
+  color: color-mix(in srgb, var(--testo) 94%, #9fdcb0);
+}
+.b-registrazione::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .5em;
+  bottom: .5em;
+  width: 2px;
+  border-radius: 2px;
+  background: #4f7d5c;
+}
+.b-registrazione > span { display: block; }
+.traccia-voce { font-style: italic; font-weight: 340; }
+.traccia-apparecchio { font-family: var(--mono); font-size: max(11.5px, .62em); letter-spacing: .18em; text-transform: uppercase; color: var(--tenue); }
+.b-registrazione .stacco { margin-top: .55em; }
+.b-registrazione > .traccia-buco { display: flex; align-items: center; gap: .8em; margin: .35em 0; color: var(--tenue); }
+.traccia-buco .buco-testo { font-family: var(--mono); font-size: max(11.5px, .62em); letter-spacing: .14em; white-space: nowrap; }
+.traccia-buco .buco-segno {
+  flex: 0 1 3.2em;
+  height: 1px;
+  background: repeating-linear-gradient(90deg, color-mix(in srgb, var(--tenue) 70%, transparent) 0 2px, transparent 2px 7px);
+}
+.traccia-buco .buco-segno:last-child { flex-grow: 1; }
+
+/* la lettura dello scanner: mono, maiuscoletto, su una fascia scura */
+.b-lettura {
+  margin: .45em 0 .8em;
+  padding: .55em .9em;
+  font-family: var(--mono);
+  font-size: max(13px, .78em);
+  line-height: 1.6;
+  letter-spacing: .02em;
+  background: color-mix(in srgb, var(--fondo-2) 55%, transparent);
+  border-left: 2px solid var(--vena-2);
+  border-radius: 0 .25em .25em 0;
+}
+.lamina[data-forma="acciaio"] .b-lettura { border-left-color: var(--accento-2); border-radius: 0; }
+
+/* la riga del registro di bordo che chiude un finale */
+.b-registro {
+  margin-top: 1.1em;
+  padding-top: .7em;
+  border-top: 1px solid var(--bordo);
+  font-family: var(--mono);
+  font-size: max(12px, .7em);
+  letter-spacing: .08em;
+  color: var(--tenue);
+}
+.fine { margin-top: .4em; }
+
+/* i segni dentro la prosa */
+.s-suggerimento {
+  display: inline;
+  padding: 0;
+  font: inherit;
+  font-style: normal;
+  letter-spacing: .05em;
+  color: var(--accento-2);
+  text-shadow: 0 0 .5em color-mix(in srgb, var(--accento-2) 70%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--accento-2) 55%, transparent);
+  border-radius: 0;
+  cursor: pointer;
+}
+[data-movimento="pieno"] .lamina[data-forma="membrana"] .turno.attuale .s-suggerimento { animation: luce-propria 2.6s ease-in-out infinite; }
+@keyframes luce-propria {
+  0%, 100% { text-shadow: 0 0 .35em color-mix(in srgb, var(--accento-2) 60%, transparent); }
+  50% { text-shadow: 0 0 1.1em var(--accento-2), 0 0 .25em color-mix(in srgb, var(--accento-2) 80%, transparent); }
+}
+.s-suggerimento:hover { color: var(--testo); }
+.s-suggerimento:disabled { cursor: default; text-shadow: none; }
+.lamina[data-forma="acciaio"] .s-suggerimento {
+  font-family: var(--mono);
+  font-size: .86em;
+  letter-spacing: .04em;
+  padding: .05em .4em;
+  color: #120d08;
+  background: var(--accento-2);
+  text-shadow: none;
+  border-bottom: 0;
+  border-radius: .12em;
+}
+.lamina[data-forma="acciaio"] .s-suggerimento:hover { background: var(--testo); }
+.turno.passato .s-suggerimento { pointer-events: none; animation: none; }
+.attenuato { color: var(--tenue); }
+
+.s-protezione { font-family: var(--mono); font-size: .86em; letter-spacing: .06em; color: var(--rosso); }
+.s-schermo, .s-maiuscolo { font-family: var(--mono); font-size: .86em; letter-spacing: .06em; }
+.b-lettura .s-schermo { font-size: 1em; color: var(--testo); font-weight: 500; letter-spacing: .08em; }
+.s-etichetta { font-family: var(--mono); font-size: .86em; color: var(--accento); }
+.b-lettura .s-etichetta { font-size: 1em; }
+.s-matrice { font-family: var(--mono); font-size: .76em; letter-spacing: .04em; color: var(--tenue); white-space: nowrap; }
+.s-intraducibile { font-family: var(--mono); font-style: normal; font-size: .78em; color: var(--tenue); }
+.s-stampo { font-family: var(--stencil); font-weight: 700; letter-spacing: .12em; font-size: .98em; }
+.s-graffio { letter-spacing: .16em; font-size: .9em; font-weight: 500; }
+.s-nome {
+  cursor: pointer;
+  border-bottom: 1px dotted color-mix(in srgb, var(--accento) 70%, transparent);
+}
+.s-nome:hover { color: var(--accento); border-bottom-style: solid; }
+
+/* «continua»: c'è altro sotto, e il testo sfuma prima del bordo */
+.lamina.con-altro .lamina-scorre {
+  -webkit-mask-image: linear-gradient(transparent, #000 2.8em, #000 calc(100% - 3.2em), transparent calc(100% - .6em));
+  mask-image: linear-gradient(transparent, #000 2.8em, #000 calc(100% - 3.2em), transparent calc(100% - .6em));
+}
+.lamina[data-forma="acciaio"].con-altro .lamina-scorre {
+  -webkit-mask-image: linear-gradient(transparent 2.6cqw, #000 calc(2.6cqw + 2.2em), #000 calc(100% - 3.2em), transparent calc(100% - .6em));
+  mask-image: linear-gradient(transparent 2.6cqw, #000 calc(2.6cqw + 2.2em), #000 calc(100% - 3.2em), transparent calc(100% - .6em));
+}
+.lamina-continua {
+  position: absolute;
+  right: 2.6cqw;
+  bottom: .8cqw;
+  min-height: 28px;
+  font-family: var(--mono);
+  font-size: max(11.5px, .62em);
+  letter-spacing: .16em;
+  color: var(--tenue);
+  padding: .25em .8em;
+  border: 1px solid var(--bordo);
+  border-radius: 999px;
+  background: var(--lamina-2);
+}
+.lamina[data-forma="acciaio"] .lamina-continua { border-radius: .15em; }
+.lamina-continua:hover { color: var(--testo); border-color: var(--accento); }
+
+/* la rivelazione a righe (§4.1): ogni blocco si scopre una riga alla volta */
+.turno.in-rivelazione [data-riv] {
+  -webkit-mask-image: linear-gradient(to bottom, #000 48%, transparent 52%);
+  mask-image: linear-gradient(to bottom, #000 48%, transparent 52%);
+  -webkit-mask-size: 100% 200%;
+  mask-size: 100% 200%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: 0 100%;
+  mask-position: 0 100%;
+  animation: rivela var(--durata, 120ms) steps(var(--righe, 1), start) var(--ritardo, 0ms) both;
+}
+@keyframes rivela {
+  from { -webkit-mask-position: 0 100%; mask-position: 0 100%; }
+  to { -webkit-mask-position: 0 0; mask-position: 0 0; }
+}
