@@ -13,3 +13,5 @@
 *.ico  binary
 *.icns binary
 *.wasm binary
+*.mp3  binary
+*.flac binary

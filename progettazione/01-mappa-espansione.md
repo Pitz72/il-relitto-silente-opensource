@@ -1,21 +1,21 @@
-# Il Relitto Silente — mappa dell'espansione
+# Il Relitto Silente — mappa dell’espansione
 
 **Strato 1: struttura, mappa, meccaniche, finali.** Versione 0.5, 14 ottobre 2026.
 
 Dalla 0.4: la revisione (`04-revisione.md`) ha precisato D6 (la protezione vitale abbassa anche il
-faro) e il cavo di L.V. (T3: fra le teche c'è il suo cavo guida). Il resto del documento è il
-progetto com'era.
+faro) e il cavo di L.V. (T3: fra le teche c’è il suo cavo guida). Il resto del documento è il
+progetto com’era.
 
 Dalla 0.3: il remake è completo. Gli strati 3, 4 e 5 sono descritti in `03-strati-3-5.md`, che
-riporta anche i valori d'aria tarati (diversi dalle stime del §5.1) e la divisione finale dei
+riporta anche i valori d’aria tarati (diversi dalle stime del §5.1) e la divisione finale dei
 moduli (che aggiunge `corridoio.fav` e tiene `traduci.fav` ed `echi.fav` come moduli trasversali).
 
 Dalla 0.2: prese anche le decisioni D4 e D6–D10 (§15); §14.1 aggiornato alla divisione in moduli
 per atto adottata nello strato 2. Lo strato 2 (Atti I e II) è fatto: vedi
 `02-strato-2-atti-I-II.md`.
 
-Dalla 0.1: decise la voce narrante (D1), L.V. come nel libro (D2), la stiva vuota (D3), l'Anziano
-che spera (D5). L.V. passa dall'Arca biologica alla Serra morente. I finali si chiudono con una riga
+Dalla 0.1: decise la voce narrante (D1), L.V. come nel libro (D2), la stiva vuota (D3), l’Anziano
+che spera (D5). L.V. passa dall’Arca biologica alla Serra morente. I finali si chiudono con una riga
 del registro di bordo. Il gioco si apre con un frammento della scatola nera di L.V.
 
 Fonti: il gioco in `relitto-silente/` (FAVELLA 1, motore 1.4.4) e «Il Relitto», racconto primo
@@ -41,15 +41,15 @@ Gli ID di stato sono in `MAIUSCOLO_CON_TRATTINO_BASSO`.
 | Percorso minimo vincente | 54 comandi | ~100 comandi (stima) | |
 | Contatori tracciati e mai letti | 2 (`echi`, `risonanze`) | 0 | |
 
-Le tre idee che reggono l'espansione:
+Le tre idee che reggono l’espansione:
 
-1. **L'aria è la lingua del gioco.** Il racconto lo dice in ogni pagina: ascoltare costa fiato.
+1. **L’aria è la lingua del gioco.** Il racconto lo dice in ogni pagina: ascoltare costa fiato.
    Nel gioco ogni voce ascoltata e ogni testo tradotto consumano la riserva della tuta. Nessuno
-   ascolta tutto e porta via tutto: l'aria basta per una delle due cose.
-2. **La nave si attraversa due volte.** All'andata si sale per la strada dei costruttori (le tre
+   ascolta tutto e porta via tutto: l’aria basta per una delle due cose.
+2. **La nave si attraversa due volte.** All’andata si sale per la strada dei costruttori (le tre
    chiavi, la Grande Porta). Al ritorno si scende per quella di L.V. (le gole, le teche, i
-   filamenti), con l'aria che cala e la nave che si disgrega.
-3. **La scelta finale si fa con le mani, non nel dialogo.** L'Anziano non decide niente per chi
+   filamenti), con l’aria che cala e la nave che si disgrega.
+3. **La scelta finale si fa con le mani, non nel dialogo.** L’Anziano non decide niente per chi
    gioca. Dopo il congedo restano un seme scuro su un sostegno e, due gallerie più su, una
    macchina che vale il viaggio e altri tre. Si esce con quello che si riesce a portare.
 
@@ -63,42 +63,42 @@ Le tre idee che reggono l'espansione:
 |---|---|---|
 | William T. Eriksonn, recuperante, stiva vuota da sei settimane, il conto aperto con Yusuf | Il movente. La stiva diventa vuota, la radio porta Yusuf, sulla plancia un quadrante mostra il margine | Atto I |
 | La massa che beve il radar e la luce del faro (cap. 1) | La scansione lunga e il faro di prua: gesti di apertura, con la luce che entra e non torna | Atto I |
-| Arpioni, tuta, cavo di sicurezza (cap. 1) | Enigma dell'accostamento. Il cavo torna come indizio: quello di L.V. è stato tranciato | Atti I e III |
-| L'arnese nella nicchia che parla ancora e vale una stiva piena (cap. 1) | Il **risuonatore** (nome nuovo, vedi §5.3), la tentazione che resta in vista per tutta la partita | Atti II e V |
-| La tuta che traduce e intanto beve dalla stessa batteria dell'aria (capp. 1–2) | La meccanica dell'aria: ascoltare e tradurre costano | Ovunque |
-| La riga sul visore: la connessione la tiene l'altro capo (cap. 2) | Evento scritto nella Gola di mezzo: il Sintonizzatore non si spegne | Atto II |
-| La voce che dice nomi che il traduttore non sa rendere (cap. 2) | Eco involontaria nella Gola di mezzo; il profondo dell'Ingegnere (che c'è già) svela chi parlava | Atti II e III |
+| Arpioni, tuta, cavo di sicurezza (cap. 1) | Enigma dell’accostamento. Il cavo torna come indizio: quello di L.V. è stato tranciato | Atti I e III |
+| L’arnese nella nicchia che parla ancora e vale una stiva piena (cap. 1) | Il **risuonatore** (nome nuovo, vedi §5.3), la tentazione che resta in vista per tutta la partita | Atti II e V |
+| La tuta che traduce e intanto beve dalla stessa batteria dell’aria (capp. 1–2) | La meccanica dell’aria: ascoltare e tradurre costano | Ovunque |
+| La riga sul visore: la connessione la tiene l’altro capo (cap. 2) | Evento scritto nella Gola di mezzo: il Sintonizzatore non si spegne | Atto II |
+| La voce che dice nomi che il traduttore non sa rendere (cap. 2) | Eco involontaria nella Gola di mezzo; il profondo dell’Ingegnere (che c’è già) svela chi parlava | Atti II e III |
 | Le teche forzate da dentro, i filamenti che cercano calore e luce (cap. 2) | La Sala delle teche: enigma del faro con tre soluzioni; ci si ripassa nella fuga | Atti III e V |
-| La voce giovane che chiede perché la nave non si muove (cap. 2) | Il Nido e l'eco del Piccolo, a cui si può rispondere | Atto III |
+| La voce giovane che chiede perché la nave non si muove (cap. 2) | Il Nido e l’eco del Piccolo, a cui si può rispondere | Atto III |
 | La voce che non fa parole ma graffia, e si ferma sempre nello stesso punto (cap. 2) | Profondo dello Scriba sulla lastra incisa (il glifo incompiuto è già nel gioco) | Atto III |
-| L'uomo seduto contro la colonna, la punta del carotatore, la placca graffiata, la frase spezzata, le due lettere (cap. 3) | L.V. come nel racconto, nella Serra morente: seduto contro la base di una colonna spenta, a mezzo metro dalla teca con il seme vivo che non è riuscito ad aprire | Atto III |
+| L’uomo seduto contro la colonna, la punta del carotatore, la placca graffiata, la frase spezzata, le due lettere (cap. 3) | L.V. come nel racconto, nella Serra morente: seduto contro la base di una colonna spenta, a mezzo metro dalla teca con il seme vivo che non è riuscito ad aprire | Atto III |
 | William che graffia le sue due lettere accanto a quelle del morto (cap. 3) | `incidi la placca`: firmare accanto a lui o completare la sua parola | Atto III |
 | La scatola nera della tuta, spenta da un secolo e mezzo; il diario del Prologo | Il gioco si apre con un frammento di quella voce, senza dire di chi è. Nella Serra la scatola nera si accende collegandola alla propria tuta: la voce di L.V. costa aria | Prologo, Atto III |
-| La carta di rotta: tre soli morti e una linea fino al nostro sole (cap. 4) | Resta sul Ponte; i disegni del Nido ne sono l'eco | Atti III e IV |
-| Il seme scuro che non pulsa (cap. 4) | Il seme torna scuro dalla Grande Porta e dall'Anziano | Atto IV |
-| L'ultima voce, a buchi, con poche parole intere (cap. 4) | Sul sostegno, dopo il congedo. Resta a buchi anche con la traduzione al 100% | Atto IV |
-| La fuga, la caviglia afferrata, il pensiero che rallenta per mancanza d'ossigeno (cap. 4) | L'Atto V; sotto il 15% d'aria le descrizioni si accorciano e si spezzano | Atto V |
+| La carta di rotta: tre soli morti e una linea fino al nostro sole (cap. 4) | Resta sul Ponte; i disegni del Nido ne sono l’eco | Atti III e IV |
+| Il seme scuro che non pulsa (cap. 4) | Il seme torna scuro dalla Grande Porta e dall’Anziano | Atto IV |
+| L’ultima voce, a buchi, con poche parole intere (cap. 4) | Sul sostegno, dopo il congedo. Resta a buchi anche con la traduzione al 100% | Atto IV |
+| La fuga, la caviglia afferrata, il pensiero che rallenta per mancanza d’ossigeno (cap. 4) | L’Atto V; sotto il 15% d’aria le descrizioni si accorciano e si spezzano | Atto V |
 | Il risveglio in poltrona, la massa sparita, il seme che dà un battito di luce (cap. 4) | Il finale «Vivi» | Finali |
 | Il reattore che riprende il suo lamento in re (cap. 4) | La sala macchine; la stessa nota torna nel Nido; la variante «La prima nota» | Atti I e III, finali |
 | Il seme mai dichiarato, poi la teca sulla mensola (Undici Chili, Coda) | «Vivi» e «Doppio fondo» chiudono con lo stesso gancio | Finali |
 
 ### Cosa resta del gioco (le differenze volute)
 
-I K'tharr, l'Anziano, le tre chiavi e la Grande Porta, la matrice di traduzione, il Sintonizzatore
+I K’tharr, l’Anziano, le tre chiavi e la Grande Porta, la matrice di traduzione, il Sintonizzatore
 con i suoi echi, il Ponte con le punte, il Santuario centrale. Il racconto non ha un Anziano: nel
 gioco resta, ed è il posto dove le voci smettono di essere registrazioni e diventano una
 conversazione.
 
 Nel racconto la sala tonda contiene insieme il morto, la mappa e il seme. Il gioco li divide in tre
 luoghi: L.V. accanto al seme vivo nella Serra, la mappa sul Ponte, il seme scuro nel Santuario. Chi
-gioca rimette insieme da sé, un pezzo alla volta, quello che William vede in un colpo solo. L'ordine
-resta quello del racconto: prima l'uomo, poi la mappa, poi il seme, poi la fuga.
+gioca rimette insieme da sé, un pezzo alla volta, quello che William vede in un colpo solo. L’ordine
+resta quello del racconto: prima l’uomo, poi la mappa, poi il seme, poi la fuga.
 
 ### Cosa lascio
 
 - La rinuncia di William alla macchina che parla: nel racconto la decide lui, nel gioco tocca a chi
   gioca.
-- Il limite dell'«ora» data a sé stesso: nel gioco il tempo è l'aria, non l'orologio.
+- Il limite dell’«ora» data a sé stesso: nel gioco il tempo è l’aria, non l’orologio.
 
 ---
 
@@ -106,21 +106,21 @@ resta quello del racconto: prima l'uomo, poi la mappa, poi il seme, poi la fuga.
 
 **Premessa.** Intorno al 2201. Sei William T. Eriksonn, unico abitante della Santa Maria, cargo
 TSC-1972. Recuperi quello che gli altri lasciano indietro. La stiva è vuota da sei settimane e Yusuf
-non ti fa più credito. Sulla rotta c'è una massa che beve il radar. Ci sali per tagliarne un pezzo
+non ti fa più credito. Sulla rotta c’è una massa che beve il radar. Ci sali per tagliarne un pezzo
 da vendere. Dentro trovi una nave cresciuta invece che costruita, che parla ancora, e un uomo
 arrivato prima di te.
 
 **Tema.** Contare e ascoltare. Il gioco misura tutto: aria, percentuali di traduzione, crediti,
-turni. Chiede a chi gioca quando smettere di contare. Sotto c'è la solitudine scelta, e il segno che
+turni. Chiede a chi gioca quando smettere di contare. Sotto c’è la solitudine scelta, e il segno che
 si lascia per qualcuno che forse non passerà mai.
 
-**Conflitto.** Fuori: l'aria, la nave che si disgrega, i filamenti. Dentro: la stiva da riempire
+**Conflitto.** Fuori: l’aria, la nave che si disgrega, i filamenti. Dentro: la stiva da riempire
 contro una memoria che non vale niente per nessun compratore.
 
 **Obiettivo dichiarato** (da Yusuf): riempire la stiva. **Obiettivo che emerge**: arrivare al
 cuore, e decidere cosa portare via.
 
-**Tono.** Fantascienza riflessiva. Brutalismo d'acciaio sulla Santa Maria, materia organica e luce
+**Tono.** Fantascienza riflessiva. Brutalismo d’acciaio sulla Santa Maria, materia organica e luce
 fredda sul relitto. Nessun combattimento. Il pericolo viene dal freddo, dal buio e dal proprio
 fiato.
 
@@ -131,7 +131,7 @@ gioca è William senza che glielo si ripeta.
 
 **Prologo.** Prima della plancia, un frammento della scatola nera di L.V.: una voce che non sa se il
 registratore funziona, che conta il fiato, che non dice di chi è. Il libro si apre allo stesso modo.
-Chi lo riascolta nella Serra (N7) riconosce la voce. Va scritto nuovo, sull'idea del Prologo del
+Chi lo riascolta nella Serra (N7) riconosce la voce. Va scritto nuovo, sull’idea del Prologo del
 racconto, non copiato.
 
 **Durata.** 23 stanze, percorso minimo intorno ai 100 comandi, partita tipica di due o tre ore.
@@ -150,19 +150,19 @@ ATTO I ──fuori──▶ ATTO II ──soglia──▶ ATTO III (rete) ──
 
 | Atto | Titolo | Stanze | Cosa succede, cosa insegna | Collo di bottiglia |
 |---|---|---|---|---|
-| I | Il margine | Plancia, Cuccetta, Sala macchine, Stiva | Il movente (Yusuf, il quadrante), la scansione, l'accostamento. Si prendono la tuta, il faro del casco, la cella d'aria, il bengala. Il reattore canta un re. | Tuta indossata + arpioni agganciati → `fuori` |
-| II | Il brusio | Scafo, Camera di compensazione, Vestibolo delle gole, Gola di mezzo | Il taglio, l'ingresso, il varco che si richiude. Primo contatto con il brusio: la cifra scende. Il risuonatore nella nicchia. La connessione che non si spegne. | Nessuno: dal Vestibolo si apre il resto |
-| III | Le voci | Corridoio (hub) e quattro ali: Memoria (nord), Vita (sud e gole), Tecnica (basso), Equipaggio (laterale) | Esplorazione a rete, ordine libero. Le tre chiavi, l'energia, L.V. (lo specchio), le voci profonde, i segni. | Tre chiavi + energia → `portale` |
-| IV | La mappa | Ponte, Anticamera, Santuario centrale | La mappa stellare, la porta circolare, l'Anziano. | `oltre` è il punto di non ritorno [!] |
-| V | La fuga | Gola del ritorno, Sala delle teche, Gola di mezzo, Vestibolo, Camera, Scafo, Stiva | La nave si disgrega. L'aria cala a ogni turno. Il seme, il risuonatore, i filamenti svegli. | Arrivare in stiva con l'aria sopra lo zero |
+| I | Il margine | Plancia, Cuccetta, Sala macchine, Stiva | Il movente (Yusuf, il quadrante), la scansione, l’accostamento. Si prendono la tuta, il faro del casco, la cella d’aria, il bengala. Il reattore canta un re. | Tuta indossata + arpioni agganciati → `fuori` |
+| II | Il brusio | Scafo, Camera di compensazione, Vestibolo delle gole, Gola di mezzo | Il taglio, l’ingresso, il varco che si richiude. Primo contatto con il brusio: la cifra scende. Il risuonatore nella nicchia. La connessione che non si spegne. | Nessuno: dal Vestibolo si apre il resto |
+| III | Le voci | Corridoio (hub) e quattro ali: Memoria (nord), Vita (sud e gole), Tecnica (basso), Equipaggio (laterale) | Esplorazione a rete, ordine libero. Le tre chiavi, l’energia, L.V. (lo specchio), le voci profonde, i segni. | Tre chiavi + energia → `portale` |
+| IV | La mappa | Ponte, Anticamera, Santuario centrale | La mappa stellare, la porta circolare, l’Anziano. | `oltre` è il punto di non ritorno [!] |
+| V | La fuga | Gola del ritorno, Sala delle teche, Gola di mezzo, Vestibolo, Camera, Scafo, Stiva | La nave si disgrega. L’aria cala a ogni turno. Il seme, il risuonatore, i filamenti svegli. | Arrivare in stiva con l’aria sopra lo zero |
 
-### Le ali dell'Atto III
+### Le ali dell’Atto III
 
 | Ala | Stanze | Contiene |
 |---|---|---|
 | Memoria (nord) | Santuario del silenzio, Scriptorium, Arca della memoria | Stele, Nucleo, lo Scriba, il Custode |
 | Vita (sud e gole) | Serra morente, Arca biologica, Sala delle teche, Vivaio | Seme vivente e L.V. (Serra), dispositivo e cristallo (Arca biologica), i filamenti, la tavoletta (Vivaio) |
-| Tecnica (basso) | Laboratorio di risonanza | Energia, Sintonizzatore, l'Ingegnere, la ricarica della tuta |
+| Tecnica (basso) | Laboratorio di risonanza | Energia, Sintonizzatore, l’Ingegnere, la ricarica della tuta |
 | Equipaggio (laterale) | Alloggio, Nido | Navarca, cilindro, il Piccolo |
 
 La Sala delle teche e il Vivaio si raggiungono dal Vestibolo, scendendo per la Gola di mezzo: è la
@@ -270,7 +270,7 @@ quello che valeva, e chi gioca lo sa.
 Uscite: su → Vestibolo, giù → Sala delle teche.
 Oggetti: le venature (si accendono di un verde stanco al passaggio del guanto).
 Evento: la prima volta che ci entri con il Sintonizzatore, parte la voce che dice i nomi e il
-Sintonizzatore non si spegne (vedi §5.6). Il costo d'aria è fisso e messo in conto.
+Sintonizzatore non si spegne (vedi §5.6). Il costo d’aria è fisso e messo in conto.
 Buia: no. La luce viene dalle venature. Vedi la nota tecnica in §5.2.
 
 **[LOC_TECHE] Sala delle teche** · Atti III e V
@@ -288,15 +288,15 @@ tranciato è qui.
 
 **[LOC_VIVAIO] Vivaio** · Atto III
 Uscite: est → Sala delle teche.
-Oggetti: il germinatoio (ancora tiepido, l'ultima cosa verde della nave), la tavoletta (spostata qui
+Oggetti: il germinatoio (ancora tiepido, l’ultima cosa verde della nave), la tavoletta (spostata qui
 dalla Serra), le tabelle di semina (si traducono).
 Funzione: dove la semina era ancora sotto controllo. La tavoletta che apre la teca della Serra sta
-qui: il primo enigma dell'originale, che oggi si risolve senza uscire dalla stanza, diventa una
+qui: il primo enigma dell’originale, che oggi si risolve senza uscire dalla stanza, diventa una
 spedizione.
 
 **[LOC_NIDO] Nido** · Atto III
-Uscite: sud → Alloggio dell'equipaggio.
-Oggetti: la culla, i disegni sulle pareti, il sonaglio, l'eco del Piccolo (personaggio, compare
+Uscite: sud → Alloggio dell’equipaggio.
+Oggetti: la culla, i disegni sulle pareti, il sonaglio, l’eco del Piccolo (personaggio, compare
 quando sintonizzi la culla).
 Descrizione: una cella a misura di qualcuno più piccolo. Sulle pareti lo stesso disegno, cento
 volte: un sole solo, giallo, piccolo. Il Piccolo è nato in viaggio e non ha mai visto i tre soli: ha
@@ -308,31 +308,31 @@ Funzione: la rivelazione più semplice del gioco, mostrata e mai spiegata. Il so
 Uscite: ovest → Sala delle teche, su → Santuario centrale (✗ nella fuga, crollata).
 Oggetti: le venature del ritorno.
 Stato dinamico: accese se hai ascoltato il profondo del Navarca, che disse di aver tenuto le luci
-accese perché qualcuno trovasse la strada. Senza quell'eco è buia e serve il faro.
-Funzione: il primo tratto della fuga. Il premio dell'ascolto si vede qui.
+accese perché qualcuno trovasse la strada. Senza quell’eco è buia e serve il faro.
+Funzione: il primo tratto della fuga. Il premio dell’ascolto si vede qui.
 
 ### 4.5 Stanze modificate
 
 | Stanza | Cosa cambia |
 |---|---|
 | Plancia | Radio con Yusuf, comandi di manovra, lanciarpioni, faro di prua, quadrante del margine. Nuova uscita a nord. Il seme del finale «Vivi» finisce sul ripiano. |
-| Stiva | Vuota da sei settimane. Le casse di minerale per Europa diventano i ganci vuoti. Restano la tuta, il kit, il lettore con *Castello di Ghiaccio*. Arrivano la cella d'aria e il faro del casco. Nuova uscita in giù. È il traguardo della fuga. |
+| Stiva | Vuota da sei settimane. Le casse di minerale per Europa diventano i ganci vuoti. Restano la tuta, il kit, il lettore con *Castello di Ghiaccio*. Arrivano la cella d’aria e il faro del casco. Nuova uscita in giù. È il traguardo della fuga. |
 | Scafo | `analizza la giuntura` rivela un taglio vecchio, risaldato dalla nave: qualcuno è entrato di qui (traccia T1). Nella fuga il varco si riapre. |
 | Camera di compensazione | La soglia porta al Vestibolo e non più al corridoio. Nella fuga la porta fusa nella parete si riapre. |
 | Corridoio principale | La parete est non è più cieca: dà sul Vestibolo. Le tre tacche diventano di L.V. (T2). |
-| Santuario del silenzio | L'altare chiede il disco orientato (enigma N5). |
+| Santuario del silenzio | L’altare chiede il disco orientato (enigma N5). |
 | Arca della memoria | Il terminale si apre in due modi (N6). Il pilastro può restare acceso o spegnersi. |
-| Serra morente | La tavoletta non è più qui. Arriva L.V., come nel racconto: seduto, la schiena contro la base di una delle colonne spente che reggono la cupola, le gambe aperte, il casco calato sul petto; la tuta di un secolo e mezzo, di un modello fuori produzione; la punta del carotatore stretta nella destra, le dita chiuse dal freddo. A mezzo metro, la teca con il seme vivo. L'aria secca della serra non l'ha corrotto: l'ha asciugato. Nuovi la scatola nera, la placca e la punta. |
-| Arca biologica | Senza L.V. Restano le capsule, il dispositivo medico e il cristallo. L'incisione sulle capsule va riscritta: non è più accanto all'astronauta ma accanto ai K'tharr morti nel sonno. |
-| Laboratorio | Dopo l'energia il generatore ricarica la tuta, una volta. |
+| Serra morente | La tavoletta non è più qui. Arriva L.V., come nel racconto: seduto, la schiena contro la base di una delle colonne spente che reggono la cupola, le gambe aperte, il casco calato sul petto; la tuta di un secolo e mezzo, di un modello fuori produzione; la punta del carotatore stretta nella destra, le dita chiuse dal freddo. A mezzo metro, la teca con il seme vivo. L’aria secca della serra non l’ha corrotto: l’ha asciugato. Nuovi la scatola nera, la placca e la punta. |
+| Arca biologica | Senza L.V. Restano le capsule, il dispositivo medico e il cristallo. L’incisione sulle capsule va riscritta: non è più accanto all’astronauta ma accanto ai K’tharr morti nel sonno. |
+| Laboratorio | Dopo l’energia il generatore ricarica la tuta, una volta. |
 | Alloggio | Nuova uscita a nord, verso il Nido. |
-| Santuario centrale | Il sostegno al centro. Dopo il congedo si apre l'uscita in giù. |
+| Santuario centrale | Il sostegno al centro. Dopo il congedo si apre l’uscita in giù. |
 
 ---
 
 ## 5. Meccaniche nuove
 
-### 5.1 L'aria (il margine)
+### 5.1 L’aria (il margine)
 
 `ARIA` è un contatore da 0 a 100 e parte da 100. Si legge con `esamina il visore` o `esamina la
 tuta` («La cifra sul visore: [aria]»), e a ogni soglia la annuncia un demone.
@@ -345,7 +345,7 @@ tuta` («La cifra sul visore: [aria]»), e a ogni soglia la annuncia un demone.
 | La connessione che non si spegne nella Gola di mezzo (scritto, una volta) | −3 |
 | `sintonizza`: eco di superficie | −4 |
 | `sintonizza` o dialogo: eco profonda | −6 |
-| Scatola nera di L.V. (oltre al costo dell'eco profonda) | −4 |
+| Scatola nera di L.V. (oltre al costo dell’eco profonda) | −4 |
 | `traduci` | −1 |
 | Allungare la mano sul risuonatore ancora incastrato | −2 |
 | Staccare il risuonatore: tre turni | −1 a turno |
@@ -353,8 +353,8 @@ tuta` («La cifra sul visore: [aria]»), e a ogni soglia la annuncia un demone.
 | Sala delle teche con il faro pieno | −4 a turno; essere afferrati: −8 |
 | Fuga | −3 a turno |
 
-**Cosa la restituisce:** la cella d'aria della Santa Maria (+25, una volta, in qualsiasi momento) e
-la ricarica al generatore dopo l'energia (+25, una volta). Tetto: 100.
+**Cosa la restituisce:** la cella d’aria della Santa Maria (+25, una volta, in qualsiasi momento) e
+la ricarica al generatore dopo l’energia (+25, una volta). Tetto: 100.
 
 **Cosa non la consuma:** muoversi, esaminare, `analizza` (lo scanner lavora per conto suo), la vita a
 bordo della Santa Maria.
@@ -363,7 +363,7 @@ bordo della Santa Maria.
 
 | Soglia | Effetto |
 |---|---|
-| 60 | La cifra passa all'ambra. |
+| 60 | La cifra passa all’ambra. |
 | 30 | Rosso. **Protezione vitale**: fino al congedo la tuta stacca i canali secondari e non lascia più ascoltare né tradurre. Si torna ad ascoltare solo dopo una ricarica. |
 | 15 | Il pensiero rallenta. Le descrizioni della fuga passano alla variante breve, spezzata: frasi di tre parole. Il ritmo della prosa segue il fiato. |
 | 0 | Finale «Due lettere». |
@@ -371,13 +371,13 @@ bordo della Santa Maria.
 **Invarianti di bilanciamento** (vanno verificati con i percorsi di collaudo, non a occhio):
 
 - I1. Il percorso critico del finale «Vivi», senza ascolti facoltativi, consuma al massimo il 35%
-  dell'aria disponibile.
-- I2. Chi ascolta tutto (21 voci e tutte le traduzioni) arriva al congedo con l'aria per tornare
+  dell’aria disponibile.
+- I2. Chi ascolta tutto (21 voci e tutte le traduzioni) arriva al congedo con l’aria per tornare
   dritto, ma solo se ha usato tutte e due le ricariche.
 - I3. Chi ascolta tutto non ha aria per staccare e portare via il risuonatore.
 - I4. Prima del congedo non si muore ascoltando (protezione vitale al 30%).
-- I5. Ogni soglia è annunciata. Prima di `avanti` dal Ponte, se l'aria è sotto 30, la tuta avverte
-  che una risalita potrebbe non bastare. È l'ultimo punto in cui si può ancora tornare al generatore.
+- I5. Ogni soglia è annunciata. Prima di `avanti` dal Ponte, se l’aria è sotto 30, la tuta avverte
+  che una risalita potrebbe non bastare. È l’ultimo punto in cui si può ancora tornare al generatore.
 
 Con i valori della tabella tutti gli ascolti (compresi i due scritti) valgono circa 110 punti e la
 fuga diretta circa 27 (nove turni). Il risuonatore nella fuga aggiunge circa 18: tre turni per
@@ -399,14 +399,14 @@ Nella Sala delle teche:
 
 **Nota tecnica.** Nel motore una stanza buia (`è buia`) impedisce di esaminare, prendere e lasciare.
 Per questo la Sala delle teche non è dichiarata buia: il pericolo dipende dallo stato del faro, non
-dalla luce del motore. Il buio vero resta all'Anticamera e alla Gola del ritorno, dove ci si muove e
+dalla luce del motore. Il buio vero resta all’Anticamera e alla Gola del ritorno, dove ci si muove e
 basta.
 
 ### 5.3 Il risuonatore
 
 Nel racconto la macchina della nicchia si chiama «matrice». Nel gioco «matrice» è già la matrice di
-traduzione, quindi l'oggetto prende il nome di **risuonatore** (alias: arnese, matrice, nicchia
-parlante). È la sorgente del brusio: tutte le voci della nave, una sopra l'altra.
+traduzione, quindi l’oggetto prende il nome di **risuonatore** (alias: arnese, matrice, nicchia
+parlante). È la sorgente del brusio: tutte le voci della nave, una sopra l’altra.
 
 - Incastrato nella nicchia del Vestibolo. `prendi il risuonatore` costa aria e non riesce: la mano
   si ferma a un palmo, come nel racconto.
@@ -414,10 +414,10 @@ parlante). È la sorgente del brusio: tutte le voci della nave, una sopra l'altr
 - Finché lo porti consuma aria (−1 a turno, −2 nella fuga) e copre gli echi: con il coro intero in
   mano il Sintonizzatore non distingue una voce sola. Si può lasciare dove si vuole. Se lo lasci
   lontano dal percorso della fuga, è perso.
-- Vale una stiva piena. È l'unico oggetto del relitto che Yusuf saprebbe vendere.
+- Vale una stiva piena. È l’unico oggetto del relitto che Yusuf saprebbe vendere.
 
 Chi lo stacca subito impara in pochi turni cosa costa, e lo posa. Chi lo prende alla fine lo fa con
-l'aria in rosso: la stessa scelta del racconto, decisa questa volta da chi gioca.
+l’aria in rosso: la stessa scelta del racconto, decisa questa volta da chi gioca.
 
 ### 5.4 Le tracce di L.V.
 
@@ -427,43 +427,43 @@ l'aria in rosso: la stessa scelta del racconto, decisa questa volta da chi gioca
 |---|---|---|---|
 | T1 | Scafo | Un taglio vecchio, risaldato dalla nave | `analizza la giuntura` |
 | T2 | Corridoio | Le tre tacche: punta da carotatore, standard terrestre | `analizza le tacche` |
-| T3 | Sala delle teche | Un cavo guida terrestre tranciato, il capo avvolto di fibre (il cavo di sicurezza gliel'ha tagliato la nave all'ingresso, come a te: lo porta ancora alla cintura) | `esamina il cavo` |
-| T4 | Serra morente | L'uomo, la placca, le due lettere | `esamina il cadavere` |
+| T3 | Sala delle teche | Un cavo guida terrestre tranciato, il capo avvolto di fibre (il cavo di sicurezza gliel’ha tagliato la nave all’ingresso, come a te: lo porta ancora alla cintura) | `esamina il cavo` |
+| T4 | Serra morente | L’uomo, la placca, le due lettere | `esamina il cadavere` |
 | T5 | Serra morente | La sua voce | la scatola nera, collegata alla tuta |
 
-Le leggono l'Anziano (nodo «l'altro» da 3 in su) e le varianti dei finali.
+Le leggono l’Anziano (nodo «l’altro» da 3 in su) e le varianti dei finali.
 
 **La strada di L.V.**, ricostruibile dalle tracce: entra dalla giuntura (T1), passa per il Vestibolo
 e il corridoio, dove segna tre tacche (T2). Nella Serra trova la teca con il seme vivo, ma senza la
 tavoletta non la apre. Cerca la chiave, scende per la Gola di mezzo e nella Sala delle teche i
-filamenti gli prendono il cavo (T3). Il Vivaio, dove la tavoletta c'era, non lo raggiunge. Torna alla
-Serra con l'aria che gli manca, si siede contro una colonna a mezzo metro dalla teca, incide la placca
+filamenti gli prendono il cavo (T3). Il Vivaio, dove la tavoletta c’era, non lo raggiunge. Torna alla
+Serra con l’aria che gli manca, si siede contro una colonna a mezzo metro dalla teca, incide la placca
 e muore. Chi gioca rifà la sua strada e arriva dove lui non è arrivato.
 
 ### 5.5 Le voci profonde e il canto
 
-`RISONANZE` passa da 4 a 7 voci profonde. Ognuna, oltre al testo, dà qualcosa: un'informazione o un
-vantaggio nella fuga. Così l'ascolto costa aria ma non è un lusso.
+`RISONANZE` passa da 4 a 7 voci profonde. Ognuna, oltre al testo, dà qualcosa: un’informazione o un
+vantaggio nella fuga. Così l’ascolto costa aria ma non è un lusso.
 
 | ID | Voce | Àncora | Si sblocca | Cosa dà |
 |---|---|---|---|---|
-| R1 | Xeno-botanico | le piante (Serra) | seme liberato (c'è già) | Spiega che i filamenti cercano un sole: indizio per il bengala |
-| R2 | Navarca | le alcove (Alloggio) | hai il cilindro (c'è già) | Nella fuga la Gola del ritorno e la Sala delle teche hanno luce fredda: niente faro, niente filamenti |
-| R3 | Custode | il bassorilievo | traduzione 100 (c'è già) | Una battuta in più dell'Anziano |
-| R4 | Ingegnere: i nomi | il generatore | traduzione ≥ 75 (c'è già) | Svela chi era la voce della Gola di mezzo. Parla del campo da tenere fermo: indizio per la soluzione con l'energia |
-| R5 | Il Piccolo | la culla (Nido) | eco di superficie della culla | Il dialogo con l'eco (§9.3) |
+| R1 | Xeno-botanico | le piante (Serra) | seme liberato (c’è già) | Spiega che i filamenti cercano un sole: indizio per il bengala |
+| R2 | Navarca | le alcove (Alloggio) | hai il cilindro (c’è già) | Nella fuga la Gola del ritorno e la Sala delle teche hanno luce fredda: niente faro, niente filamenti |
+| R3 | Custode | il bassorilievo | traduzione 100 (c’è già) | Una battuta in più dell’Anziano |
+| R4 | Ingegnere: i nomi | il generatore | traduzione ≥ 75 (c’è già) | Svela chi era la voce della Gola di mezzo. Parla del campo da tenere fermo: indizio per la soluzione con l’energia |
+| R5 | Il Piccolo | la culla (Nido) | eco di superficie della culla | Il dialogo con l’eco (§9.3) |
 | R6 | Lo Scriba: il raschio | la lastra incisa | hai visto la placca di L.V. | Due firme ferme nello stesso punto: apre la scelta «completa la parola» sulla placca |
 | R7 | L.V. | la scatola nera | collegata alla tuta | Racconta dove ha perso il cavo: indizio per la fuga |
 
-Le leggono l'Anziano (nodo «la musica» da 4 in su) e la variante segreta «La prima nota» (6 o più).
+Le leggono l’Anziano (nodo «la musica» da 4 in su) e la variante segreta «La prima nota» (6 o più).
 
 ### 5.6 La connessione che non si spegne
 
 Una volta sola, nella Gola di mezzo, con il Sintonizzatore in mano: parte una voce bassa che dice
 nomi, e il traduttore scrive per ognuno la stessa etichetta, nome proprio non traducibile, una riga
-dopo l'altra. Il Sintonizzatore non si spegne e sul visore compare la riga che dice che la
-connessione la tiene l'altro capo. L'aria scende di 3. È la prova che la nave ascolta, e prepara il
-dialogo con l'eco del Piccolo.
+dopo l’altra. Il Sintonizzatore non si spegne e sul visore compare la riga che dice che la
+connessione la tiene l’altro capo. L’aria scende di 3. È la prova che la nave ascolta, e prepara il
+dialogo con l’eco del Piccolo.
 
 ### 5.7 La nota
 
@@ -477,19 +477,19 @@ Un oggetto solo, per evitare due «seme» nel parser:
 
 1. **vivente**: nella teca della Serra, pulsa di verde, è la prima chiave;
 2. **nella porta**: la Grande Porta lo assorbe;
-3. **scuro**: al congedo l'Anziano si raccoglie dentro il seme, che torna sul sostegno del Santuario.
+3. **scuro**: al congedo l’Anziano si raccoglie dentro il seme, che torna sul sostegno del Santuario.
    Non pulsa e non brilla, come nel racconto.
 
 Pulsa di nuovo soltanto sulla Santa Maria, nel finale «Vivi». Lo si è dato alla nave vivo e lo si
 riprende scuro: dentro, nel frattempo, ci si sono messi loro.
 
-### 5.9 L'energia è la condizione dell'Anziano
+### 5.9 L’energia è la condizione dell’Anziano
 
 Perché L.V. è morto senza che nessuno gli rispondesse? Perché la nave non aveva più energia per
 parlare: ascoltava (le voci restano impresse nella materia) ma non poteva rispondere. Sei tu a
-riaccendere il generatore, ed è con quell'energia che l'Anziano ti parla. Quando la spende tutta per
-raccogliersi nel seme, la nave comincia a disgregarsi. L'enigma dell'energia diventa così la causa
-dell'incontro e della fuga.
+riaccendere il generatore, ed è con quell’energia che l’Anziano ti parla. Quando la spende tutta per
+raccogliersi nel seme, la nave comincia a disgregarsi. L’enigma dell’energia diventa così la causa
+dell’incontro e della fuga.
 
 ---
 
@@ -553,34 +553,34 @@ Note: enigma da tutorial. Il valore sta nel registro, che dà carattere e una da
 **[N3] Il risuonatore** · sequenza e risorsa · Vestibolo
 Soluzione: `stacca il risuonatore` per tre turni, con la taglierina.
 Se sbagli: `prendi` senza staccare → la mano si ferma, la cifra scende.
-Effetti: `RISUONATORE` = incastrato → staccato; consumo d'aria mentre lo porti.
+Effetti: `RISUONATORE` = incastrato → staccato; consumo d’aria mentre lo porti.
 Note: facoltativo. Decide due finali su cinque.
 
-**[N4] L'attraversamento delle teche** · tre soluzioni · Sala delle teche
+**[N4] L’attraversamento delle teche** · tre soluzioni · Sala delle teche
 Soluzioni:
 (a) furtiva: `abbassa il faro`, `segui la parete`, `ovest`;
 (b) esca: `accendi il bengala`, `lancia il bengala` (i filamenti vanno al finto sole per tre turni,
 poi il bengala si consuma);
-(c) di sistema: con l'energia ripristinata il campo regge a tratti e i filamenti stanno fermi.
-Indizi: la descrizione (si muovono verso la luce), le teche chiuse coperte di brina, l'eco dello
-xeno-botanico (R1), l'Ingegnere (R4).
+(c) di sistema: con l’energia ripristinata il campo regge a tratti e i filamenti stanno fermi.
+Indizi: la descrizione (si muovono verso la luce), le teche chiuse coperte di brina, l’eco dello
+xeno-botanico (R1), l’Ingegnere (R4).
 Se sbagli: faro pieno → avviso, poi presa. `ovest` a faro basso senza parete → «Nel buio perdi
-l'orientamento: le mani cercano qualcosa di freddo a cui tenersi».
-Note: il bengala è uno solo. Usarlo all'andata vuol dire non averlo nella fuga.
+l’orientamento: le mani cercano qualcosa di freddo a cui tenersi».
+Note: il bengala è uno solo. Usarlo all’andata vuol dire non averlo nella fuga.
 
-**[N5] L'orientamento del disco** · informazione · Santuario del silenzio
-Soluzione: `ruota il disco` finché i tre soli incisi sono disposti come nel bassorilievo (all'alba
+**[N5] L’orientamento del disco** · informazione · Santuario del silenzio
+Soluzione: `ruota il disco` finché i tre soli incisi sono disposti come nel bassorilievo (all’alba
 del Salto, il più grande in alto), poi `usa il disco sull'altare`.
 Se sbagli: «Il disco scende di un dito e si ferma: i solchi non combaciano».
 Nota tecnica: contatore `ROTAZIONE` con `riduci … modulo 3`.
 
 **[N6] Il nucleo: forza o pazienza** · soluzione alternativa, ordine · Arca della memoria
-Forza (c'è già): taglierina sul terminale. Il nucleo esce, l'ultimo pilastro si spegne.
-Pazienza (nuova): con l'energia ripristinata il terminale si accende da solo quando entri, e il
-pilastro ti saluta con una riga dell'Archivista prima di aprire lo scomparto.
+Forza (c’è già): taglierina sul terminale. Il nucleo esce, l’ultimo pilastro si spegne.
+Pazienza (nuova): con l’energia ripristinata il terminale si accende da solo quando entri, e il
+pilastro ti saluta con una riga dell’Archivista prima di aprire lo scomparto.
 Indizi: il pilastro «pulsa come se aspettasse»; sul banco del Laboratorio i flussi vanno al Ponte e
-all'Archivio.
-Effetti: `NUCLEO_VIA` = forza / pazienza (lo legge l'Anziano).
+all’Archivio.
+Effetti: `NUCLEO_VIA` = forza / pazienza (lo legge l’Anziano).
 
 **[N7] La scatola nera** · trasformazione · Serra morente
 Soluzione: `collega la scatola nera alla tuta` (o `usa la scatola nera sulla tuta`). La tua tuta fa
@@ -590,29 +590,29 @@ Testo: adattamento del Prologo «L.V.» del racconto, ridotto a quattro framment
 registrazione rovinata. Va scritto, non copiato.
 
 **[N8] La placca** · scelta · Serra morente
-Cosa c'è sulla placca, come nel racconto: in stampatello graffiato con la punta del carotatore, un
-«qui prima», «il seme», una frase che si interrompe all'inizio di una parola dopo «non siamo», e sotto
-le due lettere, le sole arrivate in fondo. I solchi sono profondi all'inizio e appena accennati alla
-fine, quando la mano non teneva più. (Sostituisce il messaggio completo dell'originale, che spiegava
+Cosa c’è sulla placca, come nel racconto: in stampatello graffiato con la punta del carotatore, un
+«qui prima», «il seme», una frase che si interrompe all’inizio di una parola dopo «non siamo», e sotto
+le due lettere, le sole arrivate in fondo. I solchi sono profondi all’inizio e appena accennati alla
+fine, quando la mano non teneva più. (Sostituisce il messaggio completo dell’originale, che spiegava
 tutto.)
 `incidi la placca` chiede cosa: le tue iniziali (`firma la placca`) oppure la fine della sua parola
-(`completa la parola`, disponibile dopo R6). C'è spazio per un segno solo.
-Effetti: `SEGNO_LV` = firmata / completata. Lo leggono l'Anziano e i finali «Vivi» e «Due lettere».
-Note: firmare dice «sono stato qui anch'io»; completare dice «avevi ragione». Sono due cose diverse e
+(`completa la parola`, disponibile dopo R6). C’è spazio per un segno solo.
+Effetti: `SEGNO_LV` = firmata / completata. Lo leggono l’Anziano e i finali «Vivi» e «Due lettere».
+Note: firmare dice «sono stato qui anch’io»; completare dice «avevi ragione». Sono due cose diverse e
 chi gioca deve sceglierne una.
 
 **[N9] La risposta al Piccolo** · informazione · Nido
 Soluzione: dopo `sintonizza la culla`, `parla con l'eco`. La risposta vera («Perché siete arrivati»)
 compare solo se hai visto la rotta finire sul nostro sole (`PROIEZIONE = attiva`).
 Note: la domanda si capisce presto, la risposta si può dare solo tardi. Chi torna nel Nido dopo il
-Ponte trova un'opzione in più.
+Ponte trova un’opzione in più.
 
 **[N10] La nota** · associazione · Sala macchine e Nido
 `ascolta il reattore` + `suona il sonaglio`, in qualsiasi ordine. Segreto, non necessario.
 
 **[N11] La fuga** · tempo e risorse · Atto V
-L'aria scende di 3 a ogni turno. Nella Sala delle teche, con i filamenti svegli: faro basso e
-parete, bengala se ti è rimasto, luce del Navarca se l'hai ascoltato, oppure liberarsi a forza
+L’aria scende di 3 a ogni turno. Nella Sala delle teche, con i filamenti svegli: faro basso e
+parete, bengala se ti è rimasto, luce del Navarca se l’hai ascoltato, oppure liberarsi a forza
 (`strappa il filamento`, `taglia il filamento`: −6 e un turno). Davanti alla nicchia del Vestibolo
 si decide il risuonatore.
 
@@ -622,12 +622,12 @@ si decide il risuonatore.
 
 ### 7.1 Dove il gioco si dirama
 
-- **Ordine**: l'Atto III è una rete. Le quattro ali si visitano come si vuole.
+- **Ordine**: l’Atto III è una rete. Le quattro ali si visitano come si vuole.
 - **Soluzioni alternative**: teche (3), nucleo (2), fuga (4).
 - **Scelte morali e di lettura**: il nucleo (forza o pazienza), la placca (firma o parola), il
-  Piccolo (tre risposte), il risuonatore, il seme, la promessa a Yusuf. Ce n'è poi una che nessuno
-  annuncia: quali voci ascoltare con l'aria che hai.
-- **Dialogo**: sette nodi nuovi dell'Anziano si aprono solo in base a ciò che hai fatto.
+  Piccolo (tre risposte), il risuonatore, il seme, la promessa a Yusuf. Ce n’è poi una che nessuno
+  annuncia: quali voci ascoltare con l’aria che hai.
+- **Dialogo**: sette nodi nuovi dell’Anziano si aprono solo in base a ciò che hai fatto.
 - **Finali**: cinque, più una variante.
 
 ### 7.2 Quale finale
@@ -644,7 +644,7 @@ Si decide entrando nella Stiva durante la fuga (o a `ARIA = 0`, ovunque):
 
 ### 7.3 Schede dei finali
 
-Ogni finale si chiude con la riga che William scrive nel registro di bordo. È l'unico punto in cui il
+Ogni finale si chiude con la riga che William scrive nel registro di bordo. È l’unico punto in cui il
 suo nome compare nel testo dei finali, e compare perché lo firma lui: «Registro di bordo, TSC-1972.
 Operatore W. T. Eriksonn.», seguito da una riga sola, diversa per ogni finale. Il libro si chiama *Dal
 registro della Santa Maria*: le uscite del gioco sono voci di quel registro.
@@ -654,7 +654,7 @@ registro della Santa Maria*: le uscite del gioco sono voci di quel registro.
 | «Vivi» | Rotta ripresa. Carico: nessuno. (Il seme non si dichiara.) |
 | «La prima nota» | Come «Vivi». |
 | «La stiva piena» | Carico: un manufatto, origine non dichiarata. Destinazione: Magazzino Quattro. |
-| «Doppio fondo» | Carico: un manufatto. Nient'altro da dichiarare. |
+| «Doppio fondo» | Carico: un manufatto. Nient’altro da dichiarare. |
 | «Mani vuote» | Nessun evento da registrare. |
 | «Due lettere» | Nessuna riga: il registro resta sulla Santa Maria. Restano due iniziali incise, il nome intero non arriva. |
 
@@ -715,13 +715,13 @@ lascia indietro le riparazioni. Il gioco gli dà un arco possibile, non obbligat
 minuti a chi smette di contarli. Chi prende il risuonatore e torna indietro senza ascoltare niente
 non è punito: è un altro William, che il gioco lascia esistere.
 
-**Yusuf** (Magazzino Quattro, alla radio). Il fornitore e creditore di vent'anni. Conta fino a dieci
+**Yusuf** (Magazzino Quattro, alla radio). Il fornitore e creditore di vent’anni. Conta fino a dieci
 prima di dire di no, e poi dice sì lo stesso. Ha una vita sua: altri clienti, le richieste tutte
 uguali, sua madre che gli ha insegnato a contare. Non sa niente del relitto e non vuole saperlo.
-Compare all'inizio e in due finali.
+Compare all’inizio e in due finali.
 
-**L.V.** (deciso, D2: come nel libro). Centocinquant'anni prima di William, intorno al 2050, partito
-da solo perché voleva andarsene: ha firmato le carte e ha mentito al medico pur di avere l'idoneità a
+**L.V.** (deciso, D2: come nel libro). Centocinquant’anni prima di William, intorno al 2050, partito
+da solo perché voleva andarsene: ha firmato le carte e ha mentito al medico pur di avere l’idoneità a
 viaggiare senza equipaggio, e qualcuno gli aveva detto di non partire. La sua nave si è spenta un
 pezzo alla volta. Quando è finito addosso alla massa nera stava già morendo, ed è entrato lo stesso.
 Ha seguito la strada descritta in §5.4 ed è morto nella Serra, a mezzo metro dal seme vivo che aveva
@@ -729,21 +729,21 @@ trovato e non poteva prendere, quando la nave non aveva più energia per rispond
 graffiato la placca e ha parlato alla scatola nera della tuta, a nessuno, contando le parole come
 contava i fiati. Nomina un Matthew, con cui dice di averci provato. Il gioco non spiega chi sia.
 Si firma con due lettere perché non è rimasto nessuno a cui dire il nome intero.
-Il nome della missione, AURORA-7, viene dall'originale e il racconto non lo contraddice: resta, come
+Il nome della missione, AURORA-7, viene dall’originale e il racconto non lo contraddice: resta, come
 spedizione solitaria di cui non è mai arrivata notizia.
 
-**Il Navarca.** È rimasto sveglio per ultimo, per spegnere le luci. Nell'espansione si scopre, dal
-dialogo con l'eco del Piccolo, che è rimasto sveglio anche per lui. Le luci che ha lasciato accese
+**Il Navarca.** È rimasto sveglio per ultimo, per spegnere le luci. Nell’espansione si scopre, dal
+dialogo con l’eco del Piccolo, che è rimasto sveglio anche per lui. Le luci che ha lasciato accese
 sono quelle che ti illuminano la fuga.
 
-**Il Piccolo.** L'unico nato durante il viaggio. Non ha mai visto i tre soli e ha disegnato quello
+**Il Piccolo.** L’unico nato durante il viaggio. Non ha mai visto i tre soli e ha disegnato quello
 verso cui andavano. La sua voce chiede perché la nave non si muove. È il personaggio più fragile del
 gioco: va scritto con misura, una domanda e pochissimo altro.
 
-**L'Ingegnere capo.** C'è già: è rimasto a tenere il campo e ha inciso i nomi sul banco.
-L'espansione lo collega alla voce della Gola di mezzo. È lui che li dice, uno per uno.
+**L’Ingegnere capo.** C’è già: è rimasto a tenere il campo e ha inciso i nomi sul banco.
+L’espansione lo collega alla voce della Gola di mezzo. È lui che li dice, uno per uno.
 
-**L'Anziano.** C'è già. Diventa meno oracolo. Non sa se la semina ha attecchito: lo spera (deciso,
+**L’Anziano.** C’è già. Diventa meno oracolo. Non sa se la semina ha attecchito: lo spera (deciso,
 D5). Dove ora dice che chi gioca porta nel sangue i loro tre soli, dirà che vorrebbe crederlo.
 Conosce L.V., conosce il prezzo di quello che porti, sa cosa hai risposto al Piccolo. Non ti dice
 cosa fare con il seme.
@@ -752,7 +752,7 @@ cosa fare con il seme.
 
 ## 9. Alberi di dialogo
 
-### 9.1 L'Anziano (da 7 a 12 nodi)
+### 9.1 L’Anziano (da 7 a 12 nodi)
 
 ```
 [AN_BENVENUTO]  (c'è già)
@@ -840,7 +840,7 @@ Scelte:
               «La stiva piena», non chiede niente.)
 ```
 
-### 9.3 L'eco del Piccolo (4 nodi)
+### 9.3 L’eco del Piccolo (4 nodi)
 
 ```
 [PI_DOMANDA] la voce giovane chiede perché la nave non si muove, perché nessuno…
@@ -868,14 +868,14 @@ seconda la lascia aperta, la terza rivela che nessuno ha mai risposto.
 
 | Àncora | Stanza | Voce | Stato |
 |---|---|---|---|
-| le pareti del corridoio | Corridoio | Plancia, stiva e camera dei K'tharr, in un colpo solo (4 echi) | c'è già |
-| le piante | Serra | Xeno-botanico | c'è già |
-| le capsule | Arca biologica | Ufficiale medico | c'è già |
-| le alcove | Alloggio | Navarca | c'è già |
-| la struttura centrale | Ponte | Ufficiale di navigazione | c'è già |
-| il globo olografico | Scriptorium | Scriba | c'è già |
-| il bassorilievo | Santuario del silenzio | Custode | c'è già |
-| il generatore | Laboratorio | Ingegnere capo | c'è già |
+| le pareti del corridoio | Corridoio | Plancia, stiva e camera dei K’tharr, in un colpo solo (4 echi) | c’è già |
+| le piante | Serra | Xeno-botanico | c’è già |
+| le capsule | Arca biologica | Ufficiale medico | c’è già |
+| le alcove | Alloggio | Navarca | c’è già |
+| la struttura centrale | Ponte | Ufficiale di navigazione | c’è già |
+| il globo olografico | Scriptorium | Scriba | c’è già |
+| il bassorilievo | Santuario del silenzio | Custode | c’è già |
+| il generatore | Laboratorio | Ingegnere capo | c’è già |
 | le gole | Vestibolo | Il brusio si separa: qualcuno chiede di tenere il campo, qualcuno risponde che non regge | nuovo |
 | le venature | Gola di mezzo | La voce dei nomi (involontaria, §5.6) | nuovo |
 | la culla | Nido | La voce giovane | nuovo |
@@ -888,7 +888,7 @@ Vedi la tabella di §5.5.
 
 | ID | Dove | Cosa | Costo |
 |---|---|---|---|
-| U1 | Santuario centrale, dopo il congedo | L'ultima voce: buchi, e dentro pochissime parole intere (un divieto di prendere, comporre, musica, vivi). Non si completa mai, neanche al 100%: è musica, e la matrice traduce solo parole. | 0 |
+| U1 | Santuario centrale, dopo il congedo | L’ultima voce: buchi, e dentro pochissime parole intere (un divieto di prendere, comporre, musica, vivi). Non si completa mai, neanche al 100%: è musica, e la matrice traduce solo parole. | 0 |
 | U2 | Gola di mezzo, nella fuga | La voce dei nomi, ancora. Se hai R4 sai di chi è. `ascolta` per fermarti: −6, nessun premio meccanico. | 0 / −6 |
 
 U1 è il centro interpretativo del finale: chi legge «non prendere» può lasciare il seme sul
@@ -898,9 +898,9 @@ sostegno, chi legge «vivi» se lo porta via. Il gioco non dice chi ha ragione.
 
 | Oggetto | Soglie | Contenuto (sintesi) |
 |---|---|---|
-| le tabelle di semina (Vivaio) | 18 / 75 / 100 | Quote di attecchimento; poi il mondo bersaglio, terzo pianeta, acqua presente, probabilità non calcolabile; infine l'istruzione di seminare comunque |
+| le tabelle di semina (Vivaio) | 18 / 75 / 100 | Quote di attecchimento; poi il mondo bersaglio, terzo pianeta, acqua presente, probabilità non calcolabile; infine l’istruzione di seminare comunque |
 | il sostegno (Santuario centrale) | 75 / 100 | Una riga sola, per chi raccoglierà |
-| i disegni (Nido) | nessuna | Non c'è testo da tradurre. La risposta della matrice lo dice, ed è la battuta |
+| i disegni (Nido) | nessuna | Non c’è testo da tradurre. La risposta della matrice lo dice, ed è la battuta |
 
 ---
 
@@ -917,7 +917,7 @@ Per ogni variabile: dove si scrive e dove si legge. Se una variabile non ha lett
 | faro del casco | proprietà: pieno / basso | pieno | abbassa, alza | Sala delle teche, Gola del ritorno |
 | `FILAMENTI` | stato: quieti / esca / desti | quieti | bengala, fuga | attraversamento, presa |
 | `APPOGGIO` | stato: libero / parete | libero | segui la parete; si azzera uscendo | `ovest` dalla Sala delle teche |
-| risuonatore | proprietà: incastrato / staccato, più contatore `TAGLIO` 0–3 | incastrato, 0 | N3 | prendi, consumo d'aria, finali |
+| risuonatore | proprietà: incastrato / staccato, più contatore `TAGLIO` 0–3 | incastrato, 0 | N3 | prendi, consumo d’aria, finali |
 | `TRACCE` | contatore 0–5 | 0 | T1–T5 | AN_ALTRO, varianti dei finali |
 | `SPECCHIO` | stato: non visto / visto | non visto | primo sguardo a L.V. | descrizione del risuonatore, «Vivi» |
 | `SEGNO_LV` (proprietà della placca) | vergine / firmata / completata | vergine | N8 | AN_ALTRO, AN_TRACCE, «Vivi», «Due lettere» |
@@ -951,7 +951,7 @@ Per ogni variabile: dove si scrive e dove si legge. Se una variabile non ha lett
 | il reattore | Sala macchine | no | la nota |
 | la cassetta di ferraglia (contenitore) | Sala macchine | no | bengala |
 | il bengala | Sala macchine | sì | esca (N4, N11) |
-| la cella d'aria | Stiva | sì | +25 aria |
+| la cella d’aria | Stiva | sì | +25 aria |
 | il faro del casco | Stiva (con la tuta) | sì | luce e calore (§5.2) |
 | il risuonatore | Vestibolo | dopo N3 | finali |
 | la nicchia | Vestibolo | no | àncora |
@@ -969,35 +969,35 @@ Per ogni variabile: dove si scrive e dove si legge. Se una variabile non ha lett
 | la culla | Nido | no | eco, R5 |
 | i disegni | Nido | no | la rivelazione del sole |
 | il sonaglio | Nido | sì | la nota |
-| l'eco del Piccolo (personaggio) | Nido, dopo la culla | — | dialogo |
+| l’eco del Piccolo (personaggio) | Nido, dopo la culla | — | dialogo |
 | il sostegno | Santuario centrale | no | il seme scuro, U1 |
 | le venature del ritorno | Gola del ritorno | no | la luce del Navarca |
 
 Oggetti esistenti che cambiano: la tavoletta (dalla Serra al Vivaio), il disco (si ruota), il seme
 (tre stati), il cadavere e la placca (riscritti), le casse (diventano i ganci vuoti), le punte
-(perdono l'alias «tre punte», vedi audit).
+(perdono l’alias «tre punte», vedi audit).
 
 ---
 
-## 13. Audit dell'originale
+## 13. Audit dell’originale
 
 Da correggere comunque, espansione o no.
 
 | # | Problema | Dove | Proposta |
 |---|---|---|---|
-| A1 | L.V. è morto «~847 anni fa» in una tuta terrestre: nel 2201 vorrebbe dire intorno al 1354. Anche la placca («~800 anni, pre-coloniale») e l'incisione sulle capsule («Ottocento anni vi separano») | `regole.fav` | Deciso (D2): centocinquant'anni e tutto L.V. come nel racconto, spostato nella Serra |
-| A2 | `echi` e `risonanze` crescono e nessuna regola li legge: due stati fantasma | `echi.fav` | Lettori nell'Anziano e nei finali (§11) |
-| A3 | L'alias «tre punte» delle punte suggerisce la soluzione dell'enigma | `oggetti.fav` | Togliere l'alias |
+| A1 | L.V. è morto «~847 anni fa» in una tuta terrestre: nel 2201 vorrebbe dire intorno al 1354. Anche la placca («~800 anni, pre-coloniale») e l’incisione sulle capsule («Ottocento anni vi separano») | `regole.fav` | Deciso (D2): centocinquant’anni e tutto L.V. come nel racconto, spostato nella Serra |
+| A2 | `echi` e `risonanze` crescono e nessuna regola li legge: due stati fantasma | `echi.fav` | Lettori nell’Anziano e nei finali (§11) |
+| A3 | L’alias «tre punte» delle punte suggerisce la soluzione dell’enigma | `oggetti.fav` | Togliere l’alias |
 | A4 | La tavoletta sta nella stessa stanza della teca che apre: nessuna deduzione | `oggetti.fav` | Spostarla nel Vivaio (N4) |
-| A5 | Il nucleo si apre in un modo solo, col plasma, e il gesto non ha conseguenze | `regole.fav` | La via della pazienza e la battuta dell'Anziano (N6) |
+| A5 | Il nucleo si apre in un modo solo, col plasma, e il gesto non ha conseguenze | `regole.fav` | La via della pazienza e la battuta dell’Anziano (N6) |
 | A6 | Nel dialogo «Chi eravate?» e «Resto ad ascoltare.» portano allo stesso nodo: scelta falsa | `dialoghi.fav` | AN_SILENZIO |
-| A7 | L'eco del Capitano: «Che Dio ci perdoni per quello che stiamo portando a casa». Un dio al singolare per i K'tharr, e «a casa» per un viaggio che li porta via da casa | `echi.fav` | Riscrivere la battuta |
-| A8 | La lettura delle capsule dà «SPECIE K'THARR: PREDATORE ALFA»: K'tharr è il nome della civiltà, qui sembra il nome di un animale | `regole.fav` | Una fauna del loro mondo con un nome suo |
-| A9 | La tuta ha «ossigeno per sei ore» e l'aria non conta mai | `oggetti.fav` | Diventa la meccanica (§5.1) |
+| A7 | L’eco del Capitano: «Che Dio ci perdoni per quello che stiamo portando a casa». Un dio al singolare per i K’tharr, e «a casa» per un viaggio che li porta via da casa | `echi.fav` | Riscrivere la battuta |
+| A8 | La lettura delle capsule dà «SPECIE K’THARR: PREDATORE ALFA»: K’tharr è il nome della civiltà, qui sembra il nome di un animale | `regole.fav` | Una fauna del loro mondo con un nome suo |
+| A9 | La tuta ha «ossigeno per sei ore» e l’aria non conta mai | `oggetti.fav` | Diventa la meccanica (§5.1) |
 | A10 | Il kit porta il logo «Weyland Corp», un marchio di *Alien* | `oggetti.fav` | Vedi D4 |
 | A11 | La stiva è piena di minerale per Europa: nessun motivo di salire sul relitto oltre la curiosità | `stanze.fav` | Deciso (D3): stiva vuota |
-| A12 | L'Anziano afferma come certo che l'umanità è il loro seme: l'NPC sa tutto e chiude troppo pulito | `dialoghi.fav` | Deciso (D5): speranza dichiarata invece di certezza |
-| A13 | Il seme ricompare nell'epilogo sulla plancia senza che chi gioca l'abbia portato | `dialoghi.fav` | Il seme si porta, o si lascia (§5.8, §7) |
+| A12 | L’Anziano afferma come certo che l’umanità è il loro seme: l’NPC sa tutto e chiude troppo pulito | `dialoghi.fav` | Deciso (D5): speranza dichiarata invece di certezza |
+| A13 | Il seme ricompare nell’epilogo sulla plancia senza che chi gioca l’abbia portato | `dialoghi.fav` | Il seme si porta, o si lascia (§5.8, §7) |
 
 ---
 
@@ -1006,8 +1006,8 @@ Da correggere comunque, espansione o no.
 ### 14.1 Mappatura sui file `.fav`
 
 Dallo strato 2 il gioco si divide in un modulo per atto, più i moduli trasversali. I file
-dell'originale (`stanze`, `oggetti`, `regole`, `traduci`, `echi`, `dialoghi`) tengono gli Atti III e
-IV finché gli strati 3 e 4 non li riscrivono, un'ala alla volta.
+dell’originale (`stanze`, `oggetti`, `regole`, `traduci`, `echi`, `dialoghi`) tengono gli Atti III e
+IV finché gli strati 3 e 4 non li riscrivono, un’ala alla volta.
 
 | File | Contenuto | Strato |
 |---|---|---|
@@ -1015,7 +1015,7 @@ IV finché gli strati 3 e 4 non li riscrivono, un'ala alla volta.
 | `aria.fav` | Il margine: contatore, visore, soglie, consumo del risuonatore | 2 (fatto); ricarica al generatore nel 3 |
 | `santamaria.fav` | Atto I | 2 (fatto) |
 | `ingresso.fav` | Atto II | 2 (fatto) |
-| `vita.fav`, `tecnica.fav`, `equipaggio.fav`, `memoria.fav` | Atto III, le quattro ali (prendono stanze, oggetti, regole, echi e traduzioni delle loro ali dai file dell'originale) | 3 |
+| `vita.fav`, `tecnica.fav`, `equipaggio.fav`, `memoria.fav` | Atto III, le quattro ali (prendono stanze, oggetti, regole, echi e traduzioni delle loro ali dai file dell’originale) | 3 |
 | `ponte.fav` | Atto IV: Ponte, Anticamera, Santuario centrale, Anziano | 4 |
 | `fuga.fav` | Atto V: apertura dei varchi, crolli, filamenti svegli, ultima voce | 4 |
 | `finali.fav` | Le sei uscite, con le varianti `[se …]` e la riga di registro | 2 («Due lettere»), 4 (gli altri) |
@@ -1025,7 +1025,7 @@ IV finché gli strati 3 e 4 non li riscrivono, un'ala alla volta.
 1. **Questa mappa.** Revisione e decisioni aperte (§15).
 2. **Atti I e II in dettaglio**: schede nodo complete con il testo definitivo, scritto seguendo
    prosa-italiana. Implementazione e collaudo.
-3. **Atto III**, un'ala alla volta.
+3. **Atto III**, un’ala alla volta.
 4. **Atti IV e V e i finali.**
 5. **Bilanciamento e audit finale**: un percorso di collaudo per ogni finale in `collaudo/`
    (`vivi.txt`, `prima-nota.txt`, `stiva-piena.txt`, `doppio-fondo.txt`, `mani-vuote.txt`,
@@ -1041,11 +1041,11 @@ IV finché gli strati 3 e 4 non li riscrivono, un'ala alla volta.
 | # | Domanda | Decisione |
 |---|---|---|
 | D1 | Il protagonista ha un nome? | Seconda persona presente. La voce narrante non dice mai «William»: lo dicono Yusuf, il registro di bordo e la riga di registro che chiude ogni finale. |
-| D2 | L.V. a centocinquant'anni invece di ottocento? | L.V. come nel libro, in tutto (età, tuta, placca, punta del carotatore, scatola nera, Matthew). Di conseguenza muore nella Serra, a mezzo metro dal seme vivo, e il gioco si apre con un frammento della sua voce. |
+| D2 | L.V. a centocinquant’anni invece di ottocento? | L.V. come nel libro, in tutto (età, tuta, placca, punta del carotatore, scatola nera, Matthew). Di conseguenza muore nella Serra, a mezzo metro dal seme vivo, e il gioco si apre con un frammento della sua voce. |
 | D3 | Stiva vuota invece del minerale per Europa? | Sì: è il movente. |
 | D4 | Il logo Weyland Corp? | Tolto: il kit porta la sigla TSC della nave. Il lettore con *Castello di Ghiaccio* resta come omaggio. |
-| D5 | L'Anziano è certo o spera che l'umanità sia il loro seme? | Spera. |
-| D6 | Quanto è severa l'aria? | Si muore solo nella fuga o portando il risuonatore; prima, la protezione vitale ferma gli ascolti al 30% e abbassa il faro, così il groviglio non afferra (revisione, C2). |
+| D5 | L’Anziano è certo o spera che l’umanità sia il loro seme? | Spera. |
+| D6 | Quanto è severa l’aria? | Si muore solo nella fuga o portando il risuonatore; prima, la protezione vitale ferma gli ascolti al 30% e abbassa il faro, così il groviglio non afferra (revisione, C2). |
 | D7 | La «matrice» del racconto diventa «risuonatore»? | Sì. |
 | D8 | Un seme solo in tre stati, o due semi? | Uno solo (§5.8). |
 | D9 | Le direzioni di transito | Più leggibili: solo punti cardinali, su e giù, e `dentro`/`fuori` per il boccaporto. Dettaglio in `02-strato-2-atti-I-II.md`, §3. |

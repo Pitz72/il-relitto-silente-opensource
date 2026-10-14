@@ -1,6 +1,6 @@
 # Il Relitto Silente — revisione dopo gli strati 1–5
 
-Versione 1.1, 14 ottobre 2026. Fotografia del gioco al commit `f898d10`; dalla 1.1, l'esito delle
+Versione 1.1, 14 ottobre 2026. Fotografia del gioco al commit `f898d10`; dalla 1.1, l’esito delle
 correzioni (§5).
 
 Rilettura completa dei quattordici moduli e dei tre documenti di progetto, più una serie di
@@ -11,7 +11,7 @@ dai percorsi scritti, ed è per questo che il collaudo non li vedeva.
 Ogni proposta dice se si può applicare **senza toccare il testo** (si cambia solo una condizione o
 una conseguenza) oppure se richiede una frase nuova.
 
-Tutto è stato corretto, su indicazione dell'autore e con le scelte descritte nel §5, che dice anche
+Tutto è stato corretto, su indicazione dell’autore e con le scelte descritte nel §5, che dice anche
 cosa è emerso durante le correzioni.
 
 ---
@@ -22,14 +22,14 @@ Tutti i punti di questa sezione sono riprodotti su una partita vera, salvo dove 
 
 | # | Gravità | Problema | Dove | Correzione proposta | Testo |
 |---|---|---|---|---|---|
-| C1 | **Alta** | Il risuonatore, una volta posato, non si riprende più: «Non puoi prenderlo.» | `ingresso.fav:224` | Nel terzo taglio aggiungere `e adesso il risuonatore è prendibile` (il `prendibile` dinamico c'è dalla 1.3) | invariato |
+| C1 | **Alta** | Il risuonatore, una volta posato, non si riprende più: «Non puoi prenderlo.» | `ingresso.fav:224` | Nel terzo taglio aggiungere `e adesso il risuonatore è prendibile` (il `prendibile` dinamico c’è dalla 1.3) | invariato |
 | C2 | Media | Si muore prima della fuga senza il risuonatore, contro la decisione D6 | `vita.fav:249-250` | Da decidere (§1.2) | dipende |
 | C3 | Media | Si può morire nella stiva della Santa Maria, al sicuro, appena entrati | `aria.fav:39-41` | I consumi della fuga saltano la stiva: `… e il giocatore non è nella stiva` | invariato |
-| C4 | Bassa | Le soglie dell'aria arrivano un turno dopo, e con la cifra sbagliata, quando l'aria la toglie un demone di un modulo successivo | `aria.fav:44-47` | Spostare le quattro soglie in un modulo incluso dopo `echi.fav` e prima di `finali.fav` | invariato |
+| C4 | Bassa | Le soglie dell’aria arrivano un turno dopo, e con la cifra sbagliata, quando l’aria la toglie un demone di un modulo successivo | `aria.fav:44-47` | Spostare le quattro soglie in un modulo incluso dopo `echi.fav` e prima di `finali.fav` | invariato |
 | C5 | Bassa | La connessione della gola di mezzo scatta anche con il risuonatore in mano, che per regola copre ogni eco | `ingresso.fav:250` | `… e il giocatore non ha il risuonatore` nel demone | invariato |
-| C6 | Bassa | Disco, stele e nucleo, posati e ripresi altrove, ripetono il testo della prima presa | `memoria.fav:66, 108, 155` | Legare le tre regole al posto d'origine (`se il disco è nello scriptorium`, ecc.): altrove vale il «Preso» del motore | invariato |
-| C7 | Bassa | Dal vivaio si torna alla gola di mezzo senza passare il groviglio: costa solo il −4 dell'avvicinamento | `vita.fav:260` | Da decidere: il passaggio è sorvegliato solo verso ovest | dipende |
-| C8 | Bassa | Prima della fuga le uscite della sala delle teche elencano «Est», che è chiusa | `relitto.fav:120`, `vita.fav:257` | Uscita dinamica: si crea nel demone d'inizio fuga, come il varco della camera | invariato |
+| C6 | Bassa | Disco, stele e nucleo, posati e ripresi altrove, ripetono il testo della prima presa | `memoria.fav:66, 108, 155` | Legare le tre regole al posto d’origine (`se il disco è nello scriptorium`, ecc.): altrove vale il «Preso» del motore | invariato |
+| C7 | Bassa | Dal vivaio si torna alla gola di mezzo senza passare il groviglio: costa solo il −4 dell’avvicinamento | `vita.fav:260` | Da decidere: il passaggio è sorvegliato solo verso ovest | dipende |
+| C8 | Bassa | Prima della fuga le uscite della sala delle teche elencano «Est», che è chiusa | `relitto.fav:120`, `vita.fav:257` | Uscita dinamica: si crea nel demone d’inizio fuga, come il varco della camera | invariato |
 | C9 | Bassa | Due stati scritti e mai letti: `gli echi` (dodici scritture) e `l'ultima voce` | `echi.fav`, `ponte.fav:203` | Toglierli, oppure dare a `gli echi` il lettore previsto (§1.3) | dipende |
 
 ### 1.1 Come si riproducono
@@ -40,29 +40,29 @@ Tutti i punti di questa sezione sono riprodotti su una partita vera, salvo dove 
   fuga: oggi si perde ovunque. Chi lo stacca presto, ne impara il costo e lo posa nel vestibolo per
   riprenderlo nella fuga, al ritorno trova «Puoi vedere qui: un risuonatore» e non può prenderlo.
   Perde «La stiva piena» e «Doppio fondo» senza saperlo.
-- **C2.** Dal vestibolo, con l'aria quasi piena e il faro al massimo: `giù`, `giù`, `aspetta`, e
+- **C2.** Dal vestibolo, con l’aria quasi piena e il faro al massimo: `giù`, `giù`, `aspetta`, e
   poi `giù` + `aspetta` a ripetizione. Il groviglio si avvicina (−4), afferra e respinge (−8):
   dodici punti a giro. Dopo otto giri la partita finisce in «Due lettere» con la fuga ancora
   lontana. Si arriva a zero anche toccando a ripetizione le venature del vestibolo (−1) o il
   risuonatore incastrato (−1, −2 per `prendi`).
-- **C3.** Nella fuga, arrivare sullo scafo con l'aria a 4 ed entrare. Il consumo della fuga scatta
-  nel turno d'arrivo e porta l'aria a 0 prima che il finale controlli «l'aria è più di 0»: scatta
+- **C3.** Nella fuga, arrivare sullo scafo con l’aria a 4 ed entrare. Il consumo della fuga scatta
+  nel turno d’arrivo e porta l’aria a 0 prima che il finale controlli «l’aria è più di 0»: scatta
   «Due lettere» nella stiva della propria nave («Ti siedi. La schiena trova una parete…»). Lo
-  stesso meccanismo, con l'aria più alta, fa comparire la soglia rossa («Adesso la tuta non ti
+  stesso meccanismo, con l’aria più alta, fa comparire la soglia rossa («Adesso la tuta non ti
   protegge più da niente») un istante prima del risveglio: lo si legge in fondo a
   `collaudo/trascrizione-tutto.txt`.
-- **C4.** Nella partita di C2 il visore annuncia «la cifra passa all'ambra: 58» quando l'aria è
+- **C4.** Nella partita di C2 il visore annuncia «la cifra passa all’ambra: 58» quando l’aria è
   già a 50. Le soglie sono in `aria.fav`, il primo modulo; il groviglio, il primo contatto e la
   connessione tolgono aria da demoni dichiarati più avanti, che le soglie non vedono fino al turno
   dopo. La correzione dello strato 5 vale solo per i consumi di `aria.fav`.
 - **C5.** Con il Sintonizzatore preso, staccare il risuonatore nel vestibolo e scendere nella gola
-  di mezzo con l'arnese in mano: la voce dei nomi parte lo stesso.
+  di mezzo con l’arnese in mano: la voce dei nomi parte lo stesso.
 - **C6.** `lascia il disco`, `prendi il disco` in qualunque stanza: «Liberi il disco di pietra
   incastrato nel meccanismo del proiettore…». Stele: «Prendi la Stele del Ricordo dallo scomparto.
   […] La seconda chiave.». Nucleo: «…dallo scomparto del terminale. La terza chiave.».
 - **C7.** Nel vivaio con il faro al massimo: `est`, `su`. Si arriva nella gola di mezzo con quattro
-  punti in meno. All'andata il groviglio «ti si stringe davanti»; al ritorno, lungo la stessa sala,
-  non c'è.
+  punti in meno. All’andata il groviglio «ti si stringe davanti»; al ritorno, lungo la stessa sala,
+  non c’è.
 
 ### 1.2 Le due decisioni
 
@@ -76,14 +76,14 @@ al 30%), per il groviglio no. Le strade:
    oggi dice «è scesa di otto punti».
 
 **C7, il ritorno dal vivaio.** O è voluto (chi è arrivato al vivaio ha già capito come si passa),
-oppure il gating su `ovest` va replicato, con la stessa logica, sull'uscita `su` per chi viene dal
+oppure il gating su `ovest` va replicato, con la stessa logica, sull’uscita `su` per chi viene dal
 vivaio. La seconda strada chiede un modo di sapere da che parte si entra: uno stato in più.
 
 ### 1.3 Gli stati senza lettori
 
-L'audit A2 dell'originale («echi e risonanze crescono e nessuna regola li legge») è dato per
+L’audit A2 dell’originale («echi e risonanze crescono e nessuna regola li legge») è dato per
 chiuso nel `03`, ma lo è solo per `le risonanze`. `gli echi` arriva a 14 e nessuno lo legge: la
-mappa (§11) prevedeva una battuta dell'Anziano sopra 8. `l'ultima voce` si scrive nell'ultimo nodo
+mappa (§11) prevedeva una battuta dell’Anziano sopra 8. `l'ultima voce` si scrive nell’ultimo nodo
 del dialogo e non si legge da nessuna parte. Neanche la variante di «Vivi» con quattro o più
 tracce (§7.3 della mappa) è stata scritta: `le tracce` si legge una volta sola, `almeno 3`.
 
@@ -92,19 +92,19 @@ tracce (§7.3 della mappa) è stata scritta: `le tracce` si legge una volta sola
 ## 2. Storia
 
 La cronologia regge: 14 marzo 2105 più novantasei anni fa 2201; L.V. intorno al 2050;
-«centocinquant'anni» torna uguale nella giuntura, nel cavo, nel cadavere, nella placca e nel
+«centocinquant’anni» torna uguale nella giuntura, nel cavo, nel cadavere, nella placca e nel
 finale. La regola del nome è rispettata: «William» lo dicono solo Yusuf, il registro e le righe
 che chiudono i finali.
 
 | # | Peso | Problema | Strade possibili |
 |---|---|---|---|
-| S1 | **Alto** | **Il cavo di L.V.** Quando entri, la nave richiude il varco e ti trancia il cavo alla prima stanza. L.V. è entrato dalla stessa giuntura («qualcuno ha già aperto qui, e la nave ha richiuso»), quindi il suo cavo doveva tranciarsi lì. Invece lo trovi nella sala delle teche, quattro stanze più giù, «attaccato alla sua linea», e il diario dice che gliel'hanno preso i filamenti | (a) il suo era un filo guida srotolato dentro la nave, non il cavo di sicurezza: cambia un nome e una riga; (b) centocinquant'anni fa la nave non richiudeva: il varco si è chiuso dopo la sua morte. Regge senza toccare il testo, ma allora perché con te lo fa subito? (c) lasciarlo com'è, come contraddizione voluta del racconto |
+| S1 | **Alto** | **Il cavo di L.V.** Quando entri, la nave richiude il varco e ti trancia il cavo alla prima stanza. L.V. è entrato dalla stessa giuntura («qualcuno ha già aperto qui, e la nave ha richiuso»), quindi il suo cavo doveva tranciarsi lì. Invece lo trovi nella sala delle teche, quattro stanze più giù, «attaccato alla sua linea», e il diario dice che gliel’hanno preso i filamenti | (a) il suo era un filo guida srotolato dentro la nave, non il cavo di sicurezza: cambia un nome e una riga; (b) centocinquant’anni fa la nave non richiudeva: il varco si è chiuso dopo la sua morte. Regge senza toccare il testo, ma allora perché con te lo fa subito? (c) lasciarlo com’è, come contraddizione voluta del racconto |
 | S2 | Medio | **La nave di L.V.** È arrivato con la sua nave, finita addosso alla massa. Della nave non resta traccia: lo scanner non la vede, nessuno la nomina. È la prima domanda che si fa chi ha letto la placca | Una riga di scanner o di registro (alla deriva, cannibalizzata dalla massa), oppure un gancio lasciato aperto di proposito |
-| S3 | Basso | «Due lettere» nella fuga promette che «fra centocinquant'anni, forse, qualcuno passerà di qui», ma la nave si sta disgregando e negli altri finali «non c'è più» | Una variante `[se la fuga è iniziata]`, oppure va bene così: il lettore la prende come speranza, non come fatto |
-| S4 | Basso | Morire sullo scafo, fuori, nella fuga: «La schiena trova una parete» | Una variante per lo scafo (con C3, l'unico posto in cui la frase non funziona) |
-| S5 | Regge | **L'energia.** L'Anziano dice che la nave non aveva forza per rispondere a L.V., eppure senza energia richiude il varco e apre un canale «da remoto» sul tuo Sintonizzatore. Regge per deduzione: il risuonatore beve dalla batteria di chi passa, e il canale passa dal Sintonizzatore, che L.V. non ha mai trovato | Niente da fare. Se un giorno serve, una riga dell'Anziano può renderlo esplicito |
+| S3 | Basso | «Due lettere» nella fuga promette che «fra centocinquant’anni, forse, qualcuno passerà di qui», ma la nave si sta disgregando e negli altri finali «non c’è più» | Una variante `[se la fuga è iniziata]`, oppure va bene così: il lettore la prende come speranza, non come fatto |
+| S4 | Basso | Morire sullo scafo, fuori, nella fuga: «La schiena trova una parete» | Una variante per lo scafo (con C3, l’unico posto in cui la frase non funziona) |
+| S5 | Regge | **L’energia.** L’Anziano dice che la nave non aveva forza per rispondere a L.V., eppure senza energia richiude il varco e apre un canale «da remoto» sul tuo Sintonizzatore. Regge per deduzione: il risuonatore beve dalla batteria di chi passa, e il canale passa dal Sintonizzatore, che L.V. non ha mai trovato | Niente da fare. Se un giorno serve, una riga dell’Anziano può renderlo esplicito |
 
-S1 è l'unico punto che un lettore attento nota da solo, perché il gioco gli fa vivere la scena del
+S1 è l’unico punto che un lettore attento nota da solo, perché il gioco gli fa vivere la scena del
 cavo tranciato prima di mostrargli quello di L.V.: è la stessa immagine messa due volte apposta (vedi
 `02`, §3, punto 5), e le due volte non tornano.
 
@@ -114,46 +114,46 @@ cavo tranciato prima di mostrargli quello di L.V.: è la stessa immagine messa d
 
 | # | Problema | Proposta |
 |---|---|---|
-| D1 | `collaudo/tutto.txt` dice di ascoltare «le 21 voci», ma salta il corridoio (quattro voci in una) e le capsule: chiude con `echi=9` su 14. Rifatto con le due voci mancanti, finisce comunque in «La prima nota», con l'aria a 21 invece che a 29: l'invariante I2 regge, con meno margine | Aggiungere i due ascolti al percorso e aggiornare il §4.2 del `03` |
+| D1 | `collaudo/tutto.txt` dice di ascoltare «le 21 voci», ma salta il corridoio (quattro voci in una) e le capsule: chiude con `echi=9` su 14. Rifatto con le due voci mancanti, finisce comunque in «La prima nota», con l’aria a 21 invece che a 29: l’invariante I2 regge, con meno margine | Aggiungere i due ascolti al percorso e aggiornare il §4.2 del `03` |
 | D2 | Il `03` (§4.2, I4) e la decisione D6 dicono che prima della fuga non si muore: vale per gli ascolti, non per il groviglio (C2) | Correggere dopo la decisione su C2 |
 | D3 | Il `03` (§4.4, A2) dà per chiusi gli stati mai letti: resta `gli echi` (C9) | Correggere con C9 |
-| D4 | L'intestazione di `ponte.fav` dice «Tredici nodi», il dialogo ne ha quattordici | Un commento |
-| D5 | Il collaudo dei finali e l'esploratore non trovano C1 (le partite a caso non posano e riprendono gli oggetti) né C3 (serve arrivare in stiva con l'aria esatta) | Un percorso per ciascuno in `collaudo/`, da tenere come prova di non regressione dopo le correzioni |
+| D4 | L’intestazione di `ponte.fav` dice «Tredici nodi», il dialogo ne ha quattordici | Un commento |
+| D5 | Il collaudo dei finali e l’esploratore non trovano C1 (le partite a caso non posano e riprendono gli oggetti) né C3 (serve arrivare in stiva con l’aria esatta) | Un percorso per ciascuno in `collaudo/`, da tenere come prova di non regressione dopo le correzioni |
 
 ---
 
 ## 4. Ordine consigliato
 
-1. **C1**: una conseguenza, nessun testo. È l'unico problema che toglie finali a chi gioca bene.
+1. **C1**: una conseguenza, nessun testo. È l’unico problema che toglie finali a chi gioca bene.
 2. **C3, C4, C5, C6, C8**: condizioni e spostamenti, nessun testo. Con i percorsi di D5 e D1.
-3. **C2 e C7**: decisioni dell'autore.
-4. **S1**: decisione dell'autore; la (a) chiede due righe di testo.
+3. **C2 e C7**: decisioni dell’autore.
+4. **S1**: decisione dell’autore; la (a) chiede due righe di testo.
 5. **C9, S2, S3, S4**: testo nuovo, quando si riaprono le frasi.
 
 ---
 
 ## 5. Esito delle correzioni
 
-Applicate il 14 ottobre 2026, su richiesta dell'autore di correggere tutto con le scelte più
+Applicate il 14 ottobre 2026, su richiesta dell’autore di correggere tutto con le scelte più
 logiche prima della seconda parte del progetto. I testi nuovi sono pochi, e tutti scritti dentro le
-frasi che c'erano.
+frasi che c’erano.
 
 ### 5.1 Cosa è stato fatto
 
 | # | Scelta | Dove |
 |---|---|---|
 | C1 | Il terzo taglio rende il risuonatore prendibile: si posa e si riprende dove si vuole | `ingresso.fav` |
-| C2 | La protezione vitale (sotto 30, prima della fuga) abbassa il faro da sola e non lo lascia rialzare; le venature del vestibolo non bevono più. Il groviglio cerca la luce: a faro basso non afferra, e il peggio che può fare è portare l'aria a 22. D6 resta com'era, e adesso è vera: prima della fuga si muore solo portando il risuonatore, che beve sempre. Testo: una frase in più nella soglia rossa, due risposte nuove | `aria.fav`, `santamaria.fav`, `ingresso.fav` |
+| C2 | La protezione vitale (sotto 30, prima della fuga) abbassa il faro da sola e non lo lascia rialzare; le venature del vestibolo non bevono più. Il groviglio cerca la luce: a faro basso non afferra, e il peggio che può fare è portare l’aria a 22. D6 resta com’era, e adesso è vera: prima della fuga si muore solo portando il risuonatore, che beve sempre. Testo: una frase in più nella soglia rossa, due risposte nuove | `aria.fav`, `santamaria.fav`, `ingresso.fav` |
 | C3 | I consumi della fuga e del risuonatore saltano la stiva della Santa Maria | `aria.fav` |
 | C4 | `aria.fav` è incluso per penultimo, prima di `finali.fav` | `relitto.fav` |
 | C5 | La voce dei nomi non parte con il risuonatore in mano | `ingresso.fav` |
 | C6 | Disco, stele e nucleo restano «incastrati» fino alla prima presa (la coppia di proprietà del risuonatore) | `memoria.fav` |
 | C7 | Il groviglio sbarra la strada nei due sensi. Uno stato nuovo, `la sponda` (vicina, lontana); la parete porta verso la gola o verso il vivaio a seconda di dove sei; due descrizioni nuove della sala vista dalla parte del vivaio. Ogni percorso che passa dal vivaio ha un `segui la parete` in più al ritorno | `vita.fav`, `fuga.fav` |
-| C8 | Il passaggio verso la gola del ritorno nasce all'inizio della fuga | `relitto.fav`, `fuga.fav` |
-| C9 | `l'ultima voce` è tolto. `gli echi` lo legge l'Anziano: con almeno 8 echi, una battuta nel benvenuto (con e senza il risuonatore). `le tracce`, con almeno 4, una riga in «Vivi»: «e anche il mezzo metro che a lui è mancato» | `ponte.fav`, `fuga.fav`, `finali.fav` |
-| S1 | Strada (a), rafforzata. Dalla cintura di L.V. pende un metro di cavo di sicurezza tranciato, come il tuo: la nave gliel'ha tagliato all'ingresso. Quello fra le teche è un cavo guida, srotolato da un rocchetto per ritrovare la strada. Perderlo spiega il «tornato su a tentoni» del diario, che resta com'era | `vita.fav` |
+| C8 | Il passaggio verso la gola del ritorno nasce all’inizio della fuga | `relitto.fav`, `fuga.fav` |
+| C9 | `l'ultima voce` è tolto. `gli echi` lo legge l’Anziano: con almeno 8 echi, una battuta nel benvenuto (con e senza il risuonatore). `le tracce`, con almeno 4, una riga in «Vivi»: «e anche il mezzo metro che a lui è mancato» | `ponte.fav`, `fuga.fav`, `finali.fav` |
+| S1 | Strada (a), rafforzata. Dalla cintura di L.V. pende un metro di cavo di sicurezza tranciato, come il tuo: la nave gliel’ha tagliato all’ingresso. Quello fra le teche è un cavo guida, srotolato da un rocchetto per ritrovare la strada. Perderlo spiega il «tornato su a tentoni» del diario, che resta com’era | `vita.fav` |
 | S2 | Analizzando la giuntura lo scanner non trova altre navi intorno alla massa: «chi ha tagliato qui non ha lasciato niente ad aspettarlo». La domanda resta aperta | `ingresso.fav` |
-| S3 | «Due lettere» nella fuga chiude con la nave che, dopo tanto tempo, si muove e ti porta con sé: l'eco della domanda del Piccolo. Prima della fuga resta la chiusa dei centocinquant'anni | `finali.fav` |
+| S3 | «Due lettere» nella fuga chiude con la nave che, dopo tanto tempo, si muove e ti porta con sé: l’eco della domanda del Piccolo. Prima della fuga resta la chiusa dei centocinquant’anni | `finali.fav` |
 | S4 | Sullo scafo ci si siede sullo scafo nero, a pochi metri dal boccaporto, e si incide lo scafo | `finali.fav` |
 | S5 | Niente da fare | |
 | D1–D5 | `tutto.txt` ascolta davvero tutto (echi 14, risonanze 7); `01` (D6) e `03` (§4) aggiornati; il commento di `ponte.fav` corretto; quattro percorsi di non regressione e un collaudatore che li legge | `collaudo/`, `progettazione/` |
@@ -162,9 +162,9 @@ frasi che c'erano.
 
 | # | Cosa | Come è stato chiuso |
 |---|---|---|
-| C10 | La soglia rossa scattava a «al massimo 30», le regole della protezione a «meno di 30»: con l'aria esattamente a 30 il visore diceva PROTEZIONE VITALE e la tuta lasciava ascoltare | Tutto a «meno di 30»: soglia, visore, e il ritorno a «almeno 30» |
-| C11 | **L'invariante I3 si reggeva su C3.** `limite-I3.txt` moriva entrando in stiva; corretto C3, vinceva con l'aria a 3. Completato con le due voci che gli mancavano (D1), muore sullo scafo a −5: il margine che la mappa prevedeva (§5.1: 155 contro 150) | Nessun valore ritoccato |
-| C12 | I verbi del gioco su un oggetto senza regola propria: `tocca`, `traduci`, `sintonizza` e `strappa` rispondevano con una domanda («Cosa vuoi toccare?») anche quando l'oggetto c'era; `analizza` e `ascolta` con il messaggio generico del motore; `incidi` sollevava la taglierina anche senza averla | Risposte generiche nella voce del gioco, con una variante per la Santa Maria dove serve |
+| C10 | La soglia rossa scattava a «al massimo 30», le regole della protezione a «meno di 30»: con l’aria esattamente a 30 il visore diceva PROTEZIONE VITALE e la tuta lasciava ascoltare | Tutto a «meno di 30»: soglia, visore, e il ritorno a «almeno 30» |
+| C11 | **L’invariante I3 si reggeva su C3.** `limite-I3.txt` moriva entrando in stiva; corretto C3, vinceva con l’aria a 3. Completato con le due voci che gli mancavano (D1), muore sullo scafo a −5: il margine che la mappa prevedeva (§5.1: 155 contro 150) | Nessun valore ritoccato |
+| C12 | I verbi del gioco su un oggetto senza regola propria: `tocca`, `traduci`, `sintonizza` e `strappa` rispondevano con una domanda («Cosa vuoi toccare?») anche quando l’oggetto c’era; `analizza` e `ascolta` con il messaggio generico del motore; `incidi` sollevava la taglierina anche senza averla | Risposte generiche nella voce del gioco, con una variante per la Santa Maria dove serve |
 
 ### 5.3 Come si verifica
 

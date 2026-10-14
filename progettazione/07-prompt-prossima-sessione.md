@@ -1,7 +1,7 @@
 # Prompt per la prossima sessione
 
 Scritto il 14 ottobre 2026, a chiusura della sessione che ha rivisto e corretto il gioco e
-progettato l'app desktop. Da incollare così com'è all'inizio della sessione nuova.
+progettato l’app desktop. Da incollare così com’è all’inizio della sessione nuova.
 
 ---
 

@@ -4,7 +4,7 @@ Avventura testuale in FAVELLA 1 (motore 1.4.4), di Simone Pizzi. Ispirata a «Il
 primo di *Dal registro della Santa Maria*.
 
 Intorno al 2201. Sei William T. Eriksonn, unico abitante della Santa Maria, cargo TSC-1972. La stiva
-è vuota da sei settimane e Yusuf non ti fa più credito. Sulla rotta c'è una massa che beve il
+è vuota da sei settimane e Yusuf non ti fa più credito. Sulla rotta c’è una massa che beve il
 radar. Ci sali per tagliarne un pezzo da vendere. Dentro trovi una nave cresciuta invece che
 costruita, che parla ancora, e un uomo arrivato prima di te.
 
@@ -53,14 +53,14 @@ Santuario centrale).
 | File | Contenuto |
 |---|---|
 | `relitto.fav` | Orchestratore: titolo, prologo, stati globali, direzioni, topologia |
-| `aria.fav` | L'aria della tuta: consumi e soglie (incluso per penultimo, così vede tutto quello che il turno ha tolto) |
+| `aria.fav` | L’aria della tuta: consumi e soglie (incluso per penultimo, così vede tutto quello che il turno ha tolto) |
 | `santamaria.fav` | Atto I — la Santa Maria, Yusuf |
 | `ingresso.fav` | Atto II — scafo, camera, vestibolo, gola di mezzo |
 | `corridoio.fav`, `vita.fav`, `tecnica.fav`, `equipaggio.fav`, `memoria.fav` | Atto III — il corridoio e le quattro ali |
-| `ponte.fav` | Atto IV — il Ponte, l'Anziano |
+| `ponte.fav` | Atto IV — il Ponte, l’Anziano |
 | `fuga.fav` | Atto V — la fuga |
 | `traduci.fav`, `echi.fav` | La matrice di traduzione, il Sintonizzatore |
 | `finali.fav` | I sei finali |
 
 Il progetto completo (mappa, decisioni, collaudo) è in `../progettazione/`. Le soluzioni dei finali
-sono in `../collaudo/`, con le prove di non regressione (`python collaudo/regressioni.py`). L'originale intatto è in `../motore/esempi/demo/relitto-silente/`.
+sono in `../collaudo/`, con le prove di non regressione (`python collaudo/regressioni.py`). L’originale intatto è in `../motore/esempi/demo/relitto-silente/`.
