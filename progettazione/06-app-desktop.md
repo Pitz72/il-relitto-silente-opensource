@@ -596,14 +596,14 @@ sessioni di lavoro come quella di oggi.
 **Totale stimato: 17–22 sessioni.** Il gioco diventa giocabile nell’app alla fine della fase 3,
 a circa metà del lavoro; da lì in poi ogni fase aggiunge senza rompere.
 
-**Lo stato, al 14 ottobre 2026 (seconda sessione).**
+**Lo stato, al 14 ottobre 2026 (seconda sessione, sera).**
 
 | Fase | Stato |
 |---|---|
-| 0. Decisioni | chiusa; D14 (la musica) ancora aperta |
+| 0. Decisioni | chiusa; D14 (la musica) decisa nel §18 |
 | 1. Prova tecnica | **chiusa**: `08-fase-1-prova-tecnica.md`. Il motore vero gira in Pyodide dentro Tauri, la partita si gioca a soli pulsanti (14 percorsi su 14, anche con `collaudo/pulsanti.py`), l’audio in Rust tiene. Windows misurato; Linux costruito in WSL (.deb e AppImage) e provato in WSLg; manca la macchina Linux vera (istruzioni nel §8 del documento 08) |
-| 4. Suono | progettata: `10-bibbia-sonora.md`. Il prototipo dei tre ambienti aspetta il permesso per i dodici file del suo §8 |
-| 6. Intro | storyboard 2 consegnato (`09-intro-storyboard.md`), con la tavola e il quadro finito della scala (`09-prova-di-look.html`); in attesa di approvazione e delle cinque scelte del suo §8. Niente si anima prima |
+| 4. Suono | progettata (`10-bibbia-sonora.md`) e provata: il prototipo dei tre ambienti è fatto e misurato (§8 della bibbia; ascolti in `ascolti/`). Il motore è in `app/src-tauri/src/mondo/`. Restano i letti in streaming, i cursori dei canali, il filo del Sintonizzatore, più respiri, i riverberi per convoluzione, la prova su Linux |
+| 6. Intro | storyboard 2 **approvato** (§18), con la tavola e il quadro finito della scala (`09-prova-di-look.html`). Prossimo passo: l’animatic, dopo la fase 2 |
 | le altre | da cominciare. La prossima sul percorso critico è la 2 (ponte e modello d’azione) |
 
 Le versioni seguono le fasi (`sviluppo/VERSIONI.md`): la fase 1 chiusa è la **0.1.0**.

@@ -18,8 +18,8 @@ insieme al motore che la fa girare.
 | `collaudo/` | Un percorso per ogni finale (`vivi`, `prima-nota`, `stiva-piena`, `doppio-fondo`, `mani-vuote`, `due-lettere`), i due percorsi limite `tutto` e `limite-I3`, quattro prove di non regressione (`riprendi-risuonatore`, `stiva-al-limite`, `groviglio-ostinato`, `vivaio-ritorno`), `soluzione.txt`, `prova-atti-I-II.txt`, `soluzione-originale.txt` (per l’originale intatto). Ogni percorso dichiara in testa quello che deve succedere (`# atteso: …`): `regressioni.py` li gioca tutti e controlla. `trascrivi.py` gioca un percorso e ne scrive la trascrizione; tre trascrizioni pronte da leggere | nuovo |
 | `progettazione/` | Documenti di progetto: `01-mappa-espansione.md` (strato 1: struttura, mappa, meccaniche, finali), `02-strato-2-atti-I-II.md` (Atti I e II), `03-strati-3-5.md` (Atti III–V, finali, bilanciamento, audit chiuso), `04-revisione.md` (criticità di codice e storia trovate dopo gli strati, e come sono state corrette), `05-lezioni-per-favella.md` (cosa il Relitto ha insegnato sul motore, proposte per una versione futura), `06-app-desktop.md`, `06-proposte-visive.html` e `06-proposta-membrana.html` (la seconda parte: l’app desktop in Tauri, visione, stile, piano di fattibilità, tavole visive), `07-prompt-prossima-sessione.md` (il prompt della sessione del 14 ottobre), `08-fase-1-prova-tecnica.md` (la prova tecnica dell’app: misure su Windows e Linux, rischi), `09-intro-storyboard.md` con `09-intro-tavola.html` e `09-prova-di-look.html` (l’intro: storyboard 2, tavola dei fotogrammi, il quadro finito della scala in WebGL2), `10-bibbia-sonora.md` (il suono, stanza per stanza ed evento per evento), `11-prompt-prossima-sessione.md` (da dove ripartire) | nuovo |
 | `app/` | L’app desktop: Tauri 2 (`src-tauri/`, Rust, l’audio con `kira`), React e TypeScript (`src/`), il motore dentro Pyodide con il ponte `src/motore/ponte.py`. Per ora c’è la schermata grezza della prova tecnica, non lo stile del gioco | nuovo |
-| `audio/` | `LICENZE.md`, il registro delle licenze dei suoni; le sorgenti grezze andranno in `audio/sorgenti/`, fuori da git | nuovo |
-| `strumenti/` | `versione.mjs` (le versioni), `verifica_tipografia.py` (il contratto tipografico sui documenti), `linux/costruisci.sh` (la costruzione in WSL o su Linux), `intro/` (scontorno degli still, tempi dei testi, cattura, plancia) | nuovo |
+| `audio/` | `LICENZE.md`, il registro delle licenze dei suoni, con l’impronta di ogni sorgente; le sorgenti grezze stanno in `audio/sorgenti/`, fuori da git | nuovo |
+| `strumenti/` | `versione.mjs` (le versioni), `verifica_tipografia.py` (il contratto tipografico sui documenti), `linux/costruisci.sh` (la costruzione in WSL o su Linux), `intro/` (scontorno degli still, tempi dei testi, cattura, plancia), `audio/` (la catena dei suoni: dalle sorgenti ai file del gioco), `apostrofi.py` (gli apostrofi tipografici nella prosa) | nuovo |
 | `sviluppo/` | `VERSIONI.md`: le regole delle versioni e dei messaggi di commit | nuovo |
 
 Non sono stati importati Favella Studio (l’IDE Electron), il sito e il branding del repo.
@@ -117,8 +117,9 @@ python test_linguaggio.py
 ## Stato dell’app
 
 - **Fase 1, la prova tecnica: chiusa** (`progettazione/08-fase-1-prova-tecnica.md`). Il motore vero gira dentro Pyodide nell’app Tauri; la partita si gioca a soli pulsanti; l’audio in Rust tiene. Su Windows: primo comando in circa 1,7 s, turni in 6 ms. Su Linux costruiti il .deb e l’AppImage; manca la prova su una macchina vera.
-- **L’intro: storyboard 2** (`progettazione/09-intro-storyboard.md`), in attesa di approvazione. La tavola e il quadro finito della scala sono in `progettazione/09-*.html`.
-- **Il suono: la bibbia** (`progettazione/10-bibbia-sonora.md`). Il prototipo dei tre ambienti aspetta il permesso per i file.
+- **L’intro: storyboard 2, approvato** (`progettazione/09-intro-storyboard.md`). La tavola e il quadro finito della scala sono in `progettazione/09-*.html`.
+- **Il suono: la bibbia e il prototipo** (`progettazione/10-bibbia-sonora.md`). I tre ambienti (la plancia, lo scafo, il vestibolo) suonano nell’app e si ascoltano in `progettazione/ascolti/`. Il motore è in `app/src-tauri/src/mondo/`; `cargo run --release --example rendi_ambienti` li rende su file.
+- **Le decisioni dell’autore** dopo la seconda sessione: `progettazione/06-app-desktop.md`, §18.
 - Versione: **0.1.0** (`versione.json`, `CHANGELOG.md`).
 
 Il progetto è sotto git (repository locale, ramo `main`).

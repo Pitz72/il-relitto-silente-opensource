@@ -8,6 +8,21 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+### Aggiunto
+
+- **Il prototipo del suono** (bibbia sonora, §8): dodici sorgenti CC0 e di pubblico dominio,
+  registrate in `audio/LICENZE.md`; la catena che ne fa 109 suoni (`strumenti/audio/`); il mondo
+  sonoro in Rust (`app/src-tauri/src/mondo/`) con le cinque strade, il re, il fiato guidato
+  dall’aria e il brusio granulare; la sezione «Suono» della pagina di prova e la sua misura
+  automatica; tre ascolti in `progettazione/ascolti/`.
+- **Le decisioni delegate dall’autore** (06, §18): lo storyboard dell’intro approvato, la musica
+  fatta con i materiali del gioco, le licenze in una schermata prima del gioco.
+
+### Cambiato
+
+- I documenti di progettazione usano gli apostrofi tipografici anche nelle parti vecchie
+  (`strumenti/apostrofi.py`).
+
 ## [0.1.0] - 2026-10-14
 
 ### Aggiunto
