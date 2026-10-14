@@ -5,7 +5,7 @@
 //  ponte. Ogni passo è misurato: la fase 1 deve sapere quanto costa l'avvio.
 // ============================================================================
 import { fileDaScrivere, STORIA } from "./sorgenti";
-import type { Compilazione, Percorso, SceltaPulsante, StatoStrumenti, Turno } from "./tipi";
+import type { Compilazione, EsitoCaricamento, Percorso, SceltaPulsante, StatoStrumenti, Turno } from "./tipi";
 
 const RUOTA_LARK = "lark-1.3.1-py3-none-any.whl";
 
@@ -28,9 +28,16 @@ type FunzionePy = (...a: unknown[]) => string;
 export interface Motore {
   avvia(seme?: number): Turno;
   comando(cmd: string): Turno;
-  pulsantePer(cmd: string): SceltaPulsante;
+  /** il pulsante che gioca un comando; `candidati`: solo fra questi (i comandi dei menu) */
+  pulsantePer(cmd: string, candidati?: string[]): SceltaPulsante;
   percorso(nome: string): Percorso;
   stato(): StatoStrumenti;
+  /** il testo del salvataggio della partita in corso (lo scrive su file il processo Tauri) */
+  salva(identita?: string, creato?: string): string;
+  /** rigioca un salvataggio; se lo rifiuta, la partita in corso non cambia */
+  carica(testo: string): EsitoCaricamento;
+  /** l'impronta SHA-256 dello stato della partita in corso */
+  impronta(): string;
   compilazione: Compilazione;
   versionePython: string;
   versionePyodide: string;
@@ -97,6 +104,9 @@ import ponte
   const pulsantePer = f("rel_pulsante_per");
   const percorso = f("rel_percorso");
   const stato = f("rel_stato");
+  const salva = f("rel_salva");
+  const carica = f("rel_carica");
+  const impronta = f("rel_impronta");
 
   const motore: Motore = {
     avvia: (seme) => JSON.parse(avvia(seme ?? null)) as Turno,
@@ -105,9 +115,13 @@ import ponte
       if (!r.ok) throw new Error(r.errore);
       return r as Turno;
     },
-    pulsantePer: (cmd) => JSON.parse(pulsantePer(cmd)) as SceltaPulsante,
+    pulsantePer: (cmd, candidati) =>
+      JSON.parse(pulsantePer(cmd, candidati ? JSON.stringify(candidati) : null)) as SceltaPulsante,
     percorso: (nome) => JSON.parse(percorso(`/relitto/collaudo/${nome}`)) as Percorso,
     stato: () => JSON.parse(stato()) as StatoStrumenti,
+    salva: (identita, creato) => salva(identita ?? null, creato ?? null),
+    carica: (testo) => JSON.parse(carica(testo)) as EsitoCaricamento,
+    impronta: () => (JSON.parse(impronta()) as { impronta: string }).impronta,
     compilazione,
     versionePython: pyodide.runPython("import sys; sys.version.split()[0]") as string,
     versionePyodide: pyodide.version as string,

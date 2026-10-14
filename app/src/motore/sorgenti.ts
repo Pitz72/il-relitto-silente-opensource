@@ -1,10 +1,13 @@
 // ============================================================================
 //  I sorgenti che Pyodide scrive nel suo filesystem: i cinque moduli del motore
 //  FAVELLA (../motore, mai copiati né modificati), i quattordici moduli del
-//  gioco, il ponte e i percorsi di collaudo. Vite li porta dentro il pacchetto
-//  come testo: l'app non legge niente da fuori.
+//  gioco, il ponte, i percorsi di collaudo e versione.json (la versione e il
+//  formato dei salvataggi: il ponte lo cerca accanto alla cartella della
+//  storia). Vite li porta dentro il pacchetto come testo: l'app non legge
+//  niente da fuori.
 // ============================================================================
 import ponte from "./ponte.py?raw";
+import versione from "../../../versione.json?raw";
 
 const motore = import.meta.glob(
   "../../../motore/{favella_utils,strutture,libreria_azioni,compilatore,gioco}.py",
@@ -27,7 +30,7 @@ const nome = (p: string) => p.slice(p.lastIndexOf("/") + 1);
 
 /** Percorso nel filesystem di Pyodide → contenuto. */
 export function fileDaScrivere(): Record<string, string> {
-  const file: Record<string, string> = { "/relitto/app/ponte.py": ponte };
+  const file: Record<string, string> = { "/relitto/app/ponte.py": ponte, "/relitto/versione.json": versione };
   for (const [p, testo] of Object.entries(motore)) file[`/relitto/motore/${nome(p)}`] = testo;
   for (const [p, testo] of Object.entries(storia)) file[`/relitto/relitto-silente/${nome(p)}`] = testo;
   for (const [p, testo] of Object.entries(percorsi)) file[`/relitto/collaudo/${nome(p)}`] = testo;

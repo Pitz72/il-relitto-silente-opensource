@@ -37,6 +37,8 @@ interface EsitoPercorso {
   turnoJs: Riassunto;
   turnoPython: { motore: Riassunto; pulsanti: Riassunto; json: Riassunto };
   ricerca: Riassunto;
+  /** a metà partita: salva, ricarica il testo, e la partita deve tornare identica */
+  salvataggio: { passo: number; esito: string; identica: boolean; byte: number; ms: number } | null;
   secondi: number;
 }
 
@@ -186,20 +188,37 @@ export default function Prova() {
       const tPulsanti: number[] = [];
       const tJson: number[] = [];
       const tRicerca: number[] = [];
-      const modi: Record<string, number> = { uguale: 0, equivalente: 0, "stesso stato": 0 };
+      const modi: Record<string, number> = { uguale: 0, equivalente: 0, "stesso stato": 0, "nessun effetto": 0 };
       const diversi: string[] = [];
       let nonTrovato: string | null = null;
+      let salvataggio: EsitoPercorso["salvataggio"] = null;
       let giocati = 0;
       for (const cmd of p.comandi) {
+        if (giocati === Math.floor(p.comandi.length / 2) && salvataggio === null) {
+          const s0 = performance.now();
+          const prima = m.impronta();
+          const testo = m.salva("prova", new Date().toISOString());
+          const r = m.carica(testo);
+          salvataggio = {
+            passo: giocati,
+            esito: r.ok ? r.esito : r.motivo,
+            identica: r.ok && r.esito === "identica" && m.impronta() === prima,
+            byte: testo.length,
+            ms: arrotonda(performance.now() - s0),
+          };
+          if (r.ok) ultimo = r.turno;
+        }
         if (ultimo.esito !== "in_corso") break;
         const r0 = performance.now();
         const s: SceltaPulsante = m.pulsantePer(cmd);
         tRicerca.push(performance.now() - r0);
-        if (!s.trovato || !s.comando) {
+        if (!s.trovato) {
           nonTrovato = cmd;
           break;
         }
         modi[s.modo!] += 1;
+        // un comando che non cambia niente, nemmeno il turno: non si preme niente
+        if (!s.comando) continue;
         if (s.modo === "stesso stato") diversi.push(`${cmd} → ${s.comando}`);
         if (aVista) {
           if (s.gruppo === "verbo") {
@@ -232,6 +251,7 @@ export default function Prova() {
         turnoJs: riassumi(tJs),
         turnoPython: { motore: riassumi(tMotore), pulsanti: riassumi(tPulsanti), json: riassumi(tJson) },
         ricerca: riassumi(tRicerca),
+        salvataggio,
         secondi: arrotonda((performance.now() - t0) / 1000),
       };
       setPercorso(esito);
@@ -543,6 +563,10 @@ export default function Prova() {
               «{percorso.percorso}»: {percorso.giocati}/{percorso.comandi} a pulsanti ({percorso.modi.uguale} uguali, {percorso.modi.equivalente} equivalenti,{" "}
               {percorso.modi["stesso stato"]} solo stato); attese {percorso.attese.filter((a) => a.ok).length}/{percorso.attese.length}; turno p50{" "}
               {percorso.turnoJs.p50} ms, p95 {percorso.turnoJs.p95} ms, max {percorso.turnoJs.max} ms.
+              {percorso.salvataggio &&
+                ` Salvataggio al passo ${percorso.salvataggio.passo}: ${percorso.salvataggio.esito}` +
+                  `${percorso.salvataggio.identica ? ", stessa impronta" : ", IMPRONTA DIVERSA"}` +
+                  ` (${percorso.salvataggio.byte} byte, ${percorso.salvataggio.ms} ms).`}
             </p>
           )}
           {fotogrammi.length > 0 && (
