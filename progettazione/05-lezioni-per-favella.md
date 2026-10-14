@@ -1,7 +1,8 @@
 # Cosa ha insegnato Il Relitto sul motore FAVELLA 1
 
-Versione 1.1, 14 ottobre 2026. Motore 1.4.4, non modificato. La 1.1 aggiunge quello che le correzioni
-della revisione (`04-revisione.md`, §5) hanno confermato, e la lezione L17.
+Versione 1.2, 14 ottobre 2026. Motore 1.4.4, non modificato. La 1.1 aggiunge quello che le correzioni
+della revisione (`04-revisione.md`, §5) hanno confermato, e la lezione L17. La 1.2 aggiunge le
+lezioni L18–L20, venute dall’app (`12-fase-2-ponte-e-modello.md`).
 
 FAVELLA 1 è chiuso alla 1.4.4. Queste note servono a una versione futura (una 1.5, o FAVELLA 2).
 Il Relitto è il banco di prova più duro che il motore abbia avuto finora: quattordici moduli,
@@ -35,6 +36,9 @@ gioco non l’ha usata, la nota lo dice: lì manca la documentazione, non il mot
 | L15 | Gli strumenti di collaudo non bastano per le risorse | invarianti verificati a mano, due bug sfuggiti | **Alta** |
 | L16 | Il finale arriva dopo la descrizione della stanza | l’elenco «Puoi vedere qui» prima del risveglio | Bassa |
 | L17 | Mancano le condizioni con un nome | la stessa soglia scritta in due modi, un bug (C10) | Media |
+| L18 | Il punto di partenza dei salvataggi viene prima della prima stanza | un salvataggio nella stiva si carica «diverso» | **Alta**, costa poco |
+| L19 | Caricare segna come vista la stanza in cui si è | dopo la fuga l’impronta non torna più | **Alta**, costa poco |
+| L20 | A soli pulsanti il motore offre ogni verbo su ogni cosa | 33 verbi per cosa, un filtro da scrivere fuori dal motore | Media |
 
 ---
 
@@ -263,6 +267,42 @@ Invece di sintonizza le piante se il rosso: …
 
 Va insieme a L1: con i vincoli trasversali e le condizioni con un nome, le regole della protezione
 vitale, più di venti, diventano una.
+
+### L18. Il punto di partenza dei salvataggi
+
+**Nel Relitto.** `imposta_posizione_iniziale` fissa lo stato da cui CARICA rigioca la partita
+(`_stato_iniziale`) prima che la prima stanza sia mostrata; ma mostrarla la segna come vista, e le
+stanze viste stanno nell’impronta (con «Le uscite nominano solo le stanze visitate»). Rigiocando, la
+plancia risulta mai vista: un salvataggio fatto nella stiva, quattro comandi dopo l’inizio, si carica
+con un’impronta diversa e il motore avverte che la partita «non è identica». Lo stesso vale per il
+terminale e per il playground, che fanno la stessa sequenza. Il seme del caso, se l’host lo cambia dopo
+(come fa il collaudo), resta fuori dal punto di partenza.
+
+**Proposta.** Fissare il punto di partenza dopo l’apertura (intestazione e prima stanza), oppure
+segnare la stanza iniziale come vista già in `imposta_posizione_iniziale`. Il ponte dell’app fa la
+prima cosa, e mette il seme prima.
+
+### L19. Caricare segna come vista la stanza
+
+**Nel Relitto.** Dopo CARICA il motore rimostra la stanza, e mostrarla la segna come vista. Una stanza
+raggiunta da una regola che sposta il giocatore senza mostrare la stanza (L8: la gola del ritorno,
+nella fuga) nella partita caricata diventa vista, nell’originale no. Da lì le due impronte divergono, e
+un secondo salvataggio porta la differenza con sé.
+
+**Proposta.** Rimostrare la stanza senza effetti sullo stato, o non rimostrarla e lasciare all’host la
+scelta di che cosa far vedere. Il ponte la mostra su un ramo della partita, poi disfatto.
+
+### L20. I pulsanti senza filtro
+
+**Nel Relitto.** Con `I comandi si scelgono con i pulsanti.` il motore offre ogni verbo d’autore su ogni
+cosa in vista: «firma la nave aliena», «stacca i comandi di manovra». In media 33 verbi per cosa. Il
+motore sa quali verbi hanno una regola su quale cosa, e quali proprietà quelle regole cambiano, ma
+`pulsanti()` non lo dice: l’app lo ricava leggendo le regole e i loro effetti, e con quei fatti scende
+a 4 verbi per cosa (10 al massimo), giocando lo stesso tutti e sei i finali.
+
+**Proposta.** `pulsanti()` dica, per ogni cosa, i verbi con una regola scritta e gli effetti di quelle
+regole, così che un’interfaccia possa filtrare senza leggere le strutture interne. Un modo «pulsanti
+filtrati», con il filtro dell’app (`app/src/azione/modello.ts`) come riferimento, sarebbe il passo dopo.
 
 ---
 

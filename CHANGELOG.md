@@ -17,11 +17,37 @@ documenti di `progettazione/`.
   automatica; tre ascolti in `progettazione/ascolti/`.
 - **Le decisioni delegate dall’autore** (06, §18): lo storyboard dell’intro approvato, la musica
   fatta con i materiali del gioco, le licenze in una schermata prima del gioco.
+- **L’app, fase 2 (il ponte e il modello d’azione).** Il ponte completo per FAVELLA 1.4: per ogni
+  turno gli eventi (con l’intestazione e il prologo a parte), i pulsanti, le cose in vista con le
+  regole dell’autore e i loro effetti, lo stato del visore (l’atto, la mappa delle stanze viste, i
+  contatori che compaiono quando servono), il comando scomposto. Il modello dei menu in TypeScript
+  (`app/src/azione/`): i verbi di una cosa filtrati per regole, attrezzi e stato, le quattro azioni di
+  situazione, i tasti delle uscite, i suggerimenti in maiuscolo che accendono il loro pulsante.
+  Decisioni e misure in `progettazione/12-fase-2-ponte-e-modello.md`.
+- **I salvataggi** a riprese: il file con il formato di `versione.json`, l’impronta della storia, il
+  seme, un riassunto per i posti, la sequenza dei comandi; il caricamento che rigioca e dice se la
+  partita è identica, ricostruita su una storia cambiata o diversa; i rifiuti dei file estranei, più
+  recenti o danneggiati.
+- **Gli stati e gli eventi per il suono** (bibbia sonora, §1.6 e §2.4): 51 stati, 84 tipi di evento
+  trovati per differenza fra prima e dopo il turno, il finale riconosciuto per nome.
+- **I collaudi dell’app**: `collaudo/menu.mjs` (i sei finali con i soli menu), `collaudo/salvataggi.py`
+  (salva e ricarica in ogni stanza), `collaudo/eventi.py` (il suono), le prove del modello
+  (`npm --prefix app run prove`).
 
 ### Cambiato
 
 - I documenti di progettazione usano gli apostrofi tipografici anche nelle parti vecchie
   (`strumenti/apostrofi.py`).
+- Il collaudo a pulsanti salta i comandi che non cambiano niente, nemmeno il turno («giù» dove non si
+  scende), invece di giocarli con un altro comando a vuoto.
+- La pagina di prova non ristampa il prologo sulla plancia, e salva e ricarica a metà del percorso.
+
+### Corretto
+
+- Un salvataggio fatto dopo la prima stanza si caricava «diverso»: il punto di partenza del motore
+  precede la prima stanza mostrata. Il ponte lo fissa dopo l’apertura (lezione L18).
+- Caricare segnava come vista la stanza in cui si era, e dopo la gola del ritorno l’impronta non
+  tornava più. Il ponte mostra la stanza su un ramo, poi disfatto (lezione L19).
 
 ## [0.1.0] - 2026-10-14
 
