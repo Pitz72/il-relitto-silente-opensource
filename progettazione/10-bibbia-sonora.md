@@ -12,7 +12,7 @@ Che cosa si sente in ogni stanza e in ogni evento del gioco, da quali registrazi
 - **Il fiato è lo strumento dell’aria.** La cifra sul visore decide quanto spesso e quanto a fondo respiri (§5.1).
 - **Sei silenzi diversi**, ognuno costruito (§1.5).
 - **Le fonti.** Freesound in CC0, l’archivio Sonniss GDC (senza attribuzione) e LibriVox (pubblico dominio). Il fiato, la tuta e il sonaglio conviene registrarli apposta (§7.4). Ogni file passa da `audio/LICENZE.md` prima di entrare nel gioco.
-- **Stato.** Non è stato scaricato ancora nessun file. Il §8 elenca i dodici file per il prototipo dei tre ambienti (circa 170 MB, tutti CC0 o di pubblico dominio), in attesa del tuo permesso.
+- **Stato.** Il prototipo dei tre ambienti è fatto e misurato (§8): dodici sorgenti CC0 e di pubblico dominio, un motore in Rust con le cinque strade, il fiato e il brusio, tre ascolti in `progettazione/ascolti/`.
 
 ## 1. I principi
 
@@ -800,22 +800,43 @@ Tutti con licenza verificata sulla pagina di ciascuno, il 14 ottobre 2026.
 
 **Totale: 169,7 MB.** Le registrazioni di Freesound sono tutte vere, dichiarate dai loro autori con il registratore usato. Due candidate che sembravano adatte sono state scartate perché sintetiche: «control_room.wav» (fatta con gli oscillatori) e «Cave Ambience» (archiviata come sintetica).
 
-**Come si scaricano.** Gli originali di Freesound richiedono un account, e io non posso accedere al tuo. Le strade sono due:
+**Come sono stati scaricati.** Gli originali di Freesound, con l’account dell’autore: è entrato da sé nel pannello del browser, e da quella sessione sono partiti i download (151,3 MB). LibriVox da archive.org, senza account. Le impronte SHA-256 sono in `audio/LICENZE.md`.
 
-- **gli originali:** li scarichi tu dal tuo account (151,3 MB), oppure mi dai il permesso di prenderli da una sessione in cui sei già entrato nel browser;
-- **le anteprime pubbliche:** Freesound pubblica per ogni suono un’anteprima in Ogg (circa 145 kbit/s) senza bisogno di account. Le undici anteprime pesano circa 12 MB in tutto: bastano per il prototipo, non per il gioco. Per la licenza non cambia niente (CC0).
+### 8.3 Com’è costruito
 
-LibriVox si scarica da archive.org senza account.
+- **Una catena offline** (`strumenti/audio/prepara_prototipo.py`, con gli attrezzi di `comune.py`) prende le sorgenti da `audio/sorgenti/` e scrive 109 file Ogg in `app/src-tauri/risorse/audio/prototipo/` (9 MB), con `indice.json` che dice da quale sorgente viene ciascuno:
+  - tre letti ad anello, a −28 LUFS: la ventilazione (P2, senza il rombo a 32 Hz e senza il ronzio di rete a 60 e 120 Hz), le pompe (P1, senza le cinque righe tonali che litigavano con il re: 65, 141, 746, 858 e 1000 Hz), la ventola della tuta (C5: il motore a 62 Hz teneva quasi tutta l’energia, e un passa-alto ripido a 110 Hz lascia l’aria);
+  - quindici cicli di respiro, tagliati dove l’inspirazione (più acuta) cede all’espirazione: calmo, sospiro, teso, pesante, veloce, sorpresa;
+  - i colpi e i cigolii a contatto (P3, C6), le gocce (V2), le crepe del ghiaccio e otto gemiti (V3 rallentato di un’ottava e mezza);
+  - venti voci da LibriVox, mono a 24 kHz, senza l’annuncio iniziale e senza i silenzi.
+- **Il motore** è un modulo Rust, `app/src-tauri/src/mondo/`: un solo `Sound` di kira che mescola dentro di sé tutti gli strati lungo le cinque strade, con i filtri di ciascuna (il guscio a un polo, la cuffia in banda stretta e compressa, la bolla del casco, le ossa sotto i 250 Hz). Così il filtro del guscio è davvero a 6 dB per ottava, e lo stesso codice gira anche fuori dall’app. Dentro ci sono il re (con le fasi di ogni parziale, per muovere i battimenti senza scatti), il fiato (la macchina a stati del §5.1), il brusio granulare (§5.2) e le piogge di eventi.
+- **Fuori dall’app**, `examples/rendi_ambienti.rs` rende i tre ambienti su file WAV, anche uno strato per volta: è così che i livelli sono stati tarati sulle misure.
+- **Nell’app**, i comandi `audio_mondo_avvia`, `audio_mondo` e `audio_mondo_stato`. La pagina di prova ha la sezione «Suono · il prototipo»: gli ambienti, il cursore dell’aria, la nave, la rampa, i passi, lo sforzo, gli eventi. Con `RELITTO_PROVA=mondo` misura da sola e scrive il rapporto.
 
-### 8.3 Come si costruisce
+### 8.4 Stato e misure
 
-- `audio.rs` cresce: le cinque strade come tracce, le scene come istantanee, il fiato come macchina a stati, il brusio come `Sound` granulare.
-- Le sorgenti vanno in `audio/sorgenti/` (fuori da git), si lavorano con gli script di `strumenti/audio/` e finiscono in `app/src-tauri/risorse/audio/`.
-- La pagina di prova della fase 1 avrà una sezione «suono»: i tre ambienti, il cursore dell’aria, i tre interruttori, le misure.
+**Fatto e misurato, il 14 ottobre 2026.** Gli ascolti sono in `progettazione/ascolti/` (10-plancia, 10-scafo, 10-vestibolo, in MP3).
 
-### 8.4 Stato
+| Misura | Risultato |
+|---|---|
+| Livelli (dai rendering) | plancia calma −26 LUFS (re −29, ventilazione −30, pompe −38); fiato calmo −27, ambra −26, fame d’aria −21; brusio −31; ventola −35; picchi sotto −3 dBFS |
+| Il re è l’unica nota della plancia? | sì: le sole righe tonali fra 30 e 1500 Hz sono 73,2, 147,2 e 220,5 Hz, i primi tre armonici del re, entro 5 cent |
+| Il brusio si capisce? | no: l’inviluppo delle sillabe è più piatto del 61% rispetto a una voce sola (profondità della modulazione 0,49 contro 1,26) |
+| Scatti | nessuno nei tre rendering |
+| Il fiato segue l’aria? | sì: 13,9 respiri al minuto con l’aria piena, 22 con la fame d’aria (misurati dall’app) |
+| CPU, fuori dall’app | da 57 a 106 volte più veloce del tempo reale, su un core |
+| CPU, nell’app (Windows, WASAPI) | thread audio in media dall’1,1 al 2,7%, al massimo il 4,9% |
+| Flusso, nell’app | buco massimo 10,3 ms (il periodo di WASAPI), zero errori, in tutti e sette i passi della prova |
+| Memoria e caricamento | 86 MB di campioni a 16 bit, caricati in 1,1 s fuori dal thread principale |
 
-In attesa del permesso. Nessun file scaricato.
+**Che cosa manca prima del gioco vero** (fase 4):
+
+- i letti lunghi in streaming dal disco invece che in memoria (86 MB sono troppi per 23 stanze);
+- i cinque cursori dei canali (oggi c’è solo il volume generale);
+- il «filo» del Sintonizzatore e lo spostamento di frequenza delle echi (§5.3);
+- più materiale per il fiato: quindici cicli si riconoscono, dopo qualche minuto. Servono una libreria di respiri della stessa voce, o una sessione registrata;
+- i riverberi delle stanze grandi per convoluzione, offline;
+- la prova sulla macchina Linux vera.
 
 ## 9. Decisioni dell’autore
 
