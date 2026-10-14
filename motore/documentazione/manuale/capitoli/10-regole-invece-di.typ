@@ -1,0 +1,330 @@
+#import "../lib/manuale-template.typ": *
+
+= Le regole: «Invece di»
+
+Finora hai costruito un mondo: stanze, oggetti, stati. Ma un mondo che non
+risponde non è ancora una storia. Le *regole* sono il punto in cui FAVELLA
+smette di descrivere e comincia a reagire: dicono al gioco cosa fare quando il
+giocatore prova ad #emph[aprire], a #emph[prendere], a #emph[usare] qualcosa.
+
+In FAVELLA esiste un'unica forma di regola, e si apre sempre con le stesse due
+parole: *Invece di*. Il nome non è casuale, e nasconde l'idea più importante di
+tutto il capitolo.
+
+== «Invece di» vuol dire «al posto di»
+
+Quando una regola scatta, il motore esegue la regola #emph[al posto di] ciò che
+avrebbe fatto normalmente. Non #emph[in aggiunta]: #emph[al posto di]. La frase
+che scrivi tu sostituisce in pieno il comportamento predefinito del verbo.
+
+#sintassi[
+  `Invece di [verbo all'imperativo] [oggetto]: dire "[testo]".`
+
+  Il verbo va scritto *all'imperativo*, esattamente come lo digiterebbe il
+  giocatore: `apri` (non «aprire»), `prendi` (non «prendere»).
+]
+
+Ecco la regola più semplice possibile, tratta dallo studio di Adele: una falsa
+pista, onesta. Il giocatore sposta il tappeto sperando in una botola; non c'è
+nulla, e glielo diciamo.
+
+#esempio[
+#fav(```
+Invece di sposta il tappeto dello studio: dire "Sollevi un angolo. Parquet, polvere, niente. Adele non era una che nascondeva sotto i tappeti.".
+```)
+]
+
+Qui il verbo `sposta` non aveva comunque un effetto sul mondo, quindi
+«sostituirlo» con un messaggio è innocuo. Con i verbi che #emph[cambiano
+qualcosa] — `prendi`, `lascia`, `metti`, `apri` — la faccenda è più delicata.
+
+#tranello[
+  Se scrivi `Invece di prendi la torcia: dire "Scotta!".`, il giocatore vedrà il
+  messaggio #emph[e la torcia non finirà nell'inventario]: hai sostituito l'intera
+  azione «prendi», compreso il suo effetto. Per conservare l'effetto normale devi
+  #emph[ricrearlo] con una conseguenza `e adesso` (il capitolo successivo,
+  «Logica e conseguenze»). È un tranello in cui cade chiunque, almeno una volta:
+  «Invece di» #emph[spegne] il comportamento di default.
+]
+
+Per questo, quando una regola apre qualcosa, l'apertura va dichiarata a parte.
+Guarda il cassettone della camera: la regola intercetta `apri`, racconta la
+scena #emph[e] aggiorna lo stato dell'oggetto.
+
+#esempio[
+#fav(```
+Invece di apri il cassettone se il cassettone è chiuso: dire "Il primo cassetto cede subito: era solo accostato. Dentro, avvolto in un fazzoletto, qualcosa di piccolo e pesante." e adesso il cassettone è aperto.
+```)
+]
+
+#nota[
+  E se una regola serve *solo* a cambiare qualcosa, senza niente da raccontare al
+  giocatore? Allora puoi saltare il `dire "…"` e andare dritto alla conseguenza:
+  `Invece di riposa: aumenta la forza.`. È la stessa libertà di eventi e demoni —
+  il «tick silenzioso» del capitolo sul tempo. Le conseguenze le vedi per esteso nel
+  prossimo capitolo; qui basta sapere che il testo, da solo, è facoltativo.
+]
+
+== Regole condizionali: la parola `se`
+
+Una regola può aspettare il momento giusto. Aggiungendo una clausola `se`, scatta
+*solo quando la condizione è vera*; altrimenti il motore prosegue e cerca
+un'altra regola applicabile.
+
+#sintassi[
+  `Invece di [azione] se [condizione]: dire "[testo]".`
+]
+
+La torcia di Adele è a manovella: per accenderla devi averla in mano. Servono due
+regole, una per il caso «ci riesco» e una per il caso «non ci riesco»; la prima
+usa una condizione composta con `e` (la logica booleana completa è nel capitolo
+«Logica e conseguenze»).
+
+#esempio[
+#fav(```
+Invece di accendi la torcia se la torcia è spenta e il giocatore ha la torcia: dire "Carichi la manovella per dieci secondi. Il fascio è giallo e tremante, ma tiene." e adesso la torcia è accesa.
+Invece di accendi la torcia se la torcia è spenta: dire "Devi averla in mano per caricarla.".
+```)
+]
+
+#nota[
+  Le regole *condizionali hanno la precedenza su quelle semplici*, e fra due
+  condizionali vince la prima dichiarata che risulta vera. Per questo la riga con
+  la condizione più stringente (`… e il giocatore ha la torcia`) va scritta
+  #emph[prima] del ripiego più generico: il motore le prova nell'ordine.
+]
+
+== Verbi personalizzati
+
+`accendi`, `spegni`, `forza`, `scava`, `brucia`: non sono verbi che FAVELLA
+conosce da sé, li hai inventati tu per questa storia. Un verbo nuovo è
+#emph[vocabolario nuovo], e come ogni vocabolario nuovo si dichiara *tra
+virgolette*.
+
+#sintassi[
+  `"[verbo]" è un comando.`
+]
+
+#esempio[
+#fav(```
+"accendi" è un comando.
+"spegni" è un comando.
+"forza" è un comando.
+"scava" è un comando.
+"brucia" è un comando.
+```)
+]
+
+Da quel momento il giocatore può digitarli e tu puoi intercettarli con `Invece
+di`, esattamente come i verbi predefiniti. Un comando può anche essere di *più
+parole*: in quel caso si dichiara `"fai scattare" è un comando.` e il motore
+riconosce l'intera espressione all'inizio del comando.
+
+== Comandi senza oggetto
+
+Alcuni verbi non reggono un oggetto: si #emph[accelera], si #emph[aspetta], si
+#emph[salta], e basta. Per questi dichiari il comando come *senza oggetto*, così la
+regola globale scatta anche quando il giocatore digita il verbo da solo.
+
+#sintassi[
+  `"[verbo]" è un comando senza oggetto.`
+]
+
+#esempio[
+#fav(```
+# Forma disponibile:
+"accelera" è un comando senza oggetto.
+Invece di accelera: dire "Premi a fondo. Il motore sale di giri, il paesaggio si fa liquido ai lati.".
+```)
+]
+
+== Sinonimi di un verbo
+
+Chi gioca non indovina sempre la tua parola. Molte alternative FAVELLA le conosce
+già: dove tu hai previsto `prendi`, chi gioca può scrivere `raccogli`, `afferra` o
+`prendere`, e la tua regola scatta lo stesso.
+
+#nota[
+  Una regola scritta col *verbo principale* di un'azione vale per tutti i suoi
+  sinonimi (dalla versione 1.2.2): `Invece di prendi …` intercetta anche
+  `raccogli`, `afferra` e `prendere`; `Invece di esamina …` anche `guarda`,
+  `osserva` e `leggi`; `Invece di lascia …` anche `molla`, `posa` e `butta`;
+  `Invece di metti …` anche `inserisci`, `infila` e `appoggia`. Una regola scritta
+  con un sinonimo, come `Invece di leggi il libro`, vale solo per quella parola, e
+  per quella parola ha la precedenza: così leggere e guardare possono dire cose
+  diverse.
+]
+
+Per una parola che FAVELLA non conosce, invece di duplicare le regole dichiari che
+vale *come* un verbo noto: ne eredita tutto — il comportamento di default, le tue
+regole `Invece di`, perfino i pronomi.
+
+#sintassi[
+  `"[parola nuova]" è come [verbo].`
+]
+
+#esempio[
+#fav(```
+# Forma disponibile:
+"ghermisci" è come prendi.
+```)
+]
+
+Da qui `ghermisci la torcia` fa esattamente quel che farebbe `prendi la torcia`.
+
+Il verbo a destra può essere uno di quelli che il motore conosce, oppure un comando
+che hai dichiarato tu (dalla versione 1.2). Un comando di più parole va scritto fra
+virgolette, da tutte e due le parti:
+
+#esempio[
+#fav(```
+"getta" è un comando.
+"lancia" è come getta.
+"getta il cibo" è un comando senza oggetto.
+"butta via il cibo" è come "getta il cibo".
+Invece di getta il cibo: dire "Il cane si avventa sul pane secco.".
+```)
+]
+
+Adesso `lancia il sasso` segue le regole di `getta`, e `butta via il cibo` quella di
+`getta il cibo`. L'ordine delle frasi non conta: il sinonimo può comparire prima
+del comando a cui rimanda. Se a destra c'è una parola che FAVELLA non conosce e che
+non hai dichiarato, te lo segnala con un avviso.
+
+Se la parola a sinistra è già un verbo del motore (`"colpisci" è come attacca.`),
+FAVELLA ti avvisa che da ora in poi farà un'altra cosa, e ti dice che cosa faceva
+prima. Se il cambio è quello che volevi, scrivilo nella frase stessa e l'avviso
+sparisce (dalla versione 1.4.1): `"colpisci" è come attacca (voluto).`
+
+#tranello[
+  `è come` vale *solo per i verbi*. Per le direzioni non funziona: `"destra" è
+  come est` non crea una direzione. Per dire che due direzioni sono l'una l'opposto
+  dell'altra c'è la forma apposita, già vista nel capitolo sulla topologia —
+  `Destra e sinistra sono direzioni opposte.`. Se provi `è come` su una direzione,
+  FAVELLA te lo fa notare e ti rimanda a questa forma.
+]
+
+== Regole a due oggetti
+
+Molti enigmi nascono dall'incontro di due cose: una chiave e una porta, una leva
+e un cassetto. FAVELLA lo scrive con una preposizione fra i due oggetti — `su`,
+`con`, `contro`, `in` (anche articolate: `sulla`, `nella`…).
+
+#sintassi[
+  `Invece di [verbo] [oggetto 1] [su/con/contro/in] [oggetto 2] se [condizione]: dire "[testo]".`
+]
+
+La porta della cantina si apre con la sua chiave:
+
+#esempio[
+#fav(```
+Invece di usa la chiave della cantina sulla porta della cantina se la porta della cantina è chiusa: dire "La doppia mappa gira due volte, di scatto. La porta si apre verso il basso." e adesso la porta della cantina è aperta.
+```)
+]
+
+E lo stesso cassetto dello studio si può forzare: qui un verbo personalizzato e
+due oggetti collaborano, con il portaombrelli che fa da leva.
+
+#esempio[
+#fav(```
+Invece di forza il cassetto con il portaombrelli se il cassetto è chiuso: dire "Il ferro del portaombrelli scivola sotto il piano. Una pressione asciutta, il legno cede. Hai aperto male, ma hai aperto." e adesso il cassetto è aperto.
+```)
+]
+
+#nota[
+  Il motore è tollerante sulla preposizione: se i due oggetti individuano una
+  sola interazione possibile, `usa la chiave con la porta` funziona anche se la
+  regola era scritta con `sulla`. Così il giocatore non deve indovinare la
+  preposizione «giusta».
+]
+
+Dalla versione 1.4.2 il giocatore ha altre strade per la stessa regola: `usa la
+chiave per aprire la porta`, `usa la chiave ed apri la porta` e `apri la porta con
+la chiave` fanno scattare la regola scritta con `usa`. Se scrive solo `usa la
+chiave`, il motore chiede «Con cosa vuoi usarla?», e basta rispondere `la porta`.
+Tu non devi scrivere altro: la regola è una, e le formulazioni che la raggiungono
+sono quelle che chiunque proverebbe. Se però scrivi tu una regola per `apri la
+porta con la chiave`, vince la tua.
+
+== Regole globali: senza bersaglio
+
+A volte la reazione non riguarda un oggetto, ma lo stato della storia. Una regola
+può fare a meno dell'oggetto e scattare *sul solo verbo* (con o senza
+condizione). Il verbo `ricorda`, in fondo alla Casa, tira le somme degli indizi
+raccolti:
+
+#esempio[
+#fav(```
+Invece di ricorda se la verità è svelata: dire "Tua zia. Le lettere chiuse. Il bambino consegnato. Le mensilità mai cessate. Hai messo insieme [indizi] frammenti, e bastano.".
+Invece di ricorda: dire "Non hai abbastanza pezzi per cucirli insieme. Non ancora.".
+```)
+]
+
+Le `[indizi]` fra parentesi quadre sono un'#emph[interpolazione]: a gioco avviato
+vengono sostituite dal valore corrente del contatore. Una *regola specifica*,
+legata a un oggetto, vince comunque su una globale: prima il motore cerca la
+regola puntuale, poi ripiega su quella generale.
+
+== La catena di ripiego
+
+Mettendo insieme questi pezzi ottieni il pattern più utile di tutti: più regole
+sullo stesso verbo, dalla più esigente alla più generica, che formano una
+*catena di ripiego*. Scavare la terra del giardino ne è l'esempio migliore.
+
+#esempio[
+#fav(```
+Invece di scava la terra smossa se il giocatore ha il portaombrelli e la terra smossa è compatta: dire "Con il puntale del portaombrelli arrivi sotto. Tre colpi, e la chiave dello studio è lì." e adesso la chiave dello studio è in giardino e adesso la terra smossa è scavata.
+Invece di scava la terra smossa se la terra smossa è compatta: dire "A mani nude no. Servirebbe qualcosa con cui smuovere.".
+Invece di scava la terra smossa: dire "Hai già rivoltato la terra qui sotto. Non c'è altro.".
+```)
+]
+
+Il motore le valuta dall'alto verso il basso: se hai la leva e la terra è ancora
+intatta, scavi davvero; se ti manca lo strumento, ti dice cosa ti serve; una
+volta scavata, la terza riga chiude la questione. Tre esiti per lo stesso verbo,
+nessuna ambiguità.
+
+== Prima, dopo, altrimenti
+
+`Invece di` sostituisce l'azione. Dalla versione 1.3 ci sono altre due fasi:
+
+- `Prima di prendi la piuma: dire "Ti chini.".` scatta e poi l'azione prosegue
+  come sempre;
+- `Dopo di prendi la piuma: dire "È leggerissima.".` scatta dopo che l'azione del
+  motore è riuscita (la piuma è stata presa davvero); se non riesce, tace.
+
+Così non serve riscrivere una presa solo per aggiungerle una frase: la capienza, il
+buio e il messaggio «Preso» restano quelli del motore. Una regola `Prima di` che
+scatta fa sempre passare un turno, anche se poi l'azione non riesce (`vai nord`
+dove a nord non si va): ANNULLA la disfa e SALVA la ricorda.
+
+Una regola con `se` può avere un ramo per quando la condizione è falsa:
+
+#esempio(da: "un esempio")[
+#fav(```
+Invece di esamina la porta se la porta è aperta: dire "Dà sul giardino."; altrimenti dire "È chiusa, e la vernice si scrosta.".
+```)
+]
+
+E al posto di un oggetto preciso puoi scrivere una *categoria*: `qualcosa` vale per
+ogni oggetto, `qualcosa di [proprietà]` per ogni oggetto che ha quella proprietà.
+Una regola su un oggetto preciso vince sempre su quella per categoria.
+
+#esempio(da: "un esempio")[
+#fav(```
+Invece di prendi qualcosa di pesante: dire "Non ce la fai a sollevarlo.".
+Invece di annusa qualcosa: dire "Sa di polvere.".
+```)
+]
+
+== A chi, da dove
+
+Nelle regole a due oggetti valgono anche le preposizioni `a`, `da` (con tutte le
+loro forme: `alla`, `dal`, `dall'`…) e `sopra`, `sotto`, `dentro`, `dietro`, `verso`:
+`Invece di dai la mela alla guardia`, `Invece di prendi il libro dallo scaffale`.
+
+#prova[
+  Aggiungi alla Casa una reazione per il verbo `bussa` sulla porta della cantina:
+  un messaggio diverso a seconda che la porta sia `chiusa` o `aperta`. Ti bastano
+  due regole e la parola `se` — ricordando di metterle nell'ordine giusto.
+]

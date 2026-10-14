@@ -1,0 +1,39 @@
+# ============================================================================
+# finali.fav — I FINALI
+# Il Relitto Silente (remake) — strato 4
+# ----------------------------------------------------------------------------
+# Si decide entrando nella stiva durante la fuga, con l'aria sopra lo zero,
+# oppure ad aria zero ovunque:
+#   seme sì, risuonatore no   → «Vivi» (con 6 risonanze e la nota: «La prima nota»)
+#   seme no, risuonatore sì   → «La stiva piena»
+#   seme sì, risuonatore sì   → «Doppio fondo»
+#   seme no, risuonatore no   → «Mani vuote»
+#   aria a zero               → «Due lettere»
+# Ogni finale chiude con la riga di registro che William scrive: è l'unico punto,
+# nei finali, in cui compare il suo nome, e compare perché lo firma lui. «Due
+# lettere» non ha riga: il registro resta sulla Santa Maria.
+# Le condizioni sono esclusive fra loro. Il risveglio comune viene detto prima
+# del finale, da un demone dichiarato prima dei «vinci».
+# Incluso da relitto.fav.
+# ============================================================================
+
+# --- Il ritorno a bordo e il risveglio (comune ai quattro finali di vita) -----
+Quando il giocatore è nella stiva e la fuga è iniziata e l'aria è più di 0: dire "Il portello interno si chiude alle tue spalle. Ti strappi il casco prima che la pressione sia pareggiata, e l'aria della stiva ti arriva addosso fredda, tutta insieme, e sa di olio e di casa. Il pavimento si avvicina. Dormi.\n\nTi svegli in plancia, sulla tua poltrona. Non ricordi di esserci salito. Fuori dall'oblò non c'è niente: il radar batte il vuoto e ridà vuoto. I cavi degli arpioni risultano riavvolti, e non ricordi di averli mollati. Forse la massa nera è andata alla deriva. Forse non c'è mai stata, e un uomo solo, con poca aria e meno sonno, si è inventato una compagnia.".
+
+# ★ «La prima nota» — variante di «Vivi»
+Quando il giocatore è nella stiva e la fuga è iniziata e l'aria è più di 0 e il giocatore ha il seme e il giocatore non ha il risuonatore e le risonanze è almeno 6 e la nota è riconosciuta: vinci "Ti accorgi di avere il pugno chiuso, e non sai da quanto. Lo apri. Dentro c'è il seme, scuro, piccolo, di nessun valore per nessun compratore al mondo. E allora, come se aspettasse proprio questo, dentro il seme si accende un battito di luce verde. Si spegne. Torna.\nNon c'è nessuno a cui dirlo, e il silenzio della plancia, per la prima volta, non ti basta.\nLo appoggi sul ripiano, proprio davanti alla poltrona, in un punto dove ti cadrà l'occhio ogni volta. Prima o poi gli troverai un posto più sicuro, una teca, qualcosa di stagno: alla prima sosta. Sblocchi i comandi, rimetti in asse i giroscopi, dai mezza spinta di prua. Il reattore ricomincia a cantare il suo re, sotto il pavimento.\nNel seme, la luce verde batte a tempo.\nDue cose che non si sono mai conosciute tengono la stessa nota, e nessuno le sente tranne te. Basta così.\n\nRegistro di bordo, TSC-1972. Operatore W. T. Eriksonn. Rotta ripresa. Carico: nessuno.".
+
+# ★ «Vivi»
+Quando il giocatore è nella stiva e la fuga è iniziata e l'aria è più di 0 e il giocatore ha il seme e il giocatore non ha il risuonatore e non ( le risonanze è almeno 6 e la nota è riconosciuta ): vinci "Ti accorgi di avere il pugno chiuso, e non sai da quanto. Lo apri. Dentro c'è il seme, scuro, piccolo, di nessun valore per nessun compratore al mondo. E allora, come se aspettasse proprio questo, dentro il seme si accende un battito di luce verde. Si spegne. Torna.\n[se il segno è firma]Su una placca, laggiù, accanto a due lettere ce ne sono altre due. [fine][se il segno è parola]Su una placca, laggiù, una frase adesso arriva in fondo. [fine][se la risposta è vera]Da qualche parte una domanda ha smesso di ricominciare. [fine]Non c'è nessuno a cui dirlo, e il silenzio della plancia, per la prima volta, non ti basta.\nLo appoggi sul ripiano, proprio davanti alla poltrona, in un punto dove ti cadrà l'occhio ogni volta. Prima o poi gli troverai un posto più sicuro, una teca, qualcosa di stagno: alla prima sosta.\n[se la promessa è carico]Yusuf aspetta la tua chiamata. Non lo chiami. [fine]Sblocchi i comandi, rimetti in asse i giroscopi, dai mezza spinta di prua. Il reattore ricomincia a cantare il suo re, sotto il pavimento, e la Santa Maria si allontana.\n\nRegistro di bordo, TSC-1972. Operatore W. T. Eriksonn. Rotta ripresa. Carico: nessuno.".
+
+# ★ «La stiva piena»
+Quando il giocatore è nella stiva e la fuga è iniziata e l'aria è più di 0 e il giocatore non ha il seme e il giocatore ha il risuonatore: vinci "Poi lo senti: un brusio che viene da giù, dalla stiva, dove hai lasciato il risuonatore. La nave non c'è più, ma le sue voci sì, tutte insieme.\n[se la promessa è carico]Yusuf richiama prima che tu lo chiami. Ha già un compratore, su Ganimede, uno che paga e non chiede da dove arriva la roba.[altrimenti]Chiami Yusuf. Non ti chiede da dove arriva la roba: in due giorni ha un compratore, su Ganimede, uno che paga e non fa domande.[fine] [se l'onestà è detta]A qualcuno, laggiù, avevi detto che eri venuto per vendere. Almeno quello era vero. [fine]Quando chiudi, il margine sul quadrante è verde per la prima volta in un anno.\nLa notte, in stiva, il risuonatore continua a dire nomi a nessuno. Il seme è rimasto su una nave che non c'è più.\n\nRegistro di bordo, TSC-1972. Operatore W. T. Eriksonn. Carico: un manufatto, origine non dichiarata. Destinazione: Magazzino Quattro.".
+
+# ★ «Doppio fondo»
+Quando il giocatore è nella stiva e la fuga è iniziata e l'aria è più di 0 e il giocatore ha il seme e il giocatore ha il risuonatore: vinci "Ti accorgi di avere il pugno chiuso. Dentro c'è il seme, scuro. Da giù, dalla stiva, sale il brusio del risuonatore.\nLe voci le vendi. Yusuf trova il compratore in due giorni, su Ganimede, e il margine torna verde. Il seme lo tieni: prima in un cassetto della plancia, poi in una teca, e a nessuno dici che esiste. Ogni tanto, quando sei solo, cioè sempre, batte un poco di luce verde. Per vent'anni nessuno lo saprà.\n\nRegistro di bordo, TSC-1972. Operatore W. T. Eriksonn. Carico: un manufatto. Nient'altro da dichiarare.".
+
+# ★ «Mani vuote»
+Quando il giocatore è nella stiva e la fuga è iniziata e l'aria è più di 0 e il giocatore non ha il seme e il giocatore non ha il risuonatore: vinci "Ti guardi le mani. Sono vuote. Lo scanner non ha registrazioni, il radar non ha tracce, il visore ha la cifra dell'aria che hai consumato e nessuna spiegazione.\n[se il seme è nel santuario centrale]Il seme l'hai lasciato dov'era. L'ultima voce ti aveva chiesto di non prendere, o forse no: fra un vuoto e l'altro, non lo saprai mai.\n[fine]Restano sei settimane di stiva vuota, e Yusuf da chiamare. L'aria della plancia è buona. Per oggi, basta quella.\n\nRegistro di bordo, TSC-1972. Operatore W. T. Eriksonn. Nessun evento da registrare.".
+
+# ✗★ «Due lettere» — l'aria a zero (nella fuga, o portando il risuonatore)
+Quando l'aria è al massimo 0 diventa vera: perdi "La cifra sul visore è a zero, e il visore non ha più niente da dirti.\nTi siedi. La schiena trova una parete, le gambe si allungano da sole. [se il giocatore è nella sala delle teche]Intorno, nel buio, il groviglio si avvicina piano al poco calore che ti resta. [fine][se il giocatore ha la taglierina]Regoli la taglierina al minimo, l'ultima volta, e la porti alla parete accanto alla spalla. Incidi una lettera, piano. Poi la seconda. Il nome intero, a chi lo diresti?[altrimenti]Non hai niente con cui incidere. Resti con le mani in grembo, e va bene anche così.[fine]\n[se il segno è firma]Nella serra, su una placca, le tue due lettere ci sono già, accanto alle sue.\n[fine]Fra centocinquant'anni, forse, qualcuno passerà di qui con un faro acceso, e si chinerà a leggere.".

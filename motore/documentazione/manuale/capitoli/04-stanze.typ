@@ -1,0 +1,187 @@
+#import "../lib/manuale-template.typ": *
+
+= Le stanze
+
+Le stanze sono le ambientazioni della tua storia: i luoghi in cui il giocatore si
+trova, si guarda intorno, decide dove andare. Sono anche la prima cosa che si
+costruisce, perché tutto il resto — oggetti, personaggi, regole — vive dentro una
+stanza.
+
+== Creare una stanza
+
+#sintassi[
+  `[Nome della stanza] è una stanza.`
+]
+
+Una riga, e il luogo esiste. La Casa ne ha otto; ecco le prime sette, una per frase (il giardino arriva più avanti):
+
+#esempio[
+#fav(```
+L'ingresso è una stanza.
+Il salotto è una stanza.
+Lo studio è una stanza.
+La cucina è una stanza.
+La camera è una stanza.
+La soffitta è una stanza.
+La cantina è una stanza.
+```)
+]
+
+L'articolo iniziale fa parte del nome e lo aiuta a suonare naturale; FAVELLA lo
+riconosce e non se ne preoccupa quando più avanti scriverai «la cucina». Da quel
+nome il motore ricava anche il genere e il numero, e li userà per concordare gli
+articoli quando elencherà ciò che il giocatore ha davanti.
+
+== Descrivere una stanza
+
+Una stanza senza descrizione è una scatola vuota. La descrizione è il testo che il
+giocatore legge appena entra.
+
+#sintassi[
+  `La descrizione di/del/della [stanza] è "[testo]".`
+]
+
+La preposizione si accorda con il nome, come faresti parlando: *della* cucina,
+*dello* studio, *dell'*ingresso.
+
+#esempio[
+#fav(```
+La descrizione della cucina è "Pavimentazione di graniglia. Lo schienale della sedia è ancora sguarnito. Il bicchiere e il flacone sono dove li ha lasciati. L'hanno trovata seduta, hanno detto, non riversa.".
+La descrizione dello studio è "Una scrivania ordinata. Un cassetto chiuso a chiave. Sotto i piedi un kilim. Alle pareti, due foto di gruppo da cui qualcuno è stato ritagliato.".
+```)
+]
+
+Il testo sta sempre fra virgolette dritte `"..."`. Se ti serve una virgoletta
+dentro la descrizione, falla precedere da una barra rovescia (`\"`); è un caso
+raro, ma sapere che si può torna utile.
+
+== Descrizioni che cambiano
+
+Una stanza non è sempre uguale a sé stessa. Quando scoppia il temporale, l'ingresso
+prende acqua; quando la torcia è spenta, la soffitta è solo buio. FAVELLA lo
+gestisce con le *descrizioni condizionali*: aggiungi una clausola `se`, e quella
+descrizione varrà soltanto quando la condizione è vera.
+
+#sintassi[
+  `La descrizione di [stanza] se [condizione] è "[testo]".`
+]
+
+La soffitta ha due volti. Al buio mostri il primo; con la torcia accesa, il
+secondo.
+
+#esempio[
+#fav(```
+La descrizione della soffitta se la torcia è spenta è "Buio fitto sotto la trave. Distingui solo l'angolo del lucernario, e non basta.".
+La descrizione della soffitta è "Travi a vista, polvere a centimetri. Una scatola di latta tra due vecchie valigie vuote. Adele saliva qui ancora, di rado.".
+```)
+]
+
+Il motore valuta le varianti *nell'ordine in cui le scrivi*: prende la prima la
+cui condizione è vera. Se nessuna lo è, ripiega sulla descrizione *base*, quella
+senza `se`. Per questo la riga generica fa sempre da rete di sicurezza, e puoi
+scriverne quante ne vuoi prima di lei.
+
+Lo stesso vale per i cambi di stato della storia. Quando la verità sul conto di
+Adele viene a galla, il salotto smette di essere un salotto qualunque:
+
+#esempio[
+#fav(```
+La descrizione del salotto è "Tre poltrone, una credenza, un orologio a pendolo fermo. Sul tavolo, una cartelletta aperta. Il notaio aspetta seduto, non si è alzato quando sei entrato.".
+La descrizione del salotto se la verità è svelata è "Le stesse poltrone, la stessa credenza. Adesso lo vedi: tutto disposto come se qualcuno dovesse venire a riprenderla. Solo non è venuto nessuno.".
+```)
+]
+
+== Descrizioni che variano
+
+Un dettaglio che si ripete identico a ogni `guarda` tradisce il meccanismo dietro
+la storia. Per evitarlo puoi dare a una descrizione più versioni, e lasciare che
+FAVELLA ne scelga una di volta in volta. Le politiche sono due.
+
+#sintassi[
+  `La descrizione di [stanza] è una di: "[testo]", "[testo]", ...`
+]
+
+Con `è una di` la scelta è *casuale*, e la stessa versione non esce mai due volte
+di fila. Con `è in sequenza` le versioni si presentano in ordine, una a ogni
+sguardo, e l'ultima resta finché qualcosa non cambia.
+
+#esempio[
+#fav(```
+# Forma disponibile:
+La descrizione del giardino è una di: "Il vento muove i rami del melo.", "Una gazza ti studia dal muretto, poi vola via.", "L'erba alta ondeggia, non c'è nessuno.".
+```)
+]
+
+Le varianti valgono anche per le descrizioni condizionali, e dentro ognuna puoi
+interpolare i valori del gioco con `[...]`, come fra poco vedremo. La scelta
+casuale è *riproducibile*: la stessa partita rivista dà sempre la stessa sequenza,
+e l'`annulla` riavvolge anche il caso.
+
+#nota[
+  Dentro una descrizione puoi anche inserire valori vivi del gioco, scrivendo il
+  nome di uno stato o di un contatore fra parentesi quadre: `[indizi]` diventerà
+  il numero di indizi raccolti. Questa interpolazione la vedremo per bene nel
+  capitolo sugli stati; per ora basta sapere che le descrizioni non sono per forza
+  fisse.
+]
+
+== Testi più ricchi
+
+Dentro un testo fra virgolette, dalla versione 1.3, puoi usare qualche strumento in
+più.
+
+#table(
+  columns: (auto, 1fr),
+  stroke: 0.4pt + c.rule,
+  inset: 6pt,
+  align: (left + top, left + top),
+  table.header([*Scrivi*], [*Ottieni*]),
+  [`\n`], [un a capo],
+  [`\[` e `\]`], [parentesi quadre vere, non un segnaposto],
+  [`[turno]`], [il numero del turno],
+  [`[luogo]`], [il nome della stanza in cui si trova il giocatore (con l'articolo: scrivi «Sei qui: [luogo].», non «in [luogo]»)],
+  [`[mela]`, `[Mela]`], [il nome di un oggetto: con l'articolo minuscolo a metà frase, maiuscolo a inizio frase o se il segnaposto è maiuscolo],
+  [`[se …]…[altrimenti]…[fine]`], [un pezzo di testo che dipende da una condizione],
+)
+
+Il testo condizionale evita di scrivere due descrizioni quasi uguali:
+
+#esempio(da: "un esempio")[
+#fav(```
+La descrizione della cucina è "Una cucina stretta[se la finestra è aperta], piena di aria fresca[altrimenti], che sa di chiuso[fine].".
+```)
+]
+
+La condizione si scrive come dopo un `se`; `[altrimenti]` è facoltativo. Non si
+annida: un `[se …]` dentro un altro non vale.
+
+== Titolo, autore, prologo
+
+Tre frasi presentano la storia al giocatore, prima della prima stanza:
+
+#esempio(da: "un esempio")[
+#fav(```
+Il titolo è "La casa di via Stradivari".
+L'autore è "Simone Pizzi".
+Il prologo è "Sono passati sei mesi dal funerale di Adele.\nLa casa è rimasta com'era.".
+```)
+]
+
+Anche i messaggi del motore si possono riscrivere, con la frase `Il messaggio
+"[chiave]" è "[testo]".`. Le chiavi sono `non capisco`, `non vedo`, `buio`, `buio
+pesto`, `direzione`, `niente`, `tempo`, `preso`, `lasciato`, `non si prende`,
+`mani piene` e `inventario vuoto`; nel testo `[oggetto]` è l'oggetto del comando e
+`[cosa]` la parola scritta dal giocatore:
+
+#esempio(da: "un esempio")[
+#fav(```
+Il messaggio "non capisco" è "La nonna ti guarderebbe storto, se ti sentisse.".
+Il messaggio "preso" è "Ti metti in tasca [oggetto].".
+```)
+]
+
+#prova[
+  Dài alla cantina una descrizione al buio (`se la torcia è spenta`) e una normale.
+  Poi entra una volta senza torcia e una con la torcia accesa: la stessa stanza ti
+  accoglierà in due modi diversi.
+]

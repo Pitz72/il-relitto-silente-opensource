@@ -1,0 +1,3992 @@
+# compilatore.py
+# Micro-Compilatore Formale per FAVELLA 1 (v1.4.4)
+# Usa Lark (parser LALR(1), pipeline a due passate) per generare un AST senza regex.
+#
+# [1.4.0 / L-7] Questo è il NUCLEO del compilatore: parole riservate, scanner
+# delle dichiarazioni, grammatica, transformer, validazione, Includi, e le tre
+# porte d'ingresso (analizza_file per la riga di comando, analizza_file_strutturato
+# per le diagnostiche con posizione, compila_mondo per giocare). È l'unico modulo
+# del compilatore che il motore nel browser carica. Gli strumenti costruiti sopra
+# vivono in moduli propri: strumenti_ide.py (analisi per gli editor visuali,
+# riordino, serializzatore) ed esportazione.py (la pagina HTML giocabile).
+
+import re
+import difflib
+from lark import Lark, Transformer, v_args
+from lark.exceptions import UnexpectedInput
+from strutture import (
+    Mondo, Stanza, Oggetto, Regola, Evento, Demone,
+    Condizione, CondizionePossesso, CondizioneProprieta,
+    CondizioneAnd, CondizioneOr, CondizioneNot, CondizioneVariabile,
+    CondizioneVariabileUguali,
+    CondizioneContatore, CondizionePosizioneGiocatore, CondizioneProbabilita,
+    CondizionePosizioneOggetto, CondizionePngHa, QUI, Argomento,
+    ConseguenzaTogliProprieta, ConseguenzaCollegamento, ConseguenzaPngRiceve,
+    ConseguenzaLimita, TURNO,
+    Conseguenza, ConseguenzaProprieta, ConseguenzaSpostamento,
+    ConseguenzaSpostamentoGiocatore, ConseguenzaMovimentoPNG,
+    ConseguenzaFinePartita, ConseguenzaVariabile, ConseguenzaVariabileCopia,
+    ConseguenzaSceltaStato,
+    ConseguenzaContatore, ConseguenzaBuioStanza,
+    OpzioneDialogo, VariantiDescrizione, testi_di_descrizione, descrizione_display,
+    Operando, OperandoNumero, OperandoVariabile, OperandoCasuale,
+)
+from libreria_azioni import LIBRERIA_AZIONI
+from favella_utils import (
+    normalizza_nome, normalizza_tipografia, ARTICOLI,
+    DIREZIONI_BASE, estrai_placeholder, radice_proprieta,
+    prima_maiuscola, condizioni_nel_testo, SEGNAPOSTO_DEL_MOTORE, MESSAGGI_MOTORE,
+    QUADRA_APERTA, QUADRA_CHIUSA,
+)
+import os
+import sys
+
+# Vocabolario chiuso dei verbi riconosciuti dal motore di gioco. Serve per
+# validare a compile-time i verbi delle regole "Invece di" (un verbo non in
+# questo insieme genera una regola morta che non si attiverà mai a runtime).
+VERBI_VALIDI = {verbo for azione in LIBRERIA_AZIONI.values() for verbo in azione.nomi}
+
+# [1.2.2] Verbo di libreria → nomi delle azioni che lo elencano ('guarda' ne ha
+# due). Serve all'avviso sui sinonimi dichiarati per parole già note al motore.
+_AZIONI_DI_VERBO = {}
+for _nome_azione, _azione in LIBRERIA_AZIONI.items():
+    for _verbo in _azione.nomi:
+        _AZIONI_DI_VERBO.setdefault(_verbo, set()).add(_nome_azione)
+
+# ==============================================================================
+# 0. PAROLE RISERVATE E SCANNER DELLE DICHIARAZIONI (Passata 1) — Livello 2.5
+# ==============================================================================
+#
+# La disambiguazione strutturale (G1) si fonda su una compilazione a DUE PASSATE:
+#   Passata 1 (questo blocco): scansiona il sorgente e costruisce la SYMBOL TABLE
+#       di tutti i nomi-entità dichiarati (stanze e oggetti).
+#   Passata 2 (grammatica + transformer): le entità diventano token CHIUSI risolti
+#       per longest-match contro i simboli noti, eliminando alla radice l'ambiguità
+#       del vecchio `entita: WORD+` aperto.
+#
+# Questo blocco implementa la Passata 1; la Passata 2 è cablata in analizza_file.
+
+# Vocabolario STRUTTURALE del linguaggio: parole che la grammatica interpreta
+# come keyword e che pertanto NON possono costituire da sole un nome-entità.
+# (Documentato nel manuale autore; 'e'/'o' restano sia congiunzioni sia
+# abbreviazioni di direzione — quirk noto, vedi roadmap G4.)
+PAROLE_RISERVATE = frozenset({
+    # copula e definizioni base
+    "è", "una", "un", "uno", "stanza", "cosa", "prendibile",
+    # stato astratto (Livello 3 / G3): 'X è uno stato.'
+    "stato",
+    # contatori numerici (Livello 3 / G3): dichiarazione, confronti, mutazioni
+    "contatore", "almeno", "più", "meno",
+    "aumenta", "diminuisci", "diventa",
+    # eventi a turni (Livello 3)
+    "al", "turno", "turni", "ogni",
+    # demoni / eventi condizionali (Livello 8): 'Ogni turno se ...' /
+    # 'Quando ... diventa vera: ...' ('diventa' è già riservata sopra).
+    "quando", "vera",
+    # descrizione e relative preposizioni articolate
+    "la", "il", "lo", "i", "gli", "le", "l'", "un'",
+    "descrizione", "di", "del", "della", "dell'", "degli", "delle",
+    # [1.1.0] posto iniziale di un oggetto: 'Il posto della mappa è "…".'
+    "posto",
+    # [0.22.0 / A2] descrizioni a varianti: 'è una di: …' / 'è in sequenza: …'
+    # ('una', 'di', 'in' sono già riservate; manca 'sequenza').
+    "sequenza",
+    # preposizioni di luogo
+    "in", "nel", "nella", "negli", "nelle", "nell'",
+    "sul", "sulla", "sullo", "sui", "sugli", "sulle",
+    # connessioni e posizione iniziale del giocatore
+    "collega", "a", "giocatore", "comincia", "inizia", "parte", "partono",
+    # valore iniziale dei contatori (0.16.0): 'La forza parte da 3.'
+    "da",
+    # regole, condizioni, conseguenze
+    "invece", "se", "dire", "e", "adesso", "oppure", "non", "ha",
+    # proprietà opposte (Livello 3 / M5)
+    "sono", "opposte",
+    # alias/sinonimi di oggetti (Livello 4)
+    "si", "chiama", "anche",
+    # verbi personalizzati (Livello 4 / M1); [0.19.0 / A7] 'senza oggetto' marca
+    # un comando INTRANSITIVO ('"accelera" è un comando senza oggetto.').
+    "comando", "senza", "oggetto",
+    # [0.26.0 / A6] sinonimi di verbo: '"ghermisci" è come prendi.'
+    "come",
+    # direzioni personalizzate (Livello 4 / L1)
+    "direzioni",
+    # contenitori e supporti (Livello 4 / M1)
+    "contenitore", "supporto",
+    # [0.24.0 / A4] buio e luce: 'La cantina è buia.' (proprietà speciale della
+    # stanza, riconosciuta per radice) / 'La torcia illumina.' (fonte di luce).
+    "buia", "buio", "illumina",
+    # NPC e dialoghi (Livello 5b). NB: si evitano di proposito 'porta' e 'parla'
+    # come keyword (collidono con nomi-oggetto comuni: "la porta"); la transizione
+    # tra nodi usa 'conduce' (vedi 0.10.2).
+    "personaggio", "dialogo", "nodo", "opzione", "dice", "chiude", "conduce",
+    # [0.25.0 / A5] movimento degli NPC: 'la guardia va nel corridoio' /
+    # 'il gatto cambia stanza' ('stanza' è già riservata sopra).
+    "va", "cambia",
+    # fine partita (Livello 3)
+    "vinci", "perdi", "termina",
+    # capacità di trasporto (Livello 7): 'Il giocatore può portare N oggetti.' /
+    # 'Lo zaino dà N spazi.'
+    "può", "portare", "oggetti", "dà", "spazi",
+    # preposizioni d'azione
+    "su", "con", "contro",
+    # direzioni (estese e abbreviate)
+    "nord", "sud", "est", "ovest", "n", "s", "o",
+    # destinazione speciale
+    "nulla",
+})
+
+
+class TabellaSimboli:
+    """Symbol table prodotta dalla Passata 1: i nomi-entità dichiarati nel
+    sorgente, già normalizzati (lowercase, senza articolo iniziale)."""
+
+    def __init__(self):
+        self.stanze = set()      # id normalizzati delle stanze
+        self.oggetti = set()     # id normalizzati degli oggetti
+        self.variabili = set()   # [Livello 3] id normalizzati degli 'stati'
+        # [Livello 4 / L1] Coppie di direzioni personalizzate dichiarate
+        # ('Alto e basso sono direzioni opposte.'), come tuple (a, b) normalizzate.
+        self.coppie_direzioni = []
+        # [0.18.0 / B6] Verbi personalizzati MULTI-PAROLA dichiarati ('"fai
+        # scattare" è un comando.'), normalizzati (lowercase, spazi singoli). Solo
+        # i multiparola servono alla grammatica (terminale chiuso VERBO_MULTI); i
+        # verbi monoparola restano coperti da VERBO=WORD (aperto).
+        self.verbi_multi = set()
+
+    @property
+    def tutti(self):
+        """Nomi-ENTITÀ referenziabili (stanze ∪ oggetti). Gli 'stati' sono una
+        classe di simboli SEPARATA (terminale VARIABILE) e non rientrano qui."""
+        return self.stanze | self.oggetti
+
+    def __repr__(self):
+        return (f"TabellaSimboli(stanze={sorted(self.stanze)}, "
+                f"oggetti={sorted(self.oggetti)}, variabili={sorted(self.variabili)})")
+
+
+# Pattern delle SOLE forme dichiarative che introducono un nome-entità.
+# Tutto il resto (proprietà, posizione, descrizione, regole) si limita a
+# *referenziare* entità già dichiarate e quindi non popola la symbol table.
+# [0.18.0 / A5] La copula è/sono è intercambiabile: lo scanner accetta entrambe
+# (la grammatica usa la regola inline _copula). '_COP' è il frammento condiviso.
+_COP = r"(?:è|sono)"
+_RE_DEF_STANZA = re.compile(rf"^(?P<nome>.+?)\s+{_COP}\s+una\s+stanza$", re.IGNORECASE)
+_RE_DEF_OGGETTO = re.compile(rf"^(?P<nome>.+?)\s+{_COP}\s+una\s+cosa$", re.IGNORECASE)
+# 'X è uno stato' introduce uno 'stato' (variabile globale del mondo). [Livello 3]
+# [0.27.0 / A] La copula plurale 'sono' vale anche qui (es. 'Le luci sono uno
+# stato.'), coerente con stanze/oggetti: i nomi di stato/contatore sono spesso
+# plurali ('le vite', 'i punti', 'le munizioni').
+_RE_DEF_FLAG = re.compile(rf"^(?P<nome>.+?)\s+{_COP}\s+uno\s+stato$", re.IGNORECASE)
+# 'X è un contatore' introduce un contatore numerico. [Livello 3]
+_RE_DEF_CONTATORE = re.compile(rf"^(?P<nome>.+?)\s+{_COP}\s+un\s+contatore$", re.IGNORECASE)
+# 'X è un contenitore' / 'X è un supporto' introducono un OGGETTO. [Livello 4 / M1]
+_RE_DEF_CONTENITORE = re.compile(rf"^(?P<nome>.+?)\s+{_COP}\s+un\s+contenitore$", re.IGNORECASE)
+_RE_DEF_SUPPORTO = re.compile(rf"^(?P<nome>.+?)\s+{_COP}\s+un\s+supporto$", re.IGNORECASE)
+# 'X è un personaggio' introduce un OGGETTO speciale (un NPC). [Livello 5b]
+_RE_DEF_PERSONAGGIO = re.compile(rf"^(?P<nome>.+?)\s+{_COP}\s+un\s+personaggio$", re.IGNORECASE)
+# 'X collega <direzione> a Y' introduce (o conferma) due stanze.
+_RE_DEF_CONNESSIONE = re.compile(
+    r"^(?P<x>.+?)\s+collega\s+\S+\s+a\s+(?P<y>.+)$", re.IGNORECASE)
+# 'A e B sono direzioni opposte' introduce una coppia di direzioni custom. [Livello 4]
+# Le due direzioni sono parole singole (un solo token-comando di movimento).
+_RE_DEF_DIREZIONI = re.compile(
+    r"^(?P<a>\S+)\s+e\s+(?P<b>\S+)\s+sono\s+direzioni\s+opposte$", re.IGNORECASE)
+# Stringhe quotate e commenti vanno rimossi prima di spezzare sui punti.
+_RE_QUOTATO = re.compile(r'"(\\.|[^"\\])*"')
+_RE_COMMENTO = re.compile(r"#[^\n]*")
+# [0.18.0 / B6] Verbo personalizzato (eventualmente multi-parola): '"frase" è un
+# comando.'. Va cercato PRIMA di azzerare le stringhe quotate (lo scanner le
+# svuota), perché il nome del comando vive proprio dentro le virgolette.
+_RE_DEF_VERBO = re.compile(r'"([^"]+)"\s+è\s+un\s+comando\b', re.IGNORECASE)
+
+# [0.30.0 / A1] Carattere NON consentito in un nome dichiarato. Un nome (di
+# entità, stato/contatore, direzione, verbo multiparola) diventa un TERMINALE
+# CHIUSO della grammatica generata per-file, incassato in un letterale regex
+# '/.../': un carattere come '/' lo chiude in anticipo e corrompe l'intera
+# grammatica (in passato: un 'GrammarError' interno e incomprensibile per
+# l'autore). L'alfabeto ammesso è quello del terminale WORD ([a-zA-ZÀ-ÿ0-9']),
+# più lo spazio (i nomi possono essere multiparola) e l'apostrofo. Vedi
+# valida_nomi_dichiarati.
+_RE_CHAR_NOME_VIETATO = re.compile(r"[^a-zA-ZÀ-ÿ0-9' ]")
+
+
+def costruisci_symbol_table(testo: str) -> TabellaSimboli:
+    """
+    PASSATA 1 — Scanner delle dichiarazioni.
+
+    Estrae dal sorgente .fav i nomi di tutte le stanze e gli oggetti DICHIARATI,
+    senza eseguire il parsing completo. È deliberatamente robusto e tollerante:
+    ignora il contenuto delle stringhe quotate e dei commenti, e considera solo
+    le tre forme che *introducono* un nome (`è una stanza`, `è una cosa`,
+    `collega ... a ...`).
+
+    Restituisce una TabellaSimboli con i nomi già normalizzati.
+    """
+    tab = TabellaSimboli()
+    if not testo:
+        return tab
+
+    # Normalizzazione tipografica + rimozione di stringhe e commenti, così i
+    # punti (".") interni a descrizioni o note non spezzino erroneamente le frasi.
+    pulito = normalizza_tipografia(testo)
+    # [0.18.0 / B6] Raccogli i verbi personalizzati MULTI-PAROLA *prima* di svuotare
+    # le stringhe quotate (il nome del comando vive nelle virgolette). Servono alla
+    # grammatica per generare il terminale chiuso VERBO_MULTI.
+    senza_commenti = _RE_COMMENTO.sub("", pulito)
+    for m in _RE_DEF_VERBO.finditer(senza_commenti):
+        verbo = " ".join(m.group(1).lower().split())
+        if " " in verbo:
+            tab.verbi_multi.add(verbo)
+    pulito = _RE_QUOTATO.sub('""', pulito)
+    pulito = _RE_COMMENTO.sub("", pulito)
+
+    for frase in pulito.split("."):
+        frase = frase.strip()
+        if not frase:
+            continue
+
+        m = _RE_DEF_STANZA.match(frase)
+        if m:
+            tab.stanze.add(normalizza_nome(m.group("nome")))
+            continue
+
+        m = _RE_DEF_OGGETTO.match(frase)
+        if m:
+            tab.oggetti.add(normalizza_nome(m.group("nome")))
+            continue
+
+        m = _RE_DEF_FLAG.match(frase)
+        if m:
+            tab.variabili.add(normalizza_nome(m.group("nome")))
+            continue
+
+        m = _RE_DEF_CONTATORE.match(frase)
+        if m:
+            tab.variabili.add(normalizza_nome(m.group("nome")))
+            continue
+
+        m = (_RE_DEF_CONTENITORE.match(frase) or _RE_DEF_SUPPORTO.match(frase)
+             or _RE_DEF_PERSONAGGIO.match(frase))
+        if m:
+            # Un contenitore/supporto/personaggio è a tutti gli effetti un OGGETTO.
+            tab.oggetti.add(normalizza_nome(m.group("nome")))
+            continue
+
+        m = _RE_DEF_DIREZIONI.match(frase)
+        if m:
+            a = normalizza_nome(m.group("a"))
+            b = normalizza_nome(m.group("b"))
+            if a and b:
+                tab.coppie_direzioni.append((a, b))
+            continue
+
+        # [1.3.0 / M-8] Un «collega» dentro una regola ('…: e adesso la cucina
+        # collega nord a la dispensa') è una conseguenza, non una dichiarazione.
+        m = _RE_DEF_CONNESSIONE.match(frase) if ":" not in frase else None
+        if m:
+            tab.stanze.add(normalizza_nome(m.group("x")))
+            tab.stanze.add(normalizza_nome(m.group("y")))
+            continue
+
+    # [1.3.0 / M-7] 'il turno' si legge come un contatore in ogni storia.
+    tab.variabili.add("turno")
+    return tab
+
+
+# ==============================================================================
+# 1. LA GRAMMATICA EBNF DI FAVELLA 1 (La Costituzione) — Passata 2, LALR(1)
+# ==============================================================================
+#
+# [Livello 2.5] La grammatica non è più statica: il terminale ENTITA viene
+# GENERATO per-file dalla symbol-table (Passata 1) come alternanza CHIUSA dei
+# soli nomi dichiarati (longest-match, articolo opzionale). Questo elimina alla
+# radice l'ambiguità del vecchio `entita: WORD+` aperto e permette di usare il
+# parser LALR(1), unambiguo PER COSTRUZIONE (i conflitti emergono a build-time).
+#
+# Conseguenza di design: le PROPRIETÀ coniate (`è chiusa`) sono un terminale
+# SEPARATO `PROPRIETA`, di una sola parola e a priorità bassa, così non possono
+# inghiottire i keyword che le seguono (`e`, `oppure`, `:`). I nomi multiparola
+# restano pienamente supportati, ma solo per le ENTITÀ (es. "cella di
+# contenimento"), non per le proprietà di stato (sempre monoparola).
+#
+# Sparite, finalmente, tutte le priorità-cerotto `.2`/`.1` della v0.6.x: con i
+# nomi come token chiusi non servono più.
+
+# Pseudo-simboli SEMPRE risolvibili come ENTITA (destinazioni speciali delle
+# conseguenze di spostamento), oltre ai nomi dichiarati dall'autore.
+SIMBOLI_SPECIALI = ("inventario", "nulla")
+
+# Template della grammatica: __ENTITA__ verrà sostituito a runtime con la regex
+# generata dai simboli noti.
+_GRAMMAR_TEMPLATE = r"""
+    start: dichiarazione+
+
+    ?dichiarazione: def_stanza
+                  | def_oggetto
+                  | def_verbo
+                  | def_descrizione
+                  | def_posizione
+                  | def_proprieta
+                  | def_opposti
+                  | def_alias
+                  | def_connessione
+                  | def_regola
+                  | def_giocatore
+                  | def_stato
+                  | def_stato_valore
+                  | def_contatore
+                  | def_contatore_iniziale
+                  | def_contenitore
+                  | def_supporto
+                  | def_personaggio
+                  | def_dialogo_inizio
+                  | def_battuta
+                  | def_opzione
+                  | def_direzioni
+                  | def_evento
+                  | def_demone
+                  | def_giocatore_capacita
+                  | def_giocatore_inventario
+                  | def_capacita_oggetto
+                  | def_illumina
+                  | def_sinonimo
+                  | def_posto
+                  | def_di_scena
+                  | def_anche_in
+                  | def_uscite_anonime
+                  | def_png_ha
+                  | def_argomento
+                  | def_titolo
+                  | def_autore
+                  | def_prologo
+                  | def_messaggio
+                  | def_comandi
+
+    // --- DEFINIZIONI BASE ---
+    // [0.18.0 / A5] COPULA flessibile nel numero: 'è' (singolare) oppure 'sono'
+    // (plurale). Regola INLINE (prefisso '_'): non produce figli, quindi i metodi
+    // del transformer restano identici (ricevono solo l'ENTITA/PROPRIETA). Vale
+    // ovunque il soggetto sia un'ENTITA, così l'autore può scrivere l'italiano
+    // corretto sui nomi plurali ('Le tacche SONO una cosa', 'Le tacche SONO
+    // vergini', 'Le tacche SONO nel corridoio'), senza più la stonatura 'Le
+    // tacche È una cosa'. 'sono' resta riservata anche per 'sono opposte'/'sono
+    // direzioni opposte' (contesti distinti: il token precedente è PROPRIETA o
+    // DIREZIONE, non ENTITA → nessun conflitto LALR).
+    _copula: "è" | "sono"
+    def_stanza: ENTITA _copula "una" "stanza" "."
+    def_oggetto: ENTITA _copula "una" "cosa" "."
+    // [Livello 4 / M1] Contenitore e supporto: oggetti speciali. Si distinguono
+    // da def_proprieta (ENTITA _copula PROPRIETA) sul token "un" (PROPRIETA, a
+    // priorità bassa, non può essere la keyword "un"): stesso schema di def_contatore.
+    def_contenitore: ENTITA _copula "un" "contenitore" "."
+    def_supporto: ENTITA _copula "un" "supporto" "."
+    // [Livello 5b] NPC: un personaggio con cui 'parlare'. Stesso schema di
+    // contenitore/supporto (distinto sul token "un").
+    def_personaggio: ENTITA _copula "un" "personaggio" "."
+    // [Livello 4 / M1] Verbo personalizzato. La parola-comando è quotata (come
+    // gli alias: vocabolario nuovo, non ancora un token noto), così non collide
+    // con ENTITA al primo token di una dichiarazione. Nessun'altra dichiarazione
+    // inizia con TESTO_QUOTATO: LALR la distingue subito.
+    // [0.19.0 / A7] Un comando può essere dichiarato INTRANSITIVO ('senza
+    // oggetto'): il giocatore lo digita da solo ('accelera') e una regola
+    // GLOBALE 'Invece di accelera: …' lo gestisce. Dopo "comando" il lookahead
+    // distingue "." (transitivo, storico) da "senza" (intransitivo) → 0-ambiguo.
+    def_verbo: TESTO_QUOTATO "è" "un" "comando" "senza" "oggetto" "." -> verbo_senza_oggetto
+             | TESTO_QUOTATO "è" "un" "comando" "."                   -> verbo_con_oggetto
+    // [0.26.0 / A6] Sinonimo di verbo: '"ghermisci" è come prendi.' rimappa una
+    // parola-nuova (quotata, come i verbi custom) a un verbo di libreria, così si
+    // comporta IDENTICAMENTE senza una regola per ogni oggetto. Inizia con
+    // TESTO_QUOTATO come def_verbo; dopo '"…" è' il lookahead "come" la distingue
+    // da "un" (comando) → LALR(1) 0-ambiguo.
+    // [1.2.0] Il bersaglio può essere anche un verbo DICHIARATO dall'autore
+    // ('"lancia" è come getta.'), e — fra virgolette — un comando di più parole
+    // ('"lancia il cibo" è come "getta il cibo".'). Dopo "come" il lookahead
+    // WORD vs TESTO_QUOTATO distingue le due forme → 0-ambiguo.
+    // [1.4.1] «(voluto)» in fondo dice che il cambio di significato è inteso:
+    // '"colpisci" è come attacca (voluto).' non dà l'avviso «fa come …».
+    def_sinonimo: TESTO_QUOTATO "è" "come" VERBO voluto? "."
+                | TESTO_QUOTATO "è" "come" TESTO_QUOTATO voluto? "."
+    voluto: "(" "voluto" ")"
+    // [Livello 5] La descrizione può essere CONDIZIONALE: con una clausola 'se',
+    // si applica solo quando la condizione è vera (più dichiarazioni = varianti
+    // in ordine; senza 'se' = descrizione di base/fallback). Dopo ENTITA il
+    // lookahead distingue nettamente "se" da "è": LALR(1) resta 0-ambiguo.
+    // [0.22.0 / A2] Il valore di una descrizione può essere una stringa singola
+    // (storico) OPPURE più varianti, con politica 'una di' (casuale) o 'in
+    // sequenza' (rotazione). Dopo "è" il lookahead distingue: TESTO_QUOTATO
+    // (singola) | "una" (casuale) | "in" (sequenza) → LALR(1) 0-ambiguo. Vale
+    // sia per la descrizione di base sia per le varianti condizionali ('se …').
+    def_descrizione: "La" "descrizione" _PREP_DESCR ENTITA ( "se" condizione )? "è" descr_valore "."
+    descr_valore: TESTO_QUOTATO                                            -> descr_singola
+                | "una" "di" ":" TESTO_QUOTATO ( "," TESTO_QUOTATO )*      -> descr_casuale
+                | "in" "sequenza" ":" TESTO_QUOTATO ( "," TESTO_QUOTATO )* -> descr_sequenza
+    // [1.1.0] POSTO INIZIALE di un oggetto (l'«initial appearance» di Inform):
+    // una frase d'ambiente che il motore mostra sotto la descrizione della stanza
+    // finché l'oggetto non è mai stato spostato; in quel tempo l'oggetto non
+    // compare in «Puoi vedere qui». Appena lo si prende (o una regola lo sposta)
+    // la frase sparisce per sempre e l'oggetto torna nell'elenco normale.
+    // Inizia con "Il" come def_giocatore/def_dialogo_inizio: il lookahead
+    // "posto" vs "giocatore"/"dialogo" la distingue → LALR(1) 0-ambiguo.
+    def_posto: "Il" "posto" _PREP_DESCR ENTITA "è" TESTO_QUOTATO "."
+    def_posizione: ENTITA _copula PREP_LUOGO ENTITA "."
+    // 'è prendibile' è una proprietà speciale gestita nel transformer (vedi
+    // def_proprieta): niente regola separata, così la grammatica è 0-ambigua.
+    def_proprieta: ENTITA _copula PROPRIETA "."
+    // [0.24.0 / A4] Fonte di luce: 'La torcia illumina.'. È una dichiarazione di
+    // CAPACITÀ (analoga a 'dà N spazi'): inizia con ENTITA e dopo l'entità il
+    // lookahead "illumina" la distingue da è/sono/si/collega/dà/al → LALR(1)
+    // 0-ambiguo ("illumina" è riservata: PROPRIETA, a priorità bassa, non la cattura).
+    // Il buio della stanza ('La cantina è buia.') NON ha una regola dedicata: è una
+    // proprietà speciale gestita nel transformer (def_proprieta), come 'prendibile'.
+    def_illumina: ENTITA "illumina" "."
+    // [Livello 3 / M5] Dichiarazione di proprietà opposte (mutuamente esclusive).
+    // Inizia con PROPRIETA (priorità bassa): nessun'altra dichiarazione parte con
+    // PROPRIETA, quindi LALR distingue questo costrutto al primo token.
+    def_opposti: PROPRIETA "e" PROPRIETA "sono" "opposte" "."
+    // [Livello 4] Alias/sinonimo di un oggetto: il nome alternativo è una
+    // stringa quotata (non un token ENTITA, perché per definizione non è ancora
+    // un nome dichiarato). Si distingue dalle altre dichiarazioni che iniziano
+    // con ENTITA grazie al keyword "si" (nessun'altra usa ENTITA "si").
+    def_alias: ENTITA "si" "chiama" "anche" TESTO_QUOTATO "."
+    def_connessione: ENTITA "collega" DIREZIONE "a" ENTITA "."
+    def_giocatore: "Il" "giocatore" ( "comincia" | "inizia" | "parte" ) PREP_LUOGO ENTITA "."
+    // [Livello 7] Capacità di trasporto. La BASE: 'Il giocatore può portare N
+    // oggetti.' — inizia come def_giocatore con "Il giocatore"; dopo, il lookahead
+    // "può" vs "comincia/inizia/parte" la distingue (LALR(1) 0-ambiguo). Il BONUS
+    // di un oggetto: 'Lo zaino dà N spazi.' — inizia con ENTITA; dopo l'entità il
+    // lookahead "dà" la distingue da è/si/collega/al (unico costrutto ENTITA "dà").
+    // [1.3.0 / L-1] Singolare e numeri in lettere: 'può portare un oggetto'
+    // non c'è (un/uno/una sono parole del linguaggio), ma '1 oggetto', 'tre
+    // oggetti', 'dà 1 spazio', 'Al turno dieci', 'Ogni due turni' sì.
+    def_giocatore_capacita: "Il" "giocatore" "può" "portare" _numero ( "oggetti" | "oggetto" ) "."
+    // [0.19.0 / A8] Inventario iniziale del giocatore: 'Il giocatore ha la
+    // torcia.'. Inizia come def_giocatore con "Il giocatore"; dopo, il lookahead
+    // distingue "ha" da "comincia/inizia/parte" (posizione) e "può" (capacità) →
+    // LALR(1) 0-ambiguo. Un oggetto per frase (più oggetti = più frasi), come da
+    // stile «un fatto, una frase» del linguaggio. ('ha' è già riservata: cond_possesso.)
+    def_giocatore_inventario: "Il" "giocatore" "ha" ENTITA "."
+    def_capacita_oggetto: ENTITA "dà" _numero ( "spazi" | "spazio" ) "."
+    _numero: NUMERO | NUMERO_PAROLA
+
+    // --- [1.3.0 / M-8] SCENA E TOPOLOGIA ---
+    // 'Il cielo è di scena.': si esamina ma non si elenca («Puoi vedere qui»).
+    // Dopo 'ENTITA è' il lookahead "di" è disgiunto da PROPRIETA (keyword a
+    // priorità più alta), PREP_LUOGO, "una"/"un"/"uno" → LALR(1) 0-ambiguo.
+    def_di_scena: ENTITA _copula "di" "scena" "."
+    // 'Il cielo è anche nel cortile.': presente in più stanze.
+    def_anche_in: ENTITA _copula "anche" PREP_LUOGO ENTITA "."
+    // Opzione globale: la riga «Uscite:» non rivela le stanze mai visitate.
+    // Inizia con "Le": un'ENTITA che comincia con 'Le' vince per lunghezza.
+    def_uscite_anonime: "Le" "uscite" "nominano" "solo" "le" "stanze" "visitate" "."
+
+    // --- [1.3.0 / M-10] PERSONAGGI CHE TENGONO OGGETTI E ARGOMENTI ---
+    // 'La guardia ha la chiave.': dopo ENTITA il lookahead "ha" è nuovo (le
+    // altre dichiarazioni proseguono con è/sono/si/collega/dà/illumina/al).
+    def_png_ha: ENTITA "ha" ENTITA "."
+    // 'Se chiedi alla guardia di "chiave" oppure "custode": dire "…".' La
+    // preposizione davanti al personaggio è facoltativa ('a Anna', 'ad Anna').
+    // Inizia con "Se" maiuscolo: nessun'altra frase comincia così.
+    def_argomento: "Se" "chiedi" a_chi? ENTITA "di" argomento_chiavi ( "se" condizione )? ":" _esito_temporale "."
+    a_chi: PREP_AZIONE | "ad"
+    argomento_chiavi: TESTO_QUOTATO ( "oppure" TESTO_QUOTATO )*
+
+    // --- [1.3.0 / M-6] PRESENTAZIONE DELLA STORIA ---
+    // Iniziano con "Il" (come def_giocatore/def_posto/def_dialogo_inizio): il
+    // lookahead titolo/prologo/messaggio decide. 'L'autore' inizia con
+    // _L_APOSTROFO: un'ENTITA che comincia con L' vince per lunghezza.
+    def_titolo: "Il" "titolo" "è" TESTO_QUOTATO "."
+    def_autore: _L_APOSTROFO "autore" "è" TESTO_QUOTATO "."
+    def_prologo: "Il" "prologo" "è" TESTO_QUOTATO "."
+    // 'Il messaggio "non capisco" è "Come, prego?".': i messaggi del motore.
+    def_messaggio: "Il" "messaggio" TESTO_QUOTATO "è" TESTO_QUOTATO "."
+    _L_APOSTROFO: /[Ll]'/
+
+    // --- [1.4.0] PULSANTI-VERBO ---
+    // Come il giocatore dà i comandi nelle pagine che mostrano i pulsanti (la
+    // pagina esportata, il sito). Senza questa frase valgono entrambi i modi.
+    // Inizia con "I": un'ENTITA o uno stato che comincia con 'I comandi' vince
+    // per lunghezza, come per 'Le uscite nominano…'. Dopo 'si' il lookahead
+    // scrivono/scelgono, e dopo 'scrivono' "." / "oppure" → LALR(1) 0-ambiguo.
+    def_comandi: "I" "comandi" "si" modo_comandi "."
+    modo_comandi: "scrivono"                                                 -> modo_testo
+                | "scelgono" "con" "i" "pulsanti"                            -> modo_pulsanti
+                | "scrivono" "oppure" "si" "scelgono" "con" "i" "pulsanti"   -> modo_entrambi
+
+    // --- STATO ASTRATTO (Livello 3 / G3) ---
+    // 'X è uno stato.' dichiara una variabile globale (uno 'stato'); 'X è valore.'
+    // ne imposta il valore iniziale. VARIABILE è un terminale CHIUSO disgiunto da
+    // ENTITA: LALR distingue questi costrutti da quelli su oggetti al PRIMO token.
+    // [0.27.0 / A] _copula (è|sono): 'Le luci sono uno stato.', 'Le vite sono un
+    // contatore.', 'Le luci sono accese.' — i nomi di stato/contatore sono spesso
+    // plurali. Coerente con stanze/oggetti; VARIABILE resta disgiunto da ENTITA.
+    def_stato: VARIABILE _copula "uno" "stato" "."
+    def_stato_valore: VARIABILE _copula PROPRIETA "."
+    // Contatori numerici: 'X è un contatore.' (valore iniziale 0). Distinto da
+    // def_stato per il lookahead "un" vs "uno".
+    def_contatore: VARIABILE _copula "un" "contatore" "."
+    // [Livello 8 / 0.16.0] Valore INIZIALE configurabile di un contatore (default
+    // 0). 'La forza parte da 3.' — richiede che il contatore sia dichiarato
+    // ('X è un contatore.', in qualunque punto del file). Inizia con VARIABILE; il
+    // lookahead "parte" vs copula la distingue da def_stato*/def_contatore → LALR(1)
+    // 0-ambiguo (def_giocatore usa "parte" ma parte da "Il giocatore", non VARIABILE).
+    // [0.27.0 / A] "partono" plurale per i nomi-contatore plurali ('Le vite
+    // partono da 3.'), coerente con la copula plurale di def_contatore.
+    def_contatore_iniziale: VARIABILE ("parte" | "partono") "da" _numero "."
+
+    // --- TOPOLOGIA: DIREZIONI PERSONALIZZATE (Livello 4 / L1) ---
+    // 'Alto e basso sono direzioni opposte.' dichiara una coppia di direzioni
+    // (sempre opposte, per garantire l'auto-ritorno). Entrambi gli operandi sono
+    // token DIREZIONE (generati per-file dallo scanner). Nessun'altra
+    // dichiarazione inizia con DIREZIONE: LALR la distingue al primo token.
+    def_direzioni: DIREZIONE "e" DIREZIONE "sono" "direzioni" "opposte" "."
+
+    // --- EVENTI A TURNI (Livello 3) ---
+    // 'Al turno N: ...' scatta una sola volta; 'Ogni N turni: ...' a ogni
+    // multiplo di N. Riusano la stessa coda di conseguenze delle regole.
+    // [0.19.0 / A9] L'esito (di evento o demone) può essere una battuta 'dire
+    // "…"' con conseguenze in coda, OPPURE direttamente una o più conseguenze
+    // SENZA testo: un «tick» silenzioso ('Ogni 3 turni: diminuisci il carburante.').
+    // Regola INLINE (prefisso '_'): i figli salgono al genitore, così i metodi
+    // evento_*/demone_* ricevono gli stessi tipi (testo str opzionale + conseguenze).
+    // Dopo ':' il lookahead distingue "dire" dal primo token di una conseguenza
+    // (ENTITA/VARIABILE/"il"/"aumenta"/"diminuisci"/"vinci"/"perdi"/"termina") → 0-ambiguo.
+    // [1.3.0 / M-1] Anche la PRIMA conseguenza può avere 'e adesso' / 'adesso'
+    // ('…: e adesso la mela è rossa.'): dopo ':' i lookahead "e" e "adesso" sono
+    // disgiunti da "dire" e dal primo token di una conseguenza → 0-ambiguo.
+    _esito_temporale: "dire" TESTO_QUOTATO ( "e" "adesso" conseguenza ( "e" "adesso"? conseguenza )* )?
+                    | ( "e"? "adesso" )? conseguenza ( "e" "adesso"? conseguenza )*
+    def_evento: "Al" "turno" _numero ":" _esito_temporale "." -> evento_al
+              | "Ogni" _numero ( "turno" | "turni" ) ":" _esito_temporale "." -> evento_ogni
+
+    // --- DEMONI / EVENTI CONDIZIONALI (Livello 8) ---
+    // Un 'demone' sorveglia una CONDIZIONE a ogni turno e scatta da solo, senza
+    // dipendere da un'azione del giocatore né da un turno fisso (il buco lasciato
+    // da eventi=timer-senza-se e regole=sempre-con-verbo). Due forme:
+    //   (a) 'Ogni turno se [cond]: ...' — a LIVELLO, scatta a ogni turno in cui la
+    //       condizione è vera (effetti continui). Inizia con "Ogni" come
+    //       evento_ogni; il lookahead distingue NUMERO (timer) dalla keyword
+    //       "turno" (demone) SUBITO dopo "Ogni" → LALR(1) 0-ambiguo.
+    //   (b) 'Quando [cond] (diventa vera)?: ...' — sul FRONTE di salita, scatta una
+    //       sola volta quando la condizione passa da falsa a vera. Inizia con la
+    //       riservata "Quando" (nessun'altra frase parte così) → distinta al
+    //       primo token. La chiusura 'diventa vera' è OPZIONALE (zucchero esplicito,
+    //       stessa semantica): dopo la condizione il lookahead "diventa" vs ":"
+    //       decide l'opzionale, entrambi NON continuatori di condizione (solo
+    //       "oppure"/"e"/")") → reduce deterministico, LALR(1) 0-ambiguo.
+    // Entrambe riusano l'albero `condizione` e la coda di conseguenze 'e adesso'.
+    def_demone: "Ogni" "turno" "se" condizione ":" _esito_temporale "." -> demone_ogni
+              | "Quando" condizione ( "diventa" "vera" )? ":" _esito_temporale "." -> demone_quando
+              // [1.3.0 / M-7] Timer che parte da un fatto: 'Tre turni dopo che la
+              // miccia è accesa: …' (scatta N turni dopo il fronte di salita).
+              // Inizia con NUMERO: nessun'altra dichiarazione comincia così.
+              | _numero ( "turno" | "turni" ) "dopo" "che" condizione ":" _esito_temporale "." -> demone_dopo
+
+    // --- NPC E DIALOGHI (Livello 5b) ---
+    // Etichette dei nodi e testi delle opzioni sono SEMPRE quotati (vocabolario
+    // nuovo, come alias/verbi): non entrano in contesa con i terminali chiusi.
+    //   'Il dialogo del mercante comincia con "saluto".' — nodo d'ingresso dell'NPC.
+    //     Inizia con "Il" (come def_giocatore): lookahead "dialogo" vs "giocatore".
+    //   'Il mercante al nodo "saluto" dice "Benvenuto!".' — battuta dell'NPC al nodo.
+    //     Inizia con ENTITA: dopo l'entità il lookahead "al" la distingue da è/si/collega.
+    //   'Al nodo "saluto" l'opzione "Addio." chiude il dialogo.' — opzione del giocatore.
+    //     Inizia con "Al": lookahead "nodo" vs "turno" (eventi).
+    def_dialogo_inizio: "Il" "dialogo" _PREP_DESCR ENTITA "comincia" "con" TESTO_QUOTATO "."
+    // [0.33.0 / Tema 4b] Battuta CONDIZIONALE: clausola 'se' opzionale dopo il
+    // testo, per parità con le descrizioni (def_descrizione). Dopo il secondo
+    // TESTO_QUOTATO il lookahead "se" vs "." è disgiunto → LALR(1) 0-ambiguo. Più
+    // battute per lo stesso nodo si accumulano (transformer): a render-time vince
+    // la prima la cui condizione è vera, le incondizionate fanno da fallback.
+    def_battuta: ENTITA "al" "nodo" TESTO_QUOTATO "dice" TESTO_QUOTATO ( "se" condizione )? "."
+    // [0.10.2] L'opzione ha un ESITO: 'conduce al nodo "X"' (ramificazione) oppure
+    // 'chiude il dialogo'. Dopo il testo dell'opzione il lookahead "conduce" vs
+    // "chiude" distingue le due alternative: LALR(1) 0-ambiguo.
+    // [0.10.3] L'opzione può avere CONSEGUENZE in coda ('e adesso ...'), riusando
+    // la stessa coda di regole ed eventi: scegliere cambia lo stato del mondo.
+    // [0.10.4] L'opzione può essere CONDIZIONALE ('se ...'): mostrata solo se la
+    // condizione è vera (porte chiuse, requisiti). Dopo il testo dell'opzione il
+    // lookahead "se" la distingue dall'esito ("conduce"/"chiude"): LALR(1) 0-ambiguo.
+    def_opzione: "Al" "nodo" TESTO_QUOTATO "l'" "opzione" TESTO_QUOTATO ( "se" condizione )? opzione_esito ( "e" "adesso" conseguenza ( "e" "adesso"? conseguenza )* )? "."
+    opzione_esito: "conduce" "al" "nodo" TESTO_QUOTATO -> esito_conduce
+                 | "chiude" "il" "dialogo"             -> esito_chiude
+
+    // --- REGOLE (INVECE DI) ---
+    // Il bersaglio del verbo può essere un'entità OPPURE una direzione (es. "vai
+    // nord"), con un eventuale secondo oggetto. [Livello 5] Il bersaglio è ora
+    // OPZIONALE: una regola senza bersaglio è GLOBALE, scatta sul solo verbo (con
+    // la sua condizione) — utile per verifiche su stati/contatori non legate a un
+    // oggetto (es. "Invece di guarda se il punteggio è almeno 3: ..."). Il
+    // bersaglio è incapsulato in 'regola_target' così, quando manca, l'unica
+    // stringa nuda residua è la risposta (il transformer non confonde i due str).
+    // Dopo il verbo il lookahead distingue nettamente ENTITA/DIREZIONE dal "se" o ":".
+    // [0.18.0 / B6] Il verbo può essere MULTI-PAROLA se dichiarato ('"fai scattare"
+    // è un comando.'): VERBO_MULTI è un terminale CHIUSO generato per-file (come
+    // DIREZIONE) con priorità ALTA, così 'fai scattare' vince sul singolo WORD
+    // 'fai'. Restano validi i verbi monoparola (VERBO=WORD, aperto: preserva la
+    // diagnostica 'verbo non riconosciuto' per i refusi).
+    // [0.30.0 / A3] La battuta 'dire "…"' è OPZIONALE anche nelle REGOLE, per
+    // simmetria con i «tick silenziosi» di eventi e demoni (A9, 0.19.0): una
+    // regola che muta solo lo stato può ora omettere il testo
+    // ('Invece di riposa: aumenta la forza.'). Riusa lo STESSO inline _esito_temporale
+    // di def_evento/def_demone: prima alternativa 'dire "…" [e adesso …]', seconda
+    // alternativa solo conseguenze. Dopo ':' il lookahead distingue "dire" dal
+    // primo token di una conseguenza (ENTITA/VARIABILE/"il"/"aumenta"/…) → LALR(1)
+    // 0-ambiguo, identico a eventi/demoni. Il transformer estrae già la risposta
+    // per tipo (str opzionale, default ""): nessuna modifica ai metodi.
+    // [1.3.0 / M-9] Tre fasi: 'Invece di' (sostituisce l'azione), 'Prima di'
+    // (scatta e poi l'azione prosegue), 'Dopo di' (scatta dopo che l'azione di
+    // default è riuscita). Il nodo resta def_regola: la fase è il primo figlio.
+    // Un ramo 'altrimenti' vale quando la condizione è falsa. Dopo l'esito il
+    // lookahead ";"/"altrimenti" è disgiunto da "." e dal seguito della coda.
+    def_regola: fase_regola "di" ( VERBO_MULTI | VERBO ) regola_target? ( "se" condizione )? ":" _esito_temporale ramo_altrimenti? "."
+    fase_regola: "Invece" -> fase_invece
+               | "Prima"  -> fase_prima
+               | "Dopo"   -> fase_dopo
+    ramo_altrimenti: ";"? "altrimenti" ":"? _esito_temporale
+    // [1.3.0 / M-9] Regole per CATEGORIA: 'qualcosa' (ogni oggetto) o
+    // 'qualcosa di pesante' (ogni oggetto con quella proprietà). Dopo il verbo
+    // il lookahead "qualcosa" è disgiunto da ENTITA/DIREZIONE/"se"/":".
+    regola_target: ( ENTITA | DIREZIONE | categoria ) ( PREP_AZIONE ( ENTITA | categoria ) )?
+    categoria: "qualcosa" ( "di" PROPRIETA )?
+
+    // --- CONDIZIONI (logica booleana) ---
+    // Precedenza: OR (più bassa) < AND < atomo. Parentesi per raggruppare.
+    // OR usa "oppure" (NON "o", abbreviazione di "ovest"). AND usa "e".
+    // La negazione è infissa: "non ha", "non è". Con ENTITA chiuso il token
+    // "non" non può più essere assorbito: niente più priorità di regola.
+    ?condizione: cond_or
+    ?cond_or: cond_and ( "oppure" cond_and )+ -> make_or
+            | cond_and
+    ?cond_and: cond_base ( "e" cond_base )+ -> make_and
+             | cond_base
+    ?cond_base: cond_possesso
+              | cond_possesso_neg
+              | cond_posizione_giocatore
+              | cond_posizione_giocatore_neg
+              | cond_proprieta
+              | cond_proprieta_neg
+              | cond_variabile
+              | cond_variabile_neg
+              | cond_variabile_uguali
+              | cond_variabile_uguali_neg
+              | cond_contatore_eq
+              | cond_contatore_neq
+              | cond_contatore_gte
+              | cond_contatore_gt
+              | cond_contatore_lt
+              | cond_contatore_lte
+              | cond_probabilita
+              | cond_posizione_oggetto
+              | cond_posizione_oggetto_neg
+              | cond_png_ha
+              | cond_png_ha_neg
+              | cond_non_gruppo
+              | "(" cond_or ")"
+    cond_possesso: "il" "giocatore" "ha" ENTITA
+    cond_possesso_neg: "il" "giocatore" "non" "ha" ENTITA
+    // [0.18.0 / B1] Posizione del giocatore: 'se il giocatore è in [stanza]'.
+    // Dopo 'il giocatore' il lookahead distingue "ha"/"non ha" (possesso) dalla
+    // copula è/sono (posizione) → LALR(1) 0-ambiguo.
+    cond_posizione_giocatore: "il" "giocatore" _copula PREP_LUOGO ENTITA
+    cond_posizione_giocatore_neg: "il" "giocatore" "non" _copula PREP_LUOGO ENTITA
+    cond_proprieta: ENTITA _copula PROPRIETA
+    cond_proprieta_neg: ENTITA "non" _copula PROPRIETA
+    // 'se [stato] è [valore]' — il terminale VARIABILE distingue dallo stato di
+    // un oggetto (cond_proprieta), senza ambiguità.
+    cond_variabile: VARIABILE "è" PROPRIETA
+    cond_variabile_neg: VARIABILE "non" "è" PROPRIETA
+    // [0.34.0 / Tema 3] Confronto stato↔stato per INDIREZIONE: 'se il corteggiato
+    // è come il preferito'. Il marcatore "come" è OBBLIGATORIO e non decorativo: il
+    // termine a destra è un VARIABILE (nome di stato dichiarato) che è ANCHE una
+    // WORD, quindi senza marcatore 'VARIABILE è VARIABILE' collide con
+    // 'VARIABILE è PROPRIETA' (cond_variabile, confronto con un letterale) —
+    // un'ambiguità reale (ogni nome di stato è un valore-letterale lecito). La
+    // keyword-letterale "come" (priorità sul WORD/PROPRIETA) separa i due casi in
+    // modo STRUTTURALE: dopo 'VARIABILE è' il lookahead "come" è disgiunto da
+    // PROPRIETA, da {NUMERO,"["} (cond_contatore_eq) e da "almeno"/"più"/"meno"/"al"
+    // → LALR(1) 0-ambiguo (confermato dalla guardia Earley). 'è come [stato]' si
+    // legge come italiano corrente («è come il preferito» = ha lo stesso valore).
+    // NB: "come" è già riservata da def_sinonimo ('"x" è come prendi'), in un
+    // contesto sinistro distinto (TESTO_QUOTATO, non VARIABILE) → nessuna collisione.
+    cond_variabile_uguali: VARIABILE "è" "come" VARIABILE
+    cond_variabile_uguali_neg: VARIABILE "non" "è" "come" VARIABILE
+    // Confronti su contatore. Dopo 'VARIABILE è' il lookahead distingue:
+    // PROPRIETA (stato) | NUMERO o "[" (==) | "almeno"/"più"/"meno"/"al massimo".
+    // [0.31.0 / Tema 1b] Il termine di confronto è un operando_confronto: NUMERO
+    // letterale OPPURE il valore di un contatore '[forza]' → confronti
+    // grandezza↔grandezza. FIRST(operando_confronto)={NUMERO,"["} resta disgiunto
+    // da PROPRIETA (cond_variabile) → LALR(1) 0-ambiguo.
+    cond_contatore_eq: VARIABILE "è" operando_confronto
+    // [0.18.0 / B5] '≠' sui contatori. Dopo 'VARIABILE non è' il lookahead
+    // NUMERO/"[" (≠) vs PROPRIETA (stato, cond_variabile_neg) decide → 0-ambiguo.
+    cond_contatore_neq: VARIABILE "non" "è" operando_confronto
+    cond_contatore_gte: VARIABILE "è" "almeno" operando_confronto
+    cond_contatore_gt: VARIABILE "è" "più" "di" operando_confronto
+    cond_contatore_lt: VARIABILE "è" "meno" "di" operando_confronto
+    // [0.18.0 / B4] '≤' ('al massimo'), simmetrico ad 'almeno' (≥). Dopo
+    // 'VARIABILE è' il lookahead "al" distingue dagli altri confronti → 0-ambiguo.
+    cond_contatore_lte: VARIABILE "è" "al" "massimo" operando_confronto
+    // [0.32.0 / Tema 2c] Condizione PROBABILISTICA: 'càpita (1 su 4)' è vera con
+    // probabilità N/M, pescata da mondo.rng (seedato, ANNULLA-safe). È l'UNICO
+    // cond_base senza un operando (VARIABILE/ENTITA/"il") a sinistra: parte dalla
+    // keyword dedicata "càpita", disgiunta da ogni altro FIRST di cond_base →
+    // LALR(1) 0-ambiguo. Le parentesi tonde sono già terminali (gruppo booleano);
+    // 'su' è un literal anonimo nel contesto, distinto da PREP_AZIONE (lexer
+    // contestuale). Riservata aggiunta: "càpita".
+    cond_probabilita: "càpita" "(" NUMERO "su" NUMERO ")"
+    // [0.18.0 / B7] Negazione di un GRUPPO booleano: 'non ( A e B )'. È l'unico
+    // cond_base (a parte 'càpita') con un primo token dedicato ("non") →
+    // distinto al primo token, 0-ambiguo.
+    cond_non_gruppo: "non" "(" cond_or ")"
+    // [1.3.0 / G-6] Dove stanno oggetti e personaggi. Dopo 'ENTITA è' il
+    // lookahead PREP_LUOGO è disgiunto da PROPRIETA (come già fra def_posizione
+    // e def_proprieta) → LALR(1) 0-ambiguo. 'se il gatto è qui' NON è una
+    // regola: 'qui' come parola chiave vincerebbe su ogni proprietà nello stato
+    // condiviso dopo la copula ('Lo stato è qui.'); è cond_proprieta con la
+    // proprietà speciale 'qui', riconosciuta nel transformer.
+    cond_posizione_oggetto: ENTITA _copula PREP_LUOGO ENTITA
+    cond_posizione_oggetto_neg: ENTITA "non" _copula PREP_LUOGO ENTITA
+    // [1.3.0 / M-10] 'se la guardia ha la chiave'. Dopo ENTITA il lookahead
+    // "ha" (o "non" "ha") è disgiunto da _copula.
+    cond_png_ha: ENTITA "ha" ENTITA
+    cond_png_ha_neg: ENTITA "non" "ha" ENTITA
+
+    // --- CONSEGUENZE ---
+    // La destinazione dello spostamento è un'ENTITA: include i nomi dichiarati e
+    // gli pseudo-simboli "inventario"/"nulla" iniettati nella regex.
+    ?conseguenza: ENTITA _copula PREP_LUOGO ENTITA -> cons_spostamento
+                | ENTITA _copula PROPRIETA          -> cons_proprieta
+                // [1.3.0 / M-2] Togliere una proprietà: 'il panno non è più
+                // bagnato'. Dopo ENTITA il lookahead "non" è nuovo fra le
+                // conseguenze; dopo 'non' la copula vs "collega" decide.
+                | ENTITA "non" _copula "più" PROPRIETA -> cons_proprieta_via
+                // [1.3.0 / M-8] Uscite che cambiano: 'la cucina collega nord a
+                // la dispensa' / 'la cucina non collega più nord'.
+                | ENTITA "collega" DIREZIONE "a" ENTITA -> cons_collega
+                | ENTITA "non" "collega" "più" DIREZIONE -> cons_scollega
+                // [1.3.0 / M-10] 'la guardia ha la chiave': l'oggetto passa al
+                // personaggio. Dopo ENTITA il lookahead "ha" è nuovo.
+                | ENTITA "ha" ENTITA               -> cons_png_riceve
+                // [0.18.0 / B2] Teletrasporto del giocatore: 'e adesso il
+                // giocatore è in [stanza]'. Inizia con la keyword "il" "giocatore"
+                // (mai un'ENTITA: 'giocatore' è riservata), distinta da
+                // cons_spostamento (che parte da ENTITA) al primo token → 0-ambiguo.
+                | "il" "giocatore" _copula PREP_LUOGO ENTITA -> cons_giocatore_sposta
+                // [0.25.0 / A5] Movimento di un PERSONAGGIO. Deterministico ('la
+                // guardia va nel corridoio') e CASUALE ('il gatto cambia stanza',
+                // una stanza adiacente a caso). Entrambe iniziano con ENTITA: dopo
+                // l'entità il lookahead distingue _copula (spostamento/proprietà)
+                // da "va" e "cambia" → LALR(1) 0-ambiguo. NB: la mossa casuale NON
+                // riusa 'va in …' (collide col lexer su PREP_LUOGO 'in'); usa
+                // 'cambia stanza', equivalente e privo di collisioni.
+                | ENTITA "va" PREP_LUOGO ENTITA  -> cons_png_va
+                | ENTITA "cambia" "stanza"       -> cons_png_cambia
+                // [0.33.0 / Tema 4a] Buio COMMUTABILE di una stanza: 'la radura
+                // diventa buia' (spegne la luce) / 'la radura diventa illuminata'
+                // (la riaccende). Inizia con ENTITA come spostamento/proprietà/
+                // movimento: dopo l'entità il lookahead "diventa" è disgiunto da
+                // _copula/"va"/"cambia" → LALR(1) 0-ambiguo. ENTITA è un terminale
+                // CHIUSO disgiunto da VARIABILE, quindi non collide con
+                // 'VARIABILE "diventa" …' (cons_contatore_set / cons_scelta_stato),
+                // che parte da VARIABILE. La PROPRIETA (buia/illuminata/chiara) è
+                // classificata nel transformer (folding per radice 'bui-').
+                | ENTITA "diventa" PROPRIETA     -> cons_stanza_buio
+                | VARIABILE "è" PROPRIETA        -> cons_variabile
+                // [0.32.0 / Tema 2b] Scelta casuale fra VALORI DI STATO: 'il meteo
+                // diventa uno fra sereno, pioggia, nebbia'. Pesca una PROPRIETA
+                // dall'elenco con mondo.rng (seedato, ANNULLA-safe). Condivide il
+                // prefisso 'VARIABILE "diventa"' con cons_contatore_set, ma dopo
+                // "diventa" il lookahead "uno" (scelta di stato) è disgiunto da
+                // FIRST(operando)={NUMERO,"[","un"} ("uno"≠"un", maximal-munch) →
+                // LALR(1) 0-ambiguo. Riservata aggiunta: nessuna ("uno"/"fra" già
+                // riservate da def_stato e operando_casuale).
+                | VARIABILE "diventa" "uno" "fra" PROPRIETA ( "," PROPRIETA )* -> cons_scelta_stato
+                // [0.34.0 / Tema 3] Copia stato↔stato per INDIREZIONE: 'e adesso
+                // il corteggiato diventa il preferito'. Condivide il prefisso
+                // 'VARIABILE "diventa"' con cons_scelta_stato e cons_contatore_set,
+                // ma dopo "diventa" il lookahead VARIABILE è disgiunto da "uno"
+                // (scelta di stato) e da FIRST(operando)={NUMERO,"[","un"} → LALR(1)
+                // 0-ambiguo. È riservata agli STATI (valore simbolico): la copia
+                // NUMERICA fra contatori usa già l'operando '[nome]' ('… diventa
+                // [forza]', sotto). Il mismatch stato↔contatore è un errore d'autore
+                // intercettato in valida_post (differito: lo stato sorgente può
+                // essere dichiarato dopo).
+                | VARIABILE "diventa" VARIABILE  -> cons_variabile_copia
+                // [0.31.0 / Tema 1a + casualità] La QUANTITÀ di 'di …'/'diventa'
+                // è un OPERANDO (vedi sotto): NUMERO letterale, valore di un
+                // contatore '[forza]' o estrazione casuale 'un numero fra A e B'.
+                // Dopo "di"/"diventa" il lookahead NUMERO | "[" | "un" distingue
+                // le tre forme → LALR(1) 0-ambiguo.
+                | "aumenta" VARIABILE ( "di" operando )?    -> cons_aumenta
+                | "diminuisci" VARIABILE ( "di" operando )? -> cons_diminuisci
+                | VARIABILE "diventa" operando   -> cons_contatore_set
+                // [1.3.0 / M-7] Moltiplicazione, divisione intera, resto e
+                // limiti. Ogni forma parte da una keyword nuova o da
+                // 'VARIABILE "resta"' → disgiunta dalle altre.
+                | "moltiplica" VARIABILE "per" operando -> cons_moltiplica
+                | "dividi" VARIABILE "per" operando     -> cons_dividi
+                | "riduci" VARIABILE "modulo" operando  -> cons_modulo
+                | VARIABILE "resta" "fra" operando "e" operando -> cons_limita
+                // [0.18.0 / B3] Testo d'esito opzionale: 'vinci "Sei libero!"'.
+                // Nessun'altra conseguenza inizia con TESTO_QUOTATO → 0-ambiguo.
+                | "vinci" TESTO_QUOTATO?         -> cons_vinci
+                | "perdi" TESTO_QUOTATO?         -> cons_perdi
+                | "termina" TESTO_QUOTATO?       -> cons_termina
+
+    // --- OPERANDO-QUANTITÀ (Tema 1a + estrazione casuale, v0.31.0) ---
+    // Ciò che produce un intero al momento dell'uso. Le tre forme partono da
+    // token disgiunti (NUMERO | "[" | "un") → LALR(1) 0-ambiguo. La forma
+    // "[" VARIABILE "]" rispecchia l'interpolazione [nome] dei testi: in entrambi
+    // i casi [x] significa «il valore corrente del contatore x». Le parentesi
+    // quadre, fin qui viste solo dentro TESTO_QUOTATO, diventano qui due token
+    // letterali: non collidono con nulla (fuori dalle stringhe non compaiono).
+    operando: NUMERO                                  -> operando_numero
+            | "[" VARIABILE "]"                        -> operando_variabile
+            | "un" "numero" "fra" NUMERO "e" NUMERO    -> operando_casuale
+    // Operando dei CONFRONTI fra contatori (condizioni): solo letterale o valore
+    // di un contatore. Niente estrazione casuale: una soglia ri-pescata a ogni
+    // valutazione non avrebbe senso in una condizione.
+    operando_confronto: NUMERO                 -> operando_numero
+                      | "[" VARIABILE "]"       -> operando_variabile
+
+    // --- TERMINALI LESSICALI ---
+    // [0.27.0 / D] PREP_LUOGO come REGEX con CONFINE DESTRO sulle forme semplici:
+    // 'in'/'nel'/'sul'… non devono più staccarsi dall'inizio di un aggettivo-stato
+    // monoparola (`è incisa` non è più letto 'in'+'cisa'; idem 'sulfurea'→'sul').
+    // Le forme con apostrofo (nell') non portano il lookahead: sono già delimitate
+    // dall'apostrofo e seguite dalla vocale dell'ENTITA ("nell'atrio"). Priorità di
+    // default (0) > PROPRIETA (.-1): 'è in cella' resta posizione, non proprietà.
+    // NB: l'insieme è ora COMPLETO (nello/nei/sull'…): col confine destro 'nel' non
+    // può più scomporsi in 'nel'+'lo' per formare 'nello' (com'era con i terminali
+    // stringa), quindi tutte le forme articolate vanno elencate esplicitamente.
+    PREP_LUOGO: /nell'|sull'|(?:in|nel|nello|nella|nei|negli|nelle|sul|sullo|sulla|sui|sugli|sulle)(?![a-zA-ZÀ-ÿ0-9'])/i
+    // [0.18.0 / A4] Preposizioni d'azione (regole a due oggetti: 'usa X PREP Y').
+    // Oltre alle forme semplici, ora sono ammesse le forme ARTICOLATE ('usa la
+    // batteria SUL pannello', 'metti la spada NELLA teca'), simmetriche a
+    // PREP_LUOGO: elimina la stonatura 'su il'/'su la' a cui l'autore era
+    // costretto. La sovrapposizione con PREP_LUOGO (es. 'sul', 'nel') è innocua:
+    // i due terminali non sono mai validi nello stesso stato LALR (PREP_AZIONE
+    // solo in regola_target; PREP_LUOGO solo in posizione/spostamento), come già
+    // accade per 'in'. La preposizione esatta conta solo per la priorità di
+    // match: il fallback prep-tollerante (stessi due oggetti) fa comunque da rete.
+    // [1.3.0 / G-7] Regex con CONFINE DESTRO (come PREP_LUOGO) e con le
+    // preposizioni di TERMINE e di PROVENIENZA e quelle di luogo improprie: 'dai la
+    // mela ALLA guardia', 'prendi la mela DAL tavolo', 'metti la tazza SOPRA il
+    // mobile'. Le forme più lunghe vengono prima (nello prima di nel prima di ne…).
+    PREP_AZIONE: /(?:sull'|nell'|all'|dall')|(?:sullo|sulla|sugli|sulle|sul|sui|su|contro|con|nello|nella|negli|nelle|nel|nei|in|allo|alla|agli|alle|al|ai|a|dallo|dalla|dagli|dalle|dal|dai|da|sopra|sotto|dentro|dietro|verso)(?![a-zA-ZÀ-ÿ0-9'])/i
+    // [Livello 5] Preposizioni articolate della descrizione come TERMINALE UNICO
+    // (maximal-munch: 'della' non si spezza più in 'del'+'la') e FILTRATO dal
+    // tree (prefisso '_'): elimina alla radice un'ambiguità preesistente di
+    // def_descrizione, com'è già per PREP_LUOGO. Il transformer resta invariato.
+    // [0.18.0 / A2] Aggiunto 'dei' (genitivo plurale maschile davanti a consonante:
+    // 'la descrizione DEI pilastri'). 'dello'/'degli'/'delle' restano coperti
+    // (degli/delle esplicitamente; 'dello' tramite 'del' + articolo 'lo' del prefisso
+    // ENTITA): mancava solo 'dei', che non si scompone in 'del' + articolo.
+    _PREP_DESCR: "di" | "del" | "dei" | "della" | "dell'" | "degli" | "delle"
+    // [Livello 4 / L1] DIREZIONE è generata per-file: le forme di base
+    // (favella_utils.DIREZIONI_BASE) più le direzioni personalizzate dichiarate.
+    // È una regex con confine di parola (\b) e priorità ALTA (.2): serve a
+    // vincere il longest-match contro le keyword di cui una direzione custom
+    // potrebbe condividere il prefisso (es. 'alto' vs 'al' di "Al turno").
+    // Sicuro per l'invariante "e"=est vs congiunzione: il lexer contestuale non
+    // pone mai DIREZIONE e la congiunzione "e" come candidati nello stesso stato.
+    DIREZIONE.2: /(?:__DIREZIONE_ALT__)\b/i
+
+    // [0.18.0 / B6] VERBO_MULTI: alternanza CHIUSA dei verbi personalizzati
+    // MULTI-PAROLA dichiarati ('"fai scattare" è un comando.'), generata per-file
+    // (vedi costruisci_grammatica). Priorità ALTA (.3) e confine di parola, così la
+    // frase intera vince il longest-match contro il singolo WORD del primo token.
+    // Vuota (nessun verbo multiparola) -> regex che non matcha mai.
+    VERBO_MULTI.3: /(?:__VERBI_MULTI__)\b/i
+
+    VERBO: WORD
+    WORD: /[a-zA-ZÀ-ÿ0-9']+/
+
+    // NUMERO: intero non negativo. Priorità ALTA: PROPRIETA include le cifre, ma
+    // un token tutto-cifre deve risolversi a NUMERO (per i contatori).
+    NUMERO.2: /-?[0-9]+/
+    // [1.3.0 / L-1] Numeri in lettere (senza un/uno/una, che sono parole del
+    // linguaggio), solo dove si scrive un numero di turni, spazi, oggetti.
+    NUMERO_PAROLA.1: /(?:zero|due|tre|quattro|cinque|sei|sette|otto|nove|dieci|undici|dodici|tredici|quattordici|quindici|sedici|diciassette|diciotto|diciannove|venti|trenta|quaranta|cinquanta|sessanta|settanta|ottanta|novanta|cento)(?![a-zA-ZÀ-ÿ0-9'])/i
+
+    // ENTITA: alternanza CHIUSA dei nomi noti (generata per-file). Vedi
+    // costruisci_grammatica(). Il flag /i la rende case-insensitive.
+    ENTITA: /__ENTITA__/i
+
+    // VARIABILE: alternanza CHIUSA degli 'stati' dichiarati (Livello 3), anch'essa
+    // generata per-file e disgiunta da ENTITA. Vuota -> regex che non matcha mai.
+    VARIABILE: /__VARIABILE__/i
+
+    // PROPRIETA: aggettivo di stato coniato. UNA sola parola, priorità BASSA
+    // (-1): i keyword strutturali vincono sempre la contesa lessicale.
+    PROPRIETA.-1: /[a-zA-ZÀ-ÿ0-9']+/
+
+    // Testo tra virgolette doppie, con supporto per escape (\" e \\)
+    TESTO_QUOTATO: /"(\\.|[^"\\])*"/
+
+    %import common.WS
+    %ignore WS
+    COMMENT: /#[^\n]*/
+    %ignore COMMENT
+"""
+
+
+def _pattern_nome(nome: str) -> str:
+    """Trasforma un nome (eventualmente multiparola) in un pattern regex con
+    spazi flessibili: 'porta blindata' -> 'porta\\s+blindata'."""
+    return r"\s+".join(re.escape(parola) for parola in nome.split())
+
+
+def _costruisci_regex_nomi(nomi) -> str:
+    """Costruisce una regex di alternanza CHIUSA dei nomi dati, ordinata per
+    lunghezza decrescente per garantire il LONGEST-MATCH (re usa leftmost-first,
+    non longest), con articolo iniziale opzionale e confine di parola finale.
+    Se l'insieme è vuoto, restituisce una regex che non matcha mai."""
+    nomi = set(nomi)
+    if not nomi:
+        # Nessun nome: una regex che non matcha MAI ma di larghezza 1 (Lark
+        # rifiuta i terminali a larghezza zero come '(?!)'). Qualunque
+        # riferimento produrrà un errore di parsing intercettabile.
+        return r"[^\s\S]"
+    alternanza = "|".join(sorted((_pattern_nome(n) for n in nomi),
+                                  key=len, reverse=True))
+    art_con_spazio = [a for a in ARTICOLI if not a.endswith("'")]
+    art_apostrofo = [a for a in ARTICOLI if a.endswith("'")]
+    sp = "|".join(sorted((re.escape(a) for a in art_con_spazio), key=len, reverse=True))
+    ap = "|".join(sorted((re.escape(a) for a in art_apostrofo), key=len, reverse=True))
+    prefisso_articolo = rf"(?:(?:{sp})\s+|(?:{ap}))?"
+    return rf"{prefisso_articolo}(?:{alternanza})\b"
+
+
+def _costruisci_regex_entita(simboli) -> str:
+    """Regex del terminale ENTITA: i nomi dichiarati + gli pseudo-simboli
+    speciali (inventario/nulla)."""
+    return _costruisci_regex_nomi(set(simboli) | set(SIMBOLI_SPECIALI))
+
+
+def _costruisci_alt_direzioni(direzioni_extra=()) -> str:
+    """[Livello 4 / L1] Costruisce il corpo regex dell'alternanza del terminale
+    DIREZIONE: tutte le forme di base (favella_utils.DIREZIONI_BASE) più i nomi delle
+    direzioni personalizzate dichiarate, ordinate per lunghezza decrescente per
+    garantire il longest-match (es. 'ovest' prima di 'o')."""
+    forme = []
+    for varianti in DIREZIONI_BASE.values():
+        forme.extend(varianti)
+    forme.extend(direzioni_extra)
+    ordinate = sorted(set(forme), key=len, reverse=True)
+    return "|".join(re.escape(f) for f in ordinate)
+
+
+def _costruisci_alt_verbi_multi(verbi_multi=()) -> str:
+    """[0.18.0 / B6] Corpo regex dell'alternanza del terminale VERBO_MULTI: i
+    verbi personalizzati multi-parola dichiarati, con spazi flessibili (\\s+) e
+    ordinati per lunghezza decrescente (longest-match). Vuoto -> regex che non
+    matcha mai (lo stesso sentinella usata per i terminali chiusi vuoti)."""
+    verbi = sorted(set(v for v in verbi_multi if v), key=len, reverse=True)
+    if not verbi:
+        return r"[^\s\S]"
+    return "|".join(_pattern_nome(v) for v in verbi)
+
+
+# ------------------------------------------------------------------------------
+# [1.3.0] PAROLE CHIAVE CON CONFINE DI PAROLA, SENZA DISTINZIONE DI MAIUSCOLE
+# ------------------------------------------------------------------------------
+# Nel template le parole chiave sono letterali ("un", "al", "Invece"…). Il lexer
+# di Lark prova i terminali per priorità, non per lunghezza: una parola chiave
+# (priorità 0) batteva la proprietà coniata (PROPRIETA, priorità -1) anche quando
+# era solo l'INIZIO di una parola più lunga. 'La padella è unta.' diventava
+# 'un' + 'ta'; '… se il livello è alto' diventava 'al' + 'to' (criticità G-1).
+# La 0.28.0 aveva già risolto lo stesso difetto per PREP_LUOGO ('incisa').
+# Qui ogni parola chiave diventa un terminale filtrato (nome con '_') con un
+# confine destro, e insensibile alle maiuscole: 'invece di', 'la descrizione',
+# 'Il giocatore' e 'il giocatore' valgono uguale (G-2). La grammatica, le sue
+# regole e l'albero prodotto non cambiano: i letterali erano già filtrati.
+_CONFINE = "(?![a-zA-ZÀ-ÿ0-9'])"
+_RE_DEFINIZIONE_GRAMMATICA = re.compile(r"^\s*(?P<nome>[?!]?[A-Za-z_][A-Za-z0-9_]*)(?:\.-?\d+)?\s*:")
+_RE_LETTERALE_GRAMMATICA = re.compile(r'"((?:[^"\\]|\\.)*)"')
+_RE_PAROLA_CHIAVE = re.compile(r"[a-zà-ÿ]+", re.IGNORECASE)
+# Nome del terminale -> parola chiave (per i messaggi d'errore in italiano).
+PAROLE_CHIAVE_TERMINALI: dict = {}
+
+
+def _nome_terminale_parola(parola: str) -> str:
+    import unicodedata
+    senza_accenti = "".join(c for c in unicodedata.normalize("NFD", parola)
+                            if unicodedata.category(c) != "Mn")
+    nome = "_KW_" + senza_accenti.upper()
+    if senza_accenti != parola:
+        nome += "_ACC"          # 'è' e 'e', 'dà' e 'da' restano distinte
+    return nome
+
+
+def _parole_chiave_con_confine(grammatica: str) -> str:
+    """[1.3.0] Riscrive i letterali-parola delle REGOLE come terminali con
+    confine destro e flag /i (vedi sopra). Le definizioni di terminali
+    (PREP_LUOGO, _PREP_DESCR…) e i letterali di punteggiatura restano intatti."""
+    righe_out = []
+    usate = {}
+    in_regola = False
+
+    def _sostituisci(m):
+        parola = m.group(1)
+        if not _RE_PAROLA_CHIAVE.fullmatch(parola):
+            return m.group(0)                    # '.', ':', "l'", '(' …
+        chiave = parola.lower()
+        nome = _nome_terminale_parola(chiave)
+        usate[nome] = chiave
+        return nome
+
+    for riga in grammatica.split("\n"):
+        m = _RE_DEFINIZIONE_GRAMMATICA.match(riga)
+        if m:
+            nome = m.group("nome").lstrip("?!").lstrip("_")
+            in_regola = nome[:1].islower()
+        elif riga.strip().startswith("%"):
+            in_regola = False
+        if in_regola:
+            codice, sep, commento = riga.partition("//")
+            riga = _RE_LETTERALE_GRAMMATICA.sub(_sostituisci, codice) + sep + commento
+        righe_out.append(riga)
+    definizioni = [f"    {nome}: /(?:{re.escape(parola)}){_CONFINE}/i"
+                   for nome, parola in sorted(usate.items())]
+    PAROLE_CHIAVE_TERMINALI.update(usate)
+    return "\n".join(righe_out) + "\n" + "\n".join(definizioni) + "\n"
+
+
+def costruisci_grammatica(simboli, variabili=(), direzioni=(), verbi_multi=()) -> str:
+    """Restituisce la grammatica concreta per questo file, con i terminali
+    ENTITA, VARIABILE, DIREZIONE e VERBO_MULTI risolti dai simboli noti (Passata 2).
+    VARIABILE è la classe degli 'stati' (Livello 3); DIREZIONE include le direzioni
+    personalizzate (Livello 4); VERBO_MULTI i verbi custom multi-parola (0.18.0)."""
+    grammatica = _GRAMMAR_TEMPLATE.replace("__ENTITA__", _costruisci_regex_entita(simboli))
+    grammatica = grammatica.replace("__VARIABILE__", _costruisci_regex_nomi(variabili))
+    grammatica = grammatica.replace("__DIREZIONE_ALT__", _costruisci_alt_direzioni(direzioni))
+    grammatica = grammatica.replace("__VERBI_MULTI__", _costruisci_alt_verbi_multi(verbi_multi))
+    return _parole_chiave_con_confine(grammatica)
+
+
+# [0.29.0 / perf] Cache dei parser LALR già costruiti, indicizzati per (grammatica,
+# propagate_positions). Costruire la tabella LALR costa ~40 ms: chiamare più volte
+# il compilatore sullo stesso file (CLI, IDE che rianalizza outline/regole/variabili/
+# dialoghi) ricostruiva ogni volta un parser identico. Un parser Lark è riusabile e
+# senza stato fra una .parse() e l'altra (il Transformer è separato e per-chiamata),
+# quindi cachare per chiave-grammatica è sicuro. Un GrammarError NON viene cachato
+# (si rilancia a ogni build, come prima), così la guardia anti-ambiguità resta valida.
+_CACHE_PARSER: dict = {}
+
+
+def costruisci_parser(simboli, variabili=(), direzioni=(),
+                      propagate_positions=False, verbi_multi=()) -> Lark:
+    """Istanzia (o riusa dalla cache) il parser LALR(1) per i simboli dati. LALR è
+    unambiguo per costruzione: un'eventuale ambiguità grammaticale emergerebbe qui
+    come GrammarError a build-time, non come scelta silenziosa a runtime.
+
+    'propagate_positions' (default False, così il percorso del motore e dei test
+    resta byte-stabile) annota ogni nodo dell'albero con riga/colonna iniziali e
+    finali. Lo usa SOLO il percorso additivo dell'IDE (analizza_outline) per
+    ricavare lo span sorgente di ogni frase ed editarle chirurgicamente."""
+    grammatica = costruisci_grammatica(simboli, variabili, direzioni, verbi_multi)
+    chiave = (grammatica, propagate_positions)
+    parser = _CACHE_PARSER.get(chiave)
+    if parser is None:
+        parser = Lark(grammatica, start="start", parser="lalr",
+                      propagate_positions=propagate_positions)
+        _CACHE_PARSER[chiave] = parser
+    return parser
+
+
+def costruisci_parser_condizioni(simboli, variabili=(), direzioni=(), verbi_multi=()) -> Lark:
+    """[1.3.0 / M-6] Un parser che legge una sola condizione ('la porta è
+    aperta'), per i testi condizionali. Cachato come quello principale."""
+    grammatica = costruisci_grammatica(simboli, variabili, direzioni, verbi_multi)
+    chiave = (grammatica, "condizione")
+    parser = _CACHE_PARSER.get(chiave)
+    if parser is None:
+        parser = Lark(grammatica, start="condizione", parser="lalr")
+        _CACHE_PARSER[chiave] = parser
+    return parser
+
+
+def diagnostica_entita_sconosciuta(testo, errore, simboli) -> str | None:
+    """
+    [Livello 2.5] Beneficio collaterale dei nomi come token chiusi: quando il
+    parsing fallisce perché l'autore riferisce un'entità MAI dichiarata, possiamo
+    dare un errore chiaro ("entità sconosciuta 'X'") invece di un parse error
+    criptico. Esamina la parola alla posizione d'errore; se assomiglia a un nome
+    (non è riservata) ma non è nella symbol-table, propone una diagnosi mirata.
+    Restituisce il messaggio, oppure None se l'errore è di altra natura.
+    """
+    linea = getattr(errore, "line", None)
+    colonna = getattr(errore, "column", None)
+    if not linea or not colonna:
+        return None
+    righe = testo.split("\n")
+    if linea - 1 >= len(righe):
+        return None
+    frammento = righe[linea - 1][colonna - 1:]
+    # Isola la frase fino alla prossima punteggiatura forte, poi raccogli le
+    # parole candidate al nome: salta un eventuale articolo iniziale e fermati al
+    # primo keyword strutturale (es. "è", "di", ":").
+    testa = re.match(r"[A-Za-zÀ-ÿ0-9' ]+", frammento)
+    if not testa:
+        return None
+    parole = testa.group(0).split()
+    if parole and parole[0].lower() in ARTICOLI:
+        parole = parole[1:]
+    candidate = []
+    for p in parole:
+        if p.lower() in PAROLE_RISERVATE:
+            break
+        candidate.append(p)
+    if not candidate:
+        return None  # qui c'è una keyword fuori posto: messaggio generico
+    parola = " ".join(candidate)
+    norm = normalizza_nome(parola)
+    if not norm or norm in simboli.tutti:
+        return None  # entità nota: l'errore è altrove (es. punto mancante)
+
+    suggerimenti = difflib.get_close_matches(norm, sorted(simboli.tutti), n=3, cutoff=0.6)
+    msg = f"Entità sconosciuta: «{parola}» non è mai stata dichiarata."
+    if suggerimenti:
+        msg += f" Forse intendevi: {', '.join(suggerimenti)}?"
+    else:
+        msg += (f" Dichiarala prima dell'uso, ad es. «{parola} è una cosa.» "
+                f"oppure «{parola} è una stanza.».")
+    return msg
+
+# ------------------------------------------------------------------------------
+# [1.3.0] DIAGNOSTICA PER CHI SCRIVE (G-2, L-9)
+# ------------------------------------------------------------------------------
+# Fino alla 1.2.2 un errore di sintassi elencava i nomi interni di Lark
+# ('Mi aspettavo: E', 'LPAR, VARIABILE, __ANON_2, CÀPITA'), la diagnosi
+# «entità sconosciuta» scattava su qualunque parola imprevista ('«rossa» non è
+# mai stata dichiarata' per 'La mela è molto rossa.') e la compilazione si
+# fermava al primo errore. Qui: nomi dei simboli attesi in italiano, diagnosi
+# dell'entità solo dove la grammatica si aspetta davvero un nome, suggerimenti
+# per gli sbagli più comuni, e recupero: si salta la frase sbagliata e si
+# continua, così un file mostra tutti i suoi errori in una volta.
+
+_DESCRIZIONI_ATTESI = {
+    "ENTITA": "il nome di una stanza o di un oggetto dichiarati",
+    "VARIABILE": "il nome di uno stato o di un contatore",
+    "PROPRIETA": "una proprietà (una sola parola)",
+    "NUMERO": "un numero",
+    "NUMERO_PAROLA": "un numero in lettere",
+    "_L_APOSTROFO": "«L'autore»",
+    "NUMERO_PAROLA": "un numero",
+    "TESTO_QUOTATO": "un testo fra virgolette",
+    "VERBO": "un verbo",
+    "VERBO_MULTI": "un comando di più parole",
+    "DIREZIONE": "una direzione",
+    "PREP_LUOGO": "una preposizione di luogo (in, nel, sul…)",
+    "PREP_AZIONE": "una preposizione (su, con, in, a, da…)",
+    "_PREP_DESCR": "«di», «del», «della»…",
+    "WORD": "una parola",
+}
+_DESCRIZIONI_PUNTEGGIATURA = {".": "il punto finale «.»", ":": "i due punti «:»",
+                              ",": "una virgola «,»"}
+
+
+def descrivi_attesi(attesi, parser=None) -> str:
+    """[1.3.0] I simboli che il parser si aspettava, in italiano."""
+    terminali = {}
+    if parser is not None:
+        try:
+            terminali = {t.name: t for t in parser.terminals}
+        except Exception:
+            terminali = {}
+    voci = set()
+    for nome in attesi or ():
+        nome = str(nome)
+        if nome in PAROLE_CHIAVE_TERMINALI:
+            voci.add(f"«{PAROLE_CHIAVE_TERMINALI[nome]}»")
+        elif nome in _DESCRIZIONI_ATTESI:
+            voci.add(_DESCRIZIONI_ATTESI[nome])
+        elif nome in terminali and type(terminali[nome].pattern).__name__ == "PatternStr":
+            valore = terminali[nome].pattern.value
+            voci.add(_DESCRIZIONI_PUNTEGGIATURA.get(valore, f"«{valore}»"))
+        else:
+            voci.add(nome)
+    return ", ".join(sorted(voci))
+
+
+def _fine_frasi(testo: str) -> list:
+    """[1.3.0] Le posizioni subito dopo ogni punto che chiude una frase (fuori
+    da virgolette e commenti)."""
+    fini, dentro, commento, i = [], False, False, 0
+    while i < len(testo):
+        c = testo[i]
+        if commento:
+            if c == "\n":
+                commento = False
+        elif dentro:
+            if c == "\\":
+                i += 1
+            elif c == '"':
+                dentro = False
+        elif c == '"':
+            dentro = True
+        elif c == "#":
+            commento = True
+        elif c in ".!?;":
+            # '!', '?' e ';' non chiudono una frase FAVELLA, ma fuori dalle
+            # virgolette sono sempre un errore: per il recupero valgono come fine
+            # frase, così l'errore non si trascina dietro la frase successiva.
+            fini.append(i + 1)
+        i += 1
+    return fini
+
+
+def _posizione_errore(errore, testo: str) -> int:
+    pos = getattr(errore, "pos_in_stream", None)
+    if pos is None:
+        token = getattr(errore, "token", None)
+        pos = getattr(token, "start_pos", None)
+    return len(testo) if pos is None else pos
+
+
+def _frase_attorno(testo: str, pos: int):
+    fini = _fine_frasi(testo)
+    inizio = max([f for f in fini if f <= pos], default=0)
+    fine = min([f for f in fini if f > pos], default=len(testo))
+    return inizio, fine
+
+
+def analizza_con_recupero(parser, testo: str, massimo: int = 20):
+    """[1.3.0] Analizza il sorgente; a ogni errore di sintassi lo annota, svuota
+    la frase che lo contiene (spazi al posto dei caratteri, così righe e colonne
+    restano quelle vere) e riprova. Restituisce (albero, errori): l'albero è
+    None se c'è almeno un errore."""
+    errori, lavoro = [], testo
+    while True:
+        try:
+            albero = parser.parse(lavoro)
+            return (albero if not errori else None), errori
+        except UnexpectedInput as e:
+            errori.append(e)
+            if len(errori) >= massimo:
+                return None, errori
+            inizio, fine = _frase_attorno(lavoro, _posizione_errore(e, lavoro))
+            svuotato = re.sub(r"[^\n]", " ", lavoro[inizio:fine])
+            nuovo = lavoro[:inizio] + svuotato + lavoro[fine:]
+            if nuovo == lavoro or not _RE_COMMENTO.sub("", nuovo).strip():
+                return None, errori
+            lavoro = nuovo
+
+
+def _a_inizio_frase(testo: str, pos: int) -> bool:
+    """Vero se la posizione cade nelle prime due parole della sua frase."""
+    inizio, _ = _frase_attorno(testo, pos)
+    return len(testo[inizio:pos].split()) <= 1
+
+
+def diagnosi_errore(testo, errore, simboli, parser=None):
+    """[1.3.0] (titolo, messaggio, codice) per un errore di sintassi."""
+    attesi = set(getattr(errore, "expected", None) or getattr(errore, "allowed", None) or ())
+    pos = _posizione_errore(errore, testo)
+    if simboli is not None and ("ENTITA" in attesi or _a_inizio_frase(testo, pos)):
+        diagnosi = diagnostica_entita_sconosciuta(testo, errore, simboli)
+        if diagnosi:
+            return "Errore: entità non dichiarata", diagnosi, "entita-sconosciuta"
+    messaggio = "Errore di sintassi."
+    if attesi:
+        messaggio += f" Mi aspettavo: {descrivi_attesi(attesi, parser)}."
+    for consiglio in _consigli(testo, pos, attesi, errore):
+        messaggio += f" {consiglio}"
+    return "ERRORE DI SINTASSI FAVELLA", messaggio, "sintassi"
+
+
+def _consigli(testo, pos, attesi, errore):
+    """[1.3.0] Suggerimenti per gli sbagli più comuni."""
+    dopo = testo[pos:pos + 40]
+    prima = testo[:pos].rstrip()[-2:]
+    parola = (re.match(r"[\wÀ-ÿ']+", dopo) or [""])[0].lower() if dopo else ""
+    nomi_attesi = {PAROLE_CHIAVE_TERMINALI.get(str(a), str(a)) for a in attesi}
+    consigli = []
+    if parola == "o" and "oppure" in nomi_attesi:
+        consigli.append("Per dire «oppure» scrivi «oppure»: da sola «o» vuol dire ovest.")
+    if dopo[:1] in ("!", "?", ";"):
+        consigli.append("Ogni frase finisce con il punto «.».")
+    inizio_frase, fine_frase = _frase_attorno(testo, pos)
+    if prima.endswith('."') or testo[inizio_frase:fine_frase].rstrip().endswith('."'):
+        consigli.append('Il punto finale va fuori dalle virgolette: dire "…". e non dire "….".')
+    token = getattr(errore, "token", None)
+    if (any(str(a) == "DOT" for a in attesi) and token is not None
+            and (getattr(token, "type", "") in ("PROPRIETA", "WORD", "VERBO")
+                 or str(getattr(token, "value", "")).lower() == "e")
+            and re.search(r"\b(?:è|sono)\s+[\wÀ-ÿ']+\s*$", testo[max(0, pos - 60):pos])):
+        consigli.append("Una proprietà è una sola parola: per dirne due scrivi due "
+                        "frasi («La mela è rossa. La mela è lucida.»).")
+    return consigli
+
+
+# ==============================================================================
+# 2. IL TRANSFORMER DELL'AST
+# ==============================================================================
+
+_NUMERI_IN_LETTERE = {
+    "zero": 0, "due": 2, "tre": 3, "quattro": 4, "cinque": 5, "sei": 6, "sette": 7,
+    "otto": 8, "nove": 9, "dieci": 10, "undici": 11, "dodici": 12, "tredici": 13,
+    "quattordici": 14, "quindici": 15, "sedici": 16, "diciassette": 17, "diciotto": 18,
+    "diciannove": 19, "venti": 20, "trenta": 30, "quaranta": 40, "cinquanta": 50,
+    "sessanta": 60, "settanta": 70, "ottanta": 80, "novanta": 90, "cento": 100,
+}
+
+
+def _unescape(m):
+    c = m.group(1)
+    return {"n": "\n", "[": QUADRA_APERTA, "]": QUADRA_CHIUSA}.get(c, c)
+
+
+class FaseRegola:
+    """[1.3.0 / M-9] La fase di una regola: 'invece', 'prima' o 'dopo'."""
+    __slots__ = ("nome",)
+
+    def __init__(self, nome):
+        self.nome = nome
+
+
+class Categoria:
+    """[1.3.0 / M-9] Bersaglio per categoria: 'qualcosa' (radice "") o
+    'qualcosa di pesante' (la radice della proprietà)."""
+    __slots__ = ("radice", "grezzo")
+
+    def __init__(self, radice, grezzo):
+        self.radice = radice
+        self.grezzo = grezzo
+
+
+class RamoAltrimenti:
+    """[1.3.0 / M-9] Il ramo 'altrimenti' di una regola."""
+    __slots__ = ("risposta", "conseguenze")
+
+    def __init__(self, risposta, conseguenze):
+        self.risposta = risposta
+        self.conseguenze = conseguenze
+
+
+class RegolaTarget:
+    """[Livello 5] Bersaglio di una regola 'Invece di', prodotto dalla sottoregola
+    'regola_target'. Incapsula l'oggetto bersaglio (grezzo) e l'eventuale secondo
+    oggetto con la sua preposizione. Esiste per distinguere — nel transformer di
+    def_regola — il bersaglio (ora opzionale) dalla stringa di risposta: senza
+    questo wrapper, con bersaglio assente, le due stringhe sarebbero confondibili."""
+    __slots__ = ("bersaglio", "preposizione", "secondario")
+
+    def __init__(self, bersaglio, preposizione=None, secondario=None):
+        self.bersaglio = bersaglio
+        self.preposizione = preposizione
+        self.secondario = secondario
+
+_VOLUTO = object()     # [1.4.1] il marcatore «(voluto)» di un sinonimo (vedi def_sinonimo)
+
+
+def _avviso_cambio_di_significato(sinonimo, azioni, canonico):
+    """[1.4.1] L'avviso di una parola del motore che un sinonimo d'autore rimappa.
+    Dice che cosa FACEVA la parola: «fa come 'attacca'», se il suo primo nome è
+    un altro verbo; «è l'azione 'colpire'», se il suo primo nome è la parola stessa
+    (prima diceva «fa come 'colpisci'» per '"colpisci" è come attacca.', cioè il verbo
+    che si stava rimappando). Chiude con come dichiarare che il cambio è voluto."""
+    parti = []
+    for a in sorted(azioni):
+        primo = LIBRERIA_AZIONI[a].nomi[0]
+        parti.append(f"è l'azione '{a}'" if primo == sinonimo else f"fa come '{primo}'")
+    return (f"'{sinonimo}' è già un verbo del motore ({' e '.join(parti)}): con questa "
+            f"dichiarazione farà invece come '{canonico}'. Se è voluto, scrivi "
+            f"'\"{sinonimo}\" è come {canonico} (voluto).' e l'avviso sparisce.")
+
+
+@v_args(inline=True) # Passa i figli dei nodi come argomenti singoli ai metodi
+class FavellaTransformer(Transformer):
+    """
+    Visita l'albero sintattico generato da Lark e popola l'oggetto Mondo.
+    """
+    def __init__(self, coppie_direzioni=()):
+        super().__init__()
+        self.mondo = Mondo()
+        self.errori = []        # Errori bloccanti: la compilazione fallisce
+        self.warnings = []      # Avvisi non bloccanti: la compilazione prosegue
+        self.start_dichiarato_raw = None  # Nome grezzo della stanza di partenza
+        # [Livello 5b] Pending dei dialoghi, risolti in valida_post (le
+        # dichiarazioni possono precedere quella del personaggio):
+        #   _dialogo_inizio: npc_id -> etichetta del nodo d'ingresso;
+        #   _nodo_speaker:   etichetta del nodo -> npc_id che vi parla (per validare).
+        self._dialogo_inizio = {}
+        self._nodo_speaker = {}
+        # [1.2.2] etichetta del nodo -> TUTTI i personaggi che vi hanno una
+        # battuta ({id: nome grezzo}, in ordine di scrittura). _nodo_speaker
+        # ricorda solo l'ultimo e non poteva vedere due personaggi sullo stesso
+        # nodo: vedi il controllo in valida_post.
+        self._nodo_parlanti = {}
+        # [0.17.0 — robustezza d'ordine] Operazioni che RISOLVONO entità per nome
+        # (posizioni, proprietà, descrizioni) e la validazione delle conseguenze
+        # vengono DIFFERITE a valida_post, così l'ordine delle frasi non conta più:
+        # 'La gemma è nella scatola.' funziona anche PRIMA di 'La scatola è un
+        # contenitore.'. Ogni voce conserva l'ordine sorgente (contenuto/varianti).
+        self._pending_posizioni = []     # (ogg_grezzo, prep, luogo_grezzo)
+        # [1.3.0 / G-3] Per riconoscere dichiarazioni contraddittorie: dove è
+        # stato collocato ogni oggetto, i valori iniziali di stati e contatori,
+        # le stanze dichiarate con 'è una stanza' (le altre nascono da 'collega').
+        self._luogo_iniziale = {}
+        self._descritte = set()
+        self._valori_iniziali = {}
+        self._stanze_dichiarate = set()
+        self._pending_proprieta = []     # (ogg_grezzo, proprieta_grezzo)
+        self._pending_descrizioni = []   # (nome_grezzo, condizione|None, testo)
+        self._pending_posti = []         # [1.1.0] (nome_grezzo, testo)
+        self._pending_conseguenze = []   # liste di Conseguenza da validare
+        # [0.34.0 / Tema 3] Coppie (lhs, rhs, raw_lhs, raw_rhs, contesto) dei
+        # confronti/copie stato↔stato, validate in valida_post (differito: lo
+        # stato di destra può essere dichiarato dopo). Si verifica che ENTRAMBI
+        # i nomi siano dello stesso TIPO (stato vs contatore): un confronto/copia
+        # stato↔contatore non ha senso ed è un errore d'autore gentile.
+        self._pending_var_coppie = []
+        self._pending_regole_target = [] # (id_ogg1, ogg1_grezzo, id_ogg2, ogg2_grezzo)
+        self._pending_sinonimi = []      # [1.2.0] (sinonimo, bersaglio) verso verbi d'autore
+        self._pending_inventario_iniziale = []  # [0.19.0/A8] ogg_grezzo da mettere in inventario all'avvio
+        # [1.3.0 / M-8, M-10] Oggetti di scena, presenze in più stanze, oggetti
+        # tenuti dai personaggi, argomenti di conversazione (tutti differiti).
+        self._pending_di_scena = []      # ogg_grezzo
+        self._pending_anche_in = []      # (ogg_grezzo, luogo_grezzo)
+        self._pending_png_ha = []        # (png_grezzo, ogg_grezzo)
+        self._pending_argomenti = []     # (png_grezzo, Argomento)
+        # [Livello 4 / L1] Le direzioni personalizzate sono raccolte in Passata 1
+        # e pre-popolate qui, così l'auto-ritorno delle connessioni non dipende
+        # dall'ordine in cui compaiono dichiarazione e 'collega'.
+        for dir_a, dir_b in coppie_direzioni:
+            self.mondo.dichiara_direzione_opposta(dir_a, dir_b)
+
+    # --- Nodi Entità e Testo ---
+
+    def ENTITA(self, token):
+        # Il terminale ENTITA è un singolo token risolto dalla symbol-table; il
+        # suo valore preserva il nome ORIGINALE dell'autore (articolo e
+        # maiuscole) per i nomi visualizzati. La normalizzazione a ID avviene
+        # nei metodi di regola tramite normalizza_nome().
+        return token.value
+
+    def PROPRIETA(self, token):
+        # Aggettivo di stato coniato (monoparola).
+        return token.value
+
+    def VARIABILE(self, token):
+        # Nome di uno 'stato' globale (Livello 3); preserva il grezzo, la
+        # normalizzazione a ID avviene nei metodi di regola.
+        return token.value
+
+    def NUMERO(self, token):
+        # Intero dei contatori (Livello 3).
+        return int(token.value)
+
+    def NUMERO_PAROLA(self, token):
+        # [1.3.0 / L-1] 'tre' -> 3.
+        return _NUMERI_IN_LETTERE[token.value.lower()]
+
+    def TESTO_QUOTATO(self, token):
+        # Rimuove le virgolette iniziali e finali e applica l'unescape (\" -> ", \\ -> \)
+        # [1.3.0 / M-6] \n va a capo; \[ e \] sono parentesi quadre letterali
+        # (non segnaposto): arrivano al motore come caratteri riservati.
+        contenuto = token.value[1:-1]
+        return re.sub(r'\\(.)', _unescape, contenuto)
+        
+    def VERBO(self, token):
+        return token.value.lower()
+
+    def VERBO_MULTI(self, token):
+        # [0.18.0 / B6] Verbo personalizzato multi-parola: normalizza gli spazi
+        # interni a uno singolo, così combacia con l'id dichiarato e con il
+        # riconoscimento a runtime ('fai   scattare' -> 'fai scattare').
+        return " ".join(token.value.lower().split())
+
+    def DIREZIONE(self, token):
+        return token.value.lower()
+
+    def PREP_AZIONE(self, token):
+        return token.value.lower()
+
+    # --- Dichiarazioni Semplici ---
+
+    def def_stanza(self, nome_grezzo):
+        id_stanza = normalizza_nome(nome_grezzo)
+        self._stanze_dichiarate.add(id_stanza)
+        stanza = self.mondo.trova_stanza(id_stanza)
+        if not stanza:
+            stanza = Stanza(id_stanza)
+            stanza.nome_visualizzato = nome_grezzo
+            self.mondo.aggiungi_stanza(stanza)
+        return None
+
+    def def_oggetto(self, nome_grezzo):
+        id_oggetto = normalizza_nome(nome_grezzo)
+        oggetto = self.mondo.trova_oggetto(id_oggetto)
+        if not oggetto:
+            oggetto = Oggetto(id_oggetto)
+            oggetto.nome_visualizzato = nome_grezzo
+            self.mondo.aggiungi_oggetto(oggetto)
+        return None
+
+    def _crea_o_trova_oggetto(self, nome_grezzo):
+        """Restituisce l'oggetto con quel nome, creandolo se non esiste ancora."""
+        id_oggetto = normalizza_nome(nome_grezzo)
+        oggetto = self.mondo.trova_oggetto(id_oggetto)
+        if not oggetto:
+            oggetto = Oggetto(id_oggetto)
+            oggetto.nome_visualizzato = nome_grezzo
+            self.mondo.aggiungi_oggetto(oggetto)
+        return oggetto
+
+    def def_contenitore(self, nome_grezzo):
+        # [Livello 4 / M1] 'X è un contenitore.': è un oggetto che può contenere
+        # altri oggetti al suo interno (visibili solo se aperto).
+        self._crea_o_trova_oggetto(nome_grezzo).is_contenitore = True
+        return None
+
+    def def_supporto(self, nome_grezzo):
+        # [Livello 4 / M1] 'X è un supporto.': un oggetto su cui se ne posano altri
+        # (sempre visibili, senza apertura).
+        self._crea_o_trova_oggetto(nome_grezzo).is_supporto = True
+        return None
+
+    def def_personaggio(self, nome_grezzo):
+        # [Livello 5b] 'X è un personaggio.': un NPC con cui il giocatore può
+        # 'parlare'. È un oggetto speciale (vive in una stanza, è raggiungibile).
+        self._crea_o_trova_oggetto(nome_grezzo).is_personaggio = True
+        return None
+
+    def def_illumina(self, nome_grezzo):
+        # [0.24.0 / A4] 'La torcia illumina.': l'oggetto è una fonte di luce. È una
+        # capacità additiva (come 'dà N spazi'); crea-su-riferimento per non
+        # dipendere dall'ordine ('illumina' può precedere 'è una cosa').
+        self._crea_o_trova_oggetto(nome_grezzo).illumina = True
+        return None
+
+    # --- Dialoghi (Livello 5b) ---
+
+    def def_dialogo_inizio(self, npc_grezzo, etichetta):
+        # 'Il dialogo del mercante comincia con "saluto".' — registra il nodo
+        # d'ingresso. La validazione (l'NPC esiste, è un personaggio, il nodo è
+        # definito) è rimandata a valida_post: le dichiarazioni possono essere
+        # in qualsiasi ordine.
+        self._dialogo_inizio[normalizza_nome(npc_grezzo)] = etichetta
+        return None
+
+    def def_battuta(self, npc_grezzo, etichetta, battuta, *resto):
+        # 'Il mercante al nodo "saluto" dice "Benvenuto!".' — la battuta dell'NPC
+        # al nodo. I nodi sono GLOBALI (etichetta unica nel gioco); il nome dell'NPC
+        # serve alla leggibilità e alla validazione (registrato in _nodo_speaker).
+        # [0.33.0 / Tema 4b] Una clausola 'se' opzionale rende la battuta
+        # CONDIZIONALE: 'resto' contiene allora l'oggetto Condizione. Le battute
+        # condizionali si accumulano (prima vera vince a render-time); quelle
+        # incondizionate fanno da fallback (l'ultima vince, come le descrizioni).
+        condizione = next((a for a in resto if isinstance(a, Condizione)), None)
+        nodo = self.mondo.nodo_dialogo_di(etichetta)
+        if condizione is None:
+            nodo.battuta = battuta
+        else:
+            nodo.battute_condizionali.append((condizione, battuta))
+        self._nodo_speaker[etichetta] = normalizza_nome(npc_grezzo)
+        self._nodo_parlanti.setdefault(etichetta, {}).setdefault(
+            normalizza_nome(npc_grezzo), str(npc_grezzo))
+        return None
+
+    def esito_conduce(self, dest_etichetta):
+        # [0.10.2] Esito 'conduce al nodo "X"': transizione a un altro nodo.
+        return ("conduce", dest_etichetta)
+
+    def esito_chiude(self):
+        # Esito 'chiude il dialogo': termina la conversazione.
+        return ("chiude", None)
+
+    def def_opzione(self, etichetta, testo_opzione, *resto):
+        # 'Al nodo "saluto" l'opzione "Chi sei?" [se CONDIZIONE] ESITO [e adesso ...].'
+        # Gli argomenti opzionali si distinguono per TIPO: una Condizione [0.10.4],
+        # l'esito (tupla prodotta da opzione_esito) e le Conseguenze in coda [0.10.3].
+        condizione = None
+        esito = None
+        conseguenze = []
+        for a in resto:
+            if isinstance(a, Condizione):
+                condizione = a
+            elif isinstance(a, tuple):
+                esito = a              # ("conduce"|"chiude", destinazione)
+            elif isinstance(a, Conseguenza):
+                conseguenze.append(a)
+        self._pending_conseguenze.append(conseguenze)
+        tipo, destinazione = esito
+        if tipo == "chiude":
+            opz = OpzioneDialogo(testo_opzione, chiude=True,
+                                 conseguenze=conseguenze, condizione=condizione)
+        else:
+            opz = OpzioneDialogo(testo_opzione, destinazione=destinazione,
+                                 conseguenze=conseguenze, condizione=condizione)
+        self.mondo.nodo_dialogo_di(etichetta).opzioni.append(opz)
+        return None
+
+    def _registra_verbo(self, testo_quotato, intransitivo):
+        # [Livello 4 / M1] '"spingi" è un comando.'. [0.18.0 / B6] Ammesso anche un
+        # comando MULTI-PAROLA ('"fai scattare" è un comando.'). [0.19.0 / A7] Un
+        # comando può essere INTRANSITIVO ('senza oggetto'): non richiede un
+        # bersaglio, lo gestisce una regola globale 'Invece di [verbo]: …'.
+        # Normalizziamo gli spazi interni a uno singolo.
+        verbo = " ".join(testo_quotato.lower().split())
+        if not verbo:
+            self.warnings.append("Comando vuoto ignorato.")
+            return None
+        self.mondo.dichiara_verbo(verbo, intransitivo=intransitivo)
+        return None
+
+    def verbo_con_oggetto(self, testo_quotato):
+        return self._registra_verbo(testo_quotato, intransitivo=False)
+
+    def verbo_senza_oggetto(self, testo_quotato):
+        return self._registra_verbo(testo_quotato, intransitivo=True)
+
+    def voluto(self, *_):
+        """[1.4.1] Il marcatore «(voluto)» di un sinonimo."""
+        return _VOLUTO
+
+    def def_sinonimo(self, sinonimo_testo, verbo_canonico, voluto=None):
+        # [0.26.0 / A6] '"ghermisci" è come prendi.': la parola-nuova (quotata)
+        # rimappa al verbo di libreria 'verbo_canonico'. Il verbo bersaglio dev'essere
+        # noto al motore, altrimenti il sinonimo è morto (warning non bloccante).
+        sinonimo = " ".join(sinonimo_testo.lower().split())
+        # VERBO arriva già minuscolo; la forma fra virgolette (1.2.0) va normalizzata.
+        canonico = " ".join(str(verbo_canonico).lower().split())
+        if not sinonimo:
+            self.warnings.append("Sinonimo di verbo vuoto ignorato.")
+            return None
+        if canonico not in VERBI_VALIDI:
+            # [1.2.0] Può essere un verbo dichiarato dall'autore, magari più avanti
+            # nel sorgente: si decide in valida_post.
+            self._pending_sinonimi.append((sinonimo, canonico, voluto is _VOLUTO))
+            return None
+        if sinonimo in VERBI_VALIDI:
+            # [1.2.2] Due casi, che fino alla 1.2.1 ricevevano lo stesso avviso
+            # («superflua»): se la parola è già nella stessa azione del bersaglio
+            # la dichiarazione non serve davvero (le regole sul verbo principale
+            # valgono per tutti i sinonimi); se è in un'altra azione, la
+            # dichiarazione le CAMBIA significato, e va detto.
+            azioni_sinonimo = _AZIONI_DI_VERBO.get(sinonimo, set())
+            azioni_bersaglio = _AZIONI_DI_VERBO.get(canonico, set())
+            if azioni_sinonimo & azioni_bersaglio:
+                principale = LIBRERIA_AZIONI[sorted(azioni_sinonimo & azioni_bersaglio)[0]].nomi[0]
+                self.warnings.append(
+                    f"'{sinonimo}' è già un sinonimo di '{principale}' nella libreria: "
+                    f"le regole 'Invece di {principale} …' valgono anche per "
+                    f"'{sinonimo}', quindi la dichiarazione non serve.")
+            elif voluto is not _VOLUTO:
+                self.warnings.append(_avviso_cambio_di_significato(sinonimo, azioni_sinonimo, canonico))
+        self.mondo.dichiara_sinonimo(sinonimo, canonico)
+        return None
+
+    def _applica_sinonimo_differito(self, sinonimo, canonico, voluto=False):
+        """[1.2.0] Sinonimo il cui bersaglio non è un verbo di libreria: vale se
+        il bersaglio è un comando dichiarato dall'autore, altrimenti è morto."""
+        if canonico in self.mondo.verbi_personalizzati:
+            if sinonimo in self.mondo.verbi_personalizzati:
+                self.warnings.append(
+                    f"'{sinonimo}' è dichiarato sia come comando sia come sinonimo di "
+                    f"'{canonico}': vale il sinonimo.")
+            elif sinonimo in _AZIONI_DI_VERBO and not voluto:
+                # [1.2.2] Come in def_sinonimo: una parola di libreria che diventa
+                # sinonimo di un comando d'autore cambia significato.
+                self.warnings.append(
+                    _avviso_cambio_di_significato(sinonimo, _AZIONI_DI_VERBO[sinonimo], canonico))
+            self.mondo.dichiara_sinonimo(sinonimo, canonico)
+            return
+        # [0.30.0 / A4] Caso speciale: il bersaglio è una DIREZIONE
+        # ('"sinistra" è come est.'). 'è come' rimappa solo i VERBI; per le
+        # direzioni l'idioma corretto — e più pulito — è dichiarare una coppia
+        # di opposte. Lo si dice esplicitamente invece del generico
+        # 'non è un verbo noto', che disorienterebbe l'autore.
+        forme_direzioni = {f for varianti in DIREZIONI_BASE.values() for f in varianti}
+        forme_direzioni |= set(DIREZIONI_BASE.keys())
+        if canonico in forme_direzioni:
+            self.warnings.append(
+                f"Sinonimo '{sinonimo}' è come '{canonico}', ma '{canonico}' è una "
+                f"DIREZIONE, non un verbo: 'è come' rimappa solo i verbi e il "
+                f"sinonimo non farà nulla. Per dare un nome a una direzione, "
+                f"dichiara una coppia di opposte, ad es. "
+                f"'{sinonimo.capitalize()} e <opposta> sono direzioni opposte.'."
+            )
+            return
+        self.warnings.append(
+            f"Sinonimo '{sinonimo}' è come '{canonico}', ma '{canonico}' non è "
+            f"un verbo noto al motore né un comando dichiarato: il sinonimo non "
+            f"farà nulla. Usa un verbo di libreria (es. prendi, esamina, usa, "
+            f"apri, vai) o dichiara prima il comando ('\"{canonico}\" è un comando.')."
+        )
+
+    # [0.22.0 / A2] Valore di una descrizione: stringa singola o più varianti.
+    def descr_singola(self, testo):
+        return testo
+
+    def descr_casuale(self, *testi):
+        return VariantiDescrizione(testi, "casuale")
+
+    def descr_sequenza(self, *testi):
+        return VariantiDescrizione(testi, "sequenza")
+
+    def def_descrizione(self, *tokens):
+        # tokens (le preposizioni articolate sono filtrate da Lark): l'entità è
+        # sempre il primo, il valore-descrizione l'ultimo; [Livello 5] una clausola
+        # 'se' inserisce in mezzo un oggetto Condizione. [0.22.0/A2] il valore può
+        # essere una stringa o una VariantiDescrizione (entrambi gestiti a valle).
+        nome_grezzo = tokens[0]
+        testo = tokens[-1]
+        condizione = None
+        for t in tokens[1:-1]:
+            if isinstance(t, Condizione):
+                condizione = t
+                break
+        # [0.17.0] Differita a valida_post: l'entità può essere dichiarata dopo.
+        self._pending_descrizioni.append((nome_grezzo, condizione, testo))
+        return None
+
+    def def_posto(self, nome_grezzo, testo):
+        # [1.1.0] 'Il posto della mappa è "…".' — differita a valida_post come le
+        # descrizioni: l'oggetto e la sua posizione possono venire dichiarati dopo.
+        self._pending_posti.append((nome_grezzo, testo))
+        return None
+
+    def _applica_posto(self, nome_grezzo, testo):
+        id_ogg = normalizza_nome(nome_grezzo)
+        oggetto = self.mondo.trova_oggetto(id_ogg)
+        if oggetto is None:
+            if self.mondo.trova_stanza(id_ogg):
+                self.errori.append(
+                    f"Il posto si dichiara per un oggetto, non per una stanza: "
+                    f"'{nome_grezzo}' è una stanza (usa 'La descrizione di …').")
+            else:
+                self.errori.append(f"Posto per oggetto inesistente: '{nome_grezzo}'")
+            return
+        if oggetto.posto is not None:
+            self.warnings.append(
+                f"'{nome_grezzo}' ha più di un posto dichiarato: vale l'ultimo.")
+        oggetto.posto = testo
+
+    def _applica_descrizione(self, nome_grezzo, condizione, testo):
+        id_entita = normalizza_nome(nome_grezzo)
+        bersaglio = self.mondo.trova_stanza(id_entita) or self.mondo.trova_oggetto(id_entita)
+        if bersaglio is None:
+            self.errori.append(f"Descrizione per entità inesistente: '{nome_grezzo}'")
+            return
+
+        if condizione is None:
+            # Descrizione di base (fallback se nessuna condizionale è vera).
+            # [1.3.0 / G-3] Due descrizioni di base diverse (tipico di due moduli
+            # che definiscono la stessa cosa): vale l'ultima, ma lo si dice.
+            if (id_entita in self._descritte and descrizione_display(bersaglio.descrizione)
+                    != descrizione_display(testo)):
+                self.warnings.append(
+                    f"'{nome_grezzo}' ha due descrizioni di base diverse: vale "
+                    f"l'ultima («{descrizione_display(testo)[:40]}…»).")
+            self._descritte.add(id_entita)
+            bersaglio.descrizione = testo
+        else:
+            # [Livello 5] Variante condizionale, valutata in ordine a runtime.
+            bersaglio.descrizioni_condizionali.append((condizione, testo))
+
+    def def_posizione(self, ogg_grezzo, prep, luogo_grezzo):
+        # [0.17.0] Differita a valida_post (vedi _applica_posizione): la
+        # destinazione può essere dichiarata DOPO la posizione.
+        self._pending_posizioni.append((ogg_grezzo, prep, luogo_grezzo))
+        return None
+
+    def _applica_posizione(self, ogg_grezzo, prep, luogo_grezzo):
+        id_ogg = normalizza_nome(ogg_grezzo)
+        id_luogo = normalizza_nome(luogo_grezzo)
+        oggetto = self.mondo.trova_oggetto(id_ogg)
+        stanza = self.mondo.trova_stanza(id_luogo)
+        contenitore = self.mondo.trova_oggetto(id_luogo)
+
+        if oggetto and (stanza or contenitore):
+            # [1.3.0 / G-3] Un oggetto collocato in due posti diversi compariva
+            # in entrambe le stanze ma si poteva prendere solo nell'ultima.
+            precedente = self._luogo_iniziale.get(id_ogg)
+            if precedente is not None and precedente[0] != id_luogo:
+                self.errori.append(
+                    f"'{ogg_grezzo}' è collocato in due posti: '{precedente[1]}' e "
+                    f"'{luogo_grezzo}'. Un oggetto comincia in un posto solo (per "
+                    f"qualcosa che si vede da più stanze scrivi «… è anche in …»).")
+                return
+            self._luogo_iniziale[id_ogg] = (id_luogo, luogo_grezzo)
+        if not oggetto:
+            self.errori.append(f"Oggetto inesistente '{ogg_grezzo}' da posizionare")
+        elif stanza:
+            oggetto.posizione = id_luogo
+            stanza.oggetti[id_ogg] = oggetto
+        elif contenitore and (contenitore.is_contenitore or contenitore.is_supporto):
+            # [Livello 4 / M1] Collocazione iniziale dentro/su un contenitore o
+            # supporto: l'oggetto "vive" nel contenitore, che a sua volta è in una
+            # stanza. La visibilità a runtime risolve la catena (vedi 0.8.5).
+            oggetto.posizione = id_luogo
+            contenitore.contenuto.add(id_ogg)
+        elif contenitore:
+            self.errori.append(
+                f"'{luogo_grezzo}' non è un contenitore né un supporto: non puoi "
+                f"collocarci dentro '{ogg_grezzo}'."
+            )
+        else:
+            self.errori.append(f"Stanza inesistente '{luogo_grezzo}' per posizionare '{ogg_grezzo}'")
+
+    def def_proprieta(self, ogg_grezzo, proprieta_grezzo):
+        # [Livello 2.5] 'è prendibile' è confluito qui come PROPRIETÀ SPECIALE:
+        # avere una regola def_prendibile separata creava l'unica vera collisione
+        # lessicale residua (`è prendibile` = keyword vs proprietà). Trattando
+        # 'prendibile' come proprietà speciale, la grammatica diventa 0-ambigua.
+        # [0.17.0] Differita a valida_post: l'oggetto può essere dichiarato dopo.
+        self._pending_proprieta.append((ogg_grezzo, proprieta_grezzo))
+        return None
+
+    def _applica_proprieta(self, ogg_grezzo, proprieta_grezzo):
+        id_ogg = normalizza_nome(ogg_grezzo)
+        proprieta = normalizza_nome(proprieta_grezzo)
+        oggetto = self.mondo.trova_oggetto(id_ogg)
+        if not oggetto:
+            # [0.24.0 / A4] 'La cantina è buia.': il buio è una proprietà speciale
+            # della STANZA (le stanze non hanno altre proprietà di stato). La
+            # riconosciamo per radice ('bui-' → buia/buio/buie); ogni altra
+            # proprietà su una stanza resta un errore.
+            stanza = self.mondo.trova_stanza(id_ogg)
+            if stanza is not None and radice_proprieta(proprieta) == radice_proprieta("buia"):
+                stanza.buia = True
+                return
+            self.errori.append(f"Proprietà '{proprieta_grezzo}' per oggetto inesistente: '{ogg_grezzo}'")
+            return
+        if proprieta == "prendibile":
+            oggetto.prendibile = True
+        else:
+            oggetto.aggiungi_proprieta(proprieta)
+
+    def def_stato(self, var_grezzo):
+        # [Livello 3] Dichiarazione di uno 'stato' globale (valore iniziale None).
+        self.mondo.dichiara_variabile(normalizza_nome(var_grezzo))
+        return None
+
+    def def_stato_valore(self, var_grezzo, valore_grezzo):
+        # [Livello 3] Valore iniziale di uno 'stato' a livello di dichiarazione.
+        nome = normalizza_nome(var_grezzo)
+        self.mondo.dichiara_variabile(nome)  # idempotente, per sicurezza
+        self._avvisa_valore_doppio(nome, var_grezzo, normalizza_nome(valore_grezzo))
+        self.mondo.variabili[nome] = normalizza_nome(valore_grezzo)
+        return None
+
+    def _avvisa_valore_doppio(self, nome, grezzo, valore):
+        """[1.3.0 / G-3] Due valori iniziali diversi per lo stesso stato o
+        contatore: vale l'ultimo, ma lo si dice."""
+        if nome in self._valori_iniziali and self._valori_iniziali[nome] != valore:
+            self.warnings.append(
+                f"'{grezzo}' ha due valori iniziali diversi ({self._valori_iniziali[nome]} "
+                f"e {valore}): vale l'ultimo.")
+        self._valori_iniziali[nome] = valore
+
+    def def_contatore(self, var_grezzo):
+        # [Livello 3] Dichiarazione di un contatore numerico (valore iniziale 0).
+        self.mondo.dichiara_contatore(normalizza_nome(var_grezzo))
+        return None
+
+    def def_contatore_iniziale(self, var_grezzo, numero):
+        # [0.16.0] Imposta il valore INIZIALE di un contatore ('La forza parte da
+        # 3.'). Order-independent: scriviamo direttamente il valore; una eventuale
+        # 'X è un contatore.' successiva usa setdefault e non lo sovrascrive.
+        nome = normalizza_nome(var_grezzo)
+        self._avvisa_valore_doppio(nome, var_grezzo, numero)
+        self.mondo.variabili[nome] = numero
+        return None
+
+    def def_direzioni(self, dir_a, dir_b):
+        # [Livello 4 / L1] La coppia è già stata raccolta in Passata 1 e applicata
+        # al mondo nel costruttore (vedi __init__): qui niente da fare.
+        return None
+
+    def def_opposti(self, prop_a_grezzo, prop_b_grezzo):
+        # [Livello 3 / M5] Registra una coppia di proprietà mutuamente esclusive.
+        # I nomi delle proprietà sono monoparola; li normalizziamo come gli altri
+        # aggettivi di stato per coerenza (lowercase).
+        prop_a = normalizza_nome(prop_a_grezzo)
+        prop_b = normalizza_nome(prop_b_grezzo)
+        if prop_a == prop_b:
+            self.warnings.append(
+                f"Proprietà dichiarata opposta a se stessa: '{prop_a}'. Ignorata."
+            )
+            return None
+        self.mondo.dichiara_opposte(prop_a, prop_b)
+        return None
+
+    def def_alias(self, ent_grezzo, alias_testo):
+        # [Livello 4] 'La torcia si chiama anche "lanterna".'. Il primo token è
+        # un'ENTITA dichiarata (l'oggetto canonico); il secondo è la stringa
+        # quotata con il nome alternativo. Normalizziamo entrambi come ID. La
+        # verifica che il bersaglio sia un oggetto esistente è in valida_post
+        # (l'alias può comparire prima della dichiarazione dell'oggetto).
+        id_canonico = normalizza_nome(ent_grezzo)
+        alias = normalizza_nome(alias_testo)
+        if not alias:
+            self.warnings.append("Alias vuoto ignorato.")
+            return None
+        if alias == id_canonico:
+            self.warnings.append(
+                f"Alias '{alias}' uguale al nome dell'oggetto: ignorato."
+            )
+            return None
+        self.mondo.dichiara_alias(alias, id_canonico)
+        return None
+
+    def def_connessione(self, sta1_grezzo, direzione, sta2_grezzo):
+        id_sta1 = normalizza_nome(sta1_grezzo)
+        id_sta2 = normalizza_nome(sta2_grezzo)
+        
+        if not self.mondo.trova_stanza(id_sta1):
+            stanza1 = Stanza(id_sta1)
+            stanza1.nome_visualizzato = sta1_grezzo
+            self.mondo.aggiungi_stanza(stanza1)
+        if not self.mondo.trova_stanza(id_sta2):
+            stanza2 = Stanza(id_sta2)
+            stanza2.nome_visualizzato = sta2_grezzo
+            self.mondo.aggiungi_stanza(stanza2)
+        
+        stanza1 = self.mondo.trova_stanza(id_sta1)
+        stanza2 = self.mondo.trova_stanza(id_sta2)
+
+        # [Livello 4 / L1] Direzioni data-driven: canonicalizzazione e auto-ritorno
+        # consultano le mappe del mondo (base + personalizzate), non più dict cablati.
+        direzione_norm = self.mondo.direzione_canonica(direzione) or direzione
+        stanza1.uscite[direzione_norm] = id_sta2
+
+        # Connessione automatica di ritorno, se la direzione ha un'opposta nota.
+        direzione_opposta = self.mondo.opposta_di(direzione_norm)
+        if direzione_opposta:
+            stanza2.uscite[direzione_opposta] = id_sta1
+        return None
+
+    def def_giocatore(self, *tokens):
+        # tokens: (PREP_LUOGO, entita_stanza) — l'ultimo è il nome della stanza.
+        # La stanza potrebbe non essere ancora stata definita a questo punto del
+        # transform: la validazione di esistenza è rimandata a valida_post().
+        nome_grezzo = tokens[-1]
+        self.start_dichiarato_raw = nome_grezzo
+        self.mondo.posizione_iniziale = normalizza_nome(nome_grezzo)
+        return None
+
+    def def_giocatore_capacita(self, numero):
+        # [Livello 7] 'Il giocatore può portare N oggetti.': capacità base di
+        # trasporto. NUMERO è già int. Negativi/assurdi: avviso non bloccante.
+        if numero < 0:
+            self.warnings.append(
+                f"Capacità di trasporto negativa ({numero}) ignorata."
+            )
+            return None
+        self.mondo.capacita_base = numero
+        return None
+
+    def def_giocatore_inventario(self, ent_grezzo):
+        # [0.19.0 / A8] 'Il giocatore ha la torcia.': l'oggetto parte
+        # nell'inventario. L'oggetto potrebbe essere dichiarato DOPO: la
+        # collocazione è differita a valida_post (come le posizioni).
+        self._pending_inventario_iniziale.append(ent_grezzo)
+        return None
+
+    def def_capacita_oggetto(self, ent_grezzo, numero):
+        # [Livello 7] 'Lo zaino dà N spazi.': l'oggetto, mentre è nell'inventario,
+        # aumenta la capacità di N. _crea_o_trova_oggetto tollera l'ordine delle
+        # dichiarazioni (l'oggetto è comunque un'ENTITA dichiarata, vista dallo scanner).
+        if numero < 0:
+            self.warnings.append(
+                f"Bonus di capacità negativo ({numero}) per '{ent_grezzo}' ignorato."
+            )
+            return None
+        self._crea_o_trova_oggetto(ent_grezzo).bonus_capacita = numero
+        return None
+
+
+    # --- [1.3.0 / M-6] Presentazione ---
+
+    def def_titolo(self, testo):
+        self.mondo.titolo = testo
+        return None
+
+    # --- [1.4.0] Pulsanti-verbo: 'I comandi si scrivono.' e le altre due forme ---
+
+    def modo_testo(self):
+        return "testo"
+
+    def modo_pulsanti(self):
+        return "pulsanti"
+
+    def modo_entrambi(self):
+        return "entrambi"
+
+    def def_comandi(self, modo):
+        if getattr(self, "_modo_comandi_dichiarato", None) not in (None, modo):
+            self.warnings.append(
+                "Il modo di dare i comandi è dichiarato due volte in modi diversi "
+                f"('I comandi si …'): vale l'ultima frase ({modo}).")
+        self._modo_comandi_dichiarato = modo
+        self.mondo.modo_comandi = modo
+        return None
+
+    def def_autore(self, testo):
+        self.mondo.autore = testo
+        return None
+
+    def def_prologo(self, testo):
+        self.mondo.prologo = testo
+        return None
+
+    def def_messaggio(self, chiave, testo):
+        chiave_n = " ".join(chiave.lower().split())
+        if chiave_n not in MESSAGGI_MOTORE:
+            self.errori.append(
+                f"Messaggio sconosciuto: \"{chiave}\". Si possono ridefinire: "
+                + ", ".join(f'"{k}"' for k in MESSAGGI_MOTORE) + ".")
+        else:
+            self.mondo.messaggi[chiave_n] = testo
+        return None
+
+    # --- [1.3.0 / M-9] Fasi, categorie, altrimenti ---
+
+    def fase_invece(self, *_):
+        return FaseRegola("invece")
+
+    def fase_prima(self, *_):
+        return FaseRegola("prima")
+
+    def fase_dopo(self, *_):
+        return FaseRegola("dopo")
+
+    def categoria(self, *args):
+        # La categoria conserva la PAROLA ('pesante'): il confronto per radice
+        # si fa in partita (gioco._nella_categoria), l'IDE la riscrive com'era.
+        grezzo = args[0] if args else ""
+        return Categoria(normalizza_nome(grezzo) if grezzo else "", grezzo)
+
+    def ramo_altrimenti(self, *args):
+        risposta = next((a for a in args if isinstance(a, str)), "")
+        conseguenze = [a for a in args if isinstance(a, Conseguenza)]
+        self._pending_conseguenze.append(conseguenze)
+        return RamoAltrimenti(risposta, conseguenze)
+
+    # --- [1.3.0 / M-8, M-10] Scena, topologia, personaggi ---
+
+    def def_di_scena(self, ogg_grezzo):
+        self._pending_di_scena.append(ogg_grezzo)
+        return None
+
+    def def_anche_in(self, ogg_grezzo, prep, luogo_grezzo):
+        self._pending_anche_in.append((ogg_grezzo, luogo_grezzo))
+        return None
+
+    def def_uscite_anonime(self):
+        self.mondo.uscite_solo_visitate = True
+        return None
+
+    def def_png_ha(self, png_grezzo, ogg_grezzo):
+        self._pending_png_ha.append((png_grezzo, ogg_grezzo))
+        return None
+
+    def a_chi(self, *_):
+        return None   # la preposizione davanti al personaggio non conta
+
+    def argomento_chiavi(self, *chiavi):
+        return [" ".join(normalizza_nome(c).split()) for c in chiavi if c.strip()]
+
+    def def_argomento(self, *args):
+        # args: [None], png, [chiavi], [Condizione], [risposta], conseguenze…
+        args = [a for a in args if a is not None]
+        png_grezzo = args[0]
+        chiavi = next(a for a in args if isinstance(a, list))
+        condizione = next((a for a in args if isinstance(a, Condizione)), None)
+        risposta = next((a for a in args[1:] if isinstance(a, str)), "")
+        conseguenze = [a for a in args if isinstance(a, Conseguenza)]
+        self._pending_conseguenze.append(conseguenze)
+        argomento = Argomento(normalizza_nome(png_grezzo), chiavi, risposta,
+                              condizione, conseguenze)
+        self._pending_argomenti.append((png_grezzo, argomento))
+        self.mondo.argomenti.append(argomento)
+        return None
+
+    def _applica_scena_e_personaggi(self):
+        """[1.3.0 / M-8, M-10] Le dichiarazioni differite di scena, presenze
+        multiple, oggetti dei personaggi e argomenti."""
+        m = self.mondo
+        for ogg_grezzo in self._pending_di_scena:
+            oggetto = m.trova_oggetto(normalizza_nome(ogg_grezzo))
+            if oggetto is None:
+                self.errori.append(f"«è di scena» vale per un oggetto: '{ogg_grezzo}' non lo è.")
+            else:
+                oggetto.di_scena = True
+        for ogg_grezzo, luogo_grezzo in self._pending_anche_in:
+            oggetto = m.trova_oggetto(normalizza_nome(ogg_grezzo))
+            id_luogo = normalizza_nome(luogo_grezzo)
+            if oggetto is None:
+                self.errori.append(f"«è anche in» vale per un oggetto: '{ogg_grezzo}' non lo è.")
+            elif id_luogo not in m.stanze:
+                self.errori.append(
+                    f"'{ogg_grezzo}' può essere «anche in» una stanza, non in '{luogo_grezzo}'.")
+            else:
+                oggetto.anche_in.add(id_luogo)
+                if oggetto.prendibile:
+                    self.warnings.append(
+                        f"'{ogg_grezzo}' è in più stanze ed è prendibile: preso in una, "
+                        f"sparisce da tutte.")
+        for png_grezzo, ogg_grezzo in self._pending_png_ha:
+            png = m.trova_oggetto(normalizza_nome(png_grezzo))
+            oggetto = m.trova_oggetto(normalizza_nome(ogg_grezzo))
+            if png is None or not png.is_personaggio:
+                self.errori.append(
+                    f"Solo il giocatore e i personaggi hanno oggetti: '{png_grezzo}' non è "
+                    f"un personaggio (scrivi «{png_grezzo} è un personaggio.»).")
+                continue
+            if oggetto is None:
+                self.errori.append(f"'{png_grezzo}' ha un oggetto inesistente: '{ogg_grezzo}'.")
+                continue
+            precedente = self._luogo_iniziale.get(oggetto.nome)
+            if precedente is not None and precedente[0] != png.nome:
+                self.errori.append(
+                    f"'{ogg_grezzo}' è collocato in due posti: '{precedente[1]}' e "
+                    f"'{png_grezzo}'. Un oggetto comincia in un posto solo.")
+                continue
+            self._luogo_iniziale[oggetto.nome] = (png.nome, png_grezzo)
+            m.rimuovi_da_posizione(oggetto)
+            png.contenuto.add(oggetto.nome)
+            oggetto.posizione = png.nome
+        for png_grezzo, argomento in self._pending_argomenti:
+            png = m.trova_oggetto(argomento.id_png)
+            if png is None or not png.is_personaggio:
+                self.errori.append(
+                    f"«Se chiedi a …» vale per un personaggio: '{png_grezzo}' non lo è.")
+            if not argomento.chiavi:
+                self.errori.append(f"Un argomento di '{png_grezzo}' non ha parole: \"\" è vuoto.")
+
+    def _valida_turno_e_testi(self):
+        """[1.3.0 / M-6, M-7] 'il turno' si legge soltanto; le condizioni dei
+        testi condizionali si compilano qui; lo stato che la storia può
+        cambiare (uscite, 'prendibile') entra nell'impronta dei salvataggi."""
+        m = self.mondo
+        if TURNO in m.variabili:
+            self.errori.append(
+                "«Il turno» è il numero del turno in corso: si legge nelle condizioni "
+                "e nei testi ([turno]), non si dichiara. Scegli un altro nome.")
+        conseguenze = self._tutte_le_conseguenze()
+        for cons in conseguenze:
+            if getattr(cons, "nome", None) == TURNO:
+                self.errori.append("«Il turno» si legge soltanto: nessuna conseguenza "
+                                   "può cambiarlo.")
+                break
+        if any(isinstance(c, ConseguenzaCollegamento) for c in conseguenze):
+            m._stato_esteso.add("uscite")
+        if any(isinstance(c, (ConseguenzaProprieta, ConseguenzaTogliProprieta))
+               and c.proprieta == "prendibile" for c in conseguenze):
+            m._stato_esteso.add("prendibile")
+        fonti = set()
+        for testo in self._tutti_i_testi():
+            fonti.update(" ".join(c.split()) for c in condizioni_nel_testo(testo))
+        if not fonti:
+            return
+        parser = self._parser_condizioni()
+        for fonte in sorted(fonti):
+            try:
+                condizione = self.transform(parser.parse(fonte))
+            except Exception:
+                condizione = None
+            if isinstance(condizione, Condizione):
+                m.condizioni_testo[fonte] = condizione
+            else:
+                self.errori.append(
+                    f"La condizione del testo «[se {fonte}]» non si capisce: scrivila come "
+                    f"dopo un «se» (per esempio «[se la porta è aperta]»).")
+
+    def _parser_condizioni(self):
+        """Il parser della sola regola 'condizione', con gli stessi nomi."""
+        args = getattr(self, "argomenti_parser", None)
+        if args is None:
+            raise RuntimeError("parser delle condizioni non disponibile")
+        return costruisci_parser_condizioni(*args)
+
+    # --- Condizioni e Conseguenze (Sub-Alberi) ---
+
+    def cond_possesso(self, ogg_grezzo):
+        return CondizionePossesso(normalizza_nome(ogg_grezzo))
+
+    def cond_possesso_neg(self, ogg_grezzo):
+        return CondizioneNot(CondizionePossesso(normalizza_nome(ogg_grezzo)))
+
+    def cond_posizione_giocatore(self, prep, stanza_grezzo):
+        # [0.18.0 / B1] 'se il giocatore è in [stanza]'. 'prep' è il token
+        # PREP_LUOGO (in/nel/nella…), ininfluente sull'id della stanza.
+        return CondizionePosizioneGiocatore(normalizza_nome(stanza_grezzo))
+
+    def cond_posizione_giocatore_neg(self, prep, stanza_grezzo):
+        return CondizioneNot(CondizionePosizioneGiocatore(normalizza_nome(stanza_grezzo)))
+
+    def cond_posizione_oggetto(self, ogg_grezzo, prep, luogo_grezzo):
+        # [1.3.0 / G-6] 'se la guardia è in cucina', 'se la chiave è nella scatola'.
+        luogo = normalizza_nome(luogo_grezzo)
+        if luogo in ("nessun luogo", "nessuno"):
+            luogo = "nulla"
+        return CondizionePosizioneOggetto(normalizza_nome(ogg_grezzo), luogo)
+
+    def cond_posizione_oggetto_neg(self, ogg_grezzo, prep, luogo_grezzo):
+        return CondizioneNot(self.cond_posizione_oggetto(ogg_grezzo, prep, luogo_grezzo))
+
+    def cond_png_ha(self, png_grezzo, ogg_grezzo):
+        # [1.3.0 / M-10] 'se la guardia ha la chiave'.
+        return CondizionePngHa(normalizza_nome(png_grezzo), normalizza_nome(ogg_grezzo))
+
+    def cond_png_ha_neg(self, png_grezzo, ogg_grezzo):
+        return CondizioneNot(CondizionePngHa(normalizza_nome(png_grezzo), normalizza_nome(ogg_grezzo)))
+
+    def cond_proprieta(self, ogg_grezzo, proprieta_grezzo):
+        proprieta = normalizza_nome(proprieta_grezzo)
+        if proprieta == "qui":
+            # [1.3.0 / G-6] 'se il gatto è qui': nella stanza del giocatore.
+            return CondizionePosizioneOggetto(normalizza_nome(ogg_grezzo), QUI)
+        return CondizioneProprieta(normalizza_nome(ogg_grezzo), proprieta)
+
+    def cond_proprieta_neg(self, ogg_grezzo, proprieta_grezzo):
+        return CondizioneNot(self.cond_proprieta(ogg_grezzo, proprieta_grezzo))
+
+    def cond_variabile(self, var_grezzo, valore_grezzo):
+        return CondizioneVariabile(normalizza_nome(var_grezzo), normalizza_nome(valore_grezzo))
+
+    def cond_variabile_neg(self, var_grezzo, valore_grezzo):
+        return CondizioneNot(CondizioneVariabile(normalizza_nome(var_grezzo), normalizza_nome(valore_grezzo)))
+
+    def cond_variabile_uguali(self, var_grezzo, altro_grezzo):
+        # [0.34.0 / Tema 3] 'se il corteggiato è il preferito': confronto fra i
+        # valori CORRENTI di due stati. Entrambi i nomi sono VARIABILE (dichiarati);
+        # la coerenza di TIPO (stato vs contatore) è validata in valida_post.
+        nome, altro = normalizza_nome(var_grezzo), normalizza_nome(altro_grezzo)
+        self._pending_var_coppie.append((nome, altro, str(var_grezzo), str(altro_grezzo), "confronto"))
+        return CondizioneVariabileUguali(nome, altro)
+
+    def cond_variabile_uguali_neg(self, var_grezzo, altro_grezzo):
+        nome, altro = normalizza_nome(var_grezzo), normalizza_nome(altro_grezzo)
+        self._pending_var_coppie.append((nome, altro, str(var_grezzo), str(altro_grezzo), "confronto"))
+        return CondizioneNot(CondizioneVariabileUguali(nome, altro))
+
+    # [0.31.0 / Tema 1b] Il secondo argomento è ora un Operando (NUMERO letterale
+    # o valore di un contatore [forza]), non più un int grezzo: lo passa così com'è
+    # a CondizioneContatore, che lo risolve al momento della valutazione.
+    def cond_contatore_eq(self, var_grezzo, operando):
+        return CondizioneContatore(normalizza_nome(var_grezzo), "==", operando)
+
+    def cond_contatore_gte(self, var_grezzo, operando):
+        return CondizioneContatore(normalizza_nome(var_grezzo), ">=", operando)
+
+    def cond_contatore_gt(self, var_grezzo, operando):
+        return CondizioneContatore(normalizza_nome(var_grezzo), ">", operando)
+
+    def cond_contatore_lt(self, var_grezzo, operando):
+        return CondizioneContatore(normalizza_nome(var_grezzo), "<", operando)
+
+    def cond_contatore_lte(self, var_grezzo, operando):
+        # [0.18.0 / B4] 'al massimo N' (≤).
+        return CondizioneContatore(normalizza_nome(var_grezzo), "<=", operando)
+
+    def cond_contatore_neq(self, var_grezzo, operando):
+        # [0.18.0 / B5] 'non è N' (≠): negazione dell'uguaglianza numerica.
+        return CondizioneNot(CondizioneContatore(normalizza_nome(var_grezzo), "==", operando))
+
+    def cond_non_gruppo(self, condizione):
+        # [0.18.0 / B7] 'non ( ... )': negazione di un intero gruppo booleano.
+        return CondizioneNot(condizione)
+
+    def cond_probabilita(self, numeratore, denominatore):
+        # [0.32.0 / Tema 2c] 'càpita (N su M)': vera con probabilità N/M, pescata
+        # da mondo.rng a runtime. I due token sono NUMERO (interi).
+        return CondizioneProbabilita(int(numeratore), int(denominatore))
+
+    def make_and(self, *condizioni):
+        return CondizioneAnd(list(condizioni))
+
+    def make_or(self, *condizioni):
+        return CondizioneOr(list(condizioni))
+
+    def cons_spostamento(self, ogg_grezzo, prep, dest_grezzo):
+        # dest_grezzo è un'ENTITA: un nome di stanza dichiarato oppure uno
+        # pseudo-simbolo speciale ("inventario", "nulla").
+        id_oggetto = normalizza_nome(ogg_grezzo)
+        destinazione = normalizza_nome(dest_grezzo)
+        if destinazione in ["nulla", "nessun luogo", "nessuno"]:
+            destinazione = "nulla"
+        return ConseguenzaSpostamento(id_oggetto, destinazione)
+
+    def cons_proprieta(self, ogg_grezzo, proprieta_grezzo):
+        return ConseguenzaProprieta(normalizza_nome(ogg_grezzo), normalizza_nome(proprieta_grezzo))
+
+    def cons_proprieta_via(self, ogg_grezzo, proprieta_grezzo):
+        # [1.3.0 / M-2] 'e adesso il panno non è più bagnato'.
+        return ConseguenzaTogliProprieta(normalizza_nome(ogg_grezzo), normalizza_nome(proprieta_grezzo))
+
+    def cons_collega(self, sta1_grezzo, direzione, sta2_grezzo):
+        # [1.3.0 / M-8] 'e adesso la cucina collega nord a la dispensa'.
+        direzione_norm = self.mondo.direzione_canonica(direzione) or direzione
+        return ConseguenzaCollegamento(normalizza_nome(sta1_grezzo), direzione_norm,
+                                       normalizza_nome(sta2_grezzo))
+
+    def cons_scollega(self, sta_grezzo, direzione):
+        # [1.3.0 / M-8] 'e adesso la cucina non collega più nord'.
+        direzione_norm = self.mondo.direzione_canonica(direzione) or direzione
+        return ConseguenzaCollegamento(normalizza_nome(sta_grezzo), direzione_norm, None)
+
+    def cons_png_riceve(self, png_grezzo, ogg_grezzo):
+        # [1.3.0 / M-10] 'e adesso la guardia ha la chiave'.
+        return ConseguenzaPngRiceve(normalizza_nome(png_grezzo), normalizza_nome(ogg_grezzo))
+
+    def cons_moltiplica(self, var_grezzo, operando):
+        return ConseguenzaContatore(normalizza_nome(var_grezzo), "moltiplica", operando)
+
+    def cons_dividi(self, var_grezzo, operando):
+        return ConseguenzaContatore(normalizza_nome(var_grezzo), "dividi", operando)
+
+    def cons_modulo(self, var_grezzo, operando):
+        return ConseguenzaContatore(normalizza_nome(var_grezzo), "modulo", operando)
+
+    def cons_limita(self, var_grezzo, minimo, massimo):
+        return ConseguenzaLimita(normalizza_nome(var_grezzo), minimo, massimo)
+
+    def cons_giocatore_sposta(self, prep, stanza_grezzo):
+        # [0.18.0 / B2] 'e adesso il giocatore è in [stanza]': teletrasporto.
+        return ConseguenzaSpostamentoGiocatore(normalizza_nome(stanza_grezzo))
+
+    def cons_png_va(self, png_grezzo, prep, stanza_grezzo):
+        # [0.25.0 / A5] 'la guardia va nel corridoio': movimento deterministico.
+        return ConseguenzaMovimentoPNG(normalizza_nome(png_grezzo),
+                                       destinazione=normalizza_nome(stanza_grezzo))
+
+    def cons_png_cambia(self, png_grezzo):
+        # [0.25.0 / A5] 'il gatto cambia stanza': si sposta in una stanza adiacente
+        # a caso (fra le uscite della sua stanza), pescata da mondo.rng.
+        return ConseguenzaMovimentoPNG(normalizza_nome(png_grezzo), adiacente=True)
+
+    def cons_stanza_buio(self, ent_grezzo, prop_grezzo):
+        # [0.33.0 / Tema 4a] 'la radura diventa buia' / '… diventa illuminata':
+        # commuta il buio della STANZA. Classifichiamo la PROPRIETA per RADICE,
+        # riusando il folding di concordanza: radice 'bui-' (buia/buio/buie) →
+        # buio; 'illuminat-' o 'chiar-' → luce. Ogni altra proprietà è un errore
+        # d'autore gentile (qui, perché la PROPRIETA è nota subito). L'esistenza
+        # del bersaglio come STANZA è validata in _valida_conseguenze (differita:
+        # la stanza può essere dichiarata dopo).
+        id_stanza = normalizza_nome(ent_grezzo)
+        radice = radice_proprieta(normalizza_nome(prop_grezzo))
+        if radice == radice_proprieta("buia"):
+            buio = True
+        elif radice in (radice_proprieta("illuminata"), radice_proprieta("chiara")):
+            buio = False
+        else:
+            self.errori.append(
+                f"'{prop_grezzo}' non è una proprietà di luce valida per una "
+                f"stanza: usa 'buia' oppure 'illuminata'/'chiara'.")
+            buio = True  # segnaposto: la compilazione fallisce comunque per l'errore
+        return ConseguenzaBuioStanza(id_stanza, buio)
+
+    def cons_variabile(self, var_grezzo, valore_grezzo):
+        return ConseguenzaVariabile(normalizza_nome(var_grezzo), normalizza_nome(valore_grezzo))
+
+    def cons_variabile_copia(self, var_grezzo, sorgente_grezzo):
+        # [0.34.0 / Tema 3] 'e adesso il corteggiato diventa il preferito': copia il
+        # valore corrente di uno stato (sorgente) in un altro. Entrambi i nomi sono
+        # VARIABILE (dichiarati); la coerenza di TIPO è validata in valida_post.
+        nome, sorgente = normalizza_nome(var_grezzo), normalizza_nome(sorgente_grezzo)
+        self._pending_var_coppie.append((nome, sorgente, str(var_grezzo), str(sorgente_grezzo), "copia"))
+        return ConseguenzaVariabileCopia(nome, sorgente)
+
+    def cons_scelta_stato(self, var_grezzo, *valori_grezzi):
+        # [0.32.0 / Tema 2b] 'il meteo diventa uno fra sereno, pioggia, nebbia':
+        # assegna allo stato un valore SIMBOLICO scelto a caso fra l'elenco. La
+        # grammatica garantisce >=1 PROPRIETA dopo 'fra'.
+        valori = [normalizza_nome(v) for v in valori_grezzi]
+        return ConseguenzaSceltaStato(normalizza_nome(var_grezzo), valori)
+
+    # [0.31.0 / Tema 1a + casualità] La quantità è ora un Operando (vedi
+    # operando_*). resto: (Operando,) se è presente 'di …', altrimenti vuoto →
+    # delta predefinito 1 (OperandoNumero(1)).
+    def cons_aumenta(self, var_grezzo, *resto):
+        operando = resto[0] if resto else OperandoNumero(1)
+        return ConseguenzaContatore(normalizza_nome(var_grezzo), "aumenta", operando)
+
+    def cons_diminuisci(self, var_grezzo, *resto):
+        operando = resto[0] if resto else OperandoNumero(1)
+        return ConseguenzaContatore(normalizza_nome(var_grezzo), "diminuisci", operando)
+
+    def cons_contatore_set(self, var_grezzo, operando):
+        return ConseguenzaContatore(normalizza_nome(var_grezzo), "diventa", operando)
+
+    # --- Operando-quantità (Tema 1a + estrazione casuale) ---
+    # Alias condivisi da 'operando' (conseguenze) e 'operando_confronto'
+    # (condizioni). Costruiscono l'oggetto Operando che CondizioneContatore /
+    # ConseguenzaContatore risolveranno a runtime.
+    def operando_numero(self, numero):
+        return OperandoNumero(numero)
+
+    def operando_variabile(self, var_grezzo):
+        return OperandoVariabile(normalizza_nome(var_grezzo))
+
+    def operando_casuale(self, minimo, massimo):
+        return OperandoCasuale(minimo, massimo)
+
+    # Conseguenze di fine partita. [0.18.0 / B3] Accettano un TESTO_QUOTATO
+    # OPZIONALE: se presente, è il messaggio d'esito stampato alla chiusura
+    # (al posto del banner fisso). 'args' è vuoto oppure contiene la sola stringa.
+    def cons_vinci(self, *args):
+        return ConseguenzaFinePartita("vinta", args[0] if args else None)
+
+    def cons_perdi(self, *args):
+        return ConseguenzaFinePartita("persa", args[0] if args else None)
+
+    def cons_termina(self, *args):
+        return ConseguenzaFinePartita("terminata", args[0] if args else None)
+
+    # --- Eventi a turni (Livello 3) ---
+
+    def _valida_conseguenze(self, conseguenze):
+        """Validazione a compile-time condivisa da regole ed eventi: l'oggetto di
+        una conseguenza (se presente) e la destinazione di uno spostamento devono
+        esistere."""
+        for c in conseguenze:
+            id_cons = getattr(c, "id_oggetto", None)
+            if id_cons is not None and not self.mondo.trova_oggetto(id_cons):
+                self.errori.append(f"Oggetto inesistente nella conseguenza: '{id_cons}'")
+            if isinstance(c, ConseguenzaSpostamento) and c.destinazione not in ["nulla", "inventario"]:
+                # [Livello 4 / M1] La destinazione può essere una stanza OPPURE un
+                # contenitore/supporto (vi si sposta l'oggetto dentro/sopra).
+                dest = self.mondo.trova_stanza(c.destinazione)
+                dest_ogg = self.mondo.trova_oggetto(c.destinazione)
+                if not dest and not (dest_ogg and (dest_ogg.is_contenitore or dest_ogg.is_supporto)):
+                    self.errori.append(f"Luogo inesistente nella conseguenza: '{c.destinazione}'")
+            if isinstance(c, ConseguenzaSpostamentoGiocatore) and not self.mondo.trova_stanza(c.id_stanza):
+                # [0.18.0 / B2] Il teletrasporto deve puntare a una stanza esistente.
+                self.errori.append(
+                    f"Stanza inesistente nel teletrasporto del giocatore: '{c.id_stanza}'")
+            if isinstance(c, ConseguenzaMovimentoPNG):
+                # [0.25.0 / A5] Il personaggio deve esistere; la destinazione
+                # deterministica dev'essere una stanza (la casuale è risolta a runtime).
+                if not self.mondo.trova_oggetto(c.id_png):
+                    self.errori.append(
+                        f"Personaggio inesistente nel movimento: '{c.id_png}'")
+                if c.destinazione is not None and not self.mondo.trova_stanza(c.destinazione):
+                    self.errori.append(
+                        f"Stanza inesistente nel movimento del personaggio: '{c.destinazione}'")
+            if isinstance(c, ConseguenzaCollegamento):
+                # [1.3.0 / M-8] Le stanze devono esistere già: una conseguenza
+                # non crea stanze (lo fa solo la dichiarazione 'collega').
+                for sid in (c.id_stanza, c.destinazione):
+                    if sid is not None and not self.mondo.trova_stanza(sid):
+                        self.errori.append(
+                            f"«collega» in una conseguenza richiede stanze dichiarate: "
+                            f"'{sid}' non è una stanza.")
+            if isinstance(c, ConseguenzaPngRiceve):
+                png = self.mondo.trova_oggetto(c.id_png)
+                if png is None or not png.is_personaggio:
+                    self.errori.append(
+                        f"Solo i personaggi ricevono oggetti: '{c.id_png}' non è un personaggio.")
+                if not self.mondo.trova_oggetto(c.id_oggetto):
+                    self.errori.append(f"Oggetto inesistente nella conseguenza: '{c.id_oggetto}'")
+            if isinstance(c, ConseguenzaBuioStanza) and not self.mondo.trova_stanza(c.id_stanza):
+                # [0.33.0 / Tema 4a] Il buio commutabile agisce solo su una STANZA
+                # (un oggetto/personaggio con lo stesso nome non va bene).
+                self.errori.append(
+                    f"Il buio si può cambiare solo a una stanza: '{c.id_stanza}' "
+                    f"non è una stanza.")
+
+    def _crea_evento(self, tipo, args):
+        # args: (NUMERO, [TESTO_QUOTATO], conseguenza*). [0.19.0/A9] La battuta
+        # 'dire "…"' è OPZIONALE (tick silenzioso): si estrae per TIPO, non per
+        # posizione. NUMERO è l'unico int; la risposta l'unica str (se assente, "").
+        numero = next(a for a in args if isinstance(a, int))
+        risposta = next((a for a in args if isinstance(a, str)), "")
+        conseguenze = [a for a in args if isinstance(a, Conseguenza)]
+        if numero < 1:
+            self.warnings.append(
+                f"Evento '{tipo} ... {numero}': il numero di turni deve essere "
+                f"almeno 1; evento ignorato."
+            )
+            return None
+        self._pending_conseguenze.append(conseguenze)
+        self.mondo.aggiungi_evento(Evento(tipo, numero, risposta, conseguenze))
+        return None
+
+    def evento_al(self, *args):
+        return self._crea_evento("al", args)
+
+    def evento_ogni(self, *args):
+        return self._crea_evento("ogni", args)
+
+    # --- I Demoni (eventi condizionali, Livello 8) ---
+
+    def _crea_demone(self, tipo, args):
+        # args: (condizione, [TESTO_QUOTATO], conseguenza*). [0.19.0/A9] La battuta
+        # 'dire "…"' è OPZIONALE (tick silenzioso): estrazione per TIPO. La
+        # condizione è l'unica Condizione; la risposta l'unica str (se assente, "").
+        condizione = next(a for a in args if isinstance(a, Condizione))
+        risposta = next((a for a in args if isinstance(a, str)), "")
+        conseguenze = [a for a in args if isinstance(a, Conseguenza)]
+        self._pending_conseguenze.append(conseguenze)
+        self.mondo.aggiungi_demone(Demone(tipo, condizione, risposta, conseguenze))
+        return None
+
+    def demone_ogni(self, *args):
+        return self._crea_demone("ogni_turno", args)
+
+    def demone_quando(self, *args):
+        return self._crea_demone("quando", args)
+
+    def demone_dopo(self, ritardo, *args):
+        # [1.3.0 / M-7] 'N turni dopo che …': il primo argomento è N.
+        self._crea_demone("dopo", args)
+        demone = self.mondo.demoni[-1]
+        if ritardo < 0:
+            self.warnings.append(f"«{ritardo} turni dopo che …»: il ritardo non può essere "
+                                 f"negativo; vale 0.")
+            ritardo = 0
+        demone.ritardo = ritardo
+        return None
+
+    # --- La Regola Complessa ---
+
+    def regola_target(self, bersaglio, *resto):
+        # [Livello 5] Bersaglio della regola: (ENTITA|DIREZIONE|categoria) [PREP_AZIONE (ENTITA|categoria)].
+        # 'resto' contiene 0 o 2 elementi (preposizione + secondo oggetto).
+        prep = resto[0] if len(resto) >= 2 else None
+        secondario = resto[1] if len(resto) >= 2 else None
+        return RegolaTarget(bersaglio, prep, secondario)
+
+    def def_regola(self, *args):
+        # args (ordine): verbo, [RegolaTarget], [condizione], risposta, [conseguenza...]
+        # [Livello 5] il bersaglio è opzionale (incapsulato in RegolaTarget): se
+        # assente, la regola è GLOBALE (scatta sul solo verbo). [v0.6.0] la
+        # condizione può essere composita e le conseguenze possono essere più di una.
+        args_puliti = [a for a in args if a is not None]
+
+        # [1.3.0 / M-9] Il primo figlio è la fase (Invece/Prima/Dopo).
+        fase = "invece"
+        if args_puliti and isinstance(args_puliti[0], FaseRegola):
+            fase = args_puliti.pop(0).nome
+        verbo = args_puliti[0]
+
+        # Estrai i componenti per tipo (l'ordine grammaticale è garantito).
+        target = None
+        condizione = None
+        risposta = ""
+        conseguenze = []
+        altrimenti = None
+        for a in args_puliti[1:]:
+            if isinstance(a, RegolaTarget):
+                target = a
+            elif isinstance(a, Condizione):
+                condizione = a
+            elif isinstance(a, Conseguenza):
+                conseguenze.append(a)
+            elif isinstance(a, RamoAltrimenti):
+                altrimenti = (a.risposta, a.conseguenze)
+            elif isinstance(a, str):
+                risposta = a   # unica stringa nuda residua: la risposta
+        if altrimenti is not None and condizione is None:
+            self.warnings.append(
+                f"Regola «{fase} di {verbo}» con «altrimenti» ma senza «se»: il ramo "
+                f"«altrimenti» non scatterà mai.")
+        extra = {"fase": fase, "altrimenti": altrimenti}
+
+        # --- Regola GLOBALE (senza bersaglio) ---
+        if target is None:
+            self._pending_conseguenze.append(conseguenze)
+            self.mondo.aggiungi_regola(Regola(
+                verbo=verbo,
+                id_oggetto_bersaglio=None,
+                risposta=risposta,
+                condizione=condizione,
+                conseguenze=conseguenze,
+                **extra,
+            ))
+            return None
+
+        # --- [1.3.0 / M-9] Regola per CATEGORIA ---
+        if isinstance(target.bersaglio, Categoria) or isinstance(target.secondario, Categoria):
+            primo, secondo = target.bersaglio, target.secondario
+            id_ogg1 = None if isinstance(primo, Categoria) else normalizza_nome(primo)
+            id_ogg2 = (None if secondo is None or isinstance(secondo, Categoria)
+                       else normalizza_nome(secondo))
+            self._pending_conseguenze.append(conseguenze)
+            self._pending_regole_target.append(
+                (id_ogg1, primo, id_ogg2, secondo) if id_ogg1 else
+                ("<categoria>", "qualcosa", id_ogg2, secondo))
+            self.mondo.aggiungi_regola(Regola(
+                verbo=verbo,
+                id_oggetto_bersaglio=id_ogg1,
+                risposta=risposta,
+                condizione=condizione,
+                preposizione=target.preposizione,
+                id_oggetto_secondario=id_ogg2,
+                conseguenze=conseguenze,
+                categoria=primo.radice if isinstance(primo, Categoria) else None,
+                categoria_secondaria=secondo.radice if isinstance(secondo, Categoria) else None,
+                **extra,
+            ))
+            return None
+
+        # --- Regola con bersaglio (comportamento storico) ---
+        ogg1_grezzo = target.bersaglio
+        ogg2_grezzo = target.secondario
+        prep_azione = target.preposizione
+
+        id_ogg1 = normalizza_nome(ogg1_grezzo)
+        id_ogg2 = normalizza_nome(ogg2_grezzo) if ogg2_grezzo else None
+
+        # [Livello 4 / L1] Se il bersaglio è una direzione (anche abbreviata o
+        # personalizzata), canonicalizzalo: così 'Invece di vai n' e 'vai nord'
+        # sono la stessa regola e combaciano con il movimento a runtime.
+        if id_ogg1 in self.mondo.direzioni:
+            id_ogg1 = self.mondo.direzioni[id_ogg1]
+
+        # [0.17.0 — robustezza d'ordine] La regola viene SEMPRE costruita e
+        # aggiunta; la validazione dell'esistenza del bersaglio (e del secondo
+        # oggetto) è DIFFERITA a valida_post, così 'Invece di apri la porta: …'
+        # funziona anche se 'la porta' è dichiarata DOPO la regola. Le conseguenze
+        # seguono la stessa differita. La canonicalizzazione delle direzioni è già
+        # order-independent (mappe pre-popolate in __init__ dalla Passata 1).
+        self._pending_conseguenze.append(conseguenze)
+        self._pending_regole_target.append((id_ogg1, ogg1_grezzo, id_ogg2, ogg2_grezzo))
+        self.mondo.aggiungi_regola(Regola(
+            verbo=verbo,
+            id_oggetto_bersaglio=id_ogg1,
+            risposta=risposta,
+            condizione=condizione,
+            preposizione=prep_azione,
+            id_oggetto_secondario=id_ogg2,
+            conseguenze=conseguenze,
+            **extra,
+        ))
+        return None
+
+    # --- Validazione semantica globale (dopo il transform completo) ---
+
+    def valida_post(self):
+        """
+        Esegue i controlli che richiedono la visione dell'intero mondo, una
+        volta che tutte le dichiarazioni sono state processate. Popola errori
+        (bloccanti) e warnings (non bloccanti).
+        """
+        m = self.mondo
+
+        # 0. [0.17.0 — robustezza d'ordine] Applica le operazioni DIFFERITE che
+        #    risolvono entità per nome, ora che TUTTE le dichiarazioni sono state
+        #    processate (tipi inclusi: stanza/contenitore/supporto). L'ordine
+        #    sorgente è preservato (contenuto dei contenitori, varianti di
+        #    descrizione). Va PRIMA di ogni altro controllo perché il linter
+        #    (analisi_statica) e il baseline dei demoni leggono posizioni/proprietà.
+        for ogg, prep, luogo in self._pending_posizioni:
+            self._applica_posizione(ogg, prep, luogo)
+        for ogg, prop in self._pending_proprieta:
+            self._applica_proprieta(ogg, prop)
+        for nome, cond, testo in self._pending_descrizioni:
+            self._applica_descrizione(nome, cond, testo)
+        for nome, testo in self._pending_posti:
+            self._applica_posto(nome, testo)
+        self._applica_scena_e_personaggi()
+        self._valida_turno_e_testi()
+        for conseguenze in self._pending_conseguenze:
+            self._valida_conseguenze(conseguenze)
+        for sinonimo, canonico, voluto in self._pending_sinonimi:   # [1.2.0]
+            self._applica_sinonimo_differito(sinonimo, canonico, voluto)
+        # [1.1.0] 'e adesso X è in inventario' non passa dal controllo della
+        # capienza (lo fa solo il prendere del giocatore): se la storia ne
+        # dichiara una, lo si dice all'autore una volta per oggetto. Il
+        # comportamento a runtime resta quello della 1.0 (compatibilità).
+        if self.mondo.capacita_base is not None:
+            gia_detti = set()
+            for conseguenze in self._pending_conseguenze:
+                for c in conseguenze:
+                    if (isinstance(c, ConseguenzaSpostamento)
+                            and c.destinazione == "inventario"
+                            and c.id_oggetto not in gia_detti):
+                        gia_detti.add(c.id_oggetto)
+                        self.warnings.append(
+                            f"Una conseguenza mette '{c.id_oggetto}' in inventario "
+                            f"ignorando la capienza ('Il giocatore può portare "
+                            f"{self.mondo.capacita_base} oggetti'): se serve, "
+                            f"controllala con una condizione.")
+        # [0.34.0 / Tema 3] Coerenza di TIPO nei confronti/copie stato↔stato. Un
+        # nome è un CONTATORE se il suo valore nel mondo è un intero (def_contatore
+        # → 0, 'parte da N' → N); altrimenti è uno STATO (None o parola-stato).
+        # Entrambi i nomi sono dichiarati per costruzione (VARIABILE è chiuso). La
+        # forma nuda 'X diventa Y' / 'X è Y' è riservata agli STATI: per i contatori
+        # esiste già il valore fra parentesi '[Y]' (Tema 1a/1b), più espressivo
+        # (entra anche nell'aritmetica e nei confronti d'ordine). Quindi mismatch e
+        # «due contatori» sono entrambi errori d'autore gentili.
+        def _tipo_var(n):
+            return "contatore" if isinstance(m.variabili.get(n), int) else "stato"
+        def _con_articolo(tipo):
+            return "uno stato" if tipo == "stato" else "un contatore"
+        for nome, altro, raw_lhs, raw_rhs, contesto in self._pending_var_coppie:
+            t_lhs, t_rhs = _tipo_var(nome), _tipo_var(altro)
+            # Forma SCRITTA dall'autore (rifiutata) vs forma CANONICA a contatori
+            # (col valore fra parentesi). Il confronto stato↔stato usa il marcatore
+            # 'è come'; il confronto fra contatori NON lo usa ('X è [Y]').
+            if contesto == "copia":
+                azione, scritto, giusto = "La copia", "diventa", "diventa"
+            else:
+                azione, scritto, giusto = "Il confronto", "è come", "è"
+            if t_lhs == "stato" and t_rhs == "stato":
+                continue  # caso voluto
+            if t_lhs == "contatore" and t_rhs == "contatore":
+                self.errori.append(
+                    f"{azione} fra contatori si scrive col valore fra parentesi: "
+                    f"'{raw_lhs} {giusto} [{altro}]' (non '{raw_lhs} {scritto} {raw_rhs}'). "
+                    f"La forma '{scritto} <stato>' è riservata agli stati.")
+            else:
+                self.errori.append(
+                    f"{azione} non ha senso fra tipi diversi: '{raw_lhs}' è "
+                    f"{_con_articolo(t_lhs)} e '{raw_rhs}' è {_con_articolo(t_rhs)}. "
+                    f"La forma '{raw_lhs} {scritto} {raw_rhs}' vale solo fra due "
+                    f"stati; per i contatori usa il valore fra parentesi '[{altro}]'.")
+        for id_ogg1, ogg1_grezzo, id_ogg2, ogg2_grezzo in self._pending_regole_target:
+            if id_ogg1 == "<categoria>":   # [1.3.0 / M-9] 'qualcosa (di …)'
+                if id_ogg2 and not m.trova_oggetto(id_ogg2):
+                    self.errori.append(f"Regola per secondo oggetto inesistente: '{ogg2_grezzo}'")
+                continue
+            if not (m.trova_oggetto(id_ogg1) or id_ogg1 in m.opposte_direzioni):
+                self.errori.append(f"Regola per oggetto principale inesistente: '{ogg1_grezzo}'")
+            elif id_ogg2 and not m.trova_oggetto(id_ogg2):
+                self.errori.append(f"Regola per secondo oggetto inesistente: '{ogg2_grezzo}'")
+        # [0.19.0 / A8] Inventario iniziale: dopo le posizioni (un oggetto può
+        # essere stato collocato in una stanza e poi spostato in inventario qui;
+        # vince l'ultima dichiarazione). Oggetto inesistente = errore bloccante.
+        for ogg_grezzo in self._pending_inventario_iniziale:
+            id_ogg = normalizza_nome(ogg_grezzo)
+            oggetto = m.trova_oggetto(id_ogg)
+            if not oggetto:
+                self.errori.append(
+                    f"Inventario iniziale: oggetto inesistente '{ogg_grezzo}' "
+                    f"('Il giocatore ha {ogg_grezzo}.')")
+                continue
+            m.rimuovi_da_posizione(oggetto)
+            oggetto.posizione = "inventario"
+            m.inventario.add(id_ogg)
+
+        # [1.1.0] Il posto iniziale vale per un oggetto collocato DIRETTAMENTE in
+        # una stanza: dentro un contenitore, su un supporto, in inventario o nel
+        # nulla la frase non verrebbe mai mostrata. Gli spostamenti fatti fin qui
+        # dalla compilazione (inventario iniziale) non contano come «toccato»:
+        # si azzera il segno, che d'ora in poi registra solo il gioco.
+        for ogg in m.oggetti.values():
+            ogg.spostato = False
+            if ogg.posto is not None and ogg.posizione not in m.stanze:
+                # Segnato come già spostato: se più tardi lo si posa in una
+                # stanza (dall'inventario iniziale 'lascia' non passa da
+                # rimuovi_da_posizione) la frase non deve comparire fuori luogo.
+                ogg.spostato = True
+                self.warnings.append(
+                    f"Il posto di '{ogg.nome}' non sarà mai mostrato: l'oggetto "
+                    f"non comincia direttamente in una stanza.")
+
+        # [1.3.0 / G-3] Una stanza che nasce solo da 'collega', senza descrizione
+        # né oggetti, è quasi sempre un refuso nel nome ('il giardno').
+        for sid, stanza in m.stanze.items():
+            if (sid not in self._stanze_dichiarate
+                    and stanza.descrizione == Stanza(sid).descrizione
+                    and not stanza.descrizioni_condizionali and not stanza.oggetti):
+                simili = difflib.get_close_matches(sid, sorted(self._stanze_dichiarate), n=1, cutoff=0.6)
+                forse = f" Forse intendevi «{simili[0]}»?" if simili else ""
+                self.warnings.append(
+                    f"La stanza «{sid}» esiste solo perché compare in «collega» e non ha "
+                    f"descrizione né oggetti: è un refuso?{forse}")
+
+        # 1. [GG1] La stanza di partenza dichiarata deve esistere.
+        if self.start_dichiarato_raw is not None:
+            if not m.trova_stanza(m.posizione_iniziale):
+                self.errori.append(
+                    f"Stanza di partenza inesistente: 'Il giocatore comincia in "
+                    f"{self.start_dichiarato_raw}' (la stanza '{m.posizione_iniziale}' "
+                    f"non è definita)."
+                )
+
+        # 1bis. [Livello 4] Ogni alias deve puntare a un OGGETTO esistente,
+        #    altrimenti è morto (il giocatore non potrà mai risolverlo). Un alias
+        #    che coincide con l'id di un'entità esistente è ambiguo e va segnalato.
+        for alias, id_canonico in m.alias.items():
+            if not m.trova_oggetto(id_canonico):
+                self.warnings.append(
+                    f"Alias '{alias}' per oggetto inesistente '{id_canonico}': "
+                    f"il sinonimo non risolverà mai nulla."
+                )
+            if m.trova_oggetto(alias) or m.trova_stanza(alias):
+                self.warnings.append(
+                    f"L'alias '{alias}' coincide con il nome di un'entità "
+                    f"esistente: il nome proprio ha la precedenza."
+                )
+
+        # 2. [GG3] Il verbo di ogni regola deve appartenere al vocabolario noto,
+        #    altrimenti la regola è "morta" (non si attiverà mai a runtime).
+        for regola in m.regole:
+            if regola.verbo not in VERBI_VALIDI and regola.verbo not in m.verbi_personalizzati:
+                self.warnings.append(
+                    f"Verbo '{regola.verbo}' non riconosciuto in una regola "
+                    f"'Invece di': la regola non si attiverà mai. Usa un verbo noto "
+                    f"al motore (es. usa, apri, prendi, esamina, mangia, sposta, vai) "
+                    f"oppure dichiaralo con '\"{regola.verbo}\" è un comando.'."
+                )
+
+        # 3. [GG2] Una condizione 'se [oggetto] è [proprietà]' che controlla una
+        #    proprietà mai assegnata a quell'oggetto (né come stato iniziale né
+        #    via conseguenza) è quasi sempre un refuso: resterebbe sempre falsa.
+        #    [v0.6.0] Le condizioni possono essere composite: estraiamo
+        #    ricorsivamente tutti gli atomi CondizioneProprieta.
+        # [Concordanza] Confronto per RADICE (id, radice_proprieta(prop)): così una
+        # condizione «è aperto» non è segnalata come refuso se altrove si assegna
+        # «aperta» (stessa radice). Un refuso vero cambia la radice → resta segnalato.
+        # [1.3.0 / M-3] Contano le conseguenze di TUTTO il mondo (eventi, demoni,
+        # opzioni di dialogo, argomenti), non solo delle regole: prima una
+        # proprietà assegnata da un demone era segnalata come «mai assegnata». E
+        # contano i verbi della libreria: un oggetto apribile può diventare
+        # aperto o chiuso, uno accendibile acceso o spento; 'prendibile' è un
+        # campo dell'oggetto.
+        proprieta_assegnabili = set()  # insieme di tuple (id_oggetto, radice)
+        for id_ogg, ogg in m.oggetti.items():
+            for prop in ogg.proprieta:
+                proprieta_assegnabili.add((id_ogg, radice_proprieta(prop)))
+            if ogg.prendibile:
+                proprieta_assegnabili.add((id_ogg, radice_proprieta("prendibile")))
+            for abilitante, ottenibili in (("apribile", ("aperta", "chiusa")),
+                                           ("accendibile", ("accesa", "spenta"))):
+                if radice_proprieta(abilitante) in {radice_proprieta(p) for p in ogg.proprieta}:
+                    for q in ottenibili:
+                        proprieta_assegnabili.add((id_ogg, radice_proprieta(q)))
+        for cons in self._tutte_le_conseguenze():
+            if isinstance(cons, (ConseguenzaProprieta, ConseguenzaTogliProprieta)):
+                proprieta_assegnabili.add((cons.id_oggetto, radice_proprieta(cons.proprieta)))
+        condizioni_da_controllare = [r.condizione for r in m.regole] + [
+            d.condizione for d in m.demoni] + [
+            a.condizione for a in m.argomenti if a.condizione is not None]
+
+        for condizione in condizioni_da_controllare:
+            for cond in self._atomi_proprieta(condizione):
+                if cond.proprieta == "prendibile" and m.trova_oggetto(cond.id_oggetto):
+                    continue   # vera o falsa, ma non un refuso
+                if not m.trova_oggetto(cond.id_oggetto):
+                    self.warnings.append(
+                        f"Condizione su oggetto inesistente: '{cond.id_oggetto}'."
+                    )
+                elif (cond.id_oggetto, radice_proprieta(cond.proprieta)) not in proprieta_assegnabili:
+                    self.warnings.append(
+                        f"La proprietà '{cond.proprieta}' di '{cond.id_oggetto}' non "
+                        f"è mai assegnata da nessuna parte: possibile refuso? La "
+                        f"condizione resterà sempre falsa."
+                    )
+
+        # 4. [Livello 5] Segnaposto di testo dinamico [nome] che non risolvono
+        #    nulla. L'interpolazione (favella_utils.rendi_testo) sostituisce [nome] con uno
+        #    stato/contatore o col nome di un oggetto; un segnaposto che non
+        #    corrisponde a nessuno dei due resterà letterale a runtime: quasi
+        #    sempre un refuso. Lo segnaliamo qui, non bloccante. I nomi noti sono
+        #    gli 'stati'/contatori (m.variabili) e gli oggetti (m.oggetti); le
+        #    stanze NON sono interpolabili (non hanno un valore testuale da rendere).
+        nomi_interpolabili = (set(m.variabili.keys()) | set(m.oggetti.keys())
+                              | set(SEGNAPOSTO_DEL_MOTORE) | {"oggetto", "cosa"})
+        # [0.22.0/A2] Una descrizione può avere più varianti: si ispeziona OGNI
+        # variante (testi_di_descrizione appiattisce stringa e VariantiDescrizione).
+        # [1.3.0 / M-3] TUTTI i testi: anche demoni, battute e opzioni di
+        # dialogo, argomenti e testi di vinci/perdi/termina (prima un [refuso]
+        # lì compilava senza avvisi e restava letterale in partita).
+        testi_autore = self._tutti_i_testi()
+        segnaposto_sconosciuti = set()
+        for testo in testi_autore:
+            for ph in estrai_placeholder(testo):
+                # [1.3.0] '[Apri gli occhi.]' è testo fra parentesi, non un
+                # segnaposto: un nome non contiene punteggiatura.
+                if _RE_CHAR_NOME_VIETATO.search(ph):
+                    continue
+                if normalizza_nome(ph) not in nomi_interpolabili:
+                    segnaposto_sconosciuti.add(ph)
+        for ph in sorted(segnaposto_sconosciuti):
+            self.warnings.append(
+                f"Segnaposto '[{ph}]' non corrisponde ad alcuno stato, contatore "
+                f"od oggetto: resterà invariato nel testo (possibile refuso)."
+            )
+
+        # 5. [Livello 5b] Dialoghi: coerenza di NPC e nodi.
+        #    - il nodo d'ingresso dichiarato deve appartenere a un personaggio e
+        #      avere una battuta definita; risolviamo l'ingresso sull'oggetto NPC;
+        #    - chi 'parla' a un nodo deve essere un personaggio;
+        #    - un personaggio senza nodo d'ingresso non è interrogabile (warning).
+        for npc_id, etichetta in self._dialogo_inizio.items():
+            npc = m.trova_oggetto(npc_id)
+            if not npc or not npc.is_personaggio:
+                self.errori.append(
+                    f"Dialogo riferito a '{npc_id}', che non è un personaggio "
+                    f"(dichiaralo con '{npc_id} è un personaggio.')."
+                )
+                continue
+            if etichetta not in m.dialogo_nodi:
+                self.warnings.append(
+                    f"Il dialogo di '{npc_id}' comincia con il nodo '{etichetta}', "
+                    f"ma nessuna battuta lo definisce: la conversazione sarà vuota."
+                )
+            npc.dialogo_iniziale = etichetta
+
+        for etichetta, npc_id in self._nodo_speaker.items():
+            npc = m.trova_oggetto(npc_id)
+            if not npc or not npc.is_personaggio:
+                self.warnings.append(
+                    f"Al nodo '{etichetta}' parla '{npc_id}', che non è un "
+                    f"personaggio: la battuta non sarà mai mostrata."
+                )
+
+        # [1.2.2] Le etichette dei nodi valgono per TUTTA la storia: se due
+        # personaggi scrivono battute allo stesso nodo, le loro conversazioni si
+        # fondono (la battuta dell'uno sovrascrive quella dell'altro, le opzioni
+        # si sommano) e fino alla 1.2.1 accadeva in silenzio. Un nodo condiviso
+        # resta lecito se le battute sono di un solo personaggio (per esempio un
+        # congedo comune raggiunto da più dialoghi).
+        for etichetta, parlanti in self._nodo_parlanti.items():
+            if len(parlanti) > 1:
+                nomi = ", ".join(prima_maiuscola(n) for n in parlanti.values())
+                primo, secondo = [prima_maiuscola(n) for n in list(parlanti.values())[:2]]
+                self.errori.append(
+                    f"Il nodo di dialogo '{etichetta}' ha battute di più personaggi "
+                    f"({nomi}). Le etichette dei nodi valgono per tutta la storia: "
+                    f"le loro conversazioni si fonderebbero, con le battute "
+                    f"sovrascritte e le opzioni sommate. Dai a ciascuno un nodo "
+                    f"suo, per esempio \"{etichetta} {normalizza_nome(primo)}\" e "
+                    f"\"{etichetta} {normalizza_nome(secondo)}\".")
+
+        for id_ogg, ogg in m.oggetti.items():
+            if (ogg.is_personaggio and not ogg.dialogo_iniziale
+                    and not any(a.id_png == id_ogg for a in m.argomenti)):
+                self.warnings.append(
+                    f"Il personaggio '{id_ogg}' non ha un dialogo: dichiara il nodo "
+                    f"d'ingresso con 'Il dialogo di {id_ogg} comincia con \"...\".'."
+                )
+
+        # [0.10.2] Ogni opzione che 'conduce a' un nodo deve puntare a un nodo
+        # esistente, altrimenti la ramificazione è morta (vicolo cieco a runtime).
+        for etichetta, nodo in m.dialogo_nodi.items():
+            for opz in nodo.opzioni:
+                if opz.destinazione and opz.destinazione not in m.dialogo_nodi:
+                    self.warnings.append(
+                        f"Al nodo '{etichetta}' l'opzione '{opz.testo}' conduce al "
+                        f"nodo '{opz.destinazione}', che non esiste: la scelta "
+                        f"chiuderà comunque la conversazione."
+                    )
+
+        # [Livello 6 / 0.11.1] LINTER SEMANTICO — analisi statica non bloccante
+        # sul mondo compilato (vedi sotto). Eseguita in coda alla validazione, sul
+        # canale 'warnings' già esistente: zero modifiche alla grammatica.
+        self.analisi_statica()
+
+        # [Livello 8] BASELINE dei demoni sul fronte di salita: la condizione di
+        # un demone 'Quando ... diventa vera' va confrontata col suo valore
+        # PRECEDENTE; qui registriamo il valore iniziale (mondo appena compilato,
+        # stato vergine) così una condizione GIÀ vera alla partenza non genera un
+        # falso fronte al primo turno. Per i demoni 'ogni_turno' (a livello) il
+        # campo è irrilevante. Il deepcopy dell'IDE preserva questo baseline.
+        # [1.3.0] Senza consumare il caso (vedi Mondo.azzera_memoria_demoni); il
+        # valore definitivo lo fissa imposta_posizione_iniziale, quando il
+        # giocatore ha già il suo posto.
+        m.azzera_memoria_demoni()
+
+    # ==========================================================================
+    # LINTER SEMANTICO (Livello 6 / patch 0.11.1)
+    # ==========================================================================
+    #
+    # Analisi statica del Mondo compilato: emette WARNING (non bloccanti) per i
+    # problemi che non rompono la compilazione ma quasi sempre tradiscono un
+    # errore d'autore. È puramente in LETTURA sul Mondo e non tocca la grammatica
+    # (rischio-ambiguità nullo). Quattro controlli:
+    #   1. stanze irraggiungibili (reachability dal punto di partenza);
+    #   2. oggetti orfani (mai collocati né introdotti da una conseguenza);
+    #   3. regole morte (oscurate da una precedente che scatta sempre);
+    #   4. stati/contatori dichiarati ma mai usati.
+
+    def analisi_statica(self):
+        """Esegue i controlli del linter semantico e accoda i relativi avvisi."""
+        self._lint_stanze_irraggiungibili()
+        self._lint_oggetti_orfani()
+        self._lint_regole_morte()
+        self._lint_variabili_inutilizzate()
+
+    def _lint_stanze_irraggiungibili(self):
+        # Reachability dal punto di partenza sulla sola topologia statica
+        # ('collega' -> stanza.uscite). Il giocatore non viene mai spostato da una
+        # conseguenza, quindi le uscite sono l'unico modo di cambiare stanza: una
+        # stanza non raggiunta qui è davvero irraggiungibile a runtime. La
+        # partenza è quella dichiarata ('Il giocatore comincia in X.'); in
+        # mancanza, la prima stanza definita (come imposta_posizione_iniziale).
+        m = self.mondo
+        if not m.stanze:
+            return
+        partenza = (m.posizione_iniziale if m.posizione_iniziale in m.stanze
+                    else next(iter(m.stanze)))
+        aperture = {}
+        for cons in self._tutte_le_conseguenze():
+            if isinstance(cons, ConseguenzaCollegamento) and cons.destinazione:
+                aperture.setdefault(cons.id_stanza, []).append(cons)
+                opposta = m.opposta_di(cons.direzione)
+                if opposta:
+                    aperture.setdefault(cons.destinazione, []).append(
+                        ConseguenzaCollegamento(cons.destinazione, opposta, cons.id_stanza))
+        raggiunte = set()
+        coda = [partenza]
+        while coda:
+            corrente = coda.pop()
+            if corrente in raggiunte:
+                continue
+            raggiunte.add(corrente)
+            stanza = m.trova_stanza(corrente)
+            if not stanza:
+                continue
+            for dest in stanza.uscite.values():
+                if dest not in raggiunte:
+                    coda.append(dest)
+            # [1.3.0 / M-8] Un passaggio aperto da una conseguenza ('e adesso
+            # la cucina collega nord a la dispensa') conta come uscita.
+            for cons in aperture.get(corrente, ()):
+                if cons.destinazione not in raggiunte:
+                    coda.append(cons.destinazione)
+        for id_stanza in m.stanze:
+            if id_stanza not in raggiunte:
+                self.warnings.append(
+                    f"Stanza '{id_stanza}' irraggiungibile dal punto di partenza "
+                    f"('{partenza}'): nessun percorso di uscite la collega."
+                )
+
+    def _lint_oggetti_orfani(self):
+        # Un oggetto è 'orfano' se non è collocato da nessuna parte (posizione
+        # None: non in una stanza, in un contenitore o su un supporto) E nessuna
+        # conseguenza lo introduce nel gioco (spostandolo in una stanza,
+        # nell'inventario o in un contenitore/supporto). Vale anche per NPC,
+        # contenitori e supporti. Uno spostamento 'nel nulla' non conta come
+        # collocazione (rimuove l'oggetto).
+        m = self.mondo
+        introdotti = set()
+        for cons in self._tutte_le_conseguenze():
+            if isinstance(cons, ConseguenzaSpostamento) and cons.destinazione != "nulla":
+                introdotti.add(cons.id_oggetto)
+            # [0.25.0 / A5] Un movimento PNG deterministico ('va nel corridoio')
+            # colloca il personaggio in una stanza; la forma casuale ('cambia
+            # stanza') invece presuppone che sia già collocato (lo muove soltanto).
+            elif isinstance(cons, ConseguenzaMovimentoPNG) and cons.destinazione is not None:
+                introdotti.add(cons.id_png)
+        for id_ogg, ogg in m.oggetti.items():
+            if ogg.posizione is None and id_ogg not in introdotti:
+                self.warnings.append(
+                    f"Oggetto '{id_ogg}' mai collocato: non è in una stanza né in un "
+                    f"contenitore/supporto, e nessuna conseguenza lo introduce. Il "
+                    f"giocatore non potrà mai trovarlo."
+                )
+
+    def _lint_regole_morte(self):
+        # Una regola è 'morta' (non scatterà mai) quando una regola PRECEDENTE con
+        # identica firma (verbo, bersaglio, secondario, preposizione) e SENZA
+        # condizione la oscura. Per le regole specifiche solo se anche la corrente
+        # è incondizionata (a runtime le condizionali hanno comunque la precedenza
+        # di fase su 1 oggetto, vedi gioco._esegui_comando); per le regole globali
+        # sempre (sono valutate in un unico ciclo: la prima che combacia vince).
+        # Criterio volutamente CONSERVATIVO: nessun falso positivo.
+        m = self.mondo
+        viste = []  # (firma, incondizionata?) delle regole già scorse, in ordine
+        for regola in m.regole:
+            firma = (regola.verbo, regola.id_oggetto_bersaglio,
+                     regola.id_oggetto_secondario, regola.preposizione,
+                     getattr(regola, "fase", "invece"), getattr(regola, "categoria", None),
+                     getattr(regola, "categoria_secondaria", None))
+            globale = regola.globale
+            oscurata = any(
+                f_prec == firma and incond_prec and (globale or regola.condizione is None)
+                for f_prec, incond_prec in viste
+            )
+            if oscurata:
+                dove = "globale" if globale else f"su '{regola.id_oggetto_bersaglio}'"
+                self.warnings.append(
+                    f"Regola morta: 'Invece di {regola.verbo}' ({dove}) è oscurata "
+                    f"da una regola precedente con la stessa firma che scatta "
+                    f"sempre: non scatterà mai."
+                )
+            viste.append((firma, regola.condizione is None))
+
+    def _lint_variabili_inutilizzate(self):
+        # Uno 'stato'/contatore dichiarato ma mai referenziato — in una condizione,
+        # in una conseguenza o in un'interpolazione [nome] di un testo d'autore — è
+        # codice morto: quasi sempre un refuso o un residuo di una versione passata.
+        m = self.mondo
+        if not m.variabili:
+            return
+        usate = set()
+        for cond in self._tutte_le_condizioni():
+            usate |= self._variabili_in_condizione(cond)
+        for cons in self._tutte_le_conseguenze():
+            if isinstance(cons, (ConseguenzaVariabile, ConseguenzaContatore,
+                                 ConseguenzaSceltaStato)):
+                usate.add(cons.nome)
+            # [0.31.0 / Tema 1a] Il contatore usato come quantità ('di [forza]')
+            # è anch'esso un riferimento: non marcarlo come inutilizzato.
+            if isinstance(cons, ConseguenzaContatore):
+                usate |= _variabili_in_operando(cons.valore)
+            # [0.34.0 / Tema 3] La copia stato↔stato usa ENTRAMBI i nomi (il
+            # bersaglio e la sorgente): nessuno dei due è codice morto.
+            if isinstance(cons, ConseguenzaVariabileCopia):
+                usate.add(cons.nome)
+                usate.add(cons.sorgente)
+        for testo in self._tutti_i_testi():
+            for ph in estrai_placeholder(testo):
+                usate.add(normalizza_nome(ph))
+        for nome in m.variabili:
+            if nome not in usate:
+                self.warnings.append(
+                    f"Stato/contatore '{nome}' dichiarato ma mai usato: nessuna "
+                    f"condizione, conseguenza o interpolazione [{nome}] vi fa "
+                    f"riferimento."
+                )
+
+    # --- Raccoglitori condivisi dal linter (puro attraversamento del Mondo) ---
+
+    def _tutte_le_condizioni(self):
+        """Tutte le condizioni presenti nel mondo: regole, opzioni di dialogo e
+        descrizioni condizionali."""
+        m = self.mondo
+        condizioni = [r.condizione for r in m.regole if r.condizione is not None]
+        # [Livello 8] Ogni demone ha SEMPRE una condizione (è la sua ragion d'essere).
+        condizioni += [d.condizione for d in m.demoni]
+        for nodo in m.dialogo_nodi.values():
+            condizioni += [o.condizione for o in nodo.opzioni if o.condizione is not None]
+            condizioni += [c for c, _ in nodo.battute_condizionali]   # [1.3.0]
+        condizioni += [a.condizione for a in m.argomenti if a.condizione is not None]
+        for ent in list(m.stanze.values()) + list(m.oggetti.values()):
+            condizioni += [c for c, _ in ent.descrizioni_condizionali]
+        return condizioni
+
+    def _tutte_le_conseguenze(self):
+        """Tutte le conseguenze del mondo: regole, eventi e opzioni di dialogo."""
+        m = self.mondo
+        conseguenze = []
+        for r in m.regole:
+            conseguenze.extend(r.conseguenze)
+            if getattr(r, "altrimenti", None):   # [1.3.0 / M-9]
+                conseguenze.extend(r.altrimenti[1])
+        for e in m.eventi:
+            conseguenze.extend(e.conseguenze)
+        for d in m.demoni:                 # [Livello 8]
+            conseguenze.extend(d.conseguenze)
+        for nodo in m.dialogo_nodi.values():
+            for opz in nodo.opzioni:
+                conseguenze.extend(opz.conseguenze)
+        for arg in m.argomenti:            # [1.3.0 / M-10]
+            conseguenze.extend(arg.conseguenze)
+        return conseguenze
+
+    def _tutti_i_testi(self):
+        """Tutti i testi d'autore che passano per l'interpolazione [var]:
+        descrizioni (anche condizionali), risposte di regole/eventi, battute e
+        testi delle opzioni di dialogo."""
+        m = self.mondo
+        testi = []
+        for ent in list(m.stanze.values()) + list(m.oggetti.values()):
+            # [0.22.0/A2] Appiattisce le varianti (stringa o VariantiDescrizione).
+            testi += testi_di_descrizione(ent.descrizione)
+            for _, t in ent.descrizioni_condizionali:
+                testi += testi_di_descrizione(t)
+            if getattr(ent, "posto", None):   # [1.1.0]
+                testi.append(ent.posto)
+        testi += [r.risposta for r in m.regole]
+        testi += [r.altrimenti[0] for r in m.regole if getattr(r, "altrimenti", None)]
+        testi += [e.risposta for e in m.eventi]
+        testi += [d.risposta for d in m.demoni]   # [Livello 8]
+        testi += [m.prologo] + list(m.messaggi.values())   # [1.3.0 / M-6]
+        for nodo in m.dialogo_nodi.values():
+            testi.append(nodo.battuta)
+            # [0.33.0 / Tema 4b] Anche le battute condizionali ('… dice "…" se …')
+            # vanno ispezionate per i segnaposto [nome].
+            testi += [t for _, t in nodo.battute_condizionali]
+            testi += [o.testo for o in nodo.opzioni]
+        testi += [a.risposta for a in m.argomenti]            # [1.3.0 / M-10]
+        testi += [c.messaggio for c in self._tutte_le_conseguenze()   # [1.3.0 / M-3]
+                  if isinstance(c, ConseguenzaFinePartita) and c.messaggio]
+        return [t for t in testi if t]
+
+    def _variabili_in_condizione(self, condizione):
+        """Estrae ricorsivamente i nomi di stati/contatori referenziati in una
+        condizione (anche dentro And/Or/Not)."""
+        if condizione is None:
+            return set()
+        if isinstance(condizione, CondizioneVariabile):
+            return {condizione.nome}
+        # [0.34.0 / Tema 3] Il confronto stato↔stato cita due stati: entrambi usati.
+        if isinstance(condizione, CondizioneVariabileUguali):
+            return {condizione.nome, condizione.altro}
+        if isinstance(condizione, CondizioneContatore):
+            # [0.31.0 / Tema 1b] Conta anche il contatore citato come termine di
+            # confronto ('è più di [forza]'): è un uso a tutti gli effetti.
+            return {condizione.nome} | _variabili_in_operando(condizione.valore)
+        if isinstance(condizione, CondizioneNot):
+            return self._variabili_in_condizione(condizione.condizione)
+        if isinstance(condizione, (CondizioneAnd, CondizioneOr)):
+            nomi = set()
+            for sub in condizione.condizioni:
+                nomi |= self._variabili_in_condizione(sub)
+            return nomi
+        return set()
+
+    def _atomi_proprieta(self, condizione):
+        """Estrae ricorsivamente tutti gli atomi CondizioneProprieta annidati in
+        una condizione (anche dentro And/Or/Not). Restituisce una lista."""
+        if condizione is None:
+            return []
+        if isinstance(condizione, CondizioneProprieta):
+            return [condizione]
+        if isinstance(condizione, CondizioneNot):
+            return self._atomi_proprieta(condizione.condizione)
+        if isinstance(condizione, (CondizioneAnd, CondizioneOr)):
+            atomi = []
+            for sub in condizione.condizioni:
+                atomi.extend(self._atomi_proprieta(sub))
+            return atomi
+        return []
+
+# [1.4.0] Usata dalla validazione (e dagli strumenti dell'IDE).
+def _variabili_in_operando(op):
+    """[0.31.0] I nomi di contatore citati da un Operando: solo OperandoVariabile
+    ('[forza]') ne cita uno; numero ed estrazione casuale non citano nulla."""
+    return {op.nome} if isinstance(op, OperandoVariabile) else set()
+
+
+# ==============================================================================
+# 3. MOTORE PRINCIPALE DI COMPILAZIONE (due passate)
+# ==============================================================================
+
+def valida_direzioni_dichiarate(coppie, simboli):
+    """
+    [Livello 4 / L1] Valida le coppie di direzioni personalizzate raccolte in
+    Passata 1. Il nome di una direzione NON può coincidere con una parola
+    riservata né con un nome di entità/variabile: sarebbe un'ambiguità lessicale
+    (il terminale DIREZIONE, a priorità alta, oscurerebbe l'altro uso). Un tale
+    conflitto è un ERRORE bloccante. I nomi già di base sono accettati
+    silenziosamente (no-op). Restituisce (coppie_ok, nomi_extra, errori).
+    """
+    base_forme = {f for forme in DIREZIONI_BASE.values() for f in forme}
+    base_forme |= set(DIREZIONI_BASE.keys())
+    coppie_ok = []
+    nomi_extra = set()
+    errori = []
+    for dir_a, dir_b in coppie:
+        problemi = []
+        for d in (dir_a, dir_b):
+            if d in base_forme:
+                continue  # già una direzione di base: ok
+            if d in PAROLE_RISERVATE or d in simboli.tutti or d in simboli.variabili:
+                problemi.append(d)
+        if problemi:
+            errori.append(
+                f"Direzione personalizzata in conflitto con una parola riservata "
+                f"o un nome esistente: «{', '.join(problemi)}». Scegli un nome "
+                f"diverso per la direzione."
+            )
+            continue
+        coppie_ok.append((dir_a, dir_b))
+        nomi_extra |= ({dir_a, dir_b} - base_forme)
+    return coppie_ok, nomi_extra, errori
+
+
+def _localizza_nome(testo, nome, offset_nel_nome):
+    """[0.30.0 / A1] (riga, colonna) 1-based della prima occorrenza testuale di
+    `nome` nel sorgente, spostata di `offset_nel_nome` per puntare al carattere
+    incriminato. Il nome normalizzato conserva i caratteri originali (cambia solo
+    maiuscole/articolo), quindi la ricerca case-insensitive lo ritrova quasi
+    sempre; in caso contrario ripiega su (1, 1) (posizione imprecisa)."""
+    ago = nome.lower()
+    for n_riga, linea in enumerate(testo.split("\n"), 1):
+        pos = linea.lower().find(ago)
+        if pos != -1:
+            return n_riga, pos + offset_nel_nome + 1
+    return 1, 1
+
+
+def valida_nomi_dichiarati(simboli, testo):
+    """[0.30.0 / A1] Valida i NOMI dichiarati raccolti in Passata 1 (stanze,
+    oggetti, stati/contatori, direzioni personalizzate, verbi multiparola).
+
+    Ognuno di questi diventa un terminale CHIUSO della grammatica generata
+    (ENTITA/VARIABILE/DIREZIONE/VERBO_MULTI), incassato in un letterale regex
+    '/.../': un carattere come '/' lo chiude in anticipo e fa fallire la
+    costruzione del parser con un 'GrammarError' grezzo, su una riga della
+    grammatica GENERATA che all'autore non dice nulla (riprodotto da un tester
+    reale su un nome di stato con '/'). Lo si intercetta QUI, prima di costruire
+    il parser, con un errore d'autore gentile e localizzato.
+
+    Nei nomi sono ammessi solo lettere (anche accentate), cifre, spazi e
+    l'apostrofo — lo stesso alfabeto del terminale WORD. Restituisce una lista di
+    (messaggio, riga, colonna); vuota se tutti i nomi sono validi."""
+    nomi = set(simboli.stanze) | set(simboli.oggetti) | set(simboli.variabili)
+    nomi |= set(simboli.verbi_multi)
+    for dir_a, dir_b in simboli.coppie_direzioni:
+        nomi |= {dir_a, dir_b}
+
+    errori = []
+    for nome in sorted(nomi):
+        if not nome:
+            continue
+        m = _RE_CHAR_NOME_VIETATO.search(nome)
+        if not m:
+            continue
+        ch = m.group(0)
+        riga, colonna = _localizza_nome(testo, nome, m.start())
+        suggerito = _RE_CHAR_NOME_VIETATO.sub("", nome).strip()
+        coda = f" (ad es. «{suggerito}»)" if suggerito and suggerito != nome else ""
+        errori.append((
+            f"Il nome «{nome}» contiene un carattere non consentito: «{ch}». "
+            f"Nei nomi puoi usare soltanto lettere, cifre, spazi e l'apostrofo. "
+            f"Togli o sostituisci «{ch}»{coda}.",
+            riga, colonna,
+        ))
+    return errori
+
+
+# [1.3.0 / G-3] Parole che non possono essere, da sole, il nome di un'entità o
+# di uno stato: stanno dove la grammatica accetta ANCHE un nome (inizio di
+# frase, di condizione o di conseguenza), e il nome le oscurerebbe. 'Il posto è
+# una cosa.' rompeva ogni 'Il posto di …'; un oggetto 'giocatore' rompeva 'Il
+# giocatore comincia…'. Le altre parole riservate ('stanza', 'cosa', 'stato'…)
+# compaiono solo dove un nome non è atteso, e restano nomi leciti.
+NOMI_VIETATI = frozenset({
+    "giocatore", "posto", "dialogo", "descrizione", "quando", "ogni", "invece",
+    "non", "se", "e", "dire", "adesso", "oppure", "càpita",
+    "aumenta", "diminuisci", "vinci", "perdi", "termina",
+    "inventario", "nulla",
+})
+
+
+def valida_collisioni_nomi(simboli, testo):
+    """[1.3.0 / G-3] Nomi che la grammatica non può tenere distinti. Un nome
+    fatto di una sola parola riservata ('Il posto è una cosa.') oscurava le frasi
+    che usano quella parola ('Il posto della mappa…'); una stanza e un oggetto,
+    o un'entità e uno stato, con lo stesso nome producevano errori
+    incomprensibili o un mondo incoerente (una cucina dentro la cucina). Un
+    nome usato in 'collega' diventa una stanza: se è anche un oggetto, di
+    solito è un refuso. Restituisce una lista di (messaggio, riga, colonna)."""
+    errori = []
+    for nome in sorted(simboli.tutti | simboli.variabili):
+        if nome in NOMI_VIETATI:
+            riga, col = _localizza_nome(testo, nome, 0)
+            errori.append((
+                f"«{nome}» è una parola riservata del linguaggio e non può essere, da "
+                f"sola, un nome: usane uno composto (per esempio «{nome} di pietra»).",
+                riga, col))
+    for nome in sorted(simboli.stanze & simboli.oggetti):
+        riga, col = _localizza_nome(testo, nome, 0)
+        errori.append((
+            f"«{nome}» è sia una stanza sia un oggetto (una stanza nasce anche da "
+            f"«collega»): dai loro nomi diversi.", riga, col))
+    for nome in sorted(simboli.tutti & simboli.variabili):
+        riga, col = _localizza_nome(testo, nome, 0)
+        if nome == "turno":
+            # [1.3.0 / M-7] 'il turno' è il numero del turno (scanner: sempre fra
+            # le variabili), non un nome libero.
+            errori.append((
+                "«turno» è il numero del turno in corso («se il turno è almeno 3», "
+                "«[turno]»): non può essere il nome di una stanza o di un oggetto. "
+                "Usane uno composto (per esempio «turno di guardia»).", riga, col))
+            continue
+        errori.append((
+            f"«{nome}» è sia un'entità (stanza, oggetto o personaggio) sia uno stato "
+            f"o un contatore: dai loro nomi diversi.", riga, col))
+    return errori
+
+
+# ==============================================================================
+# 0bis. PREPROCESSORE DEGLI IMPORT MULTI-FILE (Passata 0) — Livello 6 / 0.11.2
+# ==============================================================================
+#
+# La direttiva 'Includi "file.fav".' viene espansa TESTUALMENTE in un unico
+# sorgente PRIMA delle due passate: non raggiunge mai il parser, quindi non
+# tocca la grammatica (invariante LALR intatto). Gestisce: risoluzione dei path
+# relativi (rispetto al file che include), deduplica (lo stesso file è incluso
+# una sola volta — diamanti), rilevamento dei cicli (errore bloccante) e una
+# source map riga-espansa -> (file, riga) per attribuire gli errori al file giusto.
+
+# Una direttiva occupa un'INTERA riga: 'Includi "percorso".' (spazi ai lati
+# ammessi). Il path è quotato (vocabolario nuovo tra virgolette, come alias/verbi).
+_RE_INCLUDI = re.compile(r'^\s*Includi\s+"((?:\\.|[^"\\])*)"\s*\.\s*$', re.IGNORECASE)
+# [1.3.0 / M-11] 'Includi la libreria "verbi".' prende il modulo dalla libreria
+# standard installata con FAVELLA (favella1/libreria), senza doverlo copiare
+# accanto alla storia.
+_RE_INCLUDI_LIBRERIA = re.compile(
+    r'^\s*Includi\s+la\s+libreria\s+"((?:\\.|[^"\\])*)"\s*\.\s*$', re.IGNORECASE)
+
+
+def cartella_libreria():
+    """[1.3.0] La cartella della libreria standard, o None se non è installata
+    (per esempio nel motore che gira nel browser)."""
+    try:
+        from favella1 import LIBRERIA_DIR
+    except Exception:
+        return None
+    return LIBRERIA_DIR if os.path.isdir(LIBRERIA_DIR) else None
+
+
+def _aggiorna_stato_stringa(linea: str, dentro: bool) -> bool:
+    """Aggiorna il flag «siamo dentro una stringa quotata» scorrendo la riga e
+    invertendolo a ogni virgoletta doppia non escappata. Evita che il
+    preprocessore scambi per direttiva un 'Includi \"...\".' che capiti dentro il
+    testo di una descrizione (anche multilinea)."""
+    i = 0
+    while i < len(linea):
+        c = linea[i]
+        if c == "\\":
+            i += 2
+            continue
+        if c == '"':
+            dentro = not dentro
+        i += 1
+    return dentro
+
+
+def espandi_inclusioni(percorso_radice: str, sorgente_radice: str | None = None):
+    """PASSATA 0 — Espande ricorsivamente le direttive 'Includi "...".'.
+
+    Restituisce (testo_espanso, mappa_righe, errori):
+      - testo_espanso: il sorgente unito di tutti i file, senza le direttive;
+      - mappa_righe: lista parallela alle righe di testo_espanso; ogni elemento è
+        (percorso_file, numero_riga_originale 1-based);
+      - errori: messaggi bloccanti (cicli di inclusione, file inclusi mancanti).
+    La normalizzazione tipografica [L2] è applicata per-file qui. Una
+    FileNotFoundError sul file RADICE viene propagata (la gestisce analizza_file,
+    come in precedenza).
+
+    'sorgente_radice' (opzionale) è il testo del file RADICE già in memoria: se
+    presente, il file radice non viene letto da disco (l'IDE compila il buffer
+    non ancora salvato), mentre gli 'Includi' restano risolti dal disco."""
+    righe_out = []
+    mappa = []
+    errori = []
+    gia_inclusi = set()
+
+    def _espandi(percorso, catena, is_root, seed=None):
+        # 'catena' = stack dei realpath in corso di inclusione (per i cicli).
+        real = os.path.realpath(percorso)
+        if real in catena:
+            nomi = " -> ".join(os.path.basename(p) for p in catena + [real])
+            errori.append(f"Ciclo di inclusione rilevato: {nomi}.")
+            return
+        if real in gia_inclusi:
+            return  # già incluso altrove: deduplica (diamante)
+        if seed is not None:
+            testo = normalizza_tipografia(seed)
+        else:
+            try:
+                with open(percorso, "r", encoding="utf-8") as f:
+                    testo = normalizza_tipografia(f.read())
+            except FileNotFoundError:
+                if is_root:
+                    raise
+                errori.append(f"File incluso non trovato: '{percorso}'.")
+                return
+        gia_inclusi.add(real)
+        base = os.path.dirname(os.path.abspath(percorso))
+        dentro_stringa = False
+        for n, linea in enumerate(testo.split("\n"), 1):
+            if not dentro_stringa:
+                m = _RE_INCLUDI_LIBRERIA.match(linea)
+                if m:
+                    cartella = cartella_libreria()
+                    nome = m.group(1).strip()
+                    if not nome.lower().endswith(".fav"):
+                        nome += ".fav"
+                    if cartella is None:
+                        errori.append(f"La libreria standard non è disponibile qui: "
+                                      f"copia '{nome}' accanto alla storia e usa "
+                                      f"'Includi \"{nome}\".'.")
+                    elif not os.path.isfile(os.path.join(cartella, nome)):
+                        disponibili = ", ".join(sorted(f[:-4] for f in os.listdir(cartella)
+                                                       if f.endswith(".fav")))
+                        errori.append(f"La libreria standard non ha il modulo '{nome[:-4]}' "
+                                      f"(ci sono: {disponibili}).")
+                    else:
+                        _espandi(os.path.join(cartella, nome), catena + [real], False)
+                    continue
+                m = _RE_INCLUDI.match(linea)
+                if m:
+                    _espandi(os.path.join(base, m.group(1)), catena + [real], False)
+                    continue
+            righe_out.append(linea)
+            mappa.append((percorso, n))
+            dentro_stringa = _aggiorna_stato_stringa(linea, dentro_stringa)
+
+    _espandi(percorso_radice, [], True, seed=sorgente_radice)
+    return "\n".join(righe_out), mappa, errori
+
+
+def _posizione_origine(mappa_righe, linea) -> str:
+    """Formatta '  [file, riga N]' dalla source map e dal numero di riga nel
+    sorgente espanso. Stringa vuota se la mappa non copre quella riga (es. file
+    a sorgente singolo, dove la riga coincide già con l'originale)."""
+    if mappa_righe and isinstance(linea, int) and 1 <= linea <= len(mappa_righe):
+        file_o, riga_o = mappa_righe[linea - 1]
+        return f"  [{file_o}, riga {riga_o}]"
+    return ""
+
+
+def _avvisa_partenza_implicita(transformer, mappa_righe):
+    """[1.3.0 / M-11] Senza 'Il giocatore comincia in …' la partita parte dalla
+    prima stanza dichiarata; con più file (Includi) quale sia la prima dipende
+    dall'ordine delle inclusioni, e un modulo può spostare l'inizio del gioco
+    senza che l'autore se ne accorga. Lo si dice."""
+    m = transformer.mondo
+    if transformer.start_dichiarato_raw is not None or not m.stanze:
+        return
+    file_sorgente = {f for f, _ in (mappa_righe or [])}
+    if len(file_sorgente) > 1:
+        prima = next(iter(m.stanze.values()))
+        transformer.warnings.append(
+            f"Manca 'Il giocatore comincia in …': la partita comincia in "
+            f"«{prima.nome_visualizzato}», la prima stanza dichiarata, che con più "
+            f"file dipende dall'ordine degli 'Includi'. Dichiara la partenza.")
+
+
+def analizza_file(percorso_file: str) -> Mondo | None:
+    """
+    Legge un file .fav e lo compila in un Mondo popolato, con la pipeline a
+    DUE PASSATE (Livello 2.5):
+      Passata 1  costruisce la symbol-table dei nomi dichiarati;
+      Passata 2  istanzia il parser LALR(1) con ENTITA risolto dai simboli,
+                 genera l'AST, lo trasforma in oggetti e valida la semantica.
+    """
+    errori = []
+    mappa_righe = []
+
+    try:
+        # 0. PASSATA 0 — Preprocessore degli import multi-file [Livello 6 / 0.11.2].
+        # Espande 'Includi "file.fav".' in un unico sorgente PRIMA delle due
+        # passate: la direttiva non raggiunge mai il parser (invariante LALR
+        # intatto). La normalizzazione tipografica [L2] è applicata per-file dentro
+        # il preprocessore; 'mappa_righe' associa ogni riga del sorgente espanso al
+        # file e alla riga originali, per attribuire gli errori al file giusto.
+        testo, mappa_righe, inc_errori = espandi_inclusioni(percorso_file)
+        if inc_errori:
+            print("\n[FAVELLA 1] Errore negli import (Includi):")
+            for err in inc_errori:
+                print(f" - {err}")
+            return None
+
+        if not testo.strip():
+            return Mondo() # File vuoto (eventualmente dopo l'espansione)
+
+        # 1. PASSATA 1 — Symbol-table dei nomi dichiarati.
+        simboli = costruisci_symbol_table(testo)
+        # [0.30.0 / A1] Nomi con caratteri non ammessi (es. '/'): intercettati QUI,
+        # prima di costruire il parser, con un errore d'autore localizzato (il '/'
+        # corromperebbe la grammatica generata con un GrammarError incomprensibile).
+        nomi_errori = valida_nomi_dichiarati(simboli, testo) or valida_collisioni_nomi(simboli, testo)
+        if nomi_errori:
+            print("\n[FAVELLA 1] Errore: nome non valido")
+            for msg, riga, _col in nomi_errori:
+                print(f"Riga {riga}{_posizione_origine(mappa_righe, riga)}")
+                print(f" - {msg}")
+            return None
+        # [Livello 4 / L1] Direzioni personalizzate: valida le coppie raccolte e
+        # ricava i nomi da iniettare nel terminale DIREZIONE. Un conflitto con una
+        # parola riservata o un'entità è un errore bloccante: lo segnaliamo qui,
+        # con un messaggio chiaro, prima ancora di costruire il parser.
+        coppie_dir, nomi_dir, dir_errori = valida_direzioni_dichiarate(
+            simboli.coppie_direzioni, simboli)
+        if dir_errori:
+            print("\n[FAVELLA 1] Errore nelle direzioni personalizzate:")
+            for err in dir_errori:
+                print(f" - {err}")
+            return None
+
+        # 2. PASSATA 2 — Parsing formale LALR(1) con ENTITA, VARIABILE e DIREZIONE chiusi.
+        parser = costruisci_parser(simboli.tutti, simboli.variabili, nomi_dir,
+                                   verbi_multi=simboli.verbi_multi)
+        # [1.3.0] Tutti gli errori di sintassi in una volta (analizza_con_recupero).
+        tree, errori_sintassi = analizza_con_recupero(parser, testo)
+        if errori_sintassi:
+            for e in errori_sintassi:
+                titolo, messaggio, codice = diagnosi_errore(testo, e, simboli, parser)
+                print(f"\n[FAVELLA 1] {titolo}" if codice == "entita-sconosciuta"
+                      else f"\n[{titolo}]")
+                print(f"Riga {e.line}, Colonna {e.column}{_posizione_origine(mappa_righe, e.line)}")
+                if codice != "entita-sconosciuta":
+                    print("-" * 40)
+                    print(e.get_context(testo, span=40).strip())
+                    print("-" * 40)
+                print(f" - {messaggio}")
+            if len(errori_sintassi) > 1:
+                print(f"\n[FAVELLA 1] {len(errori_sintassi)} frasi da correggere.")
+            return None
+
+        # 3. TRASFORMAZIONE (AST -> Oggetti Python)
+        transformer = FavellaTransformer(coppie_dir)
+        transformer.argomenti_parser = (simboli.tutti, simboli.variabili, nomi_dir,
+                                        simboli.verbi_multi)
+        transformer.mondo.file_storia = os.path.basename(percorso_file)   # [1.3.0 / L-6]
+        transformer.transform(tree)
+
+        # 4. VALIDAZIONE SEMANTICA GLOBALE
+        transformer.valida_post()
+        _avvisa_partenza_implicita(transformer, mappa_righe)
+
+        # Estrae i log dal transformer
+        errori.extend(transformer.errori)
+
+        # Avvisi non bloccanti: mostrati sempre, ma non interrompono la build
+        if transformer.warnings:
+            print("\n[FAVELLA 1] Avvisi (non bloccanti):")
+            for w in transformer.warnings:
+                print(f" - {w}")
+
+        if errori:
+            print("\n[FAVELLA 1] Trovati errori di logica durante la costruzione:")
+            for err in errori:
+                print(f" - {err}")
+            return None
+
+        return transformer.mondo
+
+    except UnexpectedInput as e:
+        # [Livello 2.5] Prima del messaggio generico, prova la diagnosi mirata:
+        # spesso l'errore è semplicemente un'entità mai dichiarata.
+        diagnosi = diagnostica_entita_sconosciuta(testo, e, simboli)
+        if diagnosi:
+            print("\n[FAVELLA 1] Errore: entità non dichiarata")
+            print(f"Riga {e.line}, Colonna {e.column}{_posizione_origine(mappa_righe, e.line)}")
+            print(f" - {diagnosi}")
+            return None
+
+        # Errore sintattico formale sollevato da Lark (Es: manca punto, ortografia)
+        print("\n[ERRORE DI SINTASSI FAVELLA]")
+        print(f"Riga {e.line}, Colonna {e.column}{_posizione_origine(mappa_righe, e.line)}")
+
+        # Mostra il frammento di codice errato
+        contesto = e.get_context(testo, span=40)
+        print("-" * 40)
+        print(contesto.strip())
+        print("-" * 40)
+
+        # Prova a suggerire cosa si aspettava il parser
+        attesi = e.expected if hasattr(e, 'expected') else None
+        if attesi:
+            print(f"Mi aspettavo: {', '.join(attesi)}")
+
+        return None
+        
+    except FileNotFoundError:
+        print(f"[ERRORE FATALE] Il file '{percorso_file}' non è stato trovato.")
+        return None
+        
+    except Exception as ex:
+        # Bug del compilatore (non un errore dell'autore): lo stack trace serve
+        # a chi sviluppa il motore per individuare il punto esatto del crash.
+        import traceback
+        traceback.print_exc()
+        print(f"[ERRORE INTERNO] Crash durante la compilazione: {ex}")
+        return None
+
+
+# ==============================================================================
+# COMPILAZIONE STRUTTURATA PER L'IDE (Favella Studio — Fase 2)
+# ------------------------------------------------------------------------------
+# Tutto ciò che segue è ADDITIVO: non tocca analizza_file (che resta byte-stabile
+# per il motore, la CLI e la suite di test). Rispecchia la stessa pipeline ma RACCOGLIE
+# le diagnostiche in una struttura dati con posizioni (file, riga, colonna) invece
+# di stamparle, così l'IDE può popolare il pannello Problemi e i marker di Monaco.
+# ==============================================================================
+
+# La capacità "seedable" (compilare un buffer in memoria) è stata assorbita da
+# espandi_inclusioni tramite il parametro opzionale 'sorgente_radice'; l'alias
+# resta per i chiamanti del percorso IDE.
+_espandi_inclusioni_seedable = espandi_inclusioni
+
+
+def _riassunto_mondo(mondo):
+    """Riassunto leggero e read-only del Mondo compilato, per l'IDE. In Fase 2
+    servono solo conteggi e nomi (la mappa/inspector completi arrivano in Fase 4).
+    Tutto via getattr difensivo: non deve mai sollevare."""
+    def _nomi(dizio):
+        return [getattr(v, "nome_visualizzato", k) for k, v in dizio.items()]
+    return {
+        "rooms": _nomi(getattr(mondo, "stanze", {})),
+        "objects": _nomi(getattr(mondo, "oggetti", {})),
+        "rulesCount": len(getattr(mondo, "regole", [])),
+        "eventsCount": len(getattr(mondo, "eventi", [])),
+        "variables": sorted(getattr(mondo, "variabili", {}).keys()),
+        "dialogueNodes": len(getattr(mondo, "dialogo_nodi", {})),
+        "start": getattr(mondo, "posizione_iniziale", None),
+    }
+
+
+def analizza_file_strutturato(percorso_file, sorgente=None):
+    """[Favella Studio / Fase 2] Compila come analizza_file ma RACCOGLIE le
+    diagnostiche in una struttura dati invece di stamparle, per l'IDE. Additiva:
+    analizza_file resta intatta. Se 'sorgente' è dato, compila quel testo come
+    radice (buffer live non salvato), risolvendo gli 'Includi' dal disco.
+
+    Ritorna un dict serializzabile in JSON:
+        {ok: bool, errors: [diag...], warnings: [diag...], worldSummary: dict|None}
+    dove diag = {message, file, line, col, severity, code, imprecise}.
+
+    Posizioni sintattiche: PRECISE — la riga del sorgente espanso è rimappata al
+    (file, riga) originale tramite la source map dell'espansione degli Includi.
+    Posizioni semantiche: BEST-EFFORT — gli errori del transformer sono stringhe
+    senza riga; si cerca il nome citato (tra apici/«») nel sorgente e si mappa la
+    prima occorrenza. Se non si trova, posizione `imprecise` sul file radice.
+    """
+    errors = []
+    warnings = []
+    testo = ""
+    mappa_righe = []
+    simboli = None
+
+    def _diag(message, *, file=None, line=None, col=None,
+              severity="error", code="", imprecise=False):
+        return {
+            "message": message,
+            "file": file if file is not None else percorso_file,
+            "line": line,
+            "col": col,
+            "severity": severity,
+            "code": code,
+            "imprecise": imprecise,
+        }
+
+    def _posizione_da_linea_espansa(linea_espansa):
+        """(file, riga originale) dalla source map; fallback al file radice."""
+        if (mappa_righe and isinstance(linea_espansa, int)
+                and 1 <= linea_espansa <= len(mappa_righe)):
+            f_o, r_o = mappa_righe[linea_espansa - 1]
+            return f_o, r_o
+        return percorso_file, linea_espansa
+
+    def _risolvi_semantica(messaggio):
+        """Best-effort: estrai i nomi citati nel messaggio, cercali nel sorgente
+        espanso e mappa a (file, riga, imprecise=False) la PRIMA riga che ne cita
+        di più. Se nulla combacia: (file radice, 1, imprecise=True).
+        [1.4.4] Prima vinceva la prima riga che conteneva il primo nome, anche
+        dentro un'altra parola e nei commenti: «Proprietà 'sopra' per oggetto
+        inesistente: 'La soffitta'» finiva sul «Soprabito» di una descrizione.
+        Ora i nomi valgono solo come parole intere, i commenti non contano, una
+        riga che li cita tutti batte una che ne cita uno e, a pari nomi, vince
+        quella che COMINCIA con uno di loro (la frase sbagliata comincia col
+        suo soggetto: «La soffitta è sopra.», non «La camera collega sopra a la
+        soffitta.»)."""
+        citati = re.findall(r"'([^']+)'|«([^»]+)»|\"([^\"]+)\"", messaggio)
+        nomi = list(dict.fromkeys(n for tup in citati for n in tup if n))
+        modelli = [re.compile(r"(?<!\w)" + re.escape(n.lower()) + r"(?!\w)") for n in nomi]
+        migliore, punti_migliori = None, 0
+        for i, linea in enumerate(testo.split("\n"), 1):
+            minuscola = linea.strip().lower()
+            if minuscola.startswith("#"):
+                continue
+            trovati = [m.search(minuscola) for m in modelli]
+            punti = 2 * sum(1 for t in trovati if t)
+            if any(t and t.start() == 0 for t in trovati):
+                punti += 1
+            if punti > punti_migliori:
+                migliore, punti_migliori = i, punti
+        if migliore is None:
+            return percorso_file, 1, True
+        f_o, r_o = _posizione_da_linea_espansa(migliore)
+        return f_o, r_o, False
+
+    try:
+        # PASSATA 0 — espansione Includi (da disco o da buffer in memoria).
+        if sorgente is not None:
+            testo, mappa_righe, inc_errori = _espandi_inclusioni_seedable(
+                percorso_file, sorgente)
+        else:
+            testo, mappa_righe, inc_errori = espandi_inclusioni(percorso_file)
+        if inc_errori:
+            for err in inc_errori:
+                errors.append(_diag(err, line=1, col=1, code="includi", imprecise=True))
+            return {"ok": False, "errors": errors, "warnings": warnings,
+                    "worldSummary": None}
+
+        if not testo.strip():
+            return {"ok": True, "errors": [], "warnings": [],
+                    "worldSummary": _riassunto_mondo(Mondo())}
+
+        # PASSATA 1 — symbol-table + validazione nomi e direzioni.
+        simboli = costruisci_symbol_table(testo)
+        # [0.30.0 / A1] Nomi con caratteri non ammessi (es. '/'): diagnostica
+        # localizzata invece del GrammarError grezzo che ne deriverebbe.
+        for msg, riga, col in (valida_nomi_dichiarati(simboli, testo)
+                               or valida_collisioni_nomi(simboli, testo)):
+            f_o, r_o = _posizione_da_linea_espansa(riga)
+            errors.append(_diag(msg, file=f_o, line=r_o, col=col,
+                                code="nome-non-valido"))
+        if errors:
+            return {"ok": False, "errors": errors, "warnings": warnings,
+                    "worldSummary": None}
+        coppie_dir, nomi_dir, dir_errori = valida_direzioni_dichiarate(
+            simboli.coppie_direzioni, simboli)
+        if dir_errori:
+            for err in dir_errori:
+                f_o, r_o, imp = _risolvi_semantica(err)
+                errors.append(_diag(err, file=f_o, line=r_o, col=1,
+                                    code="direzioni", imprecise=imp))
+            return {"ok": False, "errors": errors, "warnings": warnings,
+                    "worldSummary": None}
+
+        # PASSATA 2 — parsing LALR + trasformazione + validazione semantica.
+        parser = costruisci_parser(simboli.tutti, simboli.variabili, nomi_dir,
+                                   verbi_multi=simboli.verbi_multi)
+        # [1.3.0] Tutti gli errori di sintassi, ciascuno con la sua posizione.
+        tree, errori_sintassi = analizza_con_recupero(parser, testo)
+        if errori_sintassi:
+            for e in errori_sintassi:
+                _titolo, messaggio, codice = diagnosi_errore(testo, e, simboli, parser)
+                f_o, r_o = _posizione_da_linea_espansa(getattr(e, "line", None))
+                col = getattr(e, "column", 1) or 1
+                if codice == "sintassi":
+                    try:
+                        messaggio += "\n" + e.get_context(testo, span=40).strip()
+                    except Exception:
+                        pass
+                errors.append(_diag(messaggio, file=f_o, line=r_o, col=col, code=codice))
+            return {"ok": False, "errors": errors, "warnings": warnings,
+                    "worldSummary": None}
+        transformer = FavellaTransformer(coppie_dir)
+        transformer.argomenti_parser = (simboli.tutti, simboli.variabili, nomi_dir,
+                                        simboli.verbi_multi)
+        transformer.transform(tree)
+        transformer.valida_post()  # include il linter (analisi_statica)
+        _avvisa_partenza_implicita(transformer, mappa_righe)
+
+        for msg in transformer.errori:
+            f_o, r_o, imp = _risolvi_semantica(msg)
+            errors.append(_diag(msg, file=f_o, line=r_o, col=1,
+                                severity="error", code="semantica", imprecise=imp))
+        for msg in transformer.warnings:
+            f_o, r_o, imp = _risolvi_semantica(msg)
+            warnings.append(_diag(msg, file=f_o, line=r_o, col=1,
+                                  severity="warning", code="lint", imprecise=imp))
+
+        ok = not errors
+        return {
+            "ok": ok,
+            "errors": errors,
+            "warnings": warnings,
+            "worldSummary": _riassunto_mondo(transformer.mondo) if ok else None,
+        }
+
+    except UnexpectedInput as e:
+        # Errore sintattico: posizione PRECISA via source map. Prima prova la
+        # diagnosi mirata "entità sconosciuta" (come fa analizza_file).
+        diagnosi = diagnostica_entita_sconosciuta(testo, e, simboli) if simboli else None
+        f_o, r_o = _posizione_da_linea_espansa(getattr(e, "line", None))
+        col = getattr(e, "column", 1) or 1
+        if diagnosi:
+            errors.append(_diag(diagnosi, file=f_o, line=r_o, col=col,
+                                code="entita-sconosciuta"))
+        else:
+            contesto = ""
+            try:
+                contesto = e.get_context(testo, span=40).strip()
+            except Exception:
+                pass
+            attesi = getattr(e, "expected", None)
+            msg = "Errore di sintassi."
+            if attesi:
+                msg += f" Mi aspettavo: {', '.join(sorted(str(a) for a in attesi))}."
+            if contesto:
+                msg += f"\n{contesto}"
+            errors.append(_diag(msg, file=f_o, line=r_o, col=col, code="sintassi"))
+        return {"ok": False, "errors": errors, "warnings": warnings,
+                "worldSummary": None}
+
+    except FileNotFoundError:
+        errors.append(_diag(f"File non trovato: '{percorso_file}'.",
+                            line=1, col=1, code="file-mancante", imprecise=True))
+        return {"ok": False, "errors": errors, "warnings": warnings,
+                "worldSummary": None}
+
+    except Exception as ex:
+        errors.append(_diag(f"Errore interno del compilatore: {type(ex).__name__}: {ex}",
+                            line=1, col=1, code="interno", imprecise=True))
+        return {"ok": False, "errors": errors, "warnings": warnings,
+                "worldSummary": None}
+
+
+def compila_mondo(percorso_file, sorgente=None):
+    """[Favella Studio / Fase 3] Compila un .fav in un Mondo GIOCABILE. ADDITIVA:
+    non tocca analizza_file (byte-stabile per motore/CLI/test). Rispecchia la
+    stessa pipeline a tre passate ma RESTITUISCE il Mondo popolato invece di
+    stamparne il riepilogo, così il sidecar dell'IDE può avviarci una partita.
+
+    Se 'sorgente' è dato, compila quel buffer come radice (testo live non ancora
+    salvato), risolvendo gli 'Includi' dal disco rispetto alla cartella di
+    'percorso_file'. Restituisce il Mondo, oppure None se la compilazione
+    fallisce per qualunque motivo (import, direzioni, sintassi, semantica): in tal
+    caso l'IDE ha già le diagnostiche puntuali dal canale 'compile'
+    (analizza_file_strutturato). NON stampa nulla: tace di proposito, perché la
+    resa degli errori d'autore vive interamente nel percorso strutturato."""
+    try:
+        # PASSATA 0 — espansione Includi (da disco o da buffer in memoria).
+        if sorgente is not None:
+            testo, _mappa, inc_errori = _espandi_inclusioni_seedable(
+                percorso_file, sorgente)
+        else:
+            testo, _mappa, inc_errori = espandi_inclusioni(percorso_file)
+        if inc_errori or not testo.strip():
+            return None
+
+        # PASSATA 1 — symbol-table + validazione direzioni.
+        simboli = costruisci_symbol_table(testo)
+        coppie_dir, _nomi, dir_errori = valida_direzioni_dichiarate(
+            simboli.coppie_direzioni, simboli)
+        if dir_errori:
+            return None
+
+        # PASSATA 2 — parsing LALR + trasformazione + validazione semantica.
+        parser = costruisci_parser(simboli.tutti, simboli.variabili, _nomi,
+                                   verbi_multi=simboli.verbi_multi)
+        tree = parser.parse(testo)
+        transformer = FavellaTransformer(coppie_dir)
+        transformer.argomenti_parser = (simboli.tutti, simboli.variabili, _nomi,
+                                        simboli.verbi_multi)
+        transformer.mondo.file_storia = os.path.basename(percorso_file or "")   # [1.3.0 / L-6]
+        transformer.transform(tree)
+        transformer.valida_post()
+        if transformer.errori:
+            return None
+        return transformer.mondo
+    except Exception:
+        return None
+
+
+# ==============================================================================
+# [1.4.0 / L-7] GLI STRUMENTI IN MODULI PROPRI
+# ------------------------------------------------------------------------------
+# Fino alla 1.3.0 questo file teneva insieme, oltre al nucleo, l'analisi per gli
+# editor visuali, il riordino, il serializzatore e l'esportazione HTML. Ora
+# stanno in strumenti_ide.py ed esportazione.py. I loro nomi restano raggiungibili
+# da qui con un import pigro (PEP 562): `from compilatore import esporta_html`
+# funziona come prima, ma il nucleo non carica gli strumenti finché nessuno li
+# chiede (il motore nel browser non li ha affatto).
+# ==============================================================================
+
+_MODULO_DI = {
+    "analizza_outline": "strumenti_ide", "analizza_regole": "strumenti_ide",
+    "analizza_variabili": "strumenti_ide", "analizza_dialoghi": "strumenti_ide",
+    "riordina_sorgente": "strumenti_ide", "serializza_frase": "strumenti_ide",
+    "esporta_html": "esportazione",
+}
+
+
+def __getattr__(nome):
+    modulo = _MODULO_DI.get(nome)
+    if modulo is None:
+        raise AttributeError(f"module {__name__!r} has no attribute {nome!r}")
+    import importlib
+    return getattr(importlib.import_module(modulo), nome)
+
+
+def main():
+    print("FAVELLA 1 COMPILER TEST")
+    if len(sys.argv) > 1:
+        m = analizza_file(sys.argv[1])
+        if m:
+            print("Compilazione AST + Transform completata con successo!")
+            print(str(m))
+
+if __name__ == "__main__":
+    main()

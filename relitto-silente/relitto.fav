@@ -1,0 +1,177 @@
+# ╔══════════════════════════════════════════════════════════════════════════╗
+# ║  IL RELITTO SILENTE — remake (FAVELLA 1, motore 1.4.4)                     ║
+# ║  di Simone Pizzi «Pitz72». Ispirato a «Il Relitto», racconto primo di      ║
+# ║  «Dal registro della Santa Maria».                                         ║
+# ╚══════════════════════════════════════════════════════════════════════════╝
+# Intorno al 2201. William T. Eriksonn, unico abitante della Santa Maria
+# (cargo TSC-1972), recuperante con la stiva vuota da sei settimane, intercetta
+# una massa che beve il radar. Ci sale per tagliarne un pezzo da vendere.
+#
+# Questo file è l'orchestratore: titolo, prologo, stati e contatori globali,
+# direzioni, topologia, moduli. Il progetto è in progettazione/01-mappa-espansione.md.
+#
+# Moduli, uno per atto più quelli trasversali:
+#   aria.fav        il margine: l'aria della tuta
+#   santamaria.fav  Atto I   — la Santa Maria, Yusuf
+#   ingresso.fav    Atto II  — scafo, camera, vestibolo, gola di mezzo
+#   corridoio.fav   Atto III — il corridoio e la Grande Porta
+#   vita.fav        Atto III — serra (L.V.), arca biologica, teche, vivaio
+#   tecnica.fav     Atto III — laboratorio, energia, ricarica
+#   equipaggio.fav  Atto III — alloggio, nido, l'eco del Piccolo
+#   memoria.fav     Atto III — santuario del silenzio, scriptorium, archivio
+#   ponte.fav       Atto IV  — ponte, anticamera, santuario centrale, Anziano
+#   fuga.fav        Atto V   — la nave che si disgrega
+#   traduci.fav     la matrice di traduzione (tutti i testi alieni)
+#   echi.fav        il Sintonizzatore (tutte le voci)
+#   finali.fav      i sei finali e la riga di registro
+#
+# Voce narrante: seconda persona, presente. La voce che racconta non dice mai
+# «William»: il nome lo dicono soltanto Yusuf, il registro di bordo e la riga
+# di registro che chiude ogni finale.
+
+Il titolo è "Il Relitto Silente".
+L'autore è "Simone Pizzi".
+Il prologo è "Scatola nera di una tuta extraveicolare. Traccia recuperata, integrità parziale.\n\n«…la spia è verde. Allora registra. Facciamo finta che registri.\nL'acqua è finita ieri. Il riscaldamento stanotte. L'aria la conto ancora, ma la conto male: i numeri mi arrivano tardi, uno alla volta, e lo so cosa vuol dire.\nHo firmato tutte le carte che servivano per partire da solo. Ci tenevo tanto.\nQui dentro c'è una cosa viva. Sta dietro un vetro, a mezzo metro da me. La vedo pulsare. Non la so aprire.»\n\nFine della traccia.".
+
+# Le uscite non rivelano i nomi dei luoghi che non hai ancora visto.
+Le uscite nominano solo le stanze visitate.
+
+# ============================================================================
+# 1. STATI GLOBALI
+# ============================================================================
+# Energia di bordo e proiezione del Ponte sono lette da più stanze; il
+# «sistema trino» è la conoscenza che apre la porta circolare e si apprende
+# per due vie (mappa stellare o Stele).
+L'energia è uno stato.
+L'energia è assente.
+
+La proiezione è uno stato.
+La proiezione è spenta.
+
+Il sistema è uno stato.
+Il sistema è ignoto.
+
+# La fuga: diventa «iniziata» al congedo dell'Anziano (strato 4). Già letta
+# dall'aria (la protezione vitale vale solo prima della fuga).
+La fuga è uno stato.
+La fuga è lontana.
+
+# ============================================================================
+# 2. CONTATORI
+# ============================================================================
+Le chiavi è un contatore.
+La traduzione è un contatore.
+Gli echi è un contatore.
+Le risonanze è un contatore.
+# La strada di L.V., ricostruibile dalle tracce T1–T5 (mappa, §5.4).
+Le tracce è un contatore.
+
+La traduzione parte da 0.
+
+# ============================================================================
+# 2b. PROPRIETÀ OPPOSTE E VERBI DEL RELITTO (dall'originale)
+# ============================================================================
+Vestita e svestita sono opposte.
+Compatta e tagliata sono opposte.
+Acceso e spento sono opposte.
+Schiuso e serrato sono opposte.
+Attivo e opaco sono opposte.
+Svuotata e sigillata sono opposte.
+Segnata e vergine sono opposte.
+Risuonata e muta sono opposte.
+Svelata e celata sono opposte.
+
+"analizza" è un comando.
+"tocca" è un comando.
+"traduci" è un comando.
+"incidi" è un comando.
+"sintonizza" è un comando.
+"indossa" è un comando.
+
+Invece di tocca: dire "Cosa vuoi toccare? Su questa nave quasi tutto chiede di essere sfiorato con rispetto.".
+Invece di incidi: dire "Sollevi la taglierina, poi ti fermi. Non ogni parete merita un segno. Alcuni luoghi, su questa nave, lo chiedono. Qui no.".
+
+# ============================================================================
+# 3. DIREZIONI
+# ============================================================================
+# Solo punti cardinali, su e giù, e una coppia per il boccaporto: «esci» porta
+# fuori, «entra» porta dentro. Così le uscite si leggono anche al contrario,
+# quando nella fuga la nave si ripercorre all'indietro. Il gating usa la
+# condizione «se il giocatore è in [stanza]».
+Dentro e fuori sono direzioni opposte.
+
+# ============================================================================
+# 4. TOPOLOGIA — il ritorno è automatico per ogni «collega»
+# ============================================================================
+# Atto I — la Santa Maria
+La plancia collega ovest a la stiva.
+La plancia collega nord a la cuccetta.
+La stiva collega giù a la sala macchine.
+La stiva collega fuori a lo scafo.
+
+# Atto II — l'ingresso
+Lo scafo collega giù a la camera di compensazione.
+La camera di compensazione collega ovest a il vestibolo delle gole.
+Il vestibolo delle gole collega ovest a il corridoio principale.
+Il vestibolo delle gole collega giù a la gola di mezzo.
+La gola di mezzo collega giù a la sala delle teche.
+La sala delle teche collega ovest a il vivaio.
+# Il nodo di fibre tiene chiusa questa strozzatura fino alla fuga (vita.fav).
+La sala delle teche collega est a la gola del ritorno.
+
+# Atti III e IV — il corridoio e le ali (la Gola del ritorno, Atto V, si apre
+# durante la fuga: fuga.fav)
+Il corridoio principale collega nord a il santuario del silenzio.
+Il corridoio principale collega sud a la serra morente.
+Il corridoio principale collega giù a il laboratorio di risonanza.
+Il corridoio principale collega nordest a l'alloggio dell'equipaggio.
+Il corridoio principale collega ovest a il ponte di comando.
+Il santuario del silenzio collega ovest a lo scriptorium.
+Lo scriptorium collega nord a l'arca della memoria.
+La serra morente collega ovest a l'arca biologica.
+L'alloggio dell'equipaggio collega nord a il nido.
+Il ponte di comando collega ovest a l'anticamera.
+L'anticamera collega ovest a il santuario centrale.
+
+# ============================================================================
+# 5. POSIZIONE INIZIALE
+# ============================================================================
+Il giocatore comincia in plancia.
+
+# ============================================================================
+# 6. MODULI — espansi dal preprocessore prima del parsing
+# ============================================================================
+# L'ordine conta: fra regole e descrizioni condizionali vince la prima
+# dichiarata. Le varianti della fuga hanno «e la fuga è lontana» nei moduli
+# che vengono prima, così in fuga valgono quelle di fuga.fav.
+Includi "aria.fav".
+Includi "santamaria.fav".
+Includi "ingresso.fav".
+Includi "corridoio.fav".
+Includi "vita.fav".
+Includi "tecnica.fav".
+Includi "equipaggio.fav".
+Includi "memoria.fav".
+Includi "ponte.fav".
+Includi "fuga.fav".
+Includi "traduci.fav".
+Includi "echi.fav".
+Includi "finali.fav".
+
+# ============================================================================
+# 7. L'AMBIENTE DEL RELITTO — vive da sé, una volta dentro
+# ============================================================================
+# (Era «Ogni 9 turni» nell'originale, sempre la stessa frase, e si sentiva
+# anche sulla Santa Maria.) Tre segni diversi, rari: insieme circa uno ogni
+# dodici turni.
+Ogni turno se l'ingresso è richiuso e la fuga è lontana e càpita (1 su 36): dire "Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che ti arriva nei denti prima che nelle cuffie. Poi più niente.".
+Ogni turno se l'ingresso è richiuso e la fuga è lontana e càpita (1 su 36): dire "Nella cuffia il brusio cala fino quasi a sparire, come una sala piena che smette di parlare quando entri. Poi riprende.".
+Ogni turno se l'ingresso è richiuso e la fuga è lontana e càpita (1 su 36): dire "Per un battito, qualcosa nelle pareti si accende tutto insieme e si rispegne. Non le hai toccate.".
+
+# ============================================================================
+# 8. DEMONI — if-then autonomi, valutati a fine turno
+# ============================================================================
+# Fronte di salita: scattano una volta sulla transizione falso→vero.
+Quando le chiavi è almeno 3: dire "Le tre luci — verde, bianca e ambrata — pulsano all'unisono. La loro frequenza accelera, il ronzio diventa un gong risonante che vibra in tutta la nave. Il simbolo a stella brilla di luce accecante, e la Grande Porta, a ovest, non si apre: si dissolve in particelle di luce, come stelle che tornano al cielo." e adesso la grande porta è aperta.
+Quando l'energia è ripristinata diventa vera: dire "Un brivido percorre lo scafo. Lontano, sistemi dormienti da secoli tornano a respirare uno dopo l'altro. Per la prima volta, il relitto non è del tutto morto.".
+Quando la traduzione è almeno 100 diventa vera: dire "(MATRICE DI TRADUZIONE: [traduzione]% — DECODIFICA COMPLETATA) Per un momento la distanza tra te e loro collassa: non c'è più nulla di alieno nel linguaggio. Non sei più uno scopritore. Sei un testimone.".

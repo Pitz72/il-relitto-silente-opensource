@@ -1,0 +1,165 @@
+# Percorso della variante segreta «La prima nota» (e dell'invariante I2: chi
+# ascolta quasi tutto torna, ma solo usando la cella e la ricarica).
+# Tutte e sette le voci profonde, la nota (reattore e sonaglio), le tracce di
+# L.V., la placca completata, la risposta vera al Piccolo, il seme.
+#   python motore/favella.py collaudo relitto-silente/relitto.fav --finali --percorso collaudo/prima-nota.txt
+
+# --- Atto I ---
+analizza la nave aliena
+accosta
+spara gli arpioni
+parla con yusuf
+Ho trovato una cosa.
+Te lo porto.
+nord
+leggi il registro
+prendi la chiavetta
+sud
+ovest
+prendi la tuta
+indossa la tuta
+apri il kit
+prendi la taglierina
+prendi la batteria
+prendi la cella di riserva
+giù
+apri la cassetta
+prendi il bengala
+ascolta il reattore
+su
+fuori
+
+# --- Atto II ---
+analizza lo scafo nero
+analizza la giuntura
+usa la taglierina sulla giuntura
+giù
+usa la batteria sul pannello
+apri la porta interna
+ovest
+
+# --- Ala della Vita: teche e vivaio (T3), poi la serra (T4, R7) ---
+giù
+abbassa il faro
+giù
+esamina il cavo spezzato
+segui la parete
+ovest
+prendi la tavoletta
+traduci le tabelle di semina
+est
+su
+su
+alza il faro
+ovest
+analizza le tacche
+incidi le tacche
+analizza la lastra dati
+sud
+usa la tavoletta sulla teca
+prendi il seme
+ascolta la scatola nera
+ovest
+prendi il dispositivo medico
+prendi il cristallo
+usa il dispositivo medico sul cristallo
+est
+nord
+
+# --- Ala Tecnica ---
+giù
+prendi il sintonizzatore
+sintonizza il generatore
+usa il cristallo sul generatore
+su
+
+# --- Ala dell'Equipaggio ---
+nordest
+prendi il cilindro mnemonico
+analizza il cilindro mnemonico
+sintonizza le alcove
+sintonizza le alcove
+nord
+sintonizza la culla
+suona il sonaglio
+sud
+sudovest
+
+# --- Ala della Memoria ---
+nord
+sintonizza il bassorilievo
+ovest
+prendi il disco
+sintonizza il globo olografico
+sintonizza la lastra incisa
+nord
+prendi il nucleo
+analizza il nucleo
+sud
+est
+gira il disco
+gira il disco
+usa il disco sull'altare
+prendi la stele
+analizza la stele
+sintonizza il bassorilievo
+traduci il bassorilievo
+sud
+
+# --- Di nuovo nel laboratorio: l'Ingegnere (R4) e la ricarica ---
+giù
+sintonizza il generatore
+ricarica la tuta
+su
+
+# --- Di nuovo nella serra: lo xeno-botanico (R1) e la placca ---
+sud
+sintonizza le piante
+sintonizza le piante
+completa la parola
+nord
+
+# --- La Grande Porta e il Ponte ---
+usa il seme sulla grande porta
+usa la stele sulla grande porta
+usa il nucleo sulla grande porta
+ovest
+usa la postazione
+analizza la mappa stellare
+sintonizza la struttura centrale
+
+# --- Di nuovo nel Nido: la risposta vera (R5) ---
+est
+nordest
+nord
+parla con l'eco
+Perché siete arrivati.
+Lascia stare.
+sud
+sudovest
+ovest
+usa la cella di riserva
+esamina il visore
+
+# --- Atto IV ---
+tocca le punte
+ovest
+ovest
+parla con l'anziano
+C'era un uomo, prima di me.
+Gli ho lasciato un segno.
+E la musica?
+Allora cosa devo fare?
+[Chiudi gli occhi e lascia andare.]
+[Resta.]
+[Apri gli occhi.]
+
+# --- Atto V: la luce del Navarca ---
+prendi il seme
+giù
+ovest
+su
+su
+est
+su
+dentro

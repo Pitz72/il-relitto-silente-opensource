@@ -1,0 +1,121 @@
+# Prova completa degli Atti I e II: ogni oggetto, ogni ramo di
+# Yusuf, i tentativi sbagliati, il risuonatore staccato e posato, la cella.
+# Non arriva a un finale: serve a leggere il testo come lo vede chi gioca.
+#   python collaudo/trascrivi.py relitto-silente/relitto.fav collaudo/prova-atti-I-II.txt -o collaudo/trascrizione-atti-I-II.txt
+
+# --- Plancia ---
+esamina l'oblò
+esamina il quadrante del margine
+esamina il quadro di prossimità
+esamina la radio
+accosta
+spara gli arpioni
+parla con yusuf
+Mi serve credito.
+Va bene.
+analizza la nave aliena
+guarda
+accendi il faro di prua
+parla con yusuf
+Ho trovato una cosa.
+E se dentro c'è qualcuno?
+Te lo porto.
+accosta
+accendi il faro di prua
+spara gli arpioni
+guarda
+esamina la radio
+parla con yusuf
+Niente. Volevo sentire una voce.
+Chiudi la comunicazione.
+
+# --- Cuccetta ---
+nord
+esamina la branda di sopra
+esamina l'armadietto
+esamina l'oblò
+leggi il registro
+prendi il registro
+prendi la chiavetta
+leggi il registro
+sud
+
+# --- Stiva e sala macchine ---
+ovest
+esamina il lettore
+esamina i ganci
+fuori
+esamina la tuta
+indossa la tuta
+prendi la tuta
+indossa la tuta
+inventario
+esamina il visore
+esamina il faro del casco
+abbassa il faro
+alza il faro
+usa la cella di riserva
+apri il kit
+prendi la taglierina
+prendi la batteria
+prendi la cella di riserva
+guarda
+giù
+apri la cassetta
+prendi l'amplificatore di firma
+prendi il bengala
+accendi il bengala
+ascolta il reattore
+ascolta il reattore
+su
+
+# --- Scafo ---
+esci
+guarda
+usa la taglierina sullo scafo nero
+analizza lo scafo nero
+giù
+analizza la giuntura
+esamina il cavo di sicurezza
+taglia la giuntura
+guarda
+rientra
+fuori
+entra nel varco
+
+# --- Camera ---
+su
+ovest
+apri la porta interna
+esamina l'incisione
+analizza il pannello
+usa la batteria sul pannello
+apri la porta interna
+inventario
+
+# --- Vestibolo ---
+ovest
+esamina le gole
+esamina l'arnese
+prendi il risuonatore
+stacca il risuonatore
+stacca il risuonatore
+stacca il risuonatore
+inventario
+esamina il risuonatore
+esamina il visore
+guarda
+
+# --- Gola di mezzo (con il risuonatore addosso) ---
+giù
+tocca le venature
+su
+lascia il risuonatore
+esamina la nicchia
+tocca le venature
+esamina il visore
+
+# --- Fino al corridoio, e indietro ---
+ovest
+est
+est

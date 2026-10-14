@@ -1,0 +1,7962 @@
+# test_linguaggio.py
+# Suite di test del LINGUAGGIO FAVELLA 1 (v1.0.0)
+#
+# Blocca le regressioni della grammatica e della semantica del compilatore.
+# In particolare "congela" la disambiguazione delle frasi che la grammatica
+# ammette in modo formalmente ambiguo (vedi note sulle priorità di regola in
+# compilatore.py): qui verifichiamo che il risultato compilato sia quello atteso.
+#
+# Esecuzione:  python test_linguaggio.py
+# Nessuna dipendenza esterna oltre a quelle del progetto (lark).
+
+import io
+import json
+import sys
+import os
+import re
+import tempfile
+import contextlib
+
+from compilatore import (
+    analizza_file, costruisci_symbol_table, costruisci_grammatica,
+    costruisci_parser, PAROLE_RISERVATE, valida_direzioni_dichiarate,
+    espandi_inclusioni, _GRAMMAR_TEMPLATE, analizza_file_strutturato,
+)
+from strumenti_ide import analizza_regole
+
+
+def _nomi_direzioni(simboli):
+    """Nomi delle direzioni personalizzate valide raccolte in un corpus (per
+    passarle a costruisci_grammatica/parser nei test della guardia)."""
+    _, nomi, _ = valida_direzioni_dichiarate(simboli.coppie_direzioni, simboli)
+    return nomi
+from lark import Lark
+from lark.exceptions import GrammarError
+
+# --- Mini-framework minimale (niente pytest richiesto) -----------------------
+
+_PASS = 0
+_FAIL = 0
+_FAILS = []
+
+
+def _check(condizione, descrizione):
+    global _PASS, _FAIL
+    if condizione:
+        _PASS += 1
+        print(f"  OK   {descrizione}")
+    else:
+        _FAIL += 1
+        _FAILS.append(descrizione)
+        print(f"  FAIL {descrizione}")
+
+
+def compila(sorgente):
+    """Compila una stringa sorgente .fav e restituisce (mondo, log_stdout)."""
+    with tempfile.NamedTemporaryFile(mode="w+", encoding="utf-8",
+                                     delete=False, suffix=".fav") as tmp:
+        tmp.write(sorgente)
+        path = tmp.name
+    buf = io.StringIO()
+    try:
+        with contextlib.redirect_stdout(buf):
+            mondo = analizza_file(path)
+    finally:
+        os.unlink(path)
+    return mondo, buf.getvalue()
+
+
+def strutturato(src):
+    """Compila via il percorso IDE (analizza_file_strutturato) scrivendo un file
+    temporaneo, e restituisce il dict diagnostico {ok, errors, warnings, ...}."""
+    with tempfile.NamedTemporaryFile(mode="w+", encoding="utf-8",
+                                     delete=False, suffix=".fav") as tmp:
+        tmp.write(src)
+        path = tmp.name
+    try:
+        return analizza_file_strutturato(path)
+    finally:
+        os.unlink(path)
+
+
+def regole_strutturate(src):
+    """[Favella Studio] Modello editabile di regole/eventi (analizza_regole) da una
+    stringa sorgente, via file temporaneo. Restituisce il dict {ok, rules, ...}."""
+    with tempfile.NamedTemporaryFile(mode="w+", encoding="utf-8",
+                                     delete=False, suffix=".fav") as tmp:
+        tmp.write(src)
+        path = tmp.name
+    try:
+        return analizza_regole(path, sorgente=src)
+    finally:
+        os.unlink(path)
+
+
+def runtime(src):
+    """Compila e prepara un mondo pronto al gioco (azioni + posizione iniziale)."""
+    from libreria_azioni import LIBRERIA_AZIONI
+    mondo, _ = compila(src)
+    if mondo:
+        mondo.carica_azioni(LIBRERIA_AZIONI)
+        mondo.imposta_posizione_iniziale()
+    return mondo
+
+
+def esegui(mondo, comando):
+    """Esegue un comando di gioco e restituisce l'output catturato."""
+    from gioco import elabora_comando
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        elabora_comando(mondo, comando)
+    return buf.getvalue()
+
+
+# --- Test: disambiguazione delle definizioni base ----------------------------
+
+def test_disambiguazione_definizioni():
+    print("[disambiguazione definizioni base]")
+    src = (
+        "La cella è una stanza.\n"
+        "Una chiave è una cosa.\n"
+        "La chiave è in cella.\n"
+        "La chiave è prendibile.\n"
+        "La chiave è lucente.\n"
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila senza errori")
+    _check("cella" in mondo.stanze, "la stanza 'cella' è definita")
+    _check("chiave" in mondo.oggetti, "l'oggetto 'chiave' è definito")
+    ogg = mondo.oggetti.get("chiave")
+    _check(ogg is not None and ogg.posizione == "cella", "posizione = cella")
+    _check(ogg is not None and ogg.prendibile is True, "è prendibile")
+    _check(ogg is not None and "lucente" in ogg.proprieta, "ha proprietà 'lucente'")
+
+
+def test_nomi_con_parole_quasi_riservate():
+    print("[nomi entità che assomigliano a parole chiave]")
+    src = (
+        "La cosa nera è una stanza.\n"
+        "Una via est è una cosa.\n"
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila senza errori")
+    _check(mondo and "cosa nera" in mondo.stanze, "stanza 'cosa nera' (contiene 'cosa')")
+    _check(mondo and "via est" in mondo.oggetti, "oggetto 'via est' (contiene 'est')")
+
+
+# --- Test: posizione iniziale del giocatore [GG1] ----------------------------
+
+def test_posizione_iniziale_dichiarata():
+    print("[posizione iniziale esplicita]")
+    src = (
+        "La prima è una stanza.\n"
+        "La seconda è una stanza.\n"
+        "Il giocatore comincia in seconda.\n"
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila senza errori")
+    _check(mondo and mondo.posizione_iniziale == "seconda", "posizione_iniziale = seconda")
+    mondo.imposta_posizione_iniziale()
+    _check(mondo.posizione_giocatore == "seconda",
+           "il giocatore parte dalla stanza dichiarata, non dalla prima")
+
+
+def test_posizione_iniziale_fallback():
+    print("[posizione iniziale: fallback alla prima stanza]")
+    src = "La prima è una stanza.\nLa seconda è una stanza.\n"
+    mondo, _ = compila(src)
+    mondo.imposta_posizione_iniziale()
+    _check(mondo.posizione_giocatore == "prima",
+           "senza dichiarazione si parte dalla prima stanza definita")
+
+
+def test_posizione_iniziale_inesistente_e_errore():
+    print("[posizione iniziale inesistente = errore bloccante]")
+    src = "La prima è una stanza.\nIl giocatore comincia in inesistente.\n"
+    mondo, log = compila(src)
+    _check(mondo is None, "la compilazione fallisce (errore bloccante)")
+    _check("partenza" in log.lower() or "inesistente" in log.lower(),
+           "il log segnala la stanza di partenza inesistente")
+
+
+# --- Test: validazione verbi [GG3] -------------------------------------------
+
+def test_verbo_sconosciuto_genera_warning():
+    print("[verbo di regola sconosciuto = warning, non blocca]")
+    src = (
+        "La cella è una stanza.\n"
+        "Una porta è una cosa.\n"
+        "La porta è in cella.\n"
+        'Invece di sblocca la porta: dire "Non succede nulla.".\n'
+    )
+    mondo, log = compila(src)
+    _check(mondo is not None, "compila comunque (warning non bloccante)")
+    _check("sblocca" in log and "non si attiverà" in log.lower(),
+           "il log avvisa che il verbo 'sblocca' non si attiverà mai")
+
+
+def test_verbo_valido_nessun_warning():
+    print("[verbo di regola valido = nessun warning]")
+    src = (
+        "La cella è una stanza.\n"
+        "Una porta è una cosa.\n"
+        "La porta è in cella.\n"
+        'Invece di apri la porta: dire "È chiusa.".\n'
+    )
+    mondo, log = compila(src)
+    _check(mondo is not None, "compila senza errori")
+    _check("non si attiverà" not in log.lower(), "nessun avviso sul verbo 'apri'")
+
+
+# --- Test: refuso proprietà nelle condizioni [GG2] ---------------------------
+
+def test_refuso_proprieta_in_condizione():
+    print("[proprietà mai assegnata in condizione = warning refuso]")
+    src = (
+        "La cella è una stanza.\n"
+        "Una porta è una cosa.\n"
+        "La porta è in cella.\n"
+        "La porta è chiusa.\n"
+        # refuso: 'chuisa' non viene mai assegnata
+        'Invece di esamina la porta se la porta è chuisa: dire "Sbarrata.".\n'
+    )
+    mondo, log = compila(src)
+    _check(mondo is not None, "compila comunque (warning non bloccante)")
+    _check("chuisa" in log and "refuso" in log.lower(),
+           "il log segnala il possibile refuso 'chuisa'")
+
+
+def test_proprieta_da_conseguenza_non_e_refuso():
+    print("[proprietà assegnata da conseguenza non è segnalata come refuso]")
+    src = (
+        "La cella è una stanza.\n"
+        "Una porta è una cosa.\n"
+        "La porta è in cella.\n"
+        "La porta è chiusa.\n"
+        'Invece di apri la porta: dire "Click." e adesso la porta è aperta.\n'
+        'Invece di esamina la porta se la porta è aperta: dire "È aperta.".\n'
+    )
+    mondo, log = compila(src)
+    _check(mondo is not None, "compila senza errori")
+    _check("refuso" not in log.lower(),
+           "'aperta' (assegnata da conseguenza) non genera falso positivo")
+
+
+# --- Test: escape nelle stringhe [M6] ----------------------------------------
+
+def test_escape_virgolette_nelle_stringhe():
+    print("[escape \\\" dentro le stringhe]")
+    src = (
+        "La cella è una stanza.\n"
+        'La descrizione della cella è "Lui disse \\"ciao\\" e se ne andò.".\n'
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila senza errori")
+    desc = mondo.stanze["cella"].descrizione if mondo else ""
+    _check('"ciao"' in desc, f"le virgolette interne sono preservate: {desc!r}")
+
+
+# --- Test: normalizzazione tipografica [L2] ----------------------------------
+
+def test_normalizzazione_apostrofo_tipografico():
+    print("[apostrofo tipografico ’ normalizzato]")
+    # Usa l'apostrofo curvo U+2019 nel sorgente
+    src = (
+        "La cella è una stanza.\n"
+        "Una porta è una cosa.\n"
+        "La porta è in cella.\n"
+        'Invece di apri la porta: dire "L’uscio è sbarrato.".\n'
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila nonostante l'apostrofo tipografico")
+
+
+# --- Test: la storia di esempio del repo compila ancora ----------------------
+
+def test_storia_esempio_compila():
+    print("[storia.fav del repository compila]")
+    percorso = os.path.join(os.path.dirname(__file__), "esempi", "materiale-didattico", "storia.fav")
+    if not os.path.exists(percorso):
+        _check(True, "storia.fav non presente: test saltato")
+        return
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        mondo = analizza_file(percorso)
+    _check(mondo is not None, "storia.fav compila correttamente")
+    _check(mondo and len(mondo.stanze) >= 2, "ha almeno 2 stanze")
+
+
+# --- Test: logica composita [Livello 2 / G2, M3] -----------------------------
+
+# Mondo base riutilizzabile per i test sulle condizioni
+_BASE = (
+    "La cella è una stanza.\n"
+    "Una porta è una cosa.\nLa porta è in cella.\nLa porta è chiusa.\n"
+    "Una chiave è una cosa.\nLa chiave è in cella.\nLa chiave è prendibile.\n"
+)
+
+
+def test_condizione_and():
+    print("[condizione AND]")
+    src = _BASE + ('Invece di apri la porta se la porta è chiusa e il '
+                   'giocatore ha la chiave: dire "ok".\n')
+    mondo, _ = compila(src)
+    cond = mondo.regole[0].condizione
+    _check(type(cond).__name__ == "CondizioneAnd", "la condizione è un AND")
+    _check(cond.valuta(mondo) is False, "AND falso senza la chiave")
+    mondo.inventario.add("chiave")
+    _check(cond.valuta(mondo) is True, "AND vero con la chiave (porta già chiusa)")
+
+
+def test_condizione_or():
+    print("[condizione OR (oppure)]")
+    src = _BASE + ('Invece di apri la porta se il giocatore ha la chiave '
+                   'oppure la porta è chiusa: dire "ok".\n')
+    mondo, _ = compila(src)
+    cond = mondo.regole[0].condizione
+    _check(type(cond).__name__ == "CondizioneOr", "la condizione è un OR")
+    _check(cond.valuta(mondo) is True, "OR vero (porta chiusa) anche senza chiave")
+
+
+def test_negazione_possesso():
+    print("[negazione: il giocatore non ha X]")
+    src = _BASE + ('Invece di apri la porta se il giocatore non ha la '
+                   'chiave: dire "Ti manca qualcosa.".\n')
+    mondo, _ = compila(src)
+    cond = mondo.regole[0].condizione
+    _check(type(cond).__name__ == "CondizioneNot", "la condizione è una negazione")
+    _check(cond.valuta(mondo) is True, "vera quando il giocatore NON ha la chiave")
+    mondo.inventario.add("chiave")
+    _check(cond.valuta(mondo) is False, "falsa quando il giocatore ha la chiave")
+
+
+def test_negazione_proprieta():
+    print("[negazione: X non è Y]")
+    src = _BASE + ('Invece di esamina la porta se la porta non è aperta: '
+                   'dire "Ancora chiusa.".\n')
+    mondo, _ = compila(src)
+    cond = mondo.regole[0].condizione
+    _check(type(cond).__name__ == "CondizioneNot",
+           "la condizione è una negazione di proprietà")
+    _check(cond.valuta(mondo) is True,
+           "vera: la porta (chiusa) non è aperta")
+
+
+def test_conseguenze_multiple():
+    print("[conseguenze multiple concatenate]")
+    src = _BASE + ('Invece di usa la chiave su la porta: dire "Click." '
+                   'e adesso la porta è aperta e adesso la chiave è nel nulla.\n')
+    mondo, _ = compila(src)
+    regola = mondo.regole[0]
+    _check(len(regola.conseguenze) == 2, "due conseguenze registrate")
+    regola.esegui_conseguenze(mondo)
+    porta = mondo.trova_oggetto("porta")
+    chiave = mondo.trova_oggetto("chiave")
+    _check("aperta" in porta.proprieta, "1ª conseguenza: la porta è aperta")
+    _check(chiave.posizione is None, "2ª conseguenza: la chiave è nel nulla")
+
+
+def test_conseguenze_multiple_forma_breve():
+    print("[conseguenze multiple, forma breve 'e adesso X e Y']")
+    src = _BASE + ('Invece di usa la chiave su la porta: dire "Click." '
+                   'e adesso la porta è aperta e la chiave è nel nulla.\n')
+    mondo, _ = compila(src)
+    _check(len(mondo.regole[0].conseguenze) == 2,
+           "due conseguenze anche senza ripetere 'adesso'")
+
+
+def test_refuso_dentro_condizione_composita():
+    print("[il rilevamento refusi guarda dentro AND/OR/NOT]")
+    src = _BASE + ('Invece di apri la porta se il giocatore ha la chiave e '
+                   'la porta è chuisa: dire "x".\n')  # 'chuisa' = refuso
+    mondo, log = compila(src)
+    _check(mondo is not None, "compila comunque (warning non bloccante)")
+    _check("chuisa" in log and "refuso" in log.lower(),
+           "il refuso 'chuisa' viene rilevato anche dentro un AND")
+
+
+# --- Test: proprietà opposte dichiarabili [Livello 3 / M5] -------------------
+
+def test_opposti_dichiarati():
+    print("[proprietà opposte dichiarate dall'autore]")
+    src = (
+        "La cella è una stanza.\n"
+        "Una lampada è una cosa.\nLa lampada è in cella.\n"
+        "Accesa e spenta sono opposte.\n"
+        "La lampada è spenta.\n"
+        'Invece di usa la lampada: dire "Click." e adesso la lampada è accesa.\n'
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila senza errori")
+    _check(mondo and "spenta" in mondo.opposti.get("accesa", set()),
+           "la coppia è registrata simmetricamente")
+    _check(mondo and "accesa" in mondo.opposti.get("spenta", set()),
+           "la relazione è simmetrica anche al contrario")
+    ogg = mondo.trova_oggetto("lampada") if mondo else None
+    _check(ogg is not None and "spenta" in ogg.proprieta, "stato iniziale: spenta")
+    mondo.regole[0].esegui_conseguenze(mondo)
+    _check("accesa" in ogg.proprieta and "spenta" not in ogg.proprieta,
+           "accendere rimuove 'spenta' (le opposte si escludono)")
+
+
+def test_opposti_default_aperta_chiusa():
+    print("[retro-compat: aperta/chiusa opposte di default, senza dichiararle]")
+    src = (
+        "La cella è una stanza.\n"
+        "Una porta è una cosa.\nLa porta è in cella.\nLa porta è chiusa.\n"
+        'Invece di apri la porta: dire "Click." e adesso la porta è aperta.\n'
+    )
+    mondo, _ = compila(src)
+    porta = mondo.trova_oggetto("porta") if mondo else None
+    _check(porta is not None and "chiusa" in porta.proprieta, "porta inizialmente chiusa")
+    mondo.regole[0].esegui_conseguenze(mondo)
+    _check("aperta" in porta.proprieta and "chiusa" not in porta.proprieta,
+           "aprire rimuove 'chiusa' anche senza dichiarazione esplicita")
+
+
+def test_concordanza_genere_proprieta():
+    print("[concordanza: le proprietà di stato ignorano genere/numero (aperto = aperta)]")
+    from favella_utils import radice_proprieta
+    _check(radice_proprieta("aperto") == radice_proprieta("aperta") == "apert",
+           "aperto e aperta hanno la stessa radice 'apert'")
+    _check(radice_proprieta("chiuso") == radice_proprieta("chiuse") == "chius",
+           "chiuso/chiuse -> 'chius'")
+    _check(radice_proprieta("chuisa") != radice_proprieta("chiusa"),
+           "un refuso ('chuisa') resta una radice distinta (il linter lo intercetta)")
+
+    # Contenitore dichiarato al MASCHILE ('chiuso') e aperto con 'aperto': deve
+    # funzionare come 'chiusa'/'aperta' (genere ignorato dal motore).
+    src = (
+        "La cucina è una stanza.\n"
+        "Il portale è un contenitore.\nIl portale è in cucina.\nIl portale è chiuso.\n"
+        "La gemma è una cosa.\nLa gemma è nel portale.\n"
+        "La chiave è una cosa.\nLa chiave è prendibile.\nLa chiave è in cucina.\n"
+        "Il giocatore comincia in cucina.\n"
+        'Invece di usa la chiave su il portale se il portale è chiuso: '
+        'dire "Si apre." e adesso il portale è aperto.\n'
+    )
+    mondo, _ = compila(src)
+    portale = mondo.trova_oggetto("portale") if mondo else None
+    _check(portale is not None and not mondo.contenitore_aperto(portale),
+           "un contenitore 'chiuso' (maschile) è chiuso come 'chiusa'")
+    _check(mondo.regole[0].condizione.valuta(mondo),
+           "la condizione 'è chiuso' è vera (combacia con la dichiarazione)")
+    mondo.regole[0].esegui_conseguenze(mondo)
+    _check(mondo.contenitore_aperto(portale),
+           "'è aperto' apre davvero il contenitore (rimuove 'chiuso')")
+
+    # Condizione incrociata: stato 'aperta', condizione 'è aperto'.
+    src2 = (
+        "La cella è una stanza.\n"
+        "La porta è una cosa.\nLa porta è in cella.\nLa porta è aperta.\n"
+        'Invece di guarda la porta se la porta è aperto: dire "Spalancata.".\n'
+    )
+    mondo2, _ = compila(src2)
+    _check(mondo2 is not None and mondo2.regole[0].condizione.valuta(mondo2),
+           "condizione 'è aperto' combacia con la proprietà 'aperta'")
+
+    # Coppia opposta dichiarata al maschile, usata al femminile.
+    src3 = (
+        "La sala è una stanza.\n"
+        "La lampada è una cosa.\nLa lampada è in sala.\n"
+        "acceso e spento sono opposte.\nLa lampada è accesa.\n"
+        'Invece di spegni la lampada: dire "Buio." e adesso la lampada è spenta.\n'
+    )
+    mondo3, _ = compila(src3)
+    lampada = mondo3.trova_oggetto("lampada") if mondo3 else None
+    _check(lampada is not None and "accesa" in lampada.proprieta, "lampada inizialmente accesa")
+    mondo3.regole[0].esegui_conseguenze(mondo3)
+    _check("spenta" in lampada.proprieta and "accesa" not in lampada.proprieta,
+           "'spenta' rimuove 'accesa' benché la coppia sia dichiarata 'acceso/spento'")
+
+    # Il linter NON deve segnalare refuso per la differenza di sola concordanza.
+    refusi = [w for w in analizza_file_strutturato("<concordanza>", src)["warnings"]
+              if "refuso" in w.get("message", "").lower()]
+    _check(refusi == [], "nessun falso warning di refuso per 'aperto' vs 'chiuso'")
+
+
+# --- Test: alias/sinonimi di oggetti [Livello 4] -----------------------------
+
+def test_alias_risoluzione_esatta():
+    print("[alias: il giocatore può riferire l'oggetto col sinonimo]")
+    from gioco import risolvi_nome_oggetto
+    from libreria_azioni import LIBRERIA_AZIONI
+    src = (
+        "La cella è una stanza.\n"
+        "Il giocatore comincia in cella.\n"
+        "Una torcia è una cosa.\nLa torcia è in cella.\n"
+        'La torcia si chiama anche "lanterna".\n'
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila senza errori")
+    _check(mondo and mondo.alias.get("lanterna") == "torcia",
+           "l'alias 'lanterna' rimanda all'id canonico 'torcia'")
+    mondo.carica_azioni(LIBRERIA_AZIONI)
+    mondo.imposta_posizione_iniziale()
+    _check(risolvi_nome_oggetto(mondo, "lanterna") == "torcia",
+           "l'input 'lanterna' risolve all'oggetto 'torcia'")
+    _check(risolvi_nome_oggetto(mondo, "torcia") == "torcia",
+           "il nome canonico continua a risolvere")
+
+
+def test_alias_multiparola_quotato():
+    print("[alias: sinonimo multiparola tra virgolette]")
+    src = (
+        "La cella è una stanza.\n"
+        "Una keycard magnetica è una cosa.\nLa keycard magnetica è in cella.\n"
+        'La keycard magnetica si chiama anche "tessera blu".\n'
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila senza errori")
+    _check(mondo and mondo.alias.get("tessera blu") == "keycard magnetica",
+           "alias multiparola normalizzato e mappato all'oggetto")
+
+
+def test_alias_parziale():
+    print("[alias: match parziale univoco via sinonimo]")
+    from gioco import risolvi_nome_oggetto
+    from libreria_azioni import LIBRERIA_AZIONI
+    src = (
+        "La cella è una stanza.\n"
+        "Il giocatore comincia in cella.\n"
+        "Una torcia è una cosa.\nLa torcia è in cella.\n"
+        'La torcia si chiama anche "lanterna".\n'
+    )
+    mondo, _ = compila(src)
+    mondo.carica_azioni(LIBRERIA_AZIONI)
+    mondo.imposta_posizione_iniziale()
+    _check(risolvi_nome_oggetto(mondo, "lant") == "torcia",
+           "un prefisso dell'alias risolve comunque all'oggetto")
+
+
+def test_alias_su_non_oggetto_warning():
+    print("[alias: bersaglio non-oggetto (una stanza) = warning non bloccante]")
+    # 'cella' è dichiarata (quindi è una ENTITA valida e la frase parsa), ma è una
+    # STANZA, non un oggetto: l'alias non potrà mai risolvere un oggetto -> warning.
+    src = (
+        "La cella è una stanza.\n"
+        'La cella si chiama anche "stanzino".\n'
+    )
+    mondo, log = compila(src)
+    _check(mondo is not None, "compila comunque (warning non bloccante)")
+    _check("alias" in log.lower() and "stanzino" in log.lower(),
+           "il log avvisa che l'alias non punta a un oggetto")
+
+
+# --- Test: verbi personalizzati [Livello 4 / M1] -----------------------------
+
+def test_verbo_personalizzato_dichiarazione():
+    print("[verbo personalizzato: dichiarazione e niente warning 'regola morta']")
+    src = (
+        "La cella è una stanza.\n"
+        "Una pietra è una cosa.\nLa pietra è in cella.\n"
+        '"spingi" è un comando.\n'
+        'Invece di spingi la pietra: dire "La pietra rotola via.".\n'
+    )
+    mondo, log = compila(src)
+    _check(mondo is not None, "compila senza errori")
+    _check(mondo and "spingi" in mondo.verbi_personalizzati,
+           "il verbo 'spingi' è registrato tra i verbi personalizzati")
+    _check("non si attiverà" not in log.lower(),
+           "una regola con verbo dichiarato NON è segnalata come morta")
+
+
+def test_verbo_personalizzato_runtime():
+    print("[verbo personalizzato: a runtime attiva la regola]")
+    from gioco import elabora_comando
+    from libreria_azioni import LIBRERIA_AZIONI
+    src = (
+        "La cella è una stanza.\n"
+        "Il giocatore comincia in cella.\n"
+        "Una pietra è una cosa.\nLa pietra è in cella.\n"
+        '"spingi" è un comando.\n'
+        'Invece di spingi la pietra: dire "La pietra rotola via.".\n'
+    )
+    mondo, _ = compila(src)
+    mondo.carica_azioni(LIBRERIA_AZIONI)
+    mondo.imposta_posizione_iniziale()
+    _check(mondo.mappa_verbi_giocatore.get("spingi") == "_personalizzata",
+           "il verbo custom è instradato all'azione generica")
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        elabora_comando(mondo, "spingi pietra")
+    _check("rotola via" in buf.getvalue(),
+           "il comando custom attiva la regola e ne stampa la risposta")
+
+
+def test_verbo_personalizzato_senza_regola():
+    print("[verbo personalizzato: senza regola applicabile = messaggio neutro]")
+    from gioco import elabora_comando
+    from libreria_azioni import LIBRERIA_AZIONI
+    src = (
+        "La cella è una stanza.\n"
+        "Il giocatore comincia in cella.\n"
+        "Una pietra è una cosa.\nLa pietra è in cella.\n"
+        '"spingi" è un comando.\n'  # nessuna regola 'Invece di spingi ...'
+    )
+    mondo, _ = compila(src)
+    mondo.carica_azioni(LIBRERIA_AZIONI)
+    mondo.imposta_posizione_iniziale()
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        elabora_comando(mondo, "spingi pietra")
+    _check("Non succede nulla" in buf.getvalue(),
+           "un verbo custom senza regola stampa un messaggio neutro, non 'non capisco'")
+
+
+def test_verbo_personalizzato_multiparola_accettato():
+    print("[verbo personalizzato: multiparola ORA accettato (0.18.0 / B6)]")
+    # Cambio di comportamento dalla 0.18.0: un comando multi-parola non è più
+    # ignorato, ma registrato e usabile (vedi test_verbo_multiparola_*).
+    src = (
+        "La cella è una stanza.\n"
+        '"dai un calcio" è un comando.\n'
+    )
+    mondo, log = compila(src)
+    _check(mondo is not None, "compila senza errori")
+    _check(mondo and "dai un calcio" in mondo.verbi_personalizzati,
+           "il comando multiparola è registrato (niente più rifiuto)")
+
+
+# --- Test: direzioni personalizzate / data-driven [Livello 4 / L1] -----------
+
+def test_direzioni_personalizzate_connessione():
+    print("[direzioni custom: connessione + auto-ritorno con l'opposta]")
+    src = (
+        "La torre è una stanza.\n"
+        "La cantina è una stanza.\n"
+        "Alto e basso sono direzioni opposte.\n"
+        "La torre collega basso a cantina.\n"
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila senza errori")
+    _check(mondo and mondo.stanze["torre"].uscite.get("basso") == "cantina",
+           "la connessione usa la direzione personalizzata 'basso'")
+    _check(mondo and mondo.stanze["cantina"].uscite.get("alto") == "torre",
+           "auto-ritorno con l'opposta 'alto'")
+
+
+def test_direzioni_personalizzate_runtime():
+    print("[direzioni custom: movimento a runtime]")
+    from gioco import elabora_comando
+    from libreria_azioni import LIBRERIA_AZIONI
+    src = (
+        "La torre è una stanza.\n"
+        "La cantina è una stanza.\n"
+        "Il giocatore comincia in torre.\n"
+        "Alto e basso sono direzioni opposte.\n"
+        "La torre collega basso a cantina.\n"
+    )
+    mondo, _ = compila(src)
+    mondo.carica_azioni(LIBRERIA_AZIONI)
+    mondo.imposta_posizione_iniziale()
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        elabora_comando(mondo, "basso")
+    _check(mondo.posizione_giocatore == "cantina",
+           "digitare la direzione custom 'basso' muove il giocatore")
+    with contextlib.redirect_stdout(io.StringIO()):
+        elabora_comando(mondo, "alto")
+    _check(mondo.posizione_giocatore == "torre",
+           "l'opposta 'alto' riporta indietro")
+
+
+def test_direzione_regola_canonicalizza_abbreviazione():
+    print("[direzioni: 'Invece di vai n' combacia con il movimento a nord]")
+    src = (
+        "La cella è una stanza.\n"
+        "Il corridoio è una stanza.\n"
+        "La cella collega nord a corridoio.\n"
+        'Invece di vai n: dire "Bloccato.".\n'  # abbreviazione 'n' nella regola
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila senza errori")
+    _check(mondo and mondo.regole[0].id_oggetto_bersaglio == "nord",
+           "il bersaglio 'n' è canonicalizzato a 'nord'")
+
+
+def test_direzione_conflitto_parola_riservata_errore():
+    print("[direzioni: conflitto con parola riservata = errore bloccante]")
+    # [1.3.0 / G-4] 'Su e giù' sono ora direzioni di base: la frase è accettata
+    # (e non fa nulla di nuovo). Il conflitto si verifica con parole che restano
+    # riservate.
+    mondo, _ = compila("La cella è una stanza.\nSu e giù sono direzioni opposte.\n")
+    _check(mondo is not None, "'Su e giù' ora sono direzioni di base")
+    src = (
+        "La cella è una stanza.\n"
+        "Con e contro sono direzioni opposte.\n"  # 'con' e 'contro' sono riservate
+    )
+    mondo, log = compila(src)
+    _check(mondo is None, "la compilazione fallisce (conflitto bloccante)")
+    _check("direzione" in log.lower() and "conflitto" in log.lower(),
+           "il log spiega il conflitto della direzione con una parola riservata")
+
+
+def test_scanner_raccoglie_direzioni():
+    print("[scanner: 'A e B sono direzioni opposte' popola le coppie]")
+    src = (
+        "La cella è una stanza.\n"
+        "Dentro e fuori sono direzioni opposte.\n"
+    )
+    tab = costruisci_symbol_table(src)
+    _check(("dentro", "fuori") in tab.coppie_direzioni,
+           "la coppia di direzioni è raccolta in Passata 1")
+    _check("dentro" not in tab.tutti and "fuori" not in tab.tutti,
+           "le direzioni NON sono entità")
+
+
+# --- Test: contenitori e supporti — modello [Livello 4 / M1] -----------------
+
+def test_contenitore_dichiarazione():
+    print("[contenitore: dichiarazione = oggetto con flag is_contenitore]")
+    src = (
+        "La cella è una stanza.\n"
+        "Una scatola è un contenitore.\nLa scatola è in cella.\n"
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila senza errori")
+    scatola = mondo.trova_oggetto("scatola") if mondo else None
+    _check(scatola is not None, "il contenitore è registrato come oggetto")
+    _check(scatola is not None and scatola.is_contenitore, "ha il flag is_contenitore")
+    _check(scatola is not None and scatola.posizione == "cella", "è collocato nella stanza")
+
+
+def test_supporto_dichiarazione():
+    print("[supporto: dichiarazione = oggetto con flag is_supporto]")
+    src = (
+        "La cella è una stanza.\n"
+        "Un tavolo è un supporto.\nIl tavolo è in cella.\n"
+    )
+    mondo, _ = compila(src)
+    tavolo = mondo.trova_oggetto("tavolo") if mondo else None
+    _check(tavolo is not None and tavolo.is_supporto, "ha il flag is_supporto")
+
+
+def test_collocazione_in_contenitore():
+    print("[collocazione: 'X è nella scatola' colloca X dentro il contenitore]")
+    src = (
+        "La cella è una stanza.\n"
+        "Una scatola è un contenitore.\nLa scatola è in cella.\n"
+        "Una gemma è una cosa.\nLa gemma è nella scatola.\n"
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila senza errori")
+    gemma = mondo.trova_oggetto("gemma") if mondo else None
+    scatola = mondo.trova_oggetto("scatola") if mondo else None
+    _check(gemma is not None and gemma.posizione == "scatola",
+           "la gemma 'vive' nel contenitore scatola")
+    _check(scatola is not None and "gemma" in scatola.contenuto,
+           "il contenitore conosce il proprio contenuto")
+
+
+def test_collocazione_su_supporto():
+    print("[collocazione: 'X è sul tavolo' colloca X sul supporto]")
+    src = (
+        "La cella è una stanza.\n"
+        "Un tavolo è un supporto.\nIl tavolo è in cella.\n"
+        "Una tazza è una cosa.\nLa tazza è sul tavolo.\n"
+    )
+    mondo, _ = compila(src)
+    tavolo = mondo.trova_oggetto("tavolo") if mondo else None
+    _check(tavolo is not None and "tazza" in tavolo.contenuto,
+           "la tazza è sul supporto tavolo")
+
+
+def test_collocazione_su_non_contenitore_errore():
+    print("[collocazione: dentro un oggetto non-contenitore = errore bloccante]")
+    src = (
+        "La cella è una stanza.\n"
+        "Una pietra è una cosa.\nLa pietra è in cella.\n"
+        "Una gemma è una cosa.\nLa gemma è nella pietra.\n"  # pietra non è contenitore
+    )
+    mondo, log = compila(src)
+    _check(mondo is None, "la compilazione fallisce")
+    _check("contenitore" in log.lower() or "supporto" in log.lower(),
+           "il log spiega che la pietra non è un contenitore/supporto")
+
+
+# --- Test: ROBUSTEZZA D'ORDINE [0.17.0] --------------------------------------
+# L'ordine delle frasi non deve più contare: posizioni, proprietà, descrizioni e
+# conseguenze risolvono le entità in valida_post, a mondo completo.
+
+def test_ordine_posizione_prima_della_stanza():
+    print("[ordine: 'X è in Y' funziona PRIMA che la stanza Y sia definita]")
+    src = (
+        "La torcia è una cosa.\n"
+        "La torcia è in cucina.\n"     # cucina non ancora definita
+        "La cucina è una stanza.\n"
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila nonostante la posizione preceda la stanza")
+    _check(mondo.trova_oggetto("torcia").posizione == "cucina",
+           "la torcia è collocata in cucina")
+    _check("torcia" in mondo.trova_stanza("cucina").oggetti,
+           "la stanza elenca la torcia")
+
+
+def test_ordine_collocazione_prima_del_contenitore():
+    print("[ordine: 'La gemma è nella scatola' PRIMA di 'La scatola è un contenitore']")
+    src = (
+        "La cripta è una stanza.\n"
+        "La gemma è una cosa.\n"
+        "La gemma è nella scatola.\n"   # scatola non ancora dichiarata contenitore
+        "La scatola è un contenitore.\n"
+        "La scatola è in cripta.\n"
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila nonostante la collocazione preceda il contenitore")
+    _check("gemma" in mondo.trova_oggetto("scatola").contenuto,
+           "la gemma è dentro la scatola")
+
+
+def test_ordine_proprieta_prima_dell_oggetto():
+    print("[ordine: 'La porta è chiusa' PRIMA di 'La porta è una cosa']")
+    src = (
+        "L'ingresso è una stanza.\n"
+        "La porta è chiusa.\n"          # proprietà prima della dichiarazione
+        "La porta è una cosa.\n"
+        "La porta è in ingresso.\n"
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila nonostante la proprietà preceda l'oggetto")
+    _check("chiusa" in mondo.trova_oggetto("porta").proprieta,
+           "la proprietà 'chiusa' è applicata")
+
+
+def test_ordine_descrizione_prima_dell_entita():
+    print("[ordine: la descrizione PRIMA della dichiarazione dell'entità]")
+    src = (
+        'La descrizione della spada è "Una lama affilata.".\n'  # prima
+        "La spada è una cosa.\n"
+        "L'armeria è una stanza.\nLa spada è in armeria.\n"
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila nonostante la descrizione preceda l'entità")
+    _check(mondo.trova_oggetto("spada").descrizione == "Una lama affilata.",
+           "la descrizione è applicata")
+
+
+def test_ordine_conseguenza_verso_oggetto_definito_dopo():
+    print("[ordine: una conseguenza riferisce un oggetto definito DOPO]")
+    src = (
+        "La stanza è una stanza.\n"
+        "Il giocatore comincia in stanza.\n"
+        'Invece di guarda: dire "Prendi la chiave." e adesso la chiave è in inventario.\n'
+        "La chiave è una cosa.\n"      # definita dopo la regola che la sposta
+        "La chiave è in stanza.\n"
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None,
+           "compila: la conseguenza è validata a mondo completo, non in ordine")
+
+
+def test_ordine_destinazione_inesistente_resta_errore():
+    print("[ordine: una destinazione MAI definita resta un errore bloccante]")
+    src = (
+        "La stanza è una stanza.\n"
+        "La gemma è una cosa.\n"
+        "La gemma è nel forziere.\n"   # forziere non esiste da nessuna parte
+    )
+    mondo, log = compila(src)
+    _check(mondo is None, "la destinazione inesistente fallisce ancora la compilazione")
+
+
+def test_ordine_regola_bersaglio_definito_dopo():
+    print("[ordine: 'Invece di apri la porta' PRIMA che 'la porta' sia dichiarata]")
+    src = (
+        "L'atrio è una stanza.\n"
+        "Il giocatore comincia in atrio.\n"
+        'Invece di apri la porta: dire "È sigillata.".\n'   # porta non ancora definita
+        "La porta è una cosa.\n"
+        "La porta è in atrio.\n"
+    )
+    mondo = runtime(src)
+    _check(mondo is not None, "la regola compila anche se il bersaglio è definito dopo")
+    out = esegui(mondo, "apri porta")
+    _check("È sigillata." in out, "la regola scatta correttamente a runtime")
+
+
+def test_linter_demone_non_falsa_variabile_inutilizzata():
+    print("[audit/linter: una variabile usata SOLO in un demone non è 'inutilizzata']")
+    src = (
+        "La cella è una stanza.\n"
+        "Il giocatore comincia in cella.\n"
+        "L'allarme è un contatore.\n"
+        'Quando l\'allarme è almeno 3: dire "Suona." e adesso vinci.\n'
+    )
+    mondo, log = compila(src)
+    _check(mondo is not None, "compila")
+    _check("inutilizz" not in log.lower(),
+           "l'allarme, usato nella condizione del demone, non è segnalato inutilizzato")
+
+
+def test_linter_demone_non_falsa_oggetto_orfano():
+    print("[audit/linter: un oggetto introdotto SOLO da un demone non è 'orfano']")
+    src = (
+        "La cella è una stanza.\n"
+        "Il giocatore comincia in cella.\n"
+        "Il punteggio è un contatore.\n"
+        "La chiave è una cosa.\n"            # mai collocata in una stanza
+        'Ogni turno se il punteggio è almeno 1: dire "Tintinnio." e adesso la chiave è in inventario.\n'
+    )
+    mondo, log = compila(src)
+    _check(mondo is not None, "compila")
+    _check("mai collocato" not in log.lower(),
+           "la chiave, introdotta dalla conseguenza del demone, non è segnalata orfana")
+
+
+def test_comando_dopo_fine_partita_e_noop():
+    print("[audit: a partita finita un comando è un no-op (niente turni/eventi)]")
+    src = (
+        "La cella è una stanza.\n"
+        "Il giocatore comincia in cella.\n"
+        'Al turno 1: dire "Fine." e adesso perdi.\n'
+        'Ogni 1 turno: dire "TICK." e adesso vinci.\n'
+    )
+    mondo = runtime(src)
+    esegui(mondo, "guarda")               # turno 1 -> perdi
+    turno_dopo_fine = mondo.turno_corrente
+    out2 = esegui(mondo, "guarda")        # a partita persa: no-op
+    _check(mondo.stato_partita == "persa", "la partita resta persa")
+    _check(mondo.turno_corrente == turno_dopo_fine,
+           "il contatore dei turni non avanza dopo la fine")
+    # [1.3.0] Dopo la fine il motore ricorda cosa si può fare (ANNULLA,
+    # RICOMINCIA, CARICA, FINE), ma nessun evento riscatta.
+    _check("TICK" not in out2 and "ANNULLA" in out2,
+           "nessun evento: solo il promemoria di cosa si può fare")
+
+
+def test_ordine_regola_bersaglio_non_oggetto_resta_errore():
+    print("[ordine: una regola su un bersaglio che non è un oggetto resta un errore]")
+    src = (
+        "L'atrio è una stanza.\n"
+        "Il giocatore comincia in atrio.\n"
+        'Invece di apri l\'atrio: dire "...".\n'   # atrio è una stanza, non un oggetto
+    )
+    mondo, log = compila(src)
+    _check(mondo is None, "il bersaglio non-oggetto fallisce ancora la compilazione")
+    _check("inesistente" in log.lower(), "il log segnala il bersaglio non valido")
+
+
+def test_scanner_raccoglie_contenitori():
+    print("[scanner: 'X è un contenitore' popola gli oggetti]")
+    src = "La cella è una stanza.\nUno scrigno è un contenitore.\n"
+    tab = costruisci_symbol_table(src)
+    _check("scrigno" in tab.oggetti, "il contenitore è tra gli oggetti")
+
+
+# --- Test: contenitori e supporti — runtime [Livello 4 / M1] -----------------
+
+_MONDO_CONTENITORE = (
+    "La cella è una stanza.\n"
+    "Il giocatore comincia in cella.\n"
+    "Una scatola è un contenitore.\nLa scatola è in cella.\n"
+    "Una gemma è una cosa.\nLa gemma è prendibile.\n"
+)
+
+
+def test_runtime_contenitore_aperto_scope():
+    print("[runtime: il contenuto di un contenitore aperto è raggiungibile]")
+    mondo = runtime(_MONDO_CONTENITORE + "La gemma è nella scatola.\n")
+    _check(mondo is not None, "compila e prepara il runtime")
+    _check("gemma" in mondo.oggetti_raggiungibili(),
+           "la gemma in un contenitore aperto è nello scope")
+    out = esegui(mondo, "prendi gemma")
+    _check("Preso" in out and "gemma" in mondo.inventario,
+           "si può prendere la gemma da dentro il contenitore aperto")
+    _check(mondo.trova_oggetto("scatola").contenuto == set(),
+           "presa la gemma, il contenitore è vuoto")
+
+
+def test_runtime_contenitore_chiuso_nasconde():
+    print("[runtime: un contenitore chiuso nasconde il contenuto, l'apertura lo rivela]")
+    src = (_MONDO_CONTENITORE + "La gemma è nella scatola.\n"
+           "La scatola è chiusa.\n"
+           'Invece di apri la scatola: dire "Si apre." e adesso la scatola è aperta.\n')
+    mondo = runtime(src)
+    _check("gemma" not in mondo.oggetti_raggiungibili(),
+           "con la scatola chiusa la gemma non è raggiungibile")
+    out = esegui(mondo, "prendi gemma")
+    _check("gemma" not in mondo.inventario and ("vedo" in out.lower() or "vedi" in out.lower()),
+           "non si può prendere dalla scatola chiusa")
+    esegui(mondo, "apri scatola")
+    out2 = esegui(mondo, "prendi gemma")
+    _check("Preso" in out2 and "gemma" in mondo.inventario,
+           "aperta la scatola, la gemma diventa prendibile")
+
+
+def test_runtime_metti_in_contenitore():
+    print("[runtime: 'metti X in contenitore' colloca l'oggetto dentro]")
+    mondo = runtime(_MONDO_CONTENITORE + "La gemma è in cella.\n")
+    esegui(mondo, "prendi gemma")
+    out = esegui(mondo, "metti gemma in scatola")
+    _check("messo" in out.lower(), "il comando metti conferma l'azione")
+    _check(mondo.trova_oggetto("gemma").posizione == "scatola",
+           "la gemma ora vive nel contenitore")
+    _check("gemma" in mondo.trova_oggetto("scatola").contenuto,
+           "il contenitore registra la gemma")
+    _check("gemma" not in mondo.inventario, "la gemma non è più nell'inventario")
+
+
+def test_runtime_metti_su_supporto():
+    print("[runtime: 'metti X su supporto' posa l'oggetto sopra]")
+    src = (
+        "La cella è una stanza.\n"
+        "Il giocatore comincia in cella.\n"
+        "Un tavolo è un supporto.\nIl tavolo è in cella.\n"
+        "Una tazza è una cosa.\nLa tazza è prendibile.\nLa tazza è in cella.\n"
+    )
+    mondo = runtime(src)
+    esegui(mondo, "prendi tazza")
+    out = esegui(mondo, "metti tazza su tavolo")
+    _check("messo" in out.lower(), "il comando conferma")
+    _check("tazza" in mondo.trova_oggetto("tavolo").contenuto,
+           "la tazza è sul supporto")
+
+
+def test_runtime_metti_in_contenitore_chiuso_rifiutato():
+    print("[runtime: non si mette nulla in un contenitore chiuso]")
+    src = _MONDO_CONTENITORE + "La gemma è in cella.\nLa scatola è chiusa.\n"
+    mondo = runtime(src)
+    esegui(mondo, "prendi gemma")
+    out = esegui(mondo, "metti gemma in scatola")
+    _check("chiusa" in out.lower(), "il motore rifiuta: la scatola è chiusa (accordato, 1.3.0)")
+    _check("gemma" not in mondo.trova_oggetto("scatola").contenuto,
+           "la gemma non è entrata nella scatola chiusa")
+
+
+def test_runtime_conseguenza_sposta_in_contenitore():
+    print("[runtime: conseguenza 'e adesso X è nella scatola']")
+    src = (_MONDO_CONTENITORE + "La gemma è in cella.\n"
+           'Invece di usa la gemma: dire "La riponi." e adesso la gemma è nella scatola.\n')
+    mondo = runtime(src)
+    _check(mondo is not None, "compila (la destinazione contenitore è valida)")
+    esegui(mondo, "usa gemma")
+    _check(mondo.trova_oggetto("gemma").posizione == "scatola",
+           "la conseguenza ha spostato la gemma dentro il contenitore")
+    _check("gemma" in mondo.trova_oggetto("scatola").contenuto,
+           "il contenitore registra la gemma spostata via conseguenza")
+
+
+# --- Test: condizioni di fine partita [Livello 3] ----------------------------
+
+def test_fine_partita_vinci():
+    print("[conseguenza di fine partita: vinci]")
+    src = (
+        "La cella è una stanza.\n"
+        "Un bottone è una cosa.\nIl bottone è in cella.\n"
+        'Invece di usa il bottone: dire "Si apre il portale!" e adesso vinci.\n'
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila senza errori")
+    cons = mondo.regole[0].conseguenze[0] if mondo and mondo.regole else None
+    _check(type(cons).__name__ == "ConseguenzaFinePartita", "la conseguenza è di fine partita")
+    _check(cons is not None and cons.esito == "vinta", "esito = vinta")
+    _check(mondo.stato_partita == "in_corso", "stato iniziale: in_corso")
+    cons.esegui(mondo)
+    _check(mondo.stato_partita == "vinta", "esegui imposta lo stato a 'vinta'")
+
+
+def test_fine_partita_perdi_termina():
+    print("[conseguenze di fine partita: perdi / termina]")
+    src = (
+        "La cella è una stanza.\n"
+        "Una trappola è una cosa.\nLa trappola è in cella.\n"
+        'Invece di usa la trappola: dire "Scatta!" e adesso perdi.\n'
+        'Invece di esamina la trappola: dire "Basta così." e adesso termina.\n'
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila senza errori")
+    esiti = [r.conseguenze[0].esito for r in mondo.regole] if mondo else []
+    _check("persa" in esiti and "terminata" in esiti,
+           "gli esiti 'persa' e 'terminata' sono entrambi presenti")
+
+
+def test_fine_partita_con_altre_conseguenze():
+    print("[fine partita combinata con altre conseguenze nella stessa regola]")
+    src = (
+        "La cella è una stanza.\n"
+        "Una leva è una cosa.\nLa leva è in cella.\n"
+        "Una porta è una cosa.\nLa porta è in cella.\nLa porta è chiusa.\n"
+        'Invece di usa la leva su la porta: dire "Clack." '
+        'e adesso la porta è aperta e adesso vinci.\n'
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None and len(mondo.regole[0].conseguenze) == 2,
+           "due conseguenze: cambio proprietà + vittoria")
+    mondo.regole[0].esegui_conseguenze(mondo)
+    _check("aperta" in mondo.trova_oggetto("porta").proprieta, "la porta si è aperta")
+    _check(mondo.stato_partita == "vinta", "e la partita risulta vinta")
+
+
+def test_runtime_partita_finita_helper():
+    print("[runtime: il loop riconosce gli stati terminali]")
+    from gioco import partita_finita
+    from strutture import Mondo
+    m = Mondo()
+    _check(partita_finita(m) is False, "stato 'in_corso': la partita continua")
+    m.stato_partita = "vinta"
+    _check(partita_finita(m) is True, "stato 'vinta': la partita si ferma")
+
+
+# --- Test: stato astratto / variabili 'stato' [Livello 3 / G3] ---------------
+
+def test_stato_dichiarazione_e_valore_iniziale():
+    print("[stato: dichiarazione e valore iniziale]")
+    src = (
+        "La cella è una stanza.\n"
+        "Il semaforo è uno stato.\n"
+        "Il semaforo è rosso.\n"
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila senza errori")
+    _check(mondo and "semaforo" in mondo.variabili, "lo stato 'semaforo' è dichiarato")
+    _check(mondo and mondo.variabili["semaforo"] == "rosso", "valore iniziale = rosso")
+
+
+def test_stato_dichiarazione_senza_valore_e_none():
+    print("[stato: dichiarato ma non valorizzato vale None]")
+    src = "La cella è una stanza.\nL'allarme è uno stato.\n"
+    mondo, _ = compila(src)
+    _check(mondo and mondo.variabili.get("allarme", "MANCANTE") is None,
+           "uno stato dichiarato e non impostato vale None")
+
+
+def test_stato_condizione_e_conseguenza():
+    print("[stato: condizione 'è' e conseguenza che lo cambia]")
+    src = (
+        "La cella è una stanza.\n"
+        "Il semaforo è uno stato.\nIl semaforo è rosso.\n"
+        "Una leva è una cosa.\nLa leva è in cella.\n"
+        'Invece di usa la leva: dire "Scatta." e adesso il semaforo è verde.\n'
+        'Invece di esamina la leva se il semaforo è verde: dire "Verde.".\n'
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila senza errori")
+    cond = mondo.regole[1].condizione if mondo else None
+    _check(type(cond).__name__ == "CondizioneVariabile", "condizione su variabile")
+    _check(cond is not None and cond.valuta(mondo) is False, "falsa: il semaforo è ancora rosso")
+    mondo.regole[0].esegui_conseguenze(mondo)
+    _check(mondo.variabili["semaforo"] == "verde", "la conseguenza imposta il semaforo a verde")
+    _check(cond.valuta(mondo) is True, "vera: ora il semaforo è verde")
+
+
+def test_stato_condizione_negata():
+    print("[stato: negazione 'non è']")
+    src = (
+        "La cella è una stanza.\n"
+        "Il semaforo è uno stato.\nIl semaforo è rosso.\n"
+        "Una leva è una cosa.\nLa leva è in cella.\n"
+        'Invece di esamina la leva se il semaforo non è verde: dire "Non verde.".\n'
+    )
+    mondo, _ = compila(src)
+    cond = mondo.regole[0].condizione if mondo else None
+    _check(type(cond).__name__ == "CondizioneNot", "la condizione è una negazione")
+    _check(cond is not None and cond.valuta(mondo) is True,
+           "vera: il semaforo (rosso) non è verde")
+
+
+def test_stato_disgiunto_da_proprieta_oggetto():
+    print("[stato: variabile e proprietà-oggetto omonime non collidono]")
+    # 'porta' è un oggetto con proprietà 'chiusa'; 'fase' è uno stato con valore
+    # 'chiusa'. I due costrutti convivono senza ambiguità grazie ai token distinti.
+    src = (
+        "La cella è una stanza.\n"
+        "Una porta è una cosa.\nLa porta è in cella.\nLa porta è chiusa.\n"
+        "La fase è uno stato.\nLa fase è chiusa.\n"
+        'Invece di esamina la porta se la porta è chiusa e la fase è chiusa: dire "Doppio.".\n'
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila: oggetto e stato con stessa parola-stato")
+    _check(mondo and "chiusa" in mondo.trova_oggetto("porta").proprieta,
+           "la proprietà 'chiusa' dell'oggetto è registrata")
+    _check(mondo and mondo.variabili.get("fase") == "chiusa",
+           "lo stato 'fase' vale 'chiusa'")
+    _check(mondo and mondo.regole[0].condizione.valuta(mondo) is True,
+           "l'AND oggetto-proprietà + stato-variabile valuta correttamente")
+
+
+def test_contatore_dichiarazione_default_zero():
+    print("[contatore: dichiarazione, default 0]")
+    src = "La cella è una stanza.\nIl punteggio è un contatore.\n"
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila senza errori")
+    _check(mondo and mondo.variabili.get("punteggio") == 0, "il contatore parte da 0")
+
+
+def test_contatore_aumenta_diminuisci():
+    print("[contatore: aumenta/diminuisci, default 1 e 'di N']")
+    src = (
+        "La cella è una stanza.\n"
+        "Il punteggio è un contatore.\n"
+        "Una moneta è una cosa.\nLa moneta è in cella.\n"
+        'Invece di prendi la moneta: dire "+1" e adesso aumenta il punteggio.\n'
+        'Invece di esamina la moneta: dire "+5" e adesso aumenta il punteggio di 5.\n'
+        'Invece di lascia la moneta: dire "-2" e adesso diminuisci il punteggio di 2.\n'
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila senza errori")
+    mondo.regole[0].esegui_conseguenze(mondo)
+    _check(mondo.variabili["punteggio"] == 1, "aumenta senza 'di' = +1")
+    mondo.regole[1].esegui_conseguenze(mondo)
+    _check(mondo.variabili["punteggio"] == 6, "aumenta di 5 = +5 (totale 6)")
+    mondo.regole[2].esegui_conseguenze(mondo)
+    _check(mondo.variabili["punteggio"] == 4, "diminuisci di 2 = -2 (totale 4)")
+
+
+def test_contatore_diventa():
+    print("[contatore: 'diventa N' imposta il valore]")
+    src = (
+        "La cella è una stanza.\n"
+        "Il punteggio è un contatore.\n"
+        "Una leva è una cosa.\nLa leva è in cella.\n"
+        'Invece di usa la leva: dire "Reset." e adesso il punteggio diventa 10.\n'
+    )
+    mondo, _ = compila(src)
+    mondo.regole[0].esegui_conseguenze(mondo)
+    _check(mondo.variabili["punteggio"] == 10, "il contatore diventa 10")
+
+
+def test_contatore_confronti():
+    print("[contatore: confronti almeno / più di / meno di / uguaglianza]")
+    src = (
+        "La cella è una stanza.\n"
+        "Il punteggio è un contatore.\n"
+        "Una guida è una cosa.\nLa guida è in cella.\n"
+        'Invece di esamina la guida se il punteggio è almeno 3: dire "ge3".\n'
+        'Invece di usa la guida se il punteggio è più di 2: dire "gt2".\n'
+        'Invece di apri la guida se il punteggio è meno di 5: dire "lt5".\n'
+        'Invece di prendi la guida se il punteggio è 0: dire "eq0".\n'
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila senza errori")
+    r_ge3, r_gt2, r_lt5, r_eq0 = (mondo.regole[0].condizione, mondo.regole[1].condizione,
+                                   mondo.regole[2].condizione, mondo.regole[3].condizione)
+    _check(type(r_ge3).__name__ == "CondizioneContatore", "condizione = CondizioneContatore")
+    # punteggio = 0
+    _check(r_ge3.valuta(mondo) is False, "almeno 3: falso a 0")
+    _check(r_lt5.valuta(mondo) is True, "meno di 5: vero a 0")
+    _check(r_eq0.valuta(mondo) is True, "uguale a 0: vero a 0")
+    mondo.variabili["punteggio"] = 3
+    _check(r_ge3.valuta(mondo) is True, "almeno 3: vero a 3")
+    _check(r_gt2.valuta(mondo) is True, "più di 2: vero a 3")
+    _check(r_eq0.valuta(mondo) is False, "uguale a 0: falso a 3")
+
+
+def test_scanner_raccoglie_contatori():
+    print("[scanner: 'X è un contatore' popola le variabili]")
+    src = "La cella è una stanza.\nIl bottino è un contatore.\n"
+    tab = costruisci_symbol_table(src)
+    _check("bottino" in tab.variabili, "il contatore 'bottino' è tra le variabili")
+    _check("bottino" not in tab.tutti, "il contatore NON è tra le entità")
+
+
+def test_evento_al_turno():
+    print("[evento: 'Al turno N' scatta una sola volta]")
+    src = (
+        "La cella è una stanza.\n"
+        "Una candela è una cosa.\nLa candela è in cella.\n"
+        'Al turno 2: dire "Buio." e adesso la candela è nel nulla.\n'
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None and len(mondo.eventi) == 1, "un evento registrato")
+    ev = mondo.eventi[0]
+    _check(ev.tipo == "al" and ev.n == 2, "tipo 'al', turno 2")
+    _check(ev.scatta_a(1) is False and ev.scatta_a(2) is True and ev.scatta_a(3) is False,
+           "scatta solo al turno 2")
+    _check(len(ev.conseguenze) == 1, "ha una conseguenza")
+    ev.esegui_conseguenze(mondo)
+    _check(mondo.trova_oggetto("candela").posizione is None,
+           "la conseguenza dell'evento sposta la candela nel nulla")
+
+
+def test_evento_ogni_turni():
+    print("[evento: 'Ogni N turni' scatta ai multipli]")
+    src = (
+        "La cella è una stanza.\n"
+        'Ogni 3 turni: dire "Rumore.".\n'
+    )
+    mondo, _ = compila(src)
+    ev = mondo.eventi[0] if mondo and mondo.eventi else None
+    _check(ev is not None and ev.tipo == "ogni" and ev.n == 3, "tipo 'ogni', ogni 3 turni")
+    _check(ev is not None and ev.scatta_a(3) and ev.scatta_a(6) and not ev.scatta_a(4),
+           "scatta a 3, 6, ... e non a 4")
+
+
+def test_evento_numero_invalido_warning():
+    print("[evento: 'Ogni 0 turni' = warning, evento ignorato]")
+    src = (
+        "La cella è una stanza.\n"
+        'Ogni 0 turni: dire "Mai.".\n'
+    )
+    mondo, log = compila(src)
+    _check(mondo is not None, "compila comunque (warning non bloccante)")
+    _check(mondo and len(mondo.eventi) == 0, "l'evento invalido non è registrato")
+    _check("ignorato" in log.lower(), "il log avvisa che l'evento è ignorato")
+
+
+def test_runtime_eventi_a_turni():
+    print("[runtime: gli eventi scattano al turno giusto nel loop]")
+    from gioco import elabora_comando
+    from libreria_azioni import LIBRERIA_AZIONI
+    src = (
+        "La cella è una stanza.\n"
+        "Il giocatore comincia in cella.\n"
+        "Una candela è una cosa.\nLa candela è in cella.\n"
+        'Al turno 2: dire "Si spegne." e adesso la candela è nel nulla.\n'
+        'Al turno 3: dire "Crollo!" e adesso perdi.\n'
+    )
+    mondo, _ = compila(src)
+    mondo.carica_azioni(LIBRERIA_AZIONI)
+    mondo.imposta_posizione_iniziale()
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        c1 = elabora_comando(mondo, "esamina candela")  # turno 1
+        c2 = elabora_comando(mondo, "esamina candela")  # turno 2 -> evento candela
+        candela_dopo_t2 = mondo.trova_oggetto("candela").posizione
+        # [1.3.0] la candela non c'è più: «Non vedo» non consumerebbe il turno
+        c3 = elabora_comando(mondo, "guarda")  # turno 3 -> perdi
+    out = buf.getvalue()
+    _check(mondo.turno_corrente == 3, "il contatore dei turni è avanzato a 3")
+    _check(candela_dopo_t2 is None, "al turno 2 l'evento ha rimosso la candela")
+    _check(c1 is True and c2 is True and c3 is False,
+           "il gioco continua fino al turno 3, poi termina")
+    _check("HAI PERSO" in out, "l'evento terminale al turno 3 chiude la partita")
+
+
+# --- Test: DEMONI / EVENTI CONDIZIONALI [Livello 8] --------------------------
+
+def test_demone_compila():
+    print("[demone: le due forme compilano e popolano mondo.demoni]")
+    src = (
+        "La cripta è una stanza.\n"
+        "Il giocatore comincia in cripta.\n"
+        "La tensione è un contatore.\n"
+        "L'allarme è uno stato.\nL'allarme è spento.\n"
+        'Ogni turno se la tensione è almeno 5: dire "Trema."'
+        " e adesso aumenta la tensione.\n"
+        'Quando l\'allarme è acceso diventa vera: dire "SCATTA!" e adesso perdi.\n'
+    )
+    mondo, log = compila(src)
+    _check(mondo is not None, "il sorgente con due demoni compila senza errori")
+    _check(len(mondo.demoni) == 2, "entrambi i demoni sono registrati in mondo.demoni")
+    tipi = {d.tipo for d in mondo.demoni}
+    _check(tipi == {"ogni_turno", "quando"},
+           "i tipi 'ogni_turno' (a livello) e 'quando' (fronte) sono distinti")
+
+
+def test_demone_quando_fronte_di_salita():
+    print("[demone: 'Quando ... diventa vera' scatta sulla soglia (esempio bersaglio)]")
+    # Esempio bersaglio: tensione che sale ogni turno + scadenza autonoma a 8.
+    src = (
+        "Il rituale è una stanza.\n"
+        "Il giocatore comincia in rituale.\n"
+        "La tensione è un contatore.\n"
+        'Ogni 1 turno: dire "La tensione cresce." e adesso aumenta la tensione di 2.\n'
+        'Quando la tensione è almeno 8: dire "Il portale ti risucchia."'
+        " e adesso perdi.\n"
+    )
+    mondo = runtime(src)
+    out = ""
+    for _ in range(3):                 # turni 1..3: tensione 2,4,6 -> non scatta
+        out += esegui(mondo, "guarda")
+    _check("portale ti risucchia" not in out,
+           "finché la tensione è sotto 8 il demone non scatta")
+    _check(mondo.stato_partita == "in_corso", "la partita è ancora in corso a tensione 6")
+    out_t4 = esegui(mondo, "guarda")   # turno 4: tensione 8 -> scatta -> perdi
+    _check("portale ti risucchia" in out_t4,
+           "quando la tensione raggiunge 8 il demone scatta da solo")
+    _check(mondo.stato_partita == "persa", "il demone ha terminato la partita autonomamente")
+
+
+def test_demone_quando_baseline_niente_falso_fronte():
+    print("[demone: una condizione GIÀ vera all'avvio non genera un falso fronte]")
+    src = (
+        "La torre è una stanza.\n"
+        "Il giocatore comincia in torre.\n"
+        "L'allarme è uno stato.\nL'allarme è attivo.\n"   # vero fin dalla partenza
+        'Quando l\'allarme è attivo diventa vera: dire "FALSO FRONTE." e adesso perdi.\n'
+    )
+    mondo = runtime(src)
+    # Baseline calcolato a compile-time: era_vera deve essere già True.
+    demone = mondo.demoni[0]
+    _check(demone.era_vera is True, "il baseline registra la condizione come già vera")
+    out = esegui(mondo, "guarda")
+    _check("FALSO FRONTE" not in out,
+           "nessun fronte di salita: l'allarme era già attivo all'avvio")
+    _check(mondo.stato_partita == "in_corso", "la partita non viene chiusa per un falso fronte")
+
+
+def test_demone_quando_scatta_una_sola_volta():
+    print("[demone: 'Quando' scatta UNA sola volta, non a ogni turno in cui resta vera]")
+    src = (
+        "La sala è una stanza.\n"
+        "Il giocatore comincia in sala.\n"
+        "Il portale è uno stato.\nIl portale è chiuso.\n"
+        "Il varchi è un contatore.\n"
+        'Al turno 2: dire "Si apre." e adesso il portale è aperto.\n'
+        'Quando il portale è aperto diventa vera: dire "VARCO." e adesso aumenta il varchi.\n'
+    )
+    mondo = runtime(src)
+    out = ""
+    for _ in range(4):                 # turni 1..4 (apertura al 2, resta aperto)
+        out += esegui(mondo, "guarda")
+    _check(out.count("VARCO.") == 1, "il fronte di salita produce esattamente uno scatto")
+    _check(mondo.variabili["varchi"] == 1,
+           "la conseguenza del demone è applicata una sola volta")
+
+
+def test_demone_ogni_turno_a_livello():
+    print("[demone: 'Ogni turno se ...' ri-scatta a ogni turno in cui la condizione è vera]")
+    src = (
+        "La palude è una stanza.\n"
+        "Il giocatore comincia in palude.\n"
+        "Il veleno è uno stato.\nIl veleno è attivo.\n"
+        "La vita è un contatore.\n"
+        'Ogni turno se il veleno è attivo: dire "Bruci." e adesso diminuisci la vita.\n'
+    )
+    mondo = runtime(src)
+    out = ""
+    for _ in range(3):
+        out += esegui(mondo, "guarda")
+    _check(out.count("Bruci.") == 3, "il demone a livello scatta a ognuno dei 3 turni")
+    _check(mondo.variabili["vita"] == -3,
+           "la conseguenza continua si accumula (vita scesa di 3)")
+
+
+def test_demone_cascata_un_solo_passaggio():
+    print("[demone: una cascata si risolve in un solo passaggio, senza loop]")
+    # Demone A (leva) dichiarato PRIMA di B (portale): A apre il portale e, nello
+    # stesso passaggio, B vede il nuovo stato e scatta -> entrambi in un turno.
+    src = (
+        "Il quadro è una stanza.\n"
+        "Il giocatore comincia in quadro.\n"
+        "La leva è uno stato.\nLa leva è giu.\n"
+        "Il portale è uno stato.\nIl portale è chiuso.\n"
+        "Il punteggio è un contatore.\n"
+        'Al turno 2: dire "Click." e adesso la leva è su.\n'
+        'Quando la leva è su diventa vera: dire "Leva su." e adesso il portale è aperto.\n'
+        'Quando il portale è aperto diventa vera: dire "Portale aperto." e adesso aumenta il punteggio.\n'
+    )
+    mondo = runtime(src)
+    esegui(mondo, "guarda")            # turno 1: nulla
+    out_t2 = esegui(mondo, "guarda")   # turno 2: click -> A scatta -> B scatta
+    _check("Leva su." in out_t2 and "Portale aperto." in out_t2,
+           "nello stesso turno la cascata A->B scatta entrambi i demoni")
+    _check(mondo.variabili["punteggio"] == 1,
+           "il demone a valle ha applicato la sua conseguenza nel medesimo passaggio")
+
+
+# --- Test: VALORE INIZIALE DEI CONTATORI [0.16.0] ----------------------------
+
+def test_contatore_valore_iniziale():
+    print("[contatore: 'La forza parte da N' imposta il valore iniziale]")
+    src = (
+        "La forza è un contatore.\n"
+        "La forza parte da 3.\n"
+    )
+    mondo, log = compila(src)
+    _check(mondo is not None, "la dichiarazione con valore iniziale compila")
+    _check(mondo.variabili["forza"] == 3, "il contatore parte da 3, non da 0")
+
+
+def test_contatore_valore_iniziale_ordine_libero():
+    print("[contatore: 'parte da' funziona anche PRIMA di 'è un contatore']")
+    src = (
+        "La forza parte da 5.\n"
+        "La forza è un contatore.\n"   # setdefault non sovrascrive il 5
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None and mondo.variabili["forza"] == 5,
+           "l'ordine delle due frasi non conta: resta 5")
+
+
+def test_contatore_valore_iniziale_in_condizione():
+    print("[contatore: il valore iniziale è visibile alle condizioni a runtime]")
+    src = (
+        "L'atrio è una stanza.\n"
+        "Il giocatore comincia in atrio.\n"
+        "La porta è una cosa.\nLa porta è in atrio.\n"
+        "La forza è un contatore.\n"
+        "La forza parte da 5.\n"
+        'Invece di apri la porta se la forza è meno di 3: dire "Troppo pesante.".\n'
+    )
+    mondo = runtime(src)
+    out = esegui(mondo, "apri porta")
+    _check("Troppo pesante." not in out,
+           "con forza iniziale 5 il gating (meno di 3) non scatta")
+
+
+def test_scanner_raccoglie_variabili():
+    print("[scanner: 'X è uno stato' popola le variabili, non le entità]")
+    src = (
+        "La cella è una stanza.\n"
+        "Il punteggio è uno stato.\n"
+    )
+    tab = costruisci_symbol_table(src)
+    _check("punteggio" in tab.variabili, "lo stato 'punteggio' è tra le variabili")
+    _check("punteggio" not in tab.tutti, "lo stato NON è tra le entità (tutti)")
+    _check("cella" in tab.stanze, "la stanza resta tra le entità")
+
+
+# --- Test: Passata 1, scanner della symbol-table [Livello 2.5 / G1] ----------
+
+def test_scanner_raccoglie_stanze_e_oggetti():
+    print("[scanner: raccoglie stanze e oggetti dichiarati]")
+    src = (
+        "La cella è una stanza.\n"
+        "Una chiave è una cosa.\n"
+        "La chiave è in cella.\n"        # posizione: NON introduce simboli
+        "La chiave è lucente.\n"         # proprietà: NON introduce simboli
+    )
+    tab = costruisci_symbol_table(src)
+    _check("cella" in tab.stanze, "la stanza 'cella' è nella symbol-table")
+    _check("chiave" in tab.oggetti, "l'oggetto 'chiave' è nella symbol-table")
+    _check("lucente" not in tab.tutti, "la proprietà 'lucente' NON è un simbolo")
+    _check(tab.tutti == {"cella", "chiave"}, "nessun simbolo spurio")
+
+
+def test_scanner_nomi_multiparola():
+    print("[scanner: nomi-entità multiparola]")
+    src = (
+        "La cella di contenimento è una stanza.\n"
+        "Una keycard magnetica è una cosa.\n"
+    )
+    tab = costruisci_symbol_table(src)
+    _check("cella di contenimento" in tab.stanze, "stanza multiparola raccolta intera")
+    _check("keycard magnetica" in tab.oggetti, "oggetto multiparola raccolto intero")
+
+
+def test_scanner_connessione_introduce_stanze():
+    print("[scanner: 'collega ... a ...' introduce entrambe le stanze]")
+    src = "Il corridoio collega sud a la cella di contenimento.\n"
+    tab = costruisci_symbol_table(src)
+    _check("corridoio" in tab.stanze, "stanza sorgente raccolta")
+    _check("cella di contenimento" in tab.stanze,
+           "stanza destinazione (con articolo) raccolta e normalizzata")
+
+
+def test_scanner_ignora_punti_nelle_stringhe():
+    print("[scanner: i punti dentro le stringhe non spezzano le frasi]")
+    src = (
+        "La cella è una stanza.\n"
+        'La descrizione della cella è "Bianca. Asettica. Fredda.".\n'
+        "Una porta è una cosa.\n"
+    )
+    tab = costruisci_symbol_table(src)
+    _check(tab.tutti == {"cella", "porta"},
+           "le frasi dentro le virgolette non generano falsi simboli")
+
+
+def test_parole_riservate_coprono_le_keyword():
+    print("[parole riservate: copertura delle keyword strutturali]")
+    attese = {"è", "una", "stanza", "cosa", "prendibile", "collega",
+              "invece", "se", "dire", "adesso", "oppure", "non", "ha"}
+    mancanti = attese - PAROLE_RISERVATE
+    _check(not mancanti, f"tutte le keyword chiave sono riservate (mancano: {mancanti})")
+
+
+# --- Test: GUARDIA ANTI-AMBIGUITÀ PERMANENTE [Livello 2.5 / G1] --------------
+#
+# Questa è la rete di sicurezza definitiva contro la regressione dell'ambiguità
+# grammaticale. In v0.6.0 il corpus qui sotto produceva da 1 a 7 alberi per
+# frase (nodi `_ambig`) sotto Earley; con il terminale ENTITA chiuso ne produce
+# esattamente UNO, e LALR(1) si costruisce senza conflitti.
+
+# Corpus che esercita tutti i costrutti storicamente ambigui.
+_CORPUS_GUARDIA = (
+    "La cella è una stanza.\n"
+    "Il corridoio è una stanza.\n"
+    "La cella collega nord a corridoio.\n"
+    "Alto e basso sono direzioni opposte.\n"   # def_direzioni [Livello 4 / L1]
+    "La cella collega basso a corridoio.\n"     # connessione con direzione custom
+    "Una porta di ferro è una cosa.\n"        # nome-entità multiparola
+    "La porta di ferro è in cella.\n"          # def_posizione
+    "La porta di ferro è chiusa.\n"            # def_proprieta
+    "La porta di ferro è incisa.\n"            # [0.27.0/D] proprietà che inizia con prep ('in')
+    "La porta di ferro è prendibile.\n"        # def_prendibile
+    "Accesa e spenta sono opposte.\n"          # def_opposti [Livello 3 / M5]
+    "Una chiave è una cosa.\nLa chiave è in cella.\nLa chiave è prendibile.\n"
+    'La chiave si chiama anche "chiavetta".\n'         # def_alias [Livello 4]
+    "Una scatola è un contenitore.\nLa scatola è in cella.\n"   # def_contenitore [Livello 4 / M1]
+    "Un anello è una cosa.\nL'anello è nella scatola.\n"         # collocazione in contenitore
+    "Un tavolo è un supporto.\nIl tavolo è in cella.\n"          # def_supporto
+    '"frusta" è un comando.\n'                          # def_verbo [Livello 4 / M1]
+    'Invece di frusta la chiave: dire "Schiocco.".\n'  # regola con verbo custom
+    "L'allarme è uno stato.\nL'allarme è attivo.\n"   # def_stato + def_stato_valore [Livello 3]
+    "Il punteggio è un contatore.\n"                   # def_contatore [Livello 3]
+    "Il punteggio parte da 2.\n"                        # def_contatore_iniziale [0.16.0]
+    # [0.27.0 / A] Copula plurale 'sono'/'partono' su stati e contatori (nomi plurali).
+    "Le luci sono uno stato.\nLe luci sono accese.\n"  # def_stato + def_stato_valore plurale
+    "Le vite sono un contatore.\nLe vite partono da 5.\n"  # def_contatore + def_contatore_iniziale plurale
+    "Il giocatore può portare 4 oggetti.\n"            # def_giocatore_capacita [Livello 7]
+    "La chiave dà 2 spazi.\n"                          # def_capacita_oggetto [Livello 7]
+    'Invece di esamina la chiave se l\'allarme non è attivo: dire "Quiete.".\n'  # cond_variabile_neg
+    'Invece di prendi la chiave se il punteggio è almeno 2: dire "Punti." '
+    'e adesso aumenta il punteggio di 3.\n'            # cond_contatore_gte + cons_aumenta
+    'Invece di apri la porta di ferro se la porta di ferro è chiusa e il '
+    'giocatore ha la chiave: dire "Click." e adesso la porta di ferro è aperta '
+    'e adesso vinci.\n'   # cons_vinci nel corpus della guardia [Livello 3]
+    'Invece di usa la chiave su la porta di ferro se il giocatore non ha la '
+    'chiave oppure la porta di ferro non è aperta: dire "No." '
+    'e adesso la chiave è nel nulla e adesso l\'allarme è spento.\n'  # cons_variabile
+    'Al turno 3: dire "Ticchettio." e adesso aumenta il punteggio.\n'  # evento_al [Livello 3]
+    'Ogni 5 turni: dire "Rintocco.".\n'               # evento_ogni
+    # [Livello 8] Demoni: 'Ogni turno se ...' (a livello, distinto da 'Ogni N
+    # turni' sul lookahead NUMERO vs "turno") e 'Quando ... diventa vera' (fronte).
+    'Ogni turno se il punteggio è almeno 3: dire "Pressione." e adesso aumenta il punteggio.\n'  # demone_ogni
+    'Quando l\'allarme non è attivo diventa vera: dire "Silenzio." e adesso vinci.\n'  # demone_quando + cond_variabile_neg
+    # [0.19.0] A7 verbo intransitivo + regola globale senza oggetto; A8 inventario
+    # iniziale; A9 «tick» silenzioso (evento e demone senza 'dire').
+    '"medita" è un comando senza oggetto.\n'                # verbo_senza_oggetto [A7]
+    'Invece di medita: dire "Respiri a fondo.".\n'          # regola globale su verbo intransitivo
+    "Il giocatore ha la chiave.\n"                          # def_giocatore_inventario [A8]
+    'Al turno 7: aumenta il punteggio.\n'                   # evento_al senza dire [A9]
+    'Ogni turno se il punteggio è al massimo 1: aumenta il punteggio.\n'  # demone_ogni senza dire [A9]
+    # [0.30.0 / A3] 'dire' OPZIONALE anche nelle REGOLE (simmetria con A9): forma
+    # GLOBALE su verbo intransitivo e forma con BERSAGLIO, entrambe a sola conseguenza.
+    'Invece di medita: aumenta il punteggio.\n'             # regola globale senza dire [A3]
+    'Invece di frusta la scatola: aumenta il punteggio.\n'  # regola con bersaglio senza dire [A3]
+    # [Livello 5] Interpolazione [var]: vive DENTRO le virgolette, dunque non
+    # deve introdurre alcuna ambiguità grammaticale (segnaposto su contatore e
+    # oggetto, entrambi dichiarati sopra).
+    'Invece di esamina la scatola: dire "Hai [punteggio] punti vicino a [chiave].".\n'
+    # [Livello 5] Regola GLOBALE senza bersaglio: scatta sul solo verbo + condizione.
+    'Invece di guarda se il punteggio è almeno 3: dire "Una luce pulsa.".\n'
+    # [Livello 5] Descrizione CONDIZIONALE: clausola 'se' tra ENTITA e "è".
+    'La descrizione della porta di ferro se l\'allarme è attivo è "Sigillata.".\n'
+    # [0.22.0 / A2] Descrizioni a VARIANTI: 'è una di: …' (casuale) e 'è in
+    # sequenza: …' (rotazione). Dopo "è" il lookahead TESTO_QUOTATO|"una"|"in".
+    'La descrizione dell\'anello è una di: "Un anello d\'oro.", "Un cerchio lucente.".\n'
+    'La descrizione del tavolo è in sequenza: "Un tavolo grezzo.", "Un tavolo segnato.".\n'
+    # [Livello 5b] NPC e dialoghi: personaggio, nodo d'ingresso, battuta (con
+    # interpolazione), opzione di uscita. Etichette/testi quotati: 0 ambiguità.
+    "Il mercante è un personaggio.\nIl mercante è in cella.\n"
+    'Il dialogo del mercante comincia con "saluto".\n'
+    'Il mercante al nodo "saluto" dice "Benvenuto, hai [punteggio] punti!".\n'
+    'Al nodo "saluto" l\'opzione "Chi sei?" se il giocatore ha la chiave conduce al nodo "chi" e adesso aumenta il punteggio.\n'  # condizione [0.10.4] + rami [0.10.2] + conseguenza [0.10.3]
+    'Al nodo "saluto" l\'opzione "Addio." chiude il dialogo.\n'
+    'Il mercante al nodo "chi" dice "Un mercante.".\n'
+    'Al nodo "chi" l\'opzione "Vinci!" chiude il dialogo e adesso vinci.\n'   # conseguenza di fine partita [0.10.3]
+    'Al nodo "chi" l\'opzione "Addio." chiude il dialogo.\n'
+    # [0.24.0 / A4] Buio e luce: stanza buia (proprietà speciale via def_proprieta)
+    # e fonte di luce (def_illumina, dopo ENTITA lookahead "illumina").
+    "La cantina è una stanza.\nLa cella collega sud a cantina.\n"
+    "La cantina è buia.\n"                             # proprietà speciale 'buia' su stanza
+    "Una lanterna è una cosa.\nLa lanterna illumina.\nLa lanterna è in cantina.\n"  # def_illumina
+    # [0.25.0 / A5] Movimento NPC: deterministico (cons_png_va) e casuale
+    # (cons_png_cambia). Dopo ENTITA il lookahead "va"/"cambia" vs _copula.
+    "Ogni 6 turni: il mercante cambia stanza.\n"        # cons_png_cambia
+    "Quando il punteggio è almeno 4: il mercante va nel corridoio.\n"  # cons_png_va
+    # [0.26.0 / A6] Sinonimo di verbo: dopo '"…" è' il lookahead "come" vs "un".
+    '"ghermisci" è come prendi.\n'                       # def_sinonimo
+    # [0.31.0 / Tema 1] Operando-quantità: valore di un contatore '[…]' ed
+    # estrazione casuale 'un numero fra A e B', sia come QUANTITÀ (1a, in 'di …'
+    # e 'diventa') sia come TERMINE DI CONFRONTO (1b). Convivono con le forme a
+    # NUMERO letterale già presenti sopra: il lookahead NUMERO|"["|"un" decide.
+    'Invece di guarda se il punteggio è meno di [vite]: aumenta il punteggio di [vite].\n'      # 1b cond_lt var + 1a cons 'di [var]'
+    'Invece di esamina la chiave se il punteggio è più di [vite]: diminuisci il punteggio di un numero fra 1 e 2.\n'  # 1b cond_gt var + casuale
+    'Ogni turno se il punteggio è almeno [vite]: il punteggio diventa [vite].\n'   # 1b cond_gte var + diventa var
+    'Quando il punteggio è al massimo [vite] diventa vera: il punteggio diventa un numero fra 1 e 6.\n'  # 1b cond_lte var + diventa casuale
+    'Ogni turno se il punteggio è [vite]: aumenta le vite.\n'                       # 1b cond_eq contatore==contatore
+    'Quando il punteggio non è [vite] diventa vera: aumenta le vite.\n'             # 1b cond_neq contatore
+    # [0.32.0 / Tema 2] Casualità d'autore non-numerica. 2b: scelta casuale fra
+    # VALORI DI STATO ('… diventa uno fra …'); convive con 'diventa operando'
+    # (cons_contatore_set) — dopo "diventa" il lookahead "uno" vs {NUMERO,"[","un"}
+    # decide. 2c: condizione probabilistica ('càpita (N su M)'), unico cond_base
+    # senza operando a sinistra (keyword dedicata).
+    "Il meteo è uno stato.\nIl meteo è sereno.\n"                                   # stato per 2b
+    'Invece di osserva: il meteo diventa uno fra sereno, pioggia, nebbia.\n'        # 2b cons_scelta_stato
+    'Ogni turno se càpita (1 su 4): aumenta il punteggio.\n'                        # 2c cond_probabilita (demone)
+    'Invece di scruta se càpita (3 su 4) e il meteo è pioggia: dire "Forse.".\n'    # 2c in regola, in AND con cond_variabile
+    # [0.33.0 / Tema 4a] Buio COMMUTABILE: 'la stanza diventa buia/illuminata'.
+    # Dopo ENTITA il lookahead "diventa" è disgiunto da _copula/"va"/"cambia"; ENTITA
+    # è un terminale chiuso disgiunto da VARIABILE, quindi non collide con
+    # 'VARIABILE "diventa" …' (cons_contatore_set / cons_scelta_stato).
+    '"oscura" è un comando senza oggetto.\n'
+    'Invece di oscura: la cantina diventa buia.\n'           # cons_stanza_buio (buio)
+    '"rischiara" è un comando senza oggetto.\n'
+    'Invece di rischiara: la cantina diventa illuminata.\n'  # cons_stanza_buio (luce)
+    # [0.33.0 / Tema 4b] Battuta CONDIZIONALE: 'X al nodo "n" dice "…" se …'. Dopo
+    # il secondo TESTO_QUOTATO il lookahead "se" vs "." è disgiunto → 0-ambiguo. Si
+    # accumula sulla battuta INCONDIZIONATA del nodo "chi" già nel corpus (fallback).
+    'Il mercante al nodo "chi" dice "Sono in allerta." se l\'allarme è attivo.\n'   # def_battuta condizionale
+    # [0.34.0 / Tema 3] Stato↔stato per INDIREZIONE: copia ('X diventa Y', forma
+    # NUDA: dopo "diventa" non c'è alcun 'diventa PROPRIETA' che competa) e
+    # confronto ('X è come Y', anche negato): qui il marcatore "come" è OBBLIGATORIO
+    # perché 'VARIABILE è VARIABILE' collide con 'VARIABILE è PROPRIETA'
+    # (cond_variabile). Entrambi i RHS sono STATI (terminale VARIABILE). Dopo
+    # 'VARIABILE diventa' il lookahead VARIABILE è disgiunto da "uno" e da
+    # {NUMERO,"[","un"}; dopo 'VARIABILE è'/'VARIABILE non è' la keyword "come" è
+    # disgiunta da PROPRIETA/{NUMERO,"["}/"almeno"/… → 0-ambiguo (verificato qui).
+    "Il bersaglio è uno stato.\nL'obiettivo è uno stato.\n"                       # due stati per il Tema 3
+    'Invece di indaga: il bersaglio diventa l\'obiettivo.\n'                      # cons_variabile_copia
+    'Invece di accusa se il bersaglio è come l\'obiettivo: dire "Preso.".\n'       # cond_variabile_uguali
+    'Invece di dubita se il bersaglio non è come l\'obiettivo: dire "Non lui.".\n' # cond_variabile_uguali_neg
+    # [1.4.0] Pulsanti-verbo: le tre forme di 'I comandi si …' (vale l'ultima).
+    # Dopo 'si' il lookahead scrivono/scelgono, dopo 'scrivono' "."/"oppure".
+    "I comandi si scrivono.\n"
+    "I comandi si scelgono con i pulsanti.\n"
+    "I comandi si scrivono oppure si scelgono con i pulsanti.\n"
+)
+
+
+def _conta_ambig(tree):
+    return sum(1 for st in tree.iter_subtrees() if st.data == "_ambig")
+
+
+def test_guardia_lalr_si_costruisce_senza_conflitti():
+    print("[guardia: LALR(1) si costruisce senza conflitti]")
+    simboli = costruisci_symbol_table(_CORPUS_GUARDIA)
+    try:
+        costruisci_parser(simboli.tutti, simboli.variabili, _nomi_direzioni(simboli))
+        ok = True
+        msg = ""
+    except GrammarError as e:
+        ok = False
+        msg = str(e)
+    _check(ok, f"il parser LALR(1) si costruisce senza GrammarError ({msg})")
+
+
+def test_guardia_zero_ambiguita():
+    print("[guardia: il corpus produce UN SOLO albero (0 _ambig)]")
+    simboli = costruisci_symbol_table(_CORPUS_GUARDIA)
+    grammatica = costruisci_grammatica(simboli.tutti, simboli.variabili, _nomi_direzioni(simboli))
+    # Stesso grammar, ma con Earley in modalità 'explicit' per CONTARE gli alberi.
+    parser_amb = Lark(grammatica, start="start", parser="earley",
+                      ambiguity="explicit")
+    tree = parser_amb.parse(_CORPUS_GUARDIA)
+    n = _conta_ambig(tree)
+    _check(n == 0, f"nessun nodo ambiguo nel corpus (trovati: {n})")
+
+
+def test_guardia_nome_con_parola_chiave_disambiguato():
+    print("[guardia: un nome che contiene una parola-chiave non genera ambiguità]")
+    # 'via est' contiene 'est' (direzione); 'cosa preziosa' contiene 'cosa'.
+    src = (
+        "La via est è una stanza.\n"
+        "Una cosa preziosa è una cosa.\n"
+        "La cosa preziosa è in via est.\n"
+    )
+    simboli = costruisci_symbol_table(src)
+    grammatica = costruisci_grammatica(simboli.tutti, simboli.variabili)
+    parser_amb = Lark(grammatica, start="start", parser="earley",
+                      ambiguity="explicit")
+    tree = parser_amb.parse(src)
+    _check(_conta_ambig(tree) == 0, "0 alberi ambigui anche con nomi 'pericolosi'")
+    mondo, _ = compila(src)
+    _check(mondo is not None and "cosa preziosa" in mondo.oggetti,
+           "l'oggetto 'cosa preziosa' è risolto correttamente")
+
+
+def test_riga_degli_errori_semantici():
+    print("[1.4.4: un errore semantico va sulla riga della frase sbagliata, non su una parola simile]")
+    # Una proprietà data a una stanza: errore semantico, senza riga dal parser.
+    src = ("L'ingresso è una stanza.\n"
+           "La descrizione dell'ingresso è \"Un soprabito appeso.\".\n"   # «sopra» dentro «soprabito»
+           "# La soffitta è sopra: un commento non conta.\n"
+           "La soffitta è una stanza.\n"
+           "Il giocatore comincia nell'ingresso.\n"
+           "La soffitta è sopra.\n")
+    r = strutturato(src)
+    err = next((e for e in r["errors"] if "'sopra'" in e.get("message", "")), {})
+    _check(err.get("code") == "semantica", "è l'errore semantico (non uno di sintassi)")
+    _check(err.get("line") == 6 and not err.get("imprecise"),
+           f"l'errore cade sulla riga 6, quella che lo causa (era {err.get('line')})")
+    src2 = ("La camera è una stanza.\n"
+            "La soffitta è una stanza.\n"
+            "La descrizione della camera è \"Una scala, e sopra la soffitta.\".\n"
+            "Il giocatore comincia nella camera.\n"
+            "La soffitta è sopra.\n")
+    r2 = strutturato(src2)
+    err2 = next((e for e in r2["errors"] if "'sopra'" in e.get("message", "")), {})
+    _check(err2.get("line") == 5,
+           f"a pari nomi citati vince la frase che comincia col soggetto (riga {err2.get('line')})")
+
+
+# --- Test: Cassetto A [0.30.0] — A1 nomi non validi, A3 'dire' opzionale, A4 idioma direzione
+
+def test_a1_nome_con_carattere_non_valido_errore():
+    print("[A1: un nome con '/' dà un errore d'autore localizzato, non un GrammarError]")
+    src = ("La cella è una stanza.\n"
+           "Il doppio/gioco è uno stato.\n"   # '/' chiuderebbe il regex del terminale
+           "Il giocatore comincia nella cella.\n")
+    # Percorso IDE (strutturato): diagnostica precisa con codice dedicato.
+    r = strutturato(src)
+    _check(not r["ok"], "il file non compila")
+    err = r["errors"][0] if r["errors"] else {}
+    _check(err.get("code") == "nome-non-valido",
+           "l'errore ha codice 'nome-non-valido' (non 'interno'/'sintassi')")
+    _check(err.get("line") == 2 and not err.get("imprecise"),
+           "l'errore è localizzato alla riga 2 (posizione precisa)")
+    _check("/" in err.get("message", ""),
+           "il messaggio cita il carattere incriminato")
+    # Percorso motore/CLI: non solleva, ritorna None segnalando il nome non valido.
+    mondo, log = compila(src)
+    _check(mondo is None and "nome non valido" in log.lower(),
+           "il percorso motore segnala 'nome non valido' senza crashare")
+    _check("GrammarError" not in log and "Traceback" not in log,
+           "nessun GrammarError/traceback grezzo verso l'autore")
+
+
+def test_a1_nome_valido_con_accenti_apostrofo_spazi_ok():
+    print("[A1: accenti, apostrofo e nomi multiparola restano pienamente validi]")
+    src = ("La città vecchia è una stanza.\n"
+           "L'affinità di Anna è un contatore.\n"
+           "Il giocatore comincia nella città vecchia.\n")
+    mondo, log = compila(src)
+    _check(mondo is not None, "un nome con accento/apostrofo/spazi compila (additività)")
+    _check("nome non valido" not in log.lower(),
+           "nessun falso positivo sui nomi italiani leciti")
+
+
+def test_a3_regola_senza_dire_compila_ed_esegue():
+    print("[A3: 'dire' opzionale nelle regole (tick silenzioso come A9)]")
+    src = ('La cella è una stanza.\n'
+           'La forza è un contatore.\n'
+           'La forza parte da 1.\n'
+           '"riposa" è un comando senza oggetto.\n'
+           'Invece di riposa: aumenta la forza di 2.\n'   # nessun 'dire'
+           'Il giocatore comincia nella cella.\n')
+    mondo, log = compila(src)
+    _check(mondo is not None, "una regola senza 'dire' compila")
+    regola = next((r for r in mondo.regole), None) if mondo else None
+    _check(regola is not None and regola.risposta == "" and regola.conseguenze,
+           "la regola ha risposta vuota e mantiene la conseguenza")
+    m = runtime(src)
+    out = esegui(m, "riposa")
+    _check(m.variabili.get("forza") == 3, "la conseguenza si applica (forza 1->3)")
+    _check(out.strip() == "", "una regola muta NON stampa una riga vuota")
+
+
+def test_a3_regola_con_dire_resta_invariata():
+    print("[A3: la forma storica 'dire \"...\"' resta identica (non regredisce)]")
+    m = runtime('La cella è una stanza.\n'
+                'Una pietra è una cosa.\nLa pietra è in cella.\nLa pietra è prendibile.\n'
+                'Invece di esamina la pietra: dire "È liscia.".\n'
+                'Il giocatore comincia nella cella.\n')
+    out = esegui(m, "esamina pietra")
+    _check("liscia" in out.lower(), "la regola con 'dire' stampa ancora il suo testo")
+
+
+def test_a4_sinonimo_direzione_avviso_mirato():
+    print("[A4: '\"x\" è come <direzione>' avvisa con l'idioma corretto, non genericamente]")
+    mondo, log = compila('La cella è una stanza.\n'
+                         '"sinistra" è come est.\n'   # 'est' è una direzione, non un verbo
+                         'Il giocatore comincia nella cella.\n')
+    _check(mondo is not None, "il file compila (l'avviso non è bloccante)")
+    basso = log.lower()
+    _check("direzione" in basso and "opposte" in basso,
+           "l'avviso spiega che 'est' è una direzione e indica 'sono direzioni opposte'")
+
+
+# --- Test: Tema 1 [0.31.0] — i contatori si parlano -------------------------
+# 1a) un contatore (o un'estrazione casuale) come QUANTITÀ di 'di …'/'diventa';
+# 1b) confronto fra due GRANDEZZE ('è più di [forza]'). Operando unico, tre
+# forme: NUMERO | [VARIABILE] | un numero fra A e B.
+
+def _src_arena():
+    """Mondo minimo per i test del Tema 1: due contatori e un verbo intransitivo
+    su cui appendere una regola globale che applica conseguenze."""
+    return ("L'arena è una stanza.\nIl giocatore comincia nell'arena.\n"
+            "La forza è un contatore.\nLa forza parte da 5.\n"
+            "La vita è un contatore.\nLa vita parte da 10.\n"
+            '"agisci" è un comando senza oggetto.\n')
+
+
+def test_tema1a_contatore_come_quantita_in_di():
+    print("[1a: 'aumenta/diminuisci X di [Y]' usa il VALORE del contatore Y]")
+    # vita 10, forza 5: 'aumenta la vita di [forza]' -> 15; poi 'diminuisci' -> 10.
+    m = runtime(_src_arena() +
+                'Invece di agisci: aumenta la vita di [forza] e adesso diminuisci la forza.\n')
+    esegui(m, "agisci")
+    _check(m.variabili.get("vita") == 15, "la vita cresce del valore di forza (10+5=15)")
+    _check(m.variabili.get("forza") == 4, "le altre conseguenze restano invariate (forza 5->4)")
+
+
+def test_tema1a_diventa_contatore():
+    print("[1a: 'X diventa [Y]' copia il valore corrente di Y in X]")
+    m = runtime(_src_arena() +
+                'Invece di agisci: il danno diventa [forza].\n'
+                'Il danno è un contatore.\n')
+    esegui(m, "agisci")
+    _check(m.variabili.get("danno") == 5, "il danno assume il valore di forza (5)")
+
+
+def test_tema1a_di_letterale_invariato():
+    print("[1a: 'di N' letterale resta identico (additività)]")
+    m = runtime(_src_arena() +
+                'Invece di agisci: aumenta la forza di 3.\n')
+    esegui(m, "agisci")
+    _check(m.variabili.get("forza") == 8, "il delta letterale funziona come prima (5+3=8)")
+
+
+def test_tema1a_estrazione_casuale_in_intervallo_e_riproducibile():
+    print("[1a/casualità: 'di un numero fra A e B' resta nell'intervallo ed è seedato]")
+    sorgente = (_src_arena() +
+                'Invece di agisci: il dado diventa un numero fra 1 e 6.\n'
+                'Il dado è un contatore.\n')
+    valori = []
+    for _ in range(2):
+        m = runtime(sorgente)          # ogni partita riparte dallo stesso seme
+        serie = []
+        for _ in range(8):
+            esegui(m, "agisci")
+            serie.append(m.variabili.get("dado"))
+        valori.append(serie)
+    _check(all(1 <= v <= 6 for v in valori[0]), "ogni estratto è nell'intervallo chiuso [1, 6]")
+    _check(valori[0] == valori[1], "stesso seme -> stessa sequenza (riproducibile)")
+    _check(len(set(valori[0])) > 1, "la sequenza non è costante (è davvero casuale)")
+
+
+def test_tema1a_estrazione_casuale_annulla_safe():
+    print("[1a/casualità: ANNULLA riavvolge anche l'RNG dell'estrazione]")
+    m = runtime(_src_arena() +
+                'Invece di agisci: il dado diventa un numero fra 1 e 100.\n'
+                'Il dado è un contatore.\n')
+    esegui(m, "agisci")
+    primo = m.variabili.get("dado")
+    esegui(m, "agisci")
+    secondo = m.variabili.get("dado")
+    esegui(m, "annulla")               # disfa la seconda estrazione
+    _check(m.variabili.get("dado") == primo, "ANNULLA riporta il dado al valore precedente")
+    esegui(m, "agisci")                # ri-estrae dallo stesso stato RNG
+    _check(m.variabili.get("dado") == secondo,
+           "ripetendo l'azione l'estrazione è identica (RNG riavvolto)")
+
+
+def test_tema1b_confronto_contatore_contatore():
+    print("[1b: 'è più/meno di [Y]', 'almeno/al massimo [Y]', '== / != [Y]' fra contatori]")
+    src = ("L'arena è una stanza.\nIl giocatore comincia nell'arena.\n"
+           "La vita è un contatore.\n"
+           "La soglia è un contatore.\n"
+           "Una runa è una cosa.\nLa runa è nell'arena.\n"
+           'Invece di esamina la runa se la vita è più di [soglia]: dire "gt".\n'
+           'Invece di usa la runa se la vita è meno di [soglia]: dire "lt".\n'
+           'Invece di apri la runa se la vita è almeno [soglia]: dire "ge".\n'
+           'Invece di prendi la runa se la vita è al massimo [soglia]: dire "le".\n'
+           'Invece di rompi la runa se la vita è [soglia]: dire "eq".\n'
+           'Invece di spingi la runa se la vita non è [soglia]: dire "ne".\n')
+    mondo, _ = compila(src)
+    _check(mondo is not None, "i confronti contatore<->contatore compilano")
+    gt, lt, ge, le, eq, ne = (mondo.regole[i].condizione for i in range(6))
+    mondo.variabili["vita"] = 7
+    mondo.variabili["soglia"] = 5
+    _check(gt.valuta(mondo) and ge.valuta(mondo) and ne.valuta(mondo),
+           "vita 7 vs soglia 5: più di / almeno / diverso sono veri")
+    _check(not lt.valuta(mondo) and not le.valuta(mondo) and not eq.valuta(mondo),
+           "vita 7 vs soglia 5: meno di / al massimo / uguale sono falsi")
+    mondo.variabili["vita"] = 5     # ora pari alla soglia
+    _check(eq.valuta(mondo) and ge.valuta(mondo) and le.valuta(mondo),
+           "vita 5 == soglia 5: uguale / almeno / al massimo sono veri")
+    _check(not gt.valuta(mondo) and not lt.valuta(mondo) and not ne.valuta(mondo),
+           "vita 5 == soglia 5: più di / meno di / diverso sono falsi")
+    mondo.variabili["soglia"] = 9   # la soglia si muove: il confronto è DINAMICO
+    _check(lt.valuta(mondo) and not gt.valuta(mondo),
+           "spostando la soglia il confronto cambia (5 < 9): operando risolto a runtime")
+
+
+def test_tema1b_confronto_letterale_invariato():
+    print("[1b: il confronto con NUMERO letterale resta identico (additività)]")
+    src = ("L'arena è una stanza.\nIl giocatore comincia nell'arena.\n"
+           "La vita è un contatore.\n"
+           "Una runa è una cosa.\nLa runa è nell'arena.\n"
+           'Invece di esamina la runa se la vita è più di 3: dire "ok".\n')
+    mondo, _ = compila(src)
+    cond = mondo.regole[0].condizione
+    mondo.variabili["vita"] = 4
+    _check(cond.valuta(mondo) is True, "vita 4 > 3 (letterale) è vero")
+    mondo.variabili["vita"] = 2
+    _check(cond.valuta(mondo) is False, "vita 2 > 3 (letterale) è falso")
+
+
+def test_tema1_operando_marca_contatore_come_usato():
+    print("[1a/lint: un contatore citato solo come 'di [Y]' NON è 'inutilizzato']")
+    # 'bonus' compare SOLO come operando di 'di [bonus]': il linter non deve
+    # segnalarlo come dichiarato-ma-mai-usato.
+    src = (_src_arena() +
+           "Il bonus è un contatore.\nIl bonus parte da 2.\n"
+           'Invece di agisci: aumenta la vita di [bonus].\n')
+    r = strutturato(src)
+    _check(r["ok"], "il file compila")
+    inutil = [w for w in r.get("warnings", []) if "bonus" in str(w) and "mai usato" in str(w)]
+    _check(not inutil, "'bonus' usato come operando non è segnalato inutilizzato")
+
+
+def test_tema1_strutturato_serializza_operando():
+    print("[1a/IDE: il serializzatore JSON espone le forme dinamiche dell'operando]")
+    src = (_src_arena() +
+           'Invece di agisci: aumenta la vita di [forza] e adesso il dado diventa un numero fra 1 e 6.\n'
+           'Il dado è un contatore.\n')
+    dati = regole_strutturate(src)
+    _check(dati["ok"], "analizza_regole non solleva e ritorna ok")
+    cons = [c for r in dati["rules"] for c in r.get("consequences", []) if c.get("op") == "count"]
+    valori = [c.get("value") for c in cons]
+    var_ref = any(isinstance(v, dict) and v.get("kind") == "var" and v.get("name") == "forza" for v in valori)
+    rand_ref = any(isinstance(v, dict) and v.get("kind") == "rand"
+                   and v.get("min") == 1 and v.get("max") == 6 for v in valori)
+    _check(var_ref, "l'operando contatore è serializzato come {kind:'var', name:'forza'}")
+    _check(rand_ref, "l'estrazione casuale è serializzata come {kind:'rand', min, max}")
+
+
+# --- Test: Tema 2 [0.32.0] — casualità d'autore non-numerica ----------------
+# 2b) scelta casuale fra VALORI DI STATO ('… diventa uno fra X, Y, Z');
+# 2c) condizione PROBABILISTICA ('càpita (N su M)'). Entrambe pescano da
+# mondo.rng (seedato e ANNULLA-safe, come l'estrazione numerica di 0.31.0).
+
+def _src_meteo():
+    """Mondo minimo per il Tema 2b: uno stato 'meteo' e un verbo intransitivo su
+    cui appendere una regola che lo fa cambiare a caso."""
+    return ("Il cielo è una stanza.\nIl giocatore comincia nel cielo.\n"
+            "Il meteo è uno stato.\nIl meteo è sereno.\n"
+            '"osserva" è un comando senza oggetto.\n')
+
+
+def test_tema2b_scelta_stato_pesca_dall_elenco():
+    print("[2b: 'X diventa uno fra A, B, C' assegna a X un valore dell'elenco]")
+    m = runtime(_src_meteo() +
+                'Invece di osserva: il meteo diventa uno fra sereno, pioggia, nebbia.\n')
+    visti = set()
+    for _ in range(20):
+        esegui(m, "osserva")
+        visti.add(m.variabili.get("meteo"))
+    _check(visti <= {"sereno", "pioggia", "nebbia"},
+           "ogni valore estratto appartiene all'elenco dichiarato")
+    _check(len(visti) > 1, "su molte estrazioni l'esito varia (è davvero casuale)")
+
+
+def test_tema2b_scelta_stato_riproducibile():
+    print("[2b: stesso seme -> stessa sequenza di valori di stato]")
+    sorgente = (_src_meteo() +
+                'Invece di osserva: il meteo diventa uno fra sereno, pioggia, nebbia.\n')
+    serie = []
+    for _ in range(2):
+        m = runtime(sorgente)          # ogni partita riparte dallo stesso seme
+        s = []
+        for _ in range(8):
+            esegui(m, "osserva")
+            s.append(m.variabili.get("meteo"))
+        serie.append(s)
+    _check(serie[0] == serie[1], "due partite col seme di default danno la stessa sequenza")
+
+
+def test_tema2b_scelta_stato_annulla_safe():
+    print("[2b: ANNULLA riavvolge la scelta casuale di stato]")
+    m = runtime(_src_meteo() +
+                'Invece di osserva: il meteo diventa uno fra sereno, pioggia, nebbia.\n')
+    esegui(m, "osserva")
+    primo = m.variabili.get("meteo")
+    esegui(m, "osserva")
+    secondo = m.variabili.get("meteo")
+    esegui(m, "annulla")               # disfa la seconda scelta
+    _check(m.variabili.get("meteo") == primo, "ANNULLA riporta il meteo al valore precedente")
+    esegui(m, "osserva")               # ri-pesca dallo stesso stato RNG
+    _check(m.variabili.get("meteo") == secondo,
+           "ripetendo l'azione la scelta è identica (RNG riavvolto)")
+
+
+def test_tema2b_un_solo_valore_e_deterministico():
+    print("[2b: 'diventa uno fra X' (un solo valore) assegna sempre X]")
+    m = runtime(_src_meteo() +
+                'Invece di osserva: il meteo diventa uno fra nebbia.\n')
+    esegui(m, "osserva")
+    _check(m.variabili.get("meteo") == "nebbia", "con un unico valore la scelta è deterministica")
+
+
+def test_tema2b_non_collide_con_diventa_operando():
+    print("[2b: 'diventa uno fra …' (stato) e 'diventa [operando]' (contatore) convivono]")
+    # Stessa testa 'VARIABILE diventa …': lo stato pesca fra parole, il contatore
+    # riceve un numero. Le due forme non si confondono (lookahead 'uno' vs operando).
+    src = (_src_meteo() +
+           "Il punti è un contatore.\nIl punti parte da 0.\n"
+           'Invece di osserva: il meteo diventa uno fra sereno, pioggia e adesso il punti diventa 7.\n')
+    m = runtime(src)
+    esegui(m, "osserva")
+    _check(m.variabili.get("meteo") in ("sereno", "pioggia"), "lo stato riceve un valore dell'elenco")
+    _check(m.variabili.get("punti") == 7, "il contatore riceve l'operando numerico, nella stessa regola")
+
+
+def test_tema2b_stato_solo_scelto_non_e_inutilizzato():
+    print("[2b/lint: uno stato assegnato solo via 'diventa uno fra' NON è 'inutilizzato']")
+    src = (_src_meteo() +
+           'Invece di osserva: il meteo diventa uno fra sereno, pioggia, nebbia.\n')
+    r = strutturato(src)
+    _check(r["ok"], "il file compila")
+    inutil = [w for w in r.get("warnings", []) if "meteo" in str(w) and "mai usato" in str(w)]
+    _check(not inutil, "'meteo' assegnato dalla scelta casuale è considerato usato")
+
+
+def test_tema2c_probabilita_in_intervallo():
+    print("[2c: 'càpita (N su M)' è vera ~N/M delle volte]")
+    src = ("L'arena è una stanza.\nIl giocatore comincia nell'arena.\n"
+           "Il conta è un contatore.\nIl conta parte da 0.\n"
+           "Ogni turno se càpita (1 su 2): aumenta il conta.\n"
+           '"aspetta" è un comando senza oggetto.\nInvece di aspetta: dire ".".\n')
+    m = runtime(src)
+    for _ in range(400):
+        esegui(m, "aspetta")
+    colpi = m.variabili.get("conta")
+    # 1 su 2 su 400 turni: atteso ~200, con ampio margine statistico.
+    _check(100 < colpi < 300, f"la frequenza dei colpi è plausibile per 1/2 (osservati {colpi}/400)")
+
+
+def test_tema2c_probabilita_estremi():
+    print("[2c: 'càpita (M su M)' sempre vera; 'càpita (0 su M)' mai vera]")
+    src = ("L'arena è una stanza.\nIl giocatore comincia nell'arena.\n"
+           "Il sempre è un contatore.\nIl sempre parte da 0.\n"
+           "Il mai è un contatore.\nIl mai parte da 0.\n"
+           "Ogni turno se càpita (3 su 3): aumenta il sempre.\n"
+           "Ogni turno se càpita (0 su 5): aumenta il mai.\n"
+           '"aspetta" è un comando senza oggetto.\nInvece di aspetta: dire ".".\n')
+    m = runtime(src)
+    for _ in range(10):
+        esegui(m, "aspetta")
+    _check(m.variabili.get("sempre") == 10, "'3 su 3' scatta a ogni turno (10/10)")
+    _check(m.variabili.get("mai") == 0, "'0 su 5' non scatta mai (0/10)")
+
+
+def test_tema2c_probabilita_annulla_safe():
+    print("[2c: ANNULLA riavvolge l'estrazione della condizione probabilistica]")
+    # Un demone probabilistico fa avanzare l'RNG ogni turno; ANNULLA deve
+    # riportare l'RNG (e quindi l'esito ripetuto) al punto pre-turno.
+    src = ("L'arena è una stanza.\nIl giocatore comincia nell'arena.\n"
+           "Il conta è un contatore.\nIl conta parte da 0.\n"
+           "Ogni turno se càpita (1 su 2): aumenta il conta.\n"
+           '"aspetta" è un comando senza oggetto.\nInvece di aspetta: dire ".".\n')
+    m = runtime(src)
+    esegui(m, "aspetta")
+    dopo_uno = m.variabili.get("conta")
+    esegui(m, "aspetta")
+    dopo_due = m.variabili.get("conta")
+    esegui(m, "annulla")               # disfa il secondo turno
+    _check(m.variabili.get("conta") == dopo_uno, "ANNULLA riporta il contatore al turno precedente")
+    esegui(m, "aspetta")               # ripete il turno: stesso esito casuale
+    _check(m.variabili.get("conta") == dopo_due,
+           "ripetendo il turno l'esito probabilistico è identico (RNG riavvolto)")
+
+
+def test_tema2c_probabilita_in_regola_e_in_and():
+    print("[2c: 'càpita (N su M)' usabile in una regola e dentro un AND]")
+    src = ("L'arena è una stanza.\nIl giocatore comincia nell'arena.\n"
+           "Il meteo è uno stato.\nIl meteo è pioggia.\n"
+           "Il conta è un contatore.\nIl conta parte da 0.\n"
+           '"scruta" è un comando senza oggetto.\n'
+           'Invece di scruta se càpita (5 su 5) e il meteo è pioggia: aumenta il conta.\n')
+    m = runtime(src)
+    esegui(m, "scruta")
+    _check(m.variabili.get("conta") == 1,
+           "regola con 'càpita (5 su 5) e il meteo è pioggia' scatta (entrambe vere)")
+
+
+def test_tema2c_serializza_chance_e_2b_pick():
+    print("[2b/2c/IDE: il serializzatore espone 'pick' (scelta) e 'chance' (probabilità)]")
+    src = (_src_meteo() +
+           "Il conta è un contatore.\nIl conta parte da 0.\n"
+           'Invece di osserva: il meteo diventa uno fra sereno, pioggia, nebbia.\n'
+           "Ogni turno se càpita (1 su 4): aumenta il conta.\n")
+    dati = regole_strutturate(src)
+    _check(dati["ok"], "analizza_regole non solleva e ritorna ok")
+    pick = [c for r in dati["rules"] for c in r.get("consequences", []) if c.get("op") == "pick"]
+    _check(any(c.get("name") == "meteo" and c.get("values") == ["sereno", "pioggia", "nebbia"]
+               for c in pick), "la scelta di stato è serializzata come {op:'pick', values:[…]}")
+    cond_dem = [d.get("condition") for d in dati.get("demons", [])]
+    chance = [c for c in cond_dem if isinstance(c, dict) and c.get("op") == "chance"]
+    _check(any(c.get("num") == 1 and c.get("den") == 4 for c in chance),
+           "la condizione probabilistica è serializzata come {op:'chance', num, den}")
+
+
+# --- Test: Tema 4 [0.33.0] — il mondo che cambia in scena -------------------
+# 4a) buio COMMUTABILE ('la stanza diventa buia/illuminata'); 4b) battuta di
+# nodo CONDIZIONALE ('… dice "…" se …', prima vera vince come le descrizioni).
+
+
+def _src_buio():
+    """Mondo minimo per il Tema 4a: una stanza non buia in cui il giocatore parte,
+    più due verbi intransitivi che la oscurano / la rischiarano."""
+    return ("La radura è una stanza.\nIl giocatore comincia nella radura.\n"
+            'La descrizione della radura è "Una radura quieta.".\n'
+            '"oscura" è un comando senza oggetto.\n'
+            '"rischiara" è un comando senza oggetto.\n')
+
+
+def test_tema4a_diventa_buia_spegne_la_luce():
+    print("[4a: 'la radura diventa buia' spegne la luce in scena]")
+    m = runtime(_src_buio() +
+                'Invece di oscura: la radura diventa buia.\n')
+    radura = m.trova_stanza("radura")
+    _check(radura is not None and radura.buia is False, "la radura parte illuminata")
+    esegui(m, "oscura")
+    _check(radura.buia is True, "dopo 'oscura' la radura è buia")
+    out = esegui(m, "guarda")
+    _check("buio pesto" in out.lower(), "al buio 'guarda' mostra 'È buio pesto.'")
+    _check("radura quieta" not in out.lower(), "al buio la descrizione non si vede")
+
+
+def test_tema4a_diventa_illuminata_riaccende():
+    print("[4a: 'la radura diventa illuminata' riaccende una stanza buia]")
+    # La radura parte BUIA (statica) e viene riaccesa in scena.
+    m = runtime("La radura è una stanza.\nIl giocatore comincia nella radura.\n"
+                "La radura è buia.\n"
+                'La descrizione della radura è "Una radura quieta.".\n'
+                '"rischiara" è un comando senza oggetto.\n'
+                'Invece di rischiara: la radura diventa illuminata.\n')
+    radura = m.trova_stanza("radura")
+    _check(radura.buia is True, "la radura parte buia (dichiarazione statica)")
+    esegui(m, "rischiara")
+    _check(radura.buia is False, "dopo 'rischiara' la radura è illuminata")
+    out = esegui(m, "guarda")
+    _check("radura quieta" in out.lower(), "riaccesa, la descrizione torna visibile")
+
+
+def test_tema4a_chiara_e_un_sinonimo_di_illuminata():
+    print("[4a: 'diventa chiara' è accettato come opposto di 'buia']")
+    m = runtime("La radura è una stanza.\nIl giocatore comincia nella radura.\n"
+                "La radura è buia.\n"
+                '"rischiara" è un comando senza oggetto.\n'
+                'Invece di rischiara: la radura diventa chiara.\n')
+    esegui(m, "rischiara")
+    _check(m.trova_stanza("radura").buia is False, "'diventa chiara' spegne il buio")
+
+
+def test_tema4a_annulla_safe():
+    print("[4a: ANNULLA riavvolge il buio commutato]")
+    m = runtime(_src_buio() +
+                'Invece di oscura: la radura diventa buia.\n')
+    radura = m.trova_stanza("radura")
+    esegui(m, "oscura")
+    _check(radura.buia is True, "la radura è buia dopo 'oscura'")
+    esegui(m, "annulla")
+    # Dopo ANNULLA l'oggetto stanza potrebbe essere stato sostituito dall'istantanea.
+    _check(m.trova_stanza("radura").buia is False,
+           "ANNULLA riporta la radura allo stato illuminato precedente")
+
+
+def test_tema4a_bersaglio_non_stanza_e_errore():
+    print("[4a/diagnostica: cambiare il buio a un OGGETTO è un errore gentile]")
+    src = ("La cella è una stanza.\nUna pietra è una cosa.\nLa pietra è in cella.\n"
+           '"x" è un comando senza oggetto.\n'
+           "Invece di x: la pietra diventa buia.\n")
+    r = strutturato(src)
+    _check(not r["ok"], "il file NON compila (la pietra non è una stanza)")
+    msg = " ".join(e["message"] for e in r["errors"])
+    _check("pietra" in msg and "stanza" in msg.lower(),
+           "l'errore nomina la pietra e spiega che serve una stanza")
+
+
+def test_tema4a_proprieta_non_di_luce_e_errore():
+    print("[4a/diagnostica: 'diventa rossa' (non buio/luce) è un errore gentile]")
+    src = ("La cella è una stanza.\n"
+           '"x" è un comando senza oggetto.\n'
+           "Invece di x: la cella diventa rossa.\n")
+    r = strutturato(src)
+    _check(not r["ok"], "il file NON compila ('rossa' non è una proprietà di luce)")
+    msg = " ".join(e["message"] for e in r["errors"])
+    _check("rossa" in msg and ("buia" in msg or "illuminata" in msg),
+           "l'errore nomina 'rossa' e suggerisce buia/illuminata/chiara")
+
+
+def _src_battuta_cond():
+    """Mondo minimo per il Tema 4b: un NPC con una battuta che dipende da uno stato
+    ('doppiogioco'), più due battute condizionali e una di fallback."""
+    return ("La sala è una stanza.\nIl giocatore comincia nella sala.\n"
+            "Il doppiogioco è uno stato.\nIl doppiogioco è ignoto.\n"
+            "Anna è un personaggio.\nAnna è in sala.\n"
+            'Il dialogo di Anna comincia con "incontro".\n'
+            'Anna al nodo "incontro" dice "Sono smascherata." se il doppiogioco è palese.\n'
+            'Anna al nodo "incontro" dice "Sospetti qualcosa?" se il doppiogioco è sospetto.\n'
+            'Anna al nodo "incontro" dice "Buongiorno.".\n'
+            'Al nodo "incontro" l\'opzione "Addio." chiude il dialogo.\n')
+
+
+def test_tema4b_battuta_condizionale_prima_vera_vince():
+    print("[4b: la battuta scelta è la prima la cui condizione è vera]")
+    m = runtime(_src_battuta_cond())
+    nodo = m.nodo_dialogo_di("incontro")
+    _check(len(nodo.battute_condizionali) == 2, "due battute condizionali accumulate")
+    _check(nodo.battuta == "Buongiorno.", "la battuta incondizionata è la base (fallback)")
+    # Stato di default: nessuna condizione vera -> fallback.
+    _check(nodo.battuta_attuale(m) == "Buongiorno.", "senza condizioni vere vince la base")
+    m.variabili["doppiogioco"] = "sospetto"
+    _check(nodo.battuta_attuale(m) == "Sospetti qualcosa?", "con 'sospetto' vince la 2a condizionale")
+    m.variabili["doppiogioco"] = "palese"
+    _check(nodo.battuta_attuale(m) == "Sono smascherata.",
+           "con 'palese' vince la 1a condizionale (ordine di dichiarazione)")
+
+
+def test_tema4b_battuta_condizionale_runtime():
+    print("[4b: 'parla con Anna' mostra la battuta giusta secondo lo stato]")
+    m = runtime(_src_battuta_cond())
+    out = esegui(m, "parla con Anna")
+    _check("Buongiorno." in out, "di default Anna usa la battuta di fallback")
+    m2 = runtime(_src_battuta_cond() +
+                 "Il doppiogioco è palese.\n")  # stato iniziale = palese
+    out2 = esegui(m2, "parla con Anna")
+    _check("Sono smascherata." in out2,
+           "con doppiogioco palese Anna usa la prima battuta condizionale")
+
+
+def test_tema4b_battuta_condizionale_con_segnaposto():
+    print("[4b: i segnaposto [nome] funzionano anche in una battuta condizionale]")
+    src = ("La sala è una stanza.\nIl giocatore comincia nella sala.\n"
+           "Il bottino è un contatore.\nIl bottino parte da 9.\n"
+           "Il doppiogioco è uno stato.\nIl doppiogioco è palese.\n"
+           "Anna è un personaggio.\nAnna è in sala.\n"
+           'Il dialogo di Anna comincia con "incontro".\n'
+           'Anna al nodo "incontro" dice "Ho [bottino] monete." se il doppiogioco è palese.\n'
+           'Anna al nodo "incontro" dice "Niente.".\n'
+           'Al nodo "incontro" l\'opzione "Addio." chiude il dialogo.\n')
+    m = runtime(src)
+    out = esegui(m, "parla con Anna")
+    _check("Ho 9 monete." in out, "il segnaposto [bottino] è interpolato nella battuta condizionale")
+
+
+def test_tema4b_battuta_incondizionata_resta_compatibile():
+    print("[4b: una battuta senza 'se' continua a funzionare come prima]")
+    mondo, _ = compila(_SRC_NPC)
+    nodo = mondo.dialogo_nodi.get("saluto")
+    _check(nodo is not None and nodo.battuta == "Benvenuto, viaggiatore!",
+           "la battuta semplice resta la base del nodo")
+    _check(nodo is not None and nodo.battute_condizionali == [],
+           "nessuna battuta condizionale per un nodo senza clausola 'se'")
+
+
+# --- Test: Tema 3 [0.34.0] — lo stato che parla allo stato (indirezione) -----
+# Copia 'X diventa Y' (cons_variabile_copia) e confronto 'X è come Y'
+# (cond_variabile_uguali / _neg), entrambi fra STATI; mismatch e «due contatori»
+# sono errori d'autore; ANNULLA riavvolge la copia; la forma è additiva.
+
+def _src_tema3():
+    """Mondo minimo per il Tema 3: una leva su cui agire e due stati ('bersaglio',
+    'sospettato') con valori iniziali distinti."""
+    return ("Il covo è una stanza.\nUna leva è una cosa.\nLa leva è nel covo.\n"
+            "La leva è prendibile.\nIl giocatore comincia nel covo.\n"
+            "Il bersaglio è uno stato.\nIl sospettato è uno stato.\n"
+            "Il bersaglio è anna.\nIl sospettato è bea.\n")
+
+
+def test_tema3_copia_stato_in_stato():
+    print("[3: 'il bersaglio diventa il sospettato' copia il valore corrente]")
+    m = runtime(_src_tema3() +
+                'Invece di usa la leva: dire "Identità copiata." e adesso il bersaglio diventa il sospettato.\n')
+    _check(m.variabili["bersaglio"] == "anna", "all'avvio il bersaglio vale 'anna'")
+    esegui(m, "usa la leva")
+    _check(m.variabili["bersaglio"] == "bea",
+           "dopo la copia il bersaglio prende il valore del sospettato ('bea')")
+    _check(m.variabili["sospettato"] == "bea", "il sospettato (sorgente) resta invariato")
+
+
+def test_tema3_confronto_e_come_vero_e_falso():
+    print("[3: 'se il bersaglio è come il sospettato' confronta i due valori]")
+    m = runtime(_src_tema3() +
+                'Invece di esamina la leva se il bersaglio è come il sospettato: dire "Coincidono.".\n'
+                'Invece di usa la leva: il bersaglio diventa il sospettato.\n')
+    out = esegui(m, "esamina la leva")
+    _check("Coincidono." not in out, "valori distinti (anna vs bea): il confronto è falso")
+    esegui(m, "usa la leva")             # ora bersaglio = sospettato = bea
+    out2 = esegui(m, "esamina la leva")
+    _check("Coincidono." in out2, "dopo la copia i due stati coincidono: il confronto è vero")
+
+
+def test_tema3_confronto_negato():
+    print("[3: 'se il bersaglio non è come il sospettato' è la negazione]")
+    m = runtime(_src_tema3() +
+                'Invece di esamina la leva se il bersaglio non è come il sospettato: dire "Diversi.".\n')
+    out = esegui(m, "esamina la leva")
+    _check("Diversi." in out, "all'avvio (anna vs bea) i due stati sono diversi")
+
+
+def test_tema3_annulla_safe():
+    print("[3: ANNULLA riavvolge una copia stato-stato]")
+    m = runtime(_src_tema3() +
+                'Invece di usa la leva: dire "Copio." e adesso il bersaglio diventa il sospettato.\n')
+    esegui(m, "usa la leva")
+    _check(m.variabili["bersaglio"] == "bea", "dopo la copia il bersaglio vale 'bea'")
+    esegui(m, "annulla")
+    _check(m.variabili["bersaglio"] == "anna", "ANNULLA riporta il bersaglio a 'anna'")
+
+
+def test_tema3_copia_da_stato_non_impostato_propaga_none():
+    print("[3: copiare da uno stato non ancora impostato azzera il bersaglio]")
+    m = runtime("Il covo è una stanza.\nUna leva è una cosa.\nLa leva è nel covo.\n"
+                "Il giocatore comincia nel covo.\n"
+                "Il bersaglio è uno stato.\nIl vuoto è uno stato.\n"
+                "Il bersaglio è anna.\n"     # 'vuoto' resta None
+                'Invece di usa la leva: il bersaglio diventa il vuoto.\n')
+    esegui(m, "usa la leva")
+    _check(m.variabili["bersaglio"] is None,
+           "copiando da uno stato non impostato il bersaglio torna 'non impostato' (None)")
+
+
+def test_tema3_mismatch_stato_contatore_copia_e_errore():
+    print("[3/diagnostica: copiare un contatore in uno stato è un errore gentile]")
+    src = ("Il covo è una stanza.\nUna leva è una cosa.\nLa leva è nel covo.\n"
+           "Il giocatore comincia nel covo.\n"
+           "Il bersaglio è uno stato.\nLa forza è un contatore.\n"
+           'Invece di usa la leva: il bersaglio diventa la forza.\n')
+    r = strutturato(src)
+    _check(not r["ok"], "il file NON compila (stato <- contatore non ha senso)")
+    msg = " ".join(e["message"] for e in r["errors"])
+    _check("bersaglio" in msg and "forza" in msg and "[forza]" in msg,
+           "l'errore nomina i due nomi e indirizza alla forma '[forza]'")
+
+
+def test_tema3_due_contatori_confronto_e_errore():
+    print("[3/diagnostica: confrontare due contatori con 'è come' rinvia a [nome]]")
+    src = ("Il covo è una stanza.\nUna leva è una cosa.\nLa leva è nel covo.\n"
+           "Il giocatore comincia nel covo.\n"
+           "La forza è un contatore.\nLa difesa è un contatore.\n"
+           'Invece di esamina la leva se la forza è come la difesa: dire "x".\n')
+    r = strutturato(src)
+    _check(not r["ok"], "il file NON compila (per i contatori serve [nome])")
+    msg = " ".join(e["message"] for e in r["errors"])
+    _check("[difesa]" in msg, "l'errore suggerisce il valore fra parentesi '[difesa]'")
+
+
+def test_tema3_confronto_letterale_resta_intatto():
+    print("[3: 'è valore' (letterale) non è scambiato per un confronto fra stati]")
+    # Additività: senza 'come', 'è bea' resta un confronto col valore-letterale.
+    m = runtime(_src_tema3() +
+                'Invece di esamina la leva se il bersaglio è bea: dire "È bea.".\n')
+    out = esegui(m, "esamina la leva")
+    _check("È bea." not in out, "il bersaglio vale 'anna', non 'bea': confronto letterale falso")
+    m2 = runtime(_src_tema3().replace("Il bersaglio è anna.", "Il bersaglio è bea.") +
+                 'Invece di esamina la leva se il bersaglio è bea: dire "È bea.".\n')
+    out2 = esegui(m2, "esamina la leva")
+    _check("È bea." in out2, "con bersaglio='bea' il confronto col letterale è vero")
+
+
+def test_a4_idioma_direzioni_opposte_funziona():
+    print("[A4: l'idioma corretto 'A e B sono direzioni opposte' resta la via giusta]")
+    m = runtime("La cella è una stanza.\n"
+                "Il corridoio è una stanza.\n"
+                "Sinistra e destra sono direzioni opposte.\n"
+                "La cella collega sinistra a corridoio.\n"
+                "Il giocatore comincia nella cella.\n")
+    esegui(m, "sinistra")
+    _check(m.posizione_giocatore == "corridoio",
+           "muoversi con la direzione personalizzata 'sinistra' funziona")
+
+
+# --- Test: errori d'autore migliori [Livello 2.5, beneficio collaterale] -----
+
+def test_errore_entita_sconosciuta():
+    print("[errore chiaro per entità mai dichiarata]")
+    src = "La cella è una stanza.\nLa porta è in cella.\n"  # 'porta' non dichiarata
+    mondo, log = compila(src)
+    _check(mondo is None, "la compilazione fallisce")
+    _check("sconosciuta" in log.lower() and "porta" in log,
+           "il log nomina l'entità sconosciuta 'porta'")
+    _check("SINTASSI" not in log, "non è il parse error criptico generico")
+
+
+def test_errore_entita_suggerimento():
+    print("[suggerimento sul refuso di un nome noto]")
+    src = (
+        "La cella è una stanza.\n"
+        "Una chiave è una cosa.\nLa chiave è in cella.\n"
+        'Invece di prendi la chave: dire "x".\n'  # 'chave' = refuso di 'chiave'
+    )
+    mondo, log = compila(src)
+    _check(mondo is None, "la compilazione fallisce")
+    _check("chiave" in log and "intendevi" in log.lower(),
+           "il log suggerisce 'chiave' come correzione di 'chave'")
+
+
+def test_errore_sintassi_resta_generico():
+    print("[un vero errore di sintassi non viene scambiato per entità sconosciuta]")
+    src = "La cella è una stanza\n"  # manca il punto finale
+    mondo, log = compila(src)
+    _check(mondo is None, "la compilazione fallisce")
+    _check("sconosciuta" not in log.lower() and "SINTASSI" in log,
+           "resta un errore di sintassi, non una falsa 'entità sconosciuta'")
+
+
+# --- Test: LIVELLO 5 — interpolazione di testo dinamico [var] (0.9.1) ---------
+
+_SRC_INTERP = (
+    "La cella è una stanza.\n"
+    "La chiave è una cosa.\n"          # nome_visualizzato = 'La chiave'
+    "La chiave è in cella.\n"
+    "La chiave è prendibile.\n"
+    "Il punteggio è un contatore.\n"   # default 0
+    "Il semaforo è uno stato.\n"
+    "Il semaforo è rosso.\n"
+)
+
+
+def test_interpolazione_contatore():
+    print("[interpolazione: contatore nel testo, valore corrente]")
+    src = _SRC_INTERP + (
+        'Invece di esamina la chiave: dire "Punti: [punteggio]." '
+        'e adesso aumenta il punteggio di 5.\n'
+    )
+    mondo = runtime(src)
+    out1 = esegui(mondo, "esamina chiave")
+    _check("Punti: 0." in out1, "primo esame: contatore reso come 0 (prima della conseguenza)")
+    out2 = esegui(mondo, "esamina chiave")
+    _check("Punti: 5." in out2, "secondo esame: contatore reso come 5 (dopo la conseguenza)")
+
+
+def test_interpolazione_stato():
+    print("[interpolazione: valore di uno stato nel testo]")
+    src = _SRC_INTERP + 'Invece di esamina la chiave: dire "Colore: [semaforo].".\n'
+    mondo = runtime(src)
+    out = esegui(mondo, "esamina chiave")
+    _check("Colore: rosso." in out, "lo stato 'semaforo' è reso come 'rosso'")
+
+
+def test_interpolazione_nome_oggetto():
+    print("[interpolazione: nome visualizzato di un oggetto]")
+    src = _SRC_INTERP + 'Invece di esamina la chiave: dire "Vedo [chiave] qui.".\n'
+    mondo = runtime(src)
+    out = esegui(mondo, "esamina chiave")
+    # [1.3.0 / M-4] A metà frase l'articolo è minuscolo (prima: «Vedo La chiave»).
+    _check("Vedo la chiave qui." in out, "l'oggetto è reso col suo nome visualizzato")
+
+
+def test_interpolazione_in_descrizione():
+    print("[interpolazione: segnaposto nella descrizione di un oggetto]")
+    src = _SRC_INTERP + 'La descrizione della chiave è "Lucida. Hai [punteggio] punti.".\n'
+    mondo = runtime(src)
+    out = esegui(mondo, "esamina chiave")
+    _check("Hai 0 punti." in out, "la descrizione interpola il contatore")
+
+
+def test_interpolazione_sconosciuto_resta_letterale_e_warning():
+    print("[interpolazione: segnaposto sconosciuto -> letterale + warning]")
+    src = _SRC_INTERP + 'Invece di esamina la chiave: dire "Valore [pippo].".\n'
+    mondo, log = compila(src)
+    _check(mondo is not None, "la compilazione riesce (warning non bloccante)")
+    _check("[pippo]" in log and "Segnaposto" in log,
+           "il log avvisa del segnaposto sconosciuto '[pippo]'")
+    mondo = runtime(src)
+    out = esegui(mondo, "esamina chiave")
+    _check("Valore [pippo]." in out, "a runtime il segnaposto sconosciuto resta letterale")
+
+
+def test_interpolazione_stato_non_impostato_vuoto():
+    print("[interpolazione: stato dichiarato senza valore -> stringa vuota]")
+    from favella_utils import rendi_testo
+    src = (
+        "La cella è una stanza.\n"
+        "Il semaforo è uno stato.\n"   # nessun valore iniziale -> None
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila")
+    _check(rendi_testo(mondo, "X[semaforo]Y") == "XY",
+           "uno stato a None rende stringa vuota")
+
+
+def test_interpolazione_nessun_warning_se_noto():
+    print("[interpolazione: nessun warning per segnaposto validi]")
+    src = _SRC_INTERP + 'Invece di esamina la chiave: dire "[punteggio] [semaforo] [chiave].".\n'
+    mondo, log = compila(src)
+    _check(mondo is not None, "compila")
+    _check("Segnaposto" not in log, "nessun avviso di segnaposto per nomi noti")
+
+
+# --- Test: LIVELLO 5 — regole globali senza oggetto (0.9.2) -------------------
+
+_SRC_GLOBALE = (
+    "La cella è una stanza.\n"
+    "La chiave è una cosa.\n"
+    "La chiave è in cella.\n"
+    "La chiave è prendibile.\n"
+    "Il punteggio è un contatore.\n"
+    'Invece di prendi la chiave: dire "Presa." e adesso aumenta il punteggio di 5.\n'
+)
+
+
+def test_regola_globale_compila_senza_bersaglio():
+    print("[regola globale: compila con bersaglio nullo]")
+    src = _SRC_GLOBALE + 'Invece di guarda se il punteggio è almeno 3: dire "Luce.".\n'
+    mondo, _ = compila(src)
+    _check(mondo is not None, "compila senza errori")
+    globali = [r for r in mondo.regole if r.id_oggetto_bersaglio is None]
+    _check(len(globali) == 1, "esiste una regola con id_oggetto_bersaglio = None")
+    _check(globali and globali[0].verbo == "guarda", "la regola globale è sul verbo 'guarda'")
+
+
+def test_regola_globale_condizione_falsa_non_scatta():
+    print("[regola globale: condizione falsa -> non scatta, default attivo]")
+    src = _SRC_GLOBALE + 'Invece di guarda se il punteggio è almeno 3: dire "Una luce pulsa.".\n'
+    mondo = runtime(src)
+    out = esegui(mondo, "guarda")  # punteggio = 0, condizione falsa
+    _check("Una luce pulsa." not in out, "la regola globale NON scatta")
+    _check("cella" in out.lower(), "viene mostrata la descrizione di default della stanza")
+
+
+def test_regola_globale_condizione_vera_scatta():
+    print("[regola globale: condizione vera -> scatta e sostituisce il default]")
+    src = _SRC_GLOBALE + 'Invece di guarda se il punteggio è almeno 3: dire "Una luce pulsa.".\n'
+    mondo = runtime(src)
+    esegui(mondo, "prendi chiave")        # punteggio -> 5
+    out = esegui(mondo, "guarda")          # ora 5 >= 3
+    _check("Una luce pulsa." in out, "la regola globale scatta quando la condizione è vera")
+
+
+def test_regola_globale_senza_condizione_scatta_sempre():
+    print("[regola globale: senza condizione scatta sempre]")
+    src = _SRC_GLOBALE + 'Invece di aiuto: dire "Nessun aiuto qui.".\n'
+    mondo = runtime(src)
+    out = esegui(mondo, "aiuto")
+    _check("Nessun aiuto qui." in out, "la regola globale incondizionata scatta")
+    _check("--- AIUTO ---" not in out, "il testo di aiuto di default è sostituito")
+
+
+def test_regola_specifica_precede_globale():
+    print("[regola globale: una regola specifica ha la precedenza]")
+    src = _SRC_GLOBALE + (
+        'Invece di esamina la chiave: dire "Specifica.".\n'
+        'Invece di esamina se il punteggio è almeno 0: dire "Globale.".\n'
+    )
+    mondo = runtime(src)
+    out = esegui(mondo, "esamina chiave")
+    _check("Specifica." in out, "scatta la regola specifica sull'oggetto")
+    _check("Globale." not in out, "la regola globale non scavalca quella specifica")
+
+
+def test_regola_globale_esegue_conseguenza():
+    print("[regola globale: esegue la conseguenza (fine partita)]")
+    src = _SRC_GLOBALE + 'Invece di guarda se il punteggio è meno di 1: dire "Fine." e adesso vinci.\n'
+    mondo = runtime(src)
+    out = esegui(mondo, "guarda")  # punteggio 0 < 1
+    _check("Fine." in out, "la regola globale stampa la risposta")
+    _check("HAI VINTO" in out, "la conseguenza di fine partita è eseguita")
+
+
+# --- Test: LIVELLO 5 — descrizioni condizionali (0.9.3) -----------------------
+
+_SRC_DESCCOND = (
+    "La cella è una stanza.\n"
+    "La torcia è una cosa.\n"
+    "La torcia è in cella.\n"
+    "La torcia è prendibile.\n"
+    "Il semaforo è uno stato.\n"
+    "Il semaforo è rosso.\n"
+    'La descrizione della torcia è "Una torcia spenta.".\n'
+    'La descrizione della torcia se il semaforo è verde è "Una torcia che brilla.".\n'
+    'Invece di usa la torcia: dire "Accendi." e adesso il semaforo è verde.\n'
+)
+
+
+def test_descrizione_condizionale_compila():
+    print("[descrizione condizionale: base + variante registrate]")
+    mondo, _ = compila(_SRC_DESCCOND)
+    _check(mondo is not None, "compila senza errori")
+    torcia = mondo.oggetti.get("torcia")
+    _check(torcia is not None and torcia.descrizione == "Una torcia spenta.",
+           "la descrizione di base è quella senza 'se'")
+    _check(torcia is not None and len(torcia.descrizioni_condizionali) == 1,
+           "una variante condizionale è registrata")
+
+
+def test_descrizione_condizionale_base_quando_falsa():
+    print("[descrizione condizionale: condizione falsa -> descrizione di base]")
+    mondo = runtime(_SRC_DESCCOND)
+    out = esegui(mondo, "esamina torcia")  # semaforo = rosso
+    _check("Una torcia spenta." in out, "mostra la base quando la condizione è falsa")
+    _check("brilla" not in out, "la variante condizionale non appare")
+
+
+def test_descrizione_condizionale_variante_quando_vera():
+    print("[descrizione condizionale: condizione vera -> variante]")
+    mondo = runtime(_SRC_DESCCOND)
+    esegui(mondo, "usa torcia")             # semaforo -> verde
+    out = esegui(mondo, "esamina torcia")
+    _check("Una torcia che brilla." in out, "mostra la variante quando la condizione è vera")
+
+
+def test_descrizione_condizionale_prima_vera_vince():
+    print("[descrizione condizionale: la prima variante vera (in ordine) vince]")
+    src = (
+        "La cella è una stanza.\n"
+        "La gemma è una cosa.\n"
+        "La gemma è in cella.\n"
+        "Il semaforo è uno stato.\n"
+        "Il semaforo è verde.\n"
+        'La descrizione della gemma se il semaforo è verde è "Prima.".\n'
+        'La descrizione della gemma se il semaforo è verde è "Seconda.".\n'
+    )
+    mondo = runtime(src)
+    out = esegui(mondo, "esamina gemma")
+    _check("Prima." in out and "Seconda." not in out,
+           "vince la prima variante dichiarata tra quelle vere")
+
+
+def test_descrizione_condizionale_su_stanza():
+    print("[descrizione condizionale: funziona anche per una stanza]")
+    src = (
+        "La cella è una stanza.\n"
+        "Il semaforo è uno stato.\n"
+        "Il semaforo è verde.\n"
+        'La descrizione della cella è "Buio.".\n'
+        'La descrizione della cella se il semaforo è verde è "La cella è illuminata.".\n'
+    )
+    mondo = runtime(src)
+    out = esegui(mondo, "guarda")
+    _check("La cella è illuminata." in out, "la stanza usa la descrizione condizionale")
+
+
+def test_descrizione_condizionale_con_interpolazione():
+    print("[descrizione condizionale: interpolazione [var] nel testo]")
+    src = (
+        "La cella è una stanza.\n"
+        "La torcia è una cosa.\n"
+        "La torcia è in cella.\n"
+        "Il punteggio è un contatore.\n"
+        "Il semaforo è uno stato.\n"
+        "Il semaforo è verde.\n"
+        'La descrizione della torcia se il semaforo è verde è "Brilla, hai [punteggio] punti.".\n'
+    )
+    mondo = runtime(src)
+    out = esegui(mondo, "esamina torcia")
+    _check("Brilla, hai 0 punti." in out, "la variante condizionale interpola il contatore")
+
+
+# --- Test: LIVELLO 5 — concordanza grammaticale italiana (0.9.4) --------------
+
+def test_concordanza_inferenza_genere_numero():
+    print("[concordanza: genere/numero inferiti dall'articolo del nome]")
+    from favella_utils import genere_numero
+    casi = {
+        "La torcia": ("f", "s"),
+        "Il tavolo": ("m", "s"),
+        "Lo specchio": ("m", "s"),
+        "Le chiavi": ("f", "p"),
+        "I tavoli": ("m", "p"),
+        "Gli specchi": ("m", "p"),
+        "L'ascia": (None, "s"),     # 'l'' ambiguo nel genere
+        "chiave": (None, None),       # senza articolo: nessuna info
+    }
+    for nome, atteso in casi.items():
+        _check(genere_numero(nome) == atteso, f"{nome!r} -> {atteso}")
+
+
+def test_concordanza_frase_indeterminativa():
+    print("[concordanza: articolo indeterminativo/partitivo concordato]")
+    from favella_utils import frase_indeterminativa as f
+    _check(f("La torcia") == "una torcia", "femminile + consonante -> 'una'")
+    _check(f("La ascia") == "un'ascia", "femminile + vocale -> \"un'\"")
+    _check(f("Il tavolo") == "un tavolo", "maschile + consonante -> 'un'")
+    _check(f("Lo specchio") == "uno specchio", "maschile + s impura -> 'uno'")
+    _check(f("Lo zaino") == "uno zaino", "maschile + z -> 'uno'")
+    _check(f("Le chiavi") == "delle chiavi", "femminile plurale -> 'delle'")
+    _check(f("I tavoli") == "dei tavoli", "maschile plurale + consonante -> 'dei'")
+    _check(f("Gli specchi") == "degli specchi", "maschile plurale + s impura -> 'degli'")
+    _check(f("chiave") == "chiave", "senza articolo: nome invariato (non inventa)")
+
+
+def test_concordanza_oggetto_metodo():
+    print("[concordanza: Oggetto.concordanza() legge il nome visualizzato]")
+    src = (
+        "La cella è una stanza.\n"
+        "La torcia è una cosa.\n"
+        "La torcia è in cella.\n"
+    )
+    mondo, _ = compila(src)
+    torcia = mondo.oggetti.get("torcia")
+    _check(torcia is not None and torcia.concordanza() == ("f", "s"),
+           "la torcia è inferita femminile singolare")
+
+
+def test_concordanza_elenco_stanza_singolari():
+    print("[concordanza: elenco oggetti con articoli concordati]")
+    src = (
+        "La cella è una stanza.\n"
+        "La torcia è una cosa.\nLa torcia è in cella.\n"
+        "Il tavolo è una cosa.\nIl tavolo è in cella.\n"
+    )
+    mondo = runtime(src)
+    out = esegui(mondo, "guarda")
+    _check("una torcia" in out, "la torcia è introdotta da 'una'")
+    _check("un tavolo" in out, "il tavolo è introdotto da 'un'")
+    _check("La torcia" not in out, "l'articolo determinativo grezzo non compare più nell'elenco")
+
+
+def test_concordanza_elenco_plurale():
+    print("[concordanza: oggetto plurale -> partitivo nell'elenco]")
+    src = (
+        "La cella è una stanza.\n"
+        "Le chiavi è una cosa.\nLe chiavi è in cella.\n"
+    )
+    mondo = runtime(src)
+    out = esegui(mondo, "guarda")
+    _check("delle chiavi" in out, "l'oggetto plurale usa il partitivo 'delle'")
+
+
+# --- Test: LIVELLO 5b — NPC e dialoghi, fondazione (0.10.1) --------------------
+
+_SRC_NPC = (
+    "La piazza è una stanza.\n"
+    "Il mercante è un personaggio.\n"
+    "Il mercante è in piazza.\n"
+    'Il dialogo del mercante comincia con "saluto".\n'
+    'Il mercante al nodo "saluto" dice "Benvenuto, viaggiatore!".\n'
+    'Al nodo "saluto" l\'opzione "Addio." chiude il dialogo.\n'
+)
+
+
+def test_npc_dichiarazione():
+    print("[NPC: 'X è un personaggio' crea un oggetto-personaggio]")
+    mondo, _ = compila(_SRC_NPC)
+    _check(mondo is not None, "compila senza errori")
+    npc = mondo.oggetti.get("mercante")
+    _check(npc is not None and npc.is_personaggio, "il mercante è un personaggio")
+    _check(npc is not None and npc.posizione == "piazza", "il mercante è in piazza")
+
+
+def test_dialogo_struttura():
+    print("[dialogo: nodo d'ingresso, battuta e opzione registrati]")
+    mondo, _ = compila(_SRC_NPC)
+    npc = mondo.oggetti.get("mercante")
+    _check(npc is not None and npc.dialogo_iniziale == "saluto", "nodo d'ingresso = 'saluto'")
+    nodo = mondo.dialogo_nodi.get("saluto")
+    _check(nodo is not None and nodo.battuta == "Benvenuto, viaggiatore!", "battuta registrata")
+    _check(nodo is not None and len(nodo.opzioni) == 1 and nodo.opzioni[0].chiude,
+           "una sola opzione, che chiude il dialogo")
+
+
+def test_dialogo_avvio_runtime():
+    print("[dialogo: 'parla con X' avvia la conversazione e mostra le opzioni]")
+    mondo = runtime(_SRC_NPC)
+    out = esegui(mondo, "parla con mercante")
+    _check("Benvenuto, viaggiatore!" in out, "viene mostrata la battuta")
+    _check("1. Addio." in out, "l'opzione è elencata e numerata")
+    _check(mondo.in_dialogo() and mondo.nodo_dialogo == "saluto",
+           "il mondo è in dialogo sul nodo d'ingresso")
+
+
+def test_dialogo_scelta_chiude():
+    print("[dialogo: scegliere l'opzione di uscita termina la conversazione]")
+    mondo = runtime(_SRC_NPC)
+    esegui(mondo, "parla con mercante")
+    out = esegui(mondo, "1")
+    _check("Fine della conversazione." in out, "la conversazione si conclude")
+    _check(not mondo.in_dialogo(), "il mondo non è più in dialogo")
+
+
+def test_dialogo_scelta_per_testo():
+    print("[dialogo: l'opzione si può scegliere anche per testo]")
+    mondo = runtime(_SRC_NPC)
+    esegui(mondo, "parla con mercante")
+    esegui(mondo, "addio.")   # match testuale dell'opzione "Addio."
+    _check(not mondo.in_dialogo(), "scelta per testo conclude il dialogo")
+
+
+def test_dialogo_uscita_universale_non_esce_dal_gioco():
+    print("[dialogo: 'esci' chiude il dialogo, non il gioco]")
+    mondo = runtime(_SRC_NPC)
+    esegui(mondo, "parla con mercante")
+    from gioco import elabora_comando
+    import io, contextlib
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        continua = elabora_comando(mondo, "esci")
+    _check(continua is True, "il gioco continua (esci non termina la partita)")
+    _check(not mondo.in_dialogo(), "ma la conversazione è chiusa")
+
+
+def test_dialogo_non_consuma_turno():
+    print("[dialogo: parlare e scegliere non fa avanzare i turni]")
+    mondo = runtime(_SRC_NPC)
+    esegui(mondo, "parla con mercante")
+    esegui(mondo, "1")
+    _check(mondo.turno_corrente == 0, "il tempo del mondo non è avanzato durante il dialogo")
+
+
+def test_dialogo_battuta_interpolata():
+    print("[dialogo: la battuta interpola i segnaposto [var]]")
+    src = (
+        "La piazza è una stanza.\n"
+        "Il mercante è un personaggio.\nIl mercante è in piazza.\n"
+        "L'oro è un contatore.\n"
+        'Il dialogo del mercante comincia con "saluto".\n'
+        'Il mercante al nodo "saluto" dice "Hai [oro] monete.".\n'
+        'Al nodo "saluto" l\'opzione "Addio." chiude il dialogo.\n'
+    )
+    mondo = runtime(src)
+    out = esegui(mondo, "parla con mercante")
+    _check("Hai 0 monete." in out, "la battuta interpola il contatore 'oro'")
+
+
+def test_personaggio_senza_dialogo_warning():
+    print("[NPC senza nodo d'ingresso: warning non bloccante]")
+    src = (
+        "La piazza è una stanza.\n"
+        "Il mercante è un personaggio.\nIl mercante è in piazza.\n"
+    )
+    mondo, log = compila(src)
+    _check(mondo is not None, "compila (warning non bloccante)")
+    _check("mercante" in log and "dialogo" in log.lower(),
+           "il log avvisa che il personaggio non ha dialogo")
+
+
+def test_dialogo_su_non_personaggio_errore():
+    print("[dialogo riferito a non-personaggio: errore bloccante]")
+    src = (
+        "La piazza è una stanza.\n"
+        "La statua è una cosa.\nLa statua è in piazza.\n"
+        'Il dialogo della statua comincia con "saluto".\n'
+        'La statua al nodo "saluto" dice "...".\n'
+        'Al nodo "saluto" l\'opzione "Addio." chiude il dialogo.\n'
+    )
+    mondo, log = compila(src)
+    _check(mondo is None, "la compilazione fallisce")
+    _check("personaggio" in log.lower(), "il log spiega che serve un personaggio")
+
+
+# --- Test: LIVELLO 5b — ramificazione dei dialoghi (0.10.2) --------------------
+
+_SRC_RAMI = (
+    "La piazza è una stanza.\n"
+    "Il mercante è un personaggio.\nIl mercante è in piazza.\n"
+    'Il dialogo del mercante comincia con "saluto".\n'
+    'Il mercante al nodo "saluto" dice "Che vuoi sapere?".\n'
+    'Al nodo "saluto" l\'opzione "Chi sei?" conduce al nodo "chi".\n'
+    'Al nodo "saluto" l\'opzione "Addio." chiude il dialogo.\n'
+    'Il mercante al nodo "chi" dice "Un mercante di spezie.".\n'
+    'Al nodo "chi" l\'opzione "Torna indietro." conduce al nodo "saluto".\n'
+    'Al nodo "chi" l\'opzione "Addio." chiude il dialogo.\n'
+)
+
+
+def test_ramificazione_struttura():
+    print("[ramificazione: opzione 'conduce al nodo' registra la destinazione]")
+    mondo, _ = compila(_SRC_RAMI)
+    nodo = mondo.dialogo_nodi.get("saluto")
+    opz_chi = next((o for o in nodo.opzioni if "Chi sei" in o.testo), None)
+    _check(opz_chi is not None and opz_chi.destinazione == "chi" and not opz_chi.chiude,
+           "l'opzione conduce al nodo 'chi'")
+
+
+def test_ramificazione_transizione_runtime():
+    print("[ramificazione: scegliere transita al nodo successivo]")
+    mondo = runtime(_SRC_RAMI)
+    esegui(mondo, "parla con mercante")
+    out = esegui(mondo, "1")   # "Chi sei?" -> nodo "chi"
+    _check("Un mercante di spezie." in out, "mostra la battuta del nodo di arrivo")
+    _check(mondo.nodo_dialogo == "chi", "il nodo corrente è 'chi'")
+
+
+def test_ramificazione_ritorno_e_chiusura():
+    print("[ramificazione: ritorno a un nodo precedente e chiusura]")
+    mondo = runtime(_SRC_RAMI)
+    esegui(mondo, "parla con mercante")
+    esegui(mondo, "1")                       # -> chi
+    out = esegui(mondo, "torna indietro.")   # match testuale -> saluto
+    _check("Che vuoi sapere?" in out and mondo.nodo_dialogo == "saluto",
+           "si torna al nodo 'saluto'")
+    esegui(mondo, "2")                        # Addio -> chiude
+    _check(not mondo.in_dialogo(), "la conversazione si chiude")
+
+
+def test_ramificazione_nodo_inesistente_warning():
+    print("[ramificazione: transizione verso un nodo inesistente -> warning]")
+    src = (
+        "La piazza è una stanza.\n"
+        "Il mercante è un personaggio.\nIl mercante è in piazza.\n"
+        'Il dialogo del mercante comincia con "saluto".\n'
+        'Il mercante al nodo "saluto" dice "Ciao.".\n'
+        'Al nodo "saluto" l\'opzione "Vai." conduce al nodo "inesistente".\n'
+    )
+    mondo, log = compila(src)
+    _check(mondo is not None, "compila (warning non bloccante)")
+    _check("inesistente" in log and "non esiste" in log.lower(),
+           "il log avvisa della transizione verso un nodo inesistente")
+
+
+# --- Test: LIVELLO 5b — conseguenze sulle scelte di dialogo (0.10.3) -----------
+
+_SRC_CONSEG = (
+    "La piazza è una stanza.\n"
+    "Il mercante è un personaggio.\nIl mercante è in piazza.\n"
+    "La gemma è una cosa.\nLa gemma è in piazza.\n"
+    "L'oro è un contatore.\n"
+    'Il dialogo del mercante comincia con "saluto".\n'
+    'Il mercante al nodo "saluto" dice "Vuoi la gemma?".\n'
+    'Al nodo "saluto" l\'opzione "Sì!" conduce al nodo "fine" e adesso la gemma è in inventario e adesso aumenta l\'oro di 5.\n'
+    'Al nodo "saluto" l\'opzione "No." chiude il dialogo.\n'
+    'Il mercante al nodo "fine" dice "Hai [oro] monete.".\n'
+    'Al nodo "fine" l\'opzione "Addio." chiude il dialogo e adesso vinci.\n'
+)
+
+
+def test_conseguenza_scelta_struttura():
+    print("[conseguenze: l'opzione registra le conseguenze in coda]")
+    mondo, _ = compila(_SRC_CONSEG)
+    nodo = mondo.dialogo_nodi.get("saluto")
+    opz = next((o for o in nodo.opzioni if o.destinazione == "fine"), None)
+    _check(opz is not None and len(opz.conseguenze) == 2,
+           "l'opzione ha due conseguenze (spostamento + contatore)")
+
+
+def test_conseguenza_scelta_modifica_mondo():
+    print("[conseguenze: scegliere cambia lo stato del mondo]")
+    mondo = runtime(_SRC_CONSEG)
+    esegui(mondo, "parla con mercante")
+    out = esegui(mondo, "1")   # "Sì!" -> dà la gemma, +5 oro, va a "fine"
+    _check("gemma" in mondo.inventario, "la gemma è finita nell'inventario")
+    _check(mondo.variabili.get("oro") == 5, "il contatore 'oro' è aumentato a 5")
+    _check("Hai 5 monete." in out, "la battuta del nodo d'arrivo interpola il nuovo valore")
+
+
+def test_conseguenza_scelta_fine_partita():
+    print("[conseguenze: una scelta può terminare la partita]")
+    mondo = runtime(_SRC_CONSEG)
+    esegui(mondo, "parla con mercante")
+    esegui(mondo, "1")                     # -> nodo "fine"
+    from gioco import elabora_comando
+    import io, contextlib
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        continua = elabora_comando(mondo, "1")   # "Addio." chiude + vinci
+    out = buf.getvalue()
+    _check("HAI VINTO" in out, "la conseguenza di fine partita scatta dal dialogo")
+    _check(continua is False, "il gioco termina")
+    _check(not mondo.in_dialogo(), "la conversazione è chiusa")
+
+
+# --- Test: LIVELLO 5b — opzioni condizionali (0.10.4) --------------------------
+
+_SRC_OPZCOND = (
+    "La piazza è una stanza.\n"
+    "Il mercante è un personaggio.\nIl mercante è in piazza.\n"
+    "La chiave è una cosa.\nLa chiave è in piazza.\nLa chiave è prendibile.\n"
+    'Il dialogo del mercante comincia con "saluto".\n'
+    'Il mercante al nodo "saluto" dice "Hai la chiave?".\n'
+    'Al nodo "saluto" l\'opzione "Ecco la chiave!" se il giocatore ha la chiave conduce al nodo "grazie".\n'
+    'Al nodo "saluto" l\'opzione "Non ancora." chiude il dialogo.\n'
+    'Il mercante al nodo "grazie" dice "Grazie!".\n'
+    'Al nodo "grazie" l\'opzione "Prego." chiude il dialogo.\n'
+)
+
+
+def test_opzione_condizionale_struttura():
+    print("[opzione condizionale: la condizione è registrata sull'opzione]")
+    mondo, _ = compila(_SRC_OPZCOND)
+    nodo = mondo.dialogo_nodi.get("saluto")
+    opz = next((o for o in nodo.opzioni if "Ecco" in o.testo), None)
+    _check(opz is not None and opz.condizione is not None,
+           "l'opzione 'Ecco la chiave!' ha una condizione")
+
+
+def test_opzione_condizionale_nascosta_se_falsa():
+    print("[opzione condizionale: nascosta finché la condizione è falsa]")
+    mondo = runtime(_SRC_OPZCOND)
+    out = esegui(mondo, "parla con mercante")   # senza chiave
+    _check("Ecco la chiave!" not in out, "l'opzione condizionata non appare")
+    _check("Non ancora." in out, "l'opzione incondizionata appare")
+
+
+def test_opzione_condizionale_visibile_se_vera():
+    print("[opzione condizionale: appare quando la condizione è vera]")
+    mondo = runtime(_SRC_OPZCOND)
+    esegui(mondo, "prendi chiave")
+    out = esegui(mondo, "parla con mercante")
+    _check("Ecco la chiave!" in out, "con la chiave l'opzione condizionata appare")
+    _check("1. Ecco la chiave!" in out, "ed è la prima opzione numerata")
+
+
+def test_opzione_condizionale_selezione_per_numero_coerente():
+    print("[opzione condizionale: la numerazione segue le opzioni disponibili]")
+    mondo = runtime(_SRC_OPZCOND)
+    esegui(mondo, "prendi chiave")
+    esegui(mondo, "parla con mercante")
+    out = esegui(mondo, "1")   # con chiave, 1 = "Ecco la chiave!" -> nodo "grazie"
+    _check("Grazie!" in out and mondo.nodo_dialogo == "grazie",
+           "scegliere 1 segue l'opzione condizionata disponibile")
+
+
+# --- Test: LINTER SEMANTICO [Livello 6 / 0.11.1] -----------------------------
+#
+# Analisi statica non bloccante (canale 'warnings'): stanze irraggiungibili,
+# oggetti orfani, regole morte, stati/contatori inutilizzati. Sorgenti minimali
+# e auto-coerenti, così ogni test isola un solo tipo di avviso.
+
+def test_lint_stanza_irraggiungibile():
+    print("[linter: stanza irraggiungibile dal punto di partenza]")
+    src = (
+        "La prima è una stanza.\n"
+        "La seconda è una stanza.\n"
+        "Il giocatore comincia in prima.\n"
+    )
+    mondo, log = compila(src)
+    _check(mondo is not None, "compila comunque (warning non bloccante)")
+    _check("irraggiungibile" in log and "seconda" in log,
+           "la stanza 'seconda', non collegata, è segnalata irraggiungibile")
+
+
+def test_lint_stanza_collegata_non_segnalata():
+    print("[linter: una stanza raggiungibile non è segnalata]")
+    src = (
+        "La prima è una stanza.\n"
+        "La seconda è una stanza.\n"
+        "La prima collega nord a seconda.\n"
+        "Il giocatore comincia in prima.\n"
+    )
+    mondo, log = compila(src)
+    _check("irraggiungibile" not in log,
+           "con la connessione nessuna stanza è irraggiungibile")
+
+
+def test_lint_oggetto_orfano():
+    print("[linter: oggetto mai collocato]")
+    src = (
+        "La cella è una stanza.\n"
+        "Il giocatore comincia in cella.\n"
+        "Una gemma è una cosa.\n"
+    )
+    mondo, log = compila(src)
+    _check(mondo is not None, "compila comunque (warning non bloccante)")
+    _check("mai collocato" in log and "gemma" in log,
+           "la gemma non collocata da nessuna parte è segnalata orfana")
+
+
+def test_lint_oggetto_collocato_non_orfano():
+    print("[linter: un oggetto collocato non è orfano]")
+    src = (
+        "La cella è una stanza.\n"
+        "Il giocatore comincia in cella.\n"
+        "Una gemma è una cosa.\nLa gemma è in cella.\n"
+    )
+    mondo, log = compila(src)
+    _check("mai collocato" not in log, "un oggetto in una stanza non è orfano")
+
+
+def test_lint_oggetto_introdotto_da_conseguenza_non_orfano():
+    print("[linter: un oggetto introdotto da una conseguenza non è orfano]")
+    src = (
+        "La cella è una stanza.\n"
+        "Il giocatore comincia in cella.\n"
+        "Una leva è una cosa.\nLa leva è in cella.\n"
+        "Una gemma è una cosa.\n"
+        'Invece di usa la leva: dire "Appare." e adesso la gemma è in cella.\n'
+    )
+    mondo, log = compila(src)
+    _check("mai collocato" not in log,
+           "la gemma, introdotta da una conseguenza, non è segnalata orfana")
+
+
+def test_lint_regola_morta_specifica():
+    print("[linter: regola specifica oscurata da una precedente identica]")
+    src = (
+        "La cella è una stanza.\n"
+        "Una porta è una cosa.\nLa porta è in cella.\n"
+        'Invece di esamina la porta: dire "Una.".\n'
+        'Invece di esamina la porta: dire "Due.".\n'
+    )
+    mondo, log = compila(src)
+    _check(mondo is not None, "compila comunque (warning non bloccante)")
+    _check("Regola morta" in log,
+           "la seconda regola con la stessa firma è segnalata morta")
+
+
+def test_lint_regola_condizionale_non_morta():
+    print("[linter: una condizionale dopo un'incondizionata NON è morta]")
+    src = (
+        "La cella è una stanza.\n"
+        "Una porta è una cosa.\nLa porta è in cella.\nLa porta è chiusa.\n"
+        'Invece di esamina la porta: dire "Base.".\n'
+        'Invece di esamina la porta se la porta è chiusa: dire "Cond.".\n'
+    )
+    mondo, log = compila(src)
+    _check("Regola morta" not in log,
+           "la condizionale ha comunque la precedenza di fase: non è morta")
+
+
+def test_lint_regola_globale_morta():
+    print("[linter: regola globale oscurata da una globale incondizionata]")
+    src = (
+        "La cella è una stanza.\n"
+        "Il giocatore comincia in cella.\n"
+        'Invece di guarda: dire "Primo.".\n'
+        'Invece di guarda: dire "Secondo.".\n'
+    )
+    mondo, log = compila(src)
+    _check("Regola morta" in log and "globale" in log,
+           "la seconda regola globale sullo stesso verbo è morta")
+
+
+def test_lint_variabile_inutilizzata():
+    print("[linter: stato dichiarato ma mai usato]")
+    src = (
+        "La cella è una stanza.\n"
+        "Il semaforo è uno stato.\nIl semaforo è rosso.\n"
+    )
+    mondo, log = compila(src)
+    _check(mondo is not None, "compila comunque (warning non bloccante)")
+    _check("mai usato" in log and "semaforo" in log,
+           "lo stato 'semaforo', mai letto, è segnalato inutilizzato")
+
+
+def test_lint_variabile_usata_in_interpolazione():
+    print("[linter: una variabile usata in [var] non è inutilizzata]")
+    src = (
+        "La cella è una stanza.\n"
+        "Il punteggio è un contatore.\n"
+        'La descrizione della cella è "Hai [punteggio] punti.".\n'
+    )
+    mondo, log = compila(src)
+    _check("mai usato" not in log,
+           "il contatore interpolato in un testo conta come usato")
+
+
+def test_lint_variabile_usata_in_condizione():
+    print("[linter: una variabile usata in una condizione non è inutilizzata]")
+    src = (
+        "La cella è una stanza.\n"
+        "Il punteggio è un contatore.\n"
+        "Una leva è una cosa.\nLa leva è in cella.\n"
+        'Invece di esamina la leva se il punteggio è almeno 1: dire "Ok.".\n'
+    )
+    mondo, log = compila(src)
+    _check("mai usato" not in log,
+           "un contatore confrontato in una condizione conta come usato")
+
+
+# --- Test: MODULI / IMPORT MULTI-.FAV [Livello 6 / 0.11.2] -------------------
+#
+# Preprocessore Passata 0: 'Includi "file.fav".' espanso prima delle due passate.
+# I test scrivono piccoli progetti multi-file in cartelle temporanee.
+
+def _scrivi_progetto(files: dict) -> str:
+    """Scrive i file dati (nome relativo -> contenuto) in una cartella temporanea
+    e ne restituisce il percorso. I nomi possono includere sottocartelle."""
+    d = tempfile.mkdtemp(prefix="favimp_")
+    for nome, contenuto in files.items():
+        percorso = os.path.join(d, nome)
+        sub = os.path.dirname(percorso)
+        if sub and not os.path.isdir(sub):
+            os.makedirs(sub, exist_ok=True)
+        with open(percorso, "w", encoding="utf-8") as f:
+            f.write(contenuto)
+    return d
+
+
+def _compila_path(percorso):
+    """Compila il file al percorso dato, catturando lo stdout (log)."""
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        mondo = analizza_file(percorso)
+    return mondo, buf.getvalue()
+
+
+def test_include_basico():
+    print("[import: 'Includi' unisce le definizioni di più file]")
+    d = _scrivi_progetto({
+        "main.fav": ('Includi "stanze.fav".\n'
+                     "Una torcia è una cosa.\nLa torcia è nella sala.\n"),
+        "stanze.fav": "La sala è una stanza.\n",
+    })
+    mondo, log = _compila_path(os.path.join(d, "main.fav"))
+    _check(mondo is not None, "il progetto multi-file compila")
+    _check(mondo and "sala" in mondo.stanze, "la stanza dal file incluso è presente")
+    _check(mondo and "torcia" in mondo.oggetti, "l'oggetto del file radice è presente")
+
+
+def test_include_dedup():
+    print("[import: lo stesso file incluso due volte è espanso una sola volta]")
+    d = _scrivi_progetto({
+        "main.fav": 'Includi "b.fav".\nIncludi "b.fav".\n',
+        "b.fav": "La cella è una stanza.\n",
+    })
+    testo, mappa, err = espandi_inclusioni(os.path.join(d, "main.fav"))
+    _check(not err, "nessun errore con doppio include")
+    _check(testo.count("La cella è una stanza.") == 1,
+           "il contenuto del file incluso due volte appare una sola volta")
+
+
+def test_include_ciclo():
+    print("[import: un ciclo di inclusione è un errore bloccante]")
+    d = _scrivi_progetto({
+        "main.fav": 'La cella è una stanza.\nIncludi "b.fav".\n',
+        "b.fav": 'Includi "main.fav".\n',
+    })
+    mondo, log = _compila_path(os.path.join(d, "main.fav"))
+    _check(mondo is None, "il ciclo blocca la compilazione")
+    _check("ciclo" in log.lower(), "il log spiega il ciclo di inclusione")
+
+
+def test_include_path_relativo():
+    print("[import: path relativo in una sottocartella]")
+    d = _scrivi_progetto({
+        "main.fav": 'Includi "moduli/extra.fav".\n',
+        "moduli/extra.fav": "La cripta è una stanza.\n",
+    })
+    mondo, log = _compila_path(os.path.join(d, "main.fav"))
+    _check(mondo is not None and "cripta" in mondo.stanze,
+           "il path relativo in sottocartella è risolto e incluso")
+
+
+def test_include_file_mancante():
+    print("[import: un file incluso mancante è bloccante]")
+    d = _scrivi_progetto({
+        "main.fav": 'La cella è una stanza.\nIncludi "assente.fav".\n',
+    })
+    mondo, log = _compila_path(os.path.join(d, "main.fav"))
+    _check(mondo is None, "un include mancante blocca la compilazione")
+    _check("non trovato" in log.lower(), "il log segnala il file incluso mancante")
+
+
+def test_include_errore_attribuito_al_file():
+    print("[import: l'errore nel file incluso è attribuito a quel file (source map)]")
+    d = _scrivi_progetto({
+        "main.fav": 'La cella è una stanza.\nIncludi "rotto.fav".\n',
+        "rotto.fav": "La porta è una banana.\n",   # 'porta' mai dichiarata: errore
+    })
+    mondo, log = _compila_path(os.path.join(d, "main.fav"))
+    _check(mondo is None, "l'errore nel file incluso blocca la compilazione")
+    _check("rotto.fav" in log,
+           "l'errore è attribuito al file incluso 'rotto.fav' via source map")
+
+
+# --- Test: SPEC EBNF FORMALE VERSIONATA [Livello 6 / 0.11.3] -----------------
+#
+# Guardia anti-drift: la specifica tecnica documentazione/grammatica-<ver>.md
+# deve restare allineata ai NOMI DI REGOLA della grammatica reale. Se si aggiunge
+# o rinomina una regola def_/cond_/cons_ senza aggiornare la spec, questo test
+# fallisce.
+
+_SPEC_EBNF = os.path.join(os.path.dirname(__file__), "documentazione",
+                          "grammatica-1.4.0.md")
+
+
+def _nomi_regole_grammatica():
+    """Estrae dai nomi di regola/azione del template di grammatica quelli
+    «autore-facing» (def_*, cond_*, cons_*)."""
+    nomi = set()
+    for m in re.finditer(r"(?m)^\s*\??([A-Za-z_]\w*)(?:\.-?\d+)?:", _GRAMMAR_TEMPLATE):
+        nomi.add(m.group(1))
+    for m in re.finditer(r"->\s*(\w+)", _GRAMMAR_TEMPLATE):
+        nomi.add(m.group(1))
+    return {n for n in nomi if n.startswith(("def_", "cond_", "cons_"))}
+
+
+def test_spec_ebnf_esiste():
+    print("[spec EBNF: il documento tecnico versionato esiste]")
+    _check(os.path.exists(_SPEC_EBNF),
+           "documentazione/grammatica-1.4.0.md è presente")
+
+
+def _blocchi_ebnf_della_spec(spec: str) -> str:
+    """[0.27.0 / G] Estrae e concatena SOLO i blocchi ```ebnf della spec. Così
+    l'anti-drift verifica che una regola sia DEFINITA nel listato grammaticale, non
+    soltanto menzionata in una nota in prosa (match per sottostringa sull'intero
+    file = troppo debole)."""
+    return "\n".join(re.findall(r"```ebnf\n(.*?)```", spec, re.DOTALL))
+
+
+def test_spec_ebnf_allineata_alla_grammatica():
+    print("[spec EBNF: definisce tutte le regole def_/cond_/cons_ della grammatica]")
+    if not os.path.exists(_SPEC_EBNF):
+        _check(False, "spec EBNF mancante")
+        return
+    with open(_SPEC_EBNF, "r", encoding="utf-8") as f:
+        spec = f.read()
+    ebnf = _blocchi_ebnf_della_spec(spec)
+    _check(bool(ebnf.strip()), "la spec contiene almeno un blocco ```ebnf")
+    # Nomi DEFINITI nei blocchi EBNF: 'nome:' / 'nome.prio:' (anche con '?') oppure '-> nome'.
+    definiti = set(re.findall(r"(?m)^\s*\??([A-Za-z_]\w*)(?:\.-?\d+)?:", ebnf))
+    definiti |= set(re.findall(r"->\s*(\w+)", ebnf))
+    nomi = _nomi_regole_grammatica()
+    mancanti = sorted(n for n in nomi if n not in definiti)
+    _check(not mancanti,
+           f"ogni regola def_/cond_/cons_ è DEFINITA nei blocchi ebnf (mancanti: {mancanti})")
+
+
+def test_spec_ebnf_documenta_terminali_chiusi():
+    print("[spec EBNF: documenta i terminali chiusi generati per-file]")
+    if not os.path.exists(_SPEC_EBNF):
+        _check(False, "spec EBNF mancante")
+        return
+    with open(_SPEC_EBNF, "r", encoding="utf-8") as f:
+        spec = f.read()
+    for term in ("ENTITA", "VARIABILE", "DIREZIONE", "PROPRIETA", "TESTO_QUOTATO"):
+        _check(term in spec, f"la spec documenta il terminale {term}")
+
+
+# --- Test: capacità di trasporto [Livello 7] --------------------------------
+
+def test_capacita_dichiarazione():
+    print("[capacità: dichiarazione base e bonus oggetto]")
+    src = (
+        "L'atrio è una stanza.\n"
+        "Il giocatore può portare 5 oggetti.\n"
+        "Uno zaino è una cosa.\nLo zaino è in atrio.\n"
+        "Lo zaino dà 15 spazi.\n"
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "il sorgente con capacità compila")
+    _check(mondo and mondo.capacita_base == 5, "la capacità base è 5")
+    _check(mondo and mondo.trova_oggetto("zaino").bonus_capacita == 15,
+           "lo zaino dà 15 spazi di bonus")
+
+
+def test_capacita_blocca_oltre_limite():
+    print("[capacità: l'inventario non supera il limite dichiarato]")
+    src = (
+        "L'atrio è una stanza.\nIl giocatore comincia in atrio.\n"
+        "Il giocatore può portare 1 oggetti.\n"
+        "Una mela è una cosa.\nLa mela è in atrio.\nLa mela è prendibile.\n"
+        "Una pera è una cosa.\nLa pera è in atrio.\nLa pera è prendibile.\n"
+    )
+    mondo = runtime(src)
+    esegui(mondo, "prendi mela")
+    out = esegui(mondo, "prendi pera")
+    _check("piene" in out.lower(), "il secondo oggetto è rifiutato (inventario pieno)")
+    _check("pera" not in mondo.inventario, "la pera non è entrata nell'inventario")
+    _check("mela" in mondo.inventario, "la mela è rimasta")
+
+
+def test_capacita_bonus_additivo():
+    print("[capacità: un oggetto-bonus alza il limite (additivo)]")
+    src = (
+        "L'atrio è una stanza.\nIl giocatore comincia in atrio.\n"
+        "Il giocatore può portare 1 oggetti.\n"
+        "Uno zaino è una cosa.\nLo zaino è in atrio.\nLo zaino è prendibile.\n"
+        "Lo zaino dà 2 spazi.\n"
+        "Una mela è una cosa.\nLa mela è in atrio.\nLa mela è prendibile.\n"
+        "Una pera è una cosa.\nLa pera è in atrio.\nLa pera è prendibile.\n"
+    )
+    mondo = runtime(src)
+    _check(mondo.capacita_attuale() == 1, "capacità iniziale = 1 (base)")
+    esegui(mondo, "prendi zaino")
+    _check(mondo.capacita_attuale() == 3, "con lo zaino la capacità diventa 3 (1+2)")
+    esegui(mondo, "prendi mela")
+    esegui(mondo, "prendi pera")
+    _check("pera" in mondo.inventario, "con lo zaino si porta anche la pera (3/3)")
+
+
+def test_capacita_illimitata_default():
+    print("[capacità: senza dichiarazione l'inventario è illimitato]")
+    src = (
+        "L'atrio è una stanza.\nIl giocatore comincia in atrio.\n"
+        "Una mela è una cosa.\nLa mela è in atrio.\nLa mela è prendibile.\n"
+        "Una pera è una cosa.\nLa pera è in atrio.\nLa pera è prendibile.\n"
+        "Una noce è una cosa.\nLa noce è in atrio.\nLa noce è prendibile.\n"
+    )
+    mondo = runtime(src)
+    _check(mondo.capacita_attuale() is None, "nessuna capacita' dichiarata: illimitata")
+    for n in ("mela", "pera", "noce"):
+        esegui(mondo, f"prendi {n}")
+    _check(len(mondo.inventario) == 3, "si possono prendere tutti gli oggetti")
+
+
+def test_capacita_zero():
+    print("[capacità: con capacità 0 non si prende nulla]")
+    src = (
+        "L'atrio è una stanza.\nIl giocatore comincia in atrio.\n"
+        "Il giocatore può portare 0 oggetti.\n"
+        "Una mela è una cosa.\nLa mela è in atrio.\nLa mela è prendibile.\n"
+    )
+    mondo = runtime(src)
+    _check(mondo.capacita_base == 0, "capacità base 0 accettata")
+    esegui(mondo, "prendi mela")
+    _check("mela" not in mondo.inventario, "con capacità 0 non si prende nulla")
+
+
+# --- Test: regole a DUE OGGETTI che valutano la clausola 'se' [0.18.0 / A1] --
+
+def _MONDO_DUE_OGGETTI(extra_regole):
+    return (
+        "La sala è una stanza.\n"
+        "La chiave è una cosa.\nLa chiave è prendibile.\nLa chiave è in sala.\n"
+        "La porta è una cosa.\nLa porta è chiusa.\nLa porta è in sala.\n"
+        "Il giocatore comincia in sala.\n"
+        + extra_regole
+    )
+
+
+def test_due_oggetti_se_condizionale_vince_sulla_semplice():
+    print("[2 oggetti: la regola condizionale soddisfatta vince sulla semplice]")
+    src = _MONDO_DUE_OGGETTI(
+        'Invece di usa la chiave su la porta se la porta è chiusa: '
+        'dire "La apri." e adesso la porta è aperta.\n'
+        'Invece di usa la chiave su la porta: dire "Era già aperta.".\n'
+    )
+    mondo = runtime(src)
+    esegui(mondo, "prendi chiave")
+    out1 = esegui(mondo, "usa chiave su porta")  # porta chiusa -> condizionale
+    _check("La apri." in out1, "1ª volta (porta chiusa): scatta la regola condizionale")
+    _check("aperta" in mondo.trova_oggetto("porta").proprieta,
+           "la conseguenza ha aperto la porta")
+    out2 = esegui(mondo, "usa chiave su porta")  # porta aperta -> 'se' falso -> semplice
+    _check("Era già aperta." in out2,
+           "2ª volta (condizione falsa): scatta la regola semplice, NON più la condizionale")
+
+
+def test_due_oggetti_se_falso_senza_fallback_cade_su_default():
+    print("[2 oggetti: 'se' falso e nessuna regola semplice -> azione di default]")
+    src = _MONDO_DUE_OGGETTI(
+        'Invece di usa la chiave su la porta se la porta è aperta: '
+        'dire "Solo se aperta.".\n'
+    )
+    mondo = runtime(src)
+    esegui(mondo, "prendi chiave")
+    out = esegui(mondo, "usa chiave su porta")  # porta chiusa -> 'se' falso
+    _check("Solo se aperta." not in out,
+           "con la condizione falsa la regola condizionale NON scatta")
+
+
+def test_due_oggetti_prep_tollerante_resta_attiva():
+    print("[2 oggetti: il fallback prep-tollerante continua a funzionare]")
+    src = _MONDO_DUE_OGGETTI(
+        'Invece di usa la chiave su la porta: dire "Combaciano.".\n'
+    )
+    mondo = runtime(src)
+    esegui(mondo, "prendi chiave")
+    # Il giocatore usa 'con' invece di 'su': stessi due oggetti -> match tollerante.
+    out = esegui(mondo, "usa chiave con porta")
+    _check("Combaciano." in out,
+           "preposizione diversa ma stessi due oggetti: la regola scatta lo stesso")
+
+
+# --- Test: genitivo 'dei' nelle descrizioni [0.18.0 / A2] -------------------
+
+def test_descrizione_genitivo_dei():
+    print("[descrizione: il genitivo plurale maschile 'dei' è accettato]")
+    src = (
+        "La cripta è una stanza.\n"
+        "I pilastri è una cosa.\n"
+        'La descrizione dei pilastri è "Antiche colonne scanalate.".\n'
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "'La descrizione dei pilastri…' compila")
+    ogg = mondo.trova_oggetto("pilastri") if mondo else None
+    _check(ogg is not None and ogg.descrizione == "Antiche colonne scanalate.",
+           "la descrizione è associata all'oggetto plurale maschile")
+
+
+def test_descrizione_genitivi_singolari_restano_validi():
+    print("[descrizione: i genitivi singolari/plurali esistenti restano validi]")
+    src = (
+        "La stiva è una stanza.\n"
+        "Lo specchio è una cosa.\n"
+        "Le chiavi è una cosa.\n"
+        'La descrizione dello specchio è "Opaco.".\n'
+        'La descrizione delle chiavi è "Arrugginite.".\n'
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "'dello' e 'delle' continuano a compilare")
+    _check(mondo and mondo.trova_oggetto("specchio").descrizione == "Opaco.",
+           "'dello specchio' risolve l'oggetto")
+    _check(mondo and mondo.trova_oggetto("chiavi").descrizione == "Arrugginite.",
+           "'delle chiavi' risolve l'oggetto")
+
+
+# --- Test: copula plurale 'sono' [0.18.0 / A5] ------------------------------
+
+def test_copula_sono_dichiarazioni():
+    print("[copula 'sono': dichiarazioni di entità plurali]")
+    src = (
+        "Il corridoio è una stanza.\n"
+        "Le tacche sono una cosa.\n"
+        "I pilastri sono una cosa.\n"
+        "Gli scaffali sono un supporto.\n"
+        "Le casse sono un contenitore.\n"
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "le dichiarazioni con 'sono' compilano")
+    _check(mondo and mondo.trova_oggetto("tacche") is not None, "'Le tacche sono una cosa' crea l'oggetto")
+    _check(mondo and mondo.trova_oggetto("pilastri") is not None, "'I pilastri sono una cosa' crea l'oggetto")
+    _check(mondo and mondo.trova_oggetto("scaffali") and mondo.trova_oggetto("scaffali").is_supporto,
+           "'Gli scaffali sono un supporto' è un supporto")
+    _check(mondo and mondo.trova_oggetto("casse") and mondo.trova_oggetto("casse").is_contenitore,
+           "'Le casse sono un contenitore' è un contenitore")
+
+
+def test_copula_sono_proprieta_posizione():
+    print("[copula 'sono': proprietà e posizione di entità plurali]")
+    src = (
+        "Il corridoio è una stanza.\n"
+        "Le tacche sono una cosa.\n"
+        "Le tacche sono nel corridoio.\n"
+        "Le tacche sono vergini.\n"
+    )
+    mondo, _ = compila(src)
+    tacche = mondo.trova_oggetto("tacche") if mondo else None
+    _check(tacche is not None and tacche.posizione == "corridoio",
+           "'Le tacche sono nel corridoio' colloca l'oggetto")
+    _check(tacche is not None and "vergini" in tacche.proprieta,
+           "'Le tacche sono vergini' assegna la proprietà")
+
+
+def test_copula_sono_condizioni_e_conseguenze():
+    print("[copula 'sono': condizioni e conseguenze su entità plurali]")
+    src = (
+        "Il corridoio è una stanza.\nIl giocatore comincia in corridoio.\n"
+        "Le tacche sono una cosa.\nLe tacche sono nel corridoio.\n"
+        "Vergini e segnate sono opposte.\nLe tacche sono vergini.\n"
+        'Invece di esamina le tacche se le tacche sono vergini: '
+        'dire "Le marchi." e adesso le tacche sono segnate.\n'
+        'Invece di esamina le tacche se le tacche non sono vergini: dire "Già marchiate.".\n'
+    )
+    mondo = runtime(src)
+    out1 = esegui(mondo, "esamina tacche")
+    _check("Le marchi." in out1, "la condizione 'sono vergini' è valutata e scatta")
+    _check("segnate" in mondo.trova_oggetto("tacche").proprieta,
+           "la conseguenza 'sono segnate' ha aggiornato lo stato")
+    out2 = esegui(mondo, "esamina tacche")
+    _check("Già marchiate." in out2,
+           "la negazione 'non sono vergini' è valutata correttamente al 2° giro")
+
+
+def test_copula_e_ancora_valida():
+    print("[copula: 'è' singolare continua a funzionare (retro-compat)]")
+    src = (
+        "La cella è una stanza.\n"
+        "La porta è una cosa.\nLa porta è chiusa.\nLa porta è in cella.\n"
+    )
+    mondo, _ = compila(src)
+    porta = mondo.trova_oggetto("porta") if mondo else None
+    _check(porta is not None and "chiusa" in porta.proprieta and porta.posizione == "cella",
+           "le dichiarazioni singolari con 'è' restano invariate")
+
+
+# --- Test: [0.27.0 / A] copula plurale su STATI e CONTATORI -----------------
+# Revisione totale 2026-06-14: prima 'Le vite sono un contatore.' veniva rifiutato
+# (lo scanner e la grammatica accettavano solo 'è'), pur essendo i nomi di
+# contatore/stato spesso plurali ('le vite', 'i punti', 'le munizioni').
+
+def test_copula_sono_stato_e_contatore():
+    print("[copula 'sono': stati e contatori con nome plurale]")
+    src = (
+        "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+        "Le luci sono uno stato.\nLe luci sono accese.\n"
+        "Le vite sono un contatore.\n"
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "le dichiarazioni plurali di stato/contatore compilano")
+    _check(mondo and mondo.variabili.get("luci") == "accese",
+           "'Le luci sono uno stato' + 'Le luci sono accese' assegna il valore")
+    _check(mondo and "vite" in mondo.variabili and mondo.variabili["vite"] == 0,
+           "'Le vite sono un contatore' crea il contatore a 0")
+
+
+def test_copula_partono_da_contatore_plurale():
+    print("[copula 'partono': valore iniziale di un contatore plurale]")
+    src = (
+        "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+        "Le vite sono un contatore.\nLe vite partono da 3.\n"
+        'Invece di guarda se le vite è almeno 3: dire "Vivo.".\n'
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "'Le vite partono da 3' compila")
+    _check(mondo and mondo.variabili.get("vite") == 3,
+           "il contatore plurale parte dal valore dichiarato")
+    # E 'parte' singolare resta valido (retro-compat).
+    mondo2, _ = compila(
+        "La cella è una stanza.\nLa forza è un contatore.\nLa forza parte da 5.\n")
+    _check(mondo2 and mondo2.variabili.get("forza") == 5,
+           "'parte da' singolare continua a funzionare")
+
+
+# --- Test: [0.27.0 / B] accesa<->spenta opposte di default -------------------
+# Revisione totale 2026-06-14: il motore tratta già accesa/spenta come coppia per
+# la luce (c_e_luce), ma senza la coppia precaricata 'e adesso X è spenta' lasciava
+# l'oggetto sia 'accesa' sia 'spenta' (condizione 'è accesa' restava vera).
+
+def test_accesa_spenta_opposte_di_default():
+    print("[opposti: accesa<->spenta esclusive senza dichiarazione esplicita]")
+    src = (
+        "L'atrio è una stanza.\nIl giocatore comincia nell'atrio.\n"
+        "La torcia è una cosa.\nLa torcia è nell'atrio.\nLa torcia è accesa.\n"
+        '"spegni" è un comando.\n'
+        'Invece di spegni la torcia: dire "Spenta." e adesso la torcia è spenta.\n'
+    )
+    mondo = runtime(src)
+    esegui(mondo, "spegni la torcia")
+    prop = mondo.trova_oggetto("torcia").proprieta
+    _check("spenta" in prop, "dopo 'spenta' l'oggetto è spento")
+    _check("accesa" not in prop,
+           "'accesa' è stata rimossa (le due si escludono senza dichiararle)")
+
+
+# --- Test: [0.27.0 / C] 'lascia' bloccato al buio ---------------------------
+# Revisione totale 2026-06-14: al buio prendi/metti/esamina erano bloccati ma
+# 'lascia' sfuggiva (asimmetria tra canali).
+
+def test_lascia_bloccato_al_buio():
+    print("[buio: 'lascia' è bloccato come prendi/metti/esamina]")
+    src = (
+        "La cantina è una stanza.\nLa cantina è buia.\n"
+        "La moneta è una cosa.\nIl giocatore comincia nella cantina.\n"
+        "Il giocatore ha la moneta.\n"
+    )
+    mondo = runtime(src)
+    out = esegui(mondo, "lascia la moneta")
+    _check("buio" in out.lower(), "al buio 'lascia' avvisa che non ci si vede")
+    _check("moneta" in mondo.inventario,
+           "al buio l'oggetto NON viene lasciato (resta in inventario)")
+
+
+# --- Test: [0.27.0 / M4] iniziale maiuscola senza rovinare i nomi propri -----
+# Revisione totale 2026-06-14: str.capitalize() minuscolava il resto del nome
+# ('La Guardia Reale' -> 'La guardia reale'). prima_maiuscola() preserva l'interno.
+
+def test_prima_maiuscola_preserva_nomi_propri():
+    print("[concordanza: prima_maiuscola preserva le maiuscole interne]")
+    from favella_utils import prima_maiuscola
+    _check(prima_maiuscola("la Guardia Reale") == "La Guardia Reale",
+           "maiuscola solo sull'iniziale, resto preservato")
+    _check(prima_maiuscola("") == "", "stringa vuota gestita")
+    # Annuncio di movimento NPC: il nome composto non viene storpiato.
+    src = (
+        "L'atrio è una stanza.\nIl corridoio è una stanza.\n"
+        "L'atrio collega nord a corridoio.\n"
+        "La Guardia Reale è un personaggio.\nLa Guardia Reale è nell'atrio.\n"
+        'Il dialogo di Guardia Reale comincia con "x".\n'
+        'La Guardia Reale al nodo "x" dice "...".\n'
+        "Il giocatore comincia nell'atrio.\n"
+        "Ogni 1 turno: la Guardia Reale va nel corridoio.\n"
+    )
+    mondo = runtime(src)
+    out = esegui(mondo, "guarda")   # [1.3.0] un turno vero: un «Non vedo» non fa passare il tempo
+    _check("Guardia Reale" in out,
+           "l'annuncio mantiene 'Guardia Reale' (non 'guardia reale')")
+
+
+# --- Test: [0.27.0 / D] aggettivi-proprietà che iniziano con una preposizione -
+# Revisione totale 2026-06-14: 'La lapide è incisa.' veniva rifiutato perché il
+# lexer staccava 'in' (PREP_LUOGO) da 'incisa'. Ora PREP_LUOGO ha un confine destro.
+
+def test_proprieta_con_prefisso_preposizione():
+    print("[lexer: proprietà che iniziano con 'in'/'sul'/... sono accettate]")
+    base = "L'atrio è una stanza.\nIl giocatore comincia nell'atrio.\n"
+    for adj in ("incisa", "insanguinata", "informe", "sulfurea"):
+        mondo, _ = compila(
+            base + f"La lapide è una cosa.\nLa lapide è nell'atrio.\nLa lapide è {adj}.\n")
+        ok = mondo is not None and adj in mondo.trova_oggetto("lapide").proprieta
+        _check(ok, f"'La lapide è {adj}.' compila e assegna la proprietà")
+    # La posizione (PREP_LUOGO vero) NON deve regredire.
+    m1, _ = compila("La cella è una stanza.\nLa gemma è una cosa.\nLa gemma è in cella.\n")
+    _check(m1 and m1.trova_oggetto("gemma").posizione == "cella",
+           "'è in cella' resta una posizione (non una proprietà 'in')")
+    m2, _ = compila("L'atrio è una stanza.\nLa gemma è una cosa.\nLa gemma è nell'atrio.\n")
+    _check(m2 and m2.trova_oggetto("gemma").posizione == "atrio",
+           "la forma con apostrofo \"nell'atrio\" resta una posizione")
+    m3, _ = compila(
+        "L'atrio è una stanza.\nLa mensola è un supporto.\nLa mensola è nell'atrio.\n"
+        "La gemma è una cosa.\nLa gemma è sulla mensola.\n")
+    _check(m3 and m3.trova_oggetto("gemma").posizione == "mensola",
+           "'sulla mensola' resta una posizione")
+    # Le forme articolate complete (nello/nei/sullo) devono restare valide: col
+    # confine destro 'nel' non si scompone più in 'nel'+'lo' (regressione vista
+    # nella demo «Il Relitto»: 'è nello scriptorium').
+    m5, _ = compila(
+        "Lo scriptorium è una stanza.\nIl globo è una cosa.\nIl globo è nello scriptorium.\n")
+    _check(m5 and m5.trova_oggetto("globo").posizione == "scriptorium",
+           "'è nello scriptorium' resta una posizione (forma articolata 'nello')")
+    m6, _ = compila(
+        "Lo studio è una stanza.\nLo scaffale è un supporto.\nLo scaffale è nello studio.\n"
+        "Il tomo è una cosa.\nIl tomo è sullo scaffale.\n")
+    _check(m6 and m6.trova_oggetto("tomo").posizione == "scaffale",
+           "'sullo scaffale' resta una posizione (forma articolata 'sullo')")
+    # La proprietà deve funzionare anche in condizione e conseguenza.
+    m4 = runtime(
+        "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+        "La lapide è una cosa.\nLa lapide è in cella.\nLa lapide è incisa.\n"
+        'Invece di esamina la lapide se la lapide è incisa: dire "Rune.".\n')
+    _check("Rune." in esegui(m4, "esamina lapide"),
+           "la condizione 'se la lapide è incisa' è valutata correttamente")
+
+
+# --- Test: [0.27.0 / E] turno ATOMICO su eccezione in una conseguenza --------
+# Revisione totale 2026-06-14: prima un'eccezione a metà di una conseguenza veniva
+# inghiottita e il turno avanzava su uno stato mutato a metà (snapshot ANNULLA
+# incluso). Ora elabora_comando ripristina l'istantanea pre-turno e il turno è no-op.
+
+def test_turno_atomico_su_eccezione():
+    print("[robustezza: un'eccezione in una conseguenza rende il turno atomico]")
+    import strutture as _s
+    m = runtime(
+        "L'atrio è una stanza.\nIl punteggio è un contatore.\n"
+        "La leva è una cosa.\nLa leva è nell'atrio.\nIl giocatore comincia nell'atrio.\n"
+        'Invece di esamina la leva: dire "Click." e adesso aumenta il punteggio.\n')
+    turno0 = m.turno_corrente
+    orig = _s.ConseguenzaContatore.esegui
+
+    def _boom(self, mondo):
+        mondo.variabili["punteggio"] = 999   # mutazione PARZIALE prima dell'errore
+        raise RuntimeError("boom di test")
+
+    _s.ConseguenzaContatore.esegui = _boom
+    try:
+        out = esegui(m, "esamina leva")
+    finally:
+        _s.ConseguenzaContatore.esegui = orig
+    _check("ERRORE CRITICO" in out, "l'errore è segnalato e il gioco non crasha")
+    _check(m.variabili["punteggio"] == 0,
+           "la mutazione parziale (999) è annullata: rollback all'istantanea pre-turno")
+    _check(m.turno_corrente == turno0, "il turno NON avanza (no-op atomico)")
+    _check(len(m._storia_stati) == 0,
+           "nessuna istantanea ANNULLA accodata per un turno fallito")
+
+
+# --- Test: [0.27.0 / D-dialogo] una conversazione è un solo passo di ANNULLA --
+# Revisione totale 2026-06-14: prima le conseguenze 'e adesso …' nelle opzioni di
+# dialogo mutavano il mondo senza essere annullabili (l'ingresso scartava lo snap).
+
+def test_dialogo_annullabile_come_unita():
+    print("[ANNULLA: l'intera conversazione si annulla in un colpo]")
+    src = (
+        "L'atrio è una stanza.\nIl punteggio è un contatore.\n"
+        "Il mercante è un personaggio.\nIl mercante è nell'atrio.\n"
+        "Il giocatore comincia nell'atrio.\n"
+        'Il dialogo del mercante comincia con "saluto".\n'
+        'Il mercante al nodo "saluto" dice "Hai [punteggio] punti.".\n'
+        'Al nodo "saluto" l\'opzione "Punti" conduce al nodo "saluto" e adesso aumenta il punteggio di 5.\n'
+        'Al nodo "saluto" l\'opzione "Addio" chiude il dialogo.\n'
+    )
+    m = runtime(src)
+    esegui(m, "parla con mercante")
+    _check(m.in_dialogo() and m._snap_dialogo is not None,
+           "all'ingresso l'istantanea pre-dialogo è messa da parte")
+    esegui(m, "1")  # +5
+    esegui(m, "1")  # +5 -> 10
+    _check(m.variabili["punteggio"] == 10, "le scelte mutano il mondo (10 punti)")
+    _check(len(m._storia_stati) == 0,
+           "durante la conversazione non si accodano passi di ANNULLA")
+    esegui(m, "addio")
+    _check(not m.in_dialogo() and len(m._storia_stati) == 1,
+           "all'uscita si registra UN solo passo di ANNULLA per tutta la conversazione")
+    esegui(m, "annulla")
+    _check(m.variabili["punteggio"] == 0 and m.turno_corrente == 0,
+           "un solo ANNULLA riporta a prima di 'parla con …' (punteggio 0)")
+
+
+# --- Test: normalizzazione NFC degli accenti nei nomi [0.18.0 / A3] ---------
+
+def test_accenti_nfc_normalizzazione_nome():
+    print("[accenti: normalizza_nome unifica NFC/NFD allo stesso id]")
+    import unicodedata
+    from favella_utils import normalizza_nome
+    nfc = unicodedata.normalize("NFC", "Il comò")
+    nfd = unicodedata.normalize("NFD", "Il comò")
+    _check(nfc != nfd, "le due forme Unicode sono diverse byte-per-byte (precondizione)")
+    _check(normalizza_nome(nfc) == normalizza_nome(nfd) == "comò",
+           "NFC e NFD si normalizzano allo stesso id 'comò'")
+
+
+def test_accenti_risoluzione_runtime_nfd():
+    print("[accenti: il giocatore risolve un oggetto accentato anche in forma NFD]")
+    import unicodedata
+    from gioco import risolvi_nome_oggetto
+    src = (
+        "La cabina è una stanza.\n"
+        "Il comò è una cosa.\nIl comò è nella cabina.\n"
+        "Il giocatore comincia nella cabina.\n"
+    )
+    mondo = runtime(src)
+    _check(mondo is not None and mondo.trova_oggetto("comò") is not None,
+           "l'oggetto accentato 'comò' è dichiarato")
+    nfd = unicodedata.normalize("NFD", "comò")
+    nfc = unicodedata.normalize("NFC", "comò")
+    _check(risolvi_nome_oggetto(mondo, nfc) == "comò",
+           "input precomposto (NFC) risolve l'oggetto")
+    _check(risolvi_nome_oggetto(mondo, nfd) == "comò",
+           "input decomposto (NFD) risolve lo STESSO oggetto (prima falliva)")
+
+
+def test_accenti_sorgente_nfd_compila():
+    print("[accenti: un sorgente scritto in NFD compila e risolve come NFC]")
+    import unicodedata
+    src_nfd = unicodedata.normalize("NFD",
+        "La cabina è una stanza.\n"
+        "La caffettiera è una cosa.\n"
+        'La descrizione della caffettiera è "Annerita dall\'uso.".\n'
+    )
+    mondo, _ = compila(src_nfd)
+    _check(mondo is not None, "il sorgente in forma decomposta compila")
+    _check(mondo and mondo.trova_oggetto("caffettiera") is not None,
+           "l'entità è registrata con id NFC indipendentemente dalla forma sorgente")
+
+
+# --- Test: preposizioni d'azione articolate [0.18.0 / A4] -------------------
+
+def test_prep_azione_articolata_compila():
+    print("[prep. azione: 'usa X sul Y' e 'usa X nella Y' compilano]")
+    src = (
+        "La sala è una stanza.\n"
+        "La batteria è una cosa.\nLa batteria è in sala.\n"
+        "Il pannello è una cosa.\nIl pannello è in sala.\n"
+        "La gemma è una cosa.\nLa gemma è in sala.\n"
+        "La teca è una cosa.\nLa teca è in sala.\n"
+        'Invece di usa la batteria sul pannello: dire "Inserita.".\n'
+        'Invece di usa la gemma nella teca: dire "Incastonata.".\n'
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "le regole con preposizione articolata compilano")
+    _check(mondo and len(mondo.regole) == 2, "entrambe le regole a due oggetti sono registrate")
+    _check(mondo and mondo.regole[0].preposizione == "sul",
+           "la preposizione articolata 'sul' è conservata sulla regola")
+
+
+def test_prep_azione_articolata_runtime():
+    print("[prep. azione: il giocatore digita 'usa X sul Y' e la regola scatta]")
+    src = (
+        "La sala è una stanza.\nIl giocatore comincia in sala.\n"
+        "La batteria è una cosa.\nLa batteria è prendibile.\nLa batteria è in sala.\n"
+        "Il pannello è una cosa.\nIl pannello è in sala.\n"
+        'Invece di usa la batteria sul pannello: dire "Il pannello si accende." e adesso la batteria è nel nulla.\n'
+    )
+    mondo = runtime(src)
+    esegui(mondo, "prendi batteria")
+    out = esegui(mondo, "usa batteria sul pannello")
+    _check("Il pannello si accende." in out,
+           "il comando con preposizione articolata 'sul' attiva la regola")
+
+
+def test_prep_azione_semplice_resta_valida():
+    print("[prep. azione: le forme semplici su/in restano valide (retro-compat)]")
+    src = (
+        "La sala è una stanza.\nIl giocatore comincia in sala.\n"
+        "La chiave è una cosa.\nLa chiave è prendibile.\nLa chiave è in sala.\n"
+        "La porta è una cosa.\nLa porta è in sala.\n"
+        'Invece di usa la chiave su la porta: dire "Click.".\n'
+    )
+    mondo = runtime(src)
+    esegui(mondo, "prendi chiave")
+    out = esegui(mondo, "usa chiave su porta")
+    _check("Click." in out, "la forma semplice 'su' continua a funzionare")
+
+
+# --- Test: nuovi costrutti di design [0.18.0 / B1-B7] -----------------------
+
+def test_contatore_al_massimo_lte():
+    print("[B4: confronto '<=' — 'al massimo N']")
+    src = (
+        "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+        "La forza è un contatore.\nLa forza parte da 2.\n"
+        'Invece di guarda se la forza è al massimo 2: dire "Debole.".\n'
+    )
+    mondo = runtime(src)
+    cond = mondo.regole[0].condizione
+    _check(cond.operatore == "<=" and cond.valuta(mondo) is True, "2 <= 2 è vero")
+    _check("Debole." in esegui(mondo, "guarda"), "la regola con '<=' scatta a parità")
+    src2 = src.replace("parte da 2", "parte da 5")
+    mondo2 = runtime(src2)
+    _check(mondo2.regole[0].condizione.valuta(mondo2) is False, "5 <= 2 è falso")
+
+
+def test_contatore_diverso_neq():
+    print("[B5: disuguaglianza numerica '!=' — 'non è N']")
+    src = (
+        "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+        "La forza è un contatore.\nLa forza parte da 3.\n"
+        'Invece di guarda se la forza non è 0: dire "Hai forza.".\n'
+    )
+    mondo = runtime(src)
+    cond = mondo.regole[0].condizione
+    _check(type(cond).__name__ == "CondizioneNot", "'non è N' è una negazione")
+    _check(type(cond.condizione).__name__ == "CondizioneContatore",
+           "negazione di un confronto NUMERICO (non di uno stato)")
+    _check("Hai forza." in esegui(mondo, "guarda"), "3 != 0 -> la regola scatta")
+    src0 = src.replace("La forza parte da 3.\n", "")
+    mondo0 = runtime(src0)
+    _check(mondo0.regole[0].condizione.valuta(mondo0) is False,
+           "0 != 0 è falso (il contatore di default vale 0)")
+
+
+def test_non_gruppo_b7():
+    print("[B7: negazione di un gruppo booleano 'non ( A e B )']")
+    src = (
+        "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+        "La chiave è una cosa.\nLa chiave è in cella.\n"
+        "La torcia è una cosa.\nLa torcia è spenta.\nLa torcia è in cella.\n"
+        'Invece di guarda se non ( il giocatore ha la chiave e la torcia è accesa ): '
+        'dire "Ti manca qualcosa.".\n'
+    )
+    mondo = runtime(src)
+    cond = mondo.regole[0].condizione
+    _check(type(cond).__name__ == "CondizioneNot", "'non ( … )' produce una negazione")
+    _check(cond.valuta(mondo) is True,
+           "il gruppo (ha chiave AND torcia accesa) è falso -> la sua negazione è vera")
+    _check("Ti manca qualcosa." in esegui(mondo, "guarda"), "la regola scatta")
+
+
+def test_posizione_giocatore_b1():
+    print("[B1: condizione 'se il giocatore è in [stanza]' + negazione]")
+    src = (
+        "L'atrio è una stanza.\nLa cripta è una stanza.\n"
+        "L'atrio collega nord a cripta.\n"
+        "Il giocatore comincia in atrio.\n"
+        'Invece di guarda se il giocatore è in atrio: dire "Sei nell\'atrio.".\n'
+        'Invece di guarda se il giocatore non è in atrio: dire "Hai lasciato l\'atrio.".\n'
+    )
+    mondo = runtime(src)
+    _check("Sei nell'atrio." in esegui(mondo, "guarda"),
+           "all'avvio (in atrio) la condizione di posizione è vera")
+    esegui(mondo, "nord")  # ora in cripta
+    _check(mondo.posizione_giocatore == "cripta", "il giocatore si è spostato in cripta")
+    out_cripta = esegui(mondo, "guarda")
+    _check("Sei nell'atrio." not in out_cripta,
+           "fuori dall'atrio la condizione 'è in atrio' è falsa")
+    _check("Hai lasciato l'atrio." in out_cripta,
+           "la negazione 'non è in atrio' è vera in cripta")
+
+
+def test_teletrasporto_giocatore_b2():
+    print("[B2: conseguenza 'e adesso il giocatore è in [stanza]' (teletrasporto)]")
+    src = (
+        "L'altare è una stanza.\nIl vuoto è una stanza.\n"
+        "Il giocatore comincia in altare.\n"
+        "Il portale è una cosa.\nIl portale è in altare.\n"
+        'Invece di usa il portale: dire "Vieni risucchiato." e adesso il giocatore è nel vuoto.\n'
+    )
+    mondo = runtime(src)
+    out = esegui(mondo, "usa portale")
+    _check(mondo.posizione_giocatore == "vuoto", "il teletrasporto ha spostato il giocatore")
+    _check("Vieni risucchiato." in out, "il testo della regola è stampato")
+    _check("--- Il vuoto ---" in out or "vuoto" in out.lower(),
+           "dopo il teletrasporto è mostrata la nuova stanza")
+
+
+def test_teletrasporto_stanza_inesistente_errore():
+    print("[B2: il teletrasporto verso una stanza inesistente è un errore]")
+    src = (
+        "L'altare è una stanza.\nIl giocatore comincia in altare.\n"
+        "Il portale è una cosa.\nIl portale è in altare.\n"
+        'Invece di usa il portale: dire "Vai." e adesso il giocatore è nel limbo.\n'
+    )
+    mondo, log = compila(src)
+    _check(mondo is None, "una destinazione di teletrasporto inesistente blocca la compilazione")
+
+
+def test_esito_personalizzato_b3():
+    print("[B3: testo d'esito personalizzato per vinci/perdi/termina]")
+    src = (
+        "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+        "Il bottone è una cosa.\nIl bottone è in cella.\n"
+        'Invece di usa il bottone: dire "Premi." e adesso vinci "FUGA RIUSCITA: sei libero!".\n'
+    )
+    mondo = runtime(src)
+    out = esegui(mondo, "usa bottone")
+    _check("FUGA RIUSCITA: sei libero!" in out, "stampa il messaggio d'esito personalizzato")
+    _check("HAI VINTO" not in out, "il banner fisso è sostituito dal testo d'autore")
+    _check(mondo.stato_partita == "vinta", "lo stato della partita è comunque 'vinta'")
+
+
+def test_esito_default_resta_senza_testo():
+    print("[B3: senza testo, l'esito mostra ancora il banner di default]")
+    src = (
+        "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+        "La trappola è una cosa.\nLa trappola è in cella.\n"
+        'Invece di usa la trappola: dire "Scatta!" e adesso perdi.\n'
+    )
+    mondo = runtime(src)
+    out = esegui(mondo, "usa trappola")
+    _check("HAI PERSO" in out, "senza testo personalizzato resta il banner di default")
+
+
+# --- Test: verbi personalizzati multi-parola [0.18.0 / B6] ------------------
+
+def test_verbo_multiparola_dichiarazione_e_regola():
+    print("[B6: '\"fai scattare\" è un comando.' è accettato e usabile in una regola]")
+    src = (
+        "La cripta è una stanza.\nIl giocatore comincia in cripta.\n"
+        "La leva è una cosa.\nLa leva è in cripta.\n"
+        '"fai scattare" è un comando.\n'
+        'Invece di fai scattare la leva: dire "La trappola scatta!".\n'
+    )
+    mondo, log = compila(src)
+    _check(mondo is not None, "il comando multi-parola compila (niente più rifiuto)")
+    _check(mondo and "fai scattare" in mondo.verbi_personalizzati,
+           "il verbo multi-parola è registrato")
+    _check(mondo and any(r.verbo == "fai scattare" for r in mondo.regole),
+           "la regola 'Invece di fai scattare la leva' usa il verbo multi-parola")
+    _check("non si attiverà" not in log.lower(),
+           "nessun avviso di verbo non riconosciuto per il comando dichiarato")
+
+
+def test_verbo_multiparola_runtime():
+    print("[B6: il giocatore digita il verbo multi-parola e la regola scatta]")
+    src = (
+        "La cripta è una stanza.\nIl giocatore comincia in cripta.\n"
+        "La leva è una cosa.\nLa leva è in cripta.\n"
+        '"fai scattare" è un comando.\n'
+        'Invece di fai scattare la leva: dire "La trappola scatta!".\n'
+    )
+    mondo = runtime(src)
+    out = esegui(mondo, "fai scattare leva")
+    _check("La trappola scatta!" in out,
+           "'fai scattare leva' attiva la regola del verbo multi-parola")
+
+
+def test_verbo_monoparola_resta_valido():
+    print("[B6: i verbi personalizzati monoparola continuano a funzionare]")
+    src = (
+        "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+        "La leva è una cosa.\nLa leva è in cella.\n"
+        '"spingi" è un comando.\n'
+        'Invece di spingi la leva: dire "Spinta.".\n'
+    )
+    mondo = runtime(src)
+    _check("Spinta." in esegui(mondo, "spingi leva"),
+           "il verbo monoparola 'spingi' funziona come prima")
+
+
+# --- Test: 0.19.0 — A7 verbi intransitivi -----------------------------------
+
+def test_verbo_intransitivo_scatta_senza_oggetto():
+    print("[A7: verbo intransitivo + regola globale, digitato da solo]")
+    src = (
+        "La strada è una stanza.\nIl giocatore comincia in strada.\n"
+        '"accelera" è un comando senza oggetto.\n'
+        'Invece di accelera: dire "Vroom!".\n'
+    )
+    mondo = runtime(src)
+    _check(mondo is not None, "il sorgente con verbo intransitivo compila")
+    _check(mondo and "accelera" in mondo.verbi_intransitivi,
+           "'accelera' è registrato come intransitivo")
+    out = esegui(mondo, "accelera")
+    _check("Vroom!" in out, "'accelera' (da solo) attiva la regola globale")
+    _check("che cosa?" not in out and "Cosa vuoi" not in out,
+           "il motore NON chiede un oggetto per un verbo intransitivo")
+
+
+def test_verbo_intransitivo_con_conseguenza():
+    print("[A7: un verbo intransitivo può cambiare lo stato del mondo]")
+    src = (
+        "L'auto è una stanza.\nIl giocatore comincia in auto.\n"
+        "Il motore è uno stato.\nIl motore è spento.\n"
+        '"avvia" è un comando senza oggetto.\n'
+        'Invece di avvia se il motore è spento: dire "Brum." e adesso il motore è acceso.\n'
+    )
+    mondo = runtime(src)
+    esegui(mondo, "avvia")
+    _check(mondo and mondo.variabili.get("motore") == "acceso",
+           "la conseguenza del verbo intransitivo ha acceso il motore")
+
+
+def test_verbo_transitivo_resta_default():
+    print("[A7: senza 'senza oggetto' un comando resta transitivo]")
+    src = (
+        "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+        "La leva è una cosa.\nLa leva è in cella.\n"
+        '"spingi" è un comando.\n'
+        'Invece di spingi la leva: dire "Spinta.".\n'
+    )
+    mondo = runtime(src)
+    _check(mondo and "spingi" not in mondo.verbi_intransitivi,
+           "'spingi' NON è intransitivo")
+    # [1.3.0 / M-4] «Spingi che cosa?» (prima: «Cosa vorresti spingi?»).
+    _check("Spingi che cosa?" in esegui(mondo, "spingi"),
+           "'spingi' da solo chiede ancora un oggetto (transitivo)")
+
+
+# --- Test: 0.19.0 — A8 inventario iniziale ----------------------------------
+
+def test_inventario_iniziale():
+    print("[A8: 'Il giocatore ha X' mette X in inventario all'avvio]")
+    src = (
+        "Il vicolo è una stanza.\nIl giocatore comincia in vicolo.\n"
+        "Una torcia è una cosa.\n"
+        "Il giocatore ha la torcia.\n"
+    )
+    mondo = runtime(src)
+    _check(mondo is not None, "il sorgente con inventario iniziale compila")
+    _check(mondo and "torcia" in mondo.inventario,
+           "la torcia parte nell'inventario")
+    _check("torcia" in esegui(mondo, "inventario").lower(),
+           "l'inventario di partenza elenca la torcia")
+
+
+def test_inventario_iniziale_oggetto_inesistente_e_errore():
+    print("[A8: dare un oggetto inesistente è un errore bloccante]")
+    src = (
+        "Il vicolo è una stanza.\nIl giocatore comincia in vicolo.\n"
+        "Il giocatore ha la spada.\n"   # 'spada' mai dichiarata come cosa
+    )
+    mondo, _ = compila(src)
+    _check(mondo is None,
+           "dare un oggetto inesistente fa fallire la compilazione")
+
+
+def test_inventario_iniziale_order_independent():
+    print("[A8: l'oggetto può essere dichiarato DOPO 'Il giocatore ha …']")
+    src = (
+        "Il molo è una stanza.\nIl giocatore comincia in molo.\n"
+        "Il giocatore ha la mappa.\n"
+        "Una mappa è una cosa.\n"     # dichiarata DOPO
+    )
+    mondo = runtime(src)
+    _check(mondo and "mappa" in mondo.inventario,
+           "la mappa è in inventario anche se dichiarata dopo")
+
+
+# --- Test: 0.19.0 — A9 tick silenzioso (dire opzionale) ---------------------
+
+def test_evento_silenzioso():
+    print("[A9: un evento può non avere 'dire' (solo conseguenze)]")
+    src = (
+        "Il deserto è una stanza.\nIl giocatore comincia in deserto.\n"
+        "L'acqua è un contatore.\nL'acqua parte da 3.\n"
+        "Ogni 1 turno: diminuisci l'acqua.\n"
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None, "l'evento senza 'dire' compila")
+    _check(mondo and mondo.eventi and mondo.eventi[0].risposta == "",
+           "l'evento ha risposta vuota")
+    _check(mondo and mondo.eventi and len(mondo.eventi[0].conseguenze) == 1,
+           "l'evento porta comunque la sua conseguenza")
+    mondo = runtime(src)
+    out = esegui(mondo, "guarda")   # un turno
+    _check(mondo.variabili.get("acqua") == 2,
+           "il tick silenzioso ha decrementato il contatore")
+    _check("None" not in out,
+           "il tick silenzioso non stampa testo spurio")
+
+
+def test_demone_silenzioso():
+    print("[A9: un demone può non avere 'dire' (solo conseguenze)]")
+    src = (
+        "La cripta è una stanza.\nIl giocatore comincia in cripta.\n"
+        "Il veleno è un contatore.\nIl veleno parte da 0.\n"
+        "La vita è un contatore.\nLa vita parte da 5.\n"
+        "Ogni turno se il veleno è 0: diminuisci la vita.\n"
+    )
+    mondo, _ = compila(src)
+    _check(mondo and mondo.demoni and mondo.demoni[0].risposta == "",
+           "il demone ha risposta vuota")
+    mondo = runtime(src)
+    esegui(mondo, "guarda")
+    _check(mondo.variabili.get("vita") == 4,
+           "il demone silenzioso ha applicato la sua conseguenza")
+
+
+def test_evento_con_dire_resta_valido():
+    print("[A9: la forma con 'dire' resta valida (regressione)]")
+    src = (
+        "L'aula è una stanza.\nIl giocatore comincia in aula.\n"
+        "Il conto è un contatore.\n"
+        'Al turno 1: dire "Squilla la campanella." e adesso aumenta il conto.\n'
+    )
+    mondo = runtime(src)
+    out = esegui(mondo, "guarda")
+    _check("Squilla la campanella." in out, "la battuta dell'evento è stampata")
+    _check(mondo.variabili.get("conto") == 1, "la conseguenza è applicata")
+
+
+# --- Test: 0.20.0 — A1 pronomi e anafora ------------------------------------
+
+def test_anafora_clitico_femminile():
+    print("[A1: 'esamina la torcia' poi 'prendila']")
+    src = (
+        "L'atrio è una stanza.\nIl giocatore comincia in atrio.\n"
+        "Una torcia è una cosa.\nLa torcia è in atrio.\nLa torcia è prendibile.\n"
+        'La descrizione della torcia è "Una torcia di ottone.".\n'
+    )
+    mondo = runtime(src)
+    esegui(mondo, "esamina la torcia")
+    out = esegui(mondo, "prendila")
+    _check("torcia" in out.lower() and "torcia" in mondo.inventario,
+           "'prendila' prende la torcia (clitico f.sing.)")
+
+
+def test_anafora_clitico_maschile_da_elenco_stanza():
+    print("[A1: un oggetto elencato dalla stanza è riferibile: 'esaminalo']")
+    src = (
+        "L'atrio è una stanza.\nIl giocatore comincia in atrio.\n"
+        "Uno scrigno è una cosa.\nLo scrigno è in atrio.\n"
+        'La descrizione dello scrigno è "Pesante e chiuso.".\n'
+    )
+    mondo = runtime(src)
+    esegui(mondo, "guarda")   # la stanza «nomina» lo scrigno (m.sing.)
+    out = esegui(mondo, "esaminalo")
+    _check("Pesante e chiuso." in out,
+           "'esaminalo' trova lo scrigno nominato dall'elenco della stanza")
+
+
+def test_anafora_mismatch_genere():
+    print("[A1: un pronome di genere sbagliato non ha riferente]")
+    src = (
+        "L'atrio è una stanza.\nIl giocatore comincia in atrio.\n"
+        "Una collana è una cosa.\nLa collana è in atrio.\nLa collana è prendibile.\n"
+        'La descrizione della collana è "D\'argento.".\n'
+    )
+    mondo = runtime(src)
+    esegui(mondo, "esamina la collana")   # solo f.sing. è riferito
+    out = esegui(mondo, "prendilo")       # m.sing. → nessun riferente
+    _check("Cosa vuoi prendere?" in out and "collana" not in mondo.inventario,
+           "'prendilo' senza riferente maschile non prende nulla")
+
+
+def test_anafora_riferito_non_raggiungibile():
+    print("[A1: un riferito lasciato indietro -> 'Non la vedi piu']")
+    src = (
+        "L'atrio è una stanza.\nIl corridoio è una stanza.\n"
+        "L'atrio collega nord a corridoio.\n"
+        "Il giocatore comincia in atrio.\n"
+        "Una collana è una cosa.\nLa collana è in atrio.\nLa collana è prendibile.\n"
+        'La descrizione della collana è "D\'argento.".\n'
+    )
+    mondo = runtime(src)
+    esegui(mondo, "esamina la collana")
+    esegui(mondo, "nord")     # la collana resta in atrio, irraggiungibile
+    out = esegui(mondo, "prendila")
+    _check("Non la vedi" in out,
+           "'prendila' su un riferito non più raggiungibile avvisa")
+
+
+def test_anafora_pronome_tonico():
+    print("[A1: pronome tonico 'prendi quella']")
+    src = (
+        "L'atrio è una stanza.\nIl giocatore comincia in atrio.\n"
+        "Una collana è una cosa.\nLa collana è in atrio.\nLa collana è prendibile.\n"
+        'La descrizione della collana è "D\'argento.".\n'
+    )
+    mondo = runtime(src)
+    esegui(mondo, "esamina la collana")
+    esegui(mondo, "prendi quella")
+    _check("collana" in mondo.inventario,
+           "'prendi quella' (tonico f.sing.) prende la collana")
+
+
+def test_anafora_plurale():
+    print("[A1: pronome plurale 'esaminale']")
+    src = (
+        "L'atrio è una stanza.\nIl giocatore comincia in atrio.\n"
+        "Le chiavi sono una cosa.\nLe chiavi sono in atrio.\n"
+        'La descrizione delle chiavi è "Un mazzo di chiavi.".\n'
+    )
+    mondo = runtime(src)
+    esegui(mondo, "guarda")   # nomina le chiavi (f.plur.)
+    out = esegui(mondo, "esaminale")
+    _check("mazzo di chiavi" in out, "'esaminale' (f.plur.) trova le chiavi")
+
+
+def test_anafora_nessun_falso_positivo():
+    print("[A1: un comando esplicito che 'sembra' un pronome resta esplicito]")
+    src = (
+        "L'atrio è una stanza.\nIl giocatore comincia in atrio.\n"
+        "Una candela è una cosa.\nLa candela è in atrio.\nLa candela è prendibile.\n"
+        'La descrizione della candela è "Una candela di cera.".\n'
+    )
+    mondo = runtime(src)
+    # 'esamina la candela': 'la' è articolo, NON pronome (segue il nome).
+    out = esegui(mondo, "esamina la candela")
+    _check("Una candela di cera." in out,
+           "'esamina la candela' resta un comando esplicito sull'oggetto")
+
+
+# --- Test: 0.21.0 — A3 comandi di servizio (ANNULLA / ANCORA) ---------------
+
+def _src_atrio_torcia():
+    return (
+        "L'atrio è una stanza.\nIl giocatore comincia in atrio.\n"
+        "Una torcia è una cosa.\nLa torcia è in atrio.\nLa torcia è prendibile.\n"
+    )
+
+
+def test_annulla_disfa_ultimo_turno():
+    print("[A3: 'annulla' disfa l'ultima azione]")
+    mondo = runtime(_src_atrio_torcia())
+    esegui(mondo, "prendi la torcia")
+    _check("torcia" in mondo.inventario, "(precondizione) la torcia è stata presa")
+    out = esegui(mondo, "annulla")
+    _check("torcia" not in mondo.inventario,
+           "'annulla' rimette la torcia fuori dall'inventario")
+    _check("annullato" in out.lower(), "'annulla' conferma a video")
+
+
+def test_annulla_ripristina_contatore_e_turno():
+    print("[A3: 'annulla' riavvolge anche contatori e turni]")
+    src = (
+        "L'aula è una stanza.\nIl giocatore comincia in aula.\n"
+        "Il passi è un contatore.\n"
+        "Ogni 1 turno: aumenta il passi.\n"
+    )
+    mondo = runtime(src)
+    esegui(mondo, "guarda")   # turno 1 -> passi 1
+    esegui(mondo, "guarda")   # turno 2 -> passi 2
+    esegui(mondo, "annulla")  # disfa il turno 2
+    _check(mondo.variabili.get("passi") == 1,
+           "'annulla' riporta il contatore al valore del turno precedente")
+    _check(mondo.turno_corrente == 1,
+           "'annulla' riporta indietro il contatore dei turni")
+
+
+def test_annulla_multiplo():
+    print("[A3: 'annulla' ripetuto disfa piu turni in pila]")
+    src = (
+        "L'atrio è una stanza.\nIl giocatore comincia in atrio.\n"
+        "Una torcia è una cosa.\nLa torcia è in atrio.\nLa torcia è prendibile.\n"
+        "Una mela è una cosa.\nLa mela è in atrio.\nLa mela è prendibile.\n"
+    )
+    mondo = runtime(src)
+    esegui(mondo, "prendi la torcia")
+    esegui(mondo, "prendi la mela")
+    esegui(mondo, "annulla")   # disfa 'prendi la mela'
+    _check("mela" not in mondo.inventario and "torcia" in mondo.inventario,
+           "il primo 'annulla' disfa solo l'ultima presa")
+    esegui(mondo, "annulla")   # disfa 'prendi la torcia'
+    _check("torcia" not in mondo.inventario,
+           "il secondo 'annulla' disfa anche la presa precedente")
+
+
+def test_annulla_niente_da_annullare():
+    print("[A3: 'annulla' all'inizio non ha nulla da disfare]")
+    mondo = runtime(_src_atrio_torcia())
+    out = esegui(mondo, "annulla")
+    _check("niente da annullare" in out.lower(),
+           "'annulla' senza storia avvisa che non c'è nulla da disfare")
+
+
+def test_ancora_ripete_ultimo_comando():
+    print("[A3: 'ancora' ripete l'ultimo comando]")
+    mondo = runtime(_src_atrio_torcia())
+    esegui(mondo, "prendi la torcia")    # Preso
+    out = esegui(mondo, "ancora")        # ripete 'prendi la torcia'
+    _check("hai gi" in out.lower() or "ce l'hai" in out.lower(),
+           "'ancora' rigioca 'prendi la torcia' (stavolta gia' in mano)")
+
+
+def test_ancora_niente_da_ripetere():
+    print("[A3: 'ancora' all'inizio non ha nulla da ripetere]")
+    mondo = runtime(_src_atrio_torcia())
+    out = esegui(mondo, "ancora")
+    _check("nulla da ripetere" in out.lower(),
+           "'ancora' senza comandi precedenti avvisa")
+
+
+# --- Test: 0.22.0 — A2 varietà nelle risposte (descrizioni alternate) --------
+
+def test_descrizione_sequenza():
+    print("[A2: 'in sequenza' ruota le varianti e si ferma sull'ultima]")
+    src = (
+        "La torre è una stanza.\nIl giocatore comincia in torre.\n"
+        "Un faro è una cosa.\nIl faro è in torre.\n"
+        'La descrizione del faro è in sequenza: "FARO-UNO.", "FARO-DUE.", "FARO-TRE.".\n'
+    )
+    mondo = runtime(src)
+    o = [esegui(mondo, "esamina faro") for _ in range(4)]
+    _check("FARO-UNO." in o[0] and "FARO-DUE." in o[1] and "FARO-TRE." in o[2],
+           "le varianti si susseguono in ordine")
+    _check("FARO-TRE." in o[3], "raggiunta l'ultima variante, vi resta")
+
+
+def test_descrizione_casuale_niente_ripetizione_immediata():
+    print("[A2: 'una di' non ripete mai due volte di fila la stessa variante]")
+    src = (
+        "Il molo è una stanza.\nIl giocatore comincia in molo.\n"
+        'La descrizione del molo è una di: "MARE-A.", "MARE-B.", "MARE-C.".\n'
+    )
+    mondo = runtime(src)
+    scelte = []
+    for _ in range(12):
+        out = esegui(mondo, "guarda")
+        for etichetta in ("MARE-A.", "MARE-B.", "MARE-C."):
+            if etichetta in out:
+                scelte.append(etichetta)
+                break
+    ripetute = any(scelte[i] == scelte[i + 1] for i in range(len(scelte) - 1))
+    _check(len(scelte) == 12 and not ripetute,
+           "12 estrazioni, mai due uguali consecutive")
+
+
+def test_descrizione_casuale_deterministica():
+    print("[A2: il seme fisso rende le scelte casuali RIPRODUCIBILI]")
+    src = (
+        "Il molo è una stanza.\nIl giocatore comincia in molo.\n"
+        'La descrizione del molo è una di: "MARE-A.", "MARE-B.", "MARE-C.".\n'
+    )
+    def sequenza():
+        mondo = runtime(src)
+        return [esegui(mondo, "guarda") for _ in range(8)]
+    _check(sequenza() == sequenza(),
+           "due partite con lo stesso seme danno la stessa sequenza casuale")
+
+
+def test_descrizione_varianti_annulla_riavvolge():
+    print("[A2: 'annulla' riavvolge anche lo stato delle varianti]")
+    src = (
+        "La torre è una stanza.\nIl giocatore comincia in torre.\n"
+        "Un faro è una cosa.\nIl faro è in torre.\n"
+        'La descrizione del faro è in sequenza: "FARO-UNO.", "FARO-DUE.", "FARO-TRE.".\n'
+    )
+    mondo = runtime(src)
+    esegui(mondo, "esamina faro")           # FARO-UNO (indice -> DUE)
+    esegui(mondo, "esamina faro")           # FARO-DUE (indice -> TRE)
+    esegui(mondo, "annulla")                # disfa: indice torna a DUE
+    out = esegui(mondo, "esamina faro")
+    _check("FARO-DUE." in out,
+           "dopo 'annulla' la sequenza riparte dalla variante precedente")
+
+
+def test_descrizione_varianti_interpolano():
+    print("[A2: i segnaposto [var] funzionano dentro le varianti]")
+    src = (
+        "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+        "Il punteggio è un contatore.\nIl punteggio parte da 7.\n"
+        'La descrizione della cella è una di: "Hai [punteggio] punti.", "Punti: [punteggio].".\n'
+    )
+    mondo = runtime(src)
+    out = esegui(mondo, "guarda")
+    _check("7" in out and "[punteggio]" not in out,
+           "la variante scelta interpola il contatore")
+
+
+def test_descrizione_singola_resta_valida():
+    print("[A2: la descrizione a stringa singola continua a funzionare]")
+    src = (
+        "L'atrio è una stanza.\nIl giocatore comincia in atrio.\n"
+        'La descrizione dell\'atrio è "Un atrio semplice.".\n'
+    )
+    mondo = runtime(src)
+    _check("Un atrio semplice." in esegui(mondo, "guarda"),
+           "la forma storica (una sola stringa) è preservata")
+
+
+def test_descrizione_condizionale_a_varianti():
+    print("[A2: una variante condizionale può a sua volta essere a varianti]")
+    src = (
+        "La sala è una stanza.\nIl giocatore comincia in sala.\n"
+        "L'allarme è uno stato.\nL'allarme è attivo.\n"
+        'La descrizione della sala è "Tutto tranquillo.".\n'
+        'La descrizione della sala se l\'allarme è attivo è in sequenza: "ALL-UNO.", "ALL-DUE.".\n'
+    )
+    mondo = runtime(src)
+    o1 = esegui(mondo, "guarda")
+    o2 = esegui(mondo, "guarda")
+    _check("ALL-UNO." in o1 and "ALL-DUE." in o2,
+           "la descrizione condizionale vera pesca le sue varianti in sequenza")
+
+
+# --- Test: buio e luce [0.24.0 / A4] -----------------------------------------
+
+def test_a4_parsing_buia_e_illumina():
+    print("[A4: 'è buia' marca la stanza, 'illumina' marca la fonte di luce]")
+    src = (
+        "La cantina è una stanza.\nLa cantina è buia.\n"
+        "Una torcia è una cosa.\nLa torcia illumina.\nLa torcia è in cantina.\n"
+    )
+    mondo, log = compila(src)
+    _check(mondo is not None, "il sorgente con buio/luce compila")
+    _check(mondo and mondo.trova_stanza("cantina").buia is True,
+           "la cantina risulta buia")
+    _check(mondo and mondo.trova_oggetto("torcia").illumina is True,
+           "la torcia risulta fonte di luce")
+
+
+def test_a4_buio_blocca_esamina_e_prendi():
+    print("[A4: in stanza buia senza luce, esamina/prendi sono bloccati]")
+    src = (
+        "La cantina è una stanza.\nIl giocatore comincia in cantina.\n"
+        "La cantina è buia.\n"
+        "Un baule è una cosa.\nIl baule è in cantina.\nIl baule è prendibile.\n"
+    )
+    mondo = runtime(src)
+    out_es = esegui(mondo, "esamina baule")
+    out_pr = esegui(mondo, "prendi baule")
+    _check("buio" in out_es.lower(), "esamina al buio risponde col buio")
+    _check("buio" in out_pr.lower(), "prendi al buio risponde col buio")
+    _check("baule" not in mondo.inventario, "l'oggetto NON è stato preso al buio")
+
+
+def test_a4_guarda_mostra_buio_pesto():
+    print("[A4: guarda in stanza buia mostra «È buio pesto.» e nasconde gli oggetti]")
+    src = (
+        "La cantina è una stanza.\nIl giocatore comincia in cantina.\n"
+        "La cantina è buia.\n"
+        'La descrizione della cantina è "Pareti di pietra umida.".\n'
+        "Un baule è una cosa.\nIl baule è in cantina.\n"
+    )
+    mondo = runtime(src)
+    out = esegui(mondo, "guarda")
+    _check("buio pesto" in out.lower(), "il buio è annunciato")
+    _check("baule" not in out.lower(), "gli oggetti non sono elencati al buio")
+    _check("pietra" not in out.lower(), "la descrizione non è mostrata al buio")
+
+
+def test_a4_torcia_in_inventario_illumina():
+    print("[A4: una fonte di luce in mano rischiara la stanza buia]")
+    src = (
+        "La cantina è una stanza.\nIl giocatore comincia in cantina.\n"
+        "La cantina è buia.\n"
+        "Una torcia è una cosa.\nLa torcia illumina.\n"
+        "Il giocatore ha la torcia.\n"
+        'La descrizione della cantina è "Pareti di pietra umida.".\n'
+    )
+    mondo = runtime(src)
+    out = esegui(mondo, "guarda")
+    _check(mondo.c_e_luce() is True, "c'è luce con la torcia in mano")
+    _check("pietra" in out.lower(), "la descrizione è visibile con la luce")
+
+
+def test_a4_fonte_a_terra_rischiara():
+    print("[A4: una fonte di luce che brilla a terra rischiara la stanza]")
+    src = (
+        "La cantina è una stanza.\nIl giocatore comincia in cantina.\n"
+        "La cantina è buia.\n"
+        "Una lanterna è una cosa.\nLa lanterna illumina.\nLa lanterna è in cantina.\n"
+    )
+    mondo = runtime(src)
+    out = esegui(mondo, "guarda")
+    _check(mondo.c_e_luce() is True, "c'è luce con la lanterna a terra")
+    _check("lanterna" in out.lower(), "la fonte luminosa a terra è visibile")
+
+
+def test_a4_torcia_spenta_non_illumina():
+    print("[A4: una fonte 'spenta' non illumina (opposte accesa/spenta)]")
+    src = (
+        "La cantina è una stanza.\nIl giocatore comincia in cantina.\n"
+        "La cantina è buia.\n"
+        "Accesa e spenta sono opposte.\n"
+        "Una torcia è una cosa.\nLa torcia illumina.\nLa torcia è spenta.\n"
+        "Il giocatore ha la torcia.\n"
+    )
+    mondo = runtime(src)
+    _check(mondo.c_e_luce() is False, "la torcia spenta non fa luce")
+    out = esegui(mondo, "guarda")
+    _check("buio pesto" in out.lower(), "resta buio con la torcia spenta")
+
+
+def test_a4_accendi_la_luce_via_regola():
+    print("[A4: accendere la fonte (regola -> 'accesa') rischiara la stanza]")
+    src = (
+        "La cantina è una stanza.\nIl giocatore comincia in cantina.\n"
+        "La cantina è buia.\n"
+        "Accesa e spenta sono opposte.\n"
+        "Una torcia è una cosa.\nLa torcia illumina.\nLa torcia è spenta.\n"
+        "Il giocatore ha la torcia.\n"
+        'Invece di usa la torcia: dire "Accendi la torcia." e adesso la torcia è accesa.\n'
+    )
+    mondo = runtime(src)
+    _check(mondo.c_e_luce() is False, "all'inizio è buio (torcia spenta)")
+    esegui(mondo, "usa torcia")
+    _check(mondo.c_e_luce() is True, "dopo l'accensione c'è luce")
+
+
+def test_a4_luce_in_contenitore_chiuso_non_illumina():
+    print("[A4: una fonte dentro un contenitore CHIUSO non illumina]")
+    src = (
+        "La cantina è una stanza.\nIl giocatore comincia in cantina.\n"
+        "La cantina è buia.\n"
+        "Una cassa è un contenitore.\nLa cassa è in cantina.\nLa cassa è chiusa.\n"
+        "Una torcia è una cosa.\nLa torcia illumina.\nLa torcia è nella cassa.\n"
+    )
+    mondo = runtime(src)
+    _check(mondo.c_e_luce() is False,
+           "la torcia in una cassa chiusa non fa luce")
+
+
+def test_a4_luce_in_contenitore_aperto_illumina():
+    print("[A4: una fonte dentro un contenitore APERTO illumina]")
+    src = (
+        "La cantina è una stanza.\nIl giocatore comincia in cantina.\n"
+        "La cantina è buia.\n"
+        "Una cassa è un contenitore.\nLa cassa è in cantina.\n"  # aperta di default
+        "Una torcia è una cosa.\nLa torcia illumina.\nLa torcia è nella cassa.\n"
+    )
+    mondo = runtime(src)
+    _check(mondo.c_e_luce() is True,
+           "la torcia in una cassa aperta fa luce")
+
+
+def test_a4_stanza_non_buia_sempre_visibile():
+    print("[A4: una stanza NON buia è sempre visibile, senza alcuna luce]")
+    src = (
+        "L'atrio è una stanza.\nIl giocatore comincia in atrio.\n"
+        'La descrizione dell\'atrio è "Un atrio luminoso.".\n'
+        "Un vaso è una cosa.\nIl vaso è in atrio.\n"
+    )
+    mondo = runtime(src)
+    out = esegui(mondo, "guarda")
+    _check(mondo.c_e_luce() is True, "una stanza non buia ha sempre luce")
+    _check("atrio luminoso" in out.lower() and "vaso" in out.lower(),
+           "descrizione e oggetti sono visibili")
+
+
+def test_a4_uscite_percorribili_al_buio():
+    print("[A4: al buio non si vede, ma le uscite restano percorribili]")
+    src = (
+        "La cantina è una stanza.\nL'atrio è una stanza.\n"
+        "La cantina collega nord a atrio.\n"
+        "Il giocatore comincia in cantina.\n"
+        "La cantina è buia.\n"
+        'La descrizione dell\'atrio è "Un atrio illuminato.".\n'
+    )
+    mondo = runtime(src)
+    esegui(mondo, "nord")
+    _check(mondo.posizione_giocatore == "atrio",
+           "il giocatore si è mosso al buio verso l'atrio")
+
+
+def test_a4_demone_spegne_la_luce():
+    print("[A4: un demone che spegne la fonte riporta il buio a metà partita]")
+    src = (
+        "La cantina è una stanza.\nIl giocatore comincia in cantina.\n"
+        "La cantina è buia.\n"
+        "Accesa e spenta sono opposte.\n"
+        "Una torcia è una cosa.\nLa torcia illumina.\nLa torcia è accesa.\n"
+        "Il giocatore ha la torcia.\n"
+        "Il tempo è un contatore.\n"
+        "Ogni 1 turno: aumenta il tempo.\n"
+        'Quando il tempo è almeno 2: dire "La torcia si spegne." e adesso la torcia è spenta.\n'
+    )
+    mondo = runtime(src)
+    _check(mondo.c_e_luce() is True, "all'inizio la torcia accesa fa luce")
+    esegui(mondo, "guarda")   # turno 1
+    esegui(mondo, "guarda")   # turno 2: il demone spegne la torcia
+    _check(mondo.c_e_luce() is False, "dopo lo spegnimento è di nuovo buio")
+
+
+def test_a4_regola_autore_precede_il_buio():
+    print("[A4: una regola 'Invece di esamina' ha la precedenza anche al buio]")
+    src = (
+        "La cantina è una stanza.\nIl giocatore comincia in cantina.\n"
+        "La cantina è buia.\n"
+        "Un totem è una cosa.\nIl totem è in cantina.\n"
+        'Invece di esamina il totem: dire "Brilla di luce propria.".\n'
+    )
+    mondo = runtime(src)
+    out = esegui(mondo, "esamina totem")
+    _check("luce propria" in out.lower(),
+           "la regola d'autore scatta nonostante il buio")
+
+
+def test_a4_concordanza_buio_maschile():
+    print("[A4: 'è buio' (maschile) marca la stanza come 'è buia' (folding radice)]")
+    src = (
+        "Il sottoscala è una stanza.\nIl giocatore comincia in sottoscala.\n"
+        "Il sottoscala è buio.\n"
+    )
+    mondo = runtime(src)
+    _check(mondo.trova_stanza("sottoscala").buia is True,
+           "la forma maschile 'buio' è riconosciuta")
+    _check(mondo.c_e_luce() is False, "il sottoscala è al buio")
+
+
+def test_a4_illumina_prima_della_dichiarazione():
+    print("[A4: 'La torcia illumina.' funziona anche prima di 'è una cosa']")
+    src = (
+        "La cantina è una stanza.\n"
+        "La torcia illumina.\n"            # riferimento prima della dichiarazione
+        "Una torcia è una cosa.\nLa torcia è in cantina.\n"
+    )
+    mondo, _ = compila(src)
+    _check(mondo is not None and mondo.trova_oggetto("torcia").illumina is True,
+           "l'ordine non conta: la torcia illumina")
+
+
+# --- Test: movimento degli NPC [0.25.0 / A5] --------------------------------
+
+def _src_a5(extra_npc="La guardia è in cella.\n", trigger=""):
+    return (
+        "La cella è una stanza.\nIl corridoio è una stanza.\n"
+        "La cella collega nord a corridoio.\n"
+        "L'allarme è uno stato.\nL'allarme è attivo.\n"
+        "Una guardia è un personaggio.\n" + extra_npc + trigger
+    )
+
+
+def test_a5_parsing_due_forme():
+    print("[A5: 'va nel corridoio' e 'cambia stanza' producono un movimento NPC]")
+    src = _src_a5(trigger=(
+        "Il giocatore comincia in cella.\n"
+        "Ogni turno se l'allarme è attivo: la guardia va nel corridoio.\n"
+        "Quando l'allarme non è attivo: la guardia cambia stanza.\n"))
+    mondo, log = compila(src)
+    _check(mondo is not None, "il sorgente con movimento NPC compila")
+    tipi = [c.__class__.__name__ for d in (mondo.demoni if mondo else [])
+            for c in d.conseguenze]
+    _check(tipi.count("ConseguenzaMovimentoPNG") == 2,
+           "entrambe le forme creano una ConseguenzaMovimentoPNG")
+
+
+def test_a5_movimento_deterministico():
+    print("[A5: 'va nel corridoio' sposta l'NPC nella stanza indicata]")
+    src = _src_a5(trigger=(
+        "Il giocatore comincia in corridoio.\n"
+        "Ogni turno se l'allarme è attivo: la guardia va nel corridoio.\n"))
+    mondo = runtime(src)
+    esegui(mondo, "guarda")   # turno 1
+    _check(mondo.trova_oggetto("guardia").posizione == "corridoio",
+           "la guardia è andata nel corridoio")
+
+
+def test_a5_movimento_casuale_deterministico_col_seed():
+    print("[A5: 'cambia stanza' è casuale ma riproducibile (seed di A2)]")
+    src = (
+        "La cella è una stanza.\nIl corridoio è una stanza.\nIl magazzino è una stanza.\n"
+        "La cella collega nord a corridoio.\nLa cella collega est a magazzino.\n"
+        "Il giocatore comincia in corridoio.\n"
+        "L'allarme è uno stato.\nL'allarme è attivo.\n"
+        "Una guardia è un personaggio.\nLa guardia è in cella.\n"
+        "Ogni turno se l'allarme è attivo: la guardia cambia stanza.\n")
+    m1 = runtime(src)
+    esegui(m1, "guarda")
+    dest1 = m1.trova_oggetto("guardia").posizione
+    m2 = runtime(src)
+    esegui(m2, "guarda")
+    dest2 = m2.trova_oggetto("guardia").posizione
+    _check(dest1 in ("corridoio", "magazzino"),
+           "la guardia si sposta in una stanza adiacente")
+    _check(dest1 == dest2, "la scelta casuale è riproducibile (stesso seed)")
+
+
+def test_a5_annuncio_uscita_con_direzione():
+    print("[A5: l'NPC che lascia la stanza del giocatore è annunciato (con direzione)]")
+    src = _src_a5(trigger=(
+        "Il giocatore comincia in cella.\n"
+        "Ogni turno se l'allarme è attivo: la guardia cambia stanza.\n"))
+    mondo = runtime(src)
+    out = esegui(mondo, "guarda")
+    _check("se ne va" in out.lower(), "l'uscita dell'NPC è annunciata")
+    _check("nord" in out.lower(), "l'annuncio include la direzione")
+
+
+def test_a5_annuncio_ingresso():
+    print("[A5: l'NPC che entra nella stanza del giocatore è annunciato]")
+    src = _src_a5(trigger=(
+        "Il giocatore comincia in corridoio.\n"
+        "Ogni turno se l'allarme è attivo: la guardia va nel corridoio.\n"))
+    mondo = runtime(src)
+    out = esegui(mondo, "guarda")
+    _check("arriva" in out.lower(), "l'ingresso dell'NPC è annunciato")
+
+
+def test_a5_nessun_annuncio_altrove():
+    print("[A5: un movimento lontano dal giocatore non è annunciato]")
+    src = (
+        "L'atrio è una stanza.\nLa cella è una stanza.\nIl corridoio è una stanza.\n"
+        "L'atrio collega ovest a cella.\nLa cella collega nord a corridoio.\n"
+        "Il giocatore comincia in atrio.\n"
+        "L'allarme è uno stato.\nL'allarme è attivo.\n"
+        "Una guardia è un personaggio.\nLa guardia è in cella.\n"
+        "Ogni turno se l'allarme è attivo: la guardia va nel corridoio.\n")
+    mondo = runtime(src)
+    out = esegui(mondo, "guarda")
+    _check("se ne va" not in out.lower() and "arriva" not in out.lower(),
+           "nessun annuncio per un movimento fuori scena")
+
+
+def test_a5_movimento_via_evento():
+    print("[A5: un evento a tempo può muovere un NPC]")
+    src = (
+        "La cella è una stanza.\nIl corridoio è una stanza.\n"
+        "La cella collega nord a corridoio.\n"
+        "Il giocatore comincia in corridoio.\n"
+        "Una guardia è un personaggio.\nLa guardia è in cella.\n"
+        "Al turno 1: la guardia va nel corridoio.\n")
+    mondo = runtime(src)
+    out = esegui(mondo, "guarda")
+    _check(mondo.trova_oggetto("guardia").posizione == "corridoio",
+           "l'evento ha mosso la guardia")
+    _check("arriva" in out.lower(), "l'arrivo è annunciato")
+
+
+def test_a5_movimento_via_regola_giocatore():
+    print("[A5: una regola del giocatore può muovere un NPC, con annuncio]")
+    src = (
+        "La cella è una stanza.\nIl corridoio è una stanza.\n"
+        "La cella collega nord a corridoio.\n"
+        "Il giocatore comincia in corridoio.\n"
+        "Un bottone è una cosa.\nIl bottone è in corridoio.\n"
+        "Una guardia è un personaggio.\nLa guardia è in cella.\n"
+        'Invece di esamina il bottone: dire "Premi il bottone." e adesso la guardia va nel corridoio.\n')
+    mondo = runtime(src)
+    out = esegui(mondo, "esamina bottone")
+    _check("premi il bottone" in out.lower(), "la risposta della regola è mostrata")
+    _check(mondo.trova_oggetto("guardia").posizione == "corridoio",
+           "la regola ha mosso la guardia")
+    _check("arriva" in out.lower(), "l'arrivo è annunciato dopo la regola")
+
+
+def test_a5_cambia_stanza_senza_uscite_no_op():
+    print("[A5: 'cambia stanza' senza uscite lascia l'NPC dov'è]")
+    src = (
+        "La cella è una stanza.\nIl sgabuzzino è una stanza.\n"
+        "Il giocatore comincia in cella.\n"
+        "L'allarme è uno stato.\nL'allarme è attivo.\n"
+        "Una guardia è un personaggio.\nLa guardia è in sgabuzzino.\n"  # senza uscite
+        "Ogni turno se l'allarme è attivo: la guardia cambia stanza.\n")
+    mondo = runtime(src)
+    esegui(mondo, "guarda")
+    _check(mondo.trova_oggetto("guardia").posizione == "sgabuzzino",
+           "senza uscite l'NPC non si sposta")
+
+
+def test_a5_destinazione_inesistente_errore():
+    print("[A5: 'va' verso una non-stanza è un errore di compilazione]")
+    src = (
+        "La cella è una stanza.\n"
+        "Il giocatore comincia in cella.\n"
+        "L'allarme è uno stato.\nL'allarme è attivo.\n"
+        "Una guardia è un personaggio.\nLa guardia è in cella.\n"
+        "Un forziere è una cosa.\nIl forziere è in cella.\n"
+        "Quando l'allarme è attivo: la guardia va nel forziere.\n")  # forziere è un oggetto
+    mondo, log = compila(src)
+    _check(mondo is None, "la compilazione fallisce")
+    _check("inesistente" in log.lower() and "forziere" in log.lower(),
+           "l'errore segnala la destinazione non-stanza")
+
+
+# --- Test: sinonimi di verbo [0.26.0 / A6] ----------------------------------
+
+def test_a6_parsing_e_registrazione():
+    print("[A6: '\"ghermisci\" è come prendi.' registra il sinonimo]")
+    src = (
+        "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+        '"ghermisci" è come prendi.\n')
+    mondo, log = compila(src)
+    _check(mondo is not None, "il sorgente con sinonimo compila")
+    _check(mondo and mondo.sinonimi_verbo.get("ghermisci") == "prendi",
+           "il sinonimo rimanda al verbo canonico 'prendi'")
+
+
+def test_a6_sinonimo_si_comporta_come_il_verbo():
+    print("[A6: il sinonimo prende l'oggetto come farebbe il verbo bersaglio]")
+    src = (
+        "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+        "Una gemma è una cosa.\nLa gemma è in cella.\nLa gemma è prendibile.\n"
+        '"ghermisci" è come prendi.\n')
+    mondo = runtime(src)
+    out = esegui(mondo, "ghermisci gemma")
+    _check("gemma" in mondo.inventario, "la gemma è stata presa col sinonimo")
+    _check("preso" in out.lower(), "la risposta è quella del verbo 'prendi'")
+
+
+def test_a6_sinonimo_attiva_le_regole_del_canonico():
+    print("[A6: il sinonimo attiva le regole 'Invece di [canonico]']")
+    src = (
+        "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+        "Una chiave è una cosa.\nLa chiave è in cella.\nLa chiave è prendibile.\n"
+        '"ghermisci" è come prendi.\n'
+        'Invece di prendi la chiave: dire "Una scossa ti ferma.".\n')
+    mondo = runtime(src)
+    out = esegui(mondo, "ghermisci chiave")
+    _check("scossa" in out.lower(),
+           "la regola sul verbo canonico scatta anche col sinonimo")
+    _check("chiave" not in mondo.inventario,
+           "la regola sostituisce la presa (oggetto non raccolto)")
+
+
+def test_a6_il_canonico_continua_a_funzionare():
+    print("[A6: dichiarare un sinonimo non disturba il verbo originale]")
+    src = (
+        "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+        "Una gemma è una cosa.\nLa gemma è in cella.\nLa gemma è prendibile.\n"
+        '"ghermisci" è come prendi.\n')
+    mondo = runtime(src)
+    esegui(mondo, "prendi gemma")
+    _check("gemma" in mondo.inventario, "il verbo originale 'prendi' funziona ancora")
+
+
+def test_a6_bersaglio_sconosciuto_warning():
+    print("[A6: un sinonimo verso un verbo ignoto è un avviso (non bloccante)]")
+    src = (
+        "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+        '"svolazza" è come volare.\n')   # 'volare' non è un verbo del motore
+    mondo, log = compila(src)
+    _check(mondo is not None, "la compilazione riesce (warning non bloccante)")
+    _check("volare" in log.lower() and ("non è un verbo" in log.lower()
+           or "non fa" in log.lower()),
+           "il log avverte che il bersaglio non è un verbo noto")
+    _check(mondo and "svolazza" not in mondo.sinonimi_verbo,
+           "il sinonimo morto non è registrato")
+
+
+def test_a6_piu_sinonimi():
+    print("[A6: più sinonimi per verbi diversi convivono]")
+    src = (
+        "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+        "Una gemma è una cosa.\nLa gemma è in cella.\nLa gemma è prendibile.\n"
+        '"ghermisci" è come prendi.\n'
+        '"scruta" è come esamina.\n')
+    mondo = runtime(src)
+    _check(mondo.sinonimi_verbo.get("ghermisci") == "prendi"
+           and mondo.sinonimi_verbo.get("scruta") == "esamina",
+           "entrambi i sinonimi sono registrati")
+    out = esegui(mondo, "scruta gemma")
+    _check("non vedi nulla del genere" not in out.lower(),
+           "'scruta' esamina la gemma come 'esamina'")
+
+
+def test_robustezza_console_cp1252_non_crasha():
+    """Robustezza (debito R8): un carattere fuori da Windows-1252 in un testo
+    stampato non deve far terminare il gioco sulla console Windows. La fonte
+    unica favella_utils.assicura_console_utf8 riconfigura lo stream con
+    errors='replace' (no-op se non riconfigurabile)."""
+    import sys as _sys
+    from favella_utils import assicura_console_utf8
+
+    class _ConsoleCp1252:
+        """Finta console Windows: di default esplode sui caratteri non-cp1252;
+        reconfigure(errors='replace') la rende tollerante, come gli stream
+        reali di Python."""
+        def __init__(self):
+            self.errors = "strict"
+        def reconfigure(self, encoding=None, errors=None):
+            if errors is not None:
+                self.errors = errors
+        def write(self, testo):
+            for ch in testo:
+                try:
+                    ch.encode("cp1252")
+                except UnicodeEncodeError:
+                    if self.errors != "replace":
+                        raise
+            return len(testo)
+        def flush(self):
+            pass
+
+    falso = _ConsoleCp1252()
+    salva_out, salva_err = _sys.stdout, _sys.stderr
+    crashato = False
+    try:
+        _sys.stdout = falso
+        _sys.stderr = falso
+        assicura_console_utf8()
+        try:
+            print("★ stelle ─ frecce → emoji")
+        except UnicodeEncodeError:
+            crashato = True
+    finally:
+        _sys.stdout, _sys.stderr = salva_out, salva_err
+    _check(not crashato,
+           "un carattere fuori da cp1252 non fa crashare la stampa (fix R8)")
+    _check(falso.errors == "replace",
+           "assicura_console_utf8 imposta errors='replace' sullo stream")
+    # Idempotente: una seconda chiamata sugli stream reali non solleva.
+    assicura_console_utf8()
+    _check(True, "assicura_console_utf8 è idempotente")
+
+
+# --- [1.1.0] Posto iniziale degli oggetti -------------------------------------
+
+_SRC_POSTO = (
+    "La cucina è una stanza.\nIl giocatore comincia in cucina.\n"
+    "L'orto è una stanza.\nLa cucina collega nord a l'orto.\n"
+    "La mappa è una cosa.\nLa mappa è prendibile.\nLa mappa è in cucina.\n"
+    'Il posto della mappa è "Sul tavolo, una MAPPA piegata.".\n'
+    "Il secchio è una cosa.\nIl secchio è in cucina.\n")
+
+
+def _riga_elenco(out):
+    return next((r for r in out.splitlines() if r.startswith("Puoi vedere qui")), "")
+
+
+def test_posto_parsing_e_registrazione():
+    print("[1.1.0: 'Il posto della mappa è \"…\".' registra la frase sull'oggetto]")
+    mondo, log = compila(_SRC_POSTO)
+    _check(mondo is not None, "il sorgente con posto compila")
+    _check(mondo and mondo.oggetti["mappa"].posto == "Sul tavolo, una MAPPA piegata.",
+           "la frase è registrata in Oggetto.posto")
+    _check(mondo and not mondo.oggetti["mappa"].spostato,
+           "a inizio partita l'oggetto non risulta spostato")
+
+
+def test_posto_mostrato_e_escluso_dall_elenco():
+    print("[1.1.0: il posto si mostra e l'oggetto esce da «Puoi vedere qui»]")
+    mondo = runtime(_SRC_POSTO)
+    out = esegui(mondo, "guarda")
+    _check("Sul tavolo, una MAPPA piegata." in out, "la frase del posto compare")
+    riga = _riga_elenco(out)
+    _check("secchio" in riga and "mappa" not in riga,
+           "l'elenco generico mostra il secchio ma non la mappa")
+
+
+def test_posto_sparisce_dopo_la_presa():
+    print("[1.1.0: preso l'oggetto, il posto sparisce per sempre]")
+    mondo = runtime(_SRC_POSTO)
+    esegui(mondo, "prendi la mappa")
+    out = esegui(mondo, "guarda")
+    _check("Sul tavolo" not in out, "dopo la presa la frase non c'è più")
+    esegui(mondo, "lascia la mappa")
+    out = esegui(mondo, "guarda")
+    _check("Sul tavolo" not in out and "mappa" in _riga_elenco(out),
+           "lasciata di nuovo, la mappa torna nell'elenco generico")
+
+
+def test_posto_annulla_lo_riporta():
+    print("[1.1.0: ANNULLA dopo la presa riporta la frase in scena]")
+    mondo = runtime(_SRC_POSTO)
+    esegui(mondo, "prendi la mappa")
+    esegui(mondo, "annulla")
+    out = esegui(mondo, "guarda")
+    _check("Sul tavolo, una MAPPA piegata." in out, "la frase è tornata")
+
+
+def test_posto_spostamento_da_regola():
+    print("[1.1.0: anche uno spostamento per regola spegne il posto]")
+    src = _SRC_POSTO + (
+        '"soffia" è un comando.\n'
+        "Invece di soffia la mappa: dire \"Vola via.\" e adesso la mappa è nell'orto.\n")
+    mondo = runtime(src)
+    esegui(mondo, "soffia la mappa")
+    esegui(mondo, "nord")
+    out = esegui(mondo, "guarda")
+    _check("Sul tavolo" not in out, "nell'orto la frase d'origine non compare")
+    _check("mappa" in _riga_elenco(out), "la mappa è elencata nell'orto")
+
+
+def test_posto_errori_e_avvisi():
+    print("[1.1.0: posto su stanza = errore; fuori da una stanza = avviso]")
+    mondo, log = compila(_SRC_POSTO + 'Il posto della cucina è "Nulla.".\n')
+    _check(mondo is None and "stanza" in log.lower(),
+           "un posto dichiarato per una stanza blocca la compilazione")
+    mondo, log = compila(
+        "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+        "La scatola è un contenitore.\nLa scatola è in cella.\n"
+        "La gemma è una cosa.\nLa gemma è nella scatola.\n"
+        'Il posto della gemma è "Brilla.".\n')
+    _check(mondo is not None and "non sarà mai mostrato" in log,
+           "un posto dentro un contenitore produce un avviso")
+
+
+def test_posto_nomi_composti_ammessi():
+    print("[1.1.0: 'posto' è riservata ma «posto di blocco» resta un nome lecito]")
+    mondo, _ = compila(
+        "Il posto di blocco è una stanza.\nIl giocatore comincia in posto di blocco.\n"
+        "La sbarra è una cosa.\nLa sbarra è in posto di blocco.\n"
+        'Il posto della sbarra è "Una SBARRA abbassata.".\n')
+    _check(mondo is not None and "posto di blocco" in mondo.stanze,
+           "la stanza «posto di blocco» compila insieme a un posto")
+
+
+def test_posto_da_inventario_mai_mostrato():
+    print("[1.1.0: un posto su un oggetto che parte in inventario non compare mai]")
+    mondo = runtime(
+        "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+        "La gemma è una cosa.\nLa gemma è prendibile.\nIl giocatore ha la gemma.\n"
+        'Il posto della gemma è "Brilla sul pavimento.".\n')
+    esegui(mondo, "lascia la gemma")
+    out = esegui(mondo, "guarda")
+    _check("Brilla sul pavimento" not in out and "gemma" in _riga_elenco(out),
+           "posata, la gemma è elencata normalmente e la frase non compare")
+
+
+# --- [1.1.0] Consolidamento: semantica verificata con Il Viaggiatore ----------
+
+def test_quando_riscatta_a_ogni_fronte():
+    print("[1.1.0: 'Quando' scatta a OGNI fronte di salita, non una volta sola]")
+    mondo = runtime(
+        "La cucina è una stanza.\nIl giocatore comincia in cucina.\n"
+        "L'orto è una stanza.\nLa cucina collega nord a l'orto.\n"
+        "L'orto collega sud a la cucina.\n"
+        'Quando il giocatore è nell\'orto: dire "ORTO!".\n')
+    uscite = [esegui(mondo, c) for c in ("nord", "sud", "nord")]
+    _check(sum(o.count("ORTO!") for o in uscite) == 2,
+           "rientrare nell'orto fa riscattare il demone (2 ingressi: 2 volte)")
+    _check("ORTO!" not in uscite[1], "uscendo (condizione falsa) non scatta")
+
+
+def test_capienza_avviso_su_spostamento_in_inventario():
+    print("[1.1.0: 'è in inventario' con capienza dichiarata: avviso]")
+    base = (
+        "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+        "La pietra è una cosa.\nLa pietra è in cella.\n"
+        "La piuma è una cosa.\nLa piuma è in cella.\n"
+        'Invece di guarda: dire "Raccogli." e adesso la pietra è in inventario'
+        " e adesso la piuma è in inventario.\n"
+        'Invece di esamina la pietra: dire "Ancora." e adesso la pietra è in inventario.\n')
+    mondo, log = compila(base + "Il giocatore può portare 1 oggetti.\n")
+    _check(mondo is not None and log.count("ignorando la capienza") == 2,
+           "un avviso per oggetto (pietra e piuma), non uno per conseguenza")
+    mondo, log = compila(base)
+    _check(mondo is not None and "ignorando la capienza" not in log,
+           "senza capienza dichiarata nessun avviso")
+    mondo = runtime(base + "Il giocatore può portare 1 oggetti.\n")
+    esegui(mondo, "guarda")
+    _check(len(mondo.inventario) == 2,
+           "a runtime il comportamento 1.0 resta invariato (2 oggetti su 1 posto)")
+
+
+def test_ancora_dopo_annulla_ripete_il_comando_disfatto():
+    print("[1.2.1: ANNULLA riporta indietro anche la memoria di ANCORA]")
+    mondo = runtime(_SRC_POSTO)
+    esegui(mondo, "prendi la mappa")
+    esegui(mondo, "annulla")
+    _check("mappa" not in mondo.inventario, "annullata, la mappa è di nuovo a terra")
+    out = esegui(mondo, "ancora")
+    _check("mappa" not in mondo.inventario and "nulla da ripetere" in out,
+           "ANCORA non rifà il turno disfatto: prima non c'era nulla da ripetere")
+    mondo = runtime(_SRC_POSTO)
+    esegui(mondo, "prendi il secchio")
+    esegui(mondo, "prendi la mappa")
+    esegui(mondo, "annulla")
+    out = esegui(mondo, "ancora")
+    _check("mappa" not in mondo.inventario and mondo.ultimo_comando == "prendi il secchio",
+           "ANCORA ripete il comando che precedeva quello disfatto")
+
+
+# --- [1.2.0] Sinonimi dei verbi d'autore -------------------------------------
+
+_SRC_SIN_AUTORE = (
+    "La cucina è una stanza.\nIl giocatore comincia in cucina.\n"
+    "Il sasso è una cosa.\nIl sasso è in cucina.\n"
+    '"lancia" è come getta.\n'                     # prima della dichiarazione
+    '"getta" è un comando.\n'
+    '"scaglia" è come "getta".\n'
+    '"getta il cibo" è un comando senza oggetto.\n'
+    '"butta via il cibo" è come "getta il cibo".\n'
+    'Invece di getta il sasso: dire "Il sasso rotola via.".\n'
+    'Invece di getta il cibo: dire "Il cane si avventa sul cibo.".\n')
+
+
+def test_sinonimo_verbo_autore():
+    print("[1.2.0: 'è come' vale anche per i verbi dichiarati dall'autore]")
+    mondo = runtime(_SRC_SIN_AUTORE)
+    _check(mondo is not None and mondo.sinonimi_verbo.get("lancia") == "getta",
+           "'\"lancia\" è come getta.' registrato anche se getta è dichiarato dopo")
+    _check("rotola" in esegui(mondo, "lancia il sasso"), "il sinonimo attiva la regola del verbo d'autore")
+    _check("rotola" in esegui(mondo, "scaglia sasso"), "il bersaglio si può scrivere fra virgolette")
+    _check("avventa" in esegui(mondo, "butta via il cibo"),
+           "sinonimo di più parole verso un comando di più parole")
+    _check("rotola" in esegui(mondo, "getta il sasso"), "il verbo d'autore funziona ancora")
+
+
+def test_sinonimo_verbo_autore_ignoto_avvisa():
+    print("[1.2.0: un sinonimo verso un comando mai dichiarato resta un avviso]")
+    mondo, log = compila("La cella è una stanza.\nIl giocatore comincia in cella.\n"
+                         '"lancia" è come "scaraventa".\n')
+    _check(mondo is not None and "scaraventa" in log and "comando dichiarato" in log,
+           "l'avviso suggerisce di dichiarare prima il comando")
+
+
+# --- [1.2.0] SALVA / CARICA ---------------------------------------------------
+
+class _ArchivioMemoria:
+    def __init__(self):
+        self.d = {}
+
+    def scrivi(self, nome, testo):
+        self.d[nome] = testo
+
+    def leggi(self, nome):
+        return self.d.get(nome)
+
+
+_SRC_SALVA = (
+    "La cucina è una stanza.\nIl giocatore comincia in cucina.\n"
+    "L'orto è una stanza.\nLa cucina collega nord a l'orto.\n"
+    "La mela è una cosa.\nLa mela è prendibile.\nLa mela è in cucina.\n"
+    "La pera è una cosa.\nLa pera è prendibile.\nLa pera è nell'orto.\n"
+    "I passi è un contatore.\n"
+    "Il meteo è uno stato.\nIl meteo è sereno.\n"
+    'Ogni turno se il giocatore è nell\'orto: aumenta i passi.\n'
+    'Invece di aspetta: dire "Il cielo cambia." e adesso il meteo diventa uno fra sereno, pioggia, nebbia.\n'
+    "La nonna è un personaggio.\nLa nonna è in cucina.\n"
+    'Il dialogo della nonna comincia con "ciao".\n'
+    'La nonna al nodo "ciao" dice "Hai fame?".\n'
+    'Al nodo "ciao" l\'opzione "Sì." conduce al nodo "fame" e adesso aumenta i passi di 10.\n'
+    'Al nodo "ciao" l\'opzione "No." chiude il dialogo.\n'
+    'La nonna al nodo "fame" dice "Prendi una mela.".\n'
+    'Al nodo "fame" l\'opzione "Grazie." chiude il dialogo.\n')
+
+
+def _due_partite(comandi):
+    archivio = _ArchivioMemoria()
+    a = runtime(_SRC_SALVA)
+    a.archivio_salvataggi = archivio
+    for c in comandi:
+        esegui(a, c)
+    esegui(a, "salva prova")
+    b = runtime(_SRC_SALVA)
+    b.archivio_salvataggi = archivio
+    out = esegui(b, "carica prova")
+    return a, b, out
+
+
+def test_salva_carica_stato_identico():
+    print("[1.2.0: SALVA e CARICA riportano la stessa partita]")
+    a, b, out = _due_partite(["prendi la mela", "aspetta", "nord", "aspetta", "prendi la pera",
+                              "sud", "parla con la nonna", "1", "grazie", "aspetta"])
+    _check("Partita caricata" in out, "il caricamento lo dice al giocatore")
+    _check(a.impronta_stato() == b.impronta_stato(), "l'impronta dello stato coincide")
+    _check(b.variabili["passi"] == a.variabili["passi"] and b.variabili["meteo"] == a.variabili["meteo"],
+           "contatori e stati scelti a caso coincidono")
+    _check(all(esegui(a, c) == esegui(b, c) for c in ("aspetta", "nord", "aspetta", "guarda")),
+           "dopo il caricamento le due partite rispondono uguale")
+
+
+def test_salva_carica_annulla_e_ancora():
+    print("[1.2.0: dopo CARICA, ANNULLA e ANCORA funzionano come prima]")
+    a, b, _ = _due_partite(["prendi la mela", "nord", "prendi la pera", "annulla", "aspetta"])
+    _check("pera" not in b.inventario, "il turno disfatto con ANNULLA non rientra nella partita caricata")
+    _check(esegui(a, "annulla") == esegui(b, "annulla"), "ANNULLA subito dopo il caricamento")
+    _check(a.impronta_stato() == b.impronta_stato(), "stesso stato dopo ANNULLA")
+    _check(esegui(a, "ancora") == esegui(b, "ancora"), "ANCORA ripete lo stesso comando")
+    _check(a.impronta_stato() == b.impronta_stato(), "stesso stato dopo ANCORA")
+
+
+def test_salva_carica_durante_un_dialogo():
+    print("[1.2.0: si salva e si carica anche a metà di una conversazione]")
+    a, b, out = _due_partite(["parla con la nonna", "1"])
+    _check(b.in_dialogo() and b.nodo_dialogo == "fame", "la partita caricata è dentro la conversazione")
+    _check("Prendi una mela" in out, "il caricamento ripropone la battuta corrente")
+    _check(esegui(a, "grazie") == esegui(b, "grazie"), "la conversazione prosegue uguale")
+
+
+def test_salva_carica_rifiuti():
+    print("[1.2.0: CARICA rifiuta salvataggi di altre storie o assenti]")
+    archivio = _ArchivioMemoria()
+    a = runtime(_SRC_SALVA)
+    a.archivio_salvataggi = archivio
+    esegui(a, "prendi la mela")
+    esegui(a, "salva")
+    altra = runtime(_SRC_POSTO)
+    altra.archivio_salvataggi = archivio
+    out = esegui(altra, "carica")
+    _check("altra storia" in out and altra.turno_corrente == 0,
+           "un salvataggio di un'altra storia è rifiutato e la partita non cambia")
+    out = esegui(a, "carica inesistente")
+    _check("nessun salvataggio" in out and "mela" in a.inventario,
+           "un nome sconosciuto lo dice e lascia la partita com'è")
+    archivio.d["rotto"] = "{non è json"
+    _check("danneggiato" in esegui(a, "carica rotto"), "un file danneggiato lo dice")
+
+
+def test_salva_non_consuma_turni_ne_entra_nella_sequenza():
+    print("[1.2.0: SALVA è un comando di servizio]")
+    a = runtime(_SRC_SALVA)
+    a.archivio_salvataggi = _ArchivioMemoria()
+    esegui(a, "prendi la mela")
+    turno = a.turno_corrente
+    esegui(a, "salva")
+    _check(a.turno_corrente == turno, "salvare non fa passare il tempo")
+    _check(a._registro_comandi == ["prendi la mela"], "SALVA non entra nella sequenza dei comandi")
+
+
+def test_carica_verbo_d_autore_non_intercettato():
+    print("[1.2.0: se l'autore dichiara 'carica', il verbo resta suo]")
+    mondo = runtime("La stanza è una stanza.\nIl giocatore comincia in stanza.\n"
+                    "Il fucile è una cosa.\nIl fucile è in stanza.\n"
+                    '"carica" è un comando.\n'
+                    'Invece di carica il fucile: dire "Clic.".\n')
+    _check("Clic." in esegui(mondo, "carica il fucile"), "la regola dell'autore vince su CARICA")
+
+
+def test_salva_su_file_nella_cartella_di_lavoro():
+    print("[1.2.0: nel terminale il salvataggio è un file di testo]")
+    from gioco import ArchivioFile
+    cartella = tempfile.mkdtemp()
+    a = runtime(_SRC_SALVA)
+    a.archivio_salvataggi = ArchivioFile(cartella)
+    esegui(a, "prendi la mela")
+    esegui(a, "salva mattina")
+    percorso = os.path.join(cartella, "mattina.salvataggio")
+    _check(os.path.exists(percorso), "esiste mattina.salvataggio")
+    with open(percorso, encoding="utf-8") as f:
+        dati = json.load(f)
+    _check(dati["formato"] == "favella-salvataggio" and dati["comandi"] == ["prendi la mela"],
+           "il file è JSON leggibile, con la sequenza dei comandi")
+    b = runtime(_SRC_SALVA)
+    b.archivio_salvataggi = ArchivioFile(cartella)
+    esegui(b, "carica mattina")
+    _check("mela" in b.inventario, "ricaricato da file")
+
+
+# --- [1.2.0] Collaudo dinamico -------------------------------------------------
+
+def test_esploratore_finali_con_percorso():
+    print("[1.2.0: l'esploratore raggiunge il finale seguendo un percorso]")
+    import esploratore
+    src = (_SRC_SALVA + 'Invece di mangia la pera: dire "Buona." e adesso vinci "Sazio.".\n')
+    mondo, _ = compila(src)
+    r = esploratore.esplora(mondo, partite=2, turni=40, seme=3,
+                            percorsi=[("a mano", ["nord", "prendi la pera", "mangia la pera"])])
+    _check(r["finali"] == [("vinta", "Sazio.", "regola «Invece di mangia»")],
+           "il finale dichiarato è elencato")
+    _check(("vinta", "Sazio.") in r["raggiunti"], "il percorso lo raggiunge")
+    _check(not [a for a in r["anomalie"] if a["tipo"] in esploratore.GRAVI],
+           "nessuna anomalia grave su una storia sana")
+    _check(r["copertura"]["luoghi"] >= {"cucina", "orto"}, "la copertura conta i luoghi")
+
+
+def test_esploratore_trova_un_segnaposto_rotto():
+    print("[1.2.0: l'esploratore segnala un segnaposto non risolto]")
+    import esploratore
+    mondo, _ = compila("La cella è una stanza.\nIl giocatore comincia in cella.\n"
+                       'Invece di guarda: dire "Vedi [qualcosa] qui.".\n')
+    r = esploratore.esplora(mondo, partite=2, turni=30, seme=1)
+    _check(any(a["tipo"] == "SEGNAPOSTO" for a in r["anomalie"]), "SEGNAPOSTO trovato")
+
+
+# --- Runner ------------------------------------------------------------------
+
+
+# --- [1.2.2] Criticità gravissime (documentazione/analisi-critica-1.2.1.md) ---
+
+_SRC_GS1 = (
+    "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+    "La mela è una cosa.\nLa mela è prendibile.\nLa mela è in cella.\n"
+    "La tanica è una cosa.\nLa tanica è prendibile.\nIl giocatore ha la tanica.\n"
+    "La scatola è un contenitore.\nLa scatola è in cella.\n"
+    "La chiave è una cosa.\nLa chiave è prendibile.\nIl giocatore ha la chiave.\n"
+    'Invece di prendi la mela: dire "AVVELENATA".\n'
+    'Invece di lascia la tanica: dire "LA TANICA NON LA MOLLI".\n'
+    'Invece di metti la chiave nella scatola: dire "LA CHIAVE NON ENTRA".\n')
+
+
+def test_regola_vale_per_i_sinonimi_di_libreria():
+    print("[1.2.2 GS-1: 'Invece di prendi X' vale per raccogli/afferra/prendere X]")
+    for comando in ("prendi la mela", "raccogli la mela", "afferra la mela", "prendere la mela"):
+        mondo = runtime(_SRC_GS1)
+        out = esegui(mondo, comando)
+        _check("AVVELENATA" in out and "mela" not in mondo.inventario,
+               f"«{comando}» fa scattare la regola e la mela resta dov'è")
+    for comando in ("posa la tanica", "molla la tanica", "butta la tanica"):
+        mondo = runtime(_SRC_GS1)
+        out = esegui(mondo, comando)
+        _check("NON LA MOLLI" in out and "tanica" in mondo.inventario,
+               f"«{comando}» fa scattare la regola su 'lascia'")
+    mondo = runtime(_SRC_GS1)
+    _check("NON ENTRA" in esegui(mondo, "infila la chiave nella scatola"),
+           "vale anche per le regole a due oggetti (infila → metti)")
+
+
+def test_regola_sul_sinonimo_ha_la_precedenza():
+    print("[1.2.2 GS-1: la regola scritta con la parola digitata vince su quella del verbo principale]")
+    src = _SRC_GS1 + 'Invece di raccogli la mela: dire "RACCOLTA SPECIFICA".\n'
+    mondo = runtime(src)
+    _check("RACCOLTA SPECIFICA" in esegui(mondo, "raccogli la mela"),
+           "'raccogli' trova la sua regola, come nella 1.2.1")
+    _check("AVVELENATA" in esegui(mondo, "prendi la mela"), "'prendi' trova la sua")
+    _check("AVVELENATA" in esegui(mondo, "afferra la mela"),
+           "'afferra', che non ha una regola sua, usa quella del verbo principale")
+
+
+def test_regola_scritta_con_un_sinonimo_resta_sua():
+    print("[1.2.2 GS-1: 'Invece di leggi X' non cambia 'esamina X']")
+    mondo = runtime(
+        "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+        "Il libro è una cosa.\nIl libro è in cella.\n"
+        'La descrizione del libro è "Una copertina di cuoio.".\n'
+        'Invece di leggi il libro: dire "C\'era una volta.".\n')
+    _check("C'era una volta" in esegui(mondo, "leggi il libro"), "'leggi' trova la sua regola")
+    _check("cuoio" in esegui(mondo, "esamina il libro"),
+           "'esamina' mostra la descrizione, come prima")
+
+
+def test_apri_mangia_sposta_sono_azioni_distinte():
+    print("[1.2.2 GS-1: apri, mangia, sposta e usa non si confondono più]")
+    mondo = runtime(
+        "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+        "La porta è una cosa.\nLa porta è in cella.\n"
+        "La torta è una cosa.\nLa torta è in cella.\n"
+        'Invece di mangia la torta: dire "GNAM".\n'
+        'Invece di usare la porta: dire "USATA".\n'
+        'Invece di aprire la porta: dire "APERTA".\n')
+    _check("GNAM" not in esegui(mondo, "apri la torta"), "'apri la torta' non la mangia")
+    _check("GNAM" in esegui(mondo, "mangia la torta"), "'mangia la torta' sì")
+    _check("APERTA" in esegui(mondo, "apri la porta"),
+           "'Invece di aprire' (nome dell'azione) vale per 'apri'")
+    _check("USATA" not in esegui(mondo, "sposta la porta"),
+           "'Invece di usare' non cattura più 'sposta'")
+    _check("USATA" in esegui(mondo, "usa la porta"), "'Invece di usare' vale per 'usa'")
+    _check("con cosa vuoi usarla" in esegui(mondo, "usa la torta").lower(),
+           "senza regole 'usa' chiede con cosa (pronome accordato, 1.3.0)")
+
+
+def test_verbi_d_autore_non_diventano_sinonimi():
+    print("[1.2.2 GS-1: due verbi d'autore restano distinti]")
+    mondo = runtime(
+        "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+        "Il masso è una cosa.\nIl masso è in cella.\n"
+        '"spingi" è un comando.\n"tira" è un comando.\n'
+        'Invece di spingi il masso: dire "ROTOLA".\n')
+    _check("ROTOLA" in esegui(mondo, "spingi il masso"), "'spingi' trova la sua regola")
+    _check("ROTOLA" not in esegui(mondo, "tira il masso"), "'tira' non la eredita")
+
+
+def test_avviso_sui_sinonimi_gia_noti():
+    print("[1.2.2 GS-1: l'avviso sui sinonimi dice il vero]")
+    base = "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+    _, log = compila(base + '"raccogli" è come prendi.\n')
+    _check("già un sinonimo di 'prendi'" in log and "non serve" in log,
+           "stessa azione: la dichiarazione non serve")
+    _, log = compila(base + '"leggi" è come prendi.\n')
+    _check("farà invece come 'prendi'" in log,
+           "azione diversa: l'avviso dice che il verbo cambia significato")
+    _, log = compila(base + '"leggi" è come getta.\n"getta" è un comando.\n')
+    _check("farà invece come 'getta'" in log,
+           "anche verso un comando d'autore dichiarato dopo")
+    _, log = compila(base + '"ghermisci" è come prendi.\n')
+    _check("ghermisci" not in log, "una parola nuova non riceve avvisi")
+
+
+def test_verbi_d_autore_non_passano_alla_storia_successiva():
+    print("[1.2.2: i verbi d'autore di una storia non contaminano la successiva]")
+    from libreria_azioni import LIBRERIA_AZIONI
+    runtime("La cella è una stanza.\n\"leggi\" è un comando.\n\"sventola\" è un comando.\n")
+    _check(not any(k.startswith("_") for k in LIBRERIA_AZIONI),
+           "la libreria globale non riceve le azioni dei verbi d'autore")
+    mondo = runtime(
+        "La cucina è una stanza.\nIl diario è una cosa.\nIl diario è in cucina.\n"
+        'La descrizione del diario è "Pagine fitte.".\n')
+    _check("Pagine fitte" in esegui(mondo, "leggi il diario"),
+           "nella storia successiva 'leggi' legge ancora")
+    _check("non capisco" in esegui(mondo, "sventola il diario").lower(),
+           "e 'sventola' non è un verbo che conosce")
+
+
+def test_guarda_e_osserva_con_un_oggetto_lo_esaminano():
+    print("[1.2.2 GS-2: 'guarda X' / 'osserva X' esaminano X]")
+    src = (
+        "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+        'La descrizione della cella è "Muri di pietra.".\n'
+        "Il quadro è una cosa.\nIl quadro è in cella.\n"
+        'La descrizione del quadro è "Un paesaggio marino.".\n'
+        "La lettera è una cosa.\nLa lettera è in cella.\n"
+        'La descrizione della lettera è "Poche righe.".\n'
+        'Invece di guarda la lettera: dire "LA LETTERA TI GUARDA".\n')
+    mondo = runtime(src)
+    _check("paesaggio marino" in esegui(mondo, "guarda il quadro"), "'guarda il quadro' lo esamina")
+    _check("paesaggio marino" in esegui(mondo, "osserva il quadro"), "'osserva il quadro' lo esamina")
+    _check("LA LETTERA TI GUARDA" in esegui(mondo, "guarda la lettera"),
+           "una regola 'Invece di guarda X' scatta")
+    _check("paesaggio marino" in esegui(mondo, "guardalo"), "'guardalo' esamina l'ultimo riferito")
+    for comando in ("guarda", "osserva", "guarda intorno", "guarda adesso", "guarda nord"):
+        out = esegui(mondo, comando)
+        _check("Muri di pietra" in out and "paesaggio" not in out,
+               f"«{comando}» guarda la stanza, come prima")
+
+
+def test_guarda_x_attiva_le_regole_di_esamina():
+    print("[1.2.2 GS-1+2: 'guarda X' attiva 'Invece di esamina X']")
+    mondo = runtime(
+        "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+        "Il quadro è una cosa.\nIl quadro è in cella.\n"
+        'Invece di esamina il quadro: dire "UN VOLTO NEL QUADRO".\n')
+    _check("UN VOLTO NEL QUADRO" in esegui(mondo, "guarda il quadro"),
+           "la regola sul verbo principale 'esamina' vale per 'guarda'")
+
+
+def test_libreria_verbi_in_due_azioni_distinti_dall_argomento():
+    print("[1.2.2 GS-2: un verbo in due azioni solo se una vuole l'oggetto e l'altra no]")
+    from libreria_azioni import LIBRERIA_AZIONI
+    azioni_di = {}
+    for nome, azione in LIBRERIA_AZIONI.items():
+        for verbo in azione.nomi:
+            azioni_di.setdefault(verbo, []).append(azione)
+    for verbo, azioni in sorted(azioni_di.items()):
+        if len(azioni) > 1:
+            _check(len(azioni) == 2 and azioni[0].richiede_oggetto != azioni[1].richiede_oggetto,
+                   f"'{verbo}' si risolve con l'argomento del comando")
+
+
+_SRC_GS3 = (
+    "La piazza è una stanza.\nIl giocatore comincia in piazza.\n"
+    "Anna è un personaggio.\nAnna è in piazza.\n"
+    "Marco è un personaggio.\nMarco è in piazza.\n"
+    'Il dialogo di Anna comincia con "saluto".\n'
+    'Anna al nodo "saluto" dice "Ciao, sono Anna.".\n'
+    'Al nodo "saluto" l\'opzione "Arrivederci." chiude il dialogo.\n')
+
+
+def test_nodo_con_battute_di_due_personaggi_e_un_errore():
+    print("[1.2.2 GS-3: due personaggi allo stesso nodo di dialogo = errore]")
+    mondo, log = compila(
+        _SRC_GS3 + 'Il dialogo di Marco comincia con "saluto".\n'
+        'Marco al nodo "saluto" dice "Salve, sono Marco.".\n')
+    _check(mondo is None, "la storia non compila più (prima i dialoghi si fondevano)")
+    _check("'saluto'" in log and "Anna" in log and "Marco" in log,
+           "l'errore nomina il nodo e i due personaggi")
+    _check('"saluto anna"' in log and '"saluto marco"' in log,
+           "e propone due etichette distinte")
+    diag = strutturato(_SRC_GS3 + 'Marco al nodo "saluto" dice "Salve.".\n')
+    _check(not diag["ok"] and any("saluto" in e["message"] for e in diag["errors"]),
+           "anche il percorso dell'IDE lo segnala come errore")
+
+
+def test_nodo_condiviso_da_un_solo_parlante_resta_lecito():
+    print("[1.2.2 GS-3: un nodo comune raggiunto da più dialoghi resta lecito]")
+    mondo = runtime(
+        _SRC_GS3 + 'Il dialogo di Marco comincia con "marco".\n'
+        'Marco al nodo "marco" dice "Salve.".\n'
+        'Al nodo "marco" l\'opzione "Anna?" conduce al nodo "saluto".\n'
+        'Anna al nodo "saluto" dice "Ciao, di nuovo." se il giocatore è in piazza.\n')
+    _check(mondo is not None, "compila: al nodo 'saluto' parla solo Anna (anche con una variante 'se')")
+    out = esegui(mondo, "parla con marco") + esegui(mondo, "1")
+    _check("Salve." in out and "di nuovo" in out,
+           "dal dialogo di Marco si raggiunge il nodo comune")
+
+
+_SRC_GS4 = (
+    "La cella è una stanza.\nIl giocatore comincia in cella.\n"
+    "Il corridoio è una stanza.\nLa cella collega nord a il corridoio.\n"
+    "Lo zaino è un contenitore.\nLo zaino è prendibile.\nLo zaino è in cella.\n"
+    "La sacca è un contenitore.\nLa sacca è prendibile.\nLa sacca è in cella.\n"
+    "La chiave è una cosa.\nLa chiave è prendibile.\nLa chiave è in cella.\n"
+    "La mela è una cosa.\nLa mela è prendibile.\nLa mela è in cella.\n"
+    "La pera è una cosa.\nLa pera è prendibile.\nLa pera è in cella.\n"
+    'Invece di vai nord se il giocatore non ha la chiave: dire "SERVE LA CHIAVE".\n')
+
+
+def test_possesso_vale_dentro_cio_che_si_porta():
+    print("[1.2.2 GS-4: 'il giocatore ha X' vale anche se X è nello zaino portato]")
+    mondo = runtime(_SRC_GS4)
+    for c in ("prendi lo zaino", "prendi la chiave", "metti la chiave nello zaino"):
+        esegui(mondo, c)
+    _check("chiave" not in mondo.inventario and mondo.giocatore_possiede("chiave"),
+           "la chiave è nello zaino, e il giocatore ce l'ha")
+    out = esegui(mondo, "nord")
+    _check("SERVE LA CHIAVE" not in out and mondo.posizione_giocatore == "corridoio",
+           "la porta riconosce la chiave nello zaino")
+    mondo = runtime(_SRC_GS4)
+    esegui(mondo, "prendi la chiave")
+    esegui(mondo, "metti la chiave nella sacca")   # la sacca resta a terra
+    _check(not mondo.giocatore_possiede("chiave") and "SERVE" in esegui(mondo, "nord"),
+           "una chiave in una sacca lasciata a terra non la si ha")
+
+
+def test_capienza_conta_il_contenuto_degli_zaini():
+    print("[1.2.2 GS-4: la capienza conta anche ciò che sta negli zaini]")
+    mondo = runtime(_SRC_GS4 + "Il giocatore può portare 2 oggetti.\n")
+    esegui(mondo, "prendi la sacca")
+    esegui(mondo, "prendi la mela")
+    esegui(mondo, "metti la mela nella sacca")
+    _check(mondo.numero_oggetti_portati() == 2, "sacca + mela dentro: 2 posti usati")
+    _check("piene" in esegui(mondo, "prendi la pera").lower() and "pera" not in mondo.inventario,
+           "la pera non si prende: la capienza è piena")
+    out = esegui(mondo, "metti la pera nella sacca")
+    _check("troppe cose" in out and not mondo.giocatore_possiede("pera"),
+           "né la si infila nella sacca portata (prima entrava senza limite)")
+    inv = esegui(mondo, "inventario")
+    _check("(2/2)" in inv and "      - La mela" in inv,
+           "l'inventario conta 2/2 e mostra la mela dentro la sacca")
+    _check("Preso" in esegui(mondo, "prendi la mela") and "mela" in mondo.inventario,
+           "tirare fuori la mela dalla sacca non richiede posto")
+
+
+def test_capienza_contenitore_gia_pieno():
+    print("[1.2.2 GS-4: un contenitore pieno pesa quanto il suo contenuto]")
+    src = _SRC_GS4 + (
+        "Il giocatore può portare 2 oggetti.\n"
+        "La cassetta è un contenitore.\nLa cassetta è prendibile.\nLa cassetta è in cella.\n"
+        "Il sale è una cosa.\nIl sale è nella cassetta.\n"
+        "Il pepe è una cosa.\nIl pepe è nella cassetta.\n"
+        "La bisaccia è un contenitore.\nLa bisaccia è prendibile.\nLa bisaccia è in cella.\n"
+        "La bisaccia dà 3 spazi.\n"
+        "Il pane è una cosa.\nIl pane è nella bisaccia.\n"
+        "Il vino è una cosa.\nIl vino è nella bisaccia.\n")
+    mondo = runtime(src)
+    _check("piene" in esegui(mondo, "prendi la cassetta").lower(),
+           "una cassetta con due oggetti dentro chiede tre posti su due")
+    _check("Preso" in esegui(mondo, "prendi la bisaccia"),
+           "una bisaccia che dà 3 spazi copre il proprio contenuto (3 su 5)")
+    _check(mondo.numero_oggetti_portati() == 3 and mondo.capacita_attuale() == 5,
+           "3 oggetti portati, capienza 2 + 3")
+
+
+def test_lascia_un_oggetto_dallo_zaino():
+    print("[1.2.2 GS-4: 'lascia X' vale anche per ciò che sta nello zaino]")
+    mondo = runtime(_SRC_GS4)
+    for c in ("prendi lo zaino", "prendi la chiave", "metti la chiave nello zaino"):
+        esegui(mondo, c)
+    out = esegui(mondo, "lascia la chiave")
+    _check("Lasciato" in out and not mondo.giocatore_possiede("chiave")
+           and "chiave" in mondo.stanze["cella"].oggetti
+           and "chiave" not in mondo.oggetti["zaino"].contenuto,
+           "la chiave esce dallo zaino e resta nella cella")
+
+
+def test_capienza_inventario_piatto_invariato():
+    print("[1.2.2 GS-4: senza contenitori la capienza si comporta come prima]")
+    src = (
+        "L'atrio è una stanza.\nIl giocatore comincia in atrio.\n"
+        "Il giocatore può portare 1 oggetti.\n"
+        "Uno zaino è una cosa.\nLo zaino è in atrio.\nLo zaino è prendibile.\n"
+        "Lo zaino dà 2 spazi.\n"
+        "Una mela è una cosa.\nLa mela è in atrio.\nLa mela è prendibile.\n")
+    mondo = runtime(src)
+    esegui(mondo, "prendi la mela")
+    _check("piene" in esegui(mondo, "prendi lo zaino").lower(),
+           "con le mani piene lo zaino non si prende, nemmeno se darebbe spazio (come prima)")
+    _check("Stai portando: (1/1)" in esegui(mondo, "inventario"), "l'inventario dice 1/1")
+
+
+# --- [1.3.0] Blocco A: sessione e turni (G-5, G-8, G-9, L-3, L-4) ------------
+
+_SRC_SESSIONE = (
+    "La cucina è una stanza.\nIl giocatore comincia in cucina.\n"
+    "L'orto è una stanza.\nLa cucina collega nord a l'orto.\n"
+    "La mela è una cosa.\nLa mela è prendibile.\nLa mela è in cucina.\n"
+    "Il carro è una cosa.\nIl carro è in cucina.\n"
+    "I passi è un contatore.\n"
+    "Ogni 1 turno: aumenta i passi.\n"
+    '"mastica" è un comando.\n'
+    'Invece di mastica la mela: dire "Avvelenata!" e adesso perdi.\n')
+
+
+def test_errori_del_parser_non_consumano_turni():
+    print("[1.3.0 G-5: i comandi non capiti non fanno passare il tempo]")
+    from gioco import elabora_comando
+    mondo = runtime(_SRC_SESSIONE)
+    for c in ("xyzzy", "prendi il fantasma", "prendi", "aiuto", "parla con nessuno", "prendila"):
+        esegui(mondo, c)
+    _check(mondo.turno_corrente == 0 and mondo.variabili["passi"] == 0,
+           "verbo ignoto, oggetto assente, argomento mancante, aiuto: nessun turno, nessun evento")
+    _check(mondo._registro_comandi == [] and mondo._storia_stati == [],
+           "e nessuna traccia nella sequenza salvabile né nella pila di ANNULLA")
+    esegui(mondo, "guarda")
+    _check(mondo.turno_corrente == 1 and mondo.variabili["passi"] == 1,
+           "un'azione vera fa passare il turno")
+    esegui(mondo, "salta sul posto")
+    esegui(mondo, "annulla")
+    _check(mondo.turno_corrente == 0, "ANNULLA disfa l'ultima azione vera, non il refuso")
+
+
+def test_mossa_senza_uscita_non_consuma_turno():
+    print("[1.4.1: una mossa verso un'uscita che non c'è non fa passare il tempo]")
+    mondo = runtime(_SRC_SESSIONE)
+    for c in ("ovest", "sud", "entra", "sali"):
+        out = esegui(mondo, c)
+    _check("Non puoi andare in quella direzione." in out, "il motore dice che di là non si va")
+    _check(mondo.turno_corrente == 0 and mondo.variabili["passi"] == 0,
+           "ovest, sud, entra, sali dove non c'è niente: nessun turno, nessun evento")
+    _check(mondo._registro_comandi == [] and mondo._storia_stati == [],
+           "e nessuna traccia nella sequenza salvabile né nella pila di ANNULLA")
+    esegui(mondo, "nord")
+    _check(mondo.posizione_giocatore == "orto" and mondo.turno_corrente == 1,
+           "una mossa che riesce fa passare il turno, come sempre")
+    esegui(mondo, "nord")
+    _check(mondo.turno_corrente == 1, "e una che non riesce, subito dopo, no")
+
+
+def test_posare_non_ristampa_la_stanza():
+    print("[1.4.1: «lascia» risponde con la sola frase, come «prendi»]")
+    mondo = runtime(_SRC_SESSIONE)
+    out_prendi = esegui(mondo, "prendi la mela")
+    out_lascia = esegui(mondo, "lascia la mela")
+    _check("---" not in out_prendi and "---" not in out_lascia and "Lasciato" in out_lascia,
+           "né «prendi» né «lascia» riscrivono la stanza")
+    _check(mondo.oggetti["mela"].posizione == "cucina" and mondo.turno_corrente == 2,
+           "la mela è tornata nella stanza, e i due gesti sono due turni")
+    _check("mela" in esegui(mondo, "guarda").lower(), "e «guarda» la mostra, nella stanza")
+    out = esegui(mondo, "prendi tutto")
+    _check(out.count("---") == 0, "«prendi tutto» non cambia")
+
+
+def test_una_direzione_non_e_una_cosa():
+    print("[1.4.1: «accendi su», «apri nord»… non sollevano un errore interno]")
+    mondo = runtime(_SRC_SESSIONE)
+    guasti = []
+    for verbo in ("accendi", "spegni", "apri", "chiudi", "mangia", "bevi"):
+        for direzione in ("su", "nord", "giù"):
+            out = esegui(mondo, f"{verbo} {direzione}")
+            if "ERRORE" in out or "Non vedi nulla del genere qui." not in out:
+                guasti.append((verbo, direzione, out.strip()[:60]))
+    _check(not guasti, f"sei verbi con tre direzioni rispondono «Non vedi nulla del genere qui.» ({guasti})")
+    out = esegui(mondo, "apri il carro")
+    _check("Non si apre." in out, "e un oggetto vero, ma non apribile, risponde come prima")
+
+
+def test_avviso_del_sinonimo_dice_il_verbo_vero_e_si_silenzia():
+    print("[1.4.1: l'avviso di un verbo del motore rimappato dice cosa faceva, e «(voluto)» lo toglie]")
+    base = 'La casa è una stanza.\n"attacca" è un comando.\n'
+
+    def avvisi(src):
+        return " ".join(w["message"] for w in strutturato(src)["warnings"])
+    senza = avvisi(base + '"colpisci" è come attacca.\n')
+    _check("è l'azione 'colpire'" in senza and "fa come 'colpisci'" not in senza,
+           "«colpisci» (primo nome della sua azione) si dice «è l'azione 'colpire'», non «fa come 'colpisci'»")
+    _check('"colpisci" è come attacca (voluto).' in senza, "e l'avviso dice come dichiarare che è voluto")
+    _check(avvisi(base + '"colpisci" è come attacca (voluto).\n') == "", "con «(voluto)» l'avviso non c'è")
+    _check(avvisi('La casa è una stanza.\n"colpisci" è come attacca (voluto).\n"attacca" è un comando.\n') == "",
+           "anche se il comando d'autore è dichiarato dopo")
+    afferra = avvisi('La casa è una stanza.\n"afferra" è come esamina.\n')
+    _check("fa come 'prendi'" in afferra, "una parola il cui primo nome è altro dice «fa come 'prendi'»")
+    _check(avvisi('La casa è una stanza.\n"afferra" è come esamina (voluto).\n') == "",
+           "e anche questa si silenzia, verso un verbo di libreria")
+    mondo = runtime(base + '"colpisci" è come attacca (voluto).\nIl cane è una cosa.\nIl cane è in casa.\n'
+                    'Invece di attacca il cane: dire "Ringhia.".\n')
+    _check(mondo is not None and "Ringhia." in esegui(mondo, "colpisci il cane"), "il sinonimo vale comunque")
+
+
+_SRC_USA = (
+    "L'atrio è una stanza.\n"
+    "Il giocatore comincia in atrio.\n"
+    "La botola è una cosa.\n"
+    "La botola è in atrio.\n"
+    "La botola è chiusa.\n"
+    "La chiave della botola è una cosa.\n"
+    "La chiave della botola è prendibile.\n"
+    "La chiave della botola è in atrio.\n"
+    "Il sasso è una cosa.\n"
+    "Il sasso è in atrio.\n"
+    "Invece di usa la chiave della botola sulla botola se la botola è chiusa: dire \"Scatta.\" e adesso la botola è aperta.\n")
+
+
+def test_usare_una_cosa_su_un_altra_a_modo_proprio():
+    print("[1.4.2: «usa X per aprire Y», «apri Y con X», la risposta a «Con cosa…», «look»]")
+    forme = ("usa chiave sulla botola", "usa la chiave su botola", "usa chiave con botola",
+             "usa chiave per aprire botola", "usa la chiave per aprire la botola",
+             "usa chiave ed apri botola", "usa la chiave per la botola",
+             "apri botola con la chiave", "apri la botola con la chiave della botola")
+    guasti = []
+    for f in forme:
+        mondo = runtime(_SRC_USA)
+        esegui(mondo, "prendi la chiave")
+        out = esegui(mondo, f)
+        if "Scatta." not in out:
+            guasti.append((f, out.strip()[:50]))
+    _check(not guasti, f"nove modi di dire la stessa cosa agganciano la regola ({guasti})")
+
+    mondo = runtime(_SRC_USA)
+    esegui(mondo, "prendi la chiave")
+    out = esegui(mondo, "usa la chiave")
+    _check("Con cosa vuoi usarla?" in out, "«usa la chiave» chiede ancora con cosa")
+    out = esegui(mondo, "botola")
+    _check("Scatta." in out, "e la risposta «botola» completa il comando")
+    mondo = runtime(_SRC_USA)
+    esegui(mondo, "prendi la chiave")
+    esegui(mondo, "usa la chiave")
+    out = esegui(mondo, "sulla botola")
+    _check("Scatta." in out, "anche «sulla botola», con la preposizione")
+    mondo = runtime(_SRC_USA)
+    esegui(mondo, "prendi la chiave")
+    esegui(mondo, "usa la chiave")
+    out = esegui(mondo, "guarda")
+    _check("Scatta." not in out and "---" in out, "una risposta che è un altro comando vale da sé")
+    out = esegui(mondo, "botola")
+    _check("Scatta." not in out, "e la domanda non resta in sospeso")
+    mondo = runtime(_SRC_USA)
+    esegui(mondo, "prendi la chiave")
+    esegui(mondo, "usa la chiave")
+    out = esegui(mondo, "fantasma")
+    _check("Scatta." not in out, "una risposta che non nomina nulla non completa niente")
+
+    mondo = runtime(_SRC_USA)
+    out = esegui(mondo, "apri la botola con il sasso")
+    _check("Non si apre." in out, "senza la regola dell'autore «apri … con …» risponde come prima")
+    esegui(mondo, "prendi la chiave")
+    esegui(mondo, "usa chiave sulla botola")
+    out = esegui(mondo, "apri botola con la chiave")
+    _check("Scatta." not in out, "e a botola aperta la regola (che vuole la botola chiusa) non scatta")
+
+    mondo = runtime(_SRC_USA)
+    _check("---" in esegui(mondo, "look"), "«look» è come «guarda»")
+
+    mondo = runtime(_SRC_USA)
+    esegui(mondo, "prendi il sasso")
+    out = esegui(mondo, "usa il sasso per la botola")
+    _check("non ha alcun effetto" in out, "una coppia senza regola dice sempre che non succede nulla")
+
+
+_SRC_PRIMA_DI_VAI = (
+    "L'atrio è una stanza.\n"
+    "Il giocatore comincia in atrio.\n"
+    "La sala è una stanza.\n"
+    "L'atrio collega est a la sala.\n"
+    "La lanterna è una cosa.\n"
+    "La lanterna è in atrio.\n"
+    "La lanterna è accesa.\n"
+    "Prima di vai nord: dire \"Il vento spegne la lanterna.\" e adesso la lanterna è spenta.\n")
+
+
+def test_prima_di_vai_senza_uscita_e_un_turno_vero():
+    print("[1.4.3: una regola «Prima di vai» che scatta verso un'uscita che non c'è fa un turno]")
+    with tempfile.TemporaryDirectory() as cartella:
+        corrente = os.getcwd()
+        os.chdir(cartella)
+        try:
+            mondo = runtime(_SRC_PRIMA_DI_VAI)
+            out = esegui(mondo, "nord")
+            _check("Il vento spegne la lanterna." in out and "Non puoi andare" in out,
+                   "la regola scatta, poi il motore dice che di là non si va")
+            _check(mondo.turno_corrente == 1 and mondo._registro_comandi == ["nord"],
+                   "il mondo è cambiato: il turno passa ed entra nella sequenza salvabile")
+            esegui(mondo, "salva prova")
+            ricaricato = runtime(_SRC_PRIMA_DI_VAI)
+            out = esegui(ricaricato, "carica prova")
+            _check("non è identica" not in out and "spenta" in ricaricato.oggetti["lanterna"].proprieta,
+                   "SALVA e CARICA ritrovano la lanterna spenta")
+            esegui(mondo, "annulla")
+            _check("accesa" in mondo.oggetti["lanterna"].proprieta and mondo.turno_corrente == 0,
+                   "ANNULLA riaccende la lanterna")
+            esegui(mondo, "sud")
+            _check(mondo.turno_corrente == 0, "senza regole, una mossa a vuoto resta senza turno")
+        finally:
+            os.chdir(corrente)
+
+
+def test_usa_con_una_direzione_non_e_un_errore():
+    print("[1.4.3: «usa la chiave su nord», «usa nord sulla chiave»… non sollevano un errore interno]")
+    guasti = []
+    for comando in ("usa la chiave su nord", "usa nord sulla chiave", "usa su con la chiave",
+                    "usa la chiave per aprire nord", "usa la chiave ed apri su", "usa nord"):
+        mondo = runtime(_SRC_USA)
+        esegui(mondo, "prendi la chiave")
+        out = esegui(mondo, comando)
+        if "ERRORE" in out or "Non vedi nulla del genere qui." not in out or mondo.turno_corrente != 1:
+            guasti.append((comando, out.strip()[:60], mondo.turno_corrente))
+    _check(not guasti, f"sei frasi rispondono «Non vedi nulla del genere qui.», senza turno ({guasti})")
+
+
+def test_la_domanda_di_usa_non_consuma_turni():
+    print("[1.4.3: «Con cosa vuoi usarla?» non fa passare il tempo; la risposta sì]")
+    mondo = runtime(_SRC_USA)
+    esegui(mondo, "prendi la chiave")
+    out = esegui(mondo, "usa la chiave")
+    _check("Con cosa vuoi usarla?" in out and mondo.turno_corrente == 1
+           and mondo._registro_comandi == ["prendi la chiave"],
+           "la domanda non è un turno, come «Cosa vuoi esaminare?»")
+    out = esegui(mondo, "sulla botola")
+    _check("Scatta." in out and mondo.turno_corrente == 2,
+           "la risposta compie l'azione in un turno solo")
+    _check(mondo._registro_comandi[-1] == "usa la chiave della botola su botola",
+           "e nella sequenza salvabile c'è il comando intero, in minuscolo")
+    esegui(mondo, "annulla")
+    _check("chiusa" in mondo.oggetti["botola"].proprieta and mondo.turno_corrente == 1,
+           "ANNULLA disfa l'azione intera")
+
+    # Un salvataggio della 1.4.2, dove la domanda costava un turno: si carica, e il
+    # motore dice che la differenza viene dalla versione, non dalla storia.
+    from gioco import dati_salvataggio, carica_da_dati
+    vecchio = runtime(_SRC_USA)
+    for c in ("prendi la chiave", "usa la chiave", "botola"):
+        esegui(vecchio, c)
+    dati = dati_salvataggio(vecchio)
+    dati["comandi"] = ["prendi la chiave", "usa la chiave", "usa La chiave della botola su botola"]
+    dati["turno"], dati["motore"] = 3, "1.4.2"
+    dati["impronta"] = "impronta della 1.4.2"
+    nuovo = runtime(_SRC_USA)
+    with contextlib.redirect_stdout(io.StringIO()):
+        ok, msg = carica_da_dati(nuovo, dati)
+    _check(ok and "aperta" in nuovo.oggetti["botola"].proprieta and "FAVELLA 1.4.2" in msg
+           and "la storia è cambiata" not in msg,
+           "un salvataggio della 1.4.2 si carica, e il messaggio nomina il motore")
+
+
+def test_parole_e_comandi_per_lo_studio():
+    print("[Studio 1.0: analizza_parole e le frasi di verbi, sinonimi e modo dei comandi]")
+    import favella_server
+    from strumenti_ide import serializza_frase, analizza_parole
+    src = ('La casa è una stanza.\n"getta" è un comando.\n"accelera" è un comando senza oggetto.\n'
+           '"lancia" è come getta.\n"colpisci" è come attacca (voluto).\n"butta via il cibo" è come "getta il cibo".\n'
+           '"attacca" è un comando.\nI comandi si scrivono oppure si scelgono con i pulsanti.\n')
+    with tempfile.TemporaryDirectory() as cartella:
+        percorso = os.path.join(cartella, "p.fav")
+        with open(percorso, "w", encoding="utf-8") as f:
+            f.write(src)
+        parole = analizza_parole(percorso)
+        via_rpc = favella_server.rpc_world_words({"path": percorso})
+    _check(parole["ok"] and via_rpc == parole, "analizza_parole risponde, anche via world.words")
+    _check([v["word"] for v in parole["verbs"]] == ["getta", "accelera", "attacca"]
+           and parole["verbs"][1]["noObject"] is True, "verbi d'autore, con «senza oggetto»")
+    sin = {s["word"]: s for s in parole["synonyms"]}
+    _check(sin["lancia"]["target"] == "getta" and not sin["lancia"]["voluto"], "un sinonimo semplice")
+    _check(sin["colpisci"]["target"] == "attacca" and sin["colpisci"]["voluto"], "un sinonimo «(voluto)»")
+    _check(sin["butta via il cibo"]["target"] == "getta il cibo", "un sinonimo di più parole")
+    _check(parole["mode"] == "entrambi" and parole["modeSpan"]["line"] == 8, "il modo dei comandi, con la sua riga")
+    for spec, atteso in (
+            ({"op": "verb_decl", "word": "getta"}, '"getta" è un comando.'),
+            ({"op": "verb_decl", "word": "accelera", "noObject": True}, '"accelera" è un comando senza oggetto.'),
+            ({"op": "synonym", "word": "lancia", "target": "getta"}, '"lancia" è come getta.'),
+            ({"op": "synonym", "word": "colpisci", "target": "attacca", "voluto": True}, '"colpisci" è come attacca (voluto).'),
+            ({"op": "synonym", "word": "butta via il cibo", "target": "getta il cibo"}, '"butta via il cibo" è come "getta il cibo".'),
+            ({"op": "commands_mode", "mode": "testo"}, "I comandi si scrivono."),
+            ({"op": "commands_mode", "mode": "pulsanti"}, "I comandi si scelgono con i pulsanti."),
+            ({"op": "commands_mode", "mode": "entrambi"}, "I comandi si scrivono oppure si scelgono con i pulsanti.")):
+        _check(serializza_frase(spec) == {"ok": True, "text": atteso}, f"frase: {atteso}")
+    # andata e ritorno: ciò che si scrive si rilegge uguale
+    righe = [serializza_frase(s)["text"] for s in (
+        {"op": "verb_decl", "word": "getta"}, {"op": "synonym", "word": "lancia", "target": "getta"},
+        {"op": "synonym", "word": "colpisci", "target": "attacca", "voluto": True},
+        {"op": "verb_decl", "word": "attacca"}, {"op": "commands_mode", "mode": "pulsanti"})]
+    with tempfile.TemporaryDirectory() as cartella:
+        percorso = os.path.join(cartella, "q.fav")
+        with open(percorso, "w", encoding="utf-8") as f:
+            f.write("La casa è una stanza.\n" + "\n".join(righe) + "\n")
+        ritorno = analizza_parole(percorso)
+    _check(ritorno["ok"] and ritorno["mode"] == "pulsanti"
+           and {s["word"] for s in ritorno["synonyms"]} == {"lancia", "colpisci"},
+           "le frasi scritte dall'editor si rileggono uguali")
+
+
+def test_esci_chiede_conferma():
+    print("[1.3.0 G-8: 'esci' chiede conferma prima di chiudere la partita]")
+    from gioco import elabora_comando
+    mondo = runtime(_SRC_SESSIONE)
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        c1 = elabora_comando(mondo, "esci")
+        c2 = elabora_comando(mondo, "no")
+    _check(c1 is True and c2 is True and "davvero" in buf.getvalue(),
+           "la prima volta chiede; 'no' fa continuare")
+    esegui(mondo, "esci")
+    out = esegui(mondo, "prendi la mela")
+    _check("Preso" in out and not mondo._uscita_richiesta,
+           "un altro comando fa cadere la domanda e vale da sé")
+    with contextlib.redirect_stdout(io.StringIO()):
+        elabora_comando(mondo, "esci")
+        c3 = elabora_comando(mondo, "sì")
+    _check(c3 is False and mondo._uscita_richiesta, "'sì' chiude la partita")
+    _check(mondo.turno_corrente == 1, "la domanda e la risposta non consumano turni")
+
+
+def test_esci_come_movimento():
+    print("[1.3.0 G-8: 'esci' è un movimento dove c'è un'uscita «fuori»]")
+    mondo = runtime(
+        "La casa è una stanza.\nIl cortile è una stanza.\n"
+        "Fuori e dentro sono direzioni opposte.\nLa casa collega fuori a il cortile.\n")
+    esegui(mondo, "esci")
+    _check(mondo.posizione_giocatore == "cortile", "dalla casa si esce nel cortile")
+    out = esegui(mondo, "esci")
+    _check("davvero" in out and mondo.posizione_giocatore == "cortile",
+           "dal cortile, senza uscita «fuori», chiede di chiudere la partita")
+
+
+def test_dopo_la_fine_si_puo_annullare_e_ricominciare():
+    print("[1.3.0 G-8: a partita finita ANNULLA, RICOMINCIA e FINE]")
+    from gioco import elabora_comando
+    mondo = runtime(_SRC_SESSIONE)
+    esegui(mondo, "prendi la mela")
+    out = esegui(mondo, "mastica la mela")
+    _check(mondo.stato_partita == "persa" and "ANNULLA" in out,
+           "alla fine il motore dice cosa si può fare")
+    turno = mondo.turno_corrente
+    out = esegui(mondo, "guarda")
+    _check(mondo.turno_corrente == turno and "RICOMINCIA" in out,
+           "un altro comando non fa passare turni e ripete le possibilità")
+    esegui(mondo, "annulla")
+    _check(mondo.stato_partita == "in_corso" and "mela" in mondo.inventario,
+           "ANNULLA riporta a prima del turno fatale")
+    esegui(mondo, "mastica la mela")
+    esegui(mondo, "ricomincia")
+    _check(mondo.stato_partita == "in_corso" and mondo.turno_corrente == 0
+           and "mela" not in mondo.inventario and mondo.variabili["passi"] == 0,
+           "RICOMINCIA riporta al mondo iniziale")
+    esegui(mondo, "mastica la mela")
+    with contextlib.redirect_stdout(io.StringIO()):
+        continua = elabora_comando(mondo, "fine")
+    _check(continua is False and mondo._uscita_richiesta, "FINE chiude")
+
+
+def test_ricomincia_durante_la_partita():
+    print("[1.3.0 G-8: RICOMINCIA durante la partita chiede conferma]")
+    mondo = runtime(_SRC_SESSIONE)
+    esegui(mondo, "prendi la mela")
+    out = esegui(mondo, "ricomincia")
+    _check("davvero" in out and "mela" in mondo.inventario, "prima chiede")
+    esegui(mondo, "sì")
+    _check(mondo.turno_corrente == 0 and "mela" not in mondo.inventario, "poi ricomincia")
+
+
+def test_quando_non_scatta_se_vero_in_partenza():
+    print("[1.3.0 G-9: 'Quando' non scatta al primo turno se era già vero]")
+    mondo = runtime(
+        "La cucina è una stanza.\nIl giocatore comincia in cucina.\n"
+        "L'orto è una stanza.\nLa cucina collega nord a l'orto.\n"
+        'Quando il giocatore è in cucina: dire "DEMONE".\n')
+    out = esegui(mondo, "guarda")
+    _check("DEMONE" not in out, "partire in cucina non è un fronte")
+    esegui(mondo, "nord")
+    _check("DEMONE" in esegui(mondo, "sud"), "rientrare in cucina lo è")
+
+
+def test_preparare_i_demoni_non_consuma_il_caso():
+    print("[1.3.0 L-4: la memoria dei demoni si prepara senza pescare dal caso]")
+    import random
+    from strutture import SEME_CASUALE_DEFAULT
+    mondo = runtime(
+        "La cucina è una stanza.\n"
+        'Quando càpita (1 su 2): dire "caso".\n')
+    _check(mondo.rng.getstate() == random.Random(SEME_CASUALE_DEFAULT).getstate(),
+           "il generatore del mondo è intatto all'inizio della partita")
+
+
+def test_salva_e_carica_non_intercettano_azioni_sugli_oggetti():
+    print("[1.3.0 L-3: 'carica il carro' non è un caricamento]")
+    mondo = runtime(_SRC_SESSIONE)
+    archivio = _ArchivioMemoria()
+    mondo.archivio_salvataggi = archivio
+    out = esegui(mondo, "carica il carro")
+    _check("salvataggio" not in out.lower(), "il carro presente: non si cerca un salvataggio")
+    esegui(mondo, "salva mattina")
+    _check("mattina" in archivio.d, "'salva mattina' salva come sempre")
+
+
+# --- [1.3.0] Blocco B: lessico e diagnostica (G-1, G-2, L-9) -------------------
+
+_BASE_B = ("La cucina è una stanza.\nLa mela è una cosa.\nLa mela è in cucina.\n"
+           "Il livello è uno stato.\nIl livello è basso.\n")
+
+
+def test_parole_chiave_non_spezzano_gli_aggettivi():
+    print("[1.3.0 G-1: 'unta', 'unica', 'alto', 'cometa'… non vengono spezzati]")
+    for agg in ("unta", "unica", "unito", "alto", "allegro", "cometa", "menomato", "allarme"):
+        contesti = (f"La mela è {agg}.",
+                    f'Invece di esamina la mela se la mela è {agg}: dire "x".',
+                    f'Invece di esamina la mela: dire "x" e adesso la mela è {agg}.',
+                    f"Il livello è {agg}.",
+                    f'Invece di esamina la mela se il livello è {agg}: dire "x".',
+                    f'Invece di esamina la mela: dire "x" e adesso il livello è {agg}.')
+        falliti = [c for c in contesti if compila(_BASE_B + c + "\n")[0] is None]
+        _check(not falliti, f"«{agg}» compila in tutti e sei i contesti")
+    mondo = runtime(_BASE_B + 'Invece di esamina la mela se il livello è alto: dire "ALTO".\n'
+                    'Invece di prendi la mela: dire "su" e adesso il livello è alto.\n')
+    esegui(mondo, "prendi la mela")
+    _check("ALTO" in esegui(mondo, "esamina la mela"), "e la condizione funziona a runtime")
+
+
+def test_parole_chiave_senza_distinzione_di_maiuscole():
+    print("[1.3.0 G-2: 'invece di', 'la descrizione', 'Il giocatore' in condizione…]")
+    frasi = ('invece di prendi la mela: dire "no".',
+             'la descrizione della cucina è "x".',
+             'il giocatore comincia in cucina.',
+             'INVECE DI esamina la mela SE Il giocatore ha la mela: dire "x".',
+             'ogni 3 turni: dire "tic".')
+    for f in frasi:
+        _check(compila(_BASE_B + f + "\n")[0] is not None, f"compila: {f}")
+
+
+def test_errori_di_sintassi_in_italiano():
+    print("[1.3.0 G-2: i messaggi non mostrano i nomi interni del parser]")
+    casi = ('invece di prendi la mela dire "no".',
+            'Invece di esamina la mela se Il giocatore ha: dire "x".',
+            "La luce è una cosa.\nLa luce è in cucina.\nLa luce è molto accesa.")
+    for c in casi:
+        _, log = compila(_BASE_B + c + "\n")
+        _check("Mi aspettavo" in log and not re.search(r"__ANON|_KW_|\bLPAR\b|\bDOT\b|\bCOLON\b", log),
+               f"messaggio leggibile per: {c.splitlines()[-1]}")
+    _, log = compila(_BASE_B + "La mela è molto rossa.\n")
+    _check("Entità sconosciuta" not in log and "una sola parola" in log,
+           "'molto rossa' non è scambiata per un'entità: si spiega la proprietà")
+    _, log = compila(_BASE_B + 'Invece di prendi la mela: dire "no."\n')
+    _check("fuori dalle virgolette" in log, "il punto dentro le virgolette ha il suo consiglio")
+
+
+def test_tutti_gli_errori_in_una_volta():
+    print("[1.3.0 G-2: il compilatore mostra tutti gli errori, non solo il primo]")
+    src = _BASE_B + ("La mela è rossa!\nLa pera è in cucina.\n"
+                     'Invece di prendi la mela dire "x".\nLa mela è lucida.\n')
+    mondo, log = compila(src)
+    _check(mondo is None and "3 frasi da correggere" in log, "tre errori in una compilazione")
+    _check("Riga 6" in log and "Riga 7" in log and "Riga 8" in log, "ognuno con la sua riga")
+    r = strutturato(src)
+    _check(not r["ok"] and [e["line"] for e in r["errors"]] == [6, 7, 8],
+           "anche l'IDE riceve i tre errori con le righe giuste")
+
+
+def test_consiglio_su_o_per_oppure():
+    print("[1.3.0 L-9: «o» al posto di «oppure» ha un consiglio]")
+    _, log = compila(_BASE_B + 'Invece di esamina la mela se la mela è rossa o la mela è verde: dire "x".\n')
+    _check("scrivi «oppure»" in log, "l'errore spiega che «o» vuol dire ovest")
+
+
+# --- [1.3.0] Blocco C: invarianti del mondo e moduli (G-3, M-11) ---------------
+
+_BASE_C = "La cucina è una stanza.\nIl giardino è una stanza.\nLa cucina collega nord a il giardino.\n"
+
+
+def test_nomi_che_si_scontrano_con_la_grammatica():
+    print("[1.3.0 G-3: nomi vietati e collisioni fra stanze, oggetti e stati]")
+    casi = {
+        "Il posto è una cosa.": "parola riservata",
+        "Il giocatore è una cosa.": "parola riservata",
+        "L'inventario è una cosa.": "parola riservata",
+        "La cucina è una cosa.": "sia una stanza sia un oggetto",
+        "La mela è una cosa.\nIl giardino collega sud a la mela.": "sia una stanza sia un oggetto",
+        "La luce è una cosa.\nLa luce è uno stato.": "sia un'entità",
+    }
+    for frase, atteso in casi.items():
+        mondo, log = compila(_BASE_C + frase + "\n")
+        _check(mondo is None and atteso in log, f"errore chiaro per: {frase.splitlines()[-1]}")
+    mondo, _ = compila(_BASE_C + "La stanza del trono è una stanza.\nLa cosa è una cosa.\n")
+    _check(mondo is not None, "le altre parole riservate restano nomi leciti ('la cosa')")
+
+
+def test_oggetto_collocato_in_due_posti():
+    print("[1.3.0 G-3: un oggetto collocato in due posti diversi è un errore]")
+    mondo, log = compila(_BASE_C + "La mela è una cosa.\nLa mela è in cucina.\nLa mela è nel giardino.\n")
+    _check(mondo is None and "collocato in due posti" in log, "errore con i due posti")
+    mondo, _ = compila(_BASE_C + "La mela è una cosa.\nLa mela è in cucina.\nLa mela è in cucina.\n")
+    _check(mondo is not None, "ripetere lo stesso posto è innocuo")
+    mondo, _ = compila(_BASE_C + "La mela è una cosa.\nLa mela è in cucina.\nIl giocatore ha la mela.\n")
+    _check(mondo is not None and "mela" in mondo.inventario,
+           "'Il giocatore ha X' dopo una collocazione resta lecito (vince l'inventario)")
+
+
+def test_dichiarazioni_doppie_avvisano():
+    print("[1.3.0 G-3: due descrizioni o due valori iniziali diversi: avviso]")
+    _, log = compila(_BASE_C + 'La descrizione della cucina è "A".\nLa descrizione della cucina è "B".\n')
+    _check("due descrizioni di base diverse" in log, "descrizione doppia")
+    _, log = compila(_BASE_C + "Il punteggio è un contatore.\nIl punteggio parte da 5.\n"
+                     "Il punteggio parte da 0.\nIl meteo è uno stato.\nIl meteo è sereno.\nIl meteo è nuvoloso.\n")
+    _check("due valori iniziali diversi (5 e 0)" in log and "(sereno e nuvoloso)" in log,
+           "valori iniziali doppi di contatori e stati")
+
+
+def test_stanza_nata_da_un_refuso_in_collega():
+    print("[1.3.0 G-3: una stanza nata solo da 'collega' e vuota è segnalata]")
+    _, log = compila("La cucina è una stanza.\nIl giardino è una stanza.\n"
+                     "La cucina collega nord a il giardno.\n")
+    _check("«giardno» esiste solo perché compare in «collega»" in log and "giardino" in log,
+           "avviso con il nome giusto suggerito")
+
+
+def test_includi_la_libreria():
+    print("[1.3.0 M-11: 'Includi la libreria \"verbi\".' senza copiare il modulo]")
+    mondo, log = compila("La cella è una stanza.\nIncludi la libreria \"verbi\".\n"
+                         'La lampada è una cosa.\nLa lampada è in cella.\n'
+                         'Invece di brucia la lampada: dire "Fumo.".\n')
+    _check(mondo is not None and "brucia" in mondo.verbi_personalizzati,
+           "il modulo della libreria standard è incluso")
+    _, log = compila('La cella è una stanza.\nIncludi la libreria "inesistente".\n')
+    _check("non ha il modulo" in log and "verbi" in log, "un modulo sconosciuto elenca quelli disponibili")
+
+
+def test_partenza_implicita_con_piu_file():
+    print("[1.3.0 M-11: senza 'Il giocatore comincia' e con più file, avviso]")
+    cartella = tempfile.mkdtemp()
+    with open(os.path.join(cartella, "luoghi.fav"), "w", encoding="utf-8") as f:
+        f.write("La soffitta è una stanza.\n")
+    radice = os.path.join(cartella, "storia.fav")
+    with open(radice, "w", encoding="utf-8") as f:
+        f.write('Includi "luoghi.fav".\nLa cucina è una stanza.\n')
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        mondo = analizza_file(radice)
+    _check(mondo is not None and "Manca 'Il giocatore comincia" in buf.getvalue()
+           and "soffitta" in buf.getvalue(), "l'avviso dice da dove partirà la partita")
+
+
+# --- [1.3.0] Blocco D: verbi, preposizioni, parser, italiano -----------------
+
+_SRC_D = (
+    "La cucina è una stanza.\n"
+    "La cantina è una stanza.\n"
+    "La soffitta è una stanza.\n"
+    "Il giocatore comincia in cucina.\n"
+    "La cucina collega giù a la cantina.\n"
+    "La cucina collega nordest a la soffitta.\n"
+    "Il tavolo è una cosa.\nIl tavolo è in cucina.\nIl tavolo è un supporto.\n"
+    "La mela è una cosa.\nLa mela è sul tavolo.\nLa mela è prendibile.\n"
+    "La mela è commestibile.\n"
+    "La chiave rossa è una cosa.\nLa chiave rossa è in cucina.\nLa chiave rossa è prendibile.\n"
+    "La chiave blu è una cosa.\nLa chiave blu è in cucina.\nLa chiave blu è prendibile.\n"
+    "La scatola è una cosa.\nLa scatola è in cucina.\nLa scatola è un contenitore.\n"
+    "La scatola è chiusa.\nLa scatola è apribile.\n"
+    "La moneta è una cosa.\nLa moneta è nella scatola.\nLa moneta è prendibile.\n"
+    "La tazza con il manico è una cosa.\nLa tazza con il manico è in cucina.\n"
+    "La tazza con il manico è prendibile.\n"
+    "La lampada è una cosa.\nLa lampada è in cucina.\nLa lampada è accendibile.\n"
+    "La lampada è spenta.\n"
+    "Il vino è una cosa.\nIl vino è in cucina.\nIl vino è bevibile.\nIl vino è prendibile.\n"
+)
+
+
+def test_direzioni_su_giu_e_intermedie():
+    print("[1.3.0 G-4: su, giù e le direzioni intermedie; entra, sali, scendi]")
+    mondo = runtime(_SRC_D)
+    _check(mondo is not None, "la storia con 'giù' e 'nordest' compila")
+    esegui(mondo, "giù")
+    _check(mondo.posizione_giocatore == "cantina", "'giù' porta in cantina")
+    esegui(mondo, "sali")
+    _check(mondo.posizione_giocatore == "cucina", "'sali' torna su (ritorno automatico)")
+    esegui(mondo, "scendi")
+    _check(mondo.posizione_giocatore == "cantina", "'scendi' va giù")
+    esegui(mondo, "vai su")
+    esegui(mondo, "nord-est")
+    _check(mondo.posizione_giocatore == "soffitta", "'nord-est' vale 'nordest'")
+    esegui(mondo, "sudovest")
+    _check(mondo.posizione_giocatore == "cucina", "'sudovest' è l'opposta di 'nordest'")
+    out = esegui(mondo, "entra")
+    _check("Non puoi andare in quella direzione." in out, "'entra' senza un'uscita «dentro»")
+    src = ("L'aia è una stanza.\nLa stalla è una stanza.\nIl giocatore comincia in aia.\n"
+           "Dentro e fuori sono direzioni opposte.\nL'aia collega dentro a la stalla.\n")
+    mondo = runtime(src)
+    esegui(mondo, "entra nella stalla")
+    _check(mondo.posizione_giocatore == "stalla", "'entra nella stalla' va dentro")
+    esegui(mondo, "esci dalla stalla")
+    _check(mondo.posizione_giocatore == "aia", "'esci dalla stalla' va fuori")
+
+
+def test_verbi_nuovi_della_libreria():
+    print("[1.3.0 G-4: apri, chiudi, accendi, spegni, mangia, bevi, aspetta, x, l]")
+    mondo = runtime(_SRC_D)
+    out = esegui(mondo, "apri la scatola")
+    _check("Apri la scatola." in out and "Dentro vedi: una moneta." in out,
+           "'apri' apre un contenitore apribile e ne mostra il contenuto")
+    out = esegui(mondo, "chiudi la scatola")
+    _check("Chiudi la scatola." in out and "chiusa" in mondo.oggetti["scatola"].proprieta,
+           "'chiudi' la richiude")
+    out = esegui(mondo, "chiudi la scatola")
+    _check("È già chiusa." in out, "già chiusa, al femminile")
+    esegui(mondo, "accendi la lampada")
+    _check("accesa" in mondo.oggetti["lampada"].proprieta
+           and "spenta" not in mondo.oggetti["lampada"].proprieta, "'accendi' accende")
+    esegui(mondo, "spegnila")
+    _check("spenta" in mondo.oggetti["lampada"].proprieta, "'spegnila' spegne la lampada")
+    out = esegui(mondo, "apri il tavolo")
+    _check("Non si apre." in out, "un oggetto non apribile non si apre")
+    esegui(mondo, "mangia la mela")
+    _check("mela" not in mondo.oggetti_raggiungibili(), "'mangia' consuma un oggetto commestibile")
+    esegui(mondo, "bevi il vino")
+    _check("vino" not in mondo.oggetti_raggiungibili(), "'bevi' consuma un oggetto bevibile")
+    t = mondo.turno_corrente
+    _check("Il tempo passa." in esegui(mondo, "z") and mondo.turno_corrente == t + 1,
+           "'z' fa passare un turno")
+    _check("È un oggetto come tanti." in esegui(mondo, "x tavolo"), "'x' esamina")
+    _check("--- La cucina ---" in esegui(mondo, "l"), "'l' guarda")
+
+
+def test_verbi_nuovi_cedono_ai_verbi_d_autore():
+    print("[1.3.0 G-4: un verbo d'autore omonimo vince sui verbi nuovi]")
+    src = ("La cella è una stanza.\nIl giocatore comincia in cella.\n"
+           "La porta è una cosa.\nLa porta è in cella.\n"
+           '"chiudi" è un comando.\n"aspetta" è un comando senza oggetto.\n'
+           'Invece di chiudi la porta: dire "Sbam.".\n'
+           'Invece di aspetta: dire "Aspetti a modo tuo.".\n')
+    mondo = runtime(src)
+    _check("Sbam." in esegui(mondo, "chiudi la porta"), "la regola d'autore su 'chiudi'")
+    _check("Aspetti a modo tuo." in esegui(mondo, "aspetta"), "la regola d'autore su 'aspetta'")
+    # 'z' resta l'azione di libreria «aspettare», il cui verbo principale è
+    # 'aspetta': vale la regola d'autore scritta con 'aspetta' (come in GS-1).
+    _check("Aspetti a modo tuo." in esegui(mondo, "z"), "'z' segue la regola scritta con 'aspetta'")
+
+
+def test_preposizioni_di_termine_e_provenienza():
+    print("[1.3.0 G-7: 'a', 'da', 'sopra' nei comandi e nelle regole]")
+    src = _SRC_D + (
+        "La guardia è un personaggio.\nLa guardia è in cucina.\n"
+        'Il dialogo della guardia comincia con "saluto".\n'
+        'La guardia al nodo "saluto" dice "Salve.".\n'
+        'Al nodo "saluto" l\'opzione "Addio." chiude il dialogo.\n'
+        'Invece di dai la mela alla guardia: dire "La guardia ringrazia.".\n'
+        'Invece di mostra la moneta alla guardia: dire "La guardia annuisce.".\n')
+    mondo = runtime(src)
+    _check(mondo is not None, "'Invece di dai la mela alla guardia' compila")
+    out = esegui(mondo, "prendi la mela dal tavolo")
+    _check("Preso: la mela." in out, "'prendi la mela dal tavolo'")
+    _check("La guardia ringrazia." in esegui(mondo, "dai la mela alla guardia"),
+           "'dai la mela alla guardia' trova la regola")
+    esegui(mondo, "apri la scatola")
+    esegui(mondo, "prendi la moneta")
+    _check("La guardia annuisce." in esegui(mondo, "mostrala alla guardia"),
+           "'mostrala alla guardia': pronome e preposizione insieme")
+    out = esegui(mondo, "metti la moneta sopra il tavolo")
+    _check("Hai messo la moneta sul tavolo." in out, "'sopra' vale come 'su'")
+    out = esegui(mondo, "prendi la moneta dalla scatola")
+    _check("La moneta non è nella scatola." in out, "'dalla scatola' controlla da dove")
+    esegui(mondo, "prendi la moneta")
+    out = esegui(mondo, "lascia la moneta sull'altare")
+    _check("Non vedo 'altare' qui." in out, "'sull'altare' si divide in preposizione e nome")
+    out = esegui(mondo, "lascia la moneta sulla scatola")
+    _check("Hai messo la moneta nella scatola." in out,
+           "'lascia X su Y' mette X in/su Y")
+
+
+def test_nomi_con_preposizioni_e_ricerca_per_parole():
+    print("[1.3.0 M-5: nomi con preposizioni; ricerca per parole, non per lettere]")
+    src = _SRC_D + ("Il manico di scopa è una cosa.\nIl manico di scopa è in cucina.\n"
+                    "Il manico di scopa è prendibile.\n")
+    mondo = runtime(src)
+    esegui(mondo, "prendi la tazza con il manico")
+    _check(mondo.giocatore_possiede("tazza con il manico")
+           and not mondo.giocatore_possiede("manico di scopa"),
+           "'la tazza con il manico' è un nome, anche con un altro 'manico' in scena")
+    out = esegui(mondo, "prendi a")
+    _check("Non vedo 'a' qui." in out, "'prendi a' non propone ogni oggetto con una a")
+    out = esegui(mondo, "prendi ave")
+    _check("Non vedo 'ave' qui." in out, "'ave' non trova le chiAVi")
+    esegui(mondo, "prendi lamp")
+    _check("Non puoi prenderla." in esegui(mondo, "prendi lamp"),
+           "l'inizio di una parola ('lamp') trova la lampada")
+
+
+def test_disambiguazione_con_seguito():
+    print("[1.3.0 M-4, M-5: «Quale intendi…?» con i nomi e con la risposta]")
+    mondo = runtime(_SRC_D)
+    out = esegui(mondo, "prendi la chiave")
+    _check("Quale intendi: la chiave rossa o la chiave blu?" in out,
+           "la domanda usa i nomi della storia, nell'ordine della storia")
+    _check(mondo.turno_corrente == 0, "la domanda non consuma un turno")
+    out = esegui(mondo, "blu")
+    _check("Preso: la chiave blu." in out, "la risposta 'blu' completa il comando")
+    _check(mondo.ultimo_comando == "prendi chiave blu", "ANCORA ripeterà il comando completato")
+    out = esegui(mondo, "prendi chiave")
+    _check("Preso: la chiave rossa." in out, "'prendi' sceglie da sé la chiave non ancora presa")
+    esegui(mondo, "esamina la chiave")
+    out = esegui(mondo, "2")
+    _check("chiave blu" in mondo.ultimo_comando, "la risposta può essere un numero d'ordine")
+    esegui(mondo, "esamina la chiave")
+    out = esegui(mondo, "inventario")
+    _check("Stai portando" in out, "una risposta che non nomina un candidato è un comando nuovo")
+
+
+def test_tutto_ed_elenchi():
+    print("[1.3.0 M-5: 'prendi tutto', 'lascia tutto', elenchi di oggetti]")
+    mondo = runtime(_SRC_D)
+    out = esegui(mondo, "prendi tutto")
+    _check("Preso: la mela." in out and "Preso: la chiave rossa." in out
+           and "Preso: il vino." in out and "lampada" not in mondo.inventario,
+           "'prendi tutto' prende ciò che si può prendere")
+    _check(mondo.turno_corrente == 1, "tutto in un solo turno")
+    out = esegui(mondo, "lascia tutto")
+    _check(not mondo.inventario and out.count("Lasciato:") == 5, "'lascia tutto'")
+    out = esegui(mondo, "prendi la mela e la chiave blu")
+    _check(mondo.inventario == {"mela", "chiave blu"}, "'prendi la mela e la chiave blu'")
+    esegui(mondo, "apri la scatola")
+    out = esegui(mondo, "metti tutto nella scatola")
+    _check({"mela", "chiave blu"} <= mondo.oggetti["scatola"].contenuto,
+           "'metti tutto nella scatola'")
+    out = esegui(mondo, "prendi tutto dalla scatola")
+    _check(mondo.inventario == {"mela", "chiave blu", "moneta"}, "'prendi tutto dalla scatola'")
+    esegui(mondo, "lascia tutto")
+    esegui(mondo, "prendi tutto")
+    mondo2 = runtime("La stanza vuota è una stanza.\nIl giocatore comincia in stanza vuota.\n")
+    t = mondo2.turno_corrente
+    out = esegui(mondo2, "prendi tutto")
+    _check("Non c'è niente da prendere." in out and mondo2.turno_corrente == t,
+           "niente da prendere: messaggio e nessun turno")
+
+
+def test_italiano_dei_messaggi():
+    print("[1.3.0 M-4: articoli, preposizioni articolate e accordi nei messaggi]")
+    src = _SRC_D + ("Lo zaino è una cosa.\nLo zaino è in cucina.\nLo zaino è un contenitore.\n"
+                    "Lo zaino è prendibile.\nLa statua è una cosa.\nLa statua è in cucina.\n"
+                    'Invece di esamina la statua: dire "Accanto a te c\'è [mela]. [Mela] è rossa.".\n')
+    mondo = runtime(src)
+    _check("Preso: la chiave rossa." in esegui(mondo, "prendi la chiave rossa"), "«Preso: la …»")
+    _check("Hai messo la chiave rossa nello zaino." in esegui(mondo, "metti la chiave rossa nello zaino"),
+           "«nello zaino», non «in Lo zaino»")
+    _check("Non puoi prenderla." in esegui(mondo, "prendi la statua"), "pronome al femminile")
+    _check("Cosa vuoi prendere?" in esegui(mondo, "prendi"), "«Cosa vuoi prendere?»")
+    _check("Dove vuoi andare?" in esegui(mondo, "vai"), "«Dove vuoi andare?»")
+    out = esegui(mondo, "esamina la statua")
+    _check("Accanto a te c'è la mela. La mela è rossa." in out,
+           "segnaposto a metà frase in minuscolo, a inizio frase o '[Mela]' in maiuscolo")
+
+
+def test_la_stanza_mostra_cio_che_sta_sui_supporti():
+    print("[1.3.0 M-5: la stanza elenca il contenuto di supporti e contenitori aperti]")
+    mondo = runtime(_SRC_D)
+    out = esegui(mondo, "guarda")
+    _check("Sul tavolo: una mela." in out, "«Sul tavolo: una mela.»")
+    _check("Nella scatola" not in out, "il contenuto di un contenitore chiuso non si vede")
+    esegui(mondo, "apri la scatola")
+    _check("Nella scatola: una moneta." in esegui(mondo, "guarda"), "aperta, si vede")
+    esegui(mondo, "prendi la moneta")
+    esegui(mondo, "prendi la mela")
+    out = esegui(mondo, "guarda")
+    _check("Sul tavolo" not in out and "Nella scatola" not in out,
+           "un supporto vuoto non ha la sua riga")
+
+
+# --- [1.3.0] Blocco E: il modello del mondo --------------------------------
+
+_SRC_E = (
+    "La cucina è una stanza.\nIl corridoio è una stanza.\nLa dispensa è una stanza.\n"
+    "Il giocatore comincia in cucina.\nLa cucina collega nord a il corridoio.\n"
+    "La guardia è un personaggio.\nLa guardia è in corridoio.\n"
+    "Il tavolo è una cosa.\nIl tavolo è in cucina.\nIl tavolo è un supporto.\n"
+    "La scatola è una cosa.\nLa scatola è sul tavolo.\nLa scatola è un contenitore.\n"
+    "La chiave è una cosa.\nLa chiave è nella scatola.\nLa chiave è prendibile.\n"
+    "La mela è una cosa.\nLa mela è in cucina.\nLa mela è prendibile.\n"
+)
+
+
+def test_condizioni_sulla_posizione_degli_oggetti():
+    print("[1.3.0 G-6: 'se la guardia è in cucina', 'è nella scatola', 'è qui']")
+    src = _SRC_E + (
+        'Invece di esamina il tavolo se la guardia è in cucina: dire "La guardia ti osserva.".\n'
+        'Invece di esamina il tavolo se la chiave è sul tavolo e la guardia non è qui: dire "Sul tavolo, la chiave.".\n'
+        'Invece di esamina la mela se la mela è in inventario: dire "In mano.".\n'
+        'Invece di esamina la mela se la chiave non è nella scatola: dire "La scatola è vuota.".\n'
+        'Invece di fischia: dire "Fiii." e adesso la guardia va in cucina.\n'
+        '"fischia" è un comando senza oggetto.\n'
+        "L'umore è uno stato.\nL'umore è qui.\n")
+    mondo = runtime(src)
+    _check(mondo is not None, "le condizioni di posizione compilano ('L'umore è qui.' resta un valore)")
+    _check("Sul tavolo, la chiave." in esegui(mondo, "esamina il tavolo"),
+           "'la chiave è sul tavolo' vale anche dentro la scatola sul tavolo")
+    esegui(mondo, "fischia")
+    _check("La guardia ti osserva." in esegui(mondo, "esamina il tavolo"),
+           "'se la guardia è in cucina' dopo che la guardia si è mossa")
+    esegui(mondo, "prendi la mela")
+    _check("In mano." in esegui(mondo, "esamina la mela"), "'è in inventario'")
+    mondo.oggetti["scatola"].contenuto.discard("chiave")
+    mondo.oggetti["chiave"].posizione = "cucina"
+    mondo.stanze["cucina"].oggetti["chiave"] = mondo.oggetti["chiave"]
+    esegui(mondo, "lascia la mela")
+    _check("La scatola è vuota." in esegui(mondo, "esamina la mela"), "'non è nella scatola'")
+
+
+def test_togliere_una_proprieta():
+    print("[1.3.0 M-2: 'non è più' e 'prendibile' come proprietà vera]")
+    src = _SRC_E + (
+        "Il panno è una cosa.\nIl panno è in cucina.\nIl panno è bagnato.\n"
+        'Invece di strizza il panno se il panno è bagnato: dire "Strizzato." e adesso il panno non è più bagnato.\n'
+        'Invece di strizza il panno: dire "È già asciutto.".\n'
+        '"strizza" è un comando.\n'
+        'Invece di esamina la mela se la mela è prendibile: dire "Si può prendere." e adesso la mela non è più prendibile.\n'
+        'Invece di esamina la mela: dire "Ora no.".\n')
+    mondo, log = compila(src)
+    _check(mondo is not None and "prendibile" not in log, "'se la mela è prendibile' non è un refuso")
+    mondo = runtime(src)
+    _check("Strizzato." in esegui(mondo, "strizza il panno"), "la condizione vale")
+    _check("bagnato" not in mondo.oggetti["panno"].proprieta, "la proprietà è tolta")
+    _check("È già asciutto." in esegui(mondo, "strizza il panno"), "e resta tolta")
+    _check("Si può prendere." in esegui(mondo, "esamina la mela"), "'è prendibile' in una condizione")
+    _check(not mondo.oggetti["mela"].prendibile, "'non è più prendibile' in una conseguenza")
+    _check("Non puoi prenderla." in esegui(mondo, "prendi la mela"), "e il motore lo rispetta")
+
+
+def test_uscite_che_cambiano():
+    print("[1.3.0 M-8: 'X collega D a Y' e 'X non collega più D' come conseguenze]")
+    src = _SRC_E + (
+        "La leva è una cosa.\nLa leva è in cucina.\n"
+        'Invece di tira la leva: dire "Si apre un passaggio." e adesso la cucina collega est a la dispensa.\n'
+        'Invece di spingi la leva: dire "Si chiude." e adesso la cucina non collega più est.\n')
+    mondo, log = compila(src)
+    _check(mondo is not None and "irraggiungibile" not in log,
+           "la dispensa, aperta da una regola, non è segnalata irraggiungibile")
+    _check("invece di tira la leva" not in " ".join(mondo.stanze),
+           "un 'collega' dentro una regola non crea stanze")
+    mondo = runtime(src)
+    _check("Non puoi andare" in esegui(mondo, "est"), "prima il passaggio non c'è")
+    esegui(mondo, "tira la leva")
+    esegui(mondo, "est")
+    _check(mondo.posizione_giocatore == "dispensa", "dopo, si passa")
+    esegui(mondo, "ovest")
+    _check(mondo.posizione_giocatore == "cucina", "con il ritorno automatico")
+    esegui(mondo, "spingi la leva")
+    _check("est" not in mondo.stanze["cucina"].uscite
+           and "ovest" not in mondo.stanze["dispensa"].uscite, "chiuso, anche il ritorno")
+    mondo, log = compila(_SRC_E + 'Invece di tira la mela: dire "x" e adesso la cucina collega est a la cantina.\n')
+    _check(mondo is None and "cantina" in log,
+           "una stanza mai dichiarata in una conseguenza è un errore")
+
+
+def test_oggetti_di_scena_e_in_piu_stanze():
+    print("[1.3.0 M-8: 'è di scena' e 'è anche in']")
+    src = _SRC_E + ("Il cielo è una cosa.\nIl cielo è in cucina.\nIl cielo è anche nel corridoio.\n"
+                    "Il cielo è di scena.\nLa descrizione del cielo è \"Azzurro.\".\n")
+    mondo = runtime(src)
+    out = esegui(mondo, "guarda")
+    _check("cielo" not in out, "un oggetto di scena non si elenca")
+    _check("Azzurro." in esegui(mondo, "esamina il cielo"), "ma si esamina")
+    esegui(mondo, "nord")
+    _check("Azzurro." in esegui(mondo, "esamina il cielo"), "anche dall'altra stanza")
+    _check("Non c'è niente da prendere." in esegui(mondo, "prendi tutto"),
+           "'prendi tutto' non tocca gli oggetti di scena")
+    mondo, log = compila(_SRC_E + "Il cielo è una cosa.\nIl cielo è anche nella scatola.\n")
+    _check(mondo is None and "«anche in» una stanza" in log, "'è anche in' vuole una stanza")
+
+
+def test_uscite_solo_verso_stanze_visitate():
+    print("[1.3.0 M-8: 'Le uscite nominano solo le stanze visitate.']")
+    mondo = runtime(_SRC_E + "Le uscite nominano solo le stanze visitate.\n")
+    _check("Uscite: Nord." in esegui(mondo, "guarda"), "una stanza mai vista resta senza nome")
+    esegui(mondo, "nord")
+    out = esegui(mondo, "sud")
+    _check("Uscite: Nord (Il corridoio)." in out, "vista una volta, ha il suo nome")
+    mondo = runtime(_SRC_E)
+    _check("Uscite: Nord (Il corridoio)." in esegui(mondo, "guarda"), "senza la frase, come prima")
+
+
+def test_personaggi_che_tengono_oggetti():
+    print("[1.3.0 M-10: 'La guardia ha la chiave.', condizione e conseguenza]")
+    src = (
+        "La cucina è una stanza.\nIl giocatore comincia in cucina.\n"
+        "La guardia è un personaggio.\nLa guardia è in cucina.\n"
+        "La chiave è una cosa.\nLa guardia ha la chiave.\nLa chiave è prendibile.\n"
+        "La mela è una cosa.\nLa mela è in cucina.\nLa mela è prendibile.\n"
+        'Invece di dai la mela alla guardia: dire "Grazie." e adesso la guardia ha la mela e adesso la chiave è in inventario.\n'
+        'Invece di esamina la guardia se la guardia ha la mela: dire "Mangia.".\n')
+    mondo = runtime(src)
+    _check(mondo is not None, "compila")
+    _check("Ha con sé: una chiave." in esegui(mondo, "esamina la guardia"), "esaminarla dice cosa tiene")
+    _check("Non vedo" in esegui(mondo, "prendi la chiave") and "chiave" not in mondo.inventario,
+           "ciò che tiene non si prende")
+    esegui(mondo, "prendi la mela")
+    esegui(mondo, "dai la mela alla guardia")
+    _check("chiave" in mondo.inventario and mondo.oggetti["mela"].posizione == "guardia",
+           "'e adesso la guardia ha la mela' e la chiave passa al giocatore")
+    _check("Mangia." in esegui(mondo, "esamina la guardia"), "'se la guardia ha la mela'")
+    mondo, log = compila(src + "Il tavolo è una cosa.\nIl tavolo è in cucina.\nIl tavolo ha la mela.\n")
+    _check(mondo is None and "non è un personaggio" in log, "solo i personaggi hanno oggetti")
+
+
+def test_argomenti_di_conversazione():
+    print("[1.3.0 M-10: 'Se chiedi alla guardia di \"chiave\": …' e 'chiedi alla guardia della chiave']")
+    src = (
+        "La cucina è una stanza.\nIl giocatore comincia in cucina.\n"
+        "La guardia è un personaggio.\nLa guardia è in cucina.\n"
+        "La fiducia è un contatore.\n"
+        'Se chiedi alla guardia di "chiave" oppure "custode": dire "È del custode." e adesso aumenta la fiducia.\n'
+        'Se chiedi alla guardia di "tesoro" se la fiducia è almeno 1: dire "Sotto il pino.".\n'
+        'Se chiedi alla guardia di "tesoro": dire "Non ti conosco.".\n')
+    mondo, log = compila(src)
+    _check(mondo is not None and "non ha un dialogo" not in log,
+           "compila, e un personaggio con argomenti non chiede un dialogo")
+    mondo = runtime(src)
+    _check("Non ti conosco." in esegui(mondo, "chiedi alla guardia del tesoro"),
+           "la condizione dell'argomento conta")
+    _check("È del custode." in esegui(mondo, "chiedi alla guardia della chiave"), "prima parola chiave")
+    _check("È del custode." in esegui(mondo, "domanda del custode"),
+           "'domanda', e senza nominarla se è l'unico personaggio")
+    _check("Sotto il pino." in esegui(mondo, "chiedi alla guardia del tesoro"),
+           "le conseguenze valgono ('e adesso aumenta la fiducia')")
+    _check("La guardia non sa niente di questo." in esegui(mondo, "chiedi alla guardia del meteo"),
+           "argomento sconosciuto")
+    t = mondo.turno_corrente
+    _check("Cosa vuoi chiedere alla guardia?" in esegui(mondo, "chiedi alla guardia")
+           and mondo.turno_corrente == t, "senza argomento: domanda, nessun turno")
+
+
+def test_il_linter_vede_tutto_il_mondo():
+    print("[1.3.0 M-3: proprietà da demoni e verbi; segnaposto in tutti i testi]")
+    src = _SRC_E + (
+        "La porta è una cosa.\nLa porta è in cucina.\nLa porta è apribile.\nLa porta è chiusa.\n"
+        "Il fuoco è una cosa.\nIl fuoco è in cucina.\n"
+        'Quando il giocatore è in corridoio: dire "Fa caldo." e adesso il fuoco è acceso.\n'
+        'Invece di esamina il fuoco se il fuoco è acceso: dire "Arde.".\n'
+        'Invece di esamina la porta se la porta è aperta: dire "Aperta.".\n'
+        'Quando il fuoco è acceso: dire "[fumo] ovunque.".\n'
+        'Invece di esamina la mela: dire "Fine." e adesso vinci "Hai vinto con [mele].".\n'
+        'Invece di esamina il tavolo: dire "Il cartello: [Vietato entrare.]".\n')
+    mondo, log = compila(src)
+    _check("'acceso'" not in log and "'aperta'" not in log,
+           "una proprietà assegnata da un demone o da un verbo non è un refuso")
+    _check("[fumo]" in log and "[mele]" in log,
+           "i segnaposto dei demoni e dei testi di vittoria sono controllati")
+    _check("Vietato entrare" not in log, "testo fra parentesi con punteggiatura: non è un segnaposto")
+
+
+def test_forme_nuove_nell_ide():
+    print("[1.3.0: l'IDE rilegge e riscrive le forme nuove]")
+    from strumenti_ide import (_cond_to_json, _conseq_to_json, _serializza_condizione,
+                               _serializza_conseguenza)
+    src = _SRC_E + ("Il sigillo è una cosa.\nLa guardia ha il sigillo.\nLa mela è rossa.\n"
+                    'Invece di tocca la guardia se la guardia è in cucina e la mela non è qui '
+                    'e la guardia ha il sigillo e la chiave è nella scatola: dire "x" e adesso '
+                    'la mela non è più rossa e adesso la cucina collega est a la dispensa e adesso '
+                    'la cucina non collega più nord e adesso la guardia ha la mela.\n')
+    mondo, _ = compila(src)
+    regola = [r for r in mondo.regole if r.verbo == "tocca"][0]
+    cond = _serializza_condizione(_cond_to_json(regola.condizione, mondo))
+    cons = [_serializza_conseguenza(_conseq_to_json(c, mondo)) for c in regola.conseguenze]
+    _check("La mela non è qui" in cond and "La guardia ha Il sigillo" in cond,
+           "condizioni di posizione e di possesso dei personaggi")
+    _check(cons == ["La mela non è più rossa", "La cucina collega est a La dispensa",
+                    "La cucina non collega più nord", "La guardia ha La mela"],
+           "conseguenze nuove")
+    src2 = src + f'Invece di premi la guardia se {cond}: dire "y" e adesso {" e adesso ".join(cons)}.\n'
+    _check(compila(src2)[0] is not None, "il testo riscritto compila di nuovo")
+
+
+# --- [1.3.0] Blocco F: espressività ----------------------------------------
+
+_SRC_F = (
+    "La cucina è una stanza.\nIl giocatore comincia in cucina.\n"
+    "La porta è una cosa.\nLa porta è in cucina.\nLa porta è apribile.\nLa porta è chiusa.\n"
+    "Il sasso è una cosa.\nIl sasso è in cucina.\nIl sasso è pesante.\nIl sasso è prendibile.\n"
+    "La piuma è una cosa.\nLa piuma è in cucina.\nLa piuma è prendibile.\n"
+    "La forza è un contatore.\n"
+)
+
+
+def test_e_adesso_anche_sulla_prima_conseguenza():
+    print("[1.3.0 M-1: '…: e adesso X' e '…: adesso X' sulla prima conseguenza]")
+    src = _SRC_F + ('Invece di tocca la porta: e adesso la porta è rossa.\n'
+                    'Invece di tocca il sasso: adesso aumenta la forza e adesso la piuma è blu.\n'
+                    'Ogni 2 turni: e adesso aumenta la forza.\n')
+    mondo = runtime(src)
+    _check(mondo is not None, "compila")
+    esegui(mondo, "tocca la porta")
+    esegui(mondo, "tocca il sasso")
+    _check("rossa" in mondo.oggetti["porta"].proprieta and "blu" in mondo.oggetti["piuma"].proprieta,
+           "le conseguenze valgono")
+    _check(mondo.variabili["forza"] == 2, "anche negli eventi (turno 2)")
+
+
+def test_testi_a_capo_parentesi_e_segnaposto_del_motore():
+    print("[1.3.0 M-6: \\n, \\[ \\], [turno], [luogo], maiuscola dei valori]")
+    src = _SRC_F + (
+        "Il meteo è uno stato.\nIl meteo è sereno.\n"
+        'Invece di esamina la porta: dire "Riga uno.\\nRiga due. Turno [turno]. \\[nota\\] Luogo: [luogo]. [Meteo]!".\n')
+    mondo, log = compila(src)
+    _check(mondo is not None and "nota" not in log, "\\[…\\] non è un segnaposto")
+    mondo = runtime(src)
+    esegui(mondo, "z")
+    out = esegui(mondo, "esamina la porta")
+    _check("Riga uno.\nRiga due." in out, "\\n va a capo")
+    _check("Turno 1." in out and "[nota]" in out and "Luogo: la cucina." in out,
+           "[turno], parentesi letterali, [luogo] (minuscolo dopo i due punti)")
+    _check("Sereno!" in out, "[Meteo] con la maiuscola dà il valore con la maiuscola")
+
+
+def test_testo_condizionale():
+    print("[1.3.0 M-6: '[se la porta è aperta]…[altrimenti]…[fine]']")
+    src = _SRC_F + ('La descrizione della cucina è "Una cucina[se la porta è aperta] ventilata'
+                    '[altrimenti] chiusa[fine].[se la forza è almeno 1] Sei forte.[fine]".\n')
+    mondo = runtime(src)
+    _check(mondo is not None, "compila")
+    out = esegui(mondo, "guarda")
+    _check("Una cucina chiusa." in out and "forte" not in out, "rami 'altrimenti' e vuoto")
+    esegui(mondo, "apri la porta")
+    mondo.variabili["forza"] = 2
+    out = esegui(mondo, "guarda")
+    _check("Una cucina ventilata. Sei forte." in out, "rami veri")
+    _, log = compila(_SRC_F + 'La descrizione della cucina è "[se la porta è sbagliata e] x[fine]".\n')
+    _check("non si capisce" in log, "una condizione sbagliata nel testo è un errore chiaro")
+
+
+def test_titolo_autore_prologo_e_messaggi():
+    print("[1.3.0 M-6: titolo, autore, prologo e messaggi del motore]")
+    from gioco import intestazione
+    src = _SRC_F + ('Il titolo è "La prova".\nL\'autore è "Anna Rossi".\n'
+                    'Il prologo è "Era una notte buia.".\n'
+                    'Il messaggio "non capisco" è "Come, prego?".\n'
+                    'Il messaggio "preso" è "Ora hai [oggetto].".\n')
+    mondo = runtime(src)
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        intestazione(mondo, "invito")
+    out = buf.getvalue()
+    _check("--- LA PROVA ---" in out and "di Anna Rossi" in out and "Era una notte buia." in out,
+           "intestazione con titolo, autore e prologo")
+    _check("Come, prego?" in esegui(mondo, "xyzzy"), "messaggio 'non capisco' ridefinito")
+    _check("Ora hai la piuma." in esegui(mondo, "prendi la piuma"), "messaggio 'preso' con [oggetto]")
+    _, log = compila(_SRC_F + 'Il messaggio "inesistente" è "x".\n')
+    _check("Messaggio sconosciuto" in log and '"non capisco"' in log, "chiave sconosciuta: elenco delle valide")
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        intestazione(runtime(_SRC_F), "")
+    _check("BENVENUTO IN FAVELLA 1" in buf.getvalue(), "senza titolo, come prima")
+
+
+def test_numeri_negativi_e_aritmetica():
+    print("[1.3.0 M-7: negativi, moltiplica, dividi, riduci modulo, resta fra]")
+    src = _SRC_F.replace("La forza è un contatore.\n", "La forza è un contatore.\nLa forza parte da -3.\n") + (
+        '"a" è un comando senza oggetto.\n"b" è un comando senza oggetto.\n"c" è un comando senza oggetto.\n'
+        '"d" è un comando senza oggetto.\n'
+        'Invece di a: moltiplica la forza per -4.\n'
+        'Invece di b: dividi la forza per 5.\n'
+        'Invece di c: riduci la forza modulo 3.\n'
+        'Invece di d: aumenta la forza di 100 e adesso la forza resta fra 0 e 10.\n'
+        'Invece di esamina la porta se la forza è -3: dire "Meno tre.".\n')
+    mondo = runtime(src)
+    _check(mondo is not None and mondo.variabili["forza"] == -3, "'parte da -3'")
+    _check("Meno tre." in esegui(mondo, "esamina la porta"), "confronto con un negativo")
+    esegui(mondo, "a")
+    _check(mondo.variabili["forza"] == 12, "moltiplica")
+    esegui(mondo, "b")
+    _check(mondo.variabili["forza"] == 2, "dividi (intera)")
+    mondo.variabili["forza"] = -7
+    esegui(mondo, "c")
+    _check(mondo.variabili["forza"] == 2, "riduci modulo: resto fra 0 e N-1")
+    esegui(mondo, "d")
+    _check(mondo.variabili["forza"] == 10, "resta fra 0 e 10")
+
+
+def test_il_turno_si_legge():
+    print("[1.3.0 M-7: 'il turno' nelle condizioni; non si dichiara né si assegna]")
+    src = _SRC_F + 'Invece di esamina la porta se il turno è almeno 2: dire "Tardi.".\n'
+    mondo = runtime(src)
+    _check("Tardi." not in esegui(mondo, "esamina la porta"), "turno 0")
+    esegui(mondo, "z")
+    _check("Tardi." in esegui(mondo, "esamina la porta"), "turno 2")
+    _, log = compila(_SRC_F + "Il turno è un contatore.\n")
+    _check("non si dichiara" in log, "dichiararlo è un errore")
+    _, log = compila(_SRC_F + "Il turno è una cosa.\n")
+    _check("numero del turno in corso" in log, "chiamare 'turno' un oggetto è un errore chiaro")
+    _, log = compila(_SRC_F + '"a" è un comando senza oggetto.\nInvece di a: aumenta il turno.\n')
+    _check("si legge soltanto" in log, "cambiarlo è un errore")
+
+
+def test_timer_che_parte_da_un_fatto():
+    print("[1.3.0 M-7: 'N turni dopo che …']")
+    src = _SRC_F + ("La miccia è una cosa.\nLa miccia è in cucina.\n"
+                    'Invece di tocca la miccia: e adesso la miccia è accesa.\n'
+                    '2 turni dopo che la miccia è accesa: dire "BUM!".\n')
+    mondo = runtime(src)
+    esegui(mondo, "z")
+    esegui(mondo, "tocca la miccia")          # turno 2: il conto parte
+    _check("BUM!" not in esegui(mondo, "z"), "un turno dopo, niente")
+    _check("BUM!" in esegui(mondo, "z"), "due turni dopo, scatta")
+    _check("BUM!" not in esegui(mondo, "z"), "una volta sola")
+    esegui(mondo, "annulla")
+    _check("BUM!" not in esegui(mondo, "z"), "ANNULLA riporta anche il conto")
+
+
+def test_regole_prima_dopo_altrimenti_e_categorie():
+    print("[1.3.0 M-9: 'Prima di', 'Dopo di', 'altrimenti', 'qualcosa di …']")
+    src = _SRC_F + (
+        'Invece di esamina la porta se la porta è aperta: dire "Aperta."; altrimenti dire "Chiusa.".\n'
+        'Invece di prendi qualcosa di pesante: dire "Troppo pesante.".\n'
+        'Invece di annusa qualcosa: dire "Odore di polvere.".\n'
+        'Invece di annusa la piuma: dire "Odore di gallina.".\n'
+        'Prima di prendi la piuma: dire "Ti chini.".\n'
+        'Dopo di prendi la piuma: dire "Leggerissima!" e adesso aumenta la forza.\n'
+        'Dopo di apri la porta: dire "Entra aria fresca.".\n')
+    mondo = runtime(src)
+    _check(mondo is not None, "compila")
+    _check("Chiusa." in esegui(mondo, "esamina la porta"), "ramo 'altrimenti'")
+    out = esegui(mondo, "prendi il sasso")
+    _check("Troppo pesante." in out and "sasso" not in mondo.inventario, "regola per categoria")
+    _check("Odore di gallina." in esegui(mondo, "annusa la piuma"), "l'oggetto preciso vince sulla categoria")
+    _check("Odore di polvere." in esegui(mondo, "annusa la porta"), "'qualcosa' vale per ogni oggetto")
+    out = esegui(mondo, "prendi la piuma")
+    _check(out.index("Ti chini.") < out.index("Preso: la piuma.") < out.index("Leggerissima!"),
+           "Prima → azione → Dopo")
+    _check(mondo.variabili["forza"] == 1, "le conseguenze di 'Dopo di'")
+    out = esegui(mondo, "prendi la piuma")
+    _check("Ce l'hai già." in out and "Leggerissima!" not in out, "'Dopo di' solo se l'azione riesce")
+    out = esegui(mondo, "apri la porta")
+    _check("Apri la porta." in out and "Entra aria fresca." in out, "'Dopo di' coi verbi nuovi")
+    _check("Aperta." in esegui(mondo, "esamina la porta"), "ramo 'se'")
+
+
+def test_forme_del_blocco_f_nell_ide():
+    print("[1.3.0: l'IDE rilegge e riscrive fasi, 'altrimenti', categorie e timer]")
+    from strumenti_ide import analizza_regole, _serializza_regola, _serializza_demone
+    src = _SRC_F + (
+        'Prima di prendi qualcosa di pesante se la porta è aperta: dire "Uff."; altrimenti dire "No.".\n'
+        "La miccia è una cosa.\nLa miccia è in cucina.\n"
+        '3 turni dopo che la miccia è accesa: dire "BUM!".\n')
+    cartella = tempfile.mkdtemp()
+    percorso = os.path.join(cartella, "f.fav")
+    with open(percorso, "w", encoding="utf-8") as f:
+        f.write(src)
+    modello = analizza_regole(percorso)
+    regola = modello["rules"][0]
+    testo = _serializza_regola(regola)
+    _check(testo == 'Prima di prendi qualcosa di pesante se La porta è aperta: dire "Uff." '
+                    'altrimenti dire "No.".', f"regola riscritta: {testo}")
+    demone = _serializza_demone(modello["demons"][0])
+    _check(demone.startswith("3 turni dopo che La miccia è accesa: dire"), f"timer riscritto: {demone}")
+    _check(compila(src + testo + "\n" + demone + "\n")[0] is not None, "il testo riscritto compila")
+
+
+# --- [1.3.0] Blocco G: le criticità lievi ----------------------------------
+
+def test_numeri_in_lettere_e_singolari():
+    print("[1.3.0 L-1: '1 oggetto', '1 spazio', numeri in lettere]")
+    src = ("La cella è una stanza.\nIl giocatore comincia in cella.\n"
+           "Il giocatore può portare 1 oggetto.\nLo zaino è una cosa.\nLo zaino è in cella.\n"
+           "Lo zaino dà tre spazi.\nIl sacchetto è una cosa.\nIl sacchetto è in cella.\n"
+           "Il sacchetto dà 1 spazio.\nLa forza è un contatore.\nLa forza parte da dieci.\n"
+           'Al turno tre: dire "Tre!".\nOgni due turni: aumenta la forza.\n'
+           "Il tre è una cosa.\nIl tre è in cella.\n")
+    mondo = runtime(src)
+    _check(mondo is not None, "compila (anche con un oggetto chiamato 'il tre')")
+    _check(mondo.capacita_base == 1 and mondo.oggetti["zaino"].bonus_capacita == 3
+           and mondo.oggetti["sacchetto"].bonus_capacita == 1, "singolari e numeri in lettere")
+    _check(mondo.variabili["forza"] == 10 and [e.n for e in mondo.eventi] == [3, 2],
+           "'parte da dieci', 'Al turno tre', 'Ogni due turni'")
+
+
+def test_concordanza_dei_plurali_in_chi_e_io():
+    print("[1.3.0 L-2: bianco/bianchi, vecchio/vecchi, lungo/lunghe concordano]")
+    from favella_utils import radice_proprieta
+    for gruppo in (("bianco", "bianca", "bianchi", "bianche"), ("vecchio", "vecchia", "vecchi", "vecchie"),
+                   ("grigio", "grigia", "grigi", "grigie"), ("lungo", "lunga", "lunghi", "lunghe"),
+                   ("buio", "buia", "buie"), ("aperto", "aperta", "aperti", "aperte")):
+        _check(len({radice_proprieta(p) for p in gruppo}) == 1, f"stessa radice: {'/'.join(gruppo)}")
+    src = ("La cella è una stanza.\nIl giocatore comincia in cella.\n"
+           "I muri sono una cosa.\nI muri sono in cella.\nI muri sono bianchi.\n"
+           'Invece di esamina i muri se i muri sono bianco: dire "Bianchi.".\n')
+    mondo, log = compila(src)
+    _check(mondo is not None and "possibile refuso" not in log, "nessun falso refuso")
+    _check("Bianchi." in esegui(runtime(src), "esamina i muri"), "la condizione combacia")
+
+
+def test_istantanee_senza_dati_statici():
+    print("[1.3.0 L-5: le istantanee di ANNULLA non copiano regole ed eventi]")
+    mondo = runtime(_SRC_SALVA)
+    snap = mondo.cattura_stato()
+    _check(not any(k in snap for k in ("regole", "eventi", "dialogo_nodi")),
+           "regole, eventi e dialoghi fuori dall'istantanea")
+    esegui(mondo, "prendi la mela")
+    esegui(mondo, "annulla")
+    _check("mela" not in mondo.inventario and mondo.regole and mondo.dialogo_nodi,
+           "ANNULLA funziona e il mondo conserva regole e dialoghi")
+
+
+def test_salvataggi_dopo_una_correzione_della_storia():
+    print("[1.3.0 L-6: un salvataggio si carica anche dopo una correzione della storia]")
+    archivio = _ArchivioMemoria()
+    v1 = 'Il titolo è "L\'orto".\n' + _SRC_SALVA
+    a = runtime(v1)
+    a.archivio_salvataggi = archivio
+    esegui(a, "prendi la mela")
+    esegui(a, "nord")
+    esegui(a, "salva")
+    v2 = v1 + "Il rastrello è una cosa.\nIl rastrello è nell'orto.\n"
+    b = runtime(v2)
+    b.archivio_salvataggi = archivio
+    out = esegui(b, "carica")
+    _check("nuova versione della storia" in out and "mela" in b.inventario
+           and b.posizione_giocatore == "orto", "rigiocata sulla nuova versione, con un avviso")
+    c = runtime('Il titolo è "Un\'altra".\n' + _SRC_SALVA
+                + "Il rastrello è una cosa.\nIl rastrello è nell'orto.\n")
+    c.archivio_salvataggi = archivio
+    _check("altra storia" in esegui(c, "carica"), "una storia diversa con un altro titolo resta rifiutata")
+
+
+# ==============================================================================
+# [1.4.0] L-7 (uscita a eventi, compilatore diviso) e PULSANTI-VERBO
+# ==============================================================================
+
+_SRC_PULSANTI = (
+    'Il titolo è "Prova".\n'
+    "La cucina è una stanza.\n"
+    'La descrizione della cucina è "Una cucina.".\n'
+    "La cantina è una stanza.\nLa cantina è buia.\n"
+    "La cucina collega giù a la cantina.\n"
+    "La mela è una cosa.\nLa mela è in cucina.\nLa mela è prendibile.\n"
+    "La cassa è un contenitore.\nLa cassa è in cucina.\n"
+    "Il tavolo è un supporto.\nIl tavolo è in cucina.\n"
+    "La guardia è un personaggio.\nLa guardia è in cucina.\n"
+    '"lega" è un comando.\n"fischia" è un comando senza oggetto.\n"accendi" è un comando.\n'
+    'Invece di lega la mela al tavolo: dire "Legata.".\n'
+    'Invece di fischia: dire "Fiiii.".\n'
+    'Invece di accendi la mela: dire "Non è una lampada.".\n'
+    'Invece di dai la mela alla guardia: dire "Grazie.".\n'
+    'Se chiedi alla guardia di "chiave": dire "Non te la do.".\n'
+    'Il dialogo della guardia comincia con "saluto".\n'
+    'La guardia al nodo "saluto" dice "Ciao.".\n'
+    'Al nodo "saluto" l\'opzione "Ciao anche a te." chiude il dialogo.\n'
+)
+
+
+def _eventi(mondo, comando):
+    from favella_utils import raccogli_uscita
+    from gioco import elabora_comando
+    with raccogli_uscita(mondo) as uscita:
+        elabora_comando(mondo, comando)
+    return [(e.tipo, e.testo) for e in uscita.eventi]
+
+
+def test_uscita_a_eventi():
+    print("[1.4.0 L-7: ciò che il motore dice è un flusso di eventi tipizzati]")
+    from favella_utils import raccogli_uscita, Uscita, TIPI_EVENTO
+    from gioco import mostra_stanza
+    m = runtime(_SRC_PULSANTI)
+    with raccogli_uscita(m) as uscita:
+        mostra_stanza(m)
+    tipi = [e.tipo for e in uscita.eventi]
+    _check(tipi == ["stanza", "testo", "elenco", "elenco"], f"titolo, descrizione, oggetti, uscite ({tipi})")
+    primo = uscita.eventi[0]
+    _check(primo.stacco and primo.dati == {"id": "cucina"} and primo.testo == "--- La cucina ---",
+           "il titolo della stanza porta l'id e il capoverso")
+    _check(m.uscita is None, "fuori dal blocco il mondo torna al terminale")
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        mostra_stanza(m)
+    _check(uscita.testo() == buf.getvalue(), "gli eventi in fila sono il testo del terminale, byte per byte")
+    _check(all(e.tipo in TIPI_EVENTO for e in uscita.eventi), "solo tipi dichiarati")
+    _check(uscita.come_dizionari()[0] == {"tipo": "stanza", "testo": "--- La cucina ---",
+                                         "stacco": True, "dati": {"id": "cucina"}},
+           "forma JSON dell'evento")
+    _check(_eventi(m, "prendi") == [("domanda", "Cosa vuoi prendere?")], "«Cosa vuoi prendere?» è una domanda")
+    ev = _eventi(m, "parla con la guardia")
+    _check([t for t, _ in ev] == ["dialogo", "opzione"] and ev[0][1] == "La guardia: Ciao.",
+           f"battuta e opzione del dialogo ({ev})")
+    with raccogli_uscita(m) as uscita:
+        from gioco import elabora_comando
+        elabora_comando(m, "esci")
+        elabora_comando(m, "parla con la guardia")
+    opz = uscita.eventi[-1]
+    _check(opz.tipo == "opzione" and opz.dati == {"numero": 1, "scelta": "Ciao anche a te."},
+           "l'opzione porta il numero e il testo da scegliere")
+    _eventi(m, "1")
+    _check(_eventi(m, "annulla")[0] == ("sistema", "(Hai annullato l'ultimo turno.)"),
+           "i messaggi di servizio sono 'sistema'")
+    f = runtime('La stanza è una stanza.\n"salta" è un comando senza oggetto.\n'
+                'Invece di salta: dire "Hop." e adesso vinci "Bravo!".\n')
+    ev = _eventi(f, "salta")
+    _check(ev[0] == ("testo", "Hop.") and ev[1] == ("fine", "Bravo!") and ev[2][0] == "sistema",
+           f"la fine della partita è un evento 'fine' ({ev})")
+
+    # Un host può scriversi la sua uscita.
+    class Contatore(Uscita):
+        def __init__(self):
+            self.n = 0
+
+        def emetti(self, evento):
+            self.n += 1
+    c = Contatore()
+    m.uscita = c
+    from gioco import elabora_comando
+    elabora_comando(m, "guarda")
+    m.uscita = None
+    _check(c.n == 4, "un'uscita dell'host riceve gli eventi")
+    _check("uscita" not in m.cattura_stato(), "l'uscita non entra nelle istantanee di ANNULLA")
+
+
+def test_carica_rigioca_in_silenzio():
+    print("[1.4.0 L-7: CARICA rigioca la partita con un'uscita muta, senza toccare stdout]")
+    m = runtime(_SRC_PULSANTI)
+    m.archivio_salvataggi = _ArchivioMemoria()
+    for c in ("prendi la mela", "metti la mela nella cassa", "fischia"):
+        _eventi(m, c)
+    _eventi(m, "salva prova")
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        ev = _eventi(m, "carica prova")
+    _check(buf.getvalue() == "", "niente arriva sul terminale mentre l'host raccoglie")
+    testi = " ".join(t for _, t in ev)
+    _check(ev[0][0] == "sistema" and "Partita caricata" in ev[0][1], "prima il messaggio del caricamento")
+    _check("Fiiii" not in testi and "Hai messo" not in testi, "i comandi rigiocati non si sentono")
+    _check(m.uscita is None, "dopo il caricamento torna l'uscita di prima")
+
+
+def test_compilatore_diviso():
+    print("[1.4.0 L-7: compilatore.py è il nucleo; strumenti ed esportazione a parte]")
+    import compilatore
+    import strumenti_ide
+    import esportazione
+    from compilatore import esporta_html, analizza_regole, serializza_frase, riordina_sorgente
+    _check(esporta_html is esportazione.esporta_html and analizza_regole is strumenti_ide.analizza_regole
+           and serializza_frase is strumenti_ide.serializza_frase
+           and riordina_sorgente is strumenti_ide.riordina_sorgente,
+           "i vecchi import da compilatore funzionano ancora")
+    with open(compilatore.__file__, encoding="utf-8") as f:
+        nucleo = f.read()
+    _check("def esporta_html" not in nucleo and "<!DOCTYPE" not in nucleo
+           and "def analizza_outline" not in nucleo and "def serializza_frase" not in nucleo,
+           "il nucleo non contiene più IDE, serializzatore né pagina HTML")
+    try:
+        compilatore.non_esiste
+        _check(False, "un nome sconosciuto dà AttributeError")
+    except AttributeError:
+        _check(True, "un nome sconosciuto dà AttributeError")
+
+    # Il motore del browser (5 moduli) basta a se stesso.
+    import shutil
+    import subprocess
+    radice = os.path.dirname(os.path.abspath(__file__))
+    with tempfile.TemporaryDirectory() as cartella:
+        for nome in esportazione._ENGINE_FILES:
+            shutil.copy(os.path.join(radice, nome), cartella)
+        with open(os.path.join(cartella, "s.fav"), "w", encoding="utf-8") as f:
+            f.write(_SRC_PULSANTI)
+        # -E -s tengono fuori il pacchetto installato e i .pth, ma anche lark se
+        # sta fra i pacchetti dell'utente (Python dello Store di Windows):
+        # la sua cartella si aggiunge in coda, dopo quella di prova.
+        import lark
+        dir_lark = os.path.dirname(os.path.dirname(os.path.abspath(lark.__file__)))
+        prova = (
+            "import sys, json\n"
+            f"sys.path.append({dir_lark!r})\n"
+            "from compilatore import compila_mondo\n"
+            "from gioco import elabora_comando, pulsanti\n"
+            "from libreria_azioni import LIBRERIA_AZIONI\n"
+            "from favella_utils import raccogli_uscita\n"
+            "m = compila_mondo('s.fav'); m.carica_azioni(LIBRERIA_AZIONI); m.imposta_posizione_iniziale()\n"
+            "with raccogli_uscita(m) as u: elabora_comando(m, 'prendi la mela')\n"
+            "json.dumps(pulsanti(m))\n"
+            "print(u.testo().strip(), 'strumenti_ide' in sys.modules, 'esportazione' in sys.modules)\n")
+        r = subprocess.run([sys.executable, "-E", "-s", "-c", prova], cwd=cartella,
+                           capture_output=True, text=True)
+    _check(r.returncode == 0 and r.stdout.strip() == "Preso: la mela. False False",
+           f"i 5 moduli del browser giocano da soli ({r.stdout.strip()!r} {r.stderr[-200:]!r})")
+
+
+def test_elenchi_dei_moduli_del_motore_allineati():
+    print("[1.4.0 L-7: gli elenchi dei moduli del motore coincidono ovunque]")
+    import esportazione
+    radice = os.path.dirname(os.path.abspath(__file__))
+    attesi = list(esportazione._ENGINE_FILES)
+    fonti = {
+        "favella1.spec": (os.path.join(radice, "favella1.spec"), r'\("(\w+\.py)", "\."\)'),
+        "sito": (os.path.join(radice, "landingpage", "src", "lib", "favellaRuntime.ts"), None),
+        "esperimento": (os.path.join(radice, "landingpage", "esperimento", "src", "lib", "favellaRuntime.ts"), None),
+        "checkpoint": (os.path.join(radice, "landingpage", "scripts", "valida_checkpoint.py"),
+                       r'"(favella_utils|strutture|libreria_azioni|compilatore|gioco|strumenti_ide|esportazione)"'),
+    }
+    for nome, (percorso, regex) in fonti.items():
+        if not os.path.exists(percorso):
+            _check(True, f"{nome}: assente in questo checkout")
+            continue
+        with open(percorso, encoding="utf-8") as f:
+            testo = f.read()
+        if regex:
+            trovati = [t if t.endswith(".py") else t + ".py" for t in re.findall(regex, testo)]
+        else:
+            trovati = re.findall(r'"(\w+)(?:\.py)?"', testo[testo.find("ENGINE"):testo.find("]", testo.find("ENGINE"))])
+            trovati = [t if t.endswith(".py") else t + ".py" for t in trovati]
+        _check(sorted(trovati) == sorted(attesi), f"{nome}: {trovati}")
+
+
+def test_frase_dei_comandi():
+    print("[1.4.0: 'I comandi si scrivono.' e le altre due forme]")
+    base = "La cucina è una stanza.\n"
+    _check(runtime(base).modo_comandi == "entrambi", "senza frase: testo e pulsanti")
+    for frase, modo in (("I comandi si scrivono.", "testo"),
+                        ("I comandi si scelgono con i pulsanti.", "pulsanti"),
+                        ("I comandi si scrivono oppure si scelgono con i pulsanti.", "entrambi"),
+                        ("i comandi si scrivono.", "testo")):
+        m, log = compila(base + frase + "\n")
+        _check(m is not None and m.modo_comandi == modo, f"«{frase}» → {modo}")
+    m, log = compila(base + "I comandi si scrivono.\nI comandi si scelgono con i pulsanti.\n")
+    _check(m.modo_comandi == "pulsanti" and "dichiarato due volte" in log, "due modi diversi: vale l'ultimo, con un avviso")
+    m, log = compila("La plancia è una stanza.\nI comandi della nave sono una cosa.\n"
+                     "I comandi della nave sono in plancia.\nI comandi si scrivono.\n")
+    _check(m is not None and "comandi della nave" in m.oggetti and m.modo_comandi == "testo",
+           "un oggetto che si chiama «I comandi …» resta un oggetto")
+    _check("modo_comandi" in type(m)._CAMPI_STATICI, "il modo è un dato statico della storia")
+    from strumenti_ide import riordina_sorgente
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".fav", delete=False, encoding="utf-8") as f:
+        f.write("La cucina è una stanza.\nI comandi si scrivono.\n")
+    try:
+        r = riordina_sorgente(f.name)
+    finally:
+        os.unlink(f.name)
+    _check(r.get("ok") and r["text"].index("I comandi") < r["text"].index("La cucina"),
+           "il riordino la mette fra le impostazioni, in cima")
+
+
+def _voce(p, verbo):
+    return next((v for v in p["verbi"] if v["verbo"] == verbo), None)
+
+
+def test_pulsanti_verbo_proposte():
+    print("[1.4.0: che cosa propongono i pulsanti-verbo]")
+    import json
+    from gioco import pulsanti
+    m = runtime(_SRC_PULSANTI)
+    p = pulsanti(m)
+    json.dumps(p)
+    _check(p["modo"] == "entrambi" and p["fase"] == "gioco", "modo e fase")
+    _check([o["etichetta"] for o in p["oggetti"]] == ["Mela", "Cassa", "Tavolo", "Guardia"],
+           f"gli oggetti in vista, nell'ordine della storia ({[o['etichetta'] for o in p['oggetti']]})")
+    verbi = [v["etichetta"] for v in p["verbi"]]
+    _check(verbi[:3] == ["Esamina", "Prendi", "Parla con"], f"prima i verbi di base, poi parlare ({verbi})")
+    _check("Lascia" not in verbi and "Dai" not in verbi, "niente «Lascia» né «Dai» a mani vuote")
+    _check("Fischia" not in verbi and "Lega" not in verbi, "i verbi inventati dall'autore restano nascosti")
+    _check("Accendi" in verbi, "un verbo d'autore che è una parola della libreria si vede subito")
+    _check("Chiedi a" not in verbi, "nessun argomento scoperto: niente «Chiedi a»")
+    prendi = _voce(p, "prendi")
+    _check([x["testo"] for x in prendi["primi"]] == ["la mela", "la cassa", "il tavolo"],
+           "«Prendi» propone anche ciò che non si prende, ma non le persone")
+    metti = _voce(p, "metti")
+    _check(metti["secondo"] == "obbligatorio"
+           and [x["testo"] for x in metti["secondi"]] == ["nella mela", "nella cassa", "sul tavolo"],
+           f"«Metti»: 'sul' per i supporti, niente personaggi ({[x['testo'] for x in metti['secondi']]})")
+    _check(_voce(p, "parla")["primi"] == [{"id": "guardia", "testo": "con la guardia"}], "«Parla con» la guardia")
+    uscite = p["uscite"]
+    _check(uscite == [{"comando": "giù", "etichetta": "Giù", "stanza": "La cantina"}], f"uscite ({uscite})")
+    _check([s["comando"] for s in p["servizio"]] == ["guarda", "inventario", "aspetta", "annulla", "salva", "carica"],
+           "i comandi di servizio")
+
+    # Scoprire scrivendo.
+    _eventi(m, "fischia")
+    _eventi(m, "chiedi alla guardia della chiave")
+    _eventi(m, "prendi la mela")
+    p = pulsanti(m)
+    verbi = [v["etichetta"] for v in p["verbi"]]
+    _check("Fischia" in verbi and "Lega" not in verbi, "un verbo d'autore compare dopo che il giocatore l'ha usato")
+    chiedi = _voce(p, "chiedi")
+    _check(chiedi and chiedi["secondi_per"] == {"guardia": [{"etichetta": "Chiave", "testo": "di chiave"}]},
+           "l'argomento chiesto diventa un pulsante")
+    dai = _voce(p, "dai")
+    _check(dai and [x["testo"] for x in dai["primi"]] == ["la mela"]
+           and [x["testo"] for x in dai["secondi"]] == ["alla guardia"], "«Dai» la mela «alla guardia»")
+    _check(_voce(p, "lascia")["primi"] == [{"id": "mela", "testo": "la mela"}], "«Lascia» solo ciò che si porta")
+    _check(_eventi(m, "annulla") and "fischia" in m.verbi_scoperti, "ANNULLA non fa dimenticare ciò che si è scoperto")
+
+    # Con i soli pulsanti tutto ciò che l'autore ha inventato è subito lì.
+    solo = runtime("I comandi si scelgono con i pulsanti.\n" + _SRC_PULSANTI)
+    p = pulsanti(solo)
+    verbi = [v["etichetta"] for v in p["verbi"]]
+    _check(p["modo"] == "pulsanti" and "Fischia" in verbi and "Lega" in verbi and "Chiedi a" in verbi,
+           f"modo 'pulsanti': verbi e argomenti d'autore da subito ({verbi})")
+    _check(_voce(p, "fischia")["da_solo"] and not _voce(p, "fischia")["oggetto"], "un verbo senza oggetto si manda da solo")
+    lega = _voce(p, "lega")
+    _check(lega["secondo"] == "facoltativo" and "al tavolo" in [x["testo"] for x in lega["secondi"]],
+           "la preposizione della regola d'autore ('al tavolo')")
+
+    # Le fasi in cui al posto dei verbi ci sono le risposte.
+    _eventi(m, "parla con la guardia")
+    p = pulsanti(m)
+    _check(p["fase"] == "dialogo" and p["scelte"][0] == {"etichetta": "Ciao anche a te.", "comando": "1"}
+           and p["scelte"][-1]["comando"] == "esci" and p["verbi"] == [], "in dialogo: le opzioni")
+    _eventi(m, "1")
+    _eventi(m, "ricomincia")
+    _check(pulsanti(m)["fase"] == "conferma", "domanda di conferma: sì / no")
+    _eventi(m, "no")
+    a = runtime("La cella è una stanza.\nLa chiave rossa è una cosa.\nLa chiave rossa è in cella.\n"
+                "La chiave blu è una cosa.\nLa chiave blu è in cella.\n")
+    _eventi(a, "prendi la chiave")
+    p = pulsanti(a)
+    _check(p["fase"] == "scelta" and [s["comando"] for s in p["scelte"]] == ["1", "2"]
+           and p["scelte"][0]["etichetta"] == "Chiave rossa", "nome ambiguo: i candidati")
+    f = runtime('La stanza è una stanza.\n"salta" è un comando senza oggetto.\nInvece di salta: vinci.\n')
+    _eventi(f, "salta")
+    _check([s["comando"] for s in pulsanti(f)["scelte"]] == ["annulla", "ricomincia", "carica"],
+           "a partita finita: annulla, ricomincia, carica")
+
+    # Al buio: si vede solo ciò che si porta; le uscite solo con i soli pulsanti.
+    _eventi(m, "prendi la mela")
+    _eventi(m, "giù")
+    p = pulsanti(m)
+    _check([o["id"] for o in p["oggetti"]] == ["mela"] and p["uscite"] == [], "al buio: ciò che si porta, niente uscite")
+    _eventi(solo, "giù")
+    _check(pulsanti(solo)["uscite"] == [{"comando": "su", "etichetta": "Su", "stanza": None}],
+           "al buio, con i soli pulsanti: le uscite senza nome")
+
+    # Chiedere i pulsanti non cambia la partita, nemmeno il caso.
+    c = runtime("La piazza è una stanza.\nIl mago è un personaggio.\nIl mago è in piazza.\n"
+                'Il dialogo del mago comincia con "a".\nIl mago al nodo "a" dice "Ehi.".\n'
+                'Al nodo "a" l\'opzione "[se càpita (1 su 2)]Testa[altrimenti]Croce[fine]" chiude il dialogo.\n'
+                'Al nodo "a" l\'opzione "Ciao" se càpita (1 su 3) chiude il dialogo.\n'
+                'Se chiedi al mago di "sorte" se càpita (1 su 2): dire "Forse.".\n')
+    _eventi(c, "chiedi al mago di sorte")
+    _eventi(c, "parla con il mago")
+    prima = c.impronta_stato()
+    for _ in range(5):
+        pulsanti(c)
+    _check(c.impronta_stato() == prima, "pulsanti() non pesca dal caso e non cambia il mondo")
+
+
+def _comandi_dai_pulsanti(p):
+    comandi = [s["comando"] for s in p["scelte"]]
+    for v in p["verbi"]:
+        if v["da_solo"]:
+            comandi.append(v["verbo"])
+        for primo in v["primi"]:
+            base = v["verbo"] + " " + primo["testo"]
+            secondi = (v.get("secondi_per") or {}).get(primo["id"], []) if "secondi_per" in v else v.get("secondi", [])
+            secondi = [x for x in secondi if x.get("id") != primo["id"]]
+            if v["secondo"] != "obbligatorio" or not secondi:
+                comandi.append(base)
+            comandi += [base + " " + x["testo"] for x in secondi]
+    comandi += [u["comando"] for u in p["uscite"]]
+    comandi += [s["comando"] for s in p["servizio"] if s["comando"] not in ("salva", "carica")]
+    return comandi
+
+
+_NON_CAPITO = [re.compile(x) for x in (
+    r"^Non capisco questo verbo\.$", r"^Non vedo '.*' qui\.$", r"^Quale intendi: .*\?$",
+    r"^\S+ che cosa\?$", r"^Cosa vuoi \S+\?$", r"^Dove vuoi andare\?$", r"^Dove vuoi metterlo\?$",
+    r"^A chi vuoi chiedere\?$", r"^Con chi vuoi parlare\?$", r"^Cosa vuoi chiedere .*\?$",
+    r"^Non è una scelta valida", r"^\[ERRORE")]
+
+
+def test_pulsanti_verbo_frasi_capite():
+    print("[1.4.0: ogni frase composta con i pulsanti è capita dal parser (storie vere)]")
+    import copy
+    import random
+    from compilatore import compila_mondo
+    from libreria_azioni import LIBRERIA_AZIONI
+    from gioco import pulsanti
+    radice = os.path.dirname(os.path.abspath(__file__))
+    for storia in ("favella1/galleria/il-faro/il-faro.fav", "esempi/demo/relitto-silente/relitto.fav",
+                   "esempi/demo/appuntamenti/cuori-al-caffe.fav"):
+        base = compila_mondo(os.path.join(radice, storia))
+        problemi, provati = [], 0
+        for modo in ("pulsanti", "entrambi"):
+            for seme in range(2):
+                m = copy.deepcopy(base)
+                m.modo_comandi = modo
+                m.carica_azioni(LIBRERIA_AZIONI)
+                m.imposta_posizione_iniziale()
+                caso = random.Random(seme)
+                for _ in range(90):
+                    comando = caso.choice(_comandi_dai_pulsanti(pulsanti(m)))
+                    provati += 1
+                    righe = " ".join(t for _, t in _eventi(m, comando)).split("\n")
+                    if any(r.match(riga.strip()) for r in _NON_CAPITO for riga in righe):
+                        problemi.append((comando, righe[:2]))
+                    if m.stato_partita != "in_corso":
+                        _eventi(m, "annulla")
+        _check(not problemi, f"{os.path.basename(storia)}: {provati} comandi dai pulsanti, capiti tutti {problemi[:3]}")
+
+
+def test_pagina_esportata_con_pulsanti():
+    print("[1.4.0: la pagina esportata ha i pulsanti e mostra gli eventi]")
+    import json
+    from esportazione import esporta_html, _EXPORT_DRIVER_PY
+    with tempfile.TemporaryDirectory() as cartella:
+        percorso = os.path.join(cartella, "prova.fav")
+        with open(percorso, "w", encoding="utf-8") as f:
+            f.write("I comandi si scelgono con i pulsanti.\n" + _SRC_PULSANTI
+                    + 'Il prologo è "Una storia con </script> dentro.".\n')
+        r = esporta_html(percorso)
+        _check(r["ok"] and r["title"] == "Prova", "il titolo della pagina è quello della storia")
+        html = r["html"]
+        _check('id="pulsanti"' in html and '"modo": "pulsanti"' in html, "pannello dei pulsanti e modo nei dati")
+        _check(html.count("</script>") == 1 and "\\u003c/script>" in html,
+               "nessun «</script>» nei dati: la pagina non si spezza")
+        ns = {}
+        exec(_EXPORT_DRIVER_PY, ns)
+        avvio = json.loads(ns["fav_boot"](percorso))
+        turno = json.loads(ns["fav_step"]("prendi la mela"))
+    _check(avvio["continua"] and avvio["eventi"][0]["tipo"] == "intestazione"
+           and avvio["pulsanti"]["modo"] == "pulsanti", "l'avvio restituisce eventi e pulsanti")
+    _check(turno["eventi"] == [{"tipo": "testo", "testo": "Preso: la mela."}]
+           and turno["text"] == "Preso: la mela.\n" and "lascia" in [v["verbo"] for v in turno["pulsanti"]["verbi"]],
+           "un turno: eventi, testo e pulsanti aggiornati")
+
+
+def test_sidecar_restituisce_gli_eventi():
+    print("[1.4.0 L-7: il sidecar dell'IDE restituisce gli eventi insieme al testo]")
+    import favella_server
+    with tempfile.TemporaryDirectory() as cartella:
+        percorso = os.path.join(cartella, "prova.fav")
+        with open(percorso, "w", encoding="utf-8") as f:
+            f.write(_SRC_PULSANTI)
+        avvio = favella_server.rpc_session_start({"path": percorso})
+        turno = favella_server.rpc_session_send({"command": "prendi la mela"})
+    _check(avvio["ok"] and any(e["tipo"] == "stanza" for e in avvio["events"])
+           and "--- La cucina ---" in avvio["output"], "session.start: testo ed eventi")
+    _check(turno["events"] == [{"tipo": "testo", "testo": "Preso: la mela."}]
+           and turno["output"] == "Preso: la mela.\n", "session.send: testo ed eventi")
+    # [Studio 0.10 / sidecar 0.10.0] I pulsanti-verbo accompagnano ogni risposta.
+    for nome, risposta in (("session.start", avvio), ("session.send", turno)):
+        pulsanti = risposta.get("buttons")
+        _check(isinstance(pulsanti, dict) and pulsanti.get("fase") == "gioco"
+               and any(v["verbo"] == "esamina" for v in pulsanti.get("verbi", [])),
+               f"{nome}: i pulsanti-verbo (fase «gioco», con «esamina»)")
+
+
+
+def _storia_a_due_file(cartella):
+    """Una storia con un Includi: scrive storia.fav e oggetti.fav e ne dà i percorsi."""
+    storia = os.path.join(cartella, "storia.fav")
+    oggetti = os.path.join(cartella, "oggetti.fav")
+    with open(storia, "w", encoding="utf-8") as f:
+        f.write('# La mia storia\nInclidi "x".\n') if False else f.write(
+            '# La mia storia\nIncludi "oggetti.fav".\n'
+            'La descrizione del salotto è "Un salotto con la cucina a sud.".\n'
+            'Il salotto è una stanza.\nLa cucina è una stanza.\n'
+            'Il giocatore comincia in cucina.\nLa cucina collega nord a il salotto.\n'
+            'La descrizione della cucina è "Una cucina fredda.".\n'
+            'Invece di aprire il frigo: dire "Il frigo della cucina è vuoto.".\n')
+    with open(oggetti, "w", encoding="utf-8") as f:
+        f.write('Il frigo è un contenitore.\nIl frigo è nella cucina.\nLa mela è una cosa.\n'
+                'La mela è nel frigo.\nIl gatto è un personaggio.\nIl gatto è in salotto.\n'
+                'Il dialogo del gatto comincia con "saluto".\nIl gatto al nodo "saluto" dice "Miao.".\n'
+                'Al nodo "saluto" l\'opzione "Ciao" chiude il dialogo.\n')
+    return storia, oggetti
+
+
+def test_storie_a_piu_file_per_lo_studio():
+    print("[Studio 1.1: sorgenti vive, riordino di tutta la storia, rinomina e riferimenti]")
+    from strumenti_ide import (sorgenti_vive, riordina_storia, rinomina_entita,
+                               riferimenti_entita, analizza_outline)
+    import favella_server
+    with tempfile.TemporaryDirectory() as cartella:
+        storia, oggetti = _storia_a_due_file(cartella)
+
+        # Sorgenti vive: il buffer non salvato di un file incluso conta.
+        viva = open(oggetti, encoding="utf-8").read() + "La pera è una cosa.\nLa pera è nel frigo.\n"
+        con = favella_server._gestisci_richiesta(
+            {"id": 1, "method": "world.outline", "params": {"path": storia, "sources": {oggetti: viva}}})
+        senza = favella_server._gestisci_richiesta(
+            {"id": 2, "method": "world.outline", "params": {"path": storia}})
+        _check("La pera" in [o["name"] for o in con["result"]["objects"]]
+               and "La pera" not in [o["name"] for o in senza["result"]["objects"]],
+               "una sorgente viva sostituisce il disco solo per la durata della chiamata")
+        _check(open(oggetti, encoding="utf-8").read() == viva[:viva.index("La pera è una cosa")],
+               "il disco non è stato toccato")
+
+        # L'outline dà anche le direzioni opposte (per riscrivere i ritorni).
+        out = analizza_outline(storia)
+        _check(out["oppositeDirections"].get("nord") == "sud" and out["oppositeDirections"].get("est") == "ovest",
+               "l'outline dice qual è l'opposta di ogni direzione")
+
+        # Riordino: ogni file nel suo file, gli Includi restano in cima.
+        r = riordina_storia(storia)
+        _check(r["ok"] and {os.path.basename(f["path"]) for f in r["files"]} == {"storia.fav", "oggetti.fav"},
+               "il riordino della storia copre tutti i file")
+        testo_storia = next(f["text"] for f in r["files"] if f["path"].endswith("storia.fav"))
+        righe = testo_storia.split("\n")
+        _check(righe[0] == "# La mia storia" and righe[1] == 'Includi "oggetti.fav".',
+               "il commento e l'Includi restano in cima")
+        _check(testo_storia.index("La cucina è una stanza.") < testo_storia.index("La descrizione della cucina")
+               and testo_storia.index("Invece di") > testo_storia.index("La cucina collega"),
+               "la stanza con la sua descrizione e le uscite, poi le regole")
+        scritte = {f["path"]: f["text"] for f in r["files"]}
+        with sorgenti_vive({p: t for p, t in scritte.items() if p != storia}):
+            ancora = riordina_storia(storia, scritte[storia])
+        _check(ancora["ok"] and not any(f["changed"] for f in ancora["files"]),
+               "riordinare una storia già riordinata non cambia più niente")
+        # Riordinare non cambia il mondo.
+        with sorgenti_vive({p: t for p, t in scritte.items() if p != storia}):
+            dopo = analizza_outline(storia, scritte[storia])
+        _check(dopo["ok"] and sorted(x["name"] for x in dopo["rooms"]) == sorted(x["name"] for x in out["rooms"])
+               and sorted(x["name"] for x in dopo["objects"]) == sorted(x["name"] for x in out["objects"]),
+               "dopo il riordino la storia compila e ha le stesse stanze e gli stessi oggetti")
+
+        # Rinomina: cambia genere, adatta le preposizioni, non tocca i testi.
+        r = rinomina_entita(storia, None, "La cucina", "Il tinello")
+        _check(r["ok"] and r["replaced"] == 5, "la cucina compare in 5 frasi e le cambia tutte")
+        ogg = next(f["text"] for f in r["files"] if f["path"].endswith("oggetti.fav"))
+        sto = next(f["text"] for f in r["files"] if f["path"].endswith("storia.fav"))
+        _check("Il frigo è nel tinello." in ogg, "«nella cucina» diventa «nel tinello» (anche nel file incluso)")
+        _check("Il tinello è una stanza." in sto and "Il tinello collega nord a il salotto." in sto
+               and "La descrizione del tinello è" in sto and "Il giocatore comincia in tinello." in sto,
+               "articolo maiuscolo a inizio frase, preposizioni adattate")
+        _check('"Una cucina fredda."' in sto and any(m["line"] for m in r["mentions"]),
+               "i testi non si toccano; il vecchio nome rimasto è segnalato")
+        r2 = rinomina_entita(storia, None, "La cucina", "L'atrio")
+        sto2 = next(f["text"] for f in r2["files"] if f["path"].endswith("storia.fav"))
+        _check(r2["ok"] and "La descrizione dell'atrio è" in sto2 and "l'atrio" in sto2.lower(),
+               "con un nome che comincia per vocale: «dell'atrio»")
+        _check(not rinomina_entita(storia, None, "La cucina", "Il salotto")["ok"],
+               "un nome già preso è rifiutato")
+        _check(not rinomina_entita(storia, None, "La cucina", "Il tin(ello)")["ok"],
+               "un nome con caratteri strani è rifiutato")
+        _check(not rinomina_entita(storia, None, "La cantina", "Il tinello")["ok"],
+               "un'entità che non c'è è rifiutata")
+        _check(rinomina_entita(storia, None, "La mela", "La pera")["ok"], "si rinominano anche gli oggetti")
+
+        # Riferimenti: che cosa porterebbe via l'eliminazione.
+        rif = riferimenti_entita(storia, None, "La cucina")
+        categorie = [i["category"] for i in rif["items"]]
+        _check(rif["ok"] and rif["kind"] == "stanza" and len(rif["items"]) == 5
+               and {"definizione", "partenza", "uscita", "descrizione", "posizione"} <= set(categorie),
+               "la cucina è citata da 5 frasi di cinque categorie")
+        _check(any(i["span"]["file"].endswith("oggetti.fav") for i in rif["items"]),
+               "ogni frase ha il suo file")
+        gatto = riferimenti_entita(storia, None, "Il gatto")
+        _check(sum(1 for i in gatto["items"] if i["category"] == "dialogo") == 3,
+               "di un personaggio, anche le risposte dei suoi nodi")
+        frigo = riferimenti_entita(storia, None, "Il frigo")
+        _check(any(i["category"] == "regola" for i in frigo["items"]), "le regole che lo citano sono elencate")
+
+
+def test_riordino_di_un_file_singolo_come_prima():
+    print("[Studio 1.1: il riordino del file singolo non è cambiato]")
+    from strumenti_ide import riordina_sorgente
+    with tempfile.TemporaryDirectory() as cartella:
+        p = os.path.join(cartella, "s.fav")
+        with open(p, "w", encoding="utf-8") as f:
+            f.write("La torcia è una cosa.\n# la stanza\nLa cucina è una stanza.\nLa torcia è nella cucina.\n")
+        r = riordina_sorgente(p)
+        _check(r["ok"] and r["text"].index("# la stanza") < r["text"].index("La torcia è una cosa."),
+               "le stanze prima degli oggetti, col loro commento")
+        with open(p, "w", encoding="utf-8") as f:
+            f.write('Includi "altro.fav".\nLa cucina è una stanza.\n')
+        _check(not riordina_sorgente(p)["ok"], "con un Includi il vecchio riordino rifiuta ancora")
+
+
+def test_copie_del_motore_nel_sito_allineate():
+    print("[1.3.0 L-7: le copie del motore nel sito sono identiche ai moduli]")
+    cartella = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                            "landingpage", "public", "favella-engine", "engine")
+    if not os.path.isdir(cartella):
+        _check(True, "copie del sito assenti in questo checkout: niente da confrontare")
+        return
+    radice = os.path.dirname(os.path.abspath(__file__))
+    diverse = []
+    for modulo in ("compilatore", "gioco", "strutture", "libreria_azioni", "favella_utils"):
+        with open(os.path.join(radice, modulo + ".py"), "rb") as f:
+            originale = f.read()
+        with open(os.path.join(cartella, modulo + ".fav"), "rb") as f:
+            copia = f.read()
+        if originale != copia:
+            diverse.append(modulo)
+    _check(not diverse, f"copie identiche (diverse: {diverse}); risincronizza con SYNC.md")
+
+
+def main():
+    # [1.4.3] Con l'uscita rediretta su file, in Windows la console è cp1252 e le
+    # descrizioni dei test con «→» o simili interrompevano la suite a metà.
+    from favella_utils import assicura_console_utf8
+    assicura_console_utf8()
+    tests = [
+        test_disambiguazione_definizioni,
+        test_nomi_con_parole_quasi_riservate,
+        test_posizione_iniziale_dichiarata,
+        test_posizione_iniziale_fallback,
+        test_posizione_iniziale_inesistente_e_errore,
+        test_verbo_sconosciuto_genera_warning,
+        test_verbo_valido_nessun_warning,
+        test_refuso_proprieta_in_condizione,
+        test_proprieta_da_conseguenza_non_e_refuso,
+        test_escape_virgolette_nelle_stringhe,
+        test_normalizzazione_apostrofo_tipografico,
+        # Livello 2 — logica composita
+        test_condizione_and,
+        test_condizione_or,
+        test_negazione_possesso,
+        test_negazione_proprieta,
+        test_conseguenze_multiple,
+        test_conseguenze_multiple_forma_breve,
+        test_refuso_dentro_condizione_composita,
+        # Livello 4 — alias/sinonimi di oggetti
+        test_alias_risoluzione_esatta,
+        test_alias_multiparola_quotato,
+        test_alias_parziale,
+        test_alias_su_non_oggetto_warning,
+        # Livello 4 — verbi personalizzati (M1)
+        test_verbo_personalizzato_dichiarazione,
+        test_verbo_personalizzato_runtime,
+        test_verbo_personalizzato_senza_regola,
+        test_verbo_personalizzato_multiparola_accettato,
+        # Livello 4 — direzioni personalizzate / data-driven (L1)
+        test_direzioni_personalizzate_connessione,
+        test_direzioni_personalizzate_runtime,
+        test_direzione_regola_canonicalizza_abbreviazione,
+        test_direzione_conflitto_parola_riservata_errore,
+        test_scanner_raccoglie_direzioni,
+        # Livello 4 — contenitori e supporti, modello (M1)
+        test_contenitore_dichiarazione,
+        test_supporto_dichiarazione,
+        test_collocazione_in_contenitore,
+        test_collocazione_su_supporto,
+        test_collocazione_su_non_contenitore_errore,
+        # 0.17.0 — robustezza d'ordine
+        test_ordine_posizione_prima_della_stanza,
+        test_ordine_collocazione_prima_del_contenitore,
+        test_ordine_proprieta_prima_dell_oggetto,
+        test_ordine_descrizione_prima_dell_entita,
+        test_ordine_conseguenza_verso_oggetto_definito_dopo,
+        test_ordine_destinazione_inesistente_resta_errore,
+        test_ordine_regola_bersaglio_definito_dopo,
+        test_ordine_regola_bersaglio_non_oggetto_resta_errore,
+        test_linter_demone_non_falsa_variabile_inutilizzata,
+        test_linter_demone_non_falsa_oggetto_orfano,
+        test_comando_dopo_fine_partita_e_noop,
+        test_scanner_raccoglie_contenitori,
+        # Livello 4 — contenitori e supporti, runtime (M1)
+        test_runtime_contenitore_aperto_scope,
+        test_runtime_contenitore_chiuso_nasconde,
+        test_runtime_metti_in_contenitore,
+        test_runtime_metti_su_supporto,
+        test_runtime_metti_in_contenitore_chiuso_rifiutato,
+        test_runtime_conseguenza_sposta_in_contenitore,
+        # Livello 3 — proprietà opposte dichiarabili (M5)
+        test_opposti_dichiarati,
+        test_opposti_default_aperta_chiusa,
+        test_concordanza_genere_proprieta,
+        # Livello 3 — condizioni di fine partita
+        test_fine_partita_vinci,
+        test_fine_partita_perdi_termina,
+        test_fine_partita_con_altre_conseguenze,
+        test_runtime_partita_finita_helper,
+        # Livello 3 — stato astratto / variabili 'stato' (G3)
+        test_stato_dichiarazione_e_valore_iniziale,
+        test_stato_dichiarazione_senza_valore_e_none,
+        test_stato_condizione_e_conseguenza,
+        test_stato_condizione_negata,
+        test_stato_disgiunto_da_proprieta_oggetto,
+        test_scanner_raccoglie_variabili,
+        # Livello 3 — contatori numerici
+        test_contatore_dichiarazione_default_zero,
+        test_contatore_aumenta_diminuisci,
+        test_contatore_diventa,
+        test_contatore_confronti,
+        test_scanner_raccoglie_contatori,
+        # Livello 3 — eventi a turni
+        test_evento_al_turno,
+        test_evento_ogni_turni,
+        test_evento_numero_invalido_warning,
+        test_runtime_eventi_a_turni,
+        # Livello 8 — demoni / eventi condizionali
+        test_demone_compila,
+        test_demone_quando_fronte_di_salita,
+        test_demone_quando_baseline_niente_falso_fronte,
+        test_demone_quando_scatta_una_sola_volta,
+        test_demone_ogni_turno_a_livello,
+        test_demone_cascata_un_solo_passaggio,
+        # 0.16.0 — valore iniziale dei contatori
+        test_contatore_valore_iniziale,
+        test_contatore_valore_iniziale_ordine_libero,
+        test_contatore_valore_iniziale_in_condizione,
+        # Livello 2.5 — Passata 1 (scanner symbol-table) e parole riservate
+        test_scanner_raccoglie_stanze_e_oggetti,
+        test_scanner_nomi_multiparola,
+        test_scanner_connessione_introduce_stanze,
+        test_scanner_ignora_punti_nelle_stringhe,
+        test_parole_riservate_coprono_le_keyword,
+        # Livello 2.5 — guardia anti-ambiguità permanente
+        test_guardia_lalr_si_costruisce_senza_conflitti,
+        test_guardia_zero_ambiguita,
+        test_guardia_nome_con_parola_chiave_disambiguato,
+        # Livello 5 — interpolazione di testo dinamico [var] (0.9.1)
+        test_interpolazione_contatore,
+        test_interpolazione_stato,
+        test_interpolazione_nome_oggetto,
+        test_interpolazione_in_descrizione,
+        test_interpolazione_sconosciuto_resta_letterale_e_warning,
+        test_interpolazione_stato_non_impostato_vuoto,
+        test_interpolazione_nessun_warning_se_noto,
+        # Livello 5 — regole globali senza oggetto (0.9.2)
+        test_regola_globale_compila_senza_bersaglio,
+        test_regola_globale_condizione_falsa_non_scatta,
+        test_regola_globale_condizione_vera_scatta,
+        test_regola_globale_senza_condizione_scatta_sempre,
+        test_regola_specifica_precede_globale,
+        test_regola_globale_esegue_conseguenza,
+        # Livello 5 — descrizioni condizionali (0.9.3)
+        test_descrizione_condizionale_compila,
+        test_descrizione_condizionale_base_quando_falsa,
+        test_descrizione_condizionale_variante_quando_vera,
+        test_descrizione_condizionale_prima_vera_vince,
+        test_descrizione_condizionale_su_stanza,
+        test_descrizione_condizionale_con_interpolazione,
+        # Livello 5 — concordanza grammaticale italiana (0.9.4)
+        test_concordanza_inferenza_genere_numero,
+        test_concordanza_frase_indeterminativa,
+        test_concordanza_oggetto_metodo,
+        test_concordanza_elenco_stanza_singolari,
+        test_concordanza_elenco_plurale,
+        # Livello 5b — NPC e dialoghi, fondazione (0.10.1)
+        test_npc_dichiarazione,
+        test_dialogo_struttura,
+        test_dialogo_avvio_runtime,
+        test_dialogo_scelta_chiude,
+        test_dialogo_scelta_per_testo,
+        test_dialogo_uscita_universale_non_esce_dal_gioco,
+        test_dialogo_non_consuma_turno,
+        test_dialogo_battuta_interpolata,
+        test_personaggio_senza_dialogo_warning,
+        test_dialogo_su_non_personaggio_errore,
+        # Livello 5b — ramificazione dei dialoghi (0.10.2)
+        test_ramificazione_struttura,
+        test_ramificazione_transizione_runtime,
+        test_ramificazione_ritorno_e_chiusura,
+        test_ramificazione_nodo_inesistente_warning,
+        # Livello 5b — conseguenze sulle scelte (0.10.3)
+        test_conseguenza_scelta_struttura,
+        test_conseguenza_scelta_modifica_mondo,
+        test_conseguenza_scelta_fine_partita,
+        # Livello 5b — opzioni condizionali (0.10.4)
+        test_opzione_condizionale_struttura,
+        test_opzione_condizionale_nascosta_se_falsa,
+        test_opzione_condizionale_visibile_se_vera,
+        test_opzione_condizionale_selezione_per_numero_coerente,
+        # Livello 6 — linter semantico (0.11.1)
+        test_lint_stanza_irraggiungibile,
+        test_lint_stanza_collegata_non_segnalata,
+        test_lint_oggetto_orfano,
+        test_lint_oggetto_collocato_non_orfano,
+        test_lint_oggetto_introdotto_da_conseguenza_non_orfano,
+        test_lint_regola_morta_specifica,
+        test_lint_regola_condizionale_non_morta,
+        test_lint_regola_globale_morta,
+        test_lint_variabile_inutilizzata,
+        test_lint_variabile_usata_in_interpolazione,
+        test_lint_variabile_usata_in_condizione,
+        # Livello 6 — moduli / import multi-.fav (0.11.2)
+        test_include_basico,
+        test_include_dedup,
+        test_include_ciclo,
+        test_include_path_relativo,
+        test_include_file_mancante,
+        test_include_errore_attribuito_al_file,
+        # Livello 6 — spec EBNF formale versionata (0.11.3)
+        test_spec_ebnf_esiste,
+        test_spec_ebnf_allineata_alla_grammatica,
+        test_spec_ebnf_documenta_terminali_chiusi,
+        # Livello 7 — capacità di trasporto
+        test_capacita_dichiarazione,
+        test_capacita_blocca_oltre_limite,
+        test_capacita_bonus_additivo,
+        test_capacita_illimitata_default,
+        test_capacita_zero,
+        # [0.30.0] Cassetto A — A1 nomi non validi, A3 'dire' opzionale, A4 idioma direzione
+        test_a1_nome_con_carattere_non_valido_errore,
+        test_a1_nome_valido_con_accenti_apostrofo_spazi_ok,
+        test_a3_regola_senza_dire_compila_ed_esegue,
+        test_a3_regola_con_dire_resta_invariata,
+        test_a4_sinonimo_direzione_avviso_mirato,
+        test_a4_idioma_direzioni_opposte_funziona,
+        # [0.31.0] Tema 1 — i contatori si parlano (operando-quantità + confronti)
+        test_tema1a_contatore_come_quantita_in_di,
+        test_tema1a_diventa_contatore,
+        test_tema1a_di_letterale_invariato,
+        test_tema1a_estrazione_casuale_in_intervallo_e_riproducibile,
+        test_tema1a_estrazione_casuale_annulla_safe,
+        test_tema1b_confronto_contatore_contatore,
+        test_tema1b_confronto_letterale_invariato,
+        test_tema1_operando_marca_contatore_come_usato,
+        test_tema1_strutturato_serializza_operando,
+        # [0.32.0] Tema 2 — casualità d'autore non-numerica (scelta di stato + probabilità)
+        test_tema2b_scelta_stato_pesca_dall_elenco,
+        test_tema2b_scelta_stato_riproducibile,
+        test_tema2b_scelta_stato_annulla_safe,
+        test_tema2b_un_solo_valore_e_deterministico,
+        test_tema2b_non_collide_con_diventa_operando,
+        test_tema2b_stato_solo_scelto_non_e_inutilizzato,
+        test_tema2c_probabilita_in_intervallo,
+        test_tema2c_probabilita_estremi,
+        test_tema2c_probabilita_annulla_safe,
+        test_tema2c_probabilita_in_regola_e_in_and,
+        test_tema2c_serializza_chance_e_2b_pick,
+        # [0.33.0] Tema 4 — il mondo che cambia in scena (buio commutabile + battuta condizionale)
+        test_tema4a_diventa_buia_spegne_la_luce,
+        test_tema4a_diventa_illuminata_riaccende,
+        test_tema4a_chiara_e_un_sinonimo_di_illuminata,
+        test_tema4a_annulla_safe,
+        test_tema4a_bersaglio_non_stanza_e_errore,
+        test_tema4a_proprieta_non_di_luce_e_errore,
+        test_tema4b_battuta_condizionale_prima_vera_vince,
+        test_tema4b_battuta_condizionale_runtime,
+        test_tema4b_battuta_condizionale_con_segnaposto,
+        test_tema4b_battuta_incondizionata_resta_compatibile,
+        # [0.34.0] Tema 3 — lo stato che parla allo stato (indirezione)
+        test_tema3_copia_stato_in_stato,
+        test_tema3_confronto_e_come_vero_e_falso,
+        test_tema3_confronto_negato,
+        test_tema3_annulla_safe,
+        test_tema3_copia_da_stato_non_impostato_propaga_none,
+        test_tema3_mismatch_stato_contatore_copia_e_errore,
+        test_tema3_due_contatori_confronto_e_errore,
+        test_tema3_confronto_letterale_resta_intatto,
+        # Livello 2.5 — errori d'autore migliori
+        test_errore_entita_sconosciuta,
+        test_errore_entita_suggerimento,
+        test_errore_sintassi_resta_generico,
+        test_storia_esempio_compila,
+        # 0.18.0 — A1: regole a DUE OGGETTI che valutano la clausola 'se'
+        test_due_oggetti_se_condizionale_vince_sulla_semplice,
+        test_due_oggetti_se_falso_senza_fallback_cade_su_default,
+        test_due_oggetti_prep_tollerante_resta_attiva,
+        # 0.18.0 — A2: genitivo 'dei' nelle descrizioni
+        test_descrizione_genitivo_dei,
+        test_descrizione_genitivi_singolari_restano_validi,
+        # 0.18.0 — A5: copula plurale 'sono'
+        test_copula_sono_dichiarazioni,
+        test_copula_sono_proprieta_posizione,
+        test_copula_sono_condizioni_e_conseguenze,
+        test_copula_e_ancora_valida,
+        # 0.27.0 — Revisione totale (Lotto 1): copula plurale stati/contatori (A),
+        # accesa/spenta opposte di default (B), 'lascia' al buio (C), nomi propri (M4)
+        test_copula_sono_stato_e_contatore,
+        test_copula_partono_da_contatore_plurale,
+        test_accesa_spenta_opposte_di_default,
+        test_lascia_bloccato_al_buio,
+        test_prima_maiuscola_preserva_nomi_propri,
+        test_proprieta_con_prefisso_preposizione,
+        test_turno_atomico_su_eccezione,
+        test_dialogo_annullabile_come_unita,
+        # 0.18.0 — A3: normalizzazione NFC degli accenti
+        test_accenti_nfc_normalizzazione_nome,
+        test_accenti_risoluzione_runtime_nfd,
+        test_accenti_sorgente_nfd_compila,
+        # 0.18.0 — A4: preposizioni d'azione articolate
+        test_prep_azione_articolata_compila,
+        test_prep_azione_articolata_runtime,
+        test_prep_azione_semplice_resta_valida,
+        # 0.18.0 — B: nuovi costrutti di design
+        test_contatore_al_massimo_lte,
+        test_contatore_diverso_neq,
+        test_non_gruppo_b7,
+        test_posizione_giocatore_b1,
+        test_teletrasporto_giocatore_b2,
+        test_teletrasporto_stanza_inesistente_errore,
+        test_esito_personalizzato_b3,
+        test_esito_default_resta_senza_testo,
+        # 0.18.0 — B6: verbi personalizzati multi-parola
+        test_verbo_multiparola_dichiarazione_e_regola,
+        test_verbo_multiparola_runtime,
+        test_verbo_monoparola_resta_valido,
+        # 0.19.0 — A7: verbi intransitivi
+        test_verbo_intransitivo_scatta_senza_oggetto,
+        test_verbo_intransitivo_con_conseguenza,
+        test_verbo_transitivo_resta_default,
+        # 0.19.0 — A8: inventario iniziale del giocatore
+        test_inventario_iniziale,
+        test_inventario_iniziale_oggetto_inesistente_e_errore,
+        test_inventario_iniziale_order_independent,
+        # 0.19.0 — A9: tick silenzioso (dire opzionale in eventi/demoni)
+        test_evento_silenzioso,
+        test_demone_silenzioso,
+        test_evento_con_dire_resta_valido,
+        # 0.20.0 — A1: pronomi e anafora
+        test_anafora_clitico_femminile,
+        test_anafora_clitico_maschile_da_elenco_stanza,
+        test_anafora_mismatch_genere,
+        test_anafora_riferito_non_raggiungibile,
+        test_anafora_pronome_tonico,
+        test_anafora_plurale,
+        test_anafora_nessun_falso_positivo,
+        # 0.21.0 — A3: comandi di servizio (annulla / ancora)
+        test_annulla_disfa_ultimo_turno,
+        test_annulla_ripristina_contatore_e_turno,
+        test_annulla_multiplo,
+        test_annulla_niente_da_annullare,
+        test_ancora_ripete_ultimo_comando,
+        test_ancora_niente_da_ripetere,
+        # 0.22.0 — A2: varietà nelle risposte (descrizioni alternate)
+        test_descrizione_sequenza,
+        test_descrizione_casuale_niente_ripetizione_immediata,
+        test_descrizione_casuale_deterministica,
+        test_descrizione_varianti_annulla_riavvolge,
+        test_descrizione_varianti_interpolano,
+        test_descrizione_singola_resta_valida,
+        test_descrizione_condizionale_a_varianti,
+        # [0.24.0 / A4] Buio e luce
+        test_a4_parsing_buia_e_illumina,
+        test_a4_buio_blocca_esamina_e_prendi,
+        test_a4_guarda_mostra_buio_pesto,
+        test_a4_torcia_in_inventario_illumina,
+        test_a4_fonte_a_terra_rischiara,
+        test_a4_torcia_spenta_non_illumina,
+        test_a4_accendi_la_luce_via_regola,
+        test_a4_luce_in_contenitore_chiuso_non_illumina,
+        test_a4_luce_in_contenitore_aperto_illumina,
+        test_a4_stanza_non_buia_sempre_visibile,
+        test_a4_uscite_percorribili_al_buio,
+        test_a4_demone_spegne_la_luce,
+        test_a4_regola_autore_precede_il_buio,
+        test_a4_concordanza_buio_maschile,
+        test_a4_illumina_prima_della_dichiarazione,
+        # [0.25.0 / A5] Movimento degli NPC
+        test_a5_parsing_due_forme,
+        test_a5_movimento_deterministico,
+        test_a5_movimento_casuale_deterministico_col_seed,
+        test_a5_annuncio_uscita_con_direzione,
+        test_a5_annuncio_ingresso,
+        test_a5_nessun_annuncio_altrove,
+        test_a5_movimento_via_evento,
+        test_a5_movimento_via_regola_giocatore,
+        test_a5_cambia_stanza_senza_uscite_no_op,
+        test_a5_destinazione_inesistente_errore,
+        # [0.26.0 / A6] Sinonimi di verbo
+        test_a6_parsing_e_registrazione,
+        test_a6_sinonimo_si_comporta_come_il_verbo,
+        test_a6_sinonimo_attiva_le_regole_del_canonico,
+        test_a6_il_canonico_continua_a_funzionare,
+        test_a6_bersaglio_sconosciuto_warning,
+        test_a6_piu_sinonimi,
+        # [1.1.0] Posto iniziale degli oggetti
+        test_posto_parsing_e_registrazione,
+        test_posto_mostrato_e_escluso_dall_elenco,
+        test_posto_sparisce_dopo_la_presa,
+        test_posto_annulla_lo_riporta,
+        test_posto_spostamento_da_regola,
+        test_posto_errori_e_avvisi,
+        test_posto_nomi_composti_ammessi,
+        test_posto_da_inventario_mai_mostrato,
+        # [1.1.0] Consolidamento
+        test_quando_riscatta_a_ogni_fronte,
+        test_capienza_avviso_su_spostamento_in_inventario,
+        test_ancora_dopo_annulla_ripete_il_comando_disfatto,
+        # [1.2.0] Sinonimi dei verbi d'autore, SALVA/CARICA, collaudo dinamico
+        test_sinonimo_verbo_autore,
+        test_sinonimo_verbo_autore_ignoto_avvisa,
+        test_salva_carica_stato_identico,
+        test_salva_carica_annulla_e_ancora,
+        test_salva_carica_durante_un_dialogo,
+        test_salva_carica_rifiuti,
+        test_salva_non_consuma_turni_ne_entra_nella_sequenza,
+        test_carica_verbo_d_autore_non_intercettato,
+        test_salva_su_file_nella_cartella_di_lavoro,
+        test_esploratore_finali_con_percorso,
+        test_esploratore_trova_un_segnaposto_rotto,
+        # [1.2.2] Criticità gravissime (documentazione/analisi-critica-1.2.1.md)
+        test_regola_vale_per_i_sinonimi_di_libreria,
+        test_regola_sul_sinonimo_ha_la_precedenza,
+        test_regola_scritta_con_un_sinonimo_resta_sua,
+        test_apri_mangia_sposta_sono_azioni_distinte,
+        test_verbi_d_autore_non_diventano_sinonimi,
+        test_avviso_sui_sinonimi_gia_noti,
+        test_verbi_d_autore_non_passano_alla_storia_successiva,
+        test_guarda_e_osserva_con_un_oggetto_lo_esaminano,
+        test_guarda_x_attiva_le_regole_di_esamina,
+        test_libreria_verbi_in_due_azioni_distinti_dall_argomento,
+        test_nodo_con_battute_di_due_personaggi_e_un_errore,
+        test_nodo_condiviso_da_un_solo_parlante_resta_lecito,
+        test_possesso_vale_dentro_cio_che_si_porta,
+        test_capienza_conta_il_contenuto_degli_zaini,
+        test_capienza_contenitore_gia_pieno,
+        test_lascia_un_oggetto_dallo_zaino,
+        test_capienza_inventario_piatto_invariato,
+        # [1.3.0] Blocco A: sessione e turni
+        test_errori_del_parser_non_consumano_turni,
+        test_mossa_senza_uscita_non_consuma_turno,
+        test_posare_non_ristampa_la_stanza,
+        test_una_direzione_non_e_una_cosa,
+        test_avviso_del_sinonimo_dice_il_verbo_vero_e_si_silenzia,
+        test_usare_una_cosa_su_un_altra_a_modo_proprio,
+        test_prima_di_vai_senza_uscita_e_un_turno_vero,
+        test_usa_con_una_direzione_non_e_un_errore,
+        test_la_domanda_di_usa_non_consuma_turni,
+        test_esci_chiede_conferma,
+        test_esci_come_movimento,
+        test_dopo_la_fine_si_puo_annullare_e_ricominciare,
+        test_ricomincia_durante_la_partita,
+        test_quando_non_scatta_se_vero_in_partenza,
+        test_preparare_i_demoni_non_consuma_il_caso,
+        test_salva_e_carica_non_intercettano_azioni_sugli_oggetti,
+        # [1.3.0] Blocco B: lessico e diagnostica
+        test_parole_chiave_non_spezzano_gli_aggettivi,
+        test_parole_chiave_senza_distinzione_di_maiuscole,
+        test_errori_di_sintassi_in_italiano,
+        test_tutti_gli_errori_in_una_volta,
+        test_consiglio_su_o_per_oppure,
+        # [1.3.0] Blocco C: invarianti e moduli
+        test_nomi_che_si_scontrano_con_la_grammatica,
+        test_oggetto_collocato_in_due_posti,
+        test_dichiarazioni_doppie_avvisano,
+        test_stanza_nata_da_un_refuso_in_collega,
+        test_includi_la_libreria,
+        test_partenza_implicita_con_piu_file,
+        # [1.3.0] Blocco D: verbi, preposizioni, parser, italiano
+        test_direzioni_su_giu_e_intermedie,
+        test_verbi_nuovi_della_libreria,
+        test_verbi_nuovi_cedono_ai_verbi_d_autore,
+        test_preposizioni_di_termine_e_provenienza,
+        test_nomi_con_preposizioni_e_ricerca_per_parole,
+        test_disambiguazione_con_seguito,
+        test_tutto_ed_elenchi,
+        test_italiano_dei_messaggi,
+        test_la_stanza_mostra_cio_che_sta_sui_supporti,
+        # [1.3.0] Blocco E: il modello del mondo
+        test_condizioni_sulla_posizione_degli_oggetti,
+        test_togliere_una_proprieta,
+        test_uscite_che_cambiano,
+        test_oggetti_di_scena_e_in_piu_stanze,
+        test_uscite_solo_verso_stanze_visitate,
+        test_personaggi_che_tengono_oggetti,
+        test_argomenti_di_conversazione,
+        test_il_linter_vede_tutto_il_mondo,
+        test_forme_nuove_nell_ide,
+        # [1.3.0] Blocco F: espressività
+        test_e_adesso_anche_sulla_prima_conseguenza,
+        test_testi_a_capo_parentesi_e_segnaposto_del_motore,
+        test_testo_condizionale,
+        test_titolo_autore_prologo_e_messaggi,
+        test_numeri_negativi_e_aritmetica,
+        test_il_turno_si_legge,
+        test_timer_che_parte_da_un_fatto,
+        test_regole_prima_dopo_altrimenti_e_categorie,
+        test_forme_del_blocco_f_nell_ide,
+        # [1.3.0] Blocco G: le lievi
+        test_numeri_in_lettere_e_singolari,
+        test_concordanza_dei_plurali_in_chi_e_io,
+        test_istantanee_senza_dati_statici,
+        test_salvataggi_dopo_una_correzione_della_storia,
+        test_copie_del_motore_nel_sito_allineate,
+        # [1.4.0] L-7 completata e pulsanti-verbo
+        test_uscita_a_eventi,
+        test_carica_rigioca_in_silenzio,
+        test_compilatore_diviso,
+        test_elenchi_dei_moduli_del_motore_allineati,
+        test_frase_dei_comandi,
+        test_pulsanti_verbo_proposte,
+        test_pulsanti_verbo_frasi_capite,
+        test_pagina_esportata_con_pulsanti,
+        test_sidecar_restituisce_gli_eventi,
+        test_parole_e_comandi_per_lo_studio,
+        # [Studio 1.1] storie a più file
+        test_storie_a_piu_file_per_lo_studio,
+        test_riordino_di_un_file_singolo_come_prima,
+        # Robustezza console (debito R8 — fix cp1252)
+        test_robustezza_console_cp1252_non_crasha,
+        # [1.4.4] riga degli errori semantici
+        test_riga_degli_errori_semantici,
+    ]
+    print("=" * 60)
+    print("FAVELLA 1 — Suite di test del linguaggio (v1.4.4)")
+    print("=" * 60)
+    for t in tests:
+        t()
+    print("-" * 60)
+    print(f"RISULTATO: {_PASS} passati, {_FAIL} falliti")
+    if _FAILS:
+        print("Falliti:")
+        for f in _FAILS:
+            print(f"  - {f}")
+    print("=" * 60)
+    sys.exit(1 if _FAIL else 0)
+
+
+if __name__ == "__main__":
+    main()

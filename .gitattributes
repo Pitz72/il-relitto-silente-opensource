@@ -1,0 +1,9 @@
+# Tutto il progetto è a fine riga LF (i .fav, il motore, i documenti).
+# Il Git di sistema ha core.autocrlf=true: senza questa riga un clone su
+# Windows riscriverebbe i file in CRLF.
+* text=auto eol=lf
+
+*.jpeg binary
+*.jpg  binary
+*.png  binary
+*.pdf  binary

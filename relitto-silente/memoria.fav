@@ -1,0 +1,155 @@
+# ============================================================================
+# memoria.fav — ATTO III, ALA DELLA MEMORIA
+# Il Relitto Silente (remake) — strato 3
+# ----------------------------------------------------------------------------
+# Santuario del silenzio: il bassorilievo (il Custode, R3) e l'altare, che
+# vuole il disco orientato come i tre soli dell'alba del Salto (N5).
+# Scriptorium: i globi (lo Scriba), il proiettore che tiene il disco, la lastra
+# incisa con il glifo incompiuto (il raschio dello Scriba, R6).
+# Arca della memoria: l'ultimo pilastro e il terminale. Il nucleo si prende
+# con la forza (taglierina: il pilastro si spegne) o con la pazienza (con
+# l'energia il terminale si sveglia da solo e saluta) (N6).
+# Incluso da relitto.fav.
+# ============================================================================
+
+# Come si è aperto l'archivio (lo legge l'Anziano).
+L'archivio è uno stato.
+L'archivio è intatto.
+# Il disco: quale dei tre soli punta in alto (0 in basso, 1 a sinistra, 2 in alto).
+La rotazione è un contatore.
+
+"ruota" è come gira.
+
+# ============================================================================
+# SANTUARIO DEL SILENZIO
+# ============================================================================
+Il santuario del silenzio è una stanza.
+La descrizione del santuario del silenzio è "Una sala circolare, il soffitto così alto che il faro non lo trova. Una luce bianca e fredda sale dai disegni geometrici del pavimento. Le pareti sono coperte di bassorilievi, da terra fino al buio: creature alte e sottili sotto un cielo a tre soli, semi di luce piantati su un mondo fertile, navi immense in partenza. Al centro, un blocco cilindrico di pietra nera. A sud si torna al corridoio; a ovest si apre un altro passaggio.".
+La descrizione del santuario del silenzio se l'altare è schiuso è "La sala dei bassorilievi a tre soli, sotto la sua luce bianca. Nel fianco del blocco di pietra nera si è aperto uno scomparto. A sud il corridoio; a ovest l'altro passaggio.".
+
+Il bassorilievo è una cosa.
+Il bassorilievo è nel santuario del silenzio.
+Il bassorilievo è di scena.
+Il bassorilievo è vergine.
+Il bassorilievo si chiama anche "bassorilievi".
+Il bassorilievo si chiama anche "scene".
+Il bassorilievo si chiama anche "fregio".
+La descrizione del bassorilievo è "Scene incise con una precisione che fa male agli occhi. La prima, la più consumata: tre soli a triangolo sopra un orizzonte, il più grande in alto, e sotto una folla che guarda in su. Poi semi di luce piantati su un mondo fertile, navi immense in partenza. L'ultima: le creature entrano nelle navi, e la loro espressione non è paura. È decisione. La storia di un esodo, con i suoi glifi accanto a ogni scena: TRADUCILI.".
+Invece di tocca il bassorilievo: dire "Le dita seguono i solchi. Creature che guardano tre soli, semi che germogliano fra le stelle, navi che partono: un epitaffio inciso per durare più di chi l'ha inciso.".
+Invece di incidi il bassorilievo se il giocatore non ha la taglierina: dire "Ti servirebbe qualcosa con cui incidere.".
+Invece di incidi il bassorilievo se il bassorilievo è segnata: dire "La tua riga è già lì, in basso, dove il fregio lasciava un palmo di pietra nuda.".
+Invece di incidi il bassorilievo: dire "Cerchi un angolo libero, in basso, dove il fregio lascia un palmo di pietra nuda. Con la taglierina incidi una riga tua: storta, accanto alla loro precisione, una grafia umana fra simboli piegati fino all'ultima molecola. Non racconta un esodo, non custodisce un sapere. Dice soltanto, nella tua lingua, che sei passato di qui e che hai capito. È pochissimo. Ma è vero, ed è tuo." e adesso il bassorilievo è segnata.
+
+L'altare è una cosa.
+L'altare è nel santuario del silenzio.
+L'altare è serrato.
+L'altare si chiama anche "blocco".
+L'altare si chiama anche "pietra nera".
+La descrizione dell'altare è "Un blocco cilindrico di pietra nera che assorbe la luce. La faccia superiore è liscia, tranne un incavo tondo profondo pochi centimetri, con una tacca sul bordo, in cima: come se qualcosa, una volta messo lì, dovesse puntare proprio verso quella tacca.".
+La descrizione dell'altare se l'altare è schiuso è "Una sezione dell'altare si è ritirata: uno scomparto aperto.".
+
+La stele è una cosa.
+La stele è prendibile.
+La stele si chiama anche "stele del ricordo".
+La descrizione della stele è "Una lastra densa di informazioni, leggera e tiepida. Lo scanner potrebbe assorbirne l'archivio: ANALIZZALA.".
+
+# --- L'altare e il disco orientato (N5) --------------------------------------
+Invece di usa il disco sull'altare se l'altare è schiuso: dire "L'altare è già aperto.".
+Invece di usa il disco sull'altare se la rotazione è meno di 2: dire "Appoggi il disco nell'incavo. Scende di un dito e si ferma: i solchi non combaciano. Qualcosa, nella disposizione dei tre soli incisi, è sbagliato.".
+Invece di usa il disco sull'altare: dire "Appoggi il disco nell'incavo, con il sole più grande verso la tacca. Questa volta scende fino in fondo. Per un istante non succede niente, poi dall'interno della pietra arriva un colpo profondo, e una sezione dell'altare si ritira senza rumore. Nello scomparto, posata su un cuscino di luce che sembra solida, c'è la Stele del Ricordo." e adesso l'altare è schiuso e adesso la stele è nel santuario del silenzio e adesso il disco è nel nulla.
+Invece di metti il disco sull'altare se l'altare è schiuso: dire "L'altare è già aperto.".
+Invece di metti il disco sull'altare se la rotazione è meno di 2: dire "Appoggi il disco nell'incavo. Scende di un dito e si ferma: i solchi non combaciano. Qualcosa, nella disposizione dei tre soli incisi, è sbagliato.".
+Invece di metti il disco sull'altare: dire "Appoggi il disco nell'incavo, con il sole più grande verso la tacca. Questa volta scende fino in fondo. Per un istante non succede niente, poi dall'interno della pietra arriva un colpo profondo, e una sezione dell'altare si ritira senza rumore. Nello scomparto, posata su un cuscino di luce che sembra solida, c'è la Stele del Ricordo." e adesso l'altare è schiuso e adesso la stele è nel santuario del silenzio e adesso il disco è nel nulla.
+
+Invece di prendi la stele se l'altare è serrato: dire "Non vedi nessuna stele: l'altare è ancora chiuso.".
+Invece di prendi la stele se il giocatore ha la stele: dire "Ce l'hai già.".
+Invece di prendi la stele se l'altare è schiuso: dire "Prendi la Stele del Ricordo dallo scomparto. È leggera, più di quanto ti aspettassi, e tiepida. La seconda chiave." e adesso la stele è in inventario.
+
+# ============================================================================
+# SCRIPTORIUM
+# ============================================================================
+Lo scriptorium è una stanza.
+La descrizione dello scriptorium è "Una biblioteca circolare senza libri. Dalle nicchie delle pareti i proiettori fanno girare a mezz'aria globi di testo alieno, illeggibili e bellissimi. Al centro, una lastra scura e inclinata, i bordi consumati; intorno, utensili dalle punte di misure diverse, messi in ordine come li mette chi sa di aver finito. In una nicchia a nord il proiettore è spento. A est si torna al santuario; una porta sottile, a nord, porta più in fondo.".
+
+Il globo olografico è una cosa.
+Il globo olografico è nello scriptorium.
+Il globo olografico è di scena.
+Il globo olografico si chiama anche "globi".
+Il globo olografico si chiama anche "proiettori".
+Il globo olografico si chiama anche "globo".
+La descrizione del globo olografico è "Globi di testo alieno che girano piano a mezz'aria, illeggibili e bellissimi. Senza una chiave di lettura sono soltanto luce: TRADUCILI.".
+
+Il proiettore rotto è una cosa.
+Il proiettore rotto è nello scriptorium.
+Il proiettore rotto è di scena.
+Il proiettore rotto si chiama anche "proiettore".
+Il proiettore rotto si chiama anche "nicchia buia".
+La descrizione del proiettore rotto è "Questo proiettore fa soltanto scintille: nel suo meccanismo è incastrato un disco di pietra scura, pesante, che lo blocca.".
+La descrizione del proiettore rotto se il disco non è nello scriptorium è "Il proiettore resta spento, la nicchia vuota.".
+
+La lastra incisa è una cosa.
+La lastra incisa è nello scriptorium.
+La lastra incisa è di scena.
+La lastra incisa è celata.
+La lastra incisa si chiama anche "iscrizioni".
+La lastra incisa si chiama anche "glifo".
+La lastra incisa si chiama anche "lastra scura".
+La descrizione della lastra incisa è "Simboli incisi nella pietra, non proiettati: tracciati a fondo, con una pressione che ha un ritmo e un'intenzione. Non un archivio: una firma. L'ultimo glifo parte e non torna. TRADUCILA.".
+
+# --- Essenziale: il disco, incastrato nel proiettore -------------------------
+Il disco è una cosa.
+Il disco è prendibile.
+Il disco è nello scriptorium.
+Il disco si chiama anche "disco di pietra".
+La descrizione del disco è "Un disco di pietra nera, spesso una decina di centimetri. Sulla faccia superiore, tre soli incisi a triangolo, di grandezze diverse; il più grande adesso è in basso. Alcuni simboli sul bordo li hai già visti: sull'altare del santuario.".
+La descrizione del disco se la rotazione è almeno 2 è "Un disco di pietra nera, spesso una decina di centimetri. Sulla faccia superiore, tre soli incisi a triangolo; il più grande adesso è in alto.".
+La descrizione del disco se la rotazione è almeno 1 è "Un disco di pietra nera, spesso una decina di centimetri. Sulla faccia superiore, tre soli incisi a triangolo; il più grande adesso è a sinistra.".
+Invece di prendi il disco se il giocatore ha il disco: dire "Ce l'hai già.".
+Invece di prendi il disco: dire "Liberi il disco di pietra incastrato nel meccanismo del proiettore. Il proiettore non lo ripari, ma il disco, coperto di incisioni come quelle dell'altare, adesso ce l'hai tu." e adesso il disco è in inventario.
+Invece di gira il disco se il giocatore non ha il disco: dire "Prima prendilo.".
+Invece di gira il disco se la rotazione è almeno 2: dire "Giri il disco di un terzo: il sole più grande adesso è in basso." e adesso la rotazione diventa 0.
+Invece di gira il disco se la rotazione è almeno 1: dire "Giri il disco di un terzo: il sole più grande adesso è in alto." e adesso la rotazione diventa 2.
+Invece di gira il disco: dire "Giri il disco di un terzo: il sole più grande adesso è a sinistra." e adesso la rotazione diventa 1.
+
+# ============================================================================
+# ARCA DELLA MEMORIA (N6)
+# ============================================================================
+L'arca della memoria è una stanza.
+La descrizione dell'arca della memoria è "Una caverna di cristallo nero. Pilastri di dati alti come monoliti salgono verso un soffitto che non si vede: quasi tutti spenti, molti incrinati. In fondo un pilastro solo pulsa ancora, d'una luce ambrata, intermittente, come se aspettasse qualcosa. È l'unica luce, qui dentro. A sud si torna allo scriptorium.".
+La descrizione dell'arca della memoria se l'archivio è forzato è "La caverna dei pilastri spenti. In fondo anche l'ultimo, adesso, è buio: l'hai spento tu. A sud si torna allo scriptorium.".
+La descrizione dell'arca della memoria se l'archivio è salutato è "La caverna di cristallo nero. In fondo l'ultimo pilastro è acceso per intero, e la sua luce ambrata arriva fino alle pareti. A sud si torna allo scriptorium.".
+
+Il pilastro è una cosa.
+Il pilastro è nell'arca della memoria.
+Il pilastro è di scena.
+Il pilastro si chiama anche "pilastri".
+Il pilastro si chiama anche "monoliti".
+La descrizione del pilastro è "Archivi di dati cristallini, di una capacità che non sai immaginare. Quasi tutti incrinati, attraversati da crepe come ferite. L'ultimo pulsa ancora, appena: come se aspettasse corrente. Lo scanner ti direbbe quanto ne resta: ANALIZZALI.".
+La descrizione del pilastro se l'archivio è forzato è "L'ultimo pilastro è spento. L'hai spento tu, con il plasma, per arrivare prima.".
+La descrizione del pilastro se l'archivio è salutato è "L'ultimo pilastro è acceso per intero. Ha avuto la sua corrente, e ti ha salutato.".
+Invece di analizza il pilastro: dire "ANALISI DELL'ARCHIVIO CENTRALE — integrità dei dati stimata: 0,001%. Corruzione a cascata per degradazione entropica, perdita irreversibile.\nMillenni di storia, scienza, arte, filosofia di una civiltà che ha attraversato una galassia: polvere digitale. È la loro seconda morte, più totale della prima.".
+Invece di tocca il pilastro: dire "La superficie cristallina è tiepida. Una scintilla ambrata risponde al tocco, piccola, e si spegne.".
+
+Il terminale è una cosa.
+Il terminale è nell'arca della memoria.
+Il terminale è spento.
+Il terminale si chiama anche "console".
+Il terminale si chiama anche "bypass".
+La descrizione del terminale è "Un terminale d'accesso al pilastro, spento: non ha corrente. Sulla superficie, un pannello di bypass per le emergenze.".
+La descrizione del terminale se il terminale è acceso è "Lo schermo regge a malapena un'unica parola aliena. Alla base, uno scomparto aperto.".
+
+Il nucleo è una cosa.
+Il nucleo è prendibile.
+Il nucleo si chiama anche "nucleo di memoria".
+La descrizione del nucleo è "Un cristallo a molte facce che pulsa di luce ambrata. Dentro c'è un'ultima voce, e lo scanner saprebbe estrarla: ANALIZZALO.".
+
+# --- La forza: il plasma sul bypass, e il pilastro si spegne -----------------
+Invece di usa la taglierina sul terminale se il terminale è spento: dire "Imposti la taglierina al massimo e, per una frazione di secondo, dirigi il getto sul pannello di bypass. Il terminale sfrigola, un odore acre di metallo fuso; lo schermo si accende su un'unica parola aliena e uno scomparto si apre alla base. Accanto, l'ultimo pilastro fa una scintilla ambrata, più forte delle altre, e si spegne." e adesso il terminale è acceso e adesso il nucleo è nell'arca della memoria e adesso l'archivio è forzato.
+Invece di usa la taglierina sul terminale: dire "È già aperto.".
+
+# --- La pazienza: con l'energia il terminale si sveglia da sé ----------------
+Quando il giocatore è nell'arca della memoria e l'energia è ripristinata e il terminale è spento: dire "Appena entri, l'ultimo pilastro smette di pulsare e si accende per intero, e la sua luce ambrata arriva fino alle pareti. Il terminale accanto si sveglia da solo. Sullo schermo scorre una riga sola, e la matrice la rende al primo colpo: «Sei arrivato. Puoi prenderlo.» Lo scomparto alla base si apre piano, come una mano." e adesso il terminale è acceso e adesso il nucleo è nell'arca della memoria e adesso l'archivio è salutato.
+
+Invece di prendi il nucleo se il terminale è spento: dire "È chiuso dentro il terminale.".
+Invece di prendi il nucleo se il giocatore ha il nucleo: dire "Ce l'hai già.".
+Invece di prendi il nucleo se il terminale è acceso: dire "Prendi il Nucleo di Memoria dallo scomparto del terminale. La terza chiave." e adesso il nucleo è in inventario.

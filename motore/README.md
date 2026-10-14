@@ -1,0 +1,398 @@
+# FAVELLA 1
+
+<p align="center">
+  <img src="assets/banner.png" alt="FAVELLA 1 — versione 1.4.4 — L'italiano è il linguaggio di programmazione" width="880">
+</p>
+
+**FAVELLA 1 è un motore di gioco per narrativa interattiva (Interactive Fiction) che ti permette di creare mondi virtuali scrivendo semplici frasi in italiano.**
+
+È un progetto nato come esperimento, con una missione ambiziosa: rendere lo sviluppo di avventure testuali accessibile a tutti, specialmente a scrittori e game designer, usando la lingua italiana come un vero e proprio linguaggio di programmazione.
+
+> ### 🏁 Progetto concluso
+>
+> **FAVELLA 1 è finito.** La versione **1.4.4** è la definitiva e **non verrà più modificata**:
+> linguaggio, motore, manuale (terza edizione) e sito restano come sono. **Favella Studio 1.2.2** è
+> la sua casa di scrittura. Il repository resta aperto, con licenza MIT, come **riferimento** per
+> chi voglia imparare, riprendere il lavoro o portarlo altrove. Le storie scritte oggi funzioneranno
+> uguali fra dieci anni.
+
+---
+
+## ✨ Filosofia
+
+-   **Il Codice è Prosa:** Dimentica la sintassi complessa. Se puoi descrivere una scena, puoi programmarla. Esempio: `La biblioteca è una stanza.`
+-   **Semplicità per l'Autore:** L'obiettivo è massimizzare la semplicità per chi scrive. Tutta la complessità tecnica è nascosta e gestita dal compilatore e dall'interprete di FAVELLA.
+-   **Sviluppo Iterativo:** Il linguaggio è cresciuto passo dopo passo, partendo da un piccolo sottoinsieme della lingua italiana, fino a essere completo. Oggi è concluso.
+
+---
+
+## 📦 Installazione
+
+Dalla **v0.29.0** FAVELLA è distribuita come **installer multipiattaforma**: scarica quello del tuo sistema dall'ultima [Release](https://github.com/Pitz72/FAVELLA1/releases) — **non serve clonare il repo né installare Python**.
+
+| Sistema | File | Note |
+|---------|------|------|
+| Windows | `favella1-setup-*-windows-x64.exe` | installer; crea le scorciatoie nel Menu Start |
+| macOS (Apple Silicon) | `favella1-*-macos-arm64.dmg` | trascina la cartella in Applicazioni |
+| Linux | `favella1-*-linux-x86_64.AppImage` | rendi eseguibile e lancia |
+
+Dopo l'installazione:
+
+```sh
+favella1 gioca storia.fav        # gioca una storia
+favella1 playground              # editor + motore nel browser (offline)
+favella1 collaudo storia.fav     # collaudatore statico
+favella1 collaudo storia.fav --finali   # quali finali si raggiungono giocando
+favella1 esplora storia.fav      # partite a caso: anomalie e copertura
+favella1 compila storia.fav      # solo diagnostica
+favella1 esporta storia.fav      # genera un .html giocabile e condivisibile
+```
+
+> Gli eseguibili non sono firmati: al primo avvio accetta l'avviso di SmartScreen (Windows) o Gatekeeper (macOS). Dettagli e procedura di rilascio in [PACKAGING.md](PACKAGING.md).
+
+### Oppure con pip (per chi ha Python ≥ 3.10)
+
+```sh
+pip install favella1
+favella1 versione
+favella1 galleria              # le storie brevi incluse
+favella1 galleria gioca il-faro
+favella1 libreria              # i moduli .fav riusabili
+```
+
+Il pacchetto pip porta con sé la **libreria standard** di moduli `Includi`-bili e
+la **galleria di storie** (vedi sotto): `favella1 libreria copia <nome>` e
+`favella1 galleria copia <id>` te li copiano nella cartella corrente.
+
+---
+
+## 📘 Il manuale
+
+C'è un **manuale d'autore completo**: 21 capitoli, 95 pagine, dall'installazione fino
+a demoni, dialoghi e casualità d'autore. Il PDF è allineato al linguaggio 1.4.0
+(i pulsanti-verbo nel capitolo «I comandi del giocatore»; novità anche nella
+[spec](documentazione/grammatica-1.4.0.md), §23).
+
+- **Ebook PDF, gratuito**: [`documentazione/manuale/manuale.pdf`](documentazione/manuale/manuale.pdf)
+- **Edizione cartacea**: disponibile su Amazon (Seconda edizione · 2026); la **Terza edizione** (96 pagine a colori, allineata alla 1.4.4, 12,99 €) è stata inviata ad Amazon il 6 ottobre 2026 ed è in uscita a giorni
+
+---
+
+## 🏁 Stato Attuale: v1.4.4 — gli errori indicano la riga giusta
+
+La **1.4.4** cambia solo *dove* il motore dice che sta un errore. Alcuni errori nascono
+dopo l'analisi della frase e la riga va cercata nel testo: prima vinceva la prima riga
+che conteneva il primo nome citato, anche dentro un'altra parola («sopra» in
+«Soprabito») o in un commento, e in Favella Studio il clic sul problema portava nel
+posto sbagliato. Ora contano le parole intere e la riga che cita più nomi del messaggio.
+Trovato scrivendo la guida di Favella Studio. Dettagli nel [CHANGELOG](CHANGELOG.md).
+
+La **1.4.3** corregge tre difetti trovati da una verifica a tappeto del motore (fuzz
+di 1520 comandi, le undici suite di *Il Viaggiatore*): una regola `Prima di vai
+nord` che cambia il mondo, quando a nord non c'è un'uscita, ora fa un turno vero
+(prima ANNULLA non la disfaceva e SALVA/CARICA la perdeva); `usa la chiave su nord`
+risponde «Non vedi nulla del genere qui.» invece di un errore interno; la domanda
+«Con cosa vuoi usarla?» non consuma più un turno. Nessuna frase nuova: le storie
+della 1.4.2 girano identiche. Dettagli nel [CHANGELOG](CHANGELOG.md).
+
+La **1.4.2** nasce dalla partita di un giocatore che non riusciva ad aprire una
+botola con la chiave. Adesso `usa la chiave per aprire la botola`, `usa la chiave
+ed apri la botola` e `apri la botola con la chiave` valgono `usa la chiave sulla
+botola` e trovano la regola dell'autore; dopo `usa la chiave` basta rispondere
+`la botola` a «Con cosa vuoi usarla?»; `look` è come `guarda`. Tutto additivo: le
+storie della 1.4.1 girano identiche. Dettagli nel [CHANGELOG](CHANGELOG.md).
+
+La **1.4.1** era una patch di quattro difetti del motore trovati giocando *Il
+Viaggiatore*: una mossa verso un'uscita che non c'è non fa più passare il tempo,
+`lascia` non ristampa la stanza, `accendi su` / `apri nord` rispondono «Non vedi
+nulla del genere qui.» invece di un errore interno, e l'avviso di un verbo del
+motore rimappato dice cosa faceva la parola. Nuova frase, facoltativa:
+`"colpisci" è come attacca (voluto).` Le storie della 1.4.0 girano identiche.
+Dettagli nel [CHANGELOG](CHANGELOG.md) e nella [spec](documentazione/grammatica-1.4.0.md), §24.
+
+La **1.4.0** portò i **pulsanti-verbo**: nella pagina esportata con `favella1
+esporta` e nelle cassette-gioco del sito chi gioca può comporre la frase
+toccando un verbo, un oggetto e, se serve, un secondo oggetto («Dai» → «Mela» →
+«alla guardia»), oltre che scriverla. I pulsanti propongono solo ciò che il
+giocatore sa già, e i verbi e gli argomenti inventati dall'autore compaiono
+solo dopo che il giocatore li ha trovati scrivendo. L'autore sceglie con una
+frase: `I comandi si scrivono.` (solo testo), `I comandi si scelgono con i
+pulsanti.` (solo pulsanti); il predefinito è entrambi. La 1.4.0 chiude anche
+l'ultima criticità dell'[analisi](documentazione/analisi-critica-1.2.1.md)
+(L-7): il motore non scrive più con `print()` ma emette un flusso di eventi
+tipizzati, e `compilatore.py` è diviso in nucleo, strumenti per l'IDE
+(`strumenti_ide.py`) ed esportazione (`esportazione.py`). Le storie della 1.3
+girano identiche. Dettagli nel [CHANGELOG](CHANGELOG.md).
+
+La **1.3.0** risolve tutte le criticità gravi, medie e lievi dell'[analisi
+critica](documentazione/analisi-critica-1.2.1.md). Per chi gioca: i refusi non
+consumano turni, `esci` non chiude la partita per sbaglio, nuovi verbi
+(`apri`, `chiudi`, `accendi`, `spegni`, `mangia`, `bevi`, `aspetta`, `x`, `l`…) e
+direzioni (`su`, `giù`, `nordest`…), `dai la mela alla guardia`, `prendi tutto`,
+risposte in italiano corretto. Per chi scrive: `se la guardia è in cucina`,
+`non è più`, uscite che si aprono in partita, oggetti di scena, personaggi che
+tengono oggetti e rispondono a `chiedi … di …`, regole `Prima di` / `Dopo di` e
+`altrimenti`, testi condizionali, titolo e prologo, numeri negativi e in lettere,
+timer che partono da un fatto. Le frasi scritte per la 1.2 restano valide.
+Dettagli nel [CHANGELOG](CHANGELOG.md).
+
+La **1.2.2** è una patch di correttezza: corregge le quattro criticità gravissime
+dell'[analisi critica](documentazione/analisi-critica-1.2.1.md), casi in cui il
+motore faceva in silenzio altro da ciò che l'autore aveva scritto. Una regola
+`Invece di prendi …` vale ora anche per `raccogli`, `afferra` e gli altri sinonimi;
+`guarda X` esamina X; due personaggi sullo stesso nodo di dialogo sono un errore;
+la chiave nello zaino conta come posseduta e pesa sulla capienza. Dettagli nel
+[CHANGELOG](CHANGELOG.md).
+
+La **1.2.1** è una patch: ANNULLA riporta indietro anche la memoria di ANCORA.
+
+La **1.2.0** (settembre 2026) porta nel motore quello che è servito per fare di
+*Il Viaggiatore* un gioco vero: **SALVA/CARICA**, il **collaudo dinamico**
+(`favella1 esplora`, `favella1 collaudo --finali`), i **sinonimi per i verbi
+d'autore** e l'avviso sulle **scorte** nel collaudo statico. Comprende la 1.1.0,
+mai rilasciata da sola: il **posto iniziale degli oggetti**. Tutto additivo:
+nessuna storia scritta per la 1.0 cambia comportamento.
+
+**Con la versione 1.0.0 il linguaggio è stato dichiarato completo.** Sono stati portati a termine i **Livelli 1-8** della roadmap, il
+**Consolidamento** (v0.18.0), l'intero **Asse A — «Il mondo vivo»** (v0.19.0→v0.26.0),
+una **revisione totale di solidità** (v0.27.0→v0.28.1) e tutte le espansioni del
+**piano di completamento**: il Cassetto A (v0.30.0) e i quattro Temi —
+**Tema 1** «i contatori si parlano» (v0.31.0), **Tema 2** «casualità d'autore» (v0.32.0),
+**Tema 4** «il mondo che cambia in scena» (v0.33.0) e **Tema 3** «lo stato che parla
+allo stato» (v0.34.0). La 1.0.0 non introduce modifiche di grammatica rispetto alla
+0.34.0: è il *traguardo* che sancisce la maturità del linguaggio.
+
+La grammatica resta **LALR(1) non ambigua per costruzione** (parser a due passate:
+symbol-table → LALR con i nomi come token chiusi), con una guardia anti-ambiguità
+permanente nella suite (verifica Earley a zero alberi ambigui). Suite di **1180
+asserzioni** del linguaggio + **50** del collaudatore statico, tutte verdi (`pytest`:
+425 passati). Spec tecnica: [`documentazione/grammatica-1.4.0.md`](documentazione/grammatica-1.4.0.md).
+
+> Dopo la 1.0.0 il linguaggio cresce **solo aggiungendo**: le 1.x portano frasi e
+> strumenti nuovi quando una storia vera ne mostra il bisogno, senza toccare ciò
+> che funziona. I Temi **5a** (quantità con plurali) e **5b** (template di
+> entità) restano **deliberatamente fuori**: la semplicità per l'autore è una feature
+> (una scorta è già esprimibile come contatore; vedi il CHANGELOG).
+
+### Capacità del linguaggio (panoramica)
+- **Italiano ricco:** copula plurale, genitivi/partitivi, preposizioni articolate, accenti affidabili (NFC) nei nomi; `dire` opzionale nelle regole a sola conseguenza.
+- **Espressività:** condizione e teletrasporto sulla posizione del giocatore; testo d'esito personalizzato (`vinci "Sei libero!"`); negazione di gruppi `non ( A e B )`; verbi personalizzati anche multi-parola; sinonimi di verbo.
+- **I contatori si parlano (Tema 1):** una quantità può essere un numero, il valore di un altro contatore o un'estrazione casuale — `diminuisci la vita di [forza]`, `… di un numero fra 2 e 6`; confronti *fra grandezze* dinamici — `se la vita è meno di [soglia]`.
+- **Casualità d'autore (Tema 2):** scelta casuale fra valori di stato — `il meteo diventa uno fra sereno, pioggia, nebbia`; condizione probabilistica — `Ogni turno se càpita (1 su 4): …`. Tutto riproducibile e **ANNULLA-safe**.
+- **Mondo che cambia in scena (Tema 4):** buio commutabile — `la radura diventa buia`/`illuminata`; battuta di dialogo condizionale — `Anna al nodo "x" dice "…" se …`.
+- **Lo stato parla allo stato (Tema 3):** indirezione fra stati — copia `il corteggiato diventa il preferito` e confronto `se il corteggiato è come il preferito`.
+- **Posto iniziale (1.1):** `Il posto della mappa è "Su un mobile, una MAPPA piegata…".` — una frase d'ambiente che presenta l'oggetto finché nessuno l'ha spostato, poi sparisce.
+- **Salvataggi (1.2):** `salva mattina` / `carica mattina`, ovunque giri il motore; la partita si ricostruisce rigiocando i comandi e un'impronta dello stato lo verifica.
+- **Collaudo giocando (1.2):** `favella1 esplora` e `favella1 collaudo --finali` giocano partite vere e dicono dove la storia si rompe e quali finali si raggiungono.
+- **Pulsanti-verbo (1.4):** nella pagina esportata e nel sito si gioca anche toccando verbo, oggetto e secondo oggetto; `I comandi si scrivono.` / `I comandi si scelgono con i pulsanti.` per scegliere.
+- **Sinonimi per ogni verbo (1.2):** `"lancia" è come getta.` anche per i comandi d'autore, e `"butta via il cibo" è come "getta il cibo".`
+- **Mondo vivo:** stati e contatori, eventi a tempo, **demoni** (if-then autonomi), buio/luce, NPC che si muovono, dialoghi ramificati, pronomi/anafora, ANNULLA/ANCORA.
+
+Storia completa in [CHANGELOG.md](CHANGELOG.md). Le sezioni seguenti documentano le tappe precedenti della roadmap.
+
+### 📌 Versioni (linea unica)
+
+Dalla v0.18.0 il progetto adotta **un unico numero di versione** per tutto il linguaggio: non esiste più uno schema separato «Grammatica vX». Motore, compilatore e specifica della grammatica avanzano insieme (fonte di verità: `strutture.VERSIONE_MOTORE`).
+
+| Componente | Versione | Riferimento |
+|---|---|---|
+| Motore / interprete (`gioco.py`) | **1.4.4** | header di modulo |
+| Compilatore, nucleo (`compilatore.py`) | **1.4.4** | header di modulo |
+| Strumenti per l'IDE (`strumenti_ide.py`) | **1.4.4** | nuovo nella 1.4.0 (prima in `compilatore.py`) |
+| Esportazione HTML (`esportazione.py`) | **1.4.4** | nuovo nella 1.4.0 (prima in `compilatore.py`) |
+| Strutture dati (`strutture.py`) | **1.4.4** | `VERSIONE_MOTORE` + `Mondo.__str__` |
+| Libreria azioni (`libreria_azioni.py`) | **1.4.4** | header di modulo |
+| Collaudatore statico (`collaudo.py`) | **1.4.4** | usa `VERSIONE_MOTORE` |
+| Collaudatore dinamico (`esploratore.py`) | **1.4.4** | nuovo nella 1.2.0 |
+| Specifica formale della grammatica | **1.4.4** | [`documentazione/grammatica-1.4.0.md`](documentazione/grammatica-1.4.0.md) — *1.3.0 + la frase dei comandi e l'architettura (§23) + i quattro difetti della 1.4.1 (§24) + «usa X su Y» della 1.4.2 (§25); la 1.4.3 e la 1.4.4 non toccano la grammatica (§26, §27)* |
+| Suite di test | **1.4.4** | 1180 asserzioni linguaggio + 50 collaudo (pytest 425) |
+| Sidecar di compilazione (`favella_server.py`) | `VERSIONE_MOTORE` 1.4.4 | protocollo 0.11.0 (+ eventi, + pulsanti-verbo, + strumenti di Studio 1.1) |
+
+> La 1.0.0 è una **milestone**: la grammatica è invariata rispetto alla 0.34.0, quindi la spec di traguardo `grammatica-1.0.0.md` ne è una copia con la nota di chiusura. Le etichette di versione più vecchie nelle sezioni storiche qui sotto (es. «Grammatica v0.4.0», «v0.7.0») sono **conservate come cronaca** e non riflettono lo stato attuale. La **1.0.1** è una patch di sola distribuzione (igiene dei nomi dei moduli installati, vedi [CHANGELOG.md](CHANGELOG.md)): la **specifica del linguaggio resta la 1.0.0** e non cambierà. Il manuale d'autore completo, in PDF tipografico, è in [`documentazione/manuale/`](documentazione/manuale/) ([manuale.pdf](documentazione/manuale/manuale.pdf)): **21 capitoli, 95 pagine, allineato al linguaggio 1.4.0** (novità anche nella spec, §22 e §23). La **1.1.0** ha aggiunto una frase, il posto iniziale degli oggetti (§18 della spec), ed è arrivata al pubblico dentro la **1.2.0** (SALVA/CARICA, collaudo dinamico, sinonimi dei verbi d'autore: §20).
+
+---
+
+## Stato storico: v0.7.0 — Disambiguazione Strutturale (Alpha)
+
+Il progetto segue una **roadmap evolutiva del linguaggio** in 6 livelli. La v0.7.0 completa il **Livello 2.5 — Disambiguazione strutturale**: la grammatica di FAVELLA è ora **non ambigua per costruzione**. Il compilatore è stato riscritto in **due passate** (symbol-table → parsing **LALR(1)** con i nomi come token chiusi), eliminando alla radice l'ambiguità formale `[G1]` che prima era solo *mitigata* da priorità di regola.
+
+### Novità del Linguaggio (v0.7.0 — Livello 2.5)
+- **Grammatica non ambigua per costruzione:** parser **LALR(1)** + entità risolte da una symbol-table (longest-match). Un corpus che prima generava fino a 7 alberi per frase ora ne produce **uno solo** (guardia anti-ambiguità permanente nei test).
+- **Errori d'autore chiari:** un'entità mai dichiarata dà *«Entità sconosciuta: "porta" non è mai stata dichiarata…»* (con suggerimento del nome corretto in caso di refuso), non più un parse error criptico.
+- **Nomi con parole-chiave finalmente usabili:** `via est`, `cosa preziosa`, `porta di ferro`.
+- **Nota:** le **proprietà** di stato sono ora **monoparola** (`è chiusa`); i **nomi multiparola** restano supportati per le **entità** (`cella di contenimento`).
+
+### Dal Livello 2 (v0.6.0 — Logica Composita)
+- **Condizioni AND / OR:** `se la porta è chiusa e il giocatore ha la chiave`, `se la cassa è chiusa oppure è sigillata`. Precedenza `OR < AND < atomo`, con parentesi per raggruppare. (Si usa `oppure`, non `o`, riservato a *ovest*.)
+- **Negazione:** `se il giocatore non ha la chiave`, `se la porta non è aperta`.
+- **Conseguenze multiple:** `... e adesso la porta è aperta e adesso la chiave è nel nulla`.
+
+### Già presenti dal Livello 1 (v0.5.0)
+- **Posizione iniziale esplicita:** `Il giocatore comincia in [stanza].`
+- **Diagnostica d'autore:** avvisi su refusi nelle proprietà, verbi sconosciuti, condizioni sempre false.
+- **Grammatica disambiguata** + **suite di test** (`python test_linguaggio.py`), **stringhe con escape**, **tolleranza tipografica**.
+
+### Core del Linguaggio (storico — etichettato all'epoca «Grammatica v0.4.0»)
+- **Conservazione dell'Estetica Originale:** I nomi di stanze e oggetti conservano gli articoli e la capitalizzazione originali scritti dall'autore (es. `"Una keycard magnetica"`, `"La cella di contenimento"`), pur mantenendo l'ID normalizzato per la logica.
+- **Preposizioni Tolleranti:** Tolleranza ed eliminazione del problema *"guess-the-preposition"* nei comandi a due oggetti (es. `usa la keycard con la porta` si mappa automaticamente a `usa la keycard su la porta`).
+- **Conseguenze Dinamiche:** Regole che modificano il mondo (`... e adesso la porta è aperta`).
+- **Interazioni a Due Oggetti:** Supporto per comandi come `usa chiave con porta`.
+- **Logica Condizionale:** Supporto completo per regole `Invece di ... se ...`.
+- **Mondo Dinamico:** Stanze, oggetti, contenitori e proprietà.
+
+---
+
+## 🎮 Come Iniziare
+
+FAVELLA si usa da riga di comando: il compilatore e l'interprete sono in Python
+puro (unica dipendenza: `lark`). Esempi pronti in [`esempi/`](esempi/) — su tutti
+la **demo ufficiale** «Il Relitto Silente» in
+[`esempi/demo/relitto-silente/`](esempi/demo/relitto-silente/) e una storia con un
+errore voluto in `esempi/test debug/storia-con-errore.fav`.
+
+1.  **Clona il Repository:**
+    ```sh
+    git clone https://github.com/Pitz72/FAVELLA1.git
+    cd FAVELLA1
+    ```
+
+2.  **Scrivi la tua Storia:**
+    Apri il file `storia.fav` con un editor di testo e modificalo, oppure creane uno nuovo. Esempio con puzzle:
+    ```
+    # Definizione del mondo
+    La prigione è una stanza.
+    La descrizione della prigione è "Una cella umida con una porta di ferro a nord.".
+
+    # Oggetti interattivi
+    Una porta di ferro è una cosa.
+    La porta di ferro è in prigione.
+    La porta di ferro è chiusa.
+
+    Una chiave arrugginita è una cosa.
+    La chiave arrugginita è in prigione.
+    La chiave arrugginita è prendibile.
+
+    # Regole condizionali per creare un puzzle
+    # IMPORTANTE: Usa sempre la forma imperativa (apri, non aprire)
+    Invece di apri la porta di ferro: dire "È chiusa a chiave.".
+    Invece di apri la porta di ferro se il giocatore ha la chiave arrugginita: dire "La porta si apre!".
+    ```
+
+3.  **Esegui il Gioco:**
+    Lancia il gioco dal terminale, passandogli il nome del tuo file di storia:
+    ```sh
+    python gioco.py esempi/demo/relitto-silente/relitto.fav
+    ```
+
+    Apparirà il mondo che hai creato (o la demo ufficiale, se lanci quella).
+    Inserisci comandi come:
+    - `nord` o `n` per muoverti tra le stanze
+    - `prendi chiave` per raccogliere oggetti
+    - `inventario` o `i` per vedere cosa possiedi
+    - `esamina porta` per ispezionare oggetti
+    - `apri porta` per interagire (le regole condizionali reagiranno al contesto!)
+    - `guarda` per ristampare la descrizione della stanza
+    - `aiuto` per vedere tutti i comandi disponibili
+    
+    Per uscire, digita `esci`.
+
+4.  **Esempio di Gameplay:**
+    ```
+    > apri la porta
+    È chiusa a chiave.
+    
+    > prendi la chiave
+    Preso: la chiave arrugginita.
+    
+    > apri la porta
+    Usi la chiave arrugginita. La serratura scatta e la porta si apre!
+    ```
+    
+    Le regole condizionali reagiscono automaticamente allo stato del gioco!
+
+---
+
+## 🗺️ Roadmap
+
+**Il linguaggio è completo: con la v1.0.0 è dichiarato chiuso e definitivo.** Sono
+stati portati a termine i **Livelli 1-8**, il **Consolidamento** (v0.18.0), l'intero
+**Asse A — «Il mondo vivo»** (v0.19.0→v0.26.0), la **revisione totale di solidità**
+(v0.27.0→v0.28.1) e tutte le espansioni del piano di completamento (Cassetto A
+v0.30.0 + Temi 1-4 e Tema 3, v0.31.0→v0.34.0). Sono disponibili azioni a due oggetti
+(`usa X su Y`, con clausola `se`), condizioni composte (AND/OR/NOT con parentesi),
+contenitori e supporti, modifiche dinamiche del mondo (`e adesso …`), stati e
+contatori **che si parlano** (aritmetica e confronti fra grandezze), **casualità
+d'autore** (estrazioni, scelte di stato, probabilità), **indirezione fra stati**,
+buio commutabile e battute di dialogo condizionali, NPC con dialoghi ramificati e
+movimento, eventi a turni e demoni, pronomi/anafora e ANNULLA. Il percorso completo
+è in [CHANGELOG.md](CHANGELOG.md) e nei documenti per-versione in
+[`documentazione/`](documentazione/).
+
+L'evoluzione **non riguarda più il linguaggio**, ma il suo **ecosistema**:
+
+-   ✅ **Pacchetto installabile** — *fatto e **pubblicato su PyPI***:
+    `pip install favella1`. Con esso la **libreria standard di moduli**
+    `Includi`-bili (`favella1/libreria/`) e la **galleria di storie**
+    (`favella1/galleria/`), giocabili da CLI. Dettagli di confezionamento e
+    procedura di rilascio in [PACKAGING.md](PACKAGING.md).
+-   ✅ **Manuale d'autore** — *fatto*: 21 capitoli, 95 pagine (PDF allineato al
+    linguaggio 1.4.0), con «La Casa di Via Stradivari» e «Il Relitto Silente» come
+    esempi guida. Disponibile come **ebook PDF scaricabile** in
+    [`documentazione/manuale/`](documentazione/manuale/) e in **edizione cartacea
+    su Amazon**.
+-   **Eventuale internazionalizzazione** e strumenti d'autore (vedi «Favella Studio» qui sotto).
+-   ✅ **Pulsanti-verbo nei giochi esportati e nel sito** — *fatto nella 1.4.0*: il
+    giocatore compone la frase toccando verbo, oggetto e secondo oggetto invece di
+    scriverla (o accanto allo scriverla); l'autore sceglie con `I comandi si
+    scrivono.` / `I comandi si scelgono con i pulsanti.`. Criteri in
+    [`grammatica-1.4.0.md`](documentazione/grammatica-1.4.0.md) §23.2.
+
+---
+
+## ✦ Favella Studio — l'ambiente di scrittura
+
+<p align="center">
+  <img src="branding/materiale/banner-favella-studio-v1.2.2.png" alt="Favella Studio 1.2.2 — l'ambiente di scrittura per FAVELLA 1" width="880">
+</p>
+
+In [`studio/`](studio/) c'è **Favella Studio 1.2.2**: l'ambiente di scrittura visuale per FAVELLA.
+Cinque sezioni nell'ordine in cui si scrive una storia — **Storia** (il testo), **Mondo** (stanze,
+oggetti, mappa da trascinare), **Personaggi** (dialoghi), **Regole** (regole, eventi, stati, parole e
+comandi), **Prova** (la partita con i pulsanti-verbo) — più una finestra di gioco a parte per
+provare la storia come la vedrebbe chi la riceve. Il motore Python (1.4.4) è dentro l'app: non
+serve installarlo. Si legge in tema notte o carta, anche a contrasto alto, e si usa tutto da
+tastiera.
+
+- **Windows** e **Linux**: gli installer sono nella [Release «Favella Studio»](https://github.com/Pitz72/FAVELLA1/releases/tag/studio-v1.2.2).
+- **macOS**: si costruisce in cinque minuti sul proprio Mac, con un comando: [`studio/BUILD-MACOS.md`](studio/BUILD-MACOS.md).
+- **La guida all'uso** (45 pagine, PDF accessibile): [`studio/guida/guida-favella-studio.pdf`](studio/guida/guida-favella-studio.pdf), anche dentro l'app.
+- Presentazione e schermate: [favella.eu/studio](https://www.favella.eu/studio). Licenza MIT.
+
+Dettagli, architettura e istruzioni di build: [`studio/README.md`](studio/README.md).
+
+---
+
+## 📝 Note per gli Autori
+
+### Convenzione Importante per le Regole:
+Quando scrivi regole `Invece di`, usa sempre la **forma imperativa** del verbo (come la digiterebbe il giocatore):
+
+✅ **CORRETTO:**
+```
+Invece di apri la porta: dire "È chiusa.".
+Invece di prendi la spada: dire "È troppo pesante.".
+Invece di esamina il libro: dire "Le pagine sono vuote.".
+```
+
+❌ **ERRATO:**
+```
+Invece di aprire la porta: dire "È chiusa.".
+Invece di prendere la spada: dire "È troppo pesante.".
+Invece di esaminare il libro: dire "Le pagine sono vuote.".
+```
+
+---
+
+## 🤝 Contribuire
+
+Il progetto è concluso: non si aspettano contributi al linguaggio. Ma il codice è tuo: puoi leggerlo, forkarlo, riprenderlo e portarlo dove vuoi (licenza MIT).

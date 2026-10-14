@@ -1,0 +1,371 @@
+# ============================================================================
+# santamaria.fav — ATTO I «Il margine»: la Santa Maria
+# Il Relitto Silente (remake) — strato 2
+# ----------------------------------------------------------------------------
+# Plancia, Cuccetta, Sala macchine, Stiva. Il movente (Yusuf, il quadrante del
+# margine), la scansione e l'accostamento con gli arpioni (N1), il registro e
+# la cassetta (N2), la tuta con visore e faro, la cella di riserva, il reattore
+# che canta in re (N10, prima metà).
+# Oggetti di sfondo: «di scena», raccontati dalla descrizione della stanza.
+# Oggetti essenziali: li elenca il motore («Puoi vedere qui»), e la
+# descrizione della stanza non li nomina.
+# Incluso da relitto.fav.
+# ============================================================================
+
+# --- Stati dell'atto ---------------------------------------------------------
+# La massa: prima la scansione lunga, poi l'accostamento, poi gli arpioni.
+La scansione è uno stato.
+La scansione è assente.
+L'aggancio è uno stato.
+L'aggancio è lontano.
+
+# Cosa hai promesso a Yusuf (lo leggono l'Anziano e i finali, strato 4).
+La promessa è uno stato.
+La promessa è nessuna.
+
+# La nota del reattore; la seconda metà è il sonaglio del Nido (strato 3).
+La nota è uno stato.
+La nota è ignota.
+
+# --- Proprietà e verbi -------------------------------------------------------
+Sfogliato e intonso sono opposte.
+Pieno e basso sono opposte.
+
+"accosta" è un comando senza oggetto.
+"spara" è un comando.
+"abbassa" è un comando.
+"alza" è un comando.
+"innesta" è come usa.
+
+# ============================================================================
+# PLANCIA
+# ============================================================================
+La plancia è una stanza.
+La descrizione della plancia è "La plancia della Santa Maria: due poltrone, e ne usi una; schermi che conosci a memoria; sotto il pavimento, il lamento basso del reattore. Sul quadrante del margine la lancetta sta dove hai imparato a non guardarla. Nell'oblò, contro le stelle, c'è una sagoma nera che non ne lascia passare nessuna. Il radar la segnala da un'ora e non sa dirti cosa sia: per saperlo ti servirebbe una scansione lunga. A ovest si va in stiva; a nord, la cuccetta.".
+La descrizione della plancia se l'aggancio è fatto è "La plancia, con la sua poltrona consumata e quella intatta. Gli arpioni tengono: la Santa Maria e la massa nera adesso sono una cosa sola, e ogni minuto così costa reattore. Nell'oblò c'è soltanto nero. Dalla radio, ogni tanto, un fruscio che non è statica. A ovest si va in stiva; a nord, la cuccetta.".
+La descrizione della plancia se l'aggancio è accostato è "La massa nera riempie l'oblò da un bordo all'altro, a cinquanta metri dalla prua. Niente saldature, niente portelli, niente luci, eppure ha una forma troppo pulita per essere un sasso. Il reattore tiene il minimo, e sul quadrante del margine la lancetta scende di un pelo. A ovest si va in stiva; a nord, la cuccetta.".
+La descrizione della plancia se la scansione è completa è "La plancia della Santa Maria. Sullo schermo grande la scansione lunga è ancora aperta, ferma sulla sua ultima riga: materiale non in archivio. Nell'oblò la sagoma nera non si è mossa di un metro, e il radar ci batte contro e torna corto, con un'eco che non somiglia a niente di metallico. A ovest si va in stiva; a nord, la cuccetta.".
+
+# --- Sfondo -----------------------------------------------------------------
+L'oblò principale è una cosa.
+L'oblò principale è sulla plancia.
+L'oblò principale è di scena.
+L'oblò principale si chiama anche "oblò".
+L'oblò principale si chiama anche "vista".
+L'oblò principale si chiama anche "finestra".
+La descrizione dell'oblò principale è "Dall'oblò principale si vede la sagoma: un fuso allungato, più lungo della Santa Maria, così nero che contro il cielo sembra un taglio.".
+La descrizione dell'oblò principale se l'aggancio non è lontano è "Da qui, solo nero. Se non sapessi che c'è, diresti che l'oblò è spento.".
+
+La nave aliena è una cosa.
+La nave aliena è sulla plancia.
+La nave aliena è di scena.
+La nave aliena si chiama anche "relitto".
+La nave aliena si chiama anche "anomalia".
+La nave aliena si chiama anche "sagoma".
+La nave aliena si chiama anche "massa".
+La nave aliena si chiama anche "massa nera".
+La nave aliena si chiama anche "ombra".
+La descrizione della nave aliena è "Troppo regolare per un sasso, troppo grande per un container scivolato da una stiva mal chiusa. Non ha luci, non ha motori, non risponde ai segnali. Sta ferma sulla tua rotta. Con una scansione lunga lo scanner di bordo ti direbbe almeno di cosa è fatta: ANALIZZALA.".
+La descrizione della nave aliena se la scansione è completa è "Trecentoquaranta metri di qualcosa che l'archivio non conosce. Ferma, nera, muta.".
+
+Il quadro di prossimità è una cosa.
+Il quadro di prossimità è sulla plancia.
+Il quadro di prossimità è di scena.
+Il quadro di prossimità si chiama anche "allarme".
+Il quadro di prossimità si chiama anche "prossimità".
+Il quadro di prossimità si chiama anche "radar".
+La descrizione del quadro di prossimità è "La spia rossa della prossimità lampeggia da un'ora. Il suono l'hai tolto subito; la spia no, quella non si spegne.".
+La descrizione del quadro di prossimità se l'aggancio è fatto è "La spia della prossimità è fissa, adesso. Contatto.".
+
+Il quadrante del margine è una cosa.
+Il quadrante del margine è sulla plancia.
+Il quadrante del margine è di scena.
+Il quadrante del margine si chiama anche "margine".
+Il quadrante del margine si chiama anche "lancetta".
+Il quadrante del margine si chiama anche "quadrante".
+La descrizione del quadrante del margine è "Il margine: quanta aria, quanto reattore, quanti giorni ti restano prima di dover chiamare Yusuf senza niente da offrirgli. Sei settimane di stiva vuota hanno portato la lancetta nel rosso martedì. Da martedì non la guardi.".
+
+Il faro di prua è una cosa.
+Il faro di prua è sulla plancia.
+Il faro di prua è di scena.
+Il faro di prua si chiama anche "riflettore".
+Il faro di prua si chiama anche "faro".
+La descrizione del faro di prua è "Il riflettore di prua: un occhio da duecento metri, quando le batterie sono cariche.".
+Invece di accendi il faro di prua se l'aggancio è lontano: dire "Da qui la luce si perde molto prima di arrivare alla sagoma. Bisogna avvicinarsi.".
+Invece di accendi il faro di prua: dire "Accendi il riflettore di prua e lo fai correre lungo la massa. Su qualunque scafo il fascio troverebbe uno spigolo, una saldatura, un riflesso da restituirti. Su questo scorre come su velluto bagnato, e non torna indietro niente. Lo spegni.".
+Invece di usa il faro di prua se l'aggancio è lontano: dire "Da qui la luce si perde molto prima di arrivare alla sagoma. Bisogna avvicinarsi.".
+Invece di usa il faro di prua: dire "Accendi il riflettore di prua e lo fai correre lungo la massa. Su qualunque scafo il fascio troverebbe uno spigolo, una saldatura, un riflesso da restituirti. Su questo scorre come su velluto bagnato, e non torna indietro niente. Lo spegni.".
+
+# --- Essenziali -------------------------------------------------------------
+I comandi di manovra sono una cosa.
+I comandi di manovra sono sulla plancia.
+I comandi di manovra si chiama anche "comandi".
+I comandi di manovra si chiama anche "cloche".
+I comandi di manovra si chiama anche "pilota automatico".
+I comandi di manovra si chiama anche "propulsori".
+I comandi di manovra si chiama anche "vettori".
+La descrizione dei comandi di manovra è "La cloche, i vettori, il pilota automatico. Roba vecchia, che risponde. (Per portarti vicino alla massa: ACCOSTA.)".
+Invece di usa i comandi di manovra: dire "(Per portarti vicino alla massa: ACCOSTA.)".
+
+Il lanciarpioni è una cosa.
+Il lanciarpioni è sulla plancia.
+Il lanciarpioni si chiama anche "arpioni".
+Il lanciarpioni si chiama anche "arpione".
+La descrizione del lanciarpioni è "Due arpioni a testa magnetica, duecento metri di cavo ciascuno. Servono a tenere ferma una preda mentre la tagli.".
+La descrizione del lanciarpioni se l'aggancio è fatto è "I cavi sono tesi e tengono. Finché tengono loro, la Santa Maria e la massa nera restano una cosa sola.".
+Invece di spara il lanciarpioni se l'aggancio è fatto: dire "I cavi sono già tesi.".
+Invece di spara il lanciarpioni se l'aggancio è lontano: dire "Troppo lontano: a questa distanza i cavi tornerebbero indietro a vuoto. Prima bisogna ACCOSTARE.".
+Invece di spara il lanciarpioni: dire "Due colpi sordi, che senti nelle ossa più che nelle orecchie. Gli arpioni volano, mordono lo scafo nero e tengono. Avvolgi i cavi a strappi corti finché le due navi non si toccano, con un urto lungo che fa tremare la plancia." e adesso l'aggancio è fatto.
+Invece di usa il lanciarpioni se l'aggancio è fatto: dire "I cavi sono già tesi.".
+Invece di usa il lanciarpioni se l'aggancio è lontano: dire "Troppo lontano: a questa distanza i cavi tornerebbero indietro a vuoto. Prima bisogna ACCOSTARE.".
+Invece di usa il lanciarpioni: dire "Due colpi sordi, che senti nelle ossa più che nelle orecchie. Gli arpioni volano, mordono lo scafo nero e tengono. Avvolgi i cavi a strappi corti finché le due navi non si toccano, con un urto lungo che fa tremare la plancia." e adesso l'aggancio è fatto.
+
+La radio è una cosa.
+La radio è sulla plancia.
+La radio si chiama anche "comunicatore".
+La radio si chiama anche "ricetrasmittente".
+La descrizione della radio è "La radio a lungo raggio. Fra i canali salvati ce n'è uno solo che usi: Magazzino Quattro. (Per chiamare Yusuf: PARLA CON YUSUF.)".
+La descrizione della radio se l'aggancio è fatto è "Fra un canale e l'altro c'è un fruscio che il filtro non toglie: tante voci una sopra l'altra, nessuna intera. Abbassi il volume. Il fruscio resta sullo schermo, una riga che trema. (Per chiamare Yusuf: PARLA CON YUSUF.)".
+Invece di usa la radio: dire "Magazzino Quattro è il primo canale della lista. (Per chiamare Yusuf: PARLA CON YUSUF.)".
+Invece di ascolta la radio se l'aggancio è fatto: dire "Il fruscio. Se ti concentri su una voce, ne arrivano altre dieci a coprirla.".
+
+# --- La manovra (N1): scansione → accostamento → arpioni ---------------------
+Invece di analizza la nave aliena se la scansione è assente: dire "Lanci la scansione lunga. Il computer di bordo ha la tua età e se la prende comoda.\nLunghezza: trecentoquaranta metri. Massa: stima incerta, il doppio della Santa Maria. Composizione: il calcolo parte, si ferma, riparte. Al terzo tentativo si arrende e scrive MATERIALE NON IN ARCHIVIO.\nUna cosa che l'archivio non conosce o non vale niente, o vale abbastanza da chiudere il conto con Yusuf. Disinserisci il pilota automatico: adesso puoi ACCOSTARE." e adesso la scansione è completa.
+Invece di analizza la nave aliena: dire "La scansione è sullo schermo, ferma sulla stessa riga. Rifarla non le farà cambiare idea.".
+
+Invece di accosta se il giocatore non è sulla plancia: dire "Le manovre si fanno dalla plancia.".
+Invece di accosta se la scansione è assente: dire "Accostare a una cosa che non sai cos'è, no. Prima la scansione lunga.".
+Invece di accosta se l'aggancio non è lontano: dire "Più vicino di così, ti ci appoggi.".
+Invece di accosta: dire "Porti la Santa Maria verso la massa a spinte corte, con gli occhi sulla distanza che scende. Il reattore abbassa il suo lamento. A cinquanta metri ti fermi: la sagoma riempie l'oblò e non restituisce niente, né un riflesso né un bordo. Adesso gli arpioni ci arrivano." e adesso l'aggancio è accostato.
+
+# --- Yusuf, alla radio -------------------------------------------------------
+Yusuf è un personaggio.
+Yusuf è sulla plancia.
+Yusuf è di scena.
+Yusuf si chiama anche "magazzino quattro".
+La descrizione di Yusuf è "Yusuf è a Magazzino Quattro, a quattro giorni di rotta da qui. Sulla Santa Maria c'è soltanto la sua voce, quando la radio la porta. Vent'anni di forniture a credito: tu non gli hai mai chiesto come sta, e lui ha smesso di aspettarselo.".
+
+Il dialogo di Yusuf comincia con "apertura".
+
+Yusuf al nodo "apertura" dice "«Magazzino Quattro.» Una pausa, il tempo di leggere chi chiama. «William. Se è per il credito, la risposta è quella di martedì.»".
+Yusuf al nodo "apertura" dice "«Magazzino Quattro.» Una pausa. «Ce l'hai il mio pezzo? No. E allora cosa chiami a fare, William.»" se la promessa è carico.
+Al nodo "apertura" l'opzione "Mi serve credito." conduce al nodo "credito".
+Al nodo "apertura" l'opzione "Ho trovato una cosa." se la scansione è completa e la promessa è nessuna conduce al nodo "cosa".
+Al nodo "apertura" l'opzione "Niente. Volevo sentire una voce." conduce al nodo "voce".
+
+Yusuf al nodo "credito" dice "«Sei settimane, William. Ti ho mandato i filtri, le guarnizioni e la cella buona, e da te non è arrivato niente.» Lo senti contare sottovoce, come fa sempre prima di dirti di sì. Arriva a dieci. «No. Portami qualcosa da vendere, e ne riparliamo.»".
+Al nodo "credito" l'opzione "Ho trovato una cosa." se la scansione è completa e la promessa è nessuna conduce al nodo "cosa".
+Al nodo "credito" l'opzione "Va bene." chiude il dialogo.
+
+Yusuf al nodo "cosa" dice "«Una cosa.» Aspetta che continui. Gli racconti della massa: la scansione, i trecentoquaranta metri, la riga che lo scanner continua a scrivere. Per un po' dall'altra parte non arriva niente. Poi: «Tagliane un pezzo. Uno solo, pulito, e portamelo. Se è roba che l'archivio non conosce, il compratore lo trovo io. E in fretta.»".
+Al nodo "cosa" l'opzione "E se dentro c'è qualcuno?" conduce al nodo "qualcuno" e adesso la promessa è carico.
+Al nodo "cosa" l'opzione "Te lo porto." chiude il dialogo e adesso la promessa è carico.
+
+Yusuf al nodo "qualcuno" dice "«Dentro una cosa così?» Lo senti ridere, corto. «Allora non è roba mia, William. E nemmeno tua.» Un'altra pausa. «Ma dentro non c'è mai nessuno.»".
+Al nodo "qualcuno" l'opzione "Te lo porto." chiude il dialogo.
+
+Yusuf al nodo "voce" dice "«Allora sei messo peggio di quanto pensassi.» Però non chiude. Per qualche secondo senti il magazzino dietro di lui: un muletto in retromarcia, qualcuno che litiga con una bolla di carico. Poi la linea fa il suo schiocco.".
+Al nodo "voce" l'opzione "Chiudi la comunicazione." chiude il dialogo.
+
+# ============================================================================
+# CUCCETTA
+# ============================================================================
+La cuccetta è una stanza.
+La descrizione della cuccetta è "La cuccetta è poco più di un corridoio: due brande una sopra l'altra, un armadietto, un oblò grande quanto una mano. Dormi in quella di sotto. Quella di sopra è rifatta, le coperte tese, e non ci ha mai dormito nessuno. A sud si torna in plancia.".
+
+La branda di sopra è una cosa.
+La branda di sopra è nella cuccetta.
+La branda di sopra è di scena.
+La branda di sopra si chiama anche "brande".
+La branda di sopra si chiama anche "branda".
+La branda di sopra si chiama anche "letto".
+La branda di sopra si chiama anche "coperte".
+La descrizione della branda di sopra è "La rifai ogni mese, anche se nessuno la disfa. La Santa Maria è omologata per un equipaggio di quattro: le brande ci sono, gli altri no. Yusuf la chiama incoscienza. Tu non la chiami.".
+
+L'armadietto è una cosa.
+L'armadietto è nella cuccetta.
+L'armadietto è di scena.
+La descrizione dell'armadietto è "Due tute da lavoro, una giacca buona che non metti da anni, una scatola di fusibili che non sapevi dove altro tenere.".
+
+L'oblò piccolo è una cosa.
+L'oblò piccolo è nella cuccetta.
+L'oblò piccolo è di scena.
+L'oblò piccolo si chiama anche "oblò".
+La descrizione dell'oblò piccolo è "Grande quanto una mano. Da questo lato la massa non si vede: solo stelle, ferme.".
+
+Il registro di bordo è una cosa.
+Il registro di bordo è nella cuccetta.
+Il registro di bordo è intonso.
+Il registro di bordo si chiama anche "registro".
+Il registro di bordo si chiama anche "diario di bordo".
+Il registro di bordo si chiama anche "giornale di bordo".
+La descrizione del registro di bordo è "Il registro della Santa Maria. La prima pagina non è tua: «TSC-1972. Prima registrazione autonoma: 14 marzo 2105.» Novantasei anni di nave, tre alla radiazione. Le ultime pagine sono tue, e l'ultima riga aspetta la settimana sette.".
+Invece di esamina il registro di bordo se il registro di bordo è intonso: dire "Il registro della Santa Maria è di carta: i file si perdono, la carta resta dove la metti. La prima pagina non l'hai scritta tu. In una grafia d'altri tempi: «TSC-1972. Prima registrazione autonoma: 14 marzo 2105.» Novantasei anni di nave, tre alla radiazione.\nLe ultime pagine sono tue e si somigliano tutte. L'ultima dice: «Settimana sei. Stiva vuota. Nessun contatto. W. T. Eriksonn.»\nFra le pagine, a tenere il segno, c'è la chiavetta della cassetta di ferraglia." e adesso il registro di bordo è sfogliato e adesso la chiavetta è nella cuccetta.
+Invece di prendi il registro di bordo: dire "Il registro non lascia la nave. È la regola più vecchia che rispetti.".
+
+La chiavetta è una cosa.
+La chiavetta è prendibile.
+La chiavetta si chiama anche "chiave".
+La chiavetta si chiama anche "chiavetta d'ottone".
+La descrizione della chiavetta è "Piccola, d'ottone, consumata sui denti. Apre la cassetta di ferraglia della sala macchine.".
+
+# ============================================================================
+# SALA MACCHINE
+# ============================================================================
+La sala macchine è una stanza.
+La descrizione della sala macchine è "Si scende per una scaletta stretta e l'aria cambia: calda, ferma, olio e ozono. Il reattore prende quasi tutto lo spazio, un cilindro d'acciaio rattoppato in tre punti, e tiene la sua nota bassa, la stessa che senti in tutta la nave da tanto tempo che non la senti più. Su, si torna in stiva.".
+
+Il reattore è una cosa.
+Il reattore è nella sala macchine.
+Il reattore è di scena.
+Il reattore si chiama anche "motore".
+La descrizione del reattore è "Vecchio quanto la nave, e si vede. Le guarnizioni chiedono il cambio da un anno; quelle nuove, prese a credito, sono ancora nella scatola. Finché lavora, canta.".
+Invece di ascolta il reattore se la nota è sonaglio: dire "Stai fermo e lo ascolti. Una nota sola, tenuta: un re basso. Lo stesso re del sonaglio, nella cella del piccolo, laggiù. Resti con il guanto sul metallo più del necessario." e adesso la nota è riconosciuta.
+Invece di ascolta il reattore se la nota è ignota: dire "Stai fermo e lo ascolti davvero, per una volta. Una nota sola, tenuta, che non cambia mai: un re basso. Anni che ci vivi dentro, e non ti eri mai accorto che fosse una nota." e adesso la nota è reattore.
+Invece di ascolta il reattore: dire "Il re del reattore. Sempre quello.".
+Invece di tocca il reattore: dire "Caldo, e vibra. La vibrazione ti sale per il braccio fino ai denti.".
+
+La cassetta di ferraglia è un contenitore.
+La cassetta di ferraglia è nella sala macchine.
+La cassetta di ferraglia è chiusa.
+La cassetta di ferraglia si chiama anche "cassetta".
+La cassetta di ferraglia si chiama anche "ferraglia".
+La descrizione della cassetta di ferraglia è "Una cassetta di lamiera ammaccata, che ti porti dietro da prima della Santa Maria. Ci tieni la roba che non sai dove mettere e che non butteresti mai.".
+Invece di apri la cassetta di ferraglia se la cassetta di ferraglia è aperta: dire "È già aperta.".
+Invece di apri la cassetta di ferraglia se il giocatore non ha la chiavetta: dire "È chiusa a chiave, e la chiavetta non è nella serratura. L'ultima volta l'hai usata per tutt'altro: tenere il segno da qualche parte.".
+Invece di apri la cassetta di ferraglia: dire "Giri la chiavetta, e il coperchio si alza con il suo cigolio di sempre. Fusibili, un rotolo di nastro, un amplificatore di firma che non usi da anni, e un bengala di soccorso ancora sigillato." e adesso la cassetta di ferraglia è aperta.
+
+Il bengala è una cosa.
+Il bengala è prendibile.
+Il bengala è nella cassetta di ferraglia.
+Il bengala si chiama anche "razzo".
+Il bengala si chiama anche "razzo di segnalazione".
+Il bengala si chiama anche "bengala di soccorso".
+La descrizione del bengala è "Un bengala di soccorso: tre minuti di luce rossa e di calore, abbastanza per farsi vedere da una nave di passaggio. Da queste parti non ne passano.".
+Invece di accendi il bengala: dire "È l'unico che hai. Lo tieni per quando servirà davvero.".
+
+L'amplificatore di firma è una cosa.
+L'amplificatore di firma è nella cassetta di ferraglia.
+L'amplificatore di firma si chiama anche "amplificatore".
+La descrizione dell'amplificatore di firma è "Roba da recuperante: serve a leggere un carico chiuso senza aprirlo. Oggi non c'è nessun carico chiuso da leggere. C'è una nave.".
+Invece di prendi l'amplificatore di firma: dire "Lo lasci dov'è. Oggi non ti serve.".
+
+# ============================================================================
+# STIVA
+# ============================================================================
+La stiva è una stanza.
+La descrizione della stiva è "La stiva della Santa Maria è vuota da sei settimane. Dai ganci del soffitto non pende niente, e senza casse a fermarlo il tuo passo rimbomba fino alla paratia di poppa. Ogni giorno così lo paghi in aria e in reattore. Contro la paratia, la rastrelliera dell'attrezzatura; su una cassa vuota rovesciata, il vecchio lettore di ebook. A est si torna in plancia, da una botola si scende in sala macchine, e a poppa il boccaporto esterno dà sul vuoto.".
+La descrizione della stiva se la tuta è vestita e la fuga è lontana è "Dentro la tuta il respiro ti torna addosso, più vicino, e la stiva vuota rimbomba lo stesso. A est la plancia, giù la sala macchine. A poppa il boccaporto esterno ha la spia [se l'aggancio è fatto]verde: fuori, a pochi metri, c'è la massa nera.[altrimenti]rossa: fuori non c'è niente a cui agganciarsi.[fine]".
+
+# --- Sfondo -----------------------------------------------------------------
+I ganci sono una cosa.
+I ganci sono nella stiva.
+I ganci sono di scena.
+I ganci si chiama anche "ganci vuoti".
+I ganci si chiama anche "soffitto".
+I ganci si chiama anche "casse".
+La descrizione dei ganci è "Otto file di ganci da carico, vuoti. L'ultima volta reggevano filtri per una colonia di Callisto: pagavano poco, ma pagavano.".
+
+La rastrelliera è una cosa.
+La rastrelliera è nella stiva.
+La rastrelliera è di scena.
+La descrizione della rastrelliera è "Ganci, ripiani, la cinghia per la tuta. Lì sopra c'è tutto quello che serve per uscire.".
+
+Il lettore è una cosa.
+Il lettore è nella stiva.
+Il lettore è di scena.
+Il lettore si chiama anche "ebook".
+Il lettore si chiama anche "lettore di ebook".
+Il lettore si chiama anche "castello di ghiaccio".
+La descrizione del lettore è "Un vecchio lettore di ebook, lo schermo incrinato ma ancora acceso. Mostra il titolo di un'avventura testuale italiana: «…nello di Ghiaccio». Qualcuno ci ha giocato, su questa nave, prima di te.".
+
+Il boccaporto è una cosa.
+Il boccaporto è nella stiva.
+Il boccaporto è anche sullo scafo.
+Il boccaporto è di scena.
+Il boccaporto si chiama anche "portello".
+Il boccaporto si chiama anche "boccaporto esterno".
+La descrizione del boccaporto è "Il boccaporto esterno della Santa Maria: due portelli e, in mezzo, abbastanza spazio per una persona in tuta. La spia è [se l'aggancio è fatto]verde[altrimenti]rossa[fine].".
+
+# --- Essenziali -------------------------------------------------------------
+La tuta è una cosa.
+La tuta è prendibile.
+La tuta è nella stiva.
+La tuta è svestita.
+La tuta si chiama anche "scafandro".
+La tuta si chiama anche "tuta extraveicolare".
+La tuta si chiama anche "tuta spaziale".
+La descrizione della tuta è "La tua tuta extraveicolare, rattoppata a un gomito. Visore, cuffie, il faro sul casco, il multiscanner sulla spalla. Con la cella piena tiene sei ore.".
+La descrizione della tuta se la tuta è vestita è "Addosso pesa meno che appesa. Sul bordo del visore, la cifra dell'aria.".
+
+Il kit è un contenitore.
+Il kit è nella stiva.
+Il kit è chiuso.
+Il kit si chiama anche "valigetta".
+Il kit si chiama anche "kit di manutenzione".
+La descrizione del kit è "Una valigetta di metallo con la sigla TSC stampigliata a vernice, mezza scrostata. Dentro, gli attrezzi delle riparazioni d'emergenza.".
+
+La taglierina è una cosa.
+La taglierina è prendibile.
+La taglierina è nel kit.
+La taglierina si chiama anche "taglierina al plasma".
+La taglierina si chiama anche "plasma".
+La descrizione della taglierina è "La taglierina al plasma: un getto di luce che non fa rumore e incide quasi tutto. Al minimo, incide e basta.".
+
+La batteria è una cosa.
+La batteria è prendibile.
+La batteria è nel kit.
+La batteria si chiama anche "batteria di emergenza".
+La batteria si chiama anche "batteria d'emergenza".
+La descrizione della batteria è "Una batteria d'emergenza a bassa tensione, compatta, carica. Serve a dare corrente a qualcosa che non ne ha.".
+
+La cella di riserva è una cosa.
+La cella di riserva è prendibile.
+La cella di riserva è nella stiva.
+La cella di riserva si chiama anche "cella".
+La cella di riserva si chiama anche "cella d'aria".
+La cella di riserva si chiama anche "bombola".
+La descrizione della cella di riserva è "L'ultima cella d'aria che ti resta. Le altre le hai consumate, e Yusuf non te ne manda di nuove a credito. Venticinque punti di margine, da innestare nella tuta quando ti servono.".
+
+# Arrivano con la tuta indossata: il faro sul casco (il visore è in aria.fav).
+Il faro del casco è una cosa.
+Il faro del casco è pieno.
+Il faro del casco si chiama anche "faro".
+Il faro del casco si chiama anche "luce del casco".
+Il faro del casco si chiama anche "lampada".
+La descrizione del faro del casco è "Il faro del casco, al massimo: un cono bianco che apre il buio davanti a te e lo richiude alle tue spalle.".
+La descrizione del faro del casco se il faro del casco è basso è "Il faro del casco, girato al minimo: un alone che basta appena a vedere dove metti le mani.".
+
+# --- Il kit ------------------------------------------------------------------
+Invece di apri il kit se il kit è chiuso: dire "Fai scattare le chiusure. Nella gommapiuma sagomata ci sono la taglierina al plasma e la batteria d'emergenza." e adesso il kit è aperto.
+
+# --- La tuta -----------------------------------------------------------------
+Invece di indossa la tuta se il giocatore non ha la tuta: dire "Prima staccala dalla rastrelliera.".
+Invece di indossa la tuta se la tuta è vestita: dire "Ce l'hai addosso.".
+Invece di indossa la tuta: dire "Strato su strato, come sempre: chiusure, guarnizioni, il casco. Ogni cosa la verifichi due volte, perché dall'altra parte del boccaporto non c'è nessuno a verificarla per te. Il visore si accende e ti mette davanti la prima cifra, quella dell'aria. Sul casco si accende il faro." e adesso la tuta è vestita e adesso il visore è in inventario e adesso il faro del casco è in inventario.
+Invece di usa la tuta se la tuta è svestita e il giocatore ha la tuta: dire "Strato su strato, come sempre: chiusure, guarnizioni, il casco. Ogni cosa la verifichi due volte, perché dall'altra parte del boccaporto non c'è nessuno a verificarla per te. Il visore si accende e ti mette davanti la prima cifra, quella dell'aria. Sul casco si accende il faro." e adesso la tuta è vestita e adesso il visore è in inventario e adesso il faro del casco è in inventario.
+Invece di togli la tuta: dire "Adesso no. Ti serve addosso.".
+Invece di lascia la tuta se la tuta è vestita: dire "Ce l'hai addosso.".
+
+# --- Il faro del casco -------------------------------------------------------
+Invece di abbassa il faro del casco se il faro del casco è basso: dire "È già al minimo.".
+Invece di abbassa il faro del casco: dire "Giri la ghiera del faro al minimo, fin quasi a chiuderlo nel guanto. Il buio ti si fa più vicino." e adesso il faro del casco è basso.
+Invece di spegni il faro del casco se il faro del casco è basso: dire "È già al minimo. Spegnerlo del tutto, qui dentro, no.".
+Invece di spegni il faro del casco: dire "Spegnerlo del tutto no; al minimo sì. Giri la ghiera fin quasi a chiuderlo nel guanto." e adesso il faro del casco è basso.
+Invece di alza il faro del casco se il faro del casco è pieno: dire "È già al massimo.".
+Invece di alza il faro del casco: dire "Riapri la ghiera. Il cono bianco torna a spingere il buio un po' più in là." e adesso il faro del casco è pieno.
+Invece di accendi il faro del casco se il faro del casco è pieno: dire "È già al massimo.".
+Invece di accendi il faro del casco: dire "Riapri la ghiera. Il cono bianco torna a spingere il buio un po' più in là." e adesso il faro del casco è pieno.
+Invece di lascia il faro del casco: dire "È parte del casco.".
+
+# --- La cella di riserva -----------------------------------------------------
+Invece di usa la cella di riserva se la tuta è svestita: dire "Prima devi avere la tuta addosso.".
+Invece di usa la cella di riserva se l'aria è più di 75: dire "La tuta è ancora piena per tre quarti: sprecheresti la cella. La tieni per quando servirà.".
+Invece di usa la cella di riserva: dire "Sganci la cella esausta dal fianco della tuta e innesti quella di riserva. La valvola sibila, e la cifra sul visore risale." e adesso aumenta l'aria di 25 e adesso l'aria resta fra 0 e 100 e adesso la cella di riserva è nel nulla.
+Invece di usa la cella di riserva sulla tuta se la tuta è svestita: dire "Prima devi avere la tuta addosso.".
+Invece di usa la cella di riserva sulla tuta se l'aria è più di 75: dire "La tuta è ancora piena per tre quarti: sprecheresti la cella. La tieni per quando servirà.".
+Invece di usa la cella di riserva sulla tuta: dire "Sganci la cella esausta dal fianco della tuta e innesti quella di riserva. La valvola sibila, e la cifra sul visore risale." e adesso aumenta l'aria di 25 e adesso l'aria resta fra 0 e 100 e adesso la cella di riserva è nel nulla.
+
+# --- Il boccaporto: per uscire servono la tuta e gli arpioni -----------------
+Invece di vai fuori se il giocatore è nella stiva e la tuta non è vestita: dire "Il boccaporto dà sul vuoto. Senza tuta, è l'ultima porta che apri.".
+Invece di vai fuori se il giocatore è nella stiva e l'aggancio non è fatto: dire "Apri il portello interno e ti fermi sulla soglia. Fra te e la massa nera c'è troppo vuoto, e nessuna fune a cui agganciare il cavo di sicurezza. Prima gli arpioni, dalla plancia.".

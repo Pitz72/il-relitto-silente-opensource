@@ -1,0 +1,79 @@
+# Soluzione completa de «Il Relitto Silente» (versione FAVELLA 1, motore 1.4.4).
+# Percorso per il collaudatore: un comando per riga, «#» commenta.
+# Uso (dalla radice del progetto):
+#   python motore/favella.py collaudo motore/esempi/demo/relitto-silente/relitto.fav --finali --percorso collaudo/soluzione-originale.txt
+# (Vale per l'originale intatto. Il remake ha direzioni nuove: la sua soluzione è collaudo/soluzione.txt.)
+
+# --- Santa Maria: plancia -> stiva ---
+ovest
+prendi tuta
+indossa tuta
+apri kit
+prendi taglierina
+prendi batteria
+
+# --- Scafo esterno -> camera di compensazione ---
+fuori
+usa taglierina su crepa
+varco
+usa batteria su pannello
+apri porta interna
+soglia
+
+# --- Corridoio principale (hub): un segno, per il ramo «tracce» del dialogo ---
+incidi tacche
+
+# --- Prima chiave: il Seme Vivente (Serra) ---
+sud
+prendi tavoletta
+usa tavoletta su teca
+prendi seme vivente
+
+# --- Arca biologica: dispositivo medico e cristallo ---
+ovest
+prendi dispositivo medico
+prendi cristallo
+usa dispositivo medico su cristallo
+
+# --- Laboratorio di risonanza: energia ---
+est
+nord
+basso
+prendi sintonizzatore
+usa cristallo su generatore
+alto
+
+# --- Seconda e terza chiave: Stele (Scriptorium/Santuario) e Nucleo (Arca della memoria) ---
+nord
+ovest
+prendi disco
+nord
+usa taglierina su terminale
+prendi nucleo
+sud
+est
+usa disco su altare
+prendi stele
+sud
+
+# --- La Grande Porta ---
+usa seme vivente su grande porta
+usa stele su grande porta
+usa nucleo su grande porta
+portale
+
+# --- Ponte di comando ---
+usa postazione
+analizza mappa stellare
+tocca le punte
+avanti
+oltre
+
+# --- Santuario centrale: l'Anziano ---
+parla con l'anziano
+Chi eravate?
+E io che c'entro?
+Ho lasciato dei segni, là dietro.
+Allora cosa devo fare?
+[Chiudi gli occhi e lascia andare.]
+[Apri gli occhi.]

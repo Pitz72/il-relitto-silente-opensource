@@ -1,0 +1,252 @@
+# ============================================================================
+# ingresso.fav — ATTO II «Il brusio»: l'ingresso nel relitto
+# Il Relitto Silente (remake) — strato 2
+# ----------------------------------------------------------------------------
+# Scafo, Camera di compensazione, Vestibolo delle gole, Gola di mezzo.
+# La giuntura e il taglio vecchio di L.V. (T1), il varco che si richiude e
+# trancia il cavo di sicurezza, il primo contatto con il brusio (la cifra
+# scende), il risuonatore nella nicchia (N3), la connessione che non si spegne.
+# Oggetti di sfondo: «di scena», nella descrizione. Essenziali: li elenca il
+# motore, e la descrizione non li nomina.
+# Incluso da relitto.fav.
+# ============================================================================
+
+# --- Stati dell'atto ---------------------------------------------------------
+# Il varco nello scafo: aperto finché non entri, poi la nave lo richiude.
+L'ingresso è uno stato.
+L'ingresso è aperto.
+# Il primo contatto con il brusio, nel Vestibolo.
+Il contatto è uno stato.
+Il contatto è nuovo.
+# La voce che non si lascia spegnere, nella Gola di mezzo.
+La connessione è uno stato.
+La connessione è nuova.
+# T1: il taglio di centocinquant'anni fa sulla giuntura.
+La datazione è uno stato.
+La datazione è ignota.
+# I tre tagli che staccano il risuonatore dalla nicchia.
+Il taglio è un contatore.
+
+Incastrato e staccato sono opposte.
+
+"stacca" è un comando.
+"taglia" è un comando.
+
+# ============================================================================
+# SCAFO ESTERNO
+# ============================================================================
+Lo scafo è una stanza.
+La descrizione dello scafo è "Sei fuori. Le funi degli arpioni corrono tese fra le due navi, e il tuo cavo di sicurezza si srotola dal boccaporto alle tue spalle. Sotto i magneti degli stivali c'è lo scafo nero: liscio, senza una vite, senza una linea, come colato in un pezzo solo. Ci hai girato intorno con la Santa Maria cercando un portello, un punto qualunque che dicesse si entra di qui. Non c'è. Finché tieni un piede sulla rampa senti il reattore nelle ossa; sullo scafo nero, più niente. Dentro, alle tue spalle, il boccaporto.".
+La descrizione dello scafo se la giuntura è tagliata e la fuga è lontana è "Sei fuori, sullo scafo nero. Dove hai tagliato, un lembo si è piegato verso l'interno senza rumore e ha lasciato un'apertura buia, larga quanto le tue spalle: si scende giù, nel varco. Le funi degli arpioni, tese. Alle tue spalle il boccaporto della Santa Maria, con la sua luce gialla: dentro.".
+
+# --- Sfondo -----------------------------------------------------------------
+Lo scafo nero è una cosa.
+Lo scafo nero è sullo scafo.
+Lo scafo nero è di scena.
+Lo scafo nero si chiama anche "superficie".
+Lo scafo nero si chiama anche "scafo alieno".
+La descrizione dello scafo nero è "Liscio anche attraverso il guanto, e freddo in un modo che il guanto non dovrebbe lasciar passare. Il faro ci scivola sopra senza trovare un appiglio. Da qualche parte chi l'ha costruito avrà lasciato un punto più debole, e il multiscanner lo troverebbe: ANALIZZA lo scafo nero.".
+
+Le funi sono una cosa.
+Le funi sono sullo scafo.
+Le funi sono di scena.
+Le funi si chiama anche "funi degli arpioni".
+Le funi si chiama anche "cavi degli arpioni".
+La descrizione delle funi è "Tese fra la prua della Santa Maria e lo scafo nero. Finché tengono loro, le due navi restano una.".
+
+Il cavo di sicurezza è una cosa.
+Il cavo di sicurezza è sullo scafo.
+Il cavo di sicurezza è di scena.
+Il cavo di sicurezza si chiama anche "cavo".
+La descrizione del cavo di sicurezza è "Il tuo cavo di sicurezza, agganciato alla cintura e srotolato dal boccaporto. Finché c'è, la strada di casa è una linea.".
+La descrizione del cavo di sicurezza se l'ingresso è richiuso è "Un metro di cavo, tranciato di netto, che ti pende dalla cintura. Il resto è rimasto fuori, con la strada di casa.".
+Invece di lascia il cavo di sicurezza: dire "È agganciato alla cintura. Lo lasci pendere.".
+
+# --- Essenziali: la giuntura, che compare solo quando la trovi ---------------
+La giuntura è una cosa.
+La giuntura è compatta.
+La giuntura si chiama anche "crepa".
+La giuntura si chiama anche "linea".
+La giuntura si chiama anche "varco".
+La giuntura si chiama anche "lembo".
+La descrizione della giuntura è "Una linea sottilissima, che anche col faro si vede appena: una giuntura sigillata con una precisione che non ha niente di umano. Lungo un tratto il materiale ha una grana diversa, più giovane.".
+La descrizione della giuntura se la giuntura è tagliata è "Il lembo tagliato si è piegato verso l'interno e ha lasciato un'apertura buia, larga quanto le tue spalle. Si scende giù.".
+
+# --- Trovare il punto debole, e il taglio vecchio (T1) ------------------------
+Invece di analizza lo scafo nero se la giuntura non è sullo scafo: dire "Il multiscanner non si decide: una lettura dice organico, la successiva minerale, la terza rinuncia e scrive di nuovo MATERIALE NON IN ARCHIVIO. Poi, a tre passi da te, trova quello che cercavi: una giuntura più sottile del resto dello scafo, sigillata dall'interno. Fatta per essere tagliata, e per richiudersi." e adesso la giuntura è sullo scafo.
+Invece di analizza lo scafo nero: dire "Organico, minerale, non in archivio: il multiscanner continua a cambiare idea. L'unico punto debole è la giuntura.".
+Invece di tocca lo scafo nero: dire "Appoggi il guanto sullo scafo. Non vibra, non scalda, non ti restituisce niente. Quando togli la mano non resta nemmeno l'alone della condensa.".
+
+Invece di analizza la giuntura se la datazione è ignota: dire "Il multiscanner segue la linea e si ferma sul tratto dalla grana diversa. È un taglio, rifatto: qualcuno ha già aperto qui, e la nave ha richiuso. Datazione della saldatura: centocinquant'anni, con un margine d'errore che lo scanner stesso definisce imbarazzante.\nCentocinquant'anni fa. E di una cosa così, in centocinquant'anni, non ti è mai arrivata una parola." e adesso la datazione è nota e adesso aumenta le tracce.
+Invece di analizza la giuntura: dire "Un taglio di centocinquant'anni fa, richiuso dalla nave. Lo scanner non ha altro da aggiungere.".
+
+# --- Il taglio ---------------------------------------------------------------
+Invece di usa la taglierina sullo scafo nero se la giuntura non è sullo scafo: dire "Tagliare alla cieca uno scafo che non conosci, senza sapere cosa c'è dietro: no. Prima trova dove.".
+Invece di usa la taglierina sullo scafo nero: dire "Non qui: il punto debole è la giuntura.".
+Invece di taglia lo scafo nero se la giuntura non è sullo scafo: dire "Tagliare alla cieca uno scafo che non conosci, senza sapere cosa c'è dietro: no. Prima trova dove.".
+Invece di taglia lo scafo nero: dire "Non qui: il punto debole è la giuntura.".
+
+Invece di usa la taglierina sulla giuntura se la giuntura è tagliata: dire "È già aperta.".
+Invece di usa la taglierina sulla giuntura: dire "Regoli la taglierina e l'appoggi alla giuntura. Nessuna scintilla: il materiale si ritira dal getto come carne da una brace, e dal taglio esce un odore che il casco non dovrebbe lasciar passare, vecchio, di chiuso. Chiudi il giro. Un lembo si piega verso l'interno senza un suono e lascia un'apertura buia. Si scende giù." e adesso la giuntura è tagliata.
+Invece di taglia la giuntura se la giuntura è tagliata: dire "È già aperta.".
+Invece di taglia la giuntura se il giocatore non ha la taglierina: dire "Con cosa? Ti serve la taglierina.".
+Invece di taglia la giuntura: dire "Regoli la taglierina e l'appoggi alla giuntura. Nessuna scintilla: il materiale si ritira dal getto come carne da una brace, e dal taglio esce un odore che il casco non dovrebbe lasciar passare, vecchio, di chiuso. Chiudi il giro. Un lembo si piega verso l'interno senza un suono e lascia un'apertura buia. Si scende giù." e adesso la giuntura è tagliata.
+
+Invece di vai giù se il giocatore è sullo scafo e la giuntura non è tagliata: dire "Sotto gli stivali c'è solo scafo nero. Per scendere, prima bisogna aprirlo.".
+
+# «Entra», sullo scafo, vuol dire due cose: il varco o la Santa Maria. Il
+# motore lo leggerebbe come la direzione «dentro», che riporta a bordo; qui
+# diventa un verbo, così «entra nel varco» porta nel relitto e «rientra»
+# riporta a bordo. Le direzioni giù e dentro restano come sono.
+"entra" è un comando.
+"rientra" è un comando senza oggetto.
+Lo scafo nero si chiama anche "relitto".
+Invece di entra la giuntura se la giuntura non è tagliata: dire "Prima bisogna aprirla.".
+Invece di entra la giuntura: dire "Metti un piede oltre il bordo, poi l'altro, e ti lasci scendere. Il tremito del reattore, che ti saliva dalle suole, non c'è più." e adesso il giocatore è nella camera di compensazione.
+Invece di entra lo scafo nero se la giuntura non è tagliata: dire "Non c'è un ingresso. Non ancora.".
+Invece di entra lo scafo nero: dire "Metti un piede oltre il bordo, poi l'altro, e ti lasci scendere. Il tremito del reattore, che ti saliva dalle suole, non c'è più." e adesso il giocatore è nella camera di compensazione.
+Invece di entra il boccaporto se il giocatore è sullo scafo: dire "Ti tiri lungo il cavo fino al boccaporto e richiudi il portello esterno alle tue spalle." e adesso il giocatore è nella stiva.
+Invece di entra il boccaporto: dire "Il boccaporto porta fuori, nel vuoto: si esce, non si entra.".
+Invece di rientra se il giocatore è sullo scafo: dire "Ti tiri lungo il cavo fino al boccaporto e richiudi il portello esterno alle tue spalle." e adesso il giocatore è nella stiva.
+Invece di rientra se la fuga è iniziata: dire "La strada è quella: su, fino allo scafo, e poi dentro.".
+Invece di rientra se l'ingresso è richiuso: dire "La strada per tornare a bordo è dall'altra parte di una parete che si è richiusa.".
+Invece di rientra: dire "Sei a bordo.".
+
+# ============================================================================
+# CAMERA DI COMPENSAZIONE
+# ============================================================================
+La camera di compensazione è una stanza.
+La descrizione della camera di compensazione è "Una camera bassa e tonda, senza un angolo. Le pareti curvano con la grana fine di qualcosa che è cresciuto invece di essere montato: fredde, senza odore. Sopra di te, dove c'era il varco, solo parete. A ovest, nello stesso nero dello scafo, il profilo di una porta; sopra la porta, un'incisione.".
+La descrizione della camera di compensazione se l'ingresso è aperto e la fuga è lontana è "Una camera bassa e tonda, senza un angolo. Le pareti curvano con la grana fine di qualcosa che è cresciuto invece di essere montato: fredde, senza odore. Sopra di te il varco, e in fondo al varco la luce gialla del boccaporto. A ovest, nello stesso nero dello scafo, il profilo di una porta; sopra la porta, un'incisione.".
+La descrizione della camera di compensazione se la porta interna è aperta e la fuga è lontana è "La camera bassa e tonda, ormai attraversata. A ovest la porta interna è aperta su una sala bassa da cui sale un brusio. Sopra di te, dove c'era il varco, solo parete.".
+
+# Entrare vuol dire restare: la nave richiude il varco e trancia il cavo.
+Quando il giocatore è nella camera di compensazione e l'ingresso è aperto: dire "Sopra di te il lembo si richiude. Non lo vedi muoversi: un momento c'è l'apertura, con la luce gialla del boccaporto in fondo, e il momento dopo c'è parete. Il cavo di sicurezza, tranciato di netto, ti pende dalla cintura. Un metro, e basta." e adesso l'ingresso è richiuso e adesso la camera di compensazione non collega più su e adesso il cavo di sicurezza è in inventario.
+
+Invece di vai su se il giocatore è nella camera di compensazione e l'ingresso è richiuso e la fuga è lontana: dire "Sopra di te c'è solo parete, liscia come se nessuno l'avesse mai tagliata.".
+Invece di vai ovest se il giocatore è nella camera di compensazione e la porta interna è chiusa: dire "La porta non ha maniglia, né fessura, né niente da spingere. Sta chiusa.".
+
+# --- Sfondo -----------------------------------------------------------------
+L'incisione è una cosa.
+L'incisione è nella camera di compensazione.
+L'incisione è di scena.
+L'incisione si chiama anche "simbolo".
+L'incisione si chiama anche "stella".
+La descrizione dell'incisione è "Una stella stilizzata da cui parte una linea che finisce in una piccola spirale, come un seme che germoglia. Quasi una dichiarazione d'intenti.".
+
+# --- Essenziali -------------------------------------------------------------
+Il pannello è una cosa.
+Il pannello è nella camera di compensazione.
+Il pannello è spento.
+Il pannello si chiama anche "pannello di controllo".
+La descrizione del pannello è "Una piccola superficie liscia incassata nella parete accanto alla porta. Niente pulsanti. Sembra morta.".
+La descrizione del pannello se il pannello è acceso è "Sul pannello brilla una linea di luce ambrata.".
+
+La porta interna è una cosa.
+La porta interna è nella camera di compensazione.
+La porta interna è chiusa.
+La porta interna si chiama anche "porta".
+La descrizione della porta interna è "Una porta dello stesso nero dello scafo. Nessuna maniglia, nessuna fessura.".
+La descrizione della porta interna se la porta interna è aperta è "La porta si è ritirata nella parete. Di là, una sala bassa, e un brusio.".
+
+Invece di analizza il pannello: dire "Sotto la superficie il multiscanner trova una rete di fibre: pressurizzazione e apertura, tutto addormentato. E un ingresso per una fonte esterna, a bassa tensione: la batteria d'emergenza del kit, oppure, in mancanza d'altro, la tua tuta, che di corrente ne ha e ne darebbe.".
+Invece di usa la batteria sul pannello se il pannello è spento: dire "Trovi l'incavo sotto il bordo del pannello e ci premi il connettore della batteria. Si accende una linea di luce ambrata, e dalla porta arriva un clac sordo." e adesso il pannello è acceso e adesso la batteria è nel nulla.
+
+# Senza la batteria non si resta chiusi qui: la tuta può dare corrente al
+# pannello, e la paga in aria (la nave beve dalla tua stessa riserva).
+"alimenta" è un comando.
+Invece di usa la tuta sul pannello se il pannello è acceso: dire "Il pannello è già acceso.".
+Invece di usa la tuta sul pannello: dire "Stacchi il cavo di servizio dal fianco della tuta e lo premi nell'incavo del pannello. Una linea ambrata si accende, e dalla porta arriva un clac sordo. Sul bordo del visore la cifra dell'aria scende di dieci punti in un colpo: la tuta ha dato al pannello quello che teneva per te." e adesso il pannello è acceso e adesso diminuisci l'aria di 10.
+Invece di alimenta il pannello se il pannello è acceso: dire "Il pannello è già acceso.".
+Invece di alimenta il pannello se il giocatore ha la batteria: dire "Trovi l'incavo sotto il bordo del pannello e ci premi il connettore della batteria. Si accende una linea di luce ambrata, e dalla porta arriva un clac sordo." e adesso il pannello è acceso e adesso la batteria è nel nulla.
+Invece di alimenta il pannello: dire "Stacchi il cavo di servizio dal fianco della tuta e lo premi nell'incavo del pannello. Una linea ambrata si accende, e dalla porta arriva un clac sordo. Sul bordo del visore la cifra dell'aria scende di dieci punti in un colpo: la tuta ha dato al pannello quello che teneva per te." e adesso il pannello è acceso e adesso diminuisci l'aria di 10.
+Invece di apri la porta interna se il pannello è spento: dire "Non c'è niente da tirare né da spingere, e il meccanismo, se c'è, non ha corrente.".
+Invece di apri la porta interna se la porta interna è aperta: dire "È già aperta.".
+Invece di apri la porta interna: dire "Appoggi il guanto sulla linea ambrata del pannello. Con un sibilo appena percepibile la porta si ritira nella parete. Di là c'è una sala bassa, e un brusio che ti arriva nelle cuffie prima ancora che tu entri." e adesso la porta interna è aperta.
+
+# ============================================================================
+# VESTIBOLO DELLE GOLE
+# ============================================================================
+Il vestibolo delle gole è una stanza.
+La descrizione del vestibolo delle gole è "Una sala bassa e tonda, la prima vera sala della nave. Tre gole si aprono nella parete verso il buio: quella larga, a ovest, sale verso una luminescenza azzurrina; quella di mezzo scende, ed è da lì che il brusio sale più forte; la terza è crollata su se stessa. Le pareti sono percorse da venature spente, una rete fine che un tempo doveva fare luce. In una nicchia, all'altezza esatta della tua mano, qualcuno ha posato qualcosa, e il multiscanner l'ha già schedato. A est, la porta interna e la camera.".
+La descrizione del vestibolo delle gole se il risuonatore è staccato e la fuga è lontana è "Una sala bassa e tonda, la prima vera sala della nave. Tre gole si aprono nella parete verso il buio: quella larga, a ovest, sale verso una luminescenza azzurrina; quella di mezzo scende; la terza è crollata su se stessa. Le pareti sono percorse da venature spente. La nicchia è vuota: dove l'arnese si saldava alla parete restano i tuoi tagli. A est, la porta interna e la camera.".
+
+# Il primo contatto: la lezione su cui si regge il gioco.
+Quando il giocatore è nel vestibolo delle gole e il contatto è nuovo: dire "Appoggi il guanto alla parete per orientarti, e il multiscanner sulla spalla si impenna: il display si riempie di righe che si scavalcano. Nella cuffia, dove fino a un attimo fa c'era soltanto il tuo fiato, entra un brusio. Tante voci, una sopra l'altra, nessuna intera. La tuta prova a tradurre e ti restituisce una sillaba, poi niente. E intanto, sul bordo del visore, la cifra dell'aria scende di un punto. Poi di un altro.\nStacchi la mano. Il brusio si abbassa, la cifra si ferma.\nQualunque cosa sia, per farsi sentire beve dalla tua stessa batteria." e adesso il contatto è avvenuto e adesso diminuisci l'aria di 2.
+
+# --- Sfondo -----------------------------------------------------------------
+La nicchia è una cosa.
+La nicchia è nel vestibolo delle gole.
+La nicchia è di scena.
+La descrizione della nicchia è "Scavata all'altezza giusta perché qualcuno ci posasse le cose apposta.".
+La descrizione della nicchia se il risuonatore è staccato è "Vuota. Dove l'arnese si saldava alla parete restano i tuoi tagli, netti, già meno netti.".
+
+Le gole sono una cosa.
+Le gole sono nel vestibolo delle gole.
+Le gole sono di scena.
+Le gole sono mute.
+Le gole si chiama anche "gola".
+Le gole si chiama anche "gola larga".
+Le gole si chiama anche "terza gola".
+Le gole si chiama anche "gola crollata".
+La descrizione delle gole è "Tre bocche nella parete. La gola larga sale verso ovest, verso una luce azzurrina. Quella di mezzo scende. La terza è crollata su se stessa: dentro si vede solo materia schiacciata, piegata come carta bagnata.".
+
+Le venature spente sono una cosa.
+Le venature spente sono nel vestibolo delle gole.
+Le venature spente sono di scena.
+Le venature spente si chiama anche "venature".
+Le venature spente si chiama anche "rete".
+Le venature spente si chiama anche "parete".
+Le venature spente si chiama anche "pareti".
+La descrizione delle venature spente è "Una rete fine sotto la superficie, spenta. Quando ci passi sopra il guanto, il brusio risale.".
+Invece di tocca le venature spente: dire "Il brusio risale sotto il guanto, e la cifra sul visore scende di un punto. Togli la mano." e adesso diminuisci l'aria di 1.
+
+# --- Essenziale: il risuonatore (N3) -----------------------------------------
+Il risuonatore è una cosa.
+Il risuonatore è nel vestibolo delle gole.
+Il risuonatore è incastrato.
+Il risuonatore si chiama anche "arnese".
+Il risuonatore si chiama anche "matrice".
+Il risuonatore si chiama anche "macchina".
+Il risuonatore si chiama anche "attrezzo".
+La descrizione del risuonatore è "Non somiglia a niente che tu conosca, eppure è un attrezzo: ha un davanti, un dietro, un punto dove la mano lo prenderebbe. Il multiscanner, che non sa come chiamarlo, l'ha schedato come «risuonatore». Il brusio viene da lui. Una cosa che parla ancora dopo tutto questo tempo è una cosa che funziona, e una cosa che funziona si vende: staccato intero e portato a Yusuf, varrebbe sei mesi di stive vuote. Forse un anno.".
+La descrizione del risuonatore se il risuonatore è staccato è "Tiepido, più leggero di quanto pensassi. Il brusio viene da lì, e finché lo porti la cifra dell'aria scende a ogni passo. Vale sei mesi di stive vuote. Forse un anno.".
+
+Invece di prendi il risuonatore se il risuonatore è incastrato: dire "Allunghi la mano. Il brusio sale, la cifra sul visore riprende a scendere, e ti fermi con il guanto a un palmo dall'arnese. È saldato alla nicchia, cresciuto insieme alla parete: per portarlo via dovresti STACCARLO." e adesso diminuisci l'aria di 2.
+Invece di tocca il risuonatore se il risuonatore è incastrato: dire "Il brusio sale sotto il guanto, la cifra scende. Togli la mano." e adesso diminuisci l'aria di 1.
+Invece di analizza il risuonatore: dire "Il multiscanner rinuncia a capire cosa sia. Dice soltanto che dentro ci sono registrazioni, una quantità che non sa contare, una sopra l'altra.".
+Invece di ascolta il risuonatore: dire "Il brusio. Se ti concentri su una voce, ne arrivano altre dieci a coprirla.".
+
+Invece di stacca il risuonatore se il risuonatore è staccato: dire "È già staccato.".
+Invece di stacca il risuonatore se il giocatore non ha la taglierina: dire "A mani nude non viene: è cresciuto insieme alla parete. Ci vorrebbe la taglierina.".
+Invece di stacca il risuonatore se il taglio è meno di 1: dire "Regoli la taglierina al minimo e incidi il bordo della nicchia, dove l'arnese si salda alla parete. Il brusio si alza di colpo, e per un istante una voce si stacca dalle altre: chiede qualcosa, in fretta, a qualcuno. Poi rientra nel coro. Servono altri due tagli." e adesso aumenta il taglio e adesso diminuisci l'aria di 2.
+Invece di stacca il risuonatore se il taglio è meno di 2: dire "Secondo taglio. La parete cede come cartilagine. Nella cuffia le voci adesso sono tante e vicine, e una sembra contare. Ne manca uno." e adesso aumenta il taglio e adesso diminuisci l'aria di 2.
+Invece di stacca il risuonatore: dire "L'ultimo lembo si stacca e l'arnese ti cade nel palmo, più leggero di quanto pensassi, e tiepido. Il brusio adesso viene da lì, dalla tua mano. Sul bordo del visore la cifra scende di un punto, poi di un altro, e non smette." e adesso il risuonatore è staccato e adesso il risuonatore è in inventario e adesso diminuisci l'aria di 2.
+Invece di usa la taglierina sul risuonatore: dire "(Per liberarlo dalla nicchia: STACCA IL RISUONATORE.)".
+
+# --- L'eco delle gole (serve il Sintonizzatore, dal Laboratorio) -------------
+Invece di sintonizza le gole se il giocatore non ha il sintonizzatore: dire "Ti serve il Sintonizzatore di Frequenza per separare il brusio in voci.".
+Invece di sintonizza le gole se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. Con l'aria a [aria] la tuta non ti lascia ascoltare niente che non sia il tuo fiato. Ti serve una ricarica.".
+Invece di sintonizza le gole se il giocatore ha il risuonatore: dire "Il Sintonizzatore cerca una voce e ne trova cento: con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovresti posarlo.".
+Invece di sintonizza le gole se le gole è muta: dire "Il Sintonizzatore separa il brusio in fili, e due restano. Una voce che chiede, con urgenza, di tenere il campo: «…il campo, tenetelo…». E un'altra, più bassa, che risponde a chi non la ascolta: «…non tiene più…». Poi le voci tornano a sovrapporsi, e il resto è coro." e adesso le gole è risuonata e adesso aumenta gli echi e adesso diminuisci l'aria di 4.
+Invece di sintonizza le gole: dire "Il campo da tenere, e qualcuno che dice che non tiene più. Il resto è coro.".
+
+# ============================================================================
+# GOLA DI MEZZO
+# ============================================================================
+La gola di mezzo è una stanza.
+La descrizione della gola di mezzo è "La gola scende a scatti: si stringe fino a sfiorarti le spalle, poi si riallarga senza una regola, come se fosse cresciuta per conto suo. Qui le venature non sono spente del tutto: dove passa il guanto, una corre di un verde stanco per un palmo e si riaddormenta. Il brusio è più forte, e dal basso sale un freddo diverso, umido. Su si torna al vestibolo; la gola continua a scendere.".
+
+Le venature verdi sono una cosa.
+Le venature verdi sono nella gola di mezzo.
+Le venature verdi sono di scena.
+Le venature verdi si chiama anche "venature".
+Le venature verdi si chiama anche "venatura".
+Le venature verdi si chiama anche "pareti".
+La descrizione delle venature verdi è "Una rete fine sotto la superficie. Dove la tocchi, si accende.".
+Invece di tocca le venature verdi: dire "Una venatura si accende sotto il guanto, verde, e ti corre davanti per un palmo, giù per la gola, come se ti indicasse la strada. Poi si spegne.".
+
+# La voce dei nomi: il Sintonizzatore non si lascia spegnere. Il costo è fisso.
+Quando il giocatore è nella gola di mezzo e il giocatore ha il sintonizzatore e la connessione è nuova e l'aria è almeno 30 e la fuga è lontana: dire "Il Sintonizzatore si accende da solo. Prima che tu lo tocchi aggancia una voce, una sola, bassa, che tiene un ritmo che le altre hanno perso. Dice una parola, poi un'altra, con la pazienza di chi legge un elenco, e per ogni parola il traduttore della tuta scrive la stessa riga: «nome proprio: intraducibile». Poi la scrive ancora. E ancora.\nCerchi l'interruttore e premi. Niente. Premi di nuovo, cerchi il canale per chiuderlo a mano, e sul bordo del visore compare una riga che non hai mai visto su un visore: CHIUSURA RIFIUTATA. CANALE APERTO DA REMOTO.\nLa voce va avanti, e la cifra dell'aria scende con lei. Poi, com'era venuta, si interrompe a metà di un nome, e il Sintonizzatore ti torna in mano muto." e adesso la connessione è avvenuta e adesso aumenta gli echi e adesso diminuisci l'aria di 3.
+
+# Più giù la gola porta alla Sala delle teche (vita.fav).

@@ -1,0 +1,102 @@
+# ============================================================================
+# fuga.fav — ATTO V «La fuga»: la nave si disgrega
+# Il Relitto Silente (remake) — strato 4
+# ----------------------------------------------------------------------------
+# Comincia al congedo dell'Anziano (ponte.fav). L'aria scende di 4 a ogni
+# turno. Si apre la Gola del ritorno, il nodo di fibre cede, il varco sopra la
+# camera si riapre, il corridoio crolla. Il percorso:
+#   Santuario centrale –giù– Gola del ritorno –ovest– Sala delle teche –su–
+#   Gola di mezzo –su– Vestibolo –est– Camera –su– Scafo –dentro– Stiva ★
+# Nella Sala delle teche il groviglio è sveglio: si passa con la luce fredda
+# del Navarca (se l'hai ascoltato), con il bengala (se ti è rimasto), con il
+# faro basso e la mano sulla parete, oppure strappandosi via (−6).
+# Sotto il 15% le descrizioni si accorciano: il pensiero rallenta.
+# L'ultima voce (U1) è l'ultimo nodo del dialogo; la voce dei nomi (U2) torna
+# nella gola di mezzo.
+# I finali sono in finali.fav.
+# Incluso da relitto.fav.
+# ============================================================================
+
+L'ultima voce è uno stato.
+L'ultima voce è attesa.
+La voce dei nomi è uno stato.
+La voce dei nomi è attesa.
+
+"strappa" è un comando.
+"calcia" è come strappa.
+
+# --- L'inizio: la nave cambia forma ------------------------------------------
+# L'ultima voce (U1) e l'apertura dei varchi sono nell'ultimo nodo del dialogo
+# (ponte.fav), perché succedano nell'istante del congedo. Qui, al primo turno,
+# la nave comincia a tremare.
+Quando la fuga è iniziata diventa vera: dire "La nave trema. Sotto i tuoi piedi le linee del pavimento si spengono una dopo l'altra, e accanto al sostegno il pavimento si è aperto su una gola che scende. Sul visore, la cifra dell'aria ha cominciato a scendere da sola." e adesso la camera di compensazione collega su a lo scafo e adesso il vestibolo delle gole non collega più ovest.
+
+# Dal santuario si scende con uno spostamento diretto: l'apertura nel pavimento
+# c'è dal primo istante della fuga, e non compare fra le uscite prima.
+Invece di vai giù se il giocatore è nel santuario centrale e la fuga è iniziata: dire "Ti cali nell'apertura accanto al sostegno, e la gola ti prende. [se le alcove è svelata]Davanti a te, una dopo l'altra, le venature delle pareti si accendono: una luce fredda, azzurra, senza calore, che corre giù e ti aspetta. Aveva tenuto le luci accese, il Navarca, perché qualcuno trovasse la strada.[altrimenti]È ripida, nera, e trema: il faro ti apre davanti un metro alla volta, e dalle pareti cade una polvere fine.[fine] In fondo, a ovest, senti un fruscio che conosci: il groviglio." e adesso il giocatore è nella gola del ritorno.
+Invece di entra il buio se il giocatore è nel santuario centrale e la fuga è iniziata: dire "Ti cali nell'apertura accanto al sostegno, e la gola ti prende. [se le alcove è svelata]Davanti a te, una dopo l'altra, le venature delle pareti si accendono: una luce fredda, azzurra, senza calore, che corre giù e ti aspetta. Aveva tenuto le luci accese, il Navarca, perché qualcuno trovasse la strada.[altrimenti]È ripida, nera, e trema: il faro ti apre davanti un metro alla volta, e dalle pareti cade una polvere fine.[fine] In fondo, a ovest, senti un fruscio che conosci: il groviglio." e adesso il giocatore è nella gola del ritorno.
+
+# (Il calo di 4 a turno è in aria.fav, prima delle soglie.)
+Ogni turno se la fuga è iniziata e l'aria è più di 15 e càpita (1 su 4): dire "Da qualche parte dietro di te qualcosa crolla, con un rumore che non arriva: lo senti nelle suole.".
+Ogni turno se la fuga è iniziata e l'aria è più di 15 e càpita (1 su 4): dire "Le pareti si incrinano in lunghe linee verdi, come vene che si accendono per l'ultima volta.".
+
+# ============================================================================
+# GOLA DEL RITORNO
+# ============================================================================
+La gola del ritorno è una stanza.
+La descrizione della gola del ritorno è "Una gola che scende ripida, nera, e trema. Il faro ti apre davanti un metro alla volta, e dalle pareti cade una polvere fine. In fondo, a ovest, senti un fruscio che conosci: il groviglio.".
+La descrizione della gola del ritorno se l'aria è al massimo 15 è "Gola. Buio. Il fruscio, in fondo. Ovest.".
+La descrizione della gola del ritorno se le alcove è svelata è "Davanti a te, una dopo l'altra, le venature delle pareti si accendono: una luce fredda, azzurra, senza calore, che corre giù per la gola e ti aspetta. Aveva tenuto le luci accese, il Navarca, perché qualcuno trovasse la strada. In fondo, a ovest, il fruscio del groviglio.".
+
+Le venature del ritorno è una cosa.
+Le venature del ritorno è nella gola del ritorno.
+Le venature del ritorno è di scena.
+Le venature del ritorno si chiama anche "venature".
+Le venature del ritorno si chiama anche "pareti".
+La descrizione delle venature del ritorno è "Una rete fine sotto la superficie[se le alcove è svelata], accesa di una luce fredda che va avanti a te[altrimenti], spenta[fine].".
+
+Invece di vai su se il giocatore è nella gola del ritorno: dire "Dietro di te la gola è crollata. Non c'è più un sopra.".
+
+# ============================================================================
+# SALA DELLE TECHE, nella fuga
+# ============================================================================
+La descrizione della sala delle teche se la fuga è iniziata e l'aria è al massimo 15 è "Teche. Il groviglio, sveglio. Le pareti fredde. Su.".
+La descrizione della sala delle teche se la fuga è iniziata e le alcove è svelata è "Le venature accese del Navarca corrono lungo le pareti, sopra le teche chiuse, fino all'imbocco della gola di mezzo: una strada di luce fredda. Il groviglio è sveglio e si muove in tutta la sala, ma quella luce non la sente. Su, la gola di mezzo; a ovest il vivaio; a est la gola da cui sei arrivato.".
+La descrizione della sala delle teche se la fuga è iniziata e il bengala è acceso è "Il bengala brucia rosso in mezzo alla sala, e tutto il groviglio, sveglio, gli sta addosso. La strada verso la gola di mezzo è libera, finché dura. Su, la gola; a ovest il vivaio; a est la gola da cui sei arrivato.".
+La descrizione della sala delle teche se la fuga è iniziata è "La sala delle teche, sveglia. Il campo è caduto del tutto: il groviglio si muove dappertutto, a frustate molli e cieche, e cerca il caldo. Lungo le pareti, le teche chiuse, bianche di brina. Su, in fondo alla sala, l'imbocco della gola di mezzo; a ovest il vivaio; a est la gola da cui sei arrivato.".
+
+# Passare su: luce del Navarca, bengala, oppure faro basso e mano sulla parete.
+Invece di vai su se il giocatore è nella sala delle teche e la fuga è iniziata e le alcove non è svelata e il bengala è spento e l'appoggio è libero: dire "Un filamento ti serra la caviglia, viscido e forte, e ti tira indietro. [se il faro del casco è pieno]Il faro, al massimo, li chiama tutti. [fine]Puoi strapparti via, o trovare un'altra strada." e adesso diminuisci l'aria di 6.
+Invece di strappa il groviglio se il giocatore è nella sala delle teche e la fuga è iniziata: dire "Dai un calcio all'indietro con lo stivale, strappi la fibra che ti tiene e ti butti verso la gola di mezzo, a spinte, senza voltarti. Ti segue un'ultima frustata, che trova solo la suola." e adesso diminuisci l'aria di 6 e adesso il giocatore è nella gola di mezzo.
+Invece di taglia il groviglio se il giocatore è nella sala delle teche e la fuga è iniziata e il giocatore ha la taglierina: dire "Accendi la taglierina e tagli la fibra che ti tiene. Le altre sentono il calore del getto e arrivano tutte insieme: ti butti verso la gola di mezzo prima che ti trovino." e adesso diminuisci l'aria di 6 e adesso il giocatore è nella gola di mezzo.
+Invece di strappa il groviglio: dire "Qui non ti tiene niente.".
+Invece di strappa: dire "Strappare cosa?".
+
+# ============================================================================
+# GOLA DI MEZZO, nella fuga: la voce dei nomi (U2)
+# ============================================================================
+La descrizione della gola di mezzo se la fuga è iniziata e l'aria è al massimo 15 è "Gola. Su. Su.".
+La descrizione della gola di mezzo se la fuga è iniziata è "La gola di mezzo trema e si stringe, e le venature si accendono tutte insieme di un verde malato, come per l'ultima volta. Sopra, il vestibolo. Sotto, il groviglio.".
+
+Quando il giocatore è nella gola di mezzo e la fuga è iniziata e la voce dei nomi è attesa: dire "[se la connessione è avvenuta]Nella cuffia torna la voce dei nomi[altrimenti]Nella cuffia entra una voce bassa, paziente, che dice nomi[fine], una parola dopo l'altra.[se il generatore è svelata] È l'Ingegnere. Sta ancora dicendo i nomi.[fine] (Potresti fermarti ad ASCOLTARE LA VOCE.)" e adesso la voce dei nomi è udita.
+
+Le venature verdi si chiama anche "voce".
+Le venature verdi si chiama anche "nomi".
+Le venature verdi si chiama anche "voce dei nomi".
+Invece di ascolta le venature verdi se la fuga è iniziata: dire "Ti fermi. Lasci che la voce vada avanti, e la cifra dell'aria scende con lei. Dice i nomi uno per uno, e tu li ascolti anche se non ne capisci nessuno. Poi l'elenco finisce, e la voce, dopo una pausa, ne dice uno in più, più piano degli altri. Il traduttore scrive la sua riga di sempre, nome proprio, intraducibile. Ma tu lo sai, di chi è. È il suo." e adesso diminuisci l'aria di 6.
+Invece di ascolta le venature verdi: dire "Il brusio, e sotto il brusio un ritmo, come qualcuno che legge.".
+
+# ============================================================================
+# VESTIBOLO, CAMERA, SCAFO, STIVA nella fuga
+# ============================================================================
+La descrizione del vestibolo delle gole se la fuga è iniziata e l'aria è al massimo 15 è "Vestibolo. La nicchia. Est.".
+La descrizione del vestibolo delle gole se la fuga è iniziata è "Il vestibolo trema. A ovest la gola larga è crollata: dove c'era il passaggio per il corridoio c'è un tappo di materia schiacciata. A est la porta interna è aperta sulla camera; sotto, la gola di mezzo.[se il risuonatore è incastrato] Dalla nicchia il brusio sale, uguale a sempre.[fine]".
+Invece di vai ovest se il giocatore è nel vestibolo delle gole e la fuga è iniziata: dire "La gola larga è crollata. Di là non c'è più niente.".
+
+La descrizione della camera di compensazione se la fuga è iniziata e l'aria è al massimo 15 è "Camera. Sopra, la luce gialla. Su.".
+La descrizione della camera di compensazione se la fuga è iniziata è "La camera trema. Sopra di te la parete si è riaperta: il varco, e in fondo al varco la luce gialla del boccaporto. Dal bordo pende ancora il resto del tuo cavo di sicurezza.".
+
+La descrizione dello scafo se la fuga è iniziata e l'aria è al massimo 15 è "Fuori. Le funi. Il boccaporto. Dentro.".
+La descrizione dello scafo se la fuga è iniziata è "Sei fuori. Lo scafo nero trema sotto i magneti degli stivali, e le funi degli arpioni vibrano come corde tese. Il boccaporto della Santa Maria è lì, con la sua luce gialla: dentro.".
+
+La descrizione della stiva se la fuga è iniziata è "La stiva della Santa Maria, vuota, con la sua luce gialla di servizio.".

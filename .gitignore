@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Salvataggi del motore («salva» scrive <nome>.salvataggio nella cartella di lavoro)
+*.salvataggio
+
+# Esportazioni HTML giocabili (si rigenerano con «favella.py esporta»)
+relitto-silente/*.html
+
+# Sistema
+Thumbs.db
+desktop.ini
+.DS_Store
