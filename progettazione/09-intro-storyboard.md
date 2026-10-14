@@ -325,3 +325,69 @@ L’autore ha approvato lo storyboard con le cinque scelte come consigliate (06,
 - L’ordine di lavoro: un animatic di tutte le scene, cronometrato su questa scaletta, a bassa
   qualità; poi le scene definitive; poi la sincronia con la musica. Il motore di E è già quello
   definitivo.
+
+---
+
+## 10. L’animatic (14 ottobre 2026, terza sessione)
+
+Il primo passo della produzione del §9 è fatto. L’animatic non è una pagina a parte: è l’intro stessa,
+dentro l’app (`app/src/intro/`), nella sua prima forma. Le scene definitive prenderanno il posto dei
+quadri provvisori una alla volta, senza toccare la scaletta né il riproduttore.
+
+**Come si guarda.** Con il server di sviluppo dell’app (`npm --prefix app run dev`), all’indirizzo
+`http://localhost:5274/?intro&revisione`; nell’app, dal pulsante «L’intro: l’animatic» della pagina di
+prova. Senza `revisione` l’intro gira come girerà nel gioco: Esc, Spazio o un clic la saltano. Con
+`revisione` c’è una barra sotto il quadro: le scene e i testi sulla linea del tempo, pausa e ripresa,
+cinque secondi avanti e indietro, il salto, e tre opzioni (movimento ridotto, sottotitoli dei suoni,
+qualità ridotta). Nella revisione Spazio mette in pausa e le frecce spostano.
+
+**Che cosa c’è, scena per scena.**
+
+| Scena | Nell’animatic | Che cosa manca per la versione finale |
+|---|---|---|
+| A · la traccia | la spia (accesa con il clic, il respiro della luce, i quattro colpi del battito che rallenta), i testi B0–B4 con le loro regole | la grana, il carattere Newsreader (ora c’è il ripiego, Georgia) |
+| B · il margine | il motore della scala, quadro del margine: il cielo si apre intorno alla stella che prende il posto della spia; la nave entra da destra a 0:48,35 e alla fine della scena è a un quinto del quadro da sinistra | niente: il motore è quello definitivo |
+| C · il radar | il quadro fermo della tavola (`s_01_b` e il suo radar), con il radar, gli echi, l’arco del settore muto e la spia rossa disegnati dal vivo sopra lo schermo verde; il cambio di fuoco è una dissolvenza verso il quadro dell’oblò, con una lieve spinta; le quattro stelle che si spengono sono disegnate sopra | il cambio di fuoco vero sullo stesso quadro (il quadro dell’oblò ora è un’inquadratura più stretta) |
+| D · il faro | il quadro del faro della tavola, in dissolvenza a 1:18,2 | il fascio che si sposta di pochi gradi e cerca |
+| E · la scala | il motore definitivo, ventitré secondi e mezzo | niente |
+| F · la traccia, seconda parte | il quadro finale fermo; la spia, il testo e il punto della nave uno sotto l’altro nel nero del fuso; la spia batte con B9 e si spegne con «Fine della traccia» | niente, a parte la grana |
+| G · il titolo | i sedici glifi uno alla volta, la matrice che li riconosce in disordine cambiando forma due o tre volte, il titolo e la riga sotto | i glifi disegnati a mano sulle parole del gioco (ora sono generati) |
+| H · la plancia | il raccordo dal fuso all’oblò della plancia, la camera che arretra, la telecamera di bordo che scivola nella lente, l’interfaccia d’acciaio che si accende pezzo per pezzo, le bande che si ritirano | la plancia a risoluzione piena (lo zoom ora ingrandisce un quadro di 1.280 punti), e l’interfaccia vera della fase 3 |
+
+**Il suono** non c’è ancora. Lo raccontano i **sottotitoli dei suoni** del §2.5, che nell’animatic sono
+accesi di base e fanno da colonna sonora provvisoria: «il fruscio di una traccia registrata», «un
+battito, che rallenta», «dalla radio, molte voci». Nell’app saranno un’opzione per chi non sente.
+
+**I tempi.** La scaletta si calcola con la regola di lettura del §2.1 (`app/src/intro/scaletta.ts`),
+come `strumenti/intro/tempi.py`; le prove (`npm --prefix app run prove`) la confrontano con la tabella
+dei testi: 2:40,75, tutti i blocchi al centesimo. Il blocco che continua una frase (B4, B6) entra sotto
+il primo, che si attenua, ed escono insieme.
+
+**Il movimento ridotto**, come nello storyboard: in A la spia cambia luce più piano; in B la nave è
+ferma a metà del percorso; in C il cambio di fuoco è una dissolvenza senza spinta; in E il primo quadro
+e l’ultimo, con una dissolvenza di tre secondi; in G glifi e lettere appaiono in dissolvenza senza
+cambiare forma; in H la plancia si dissolve nell’interfaccia senza zoom. Si accende da solo con la
+preferenza del sistema.
+
+**Le scelte prese** (delegate, 06 §18):
+
+- **D resta nell’oblò.** `tempi.py` descrive ancora il primo secondo di D come un esterno («la Santa
+  Maria di tre quarti, il nero davanti»), dalla scaletta precedente; lo storyboard approvato lo vuole
+  nell’inquadratura dell’oblò, e l’animatic segue lo storyboard. Il conto dei tempi non cambia.
+- **In F tutto sta nel nero del fuso**: la spia a 0,365 dell’altezza del quadro, il testo sotto, il
+  punto della nave sotto ancora (a 0,51). Il titolo in G ha la base a 0,465, la riga sotto a 0,59,
+  sotto il punto.
+- **I quattro colpi di A** cadono a 0:42,85, 0:43,8, 0:44,8 e 0:45,85: un cuore che rallenta da 63 a
+  57 battiti al minuto, nei tre secondi che la scaletta gli dà. Il quarto coincide con l’inizio di B.
+- **La nave del margine** va più veloce di quanto faceva nella prova di look (circa due volte e mezza),
+  per attraversare il quadro nei quindici secondi della scena.
+
+**Che cosa non si è potuto provare qui.** In questa sessione il pannello del browser era nascosto, e lì
+il ciclo dei fotogrammi non gira: l’animatic è stato controllato fotogramma per fotogramma con la barra
+di revisione (ai momenti chiave di ogni scena, con e senza movimento ridotto), non visto scorrere a
+velocità piena. L’autore l’ha poi vista scorrere nel pannello, a fine sessione: «la cinematica è notevole».
+
+**Il prossimo passo** (§9): le scene definitive (C, D e H con la plancia a risoluzione piena e i quadri
+dal vivo dentro l’oblò; i glifi disegnati), poi la musica sul montaggio bloccato (D14, decisa nel §18
+del 06), poi la sincronia: l’orologio dell’intro passerà dalla pagina alla musica, come dice il §9.1
+del 06.

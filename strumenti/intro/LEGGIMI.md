@@ -21,4 +21,6 @@ python strumenti/intro/tempi.py > tempi.json
 
 La plancia è sempre `location/nuove/s_01_b.png`: mai `s_01.png`, mai `zoom_s01_teca.png`.
 
+Le immagini dell’animatic (`app/public/intro/`) sono quelle della tavola e della prova di look, estratte così come sono: i due still scontornati della nave (`poppa.webp`, `prua.webp`), i quadri della plancia di C, D e H (`plancia-radar.webp`, `plancia-oblo.webp`, `plancia-faro.webp`, `plancia.webp`) e la lente dell’interfaccia (`lente.webp`).
+
 Le immagini dentro la tavola e la prova di look sono WebP in base64. Per cambiare un testo o una posizione si modifica l’HTML direttamente, con una sostituzione esatta: i file sono grandi e conviene non riscriverli interi.

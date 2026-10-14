@@ -8,6 +8,15 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+### Aggiunto
+
+- **L’animatic dell’intro** (`app/src/intro/`, §10 di `progettazione/09-intro-storyboard.md`): tutte
+  le scene sulla scaletta di 2:40,75, calcolata con la regola di lettura e provata contro la tabella
+  dello storyboard; il motore della scala in un modulo (la scena E definitiva, e il margine di B); i
+  glifi del titolo; il radar, la spia rossa e le stelle che si spengono disegnati dal vivo sui quadri
+  della plancia; il salto, il movimento ridotto scena per scena, i sottotitoli dei suoni; una barra di
+  revisione (`?intro&revisione`).
+
 ## [0.2.0] - 2026-10-14
 
 ### Aggiunto
