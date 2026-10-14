@@ -557,6 +557,9 @@ export default function Prova() {
               Prova completa e rapporto
             </button>
           </div>
+          <div className="riga">
+            <button onClick={() => (location.search = "?intro&revisione")}>L’intro: l’animatic</button>
+          </div>
           <ProvaSuono sistema={sistema} scrivi={scrivi} />
           {percorso && (
             <p className="esito">

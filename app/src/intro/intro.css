@@ -1,0 +1,108 @@
+/* ==========================================================================
+   L'intro (09-intro-storyboard.md). Il palco è 16:9; dentro, il formato
+   2,39:1 con le bande, che si ritirano solo nella plancia.
+   Contrasti sul nero: apparecchio #9FA9A6 8,3:1 · voce di L.V. #DCE6E2 16:1 ·
+   sottotitoli dei suoni #B8C2BF 10:1 · titolo #ECF0EE 17:1.
+   ========================================================================== */
+.intro {
+  --serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --mono: "IBM Plex Mono", Consolas, "Cascadia Mono", ui-monospace, monospace;
+  --stencil: "Big Shoulders Stencil", "Arial Narrow", Impact, sans-serif;
+  --tenue: #9fa9a6;
+  --voce: #dce6e2;
+  --didascalia: #b8c2bf;
+  --verde: #8bf0a2;
+  position: fixed;
+  inset: 0;
+  background: #000;
+  color: var(--voce);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  user-select: none;
+}
+.intro.in-corso { cursor: none; }
+
+.palco {
+  position: relative;
+  container-type: size;
+  aspect-ratio: 16 / 9;
+  width: min(100vw, calc((100vh - var(--barra, 0px)) * 16 / 9));
+  background: #000;
+  overflow: hidden;
+}
+.palco > * { position: absolute; }
+.palco canvas { inset: 0; width: 100%; height: 100%; display: block; }
+
+/* i quadri della plancia: immagini 2,39:1 dentro il formato */
+.quadro-fermo { left: 0; top: 12.8%; width: 100%; height: 74.4%; opacity: 0; will-change: opacity, transform; overflow: hidden; }
+.quadro-fermo img { width: 100%; height: 100%; object-fit: cover; display: block; transform-origin: 50% 50%; }
+
+/* i testi */
+.blocco { opacity: 0; visibility: hidden; text-align: center; left: 20cqw; width: 60cqw; }
+.blocco.lv { font-family: var(--serif); font-style: italic; font-weight: 300; font-size: 1.77cqw; line-height: 1.42; color: var(--voce); }
+.blocco.apparecchio { font-family: var(--mono); font-size: 1.02cqw; letter-spacing: .2em; text-transform: uppercase; color: var(--tenue); line-height: 1.7; }
+.blocco.scena-A { top: 52%; }
+.blocco.scena-A.sotto { top: 57.5%; }
+.blocco.scena-B { left: 60cqw; width: 33cqw; top: 19%; text-align: left; }
+.blocco.scena-B.sotto { top: 29%; }
+.blocco.scena-F { top: 39%; }
+
+/* l'interfaccia d'acciaio (scena H), dalla direzione C: la Santa Maria */
+.acciaio { inset: 0; opacity: 0; background: radial-gradient(ellipse 70% 80% at 30% 40%, #14110e, #080706 75%); color: #ede3d3; font-family: var(--serif); }
+.acciaio > * { position: absolute; opacity: 0; }
+.acciaio .atto { left: 4.4cqw; top: 2.6cqw; font-family: var(--stencil); font-weight: 700; font-size: 1.2cqw; letter-spacing: .24em; text-transform: uppercase; color: #a39684; }
+.acciaio .lamina { left: 4cqw; top: 5cqw; width: 54cqw; bottom: 9cqw; background: linear-gradient(180deg, #15120f, #100e0b); border: 1px solid #3a2f24; border-radius: .25cqw; padding: 3.6cqw 3.6cqw 2cqw; }
+.acciaio .lamina::before { content: "TSC-1972 · REGISTRO DI BORDO"; position: absolute; left: 3.6cqw; top: 1.3cqw; font-family: var(--stencil); font-weight: 700; font-size: .95cqw; letter-spacing: .3em; color: #8a7a66; }
+.acciaio h3 { font-weight: 400; font-size: 2.4cqw; margin: 0 0 .3cqw; }
+.acciaio .riga { height: 1px; background: linear-gradient(90deg, #f2a03d, transparent 70%); opacity: .5; margin-bottom: .9cqw; width: 60%; }
+.acciaio p { font-size: 1.18cqw; line-height: 1.6; margin: 0; max-width: 46cqw; opacity: 0; }
+.acciaio .cornice-lente { right: 3.6cqw; top: 3.2cqw; width: 31cqw; height: 17cqw; border: 1px solid #3a2f24; border-radius: .3cqw; }
+.acciaio .didas { right: 3.6cqw; top: 20.8cqw; width: 31cqw; text-align: center; font-family: var(--mono); font-size: .7cqw; letter-spacing: .2em; color: #a39684; text-transform: uppercase; }
+.acciaio .strumenti { right: 3.6cqw; top: 23.6cqw; width: 31cqw; display: grid; grid-template-columns: auto 1fr; gap: .5cqw 1.2cqw; font-family: var(--mono); font-size: .9cqw; margin: 0; }
+.acciaio .strumenti dt { color: #a39684; letter-spacing: .18em; font-size: .7cqw; text-transform: uppercase; padding-top: .15cqw; }
+.acciaio .strumenti dd { margin: 0; color: #ede3d3; }
+.acciaio .ramo { left: 3cqw; right: 3cqw; bottom: 3.2cqw; display: flex; flex-wrap: wrap; gap: .6cqw; align-items: center; border-top: 1px solid #3a2f24; padding-top: 1.2cqw; }
+.acciaio .ramo span { font-family: var(--mono); font-size: .75cqw; padding: .35cqw .8cqw; border: 1px solid #3a2f24; border-radius: .2cqw; background: #15120f; color: #ede3d3; opacity: 0; }
+.acciaio .ramo .et { border: none; background: none; color: #a39684; letter-spacing: .2em; text-transform: uppercase; font-size: .62cqw; }
+.acciaio .ramo .u { font-style: italic; color: #f2a03d; }
+
+/* la telecamera di bordo che scivola nella lente */
+.lente-mobile { overflow: hidden; opacity: 0; border-radius: .3cqw; }
+.lente-mobile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* le bande del formato, sopra a tutto il quadro */
+.banda { left: 0; right: 0; height: 12.8%; background: #000; }
+.banda.su { top: 0; }
+.banda.giu { bottom: 0; }
+
+.suono { left: 10cqw; right: 10cqw; bottom: 2.3%; text-align: center; font-family: var(--serif); font-style: italic; font-size: max(13px, 1.15cqw); color: var(--didascalia); opacity: 0; }
+.salta { right: 2.4cqw; bottom: 4.2%; font-family: var(--mono); font-size: max(12px, .78cqw); letter-spacing: .14em; color: var(--tenue); opacity: 0; }
+.preparazione { inset: 0; display: grid; place-items: center; font-family: var(--mono); font-size: 13px; letter-spacing: .18em; text-transform: uppercase; color: var(--tenue); }
+.preparazione.errore { color: #ff8a80; white-space: pre-wrap; text-transform: none; letter-spacing: 0; padding: 24px; }
+.solo-lettori { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* la barra di revisione dell'animatic */
+.revisione { position: relative; width: min(100vw, 1600px); box-sizing: border-box; padding: 10px 16px 12px; display: flex; flex-direction: column; gap: 8px; font-family: var(--mono); font-size: 12px; color: #e6eae8; background: #0b0f10; border-top: 1px solid #1e2626; cursor: default; }
+.revisione .comandi { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.revisione button { background: transparent; color: #e6eae8; border: 1px solid #2b3536; border-radius: 999px; padding: 6px 14px; min-height: 32px; font: inherit; cursor: pointer; }
+.revisione button:hover { border-color: var(--verde); }
+.revisione button:focus-visible, .revisione input:focus-visible { outline: 2px solid var(--verde); outline-offset: 2px; }
+.revisione label { display: flex; align-items: center; gap: 6px; color: var(--tenue); cursor: pointer; }
+.revisione input[type="checkbox"] { accent-color: #8bf0a2; width: 16px; height: 16px; }
+.revisione .tempo { min-width: 15ch; }
+.revisione .scena { color: var(--verde); }
+.revisione .misura { margin-left: auto; color: var(--tenue); }
+.linea { position: relative; height: 34px; }
+.linea input[type="range"] { position: absolute; inset: 0; width: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.linea .segmento { position: absolute; top: 0; height: 14px; border-radius: 2px; font-size: 10px; line-height: 14px; padding-left: 4px; color: #060708; overflow: hidden; pointer-events: none; }
+.linea .testo { position: absolute; top: 17px; height: 5px; background: #dce6e2; opacity: .55; border-radius: 2px; pointer-events: none; }
+.linea .testina { position: absolute; top: -2px; bottom: -2px; width: 2px; background: #fff; pointer-events: none; }
+.linea:focus-within .testina { box-shadow: 0 0 0 2px #8bf0a2; }
+.linea .ora { position: absolute; top: 24px; font-size: 10px; color: var(--tenue); transform: translateX(-50%); pointer-events: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .revisione button, .revisione input { transition: none; }
+}
