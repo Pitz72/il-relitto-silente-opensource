@@ -1,0 +1,73 @@
+/* La schermata della prova tecnica: grezza, leggibile, scura.
+   Contrasti sul fondo #060708: testo 17,6:1 · tenue 8,3:1 · ciano 11,0:1 · ambra 10,1:1 · rosso 6,0:1. */
+:root {
+  --fondo: #060708;
+  --pannello: #0d1112;
+  --filo: #253031;
+  --testo: #e6eae8;
+  --tenue: #9fa9a6;
+  --ciano: #5fd4dc;
+  --verde: #8bf0a2;
+  --ambra: #f2b23d;
+  --rosso: #ff6a5f;
+  --serif: Georgia, "Times New Roman", serif;
+  --mono: Consolas, "Cascadia Mono", ui-monospace, monospace;
+}
+* { box-sizing: border-box; }
+body { font-family: var(--serif); overflow: hidden; user-select: none; }
+button { font: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--verde); outline-offset: 2px; }
+
+.prova { position: relative; height: 100vh; display: grid; grid-template-rows: auto 1fr auto; }
+canvas.vene { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; display: none; }
+.prova > * { position: relative; z-index: 1; }
+
+header { padding: 8px 16px; font-family: var(--mono); font-size: 12px; letter-spacing: .04em; color: var(--testo); border-bottom: 1px solid var(--filo); background: rgba(6, 7, 8, .85); }
+.tenue { color: var(--tenue); }
+.errore { margin: 8px 16px; padding: 10px; color: var(--rosso); background: #1a0b0a; white-space: pre-wrap; font-family: var(--mono); font-size: 12px; max-height: 30vh; overflow: auto; user-select: text; }
+
+main { display: grid; grid-template-columns: minmax(0, 1fr) 430px; min-height: 0; }
+.colonna-testo { overflow-y: auto; padding: 20px 32px 40px; font-size: 18px; line-height: 1.55; background: rgba(6, 7, 8, .72); user-select: text; }
+.voce { margin-bottom: 18px; max-width: 72ch; }
+.comando { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--tenue); margin-bottom: 4px; }
+.ev { margin: 0 0 8px; white-space: pre-wrap; }
+.ev-stanza { font-size: 24px; font-style: italic; color: var(--ciano); margin-top: 6px; }
+.ev-intestazione { color: var(--tenue); font-style: italic; }
+.ev-elenco { color: var(--tenue); font-size: 16px; }
+.ev-dialogo { padding-left: 14px; border-left: 2px solid var(--ciano); }
+.ev-opzione, .ev-domanda { color: var(--ambra); }
+.ev-sistema { color: var(--tenue); font-family: var(--mono); font-size: 13px; }
+.ev-fine { color: var(--verde); font-size: 20px; }
+.ev-errore { color: var(--rosso); }
+
+aside { overflow-y: auto; padding: 12px 16px; border-left: 1px solid var(--filo); background: rgba(13, 17, 18, .9); font-size: 14px; }
+aside h2 { font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--tenue); margin: 14px 0 6px; }
+dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; margin: 0; }
+dt { color: var(--tenue); }
+dd { margin: 0; font-family: var(--mono); font-size: 13px; color: var(--testo); }
+dd.rosso { color: var(--rosso); }
+.riga { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
+.riga button { background: transparent; color: var(--testo); border: 1px solid var(--filo); border-radius: 4px; padding: 5px 10px; font-size: 13px; }
+.riga button.forte { border-color: var(--verde); color: var(--verde); }
+.riga button:disabled, .pulsante:disabled { opacity: .45; cursor: default; }
+.esito { font-family: var(--mono); font-size: 12px; color: var(--testo); background: #101617; padding: 6px 8px; border-radius: 4px; user-select: text; }
+.registro { font-family: var(--mono); font-size: 11px; color: var(--tenue); max-height: 220px; overflow-y: auto; border-top: 1px solid var(--filo); margin-top: 8px; padding-top: 6px; user-select: text; }
+
+footer { padding: 8px 16px 12px; border-top: 1px solid var(--filo); background: rgba(13, 17, 18, .94); display: flex; flex-direction: column; gap: 6px; max-height: 34vh; overflow-y: auto; }
+.gruppo { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.etichetta { font-family: var(--mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--tenue); margin: 0 4px 0 10px; }
+.etichetta:first-child { margin-left: 0; }
+.pulsante { background: #111819; color: var(--testo); border: 1px solid var(--filo); border-radius: 999px; padding: 4px 12px; font-size: 14px; }
+.pulsante:hover:not(:disabled) { border-color: var(--ciano); }
+.pulsante.uscita { font-style: italic; color: var(--ciano); }
+.pulsante.azione { border-color: var(--ambra); color: var(--ambra); }
+.pulsante.con-te { border-style: dashed; }
+.pulsante.scelto { border-color: var(--verde); color: var(--verde); }
+.pulsante.scelta { border-radius: 6px; }
+.pulsante.servizio { font-family: var(--mono); font-size: 12px; }
+.pulsante.acceso { background: var(--verde); color: #061006; border-color: var(--verde); }
+.verbi { padding: 4px 0 2px; border-top: 1px dashed var(--filo); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+}

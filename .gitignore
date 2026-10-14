@@ -12,3 +12,10 @@ relitto-silente/*.html
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# App (Tauri + Vite): dipendenze, build, copie generate
+app/node_modules/
+app/dist/
+app/public/pyodide/
+app/src-tauri/target/
+app/src-tauri/gen/

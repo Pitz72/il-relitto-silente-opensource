@@ -7,3 +7,9 @@
 *.jpg  binary
 *.png  binary
 *.pdf  binary
+*.ogg  binary
+*.wav  binary
+*.whl  binary
+*.ico  binary
+*.icns binary
+*.wasm binary
