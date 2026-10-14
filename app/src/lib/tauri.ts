@@ -22,7 +22,7 @@ export interface InfoSistema {
 }
 
 export interface AvvioAudio {
-  info: { frequenza: number; buffer_interno: number; avvio_ms: number };
+  info: { host: string; frequenza: number; buffer_interno: number; avvio_ms: number };
   campione_ms: number;
 }
 
@@ -35,6 +35,9 @@ export interface MisureAudio {
   cpu_max: number;
   cpu_campioni: number;
   errori_flusso: number;
+  errori_tipi: string[];
+  errori_scartati: number;
+  buffer_richiesto: number;
   ultimo_segnale_ms: number | null;
   re_acceso: boolean;
   campione_acceso: boolean;

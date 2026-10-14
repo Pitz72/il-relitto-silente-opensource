@@ -21,6 +21,13 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 kira = "0.12"
 
+# Su Linux l'audio passa da ALSA con il dispositivo fissato all'avvio (audio.rs).
+# Il protocollo PulseAudio di cpal (Rust puro, nessuna libreria di sistema) resta
+# compilato per il confronto sulla macchina vera: RELITTO_AUDIO_HOST=pulseaudio.
+# Vedi progettazione/08-fase-1-prova-tecnica.md. La feature si somma al cpal di kira.
+[target.'cfg(target_os = "linux")'.dependencies]
+cpal = { version = "0.18", features = ["pulseaudio"] }
+
 [profile.release]
 codegen-units = 1
 lto = true

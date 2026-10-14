@@ -343,8 +343,8 @@ export default function Prova() {
     [giocaPercorso, misuraVenature, scrivi],
   );
 
-  // ---- la prova completa -------------------------------------------------------
-  const provaCompleta = useCallback(async () => {
+  // ---- la prova completa (o solo l'audio, con RELITTO_PROVA=audio) --------------
+  const provaCompleta = useCallback(async (soloAudio = false) => {
     setOccupato(true);
     setFotogrammi([]);
     try {
@@ -352,15 +352,17 @@ export default function Prova() {
         await getCurrentWindow().setFullscreen(true);
         await attesa(1200);
       }
-      const esitoPercorso = await giocaPercorso("vivi.txt", false);
+      const esitoPercorso = soloAudio ? null : await giocaPercorso("vivi.txt", false);
       let ris: MisuraAudio = {};
       if (dentroTauri()) ris = await misuraAudio();
       const misure: MisuraFotogrammi[] = [];
-      misure.push(await misuraVenature("crescita (primo contatto)", "contatto", 8, { crescita: true }));
-      misure.push(await misuraVenature("relitto", "relitto", 8));
-      misure.push(await misuraVenature("fuga", "fuga", 8));
-      misure.push(await misuraVenature("relitto, con la copia in memoria", "relitto", 8, { cache: true }));
-      misure.push(await misuraVenature("sotto sforzo: tre volte le vene", "fuga", 8, { densita: 3 }));
+      if (!soloAudio) {
+        misure.push(await misuraVenature("crescita (primo contatto)", "contatto", 8, { crescita: true }));
+        misure.push(await misuraVenature("relitto", "relitto", 8));
+        misure.push(await misuraVenature("fuga", "fuga", 8));
+        misure.push(await misuraVenature("relitto, con la copia in memoria", "relitto", 8, { cache: true }));
+        misure.push(await misuraVenature("sotto sforzo: tre volte le vene", "fuga", 8, { densita: 3 }));
+      }
       ris = await audioSottoCarico(ris);
       spegniVenature();
       if (dentroTauri()) {
@@ -382,12 +384,12 @@ export default function Prova() {
         audio: ris,
         erroriJs: erroriJs.current,
       };
-      const nome = `prova-fase1-${sistema?.sistema ?? "browser"}-${Date.now()}.json`;
+      const nome = `prova-fase1-${soloAudio ? "audio-" : ""}${sistema?.sistema ?? "browser"}-${Date.now()}.json`;
       if (dentroTauri()) {
         const dove = await comando<string>("scrivi_rapporto", { nome, contenuto: JSON.stringify(dati, null, 2) });
         setRapporto(dove);
         scrivi(`Rapporto scritto: ${dove}`);
-        if (sistema?.prova === "esci") await comando("esci", { codice: 0 });
+        if (sistema?.prova === "esci" || sistema?.prova === "audio") await comando("esci", { codice: 0 });
         await getCurrentWindow().setFullscreen(false);
       } else {
         console.log(dati);
@@ -403,9 +405,9 @@ export default function Prova() {
   // con RELITTO_PROVA impostata, la prova parte da sola appena il motore è pronto
   const partita = useRef(false);
   useEffect(() => {
-    if (!partita.current && turno && sistema?.prova && (sistema.prova === "completa" || sistema.prova === "esci")) {
+    if (!partita.current && turno && sistema?.prova && ["completa", "esci", "audio"].includes(sistema.prova)) {
       partita.current = true;
-      provaCompleta();
+      provaCompleta(sistema.prova === "audio");
     }
   }, [turno, sistema, provaCompleta]);
 
@@ -529,7 +531,7 @@ export default function Prova() {
             </button>
           </div>
           <div className="riga">
-            <button className="forte" disabled={occupato || !turno} onClick={provaCompleta}>
+            <button className="forte" disabled={occupato || !turno} onClick={() => provaCompleta()}>
               Prova completa e rapporto
             </button>
           </div>

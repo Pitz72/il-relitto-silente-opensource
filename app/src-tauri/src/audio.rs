@@ -188,9 +188,39 @@ impl Sound for SuonoSegnale {
 // -----------------------------------------------------------------------------
 #[derive(Serialize, Clone)]
 pub struct InfoAudio {
+    /// il sistema audio usato da cpal: Wasapi, PulseAudio, Alsa…
+    pub host: String,
     pub frequenza: u32,
     pub buffer_interno: usize,
     pub avvio_ms: f64,
+}
+
+/// Il dispositivo d'uscita. Su Linux è il «default» di ALSA, scelto una volta
+/// all'avvio e passato a kira: così kira non interroga il sistema ogni mezzo
+/// secondo per seguire il dispositivo predefinito. In WSLg quell'interrogazione,
+/// a flusso aperto, faceva fallire il plugin ALSA (errori a raffica, buchi di
+/// secondi); con il dispositivo fisso il flusso tiene. Il «default» di ALSA porta
+/// a PipeWire o a PulseAudio, che spostano da soli il flusso quando cambia
+/// l'uscita (le cuffie). RELITTO_AUDIO_HOST=pulseaudio prova il protocollo
+/// PulseAudio di cpal, che in WSLg ha dato latenze di 150 ms: per il confronto
+/// sulla macchina vera. Su Windows resta la scelta di kira (WASAPI).
+fn dispositivo() -> Result<(Option<kira::backend::cpal::cpal::Device>, String), String> {
+    use kira::backend::cpal::cpal;
+    #[cfg(target_os = "linux")]
+    {
+        use kira::backend::cpal::cpal::traits::HostTrait;
+        let host = match std::env::var("RELITTO_AUDIO_HOST").unwrap_or_default().as_str() {
+            "pulseaudio" => cpal::host_from_id(cpal::HostId::PulseAudio).map_err(|e| e.to_string())?,
+            _ => cpal::host_from_id(cpal::HostId::Alsa).map_err(|e| e.to_string())?,
+        };
+        let nome = format!("{:?}", host.id());
+        let d = host.default_output_device().ok_or("nessun dispositivo audio")?;
+        Ok((Some(d), nome))
+    }
+    #[cfg(not(target_os = "linux"))]
+    {
+        Ok((None, format!("{:?}", cpal::default_host().id())))
+    }
 }
 
 #[derive(Serialize, Clone, Default)]
@@ -204,6 +234,11 @@ pub struct MisureAudio {
     pub cpu_max: f64,
     pub cpu_campioni: u64,
     pub errori_flusso: u64,
+    /// i primi errori del flusso, diversi fra loro, come li descrive cpal
+    pub errori_tipi: Vec<String>,
+    pub errori_scartati: u64,
+    /// il buffer chiesto a cpal (0 = quello predefinito del sistema)
+    pub buffer_richiesto: u32,
     pub ultimo_segnale_ms: Option<f64>,
     pub re_acceso: bool,
     pub campione_acceso: bool,
@@ -220,33 +255,62 @@ pub struct MotoreAudio {
     cpu_max: f64,
     cpu_n: u64,
     errori: u64,
+    errori_tipi: Vec<String>,
+    buffer_richiesto: u32,
 }
 
 impl MotoreAudio {
+    /// RELITTO_AUDIO_BUFFER=1024 chiede a cpal un buffer fisso di 1024 frame
+    /// (21 ms a 48 kHz) invece di quello predefinito del sistema.
     pub fn nuovo() -> Result<Self, String> {
+        use kira::backend::cpal::CpalBackendSettings;
+        use kira::backend::cpal::cpal::traits::{DeviceTrait, HostTrait};
+        use kira::backend::cpal::cpal::{BufferSize, StreamConfig};
         let t0 = Instant::now();
-        let settings = AudioManagerSettings::<CpalBackend>::default();
+        let mut settings = AudioManagerSettings::<CpalBackend>::default();
+        let buffer_richiesto: u32 = std::env::var("RELITTO_AUDIO_BUFFER").ok().and_then(|v| v.parse().ok()).unwrap_or(0);
+        let (scelto, host) = dispositivo()?;
+        if buffer_richiesto > 0 {
+            let d = match scelto {
+                Some(d) => d,
+                None => kira::backend::cpal::cpal::default_host()
+                    .default_output_device()
+                    .ok_or("nessun dispositivo audio")?,
+            };
+            let base = d.default_output_config().map_err(|e| e.to_string())?.config();
+            settings.backend_settings = CpalBackendSettings {
+                device: Some(d),
+                config: Some(StreamConfig { buffer_size: BufferSize::Fixed(buffer_richiesto), ..base }),
+            };
+        } else if let Some(d) = scelto {
+            settings.backend_settings = CpalBackendSettings { device: Some(d), config: None };
+        }
         let buffer_interno = settings.internal_buffer_size;
         let manager = AudioManager::<CpalBackend>::new(settings).map_err(|e| e.to_string())?;
         let telemetria = Arc::new(Telemetria::default());
         let info = InfoAudio {
+            host,
             frequenza: 0,
             buffer_interno,
             avvio_ms: t0.elapsed().as_secs_f64() * 1000.0,
         };
         let mut m = Self {
             manager, telemetria, re: None, campione: None, dati_campione: None, info,
-            cpu_somma: 0.0, cpu_max: 0.0, cpu_n: 0, errori: 0,
+            cpu_somma: 0.0, cpu_max: 0.0, cpu_n: 0, errori: 0, errori_tipi: Vec::new(), buffer_richiesto,
         };
         m.info.frequenza = m.frequenza();
         Ok(m)
     }
 
     fn frequenza(&mut self) -> u32 {
-        // kira non la espone direttamente: la chiediamo a cpal, come fa il backend
-        use kira::backend::cpal::cpal::traits::{DeviceTrait, HostTrait};
-        kira::backend::cpal::cpal::default_host()
-            .default_output_device()
+        // kira non la espone direttamente: la chiediamo a cpal, sullo stesso dispositivo
+        use kira::backend::cpal::cpal::traits::DeviceTrait;
+        dispositivo()
+            .ok()
+            .and_then(|(d, _)| d.or_else(|| {
+                use kira::backend::cpal::cpal::traits::HostTrait;
+                kira::backend::cpal::cpal::default_host().default_output_device()
+            }))
             .and_then(|d| d.default_output_config().ok())
             .map(|c| c.sample_rate())
             .unwrap_or(0)
@@ -312,9 +376,14 @@ impl MotoreAudio {
                 self.cpu_max = u;
             }
         }
-        while self.manager.backend_mut().pop_error().is_some() {
+        while let Some(e) = self.manager.backend_mut().pop_error() {
             self.errori += 1;
+            let descrizione = format!("{e:?}");
+            if self.errori_tipi.len() < 8 && !self.errori_tipi.contains(&descrizione) {
+                self.errori_tipi.push(descrizione);
+            }
         }
+        let errori_scartati = self.manager.backend_mut().num_stream_errors_discarded().unwrap_or(0);
         let t = &self.telemetria;
         let comando = t.segnale_comando_ns.load(Ordering::Relaxed);
         let render = t.segnale_render_ns.load(Ordering::Relaxed);
@@ -327,6 +396,9 @@ impl MotoreAudio {
             cpu_max: self.cpu_max,
             cpu_campioni: self.cpu_n,
             errori_flusso: self.errori,
+            errori_tipi: self.errori_tipi.clone(),
+            errori_scartati,
+            buffer_richiesto: self.buffer_richiesto,
             ultimo_segnale_ms: (render > comando && comando > 0)
                 .then(|| (render - comando) as f64 / 1e6),
             re_acceso: self.re.is_some(),
