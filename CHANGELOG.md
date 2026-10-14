@@ -29,6 +29,15 @@ documenti di `progettazione/`.
   `.fav`. La lamina (`Lamina.tsx`): il comando sopra la risposta con il costo in aria, la rivelazione a
   righe che Spazio o un clic completano, il turno di prima spento sopra, l’acciaio e la membrana.
   La pagina del gioco in costruzione (`?gioco`).
+- **Il ramo delle azioni e il fiore** (06, §4.7 e §6): i menu del modello d’azione su due fili, le
+  uscite come bocche con il loro tasto, le cose come baccelli, le azioni in fondo; sotto, gli attrezzi
+  della tuta e ciò che porti. Quando il filo alto non basta le cose in più scendono, e il «+N» resta
+  per i casi in cui sono pieni tutti e due (il caso peggiore dei percorsi, 26 baccelli, ci sta). Il
+  fiore di una cosa nella fascia fra il testo e il ramo, su due anelli: la base e i verbi dell’autore
+  vicino, gli attrezzi fuori, con la nota dell’attrezzo o la stima dell’aria (D16). «Usa con…» in due
+  tocchi con tutte le cose possibili accese; gli attrezzi in mano, con il mirino; i suggerimenti che
+  accendono il loro pulsante per sei secondi; la tastiera del §6.2 (le uscite, i numeri delle
+  risposte, Esc, le frecce dentro il fiore). La geometria è pura e provata (`app/prove/ramo.test.ts`).
 - **L’animatic dell’intro** (`app/src/intro/`, §10 di `progettazione/09-intro-storyboard.md`): tutte
   le scene sulla scaletta di 2:40,75, calcolata con la regola di lettura e provata contro la tabella
   dello storyboard; il motore della scala in un modulo (la scena E definitiva, e il margine di B); i

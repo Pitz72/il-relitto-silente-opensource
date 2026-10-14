@@ -34,7 +34,7 @@
   text-transform: uppercase;
 }
 
-.palco .lamina { left: 4cqw; top: 4.4cqw; width: 54cqw; height: 35.6cqw; z-index: 3; }
+.palco .lamina { left: 4cqw; top: 4.4cqw; width: 54cqw; height: 34cqw; z-index: 3; }
 
 .avvio {
   position: absolute;
@@ -49,25 +49,7 @@
 }
 .avvio.errore { color: var(--rosso); white-space: pre-wrap; text-transform: none; letter-spacing: 0; padding: 24px; user-select: text; }
 
-/* solo per il passo 2: la fila provvisoria dei comandi */
-.provvisorie {
-  position: absolute;
-  left: 4cqw;
-  right: 4cqw;
-  bottom: 1.6cqw;
-  max-height: 12cqw;
-  overflow-y: auto;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  z-index: 4;
+/* con un attrezzo in mano il cursore diventa un mirino */
+.gioco[data-in-mano] .palco {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><circle cx='16' cy='16' r='9' fill='none' stroke='%23060708' stroke-width='4'/><circle cx='16' cy='16' r='9' fill='none' stroke='%238bf0a2' stroke-width='2'/><circle cx='16' cy='16' r='2' fill='%238bf0a2'/></svg>") 16 16, crosshair;
 }
-.provvisorie button {
-  font-family: var(--mono);
-  font-size: 12px;
-  padding: 4px 10px;
-  border: 1px solid var(--bordo);
-  border-radius: 999px;
-  color: var(--testo);
-}
-.provvisorie button:hover { border-color: var(--accento-2); }
