@@ -8,6 +8,8 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+## [0.2.0] - 2026-10-14
+
 ### Aggiunto
 
 - **Il prototipo del suono** (bibbia sonora, §8): dodici sorgenti CC0 e di pubblico dominio,
