@@ -1,11 +1,12 @@
 // =============================================================================
 //  Il Relitto Silente — il processo Tauri.
-//  Fase 1 (prova tecnica): la finestra, il motore audio, i comandi che la
-//  pagina usa per misurare e per scrivere il rapporto della prova.
+//  La finestra, il motore audio, i salvataggi su disco (fase 3), i comandi che
+//  la pagina di prova usa per misurare e per scrivere il rapporto.
 // =============================================================================
 
 mod audio;
 pub mod mondo;
+mod salvataggi;
 
 use std::sync::Mutex;
 
@@ -198,7 +199,11 @@ pub fn run() {
             tempo_avvio,
             info_sistema,
             scrivi_rapporto,
-            esci
+            esci,
+            salvataggi::salvataggi_elenco,
+            salvataggi::salvataggio_scrivi,
+            salvataggi::salvataggio_leggi,
+            salvataggi::salvataggi_cartella
         ])
         .run(tauri::generate_context!())
         .expect("errore all'avvio dell'applicazione");

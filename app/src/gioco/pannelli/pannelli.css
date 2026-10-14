@@ -1,0 +1,104 @@
+/* ==========================================================================
+   I pannelli sopra il gioco: la conferma, la pausa, i salvataggi, le opzioni.
+   Il resto si scurisce (§4.5). Nell'acciaio angoli e targhe; nella membrana
+   bordi morbidi. I colori di testo vengono da atmosfere.ts.
+   ========================================================================== */
+.velo-pannello {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--fondo-2) 72%, transparent);
+  animation: velo-entra .25s ease-out both;
+}
+@keyframes velo-entra { from { opacity: 0; } to { opacity: 1; } }
+.pannello {
+  min-width: min(560px, 80cqw);
+  max-width: min(980px, 88cqw);
+  max-height: 86cqh;
+  overflow-y: auto;
+  padding: 2.4cqw 2.8cqw;
+  background: radial-gradient(ellipse at 30% 18%, color-mix(in srgb, var(--lamina-1) 96%, var(--vena) 4%), var(--lamina-2));
+  border: 1px solid var(--bordo);
+  border-radius: 2.6cqw 3.4cqw 2.2cqw 3.8cqw / 3cqw 2.4cqw 3.4cqw 2.6cqw;
+  box-shadow: 0 0 6cqw var(--alone), 0 30px 90px rgba(0, 0, 0, .6);
+}
+.pannello[data-forma="acciaio"] { border-radius: .3cqw; box-shadow: 0 30px 90px rgba(0, 0, 0, .6); }
+.pannello h2 { margin: 0 0 1.4cqw; font-weight: 300; font-style: italic; font-size: max(24px, 2cqw); color: color-mix(in srgb, var(--testo) 78%, var(--vena-2)); }
+.pannello[data-forma="acciaio"] h2 { font-style: normal; font-weight: 700; font-family: var(--stencil); font-size: max(16px, 1.15cqw); letter-spacing: .28em; text-transform: uppercase; color: var(--targa); }
+.pannello .tasto { font-family: var(--mono); font-size: .72em; color: var(--tenue); margin-left: .6em; letter-spacing: .04em; }
+.pannello button {
+  min-height: 40px;
+  color: var(--testo);
+  border: 1px solid var(--bordo);
+  border-radius: 999px;
+  padding: .55em 1.3em;
+  background: color-mix(in srgb, var(--lamina-2) 70%, transparent);
+  transition: border-color .25s, color .25s;
+}
+.pannello[data-forma="acciaio"] button { border-radius: .2em; font-family: var(--mono); font-size: max(13px, .85cqw); }
+.pannello button:hover:not(:disabled) { border-color: var(--accento-2); }
+.pannello button:disabled { opacity: .45; cursor: default; }
+.pannello .chiudi { margin-top: 1.4cqw; color: var(--tenue); }
+
+/* la conferma */
+.conferma { text-align: center; min-width: min(520px, 70cqw); }
+.conferma .domanda { margin: 0 0 .6cqw; font-size: max(22px, 1.8cqw); line-height: 1.35; }
+.conferma .sotto { margin: 0 0 1.2cqw; color: var(--tenue); }
+.scelte-conferma { display: flex; gap: 1.2cqw; justify-content: center; margin-top: 1.6cqw; }
+
+/* la pausa */
+.voci-pausa { display: flex; flex-direction: column; gap: .7cqw; align-items: stretch; min-width: min(360px, 40cqw); }
+.voci-pausa button { text-align: left; font-size: max(17px, 1.2cqw); display: flex; justify-content: space-between; align-items: baseline; }
+.pausa .misure { margin-top: 1.6cqw; border: 0; background: none; padding: .3em 0; font-family: var(--mono); font-size: max(11px, .66cqw); letter-spacing: .14em; color: var(--tenue); min-height: 0; }
+.pausa .misure:hover { color: var(--testo); }
+
+/* i salvataggi: sei posti, e l'automatico */
+.posti { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(250px, 26cqw), 1fr)); gap: 1cqw; }
+.pannello .posto {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .25em;
+  text-align: left;
+  border-radius: 1.4cqw;
+  padding: 1em 1.2em;
+  min-height: 7.6cqw;
+}
+.pannello[data-forma="acciaio"] .posto { border-radius: .2em; }
+.posto .nome-posto { font-family: var(--mono); font-size: max(11px, .66cqw); letter-spacing: .2em; text-transform: uppercase; color: var(--accento); }
+.posto .stanza-posto { font-size: max(17px, 1.2cqw); color: var(--testo); font-family: var(--serif); }
+.posto.vuoto .stanza-posto { color: var(--tenue); font-style: italic; }
+.posto .dettagli-posto, .posto .data-posto { font-family: var(--mono); font-size: max(11.5px, .72cqw); color: var(--tenue); }
+.posto.automatico { border-style: dashed; }
+.salvataggi .dove { margin: 1.2cqw 0 0; font-size: max(13px, .85cqw); color: var(--tenue); user-select: text; }
+
+/* le opzioni */
+.opzioni .opzione { display: grid; grid-template-columns: minmax(180px, 16cqw) 1fr; gap: .4cqw 1.2cqw; align-items: center; padding: .7cqw 0; border-bottom: 1px solid color-mix(in srgb, var(--bordo) 60%, transparent); }
+.opzioni .nome-opzione { color: var(--testo); }
+.opzioni .valori { display: flex; flex-wrap: wrap; gap: .5cqw; }
+.opzioni .valori button { min-height: 36px; padding: .35em 1em; font-size: max(14px, .9cqw); }
+.opzioni .valori button[aria-pressed="true"] { background: var(--testo); color: var(--fondo-2); border-color: var(--testo); }
+.opzioni .spiega { grid-column: 2; font-size: max(13px, .8cqw); color: var(--tenue); }
+
+/* l'avviso breve */
+.avviso {
+  position: absolute;
+  left: 50%;
+  top: 1.2cqw;
+  transform: translateX(-50%);
+  z-index: 40;
+  padding: .6em 1.3em;
+  font-size: max(14px, .95cqw);
+  color: var(--testo);
+  border: 1px solid var(--bordo);
+  border-radius: 999px;
+  background: var(--lamina-2);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, .5);
+  animation: velo-entra .25s ease-out both;
+  pointer-events: none;
+}
+.avviso.grave { color: var(--rosso); border-color: color-mix(in srgb, var(--rosso) 50%, var(--bordo)); }
+[data-movimento="ridotto"] .velo-pannello, [data-movimento="ridotto"] .avviso { animation: none; }
+.pannello.salvataggi { width: min(1000px, 84cqw); max-width: none; }

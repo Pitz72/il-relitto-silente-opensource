@@ -103,7 +103,7 @@ export function baccelliDi(m: ModelloAzione, cose: readonly Cosa[]): Fili {
           riducibile: false,
           baccelli: m.scelte.map((s) => ({
             chiave: `scelta:${s.comando}`,
-            etichetta: s.etichetta,
+            etichetta: s.etichetta.replace(/'/g, "’"),
             azione: { tipo: "comando", comando: s.comando, comeSiLegge: s.etichetta },
             tipo: "scelta",
             tasto: s.tasto,

@@ -54,7 +54,7 @@
   min-height: 34px;
   border-radius: 999px;
   border: 1px solid var(--bordo);
-  background: radial-gradient(ellipse at 50% 30%, color-mix(in srgb, var(--lamina-1) 70%, var(--vena) 10%), var(--lamina-2));
+  background: radial-gradient(ellipse at 50% 30%, color-mix(in srgb, var(--lamina-1) 90%, var(--vena) 10%), var(--lamina-2));
   box-shadow: 0 0 1.4cqw var(--alone);
   transition: border-color .3s, box-shadow .3s, color .3s, opacity .3s, transform .3s, border-radius 3s;
 }

@@ -10,7 +10,7 @@
   flex-direction: column;
   font-size: var(--corpo);
   line-height: 1.58;
-  background: radial-gradient(ellipse at 30% 18%, color-mix(in srgb, var(--lamina-1) 86%, var(--vena) 4%), var(--lamina-2));
+  background: radial-gradient(ellipse at 30% 18%, color-mix(in srgb, var(--lamina-1) 96%, var(--vena) 4%), var(--lamina-2));
   border: 1px solid var(--bordo);
   border-radius: 3.6cqw 5.6cqw 3.2cqw 6.4cqw / 4.8cqw 3.4cqw 5.8cqw 4cqw;
   box-shadow: 0 0 7cqw var(--alone), inset 0 0 4cqw color-mix(in srgb, var(--vena) 5%, transparent);

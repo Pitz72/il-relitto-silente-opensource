@@ -1,0 +1,68 @@
+/* ==========================================================================
+   Il dialogo (06-app-desktop.md, §4.5; la tavola della membrana, §02).
+   Copre il palco: la vista grande a destra, le parole a sinistra, i semi in
+   basso. Contrasti: i colori vengono da atmosfere.ts (testo, tenue, accento).
+   ========================================================================== */
+.dialogo {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  background: radial-gradient(ellipse at 62% 40%, color-mix(in srgb, var(--fondo-1) 94%, var(--vena) 6%), var(--fondo-2) 70%);
+  animation: dialogo-entra .7s ease-out both;
+}
+@keyframes dialogo-entra { from { opacity: 0; } to { opacity: 1; } }
+.dialogo .vista { position: absolute; left: 50cqw; right: 3cqw; top: 3cqw; bottom: 9cqw; }
+.dialogo .vista canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.dialogo-yusuf .vista {
+  left: 56cqw;
+  top: 8cqw;
+  bottom: 18cqw;
+  border: 1px solid var(--bordo);
+  background: linear-gradient(var(--lamina-1), var(--lamina-2));
+  border-radius: .3cqw;
+}
+.dialogo .canale {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + .8cqw);
+  text-align: center;
+  font-family: var(--mono);
+  font-size: max(11px, .7cqw);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--tenue);
+}
+.dialogo .parole { position: absolute; left: 5cqw; top: 5cqw; width: 45cqw; bottom: 12cqw; overflow-y: auto; }
+.dialogo .chi { font-style: italic; font-size: max(17px, 1.3cqw); color: var(--accento); margin-bottom: 1cqw; }
+.dialogo[data-forma="acciaio"] .chi { font-style: normal; font-family: var(--mono); font-size: max(12px, .8cqw); letter-spacing: .24em; text-transform: uppercase; }
+.dialogo .detto { font-family: var(--mono); font-size: max(12px, .74cqw); letter-spacing: .1em; color: var(--tenue); margin-bottom: .9cqw; font-style: italic; }
+.dialogo .battute { display: flex; flex-direction: column; gap: 1cqw; }
+.dialogo .battuta { margin: 0; font-size: max(18px, 1.5cqw); line-height: 1.55; color: var(--testo); }
+.dialogo .narrazione { margin: 0; font-size: max(16px, 1.1cqw); line-height: 1.55; color: var(--tenue); }
+.dialogo .s-didascalia { font-style: italic; color: var(--tenue); }
+.dialogo .battuta .racconto { color: color-mix(in srgb, var(--testo) 82%, var(--tenue)); }
+.dialogo .s-intraducibile { font-family: var(--mono); font-size: .78em; color: var(--tenue); }
+
+.dialogo .semi { position: absolute; left: 5cqw; right: 5cqw; bottom: 3.6cqw; display: flex; flex-wrap: wrap; gap: 1cqw; }
+.dialogo .semi button {
+  display: inline-flex;
+  align-items: baseline;
+  gap: .8em;
+  font-size: max(16px, 1.15cqw);
+  color: var(--testo);
+  padding: .65em 1.4em;
+  min-height: 40px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--vena) 35%, transparent);
+  background: color-mix(in srgb, var(--lamina-1) 80%, transparent);
+  box-shadow: 0 0 1.6cqw var(--alone);
+  transition: border-color .3s, box-shadow .3s;
+}
+.dialogo .semi button:hover { border-color: var(--accento-2); box-shadow: 0 0 2.4cqw color-mix(in srgb, var(--accento-2) 30%, transparent); }
+.dialogo .semi .numero { font-family: var(--mono); font-size: .78em; color: var(--accento); }
+.dialogo .semi button.esci { color: var(--tenue); font-style: italic; }
+.dialogo[data-forma="acciaio"] .semi button { border-radius: .2em; font-family: var(--mono); font-size: max(13px, .9cqw); background: linear-gradient(var(--lamina-1), var(--lamina-2)); box-shadow: none; border-color: var(--bordo); }
+.dialogo[data-forma="acciaio"] .semi button:hover { border-color: var(--accento-2); }
+[data-movimento="ridotto"] .dialogo { animation: none; }
+.dialogo .s-parlato { font-style: normal; }

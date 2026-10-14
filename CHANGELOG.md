@@ -47,6 +47,17 @@ documenti di `progettazione/`.
   i monconi delle uscite mai prese. Il cartello d’atto, la fascia della protezione vitale (con
   l’ascolto e la traduzione spenti e il motivo), il bordo del visore che respira, la vignettatura
   dell’ipossia, il tremito della fuga che non tocca mai il testo.
+- **Il dialogo, la conferma, i salvataggi; la pagina del gioco** (06, §4.5 e §4.6). Il dialogo copre il
+  palco: la vista grande (la figura di punti dell’Anziano, il comunicatore di Yusuf, l’onda dell’eco),
+  chi parla, la battuta con le didascalie, le risposte come semi numerati. Il congedo dell’Anziano
+  chiede conferma («Da qui non si torna.», D16); la conferma del motore ha la stessa forma, con S e N.
+  I salvataggi su disco: sei posti più uno automatico a ogni cambio di stanza, scritti dal processo
+  Tauri in Documenti/Il Relitto Silente (`src-tauri/src/salvataggi.rs`, con le sue prove), mostrati
+  con il riassunto senza rigiocare; F5 salva, F9 carica. La pausa (Esc) con le opzioni, l’annullamento
+  dell’ultima mossa, il ricominciare; F11 per lo schermo intero; alla fine della partita Ricomincia e
+  Carica sono dell’app. La pagina del gioco è quella principale; la pagina di prova resta su `?prova`
+  e per le prove automatiche (`RELITTO_PROVA`); `RELITTO_PROVA=salvataggi` prova i salvataggi
+  nell’eseguibile vero e scrive un rapporto.
 - **L’animatic dell’intro** (`app/src/intro/`, §10 di `progettazione/09-intro-storyboard.md`): tutte
   le scene sulla scaletta di 2:40,75, calcolata con la regola di lettura e provata contro la tabella
   dello storyboard; il motore della scala in un modulo (la scena E definitiva, e il margine di B); i
