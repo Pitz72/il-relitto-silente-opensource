@@ -2,6 +2,8 @@
 # in «Vivi». Gli altri finali hanno il loro percorso in questa cartella.
 #   python motore/favella.py collaudo relitto-silente/relitto.fav --finali --percorso collaudo/soluzione.txt
 #   python collaudo/trascrivi.py relitto-silente/relitto.fav collaudo/soluzione.txt
+# atteso: esito vinta
+# atteso: finale «Rotta ripresa. Carico: nessuno.»
 
 # --- Atto I: la Santa Maria ---
 analizza la nave aliena
@@ -32,6 +34,7 @@ segui la parete
 ovest
 prendi la tavoletta
 est
+segui la parete
 su
 su
 ovest

@@ -6,7 +6,7 @@
 # la porta circolare con le cinque punte. Prima di passare a ovest, se l'aria
 # è poca, la tuta avverte: è l'ultimo punto da cui si può ancora tornare.
 # Anticamera: il buio, il punto di non ritorno [!].
-# Santuario centrale: l'Anziano, che non sa e spera. Tredici nodi; quelli nuovi
+# Santuario centrale: l'Anziano, che non sa e spera. Quattordici nodi; quelli nuovi
 # si aprono secondo quello che hai fatto (L.V., Yusuf, il Piccolo, la musica,
 # i segni). Al congedo la figura si raccoglie nel seme che avevi dato alla
 # porta, e comincia la fuga (fuga.fav).
@@ -137,8 +137,8 @@ Invece di prendi il seme se il seme è nel santuario centrale: dire "Il sostegno
 # ============================================================================
 Il dialogo dell'anziano comincia con "benvenuto".
 
-L'anziano al nodo "benvenuto" dice "(La figura non muove le labbra, ma le parole ti si aprono dentro la testa, limpide e intere.) «Creatura di carbonio. Figlio delle stelle, forse. Benvenuto. So cosa cerchi: una risposta. Ma io non sono che la memoria di una domanda. Sono quello che resta quando il cantastorie è svanito: l'ultima frase, scritta nella luce.»".
-L'anziano al nodo "benvenuto" dice "(La figura non muove le labbra, ma le parole ti si aprono nella mente.) «Porti con te le nostre voci. Le sento, tutte insieme, nella tua mano.» (Non c'è rimprovero.) «Benvenuto lo stesso. Io non sono che la memoria di una domanda: l'ultima frase, scritta nella luce.»" se il giocatore ha il risuonatore.
+L'anziano al nodo "benvenuto" dice "(La figura non muove le labbra, ma le parole ti si aprono dentro la testa, limpide e intere.) «Creatura di carbonio. Figlio delle stelle, forse. Benvenuto.[se gli echi è almeno 8] Hai ascoltato molte delle nostre voci. Ognuna ti è costata un po' del tuo fiato, e hai continuato.[fine] So cosa cerchi: una risposta. Ma io non sono che la memoria di una domanda. Sono quello che resta quando il cantastorie è svanito: l'ultima frase, scritta nella luce.»".
+L'anziano al nodo "benvenuto" dice "(La figura non muove le labbra, ma le parole ti si aprono nella mente.) «Porti con te le nostre voci. Le sento, tutte insieme, nella tua mano.» (Non c'è rimprovero.) «Benvenuto lo stesso.[se gli echi è almeno 8] Prima di prenderle, molte le hai ascoltate una per una.[fine] Io non sono che la memoria di una domanda: l'ultima frase, scritta nella luce.»" se il giocatore ha il risuonatore.
 Al nodo "benvenuto" l'opzione "Chi eravate?" conduce al nodo "salto".
 Al nodo "benvenuto" l'opzione "Cosa ne è stato di voi?" conduce al nodo "memoria".
 Al nodo "benvenuto" l'opzione "C'era un uomo, prima di me." se le tracce è almeno 3 conduce al nodo "altro".
@@ -200,4 +200,4 @@ L'anziano al nodo "dissolvenza" dice "(Chiudi gli occhi. Quando li riapri appena
 Al nodo "dissolvenza" l'opzione "[Resta.]" conduce al nodo "ultima voce".
 
 L'anziano al nodo "ultima voce" dice "(Poi arriva l'ultima voce. È la più rovinata di tutte. La matrice la prende e la restituisce piena di vuoti, e nei vuoti, ogni tanto, una parola:) «…non… prendere…» (Vuoto.) «…comporre…» (Vuoto. Poi una parola intera:) «Musica.» (E per ultima, piccola:) «Vivi.» (La matrice non sa cosa ci fosse in mezzo. Neanche al cento per cento: quello che manca non sono parole.)".
-Al nodo "ultima voce" l'opzione "[Apri gli occhi.]" chiude il dialogo e adesso la fuga è iniziata e adesso l'ultima voce è udita e adesso il seme è nel santuario centrale e adesso il seme è scuro e adesso il groviglio è desto.
+Al nodo "ultima voce" l'opzione "[Apri gli occhi.]" chiude il dialogo e adesso la fuga è iniziata e adesso il seme è nel santuario centrale e adesso il seme è scuro e adesso il groviglio è desto.

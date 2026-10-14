@@ -12,11 +12,15 @@
 # generatore (+25, strato 3).
 # Protezione vitale: sotto 30, e prima della fuga, la tuta non lascia
 # ascoltare né tradurre (le regole sono accanto a ogni eco, in echi.fav e
-# traduci.fav, perché una regola su un oggetto vince sempre su quella generale).
+# traduci.fav, perché una regola su un oggetto vince sempre su quella generale),
+# tiene il faro al minimo (santamaria.fav) e non cede corrente alle venature
+# del vestibolo (ingresso.fav). Il risuonatore invece beve sempre.
 # Si muore solo nella fuga o portando il risuonatore (finali.fav).
 # Valori tarati nello strato 5 con i percorsi di collaudo (collaudo/): vedi
 # progettazione/03-strati-3-5.md.
-# Incluso da relitto.fav.
+# Incluso da relitto.fav per penultimo, prima di finali.fav: i consumi e le
+# soglie devono vedere quello che gli altri moduli tolgono nello stesso turno
+# (il groviglio, il primo contatto, la connessione).
 # ============================================================================
 
 L'aria è un contatore.
@@ -28,21 +32,26 @@ Il visore è una cosa.
 Il visore si chiama anche "cifra".
 Il visore si chiama anche "display".
 La descrizione del visore è "Sul bordo del visore, in verde, la cifra dell'aria: [aria].".
-La descrizione del visore se l'aria è al massimo 30 è "Sul bordo del visore, in rosso, la cifra dell'aria: [aria]. Sotto, fissa, la scritta PROTEZIONE VITALE.".
+La descrizione del visore se l'aria è meno di 30 è "Sul bordo del visore, in rosso, la cifra dell'aria: [aria]. Sotto, fissa, la scritta PROTEZIONE VITALE.".
 La descrizione del visore se l'aria è al massimo 60 è "Sul bordo del visore, in ambra, la cifra dell'aria: [aria].".
 Invece di lascia il visore: dire "È parte del casco.".
 
 # --- I consumi per turno: prima delle soglie, così le soglie vedono il valore
 # di questo turno (i demoni si valutano nell'ordine in cui sono scritti) -------
 # Il risuonatore beve dalla stessa batteria (ingresso.fav); la fuga (fuga.fav)
-# toglie 4 a turno.
-Ogni turno se il giocatore ha il risuonatore: diminuisci l'aria di 1.
-Ogni turno se il giocatore ha il risuonatore e la fuga è iniziata: diminuisci l'aria di 3.
-Ogni turno se la fuga è iniziata: diminuisci l'aria di 4.
+# toglie 4 a turno. Nella stiva della Santa Maria non si consuma più niente:
+# si è a bordo, e il finale deve trovare l'aria che c'era sullo scafo.
+Ogni turno se il giocatore ha il risuonatore e il giocatore non è nella stiva: diminuisci l'aria di 1.
+Ogni turno se il giocatore ha il risuonatore e la fuga è iniziata e il giocatore non è nella stiva: diminuisci l'aria di 3.
+Ogni turno se la fuga è iniziata e il giocatore non è nella stiva: diminuisci l'aria di 4.
 
 # --- Le soglie: ogni passaggio si annuncia ----------------------------------
 Quando l'aria è al massimo 60 diventa vera: dire "Sul bordo del visore la cifra passa all'ambra: [aria].".
-Quando l'aria è al massimo 30 diventa vera: dire "[aria]. La cifra è rossa. [se la fuga è iniziata]Adesso la tuta non ti protegge più da niente: ti tiene in vita, e basta.[altrimenti]La tuta fa da sola quello che le hanno insegnato: stacca i canali secondari, e sul visore compare la scritta che speravi di non leggere, PROTEZIONE VITALE. Niente ascolto, niente traduzione, finché non le dai altra aria.[fine]".
-Quando l'aria è più di 30 diventa vera: dire "La cifra torna sopra il rosso: [aria]. La tuta riapre i canali secondari.".
+# La protezione vitale (sotto 30, prima della fuga) chiude anche il faro: al
+# minimo il groviglio delle teche non trova più niente da cercare, e prima
+# della fuga non si muore se non portando il risuonatore (decisione D6).
+Quando l'aria è meno di 30 e la fuga è lontana diventa vera: dire "[aria]. La cifra è rossa. La tuta fa da sola quello che le hanno insegnato: stacca i canali secondari, e sul visore compare la scritta che speravi di non leggere, PROTEZIONE VITALE. Niente ascolto, niente traduzione, finché non le dai altra aria. Anche il faro scende al minimo, da solo." e adesso il faro del casco è basso.
+Quando l'aria è meno di 30 e la fuga è iniziata diventa vera: dire "[aria]. La cifra è rossa. Adesso la tuta non ti protegge più da niente: ti tiene in vita, e basta.".
+Quando l'aria è almeno 30 diventa vera: dire "La cifra torna sopra il rosso: [aria]. La tuta riapre i canali secondari, e ti restituisce il faro.".
 Quando l'aria è al massimo 15 diventa vera: dire "[aria]. Ti accorgi che ragioni più piano, e che la cosa non ti spaventa. È così che comincia.".
 

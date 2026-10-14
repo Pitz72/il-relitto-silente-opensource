@@ -1,6 +1,7 @@
 # Cosa ha insegnato Il Relitto sul motore FAVELLA 1
 
-Versione 1.0, 14 ottobre 2026. Motore 1.4.4, non modificato.
+Versione 1.1, 14 ottobre 2026. Motore 1.4.4, non modificato. La 1.1 aggiunge quello che le correzioni
+della revisione (`04-revisione.md`, §5) hanno confermato, e la lezione L17.
 
 FAVELLA 1 è chiuso alla 1.4.4. Queste note servono a una versione futura (una 1.5, o FAVELLA 2).
 Il Relitto è il banco di prova più duro che il motore abbia avuto finora: quattordici moduli,
@@ -33,6 +34,7 @@ gioco non l'ha usata, la nota lo dice: lì manca la documentazione, non il motor
 | L14 | Niente `[se]` annidati | «Vivi» e «La prima nota» quasi copie | Bassa |
 | L15 | Gli strumenti di collaudo non bastano per le risorse | invarianti verificati a mano, due bug sfuggiti | **Alta** |
 | L16 | Il finale arriva dopo la descrizione della stanza | l'elenco «Puoi vedere qui» prima del risveglio | Bassa |
+| L17 | Mancano le condizioni con un nome | la stessa soglia scritta in due modi, un bug (C10) | Media |
 
 ---
 
@@ -73,6 +75,10 @@ diventato parte della logica del gioco.
 - Fra le descrizioni condizionali, vince la più specifica (più condizioni), oppure una priorità
   dichiarabile. Il linter segnala due varianti che possono essere vere insieme.
 
+**Nel gioco, dopo la revisione.** La correzione è stata spostare `aria.fav` in fondo alla lista
+degli `Includi`. Ha funzionato, e conferma la lezione: l'ordine dei moduli è semantica, e niente
+nel codice lo dice se non un commento.
+
 ### L3. Oggetti che entrano in inventario senza essere prendibili
 
 **Nel Relitto.** Il risuonatore non è prendibile: lo si stacca con una regola che lo mette in
@@ -81,8 +87,8 @@ a caso dell'esploratore non l'hanno trovato.
 
 **Proposta.** Il linter avverte: «X può finire in inventario (regola …) ma non è prendibile: se
 il giocatore lo lascia, non potrà riprenderlo». In alternativa `adesso X è in inventario` rende
-X prendibile. (Il `prendibile` dinamico esiste già dalla 1.3: la correzione nel gioco è una
-conseguenza.)
+X prendibile. (Il `prendibile` dinamico esiste già dalla 1.3: la correzione nel gioco è stata una
+conseguenza, `e adesso il risuonatore è prendibile`.)
 
 ### L4. Stati scritti e mai letti
 
@@ -222,6 +228,16 @@ percorsi scritti sia alle partite a caso.
 - Nell'esploratore, una prova di ripresa: per ogni oggetto che il giocatore può lasciare,
   lasciarlo e riprenderlo.
 
+**Nel gioco, dopo la revisione.** `collaudo/regressioni.py` è un prototipo di queste proposte: legge
+le attese scritte in testa ai percorsi (`# atteso: aria >= 20`, `# atteso: mai «…»`) e fa la prova
+di ripresa usando le istantanee di ANNULLA (`cattura_stato`), così costa secondi e non minuti. Sulla
+versione prima delle correzioni trova C1 da sola, anche in un percorso scritto per altro.
+
+Un'altra cosa l'ha insegnata la revisione: **un invariante verificato da un percorso può reggersi su
+un bug.** I3 («chi ascolta tutto non porta via il risuonatore») risultava vero perché si moriva
+entrando in stiva (C3). Corretto il bug, il percorso vinceva. Le attese vanno scritte sul motivo
+(«l'aria finisce sullo scafo»), non solo sull'esito («si perde»).
+
 ### L16. Il finale dopo la stanza
 
 **Nel Relitto.** Entrando nella stiva per l'ultima volta, prima del risveglio il motore stampa la
@@ -230,6 +246,23 @@ fine turno, dopo il movimento.
 
 **Proposta.** Un demone che chiude la partita nel turno di un movimento sopprime la stampa della
 stanza, oppure un aggancio `Quando il giocatore entra in X` che scatta prima della descrizione.
+
+### L17. Condizioni con un nome
+
+**Nel Relitto.** «Sotto il 30%, prima della fuga» è scritto più di venti volte: nelle regole come
+`l'aria è meno di 30 e la fuga è lontana`, nella soglia come `l'aria è al massimo 30`. Le due forme
+differiscono di un punto: con l'aria esattamente a 30 il visore diceva PROTEZIONE VITALE e la tuta
+lasciava ascoltare (revisione, C10).
+
+**Proposta.** Una condizione con un nome, dichiarata una volta e usata ovunque, anche nei `[se]`:
+
+```
+Il rosso è quando l'aria è meno di 30 e la fuga è lontana.
+Invece di sintonizza le piante se il rosso: …
+```
+
+Va insieme a L1: con i vincoli trasversali e le condizioni con un nome, le regole della protezione
+vitale, più di venti, diventano una.
 
 ---
 

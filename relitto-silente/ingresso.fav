@@ -77,7 +77,7 @@ Invece di analizza lo scafo nero se la giuntura non è sullo scafo: dire "Il mul
 Invece di analizza lo scafo nero: dire "Organico, minerale, non in archivio: il multiscanner continua a cambiare idea. L'unico punto debole è la giuntura.".
 Invece di tocca lo scafo nero: dire "Appoggi il guanto sullo scafo. Non vibra, non scalda, non ti restituisce niente. Quando togli la mano non resta nemmeno l'alone della condensa.".
 
-Invece di analizza la giuntura se la datazione è ignota: dire "Il multiscanner segue la linea e si ferma sul tratto dalla grana diversa. È un taglio, rifatto: qualcuno ha già aperto qui, e la nave ha richiuso. Datazione della saldatura: centocinquant'anni, con un margine d'errore che lo scanner stesso definisce imbarazzante.\nCentocinquant'anni fa. E di una cosa così, in centocinquant'anni, non ti è mai arrivata una parola." e adesso la datazione è nota e adesso aumenta le tracce.
+Invece di analizza la giuntura se la datazione è ignota: dire "Il multiscanner segue la linea e si ferma sul tratto dalla grana diversa. È un taglio, rifatto: qualcuno ha già aperto qui, e la nave ha richiuso. Datazione della saldatura: centocinquant'anni, con un margine d'errore che lo scanner stesso definisce imbarazzante.\nPer scrupolo allarghi il raggio della scansione. Intorno alla massa non c'è nessun'altra nave, nemmeno un rottame: chi ha tagliato qui non ha lasciato niente ad aspettarlo.\nCentocinquant'anni fa. E di una cosa così, in centocinquant'anni, non ti è mai arrivata una parola." e adesso la datazione è nota e adesso aumenta le tracce.
 Invece di analizza la giuntura: dire "Un taglio di centocinquant'anni fa, richiuso dalla nave. Lo scanner non ha altro da aggiungere.".
 
 # --- Il taglio ---------------------------------------------------------------
@@ -199,6 +199,7 @@ Le venature spente si chiama anche "rete".
 Le venature spente si chiama anche "parete".
 Le venature spente si chiama anche "pareti".
 La descrizione delle venature spente è "Una rete fine sotto la superficie, spenta. Quando ci passi sopra il guanto, il brusio risale.".
+Invece di tocca le venature spente se l'aria è meno di 30 e la fuga è lontana: dire "Il brusio risale sotto il guanto e si ferma lì: con la PROTEZIONE VITALE la tuta non gli cede niente. La cifra non si muove.".
 Invece di tocca le venature spente: dire "Il brusio risale sotto il guanto, e la cifra sul visore scende di un punto. Togli la mano." e adesso diminuisci l'aria di 1.
 
 # --- Essenziale: il risuonatore (N3) -----------------------------------------
@@ -221,7 +222,7 @@ Invece di stacca il risuonatore se il risuonatore è staccato: dire "È già sta
 Invece di stacca il risuonatore se il giocatore non ha la taglierina: dire "A mani nude non viene: è cresciuto insieme alla parete. Ci vorrebbe la taglierina.".
 Invece di stacca il risuonatore se il taglio è meno di 1: dire "Regoli la taglierina al minimo e incidi il bordo della nicchia, dove l'arnese si salda alla parete. Il brusio si alza di colpo, e per un istante una voce si stacca dalle altre: chiede qualcosa, in fretta, a qualcuno. Poi rientra nel coro. Servono altri due tagli." e adesso aumenta il taglio e adesso diminuisci l'aria di 2.
 Invece di stacca il risuonatore se il taglio è meno di 2: dire "Secondo taglio. La parete cede come cartilagine. Nella cuffia le voci adesso sono tante e vicine, e una sembra contare. Ne manca uno." e adesso aumenta il taglio e adesso diminuisci l'aria di 2.
-Invece di stacca il risuonatore: dire "L'ultimo lembo si stacca e l'arnese ti cade nel palmo, più leggero di quanto pensassi, e tiepido. Il brusio adesso viene da lì, dalla tua mano. Sul bordo del visore la cifra scende di un punto, poi di un altro, e non smette." e adesso il risuonatore è staccato e adesso il risuonatore è in inventario e adesso diminuisci l'aria di 2.
+Invece di stacca il risuonatore: dire "L'ultimo lembo si stacca e l'arnese ti cade nel palmo, più leggero di quanto pensassi, e tiepido. Il brusio adesso viene da lì, dalla tua mano. Sul bordo del visore la cifra scende di un punto, poi di un altro, e non smette." e adesso il risuonatore è staccato e adesso il risuonatore è prendibile e adesso il risuonatore è in inventario e adesso diminuisci l'aria di 2.
 Invece di usa la taglierina sul risuonatore: dire "(Per liberarlo dalla nicchia: STACCA IL RISUONATORE.)".
 
 # --- L'eco delle gole (serve il Sintonizzatore, dal Laboratorio) -------------
@@ -247,6 +248,7 @@ La descrizione delle venature verdi è "Una rete fine sotto la superficie. Dove 
 Invece di tocca le venature verdi: dire "Una venatura si accende sotto il guanto, verde, e ti corre davanti per un palmo, giù per la gola, come se ti indicasse la strada. Poi si spegne.".
 
 # La voce dei nomi: il Sintonizzatore non si lascia spegnere. Il costo è fisso.
-Quando il giocatore è nella gola di mezzo e il giocatore ha il sintonizzatore e la connessione è nuova e l'aria è almeno 30 e la fuga è lontana: dire "Il Sintonizzatore si accende da solo. Prima che tu lo tocchi aggancia una voce, una sola, bassa, che tiene un ritmo che le altre hanno perso. Dice una parola, poi un'altra, con la pazienza di chi legge un elenco, e per ogni parola il traduttore della tuta scrive la stessa riga: «nome proprio: intraducibile». Poi la scrive ancora. E ancora.\nCerchi l'interruttore e premi. Niente. Premi di nuovo, cerchi il canale per chiuderlo a mano, e sul bordo del visore compare una riga che non hai mai visto su un visore: CHIUSURA RIFIUTATA. CANALE APERTO DA REMOTO.\nLa voce va avanti, e la cifra dell'aria scende con lei. Poi, com'era venuta, si interrompe a metà di un nome, e il Sintonizzatore ti torna in mano muto." e adesso la connessione è avvenuta e adesso aumenta gli echi e adesso diminuisci l'aria di 3.
+# Con il risuonatore in mano non parte: il coro copre ogni voce (echi.fav).
+Quando il giocatore è nella gola di mezzo e il giocatore ha il sintonizzatore e il giocatore non ha il risuonatore e la connessione è nuova e l'aria è almeno 30 e la fuga è lontana: dire "Il Sintonizzatore si accende da solo. Prima che tu lo tocchi aggancia una voce, una sola, bassa, che tiene un ritmo che le altre hanno perso. Dice una parola, poi un'altra, con la pazienza di chi legge un elenco, e per ogni parola il traduttore della tuta scrive la stessa riga: «nome proprio: intraducibile». Poi la scrive ancora. E ancora.\nCerchi l'interruttore e premi. Niente. Premi di nuovo, cerchi il canale per chiuderlo a mano, e sul bordo del visore compare una riga che non hai mai visto su un visore: CHIUSURA RIFIUTATA. CANALE APERTO DA REMOTO.\nLa voce va avanti, e la cifra dell'aria scende con lei. Poi, com'era venuta, si interrompe a metà di un nome, e il Sintonizzatore ti torna in mano muto." e adesso la connessione è avvenuta e adesso aumenta gli echi e adesso diminuisci l'aria di 3.
 
 # Più giù la gola porta alla Sala delle teche (vita.fav).

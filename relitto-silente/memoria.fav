@@ -51,6 +51,7 @@ La descrizione dell'altare se l'altare è schiuso è "Una sezione dell'altare si
 La stele è una cosa.
 La stele è prendibile.
 La stele si chiama anche "stele del ricordo".
+La stele è incastrata.
 La descrizione della stele è "Una lastra densa di informazioni, leggera e tiepida. Lo scanner potrebbe assorbirne l'archivio: ANALIZZALA.".
 
 # --- L'altare e il disco orientato (N5) --------------------------------------
@@ -63,7 +64,7 @@ Invece di metti il disco sull'altare: dire "Appoggi il disco nell'incavo, con il
 
 Invece di prendi la stele se l'altare è serrato: dire "Non vedi nessuna stele: l'altare è ancora chiuso.".
 Invece di prendi la stele se il giocatore ha la stele: dire "Ce l'hai già.".
-Invece di prendi la stele se l'altare è schiuso: dire "Prendi la Stele del Ricordo dallo scomparto. È leggera, più di quanto ti aspettassi, e tiepida. La seconda chiave." e adesso la stele è in inventario.
+Invece di prendi la stele se la stele è incastrata: dire "Prendi la Stele del Ricordo dallo scomparto. È leggera, più di quanto ti aspettassi, e tiepida. La seconda chiave." e adesso la stele è staccata e adesso la stele è in inventario.
 
 # ============================================================================
 # SCRIPTORIUM
@@ -85,7 +86,7 @@ Il proiettore rotto è di scena.
 Il proiettore rotto si chiama anche "proiettore".
 Il proiettore rotto si chiama anche "nicchia buia".
 La descrizione del proiettore rotto è "Questo proiettore fa soltanto scintille: nel suo meccanismo è incastrato un disco di pietra scura, pesante, che lo blocca.".
-La descrizione del proiettore rotto se il disco non è nello scriptorium è "Il proiettore resta spento, la nicchia vuota.".
+La descrizione del proiettore rotto se il disco è staccato è "Il proiettore resta spento, la nicchia vuota.".
 
 La lastra incisa è una cosa.
 La lastra incisa è nello scriptorium.
@@ -97,15 +98,18 @@ La lastra incisa si chiama anche "lastra scura".
 La descrizione della lastra incisa è "Simboli incisi nella pietra, non proiettati: tracciati a fondo, con una pressione che ha un ritmo e un'intenzione. Non un archivio: una firma. L'ultimo glifo parte e non torna. TRADUCILA.".
 
 # --- Essenziale: il disco, incastrato nel proiettore -------------------------
+# Disco, stele e nucleo sono «incastrati» finché non li prendi la prima volta:
+# il testo della prima presa non si ripete se li posi e li riprendi altrove.
 Il disco è una cosa.
 Il disco è prendibile.
 Il disco è nello scriptorium.
+Il disco è incastrato.
 Il disco si chiama anche "disco di pietra".
 La descrizione del disco è "Un disco di pietra nera, spesso una decina di centimetri. Sulla faccia superiore, tre soli incisi a triangolo, di grandezze diverse; il più grande adesso è in basso. Alcuni simboli sul bordo li hai già visti: sull'altare del santuario.".
 La descrizione del disco se la rotazione è almeno 2 è "Un disco di pietra nera, spesso una decina di centimetri. Sulla faccia superiore, tre soli incisi a triangolo; il più grande adesso è in alto.".
 La descrizione del disco se la rotazione è almeno 1 è "Un disco di pietra nera, spesso una decina di centimetri. Sulla faccia superiore, tre soli incisi a triangolo; il più grande adesso è a sinistra.".
 Invece di prendi il disco se il giocatore ha il disco: dire "Ce l'hai già.".
-Invece di prendi il disco: dire "Liberi il disco di pietra incastrato nel meccanismo del proiettore. Il proiettore non lo ripari, ma il disco, coperto di incisioni come quelle dell'altare, adesso ce l'hai tu." e adesso il disco è in inventario.
+Invece di prendi il disco se il disco è incastrato: dire "Liberi il disco di pietra incastrato nel meccanismo del proiettore. Il proiettore non lo ripari, ma il disco, coperto di incisioni come quelle dell'altare, adesso ce l'hai tu." e adesso il disco è staccato e adesso il disco è in inventario.
 Invece di gira il disco se il giocatore non ha il disco: dire "Prima prendilo.".
 Invece di gira il disco se la rotazione è almeno 2: dire "Giri il disco di un terzo: il sole più grande adesso è in basso." e adesso la rotazione diventa 0.
 Invece di gira il disco se la rotazione è almeno 1: dire "Giri il disco di un terzo: il sole più grande adesso è in alto." e adesso la rotazione diventa 2.
@@ -141,6 +145,7 @@ La descrizione del terminale se il terminale è acceso è "Lo schermo regge a ma
 Il nucleo è una cosa.
 Il nucleo è prendibile.
 Il nucleo si chiama anche "nucleo di memoria".
+Il nucleo è incastrato.
 La descrizione del nucleo è "Un cristallo a molte facce che pulsa di luce ambrata. Dentro c'è un'ultima voce, e lo scanner saprebbe estrarla: ANALIZZALO.".
 
 # --- La forza: il plasma sul bypass, e il pilastro si spegne -----------------
@@ -152,4 +157,4 @@ Quando il giocatore è nell'arca della memoria e l'energia è ripristinata e il 
 
 Invece di prendi il nucleo se il terminale è spento: dire "È chiuso dentro il terminale.".
 Invece di prendi il nucleo se il giocatore ha il nucleo: dire "Ce l'hai già.".
-Invece di prendi il nucleo se il terminale è acceso: dire "Prendi il Nucleo di Memoria dallo scomparto del terminale. La terza chiave." e adesso il nucleo è in inventario.
+Invece di prendi il nucleo se il nucleo è incastrato: dire "Prendi il Nucleo di Memoria dallo scomparto del terminale. La terza chiave." e adesso il nucleo è staccato e adesso il nucleo è in inventario.

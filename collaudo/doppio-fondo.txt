@@ -1,5 +1,7 @@
 # Percorso del finale «Doppio fondo»: il seme e il risuonatore.
 #   python motore/favella.py collaudo relitto-silente/relitto.fav --finali --percorso collaudo/doppio-fondo.txt
+# atteso: esito vinta
+# atteso: finale «Nient'altro da dichiarare.»
 
 # --- Atto I: la Santa Maria ---
 analizza la nave aliena
@@ -30,6 +32,7 @@ segui la parete
 ovest
 prendi la tavoletta
 est
+segui la parete
 su
 su
 ovest

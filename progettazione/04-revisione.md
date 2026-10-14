@@ -1,17 +1,18 @@
 # Il Relitto Silente — revisione dopo gli strati 1–5
 
-Versione 1.0, 14 ottobre 2026. Fotografia del gioco al commit `f898d10`.
+Versione 1.1, 14 ottobre 2026. Fotografia del gioco al commit `f898d10`; dalla 1.1, l'esito delle
+correzioni (§5).
 
 Rilettura completa dei quattordici moduli e dei tre documenti di progetto, più una serie di
 partite-sonda giocate sul motore per verificare ogni sospetto. Il collaudo ufficiale resta verde
 (6 finali su 6, esploratore pulito, test del motore 1180 + 50): i problemi qui sotto stanno fuori
 dai percorsi scritti, ed è per questo che il collaudo non li vedeva.
 
-Per decisione dell'autore i testi non si cambiano, per ora. Ogni proposta dice se si può applicare
-**senza toccare il testo** (si cambia solo una condizione o una conseguenza) oppure se richiede
-una frase nuova, che resta in attesa.
+Ogni proposta dice se si può applicare **senza toccare il testo** (si cambia solo una condizione o
+una conseguenza) oppure se richiede una frase nuova.
 
-Niente di questo documento è stato applicato.
+Tutto è stato corretto, su indicazione dell'autore e con le scelte descritte nel §5, che dice anche
+cosa è emerso durante le correzioni.
 
 ---
 
@@ -128,3 +129,50 @@ cavo tranciato prima di mostrargli quello di L.V.: è la stessa immagine messa d
 3. **C2 e C7**: decisioni dell'autore.
 4. **S1**: decisione dell'autore; la (a) chiede due righe di testo.
 5. **C9, S2, S3, S4**: testo nuovo, quando si riaprono le frasi.
+
+---
+
+## 5. Esito delle correzioni
+
+Applicate il 14 ottobre 2026, su richiesta dell'autore di correggere tutto con le scelte più
+logiche prima della seconda parte del progetto. I testi nuovi sono pochi, e tutti scritti dentro le
+frasi che c'erano.
+
+### 5.1 Cosa è stato fatto
+
+| # | Scelta | Dove |
+|---|---|---|
+| C1 | Il terzo taglio rende il risuonatore prendibile: si posa e si riprende dove si vuole | `ingresso.fav` |
+| C2 | La protezione vitale (sotto 30, prima della fuga) abbassa il faro da sola e non lo lascia rialzare; le venature del vestibolo non bevono più. Il groviglio cerca la luce: a faro basso non afferra, e il peggio che può fare è portare l'aria a 22. D6 resta com'era, e adesso è vera: prima della fuga si muore solo portando il risuonatore, che beve sempre. Testo: una frase in più nella soglia rossa, due risposte nuove | `aria.fav`, `santamaria.fav`, `ingresso.fav` |
+| C3 | I consumi della fuga e del risuonatore saltano la stiva della Santa Maria | `aria.fav` |
+| C4 | `aria.fav` è incluso per penultimo, prima di `finali.fav` | `relitto.fav` |
+| C5 | La voce dei nomi non parte con il risuonatore in mano | `ingresso.fav` |
+| C6 | Disco, stele e nucleo restano «incastrati» fino alla prima presa (la coppia di proprietà del risuonatore) | `memoria.fav` |
+| C7 | Il groviglio sbarra la strada nei due sensi. Uno stato nuovo, `la sponda` (vicina, lontana); la parete porta verso la gola o verso il vivaio a seconda di dove sei; due descrizioni nuove della sala vista dalla parte del vivaio. Ogni percorso che passa dal vivaio ha un `segui la parete` in più al ritorno | `vita.fav`, `fuga.fav` |
+| C8 | Il passaggio verso la gola del ritorno nasce all'inizio della fuga | `relitto.fav`, `fuga.fav` |
+| C9 | `l'ultima voce` è tolto. `gli echi` lo legge l'Anziano: con almeno 8 echi, una battuta nel benvenuto (con e senza il risuonatore). `le tracce`, con almeno 4, una riga in «Vivi»: «e anche il mezzo metro che a lui è mancato» | `ponte.fav`, `fuga.fav`, `finali.fav` |
+| S1 | Strada (a), rafforzata. Dalla cintura di L.V. pende un metro di cavo di sicurezza tranciato, come il tuo: la nave gliel'ha tagliato all'ingresso. Quello fra le teche è un cavo guida, srotolato da un rocchetto per ritrovare la strada. Perderlo spiega il «tornato su a tentoni» del diario, che resta com'era | `vita.fav` |
+| S2 | Analizzando la giuntura lo scanner non trova altre navi intorno alla massa: «chi ha tagliato qui non ha lasciato niente ad aspettarlo». La domanda resta aperta | `ingresso.fav` |
+| S3 | «Due lettere» nella fuga chiude con la nave che, dopo tanto tempo, si muove e ti porta con sé: l'eco della domanda del Piccolo. Prima della fuga resta la chiusa dei centocinquant'anni | `finali.fav` |
+| S4 | Sullo scafo ci si siede sullo scafo nero, a pochi metri dal boccaporto, e si incide lo scafo | `finali.fav` |
+| S5 | Niente da fare | |
+| D1–D5 | `tutto.txt` ascolta davvero tutto (echi 14, risonanze 7); `01` (D6) e `03` (§4) aggiornati; il commento di `ponte.fav` corretto; quattro percorsi di non regressione e un collaudatore che li legge | `collaudo/`, `progettazione/` |
+
+### 5.2 Trovato durante le correzioni
+
+| # | Cosa | Come è stato chiuso |
+|---|---|---|
+| C10 | La soglia rossa scattava a «al massimo 30», le regole della protezione a «meno di 30»: con l'aria esattamente a 30 il visore diceva PROTEZIONE VITALE e la tuta lasciava ascoltare | Tutto a «meno di 30»: soglia, visore, e il ritorno a «almeno 30» |
+| C11 | **L'invariante I3 si reggeva su C3.** `limite-I3.txt` moriva entrando in stiva; corretto C3, vinceva con l'aria a 3. Completato con le due voci che gli mancavano (D1), muore sullo scafo a −5: il margine che la mappa prevedeva (§5.1: 155 contro 150) | Nessun valore ritoccato |
+| C12 | I verbi del gioco su un oggetto senza regola propria: `tocca`, `traduci`, `sintonizza` e `strappa` rispondevano con una domanda («Cosa vuoi toccare?») anche quando l'oggetto c'era; `analizza` e `ascolta` con il messaggio generico del motore; `incidi` sollevava la taglierina anche senza averla | Risposte generiche nella voce del gioco, con una variante per la Santa Maria dove serve |
+
+### 5.3 Come si verifica
+
+- `python collaudo/regressioni.py --riprese`: 14 percorsi, ognuno con le sue attese (esito, finale,
+  valori, testi che devono o non devono comparire), più la prova di ripresa di ogni oggetto portato,
+  a ogni cambio di stanza. Sulla versione di `f898d10` le quattro prove nuove falliscono tutte, e la
+  prova di ripresa trova C1 anche nel percorso di «La stiva piena».
+- Collaudo dei finali: 6 su 6. Collaudatore statico: nessun avviso. Esploratore: 23 stanze su 23,
+  nessuna anomalia. Su 200 partite a caso, 23 morti: tutte nella fuga o con il risuonatore addosso.
+- Una spazzata di trenta verbi su ogni oggetto visibile, a ogni cambio di stanza del percorso più
+  ricco: nessun segnaposto rotto, nessun errore del motore, nessuna domanda a vuoto.

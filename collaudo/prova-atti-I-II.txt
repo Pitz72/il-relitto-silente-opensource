@@ -2,6 +2,7 @@
 # Yusuf, i tentativi sbagliati, il risuonatore staccato e posato, la cella.
 # Non arriva a un finale: serve a leggere il testo come lo vede chi gioca.
 #   python collaudo/trascrivi.py relitto-silente/relitto.fav collaudo/prova-atti-I-II.txt -o collaudo/trascrizione-atti-I-II.txt
+# atteso: esito in_corso
 
 # --- Plancia ---
 esamina l'oblò

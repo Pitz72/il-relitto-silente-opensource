@@ -1,6 +1,8 @@
 # Percorso del finale «La stiva piena»: il seme resta, il risuonatore si stacca
 # nella fuga e si porta a bordo.
 #   python motore/favella.py collaudo relitto-silente/relitto.fav --finali --percorso collaudo/stiva-piena.txt
+# atteso: esito vinta
+# atteso: finale «Destinazione: Magazzino Quattro.»
 
 # --- Atto I: la Santa Maria ---
 analizza la nave aliena
@@ -31,6 +33,7 @@ segui la parete
 ovest
 prendi la tavoletta
 est
+segui la parete
 su
 su
 ovest

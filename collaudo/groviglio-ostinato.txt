@@ -1,0 +1,61 @@
+# Non regressione (revisione C2): prima della fuga non si muore senza il
+# risuonatore. Il groviglio afferra finché l'aria non scende sotto il 30%; poi
+# la protezione vitale abbassa il faro e non lo lascia rialzare, e le venature
+# del vestibolo non bevono più.
+#   python collaudo/regressioni.py collaudo/groviglio-ostinato.txt
+# atteso: esito in_corso
+# atteso: aria >= 20
+# atteso: compare «Anche il faro scende al minimo, da solo.»
+# atteso: compare «la tuta non ti ridà il faro»
+# atteso: finale «PROTEZIONE VITALE»
+# atteso: mai «La cifra sul visore è a zero»
+
+# --- Atto I: la Santa Maria ---
+analizza la nave aliena
+accosta
+spara gli arpioni
+ovest
+prendi la tuta
+indossa la tuta
+apri il kit
+prendi la taglierina
+prendi la batteria
+prendi la cella di riserva
+fuori
+
+# --- Atto II: l'ingresso ---
+analizza lo scafo nero
+usa la taglierina sulla giuntura
+giù
+usa la batteria sul pannello
+apri la porta interna
+ovest
+# --- Il groviglio, faro al massimo, finché la tuta non lo abbassa ---
+giù
+giù
+aspetta
+giù
+aspetta
+giù
+aspetta
+giù
+aspetta
+giù
+aspetta
+giù
+aspetta
+giù
+aspetta
+giù
+aspetta
+giù
+aspetta
+giù
+aspetta
+alza il faro
+su
+su
+tocca le venature spente
+tocca le venature spente
+tocca le venature spente
+esamina il visore

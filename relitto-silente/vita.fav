@@ -9,9 +9,10 @@
 # parete, oppure il bengala, oppure il campo dell'energia); il cavo di L.V.
 # (T3); a est il nodo di fibre che si apre solo nella fuga.
 # Vivaio: la tavoletta che apre la teca della serra.
-# La strada di L.V.: entrò dalla giuntura, segnò le tacche, trovò il seme e non
-# seppe aprire la teca; scese a cercare la chiave, perse il cavo fra le teche,
-# tornò su a tentoni e morì nella serra, a mezzo metro dal seme.
+# La strada di L.V.: entrò dalla giuntura (la nave gli tranciò il cavo di
+# sicurezza, come a te), segnò le tacche, trovò il seme e non seppe aprire la
+# teca; scese a cercare la chiave srotolando un cavo guida, lo perse fra le
+# teche, tornò su a tentoni e morì nella serra, a mezzo metro dal seme.
 # Le varianti di descrizione hanno «e la fuga è lontana»: in fuga valgono quelle
 # di fuga.fav.
 # Incluso da relitto.fav.
@@ -35,6 +36,11 @@ La minaccia è uno stato.
 La minaccia è lontana.
 L'appoggio è uno stato.
 L'appoggio è libero.
+# Da che parte del groviglio sei: vicina, verso la gola di mezzo, o lontana,
+# dalla parte del vivaio (e, nella fuga, della gola del ritorno). Il groviglio
+# sbarra la strada in tutti e due i sensi.
+La sponda è uno stato.
+La sponda è vicina.
 
 Vivente e scuro sono opposte.
 Desto e quieto sono opposte.
@@ -74,7 +80,7 @@ Il cadavere si chiama anche "corpo".
 Il cadavere si chiama anche "morto".
 Il cadavere si chiama anche "tuta antica".
 Il cadavere si chiama anche "l.v.".
-La descrizione del cadavere è "Seduto contro la base della colonna, le gambe allungate, il casco calato sul petto. L'aria secca della serra non l'ha disfatto: l'ha seccato, come le felci. Dentro il casco c'è ancora una faccia, tesa sugli zigomi, di uno che a vederlo vivo avresti detto sui trentacinque anni. Nella destra stringe una punta da carotatore. Sul petto ha una placca graffiata a mano; alla cintura, la scatola nera della tuta, spenta.".
+La descrizione del cadavere è "Seduto contro la base della colonna, le gambe allungate, il casco calato sul petto. L'aria secca della serra non l'ha disfatto: l'ha seccato, come le felci. Dentro il casco c'è ancora una faccia, tesa sugli zigomi, di uno che a vederlo vivo avresti detto sui trentacinque anni. Nella destra stringe una punta da carotatore. Sul petto ha una placca graffiata a mano. Alla cintura, la scatola nera della tuta, spenta, e un metro di cavo di sicurezza tranciato di netto, come il tuo.".
 Invece di analizza il cadavere: dire "Il multiscanner emette un tono lento.\nANALISI BIOMETRICA — specie: Homo sapiens. Età al decesso: trentacinque anni circa. Cause: anossia, ipotermia. Decesso stimato: centocinquant'anni fa, con lo stesso margine d'errore della giuntura.\nUn uomo, su una nave che nessun uomo ha costruito. Venuto fin qui da solo.".
 Invece di tocca il cadavere: dire "Per mestiere, a un corpo in tuta ci si avvicina per vedere cosa gli si può ancora prendere. Ti fermi a un palmo. Non prendi niente.".
 Invece di prendi il cadavere: dire "No.".
@@ -197,6 +203,8 @@ La sala delle teche è una stanza.
 La descrizione della sala delle teche è "Il faro scorre per metri su un pavimento vuoto, poi la sala gli si riempie davanti tutta in una volta: file di teche alte il doppio di te, a perdita di luce. Molte sono state forzate da dentro, piano, in tempi che non sai contare, e da lì sono usciti filamenti pallidi, spessi come una fune, che corrono sul pavimento e salgono nel buio. Dove si posa il cono del faro, i più vicini si muovono. Verso di te. Lungo le pareti le teche sono ancora chiuse, bianche di brina. Su si torna nella gola di mezzo; a ovest, oltre il groviglio, si intravede un passaggio; a est un nodo di fibre chiude una strozzatura.".
 La descrizione della sala delle teche se il bengala è acceso e la fuga è lontana è "In mezzo alla sala il bengala brucia rosso, e tutto il groviglio è lì, ammassato intorno al suo calore come intorno a un sole che finalmente è arrivato. Il passaggio a ovest è libero, finché dura. Su, la gola di mezzo; a est, il nodo di fibre.".
 La descrizione della sala delle teche se l'energia è ripristinata e la fuga è lontana è "Il campo regge a tratti. Una luce azzurrina corre lungo le file di teche e, dove passa, il groviglio si piega e resta giù, come erba sotto una mano. Fra le teche aperte si vede la strada per il passaggio a ovest. Su, la gola di mezzo; a est, il nodo di fibre.".
+La descrizione della sala delle teche se la sponda è lontana e il faro del casco è basso e la fuga è lontana è "Con il faro al minimo hai un alone e poco altro. Alle tue spalle, a ovest, il tepore del vivaio; davanti, fra te e la gola di mezzo, le teche aperte e il groviglio che cerca. Lungo le pareti senti, più che vedere, il freddo delle teche chiuse. Su, in fondo alla sala, l'imbocco della gola; a est, il nodo di fibre.".
+La descrizione della sala delle teche se la sponda è lontana e la fuga è lontana è "Dalla parte del vivaio la sala si vede al contrario: il groviglio sul pavimento, le teche aperte a perdita di luce e, in fondo, oltre tutto questo, l'imbocco della gola di mezzo. Dove si posa il cono del faro, i filamenti più vicini si muovono. Verso di te. Lungo le pareti le teche chiuse, bianche di brina. A ovest il vivaio; su, in fondo, la gola; a est, il nodo di fibre.".
 La descrizione della sala delle teche se il faro del casco è basso e la fuga è lontana è "Con il faro al minimo hai un alone e poco altro. Le teche aperte sono sagome; il groviglio, che prima ti veniva incontro, si è fermato a mezz'aria e cerca. Lungo le pareti senti, più che vedere, il freddo delle teche chiuse. Su, la gola di mezzo; a ovest, da qualche parte oltre il groviglio, il passaggio; a est, il nodo di fibre.".
 
 # --- Sfondo -----------------------------------------------------------------
@@ -239,8 +247,10 @@ Il cavo spezzato è nella sala delle teche.
 Il cavo spezzato è di scena.
 Il cavo spezzato si chiama anche "cavo".
 Il cavo spezzato si chiama anche "cavo vecchio".
-La descrizione del cavo spezzato è "Un cavo di sicurezza di fabbricazione terrestre, di un modello che non si usa da un secolo. È tranciato, e il capo libero è avvolto da fibre pallide che non lo mollano.".
-Invece di esamina il cavo spezzato se il ritrovamento è atteso: dire "Un cavo di sicurezza di fabbricazione terrestre, di un modello che non si usa da un secolo. È tranciato, e il capo libero è avvolto da fibre pallide che non lo mollano. Qualcuno è arrivato fin qui attaccato alla sua linea, e qui l'ha persa." e adesso il ritrovamento è fatto e adesso aumenta le tracce.
+Il cavo spezzato si chiama anche "cavo guida".
+Il cavo spezzato si chiama anche "rocchetto".
+La descrizione del cavo spezzato è "Un cavo guida di fabbricazione terrestre, di un modello che non si usa da un secolo: sottile, di quelli che si srotolano da un rocchetto alla cintura per ritrovare la strada al buio. È tranciato, e il capo libero è avvolto da fibre pallide che non lo mollano.".
+Invece di esamina il cavo spezzato se il ritrovamento è atteso: dire "Un cavo guida di fabbricazione terrestre, di un modello che non si usa da un secolo: sottile, di quelli che si srotolano da un rocchetto alla cintura per ritrovare la strada al buio. È tranciato, e il capo libero è avvolto da fibre pallide che non lo mollano. Qualcuno è arrivato fin qui attaccato alla sua linea, e qui l'ha persa." e adesso il ritrovamento è fatto e adesso aumenta le tracce.
 Invece di analizza il cavo spezzato: dire "Lega terrestre, centocinquant'anni circa. Le fibre l'hanno tranciato come si spezza un filo d'erba.".
 
 # --- Il groviglio sente il faro (solo prima della fuga) ----------------------
@@ -252,21 +262,24 @@ Ogni turno se la minaccia è vicina e il faro del casco è basso: la minaccia è
 Ogni turno se la minaccia è vicina e il giocatore non è nella sala delle teche: la minaccia è lontana.
 Ogni turno se l'appoggio è parete e il giocatore non è nella sala delle teche: l'appoggio è libero.
 Ogni turno se l'appoggio è parete e il faro del casco è pieno: l'appoggio è libero.
+Ogni turno se il giocatore è nel vivaio oppure il giocatore è nella gola del ritorno: la sponda è lontana.
+Ogni turno se il giocatore è nella gola di mezzo: la sponda è vicina.
 
 # --- Il nodo di fibre chiude la strozzatura a est, fino alla fuga ------------
 Invece di vai est se il giocatore è nella sala delle teche e la fuga è lontana: dire "A est la strozzatura è chiusa dal nodo di fibre, spesso come un tronco. Dall'altra parte si sente un'aria che si muove, ma di qui non si passa.".
 
 # --- Attraversare (N4) --------------------------------------------------------
-Invece di vai ovest se il giocatore è nella sala delle teche e la fuga è lontana e l'energia è assente e il bengala è spento e l'appoggio è libero: dire "[se il faro del casco è pieno]Il groviglio ti si stringe davanti, verso la luce. Così non passi.[altrimenti]Al buio, fra le teche aperte, perdi l'orientamento. Le mani cercano qualcosa di freddo a cui tenersi.[fine]".
+Invece di vai ovest se il giocatore è nella sala delle teche e la fuga è lontana e la sponda è vicina e l'energia è assente e il bengala è spento e l'appoggio è libero: dire "[se il faro del casco è pieno]Il groviglio ti si stringe davanti, verso la luce. Così non passi.[altrimenti]Al buio, fra le teche aperte, perdi l'orientamento. Le mani cercano qualcosa di freddo a cui tenersi.[fine]".
+Invece di vai su se il giocatore è nella sala delle teche e la fuga è lontana e la sponda è lontana e l'energia è assente e il bengala è spento e l'appoggio è libero: dire "[se il faro del casco è pieno]Il groviglio ti si stringe davanti, verso la luce. Così non passi.[altrimenti]Al buio, fra le teche aperte, perdi l'orientamento. Le mani cercano qualcosa di freddo a cui tenersi.[fine]".
 
 Invece di segui le teche chiuse se il giocatore non è nella sala delle teche: dire "Non qui.".
 Invece di segui le teche chiuse se il faro del casco è pieno: dire "Con il faro al massimo, lungo le pareti il groviglio ti viene dietro.".
-Invece di segui le teche chiuse: dire "Metti la spalla contro le teche chiuse e ti tieni lì, dove il freddo tiene fermi i filamenti. Passo corto, il faro basso puntato sulle suole. Uno ti cerca all'altezza del fianco e trova solo vetro gelato. Adesso sai dove sei: la parete ti porta [se la fuga è iniziata]verso la gola di mezzo, su[altrimenti]verso il passaggio, a ovest[fine]." e adesso l'appoggio è parete.
+Invece di segui le teche chiuse: dire "Metti la spalla contro le teche chiuse e ti tieni lì, dove il freddo tiene fermi i filamenti. Passo corto, il faro basso puntato sulle suole. Uno ti cerca all'altezza del fianco e trova solo vetro gelato. Adesso sai dove sei: la parete ti porta [se la sponda è lontana]verso la gola di mezzo, su[altrimenti]verso il passaggio, a ovest[fine]." e adesso l'appoggio è parete.
 Invece di tocca le teche chiuse se il faro del casco è pieno: dire "Con il faro al massimo, lungo le pareti il groviglio ti viene dietro.".
-Invece di tocca le teche chiuse: dire "Metti la spalla contro le teche chiuse e ti tieni lì, dove il freddo tiene fermi i filamenti. Passo corto, il faro basso puntato sulle suole. Uno ti cerca all'altezza del fianco e trova solo vetro gelato. Adesso sai dove sei: la parete ti porta [se la fuga è iniziata]verso la gola di mezzo, su[altrimenti]verso il passaggio, a ovest[fine]." e adesso l'appoggio è parete.
+Invece di tocca le teche chiuse: dire "Metti la spalla contro le teche chiuse e ti tieni lì, dove il freddo tiene fermi i filamenti. Passo corto, il faro basso puntato sulle suole. Uno ti cerca all'altezza del fianco e trova solo vetro gelato. Adesso sai dove sei: la parete ti porta [se la sponda è lontana]verso la gola di mezzo, su[altrimenti]verso il passaggio, a ovest[fine]." e adesso l'appoggio è parete.
 Invece di costeggia se il giocatore non è nella sala delle teche: dire "Costeggiare cosa? Qui non serve.".
 Invece di costeggia se il faro del casco è pieno: dire "Con il faro al massimo, lungo le pareti il groviglio ti viene dietro.".
-Invece di costeggia: dire "Metti la spalla contro le teche chiuse e ti tieni lì, dove il freddo tiene fermi i filamenti. Passo corto, il faro basso puntato sulle suole. Uno ti cerca all'altezza del fianco e trova solo vetro gelato. Adesso sai dove sei: la parete ti porta [se la fuga è iniziata]verso la gola di mezzo, su[altrimenti]verso il passaggio, a ovest[fine]." e adesso l'appoggio è parete.
+Invece di costeggia: dire "Metti la spalla contro le teche chiuse e ti tieni lì, dove il freddo tiene fermi i filamenti. Passo corto, il faro basso puntato sulle suole. Uno ti cerca all'altezza del fianco e trova solo vetro gelato. Adesso sai dove sei: la parete ti porta [se la sponda è lontana]verso la gola di mezzo, su[altrimenti]verso il passaggio, a ovest[fine]." e adesso l'appoggio è parete.
 
 # --- Il bengala: un sole finto per tre turni ---------------------------------
 Il bengala è spento.

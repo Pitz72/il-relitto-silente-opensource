@@ -17,8 +17,6 @@
 # Incluso da relitto.fav.
 # ============================================================================
 
-L'ultima voce è uno stato.
-L'ultima voce è attesa.
 La voce dei nomi è uno stato.
 La voce dei nomi è attesa.
 
@@ -29,7 +27,7 @@ La voce dei nomi è attesa.
 # L'ultima voce (U1) e l'apertura dei varchi sono nell'ultimo nodo del dialogo
 # (ponte.fav), perché succedano nell'istante del congedo. Qui, al primo turno,
 # la nave comincia a tremare.
-Quando la fuga è iniziata diventa vera: dire "La nave trema. Sotto i tuoi piedi le linee del pavimento si spengono una dopo l'altra, e accanto al sostegno il pavimento si è aperto su una gola che scende. Sul visore, la cifra dell'aria ha cominciato a scendere da sola." e adesso la camera di compensazione collega su a lo scafo e adesso il vestibolo delle gole non collega più ovest.
+Quando la fuga è iniziata diventa vera: dire "La nave trema. Sotto i tuoi piedi le linee del pavimento si spengono una dopo l'altra, e accanto al sostegno il pavimento si è aperto su una gola che scende. Sul visore, la cifra dell'aria ha cominciato a scendere da sola." e adesso la camera di compensazione collega su a lo scafo e adesso la sala delle teche collega est a la gola del ritorno e adesso il vestibolo delle gole non collega più ovest.
 
 # Dal santuario si scende con uno spostamento diretto: l'apertura nel pavimento
 # c'è dal primo istante della fuga, e non compare fra le uscite prima.
@@ -66,11 +64,11 @@ La descrizione della sala delle teche se la fuga è iniziata e il bengala è acc
 La descrizione della sala delle teche se la fuga è iniziata è "La sala delle teche, sveglia. Il campo è caduto del tutto: il groviglio si muove dappertutto, a frustate molli e cieche, e cerca il caldo. Lungo le pareti, le teche chiuse, bianche di brina. Su, in fondo alla sala, l'imbocco della gola di mezzo; a ovest il vivaio; a est la gola da cui sei arrivato.".
 
 # Passare su: luce del Navarca, bengala, oppure faro basso e mano sulla parete.
-Invece di vai su se il giocatore è nella sala delle teche e la fuga è iniziata e le alcove non è svelata e il bengala è spento e l'appoggio è libero: dire "Un filamento ti serra la caviglia, viscido e forte, e ti tira indietro. [se il faro del casco è pieno]Il faro, al massimo, li chiama tutti. [fine]Puoi strapparti via, o trovare un'altra strada." e adesso diminuisci l'aria di 6.
+Invece di vai su se il giocatore è nella sala delle teche e la fuga è iniziata e la sponda è lontana e le alcove non è svelata e il bengala è spento e l'appoggio è libero: dire "Un filamento ti serra la caviglia, viscido e forte, e ti tira indietro. [se il faro del casco è pieno]Il faro, al massimo, li chiama tutti. [fine]Puoi strapparti via, o trovare un'altra strada." e adesso diminuisci l'aria di 6.
 Invece di strappa il groviglio se il giocatore è nella sala delle teche e la fuga è iniziata: dire "Dai un calcio all'indietro con lo stivale, strappi la fibra che ti tiene e ti butti verso la gola di mezzo, a spinte, senza voltarti. Ti segue un'ultima frustata, che trova solo la suola." e adesso diminuisci l'aria di 6 e adesso il giocatore è nella gola di mezzo.
 Invece di taglia il groviglio se il giocatore è nella sala delle teche e la fuga è iniziata e il giocatore ha la taglierina: dire "Accendi la taglierina e tagli la fibra che ti tiene. Le altre sentono il calore del getto e arrivano tutte insieme: ti butti verso la gola di mezzo prima che ti trovino." e adesso diminuisci l'aria di 6 e adesso il giocatore è nella gola di mezzo.
 Invece di strappa il groviglio: dire "Qui non ti tiene niente.".
-Invece di strappa: dire "Strappare cosa?".
+Invece di strappa: dire "Non c'è niente da strappare.".
 
 # ============================================================================
 # GOLA DI MEZZO, nella fuga: la voce dei nomi (U2)

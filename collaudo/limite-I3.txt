@@ -2,6 +2,10 @@
 # risuonatore. Chi ha ascoltato tutto non ha l'aria per portarlo via:
 # deve finire in «Due lettere».
 #   python motore/favella.py collaudo relitto-silente/relitto.fav --finali --percorso collaudo/limite-I3.txt
+# atteso: esito persa
+# atteso: stanza scafo
+# atteso: finale «i magneti degli stivali»
+# atteso: finale «Ti porta con sé.»
 
 # --- Atto I ---
 analizza la nave aliena
@@ -47,6 +51,7 @@ ovest
 prendi la tavoletta
 traduci le tabelle di semina
 est
+segui la parete
 su
 su
 alza il faro
@@ -71,6 +76,7 @@ prendi il sintonizzatore
 sintonizza il generatore
 usa il cristallo sul generatore
 su
+sintonizza le pareti del corridoio
 est
 giù
 su
@@ -122,6 +128,9 @@ su
 sud
 sintonizza le piante
 sintonizza le piante
+ovest
+sintonizza le capsule
+est
 completa la parola
 traduci la placca
 nord

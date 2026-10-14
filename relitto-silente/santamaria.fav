@@ -348,6 +348,10 @@ Invece di togli la tuta: dire "Adesso no. Ti serve addosso.".
 Invece di lascia la tuta se la tuta è vestita: dire "Ce l'hai addosso.".
 
 # --- Il faro del casco -------------------------------------------------------
+# Sotto il 30%, prima della fuga, la protezione vitale tiene il faro al minimo
+# (aria.fav).
+Invece di alza il faro del casco se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. Con l'aria a [aria] la tuta non ti ridà il faro: anche la luce, per lei, è un canale secondario.".
+Invece di accendi il faro del casco se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. Con l'aria a [aria] la tuta non ti ridà il faro: anche la luce, per lei, è un canale secondario.".
 Invece di abbassa il faro del casco se il faro del casco è basso: dire "È già al minimo.".
 Invece di abbassa il faro del casco: dire "Giri la ghiera del faro al minimo, fin quasi a chiuderlo nel guanto. Il buio ti si fa più vicino." e adesso il faro del casco è basso.
 Invece di spegni il faro del casco se il faro del casco è basso: dire "È già al minimo. Spegnerlo del tutto, qui dentro, no.".

@@ -1,0 +1,104 @@
+# Non regressione (revisione C1): il risuonatore staccato e posato nel
+# vestibolo si riprende nella fuga. Il seme resta sul sostegno: «La stiva piena».
+#   python collaudo/regressioni.py collaudo/riprendi-risuonatore.txt
+# atteso: esito vinta
+# atteso: finale «Destinazione: Magazzino Quattro.»
+# atteso: mai «Non puoi prender»
+
+# --- Atto I: la Santa Maria ---
+analizza la nave aliena
+accosta
+spara gli arpioni
+ovest
+prendi la tuta
+indossa la tuta
+apri il kit
+prendi la taglierina
+prendi la batteria
+prendi la cella di riserva
+fuori
+
+# --- Atto II: l'ingresso ---
+analizza lo scafo nero
+usa la taglierina sulla giuntura
+giù
+usa la batteria sul pannello
+apri la porta interna
+ovest
+stacca il risuonatore
+stacca il risuonatore
+stacca il risuonatore
+lascia il risuonatore
+
+# --- Atto III, ala della Vita: la tavoletta oltre le teche ---
+giù
+abbassa il faro
+giù
+segui la parete
+ovest
+prendi la tavoletta
+est
+segui la parete
+su
+su
+ovest
+sud
+usa la tavoletta sulla teca
+prendi il seme
+ovest
+prendi il dispositivo medico
+prendi il cristallo
+usa il dispositivo medico sul cristallo
+est
+nord
+
+# --- Ala Tecnica: l'energia ---
+giù
+prendi il sintonizzatore
+usa il cristallo sul generatore
+su
+
+# --- Ala della Memoria: il disco e il nucleo (con l'energia, la pazienza) ---
+nord
+ovest
+prendi il disco
+nord
+prendi il nucleo
+sud
+est
+gira il disco
+gira il disco
+usa il disco sull'altare
+prendi la stele
+sud
+
+# --- La Grande Porta ---
+usa il seme sulla grande porta
+usa la stele sulla grande porta
+usa il nucleo sulla grande porta
+
+# --- Atto IV: il Ponte e l'Anziano ---
+ovest
+usa la postazione
+analizza la mappa stellare
+tocca le punte
+ovest
+ovest
+parla con l'anziano
+Chi eravate?
+E io che c'entro?
+Allora cosa devo fare?
+[Chiudi gli occhi e lascia andare.]
+[Resta.]
+[Apri gli occhi.]
+
+# --- Atto V: la fuga ---
+giù
+ovest
+segui la parete
+su
+su
+prendi il risuonatore
+est
+su
+dentro

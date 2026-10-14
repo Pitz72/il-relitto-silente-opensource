@@ -11,7 +11,6 @@
 # direzioni, topologia, moduli. Il progetto è in progettazione/01-mappa-espansione.md.
 #
 # Moduli, uno per atto più quelli trasversali:
-#   aria.fav        il margine: l'aria della tuta
 #   santamaria.fav  Atto I   — la Santa Maria, Yusuf
 #   ingresso.fav    Atto II  — scafo, camera, vestibolo, gola di mezzo
 #   corridoio.fav   Atto III — il corridoio e la Grande Porta
@@ -23,6 +22,7 @@
 #   fuga.fav        Atto V   — la nave che si disgrega
 #   traduci.fav     la matrice di traduzione (tutti i testi alieni)
 #   echi.fav        il Sintonizzatore (tutte le voci)
+#   aria.fav        il margine: l'aria della tuta, i consumi, le soglie
 #   finali.fav      i sei finali e la riga di registro
 #
 # Voce narrante: seconda persona, presente. La voce che racconta non dice mai
@@ -88,7 +88,12 @@ Svelata e celata sono opposte.
 "sintonizza" è un comando.
 "indossa" è un comando.
 
-Invece di tocca: dire "Cosa vuoi toccare? Su questa nave quasi tutto chiede di essere sfiorato con rispetto.".
+# Le regole senza oggetto valgono per le cose che non ne hanno una propria
+# (il verbo da solo lo gestisce il motore, che chiede «che cosa?»).
+Invece di tocca: dire "[se l'ingresso è richiuso]Passi il guanto, piano: su questa nave quasi tutto chiede di essere sfiorato con rispetto. Non succede niente.[altrimenti]Sfiori appena. Non succede niente.[fine]".
+Invece di incidi se il giocatore non ha la taglierina: dire "Ti servirebbe qualcosa con cui incidere.".
+Invece di analizza: dire "[se la tuta è vestita]Il multiscanner registra, confronta, e non trova niente da segnalare.[altrimenti]Il multiscanner sta sulla spalla della tuta, e la tuta non ce l'hai addosso.[fine]".
+Invece di ascolta: dire "[se l'ingresso è richiuso]Ascolti. Il brusio della nave, che non smette, e il tuo fiato nel casco.[altrimenti]Ascolti. Niente, a parte il tuo fiato.[fine]".
 Invece di incidi: dire "Sollevi la taglierina, poi ti fermi. Non ogni parete merita un segno. Alcuni luoghi, su questa nave, lo chiedono. Qui no.".
 
 # ============================================================================
@@ -116,8 +121,9 @@ Il vestibolo delle gole collega ovest a il corridoio principale.
 Il vestibolo delle gole collega giù a la gola di mezzo.
 La gola di mezzo collega giù a la sala delle teche.
 La sala delle teche collega ovest a il vivaio.
-# Il nodo di fibre tiene chiusa questa strozzatura fino alla fuga (vita.fav).
-La sala delle teche collega est a la gola del ritorno.
+# A est della sala delle teche il nodo di fibre chiude la strozzatura verso la
+# gola del ritorno: il passaggio si apre nella fuga (fuga.fav), così prima non
+# compare fra le uscite.
 
 # Atti III e IV — il corridoio e le ali (la Gola del ritorno, Atto V, si apre
 # durante la fuga: fuga.fav)
@@ -144,7 +150,8 @@ Il giocatore comincia in plancia.
 # L'ordine conta: fra regole e descrizioni condizionali vince la prima
 # dichiarata. Le varianti della fuga hanno «e la fuga è lontana» nei moduli
 # che vengono prima, così in fuga valgono quelle di fuga.fav.
-Includi "aria.fav".
+# aria.fav viene per penultimo: i suoi demoni (consumi e soglie) devono vedere
+# tutto quello che gli altri moduli tolgono all'aria nello stesso turno.
 Includi "santamaria.fav".
 Includi "ingresso.fav".
 Includi "corridoio.fav".
@@ -156,6 +163,7 @@ Includi "ponte.fav".
 Includi "fuga.fav".
 Includi "traduci.fav".
 Includi "echi.fav".
+Includi "aria.fav".
 Includi "finali.fav".
 
 # ============================================================================

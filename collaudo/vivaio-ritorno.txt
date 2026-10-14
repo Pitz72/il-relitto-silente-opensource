@@ -1,0 +1,41 @@
+# Non regressione (revisione C7): il groviglio sbarra la strada anche al
+# ritorno dal vivaio. Al buio, senza la parete, ci si perde; con la parete si
+# risale nella gola di mezzo.
+#   python collaudo/regressioni.py collaudo/vivaio-ritorno.txt
+# atteso: esito in_corso
+# atteso: compare «perdi l'orientamento»
+# atteso: compare «la parete ti porta verso la gola di mezzo, su»
+# atteso: stanza gola di mezzo
+
+# --- Atto I: la Santa Maria ---
+analizza la nave aliena
+accosta
+spara gli arpioni
+ovest
+prendi la tuta
+indossa la tuta
+apri il kit
+prendi la taglierina
+prendi la batteria
+prendi la cella di riserva
+fuori
+
+# --- Atto II: l'ingresso ---
+analizza lo scafo nero
+usa la taglierina sulla giuntura
+giù
+usa la batteria sul pannello
+apri la porta interna
+ovest
+
+# --- Atto III, ala della Vita: la tavoletta oltre le teche ---
+giù
+abbassa il faro
+giù
+segui la parete
+ovest
+prendi la tavoletta
+est
+su
+segui la parete
+su

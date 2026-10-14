@@ -3,6 +3,10 @@
 # Tutte e sette le voci profonde, la nota (reattore e sonaglio), le tracce di
 # L.V., la placca completata, la risposta vera al Piccolo, il seme.
 #   python motore/favella.py collaudo relitto-silente/relitto.fav --finali --percorso collaudo/prima-nota.txt
+# atteso: esito vinta
+# atteso: finale «Due cose che non si sono mai conosciute»
+# atteso: risonanze >= 6
+# atteso: nota = riconosciuta
 
 # --- Atto I ---
 analizza la nave aliena
@@ -48,6 +52,7 @@ ovest
 prendi la tavoletta
 traduci le tabelle di semina
 est
+segui la parete
 su
 su
 alza il faro

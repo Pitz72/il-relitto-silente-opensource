@@ -1,6 +1,10 @@
 # Il Relitto Silente — mappa dell'espansione
 
-**Strato 1: struttura, mappa, meccaniche, finali.** Versione 0.4, 14 ottobre 2026.
+**Strato 1: struttura, mappa, meccaniche, finali.** Versione 0.5, 14 ottobre 2026.
+
+Dalla 0.4: la revisione (`04-revisione.md`) ha precisato D6 (la protezione vitale abbassa anche il
+faro) e il cavo di L.V. (T3: fra le teche c'è il suo cavo guida). Il resto del documento è il
+progetto com'era.
 
 Dalla 0.3: il remake è completo. Gli strati 3, 4 e 5 sono descritti in `03-strati-3-5.md`, che
 riporta anche i valori d'aria tarati (diversi dalle stime del §5.1) e la divisione finale dei
@@ -423,7 +427,7 @@ l'aria in rosso: la stessa scelta del racconto, decisa questa volta da chi gioca
 |---|---|---|---|
 | T1 | Scafo | Un taglio vecchio, risaldato dalla nave | `analizza la giuntura` |
 | T2 | Corridoio | Le tre tacche: punta da carotatore, standard terrestre | `analizza le tacche` |
-| T3 | Sala delle teche | Un cavo di sicurezza terrestre tranciato, il capo avvolto di fibre | `esamina il cavo` |
+| T3 | Sala delle teche | Un cavo guida terrestre tranciato, il capo avvolto di fibre (il cavo di sicurezza gliel'ha tagliato la nave all'ingresso, come a te: lo porta ancora alla cintura) | `esamina il cavo` |
 | T4 | Serra morente | L'uomo, la placca, le due lettere | `esamina il cadavere` |
 | T5 | Serra morente | La sua voce | la scatola nera, collegata alla tuta |
 
@@ -1041,7 +1045,7 @@ IV finché gli strati 3 e 4 non li riscrivono, un'ala alla volta.
 | D3 | Stiva vuota invece del minerale per Europa? | Sì: è il movente. |
 | D4 | Il logo Weyland Corp? | Tolto: il kit porta la sigla TSC della nave. Il lettore con *Castello di Ghiaccio* resta come omaggio. |
 | D5 | L'Anziano è certo o spera che l'umanità sia il loro seme? | Spera. |
-| D6 | Quanto è severa l'aria? | Si muore solo nella fuga o portando il risuonatore; prima, la protezione vitale ferma gli ascolti al 30%. |
+| D6 | Quanto è severa l'aria? | Si muore solo nella fuga o portando il risuonatore; prima, la protezione vitale ferma gli ascolti al 30% e abbassa il faro, così il groviglio non afferra (revisione, C2). |
 | D7 | La «matrice» del racconto diventa «risuonatore»? | Sì. |
 | D8 | Un seme solo in tre stati, o due semi? | Uno solo (§5.8). |
 | D9 | Le direzioni di transito | Più leggibili: solo punti cardinali, su e giù, e `dentro`/`fuori` per il boccaporto. Dettaglio in `02-strato-2-atti-I-II.md`, §3. |

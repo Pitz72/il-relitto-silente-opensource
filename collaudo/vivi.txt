@@ -2,6 +2,10 @@
 # Il seme sì, il risuonatore no. Verifica l'invariante I1 (il percorso
 # critico consuma al massimo il 35% dell'aria disponibile).
 #   python motore/favella.py collaudo relitto-silente/relitto.fav --finali --percorso collaudo/vivi.txt
+# atteso: esito vinta
+# atteso: finale «Rotta ripresa. Carico: nessuno.»
+# atteso: aria >= 48
+# atteso: mai «Non puoi prender»
 
 # --- Atto I: la Santa Maria ---
 analizza la nave aliena
@@ -32,6 +36,7 @@ segui la parete
 ovest
 prendi la tavoletta
 est
+segui la parete
 su
 su
 ovest

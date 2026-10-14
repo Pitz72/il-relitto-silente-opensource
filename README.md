@@ -15,8 +15,8 @@ insieme al motore che la fa girare.
 | `motore/esempi/` | Le demo del repo, servono alla suite di test (alcuni test le cercano qui) | `esempi/` |
 | `motore/documentazione/` | Specifica della grammatica 1.4.0 e manuale d'autore (PDF + sorgenti Typst) | `documentazione/` |
 | `grafica/` | Copertina originale del gioco | `landingpage/immagini/covers-original/` |
-| `collaudo/` | Un percorso per ogni finale (`vivi`, `prima-nota`, `stiva-piena`, `doppio-fondo`, `mani-vuote`, `due-lettere`), i due percorsi limite `tutto` e `limite-I3`, `soluzione.txt`, `prova-atti-I-II.txt`, `soluzione-originale.txt` (per l'originale intatto). `trascrivi.py` gioca un percorso e ne scrive la trascrizione; tre trascrizioni pronte da leggere | nuovo |
-| `progettazione/` | Documenti di progetto: `01-mappa-espansione.md` (strato 1: struttura, mappa, meccaniche, finali), `02-strato-2-atti-I-II.md` (Atti I e II), `03-strati-3-5.md` (Atti III–V, finali, bilanciamento, audit chiuso), `04-revisione.md` (criticità di codice e storia trovate dopo gli strati, non ancora corrette), `05-lezioni-per-favella.md` (cosa il Relitto ha insegnato sul motore, proposte per una versione futura) | nuovo |
+| `collaudo/` | Un percorso per ogni finale (`vivi`, `prima-nota`, `stiva-piena`, `doppio-fondo`, `mani-vuote`, `due-lettere`), i due percorsi limite `tutto` e `limite-I3`, quattro prove di non regressione (`riprendi-risuonatore`, `stiva-al-limite`, `groviglio-ostinato`, `vivaio-ritorno`), `soluzione.txt`, `prova-atti-I-II.txt`, `soluzione-originale.txt` (per l'originale intatto). Ogni percorso dichiara in testa quello che deve succedere (`# atteso: …`): `regressioni.py` li gioca tutti e controlla. `trascrivi.py` gioca un percorso e ne scrive la trascrizione; tre trascrizioni pronte da leggere | nuovo |
+| `progettazione/` | Documenti di progetto: `01-mappa-espansione.md` (strato 1: struttura, mappa, meccaniche, finali), `02-strato-2-atti-I-II.md` (Atti I e II), `03-strati-3-5.md` (Atti III–V, finali, bilanciamento, audit chiuso), `04-revisione.md` (criticità di codice e storia trovate dopo gli strati, e come sono state corrette), `05-lezioni-per-favella.md` (cosa il Relitto ha insegnato sul motore, proposte per una versione futura) | nuovo |
 
 Non sono stati importati Favella Studio (l'IDE Electron), il sito e il branding del repo.
 
@@ -49,6 +49,10 @@ python motore/favella.py collaudo relitto-silente/relitto.fav --finali --percors
 ```
 
 ```bash
+python collaudo/regressioni.py --riprese
+```
+
+```bash
 python collaudo/trascrivi.py relitto-silente/relitto.fav collaudo/vivi.txt -o collaudo/trascrizione-vivi.txt
 ```
 
@@ -75,7 +79,8 @@ python test_linguaggio.py
 - Finali: 6 dichiarati, 6 raggiunti dai percorsi in `collaudo/`. Gli invarianti dell'aria sono verificati (vedi `progettazione/03-strati-3-5.md`).
 - Esploratore: 23 stanze su 23, nessuna anomalia, nessuna eccezione del motore.
 - Il motore non è stato modificato.
-- Revisione successiva (`progettazione/04-revisione.md`): un bug grave (il risuonatore posato non si riprende) e altri minori, tutti fuori dai percorsi di collaudo. Da correggere.
+- Revisione (`progettazione/04-revisione.md`): dodici problemi di codice, cinque di storia e cinque di collaudo, fra cui un bug grave (il risuonatore posato non si riprendeva). Tutti corretti; quattro percorsi nuovi impediscono che tornino.
+- Collaudo di regressione: 14 percorsi su 14, più la prova di ripresa di ogni oggetto.
 
 Il progetto è sotto git (repository locale, ramo `main`).
 

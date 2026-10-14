@@ -99,7 +99,7 @@ Giri la ghiera del faro al minimo, fin quasi a chiuderlo nel guanto. Il buio ti 
 
 --- La sala delle teche ---
 Con il faro al minimo hai un alone e poco altro. Le teche aperte sono sagome; il groviglio, che prima ti veniva incontro, si è fermato a mezz'aria e cerca. Lungo le pareti senti, più che vedere, il freddo delle teche chiuse. Su, la gola di mezzo; a ovest, da qualche parte oltre il groviglio, il passaggio; a est, il nodo di fibre.
-Uscite: Su (La gola di mezzo), Ovest, Est.
+Uscite: Su (La gola di mezzo), Ovest.
 
 > segui la parete
 Metti la spalla contro le teche chiuse e ti tieni lì, dove il freddo tiene fermi i filamenti. Passo corto, il faro basso puntato sulle suole. Uno ti cerca all'altezza del fianco e trova solo vetro gelato. Adesso sai dove sei: la parete ti porta verso il passaggio, a ovest.
@@ -118,8 +118,11 @@ Preso: la tavoletta.
 > est
 
 --- La sala delle teche ---
-Con il faro al minimo hai un alone e poco altro. Le teche aperte sono sagome; il groviglio, che prima ti veniva incontro, si è fermato a mezz'aria e cerca. Lungo le pareti senti, più che vedere, il freddo delle teche chiuse. Su, la gola di mezzo; a ovest, da qualche parte oltre il groviglio, il passaggio; a est, il nodo di fibre.
-Uscite: Su (La gola di mezzo), Ovest (Il vivaio), Est.
+Con il faro al minimo hai un alone e poco altro. Alle tue spalle, a ovest, il tepore del vivaio; davanti, fra te e la gola di mezzo, le teche aperte e il groviglio che cerca. Lungo le pareti senti, più che vedere, il freddo delle teche chiuse. Su, in fondo alla sala, l'imbocco della gola; a est, il nodo di fibre.
+Uscite: Su (La gola di mezzo), Ovest (Il vivaio).
+
+> segui la parete
+Metti la spalla contro le teche chiuse e ti tieni lì, dove il freddo tiene fermi i filamenti. Passo corto, il faro basso puntato sulle suole. Uno ti cerca all'altezza del fianco e trova solo vetro gelato. Adesso sai dove sei: la parete ti porta verso la gola di mezzo, su.
 
 > su
 
@@ -214,6 +217,7 @@ Uscite: Est (Il vestibolo delle gole), Nord, Sud (La serra morente), Giù (Il la
 Una sala circolare, il soffitto così alto che il faro non lo trova. Una luce bianca e fredda sale dai disegni geometrici del pavimento. Le pareti sono coperte di bassorilievi, da terra fino al buio: creature alte e sottili sotto un cielo a tre soli, semi di luce piantati su un mondo fertile, navi immense in partenza. Al centro, un blocco cilindrico di pietra nera. A sud si torna al corridoio; a ovest si apre un altro passaggio.
 Puoi vedere qui: un altare.
 Uscite: Sud (Il corridoio principale), Ovest.
+Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che ti arriva nei denti prima che nelle cuffie. Poi più niente.
 
 > ovest
 
@@ -221,7 +225,6 @@ Uscite: Sud (Il corridoio principale), Ovest.
 Una biblioteca circolare senza libri. Dalle nicchie delle pareti i proiettori fanno girare a mezz'aria globi di testo alieno, illeggibili e bellissimi. Al centro, una lastra scura e inclinata, i bordi consumati; intorno, utensili dalle punte di misure diverse, messi in ordine come li mette chi sa di aver finito. In una nicchia a nord il proiettore è spento. A est si torna al santuario; una porta sottile, a nord, porta più in fondo.
 Puoi vedere qui: un disco.
 Uscite: Est (Il santuario del silenzio), Nord.
-Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che ti arriva nei denti prima che nelle cuffie. Poi più niente.
 
 > prendi il disco
 Liberi il disco di pietra incastrato nel meccanismo del proiettore. Il proiettore non lo ripari, ma il disco, coperto di incisioni come quelle dell'altare, adesso ce l'hai tu.
@@ -236,13 +239,13 @@ Appena entri, l'ultimo pilastro smette di pulsare e si accende per intero, e la 
 
 > prendi il nucleo
 Prendi il Nucleo di Memoria dallo scomparto del terminale. La terza chiave.
+Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che ti arriva nei denti prima che nelle cuffie. Poi più niente.
 
 > sud
 
 --- Lo scriptorium ---
 Una biblioteca circolare senza libri. Dalle nicchie delle pareti i proiettori fanno girare a mezz'aria globi di testo alieno, illeggibili e bellissimi. Al centro, una lastra scura e inclinata, i bordi consumati; intorno, utensili dalle punte di misure diverse, messi in ordine come li mette chi sa di aver finito. In una nicchia a nord il proiettore è spento. A est si torna al santuario; una porta sottile, a nord, porta più in fondo.
 Uscite: Est (Il santuario del silenzio), Nord (L'arca della memoria).
-Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che ti arriva nei denti prima che nelle cuffie. Poi più niente.
 
 > est
 
@@ -262,6 +265,7 @@ Appoggi il disco nell'incavo, con il sole più grande verso la tacca. Questa vol
 
 > prendi la stele
 Prendi la Stele del Ricordo dallo scomparto. È leggera, più di quanto ti aspettassi, e tiepida. La seconda chiave.
+Nella cuffia il brusio cala fino quasi a sparire, come una sala piena che smette di parlare quando entri. Poi riprende.
 
 > sud
 
@@ -269,7 +273,6 @@ Prendi la Stele del Ricordo dallo scomparto. È leggera, più di quanto ti aspet
 Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sei salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.
 Puoi vedere qui: una lastra dati, una grande porta.
 Uscite: Est (Il vestibolo delle gole), Nord (Il santuario del silenzio), Sud (La serra morente), Giù (Il laboratorio di risonanza), Nordest, Ovest.
-Nella cuffia il brusio cala fino quasi a sparire, come una sala piena che smette di parlare quando entri. Poi riprende.
 
 > usa il seme sulla grande porta
 Avvicini il seme all'incavo ovoidale: viene attratto e si incastra con un clic delicato. La sua luce verde corre lungo il bordo della porta e ci resta. In mano, del seme, non hai più niente.
@@ -290,11 +293,11 @@ Uscite: Est (Il corridoio principale), Ovest.
 
 > usa la postazione
 Appoggi la mano guantata sulla depressione, e la console reagisce: non a chi sei, ma a quello che vuoi. Un'ondata di energia silenziosa attraversa la sala, le postazioni si accendono, e la struttura centrale proietta sulla cupola una mappa stellare a tre dimensioni. La rotta è chiara, e il punto d'arrivo inconfondibile: il tuo sole.
+Nella cuffia il brusio cala fino quasi a sparire, come una sala piena che smette di parlare quando entri. Poi riprende.
 
 > analizza la mappa stellare
 Segui la rotta all'indietro, partendo da casa. Attraversa un'altra galassia, fino a un ammasso denso e luminoso. Il punto d'origine non lascia dubbi: un sistema trino, tre soli che girano l'uno intorno all'altro, spenti. La culla della loro civiltà.
 Il tuo sole non l'hanno scelto a caso. Accanto c'è un'annotazione che la matrice rende così: proto-fertile, candidato primario, classe Giardino.
-Nella cuffia il brusio cala fino quasi a sparire, come una sala piena che smette di parlare quando entri. Poi riprende.
 
 > tocca le punte
 Ripensi alla culla della rotta, i tre soli, e appoggi la mano sul pannello: premi tre punte. Un clic armonioso, e la porta tonda si apre con un movimento senza attrito su un buio pieno.
@@ -362,14 +365,14 @@ Uscite: Su (La gola di mezzo), Ovest (Il vivaio), Est.
 
 > segui la parete
 Metti la spalla contro le teche chiuse e ti tieni lì, dove il freddo tiene fermi i filamenti. Passo corto, il faro basso puntato sulle suole. Uno ti cerca all'altezza del fianco e trova solo vetro gelato. Adesso sai dove sei: la parete ti porta verso la gola di mezzo, su.
+Da qualche parte dietro di te qualcosa crolla, con un rumore che non arriva: lo senti nelle suole.
+Le pareti si incrinano in lunghe linee verdi, come vene che si accendono per l'ultima volta.
 
 > su
 
 --- La gola di mezzo ---
 La gola di mezzo trema e si stringe, e le venature si accendono tutte insieme di un verde malato, come per l'ultima volta. Sopra, il vestibolo. Sotto, il groviglio.
 Uscite: Su (Il vestibolo delle gole), Giù (La sala delle teche).
-Da qualche parte dietro di te qualcosa crolla, con un rumore che non arriva: lo senti nelle suole.
-Le pareti si incrinano in lunghe linee verdi, come vene che si accendono per l'ultima volta.
 Nella cuffia entra una voce bassa, paziente, che dice nomi, una parola dopo l'altra. (Potresti fermarti ad ASCOLTARE LA VOCE.)
 
 > su
@@ -392,6 +395,7 @@ Uscite: Ovest (Il vestibolo delle gole), Su (Lo scafo).
 Sei fuori. Lo scafo nero trema sotto i magneti degli stivali, e le funi degli arpioni vibrano come corde tese. Il boccaporto della Santa Maria è lì, con la sua luce gialla: dentro.
 Puoi vedere qui: una giuntura.
 Uscite: Dentro (La stiva), Giù (La camera di compensazione).
+Da qualche parte dietro di te qualcosa crolla, con un rumore che non arriva: lo senti nelle suole.
 
 > dentro
 
@@ -399,7 +403,6 @@ Uscite: Dentro (La stiva), Giù (La camera di compensazione).
 La stiva della Santa Maria, vuota, con la sua luce gialla di servizio.
 Puoi vedere qui: un kit.
 Uscite: Est (La plancia), Giù, Fuori (Lo scafo).
-Da qualche parte dietro di te qualcosa crolla, con un rumore che non arriva: lo senti nelle suole.
 Il portello interno si chiude alle tue spalle. Ti strappi il casco prima che la pressione sia pareggiata, e l'aria della stiva ti arriva addosso fredda, tutta insieme, e sa di olio e di casa. Il pavimento si avvicina. Dormi.
 
 Ti svegli in plancia, sulla tua poltrona. Non ricordi di esserci salito. Fuori dall'oblò non c'è niente: il radar batte il vuoto e ridà vuoto. I cavi degli arpioni risultano riavvolti, e non ricordi di averli mollati. Forse la massa nera è andata alla deriva. Forse non c'è mai stata, e un uomo solo, con poca aria e meno sonno, si è inventato una compagnia.
@@ -414,5 +417,5 @@ Registro di bordo, TSC-1972. Operatore W. T. Eriksonn. Rotta ripresa. Carico: ne
 (La partita è finita. Scrivi ANNULLA per tornare indietro di un turno, RICOMINCIA per ripartire da capo, CARICA per riprendere un salvataggio o FINE per uscire.)
 
 ============================================================
-Stato: vinta · stanza: stiva · comandi: 77 · eccezioni del motore: 0
-Contatori: aria=62, chiavi=3, echi=0, risonanze=0, rotazione=2, taglio=0, tracce=1, traduzione=0
+Stato: vinta · stanza: stiva · comandi: 78 · eccezioni del motore: 0
+Contatori: aria=66, chiavi=3, echi=0, risonanze=0, rotazione=2, taglio=0, tracce=1, traduzione=0

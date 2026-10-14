@@ -22,7 +22,9 @@ Oltre ai comandi soliti (direzioni, `esamina`, `prendi`, `usa X su Y`, `parla co
 `abbassa` e `alza` (il faro), `segui la parete`, `gira`, `suona`, `firma`, `completa`, `ricarica la
 tuta`, `rientra`, `entra`.
 
-Ascoltare e tradurre costano aria: la cifra è sul visore (`esamina il visore`).
+Ascoltare e tradurre costano aria: la cifra è sul visore (`esamina il visore`). Sotto il 30%, prima
+della fuga, la tuta entra in protezione vitale: niente ascolti né traduzioni, e il faro resta al
+minimo finché non le dai altra aria. Prima della fuga si muore solo portando il risuonatore.
 
 ## Mappa
 
@@ -51,7 +53,7 @@ Santuario centrale).
 | File | Contenuto |
 |---|---|
 | `relitto.fav` | Orchestratore: titolo, prologo, stati globali, direzioni, topologia |
-| `aria.fav` | L'aria della tuta |
+| `aria.fav` | L'aria della tuta: consumi e soglie (incluso per penultimo, così vede tutto quello che il turno ha tolto) |
 | `santamaria.fav` | Atto I — la Santa Maria, Yusuf |
 | `ingresso.fav` | Atto II — scafo, camera, vestibolo, gola di mezzo |
 | `corridoio.fav`, `vita.fav`, `tecnica.fav`, `equipaggio.fav`, `memoria.fav` | Atto III — il corridoio e le quattro ali |
@@ -61,4 +63,4 @@ Santuario centrale).
 | `finali.fav` | I sei finali |
 
 Il progetto completo (mappa, decisioni, collaudo) è in `../progettazione/`. Le soluzioni dei finali
-sono in `../collaudo/`. L'originale intatto è in `../motore/esempi/demo/relitto-silente/`.
+sono in `../collaudo/`, con le prove di non regressione (`python collaudo/regressioni.py`). L'originale intatto è in `../motore/esempi/demo/relitto-silente/`.

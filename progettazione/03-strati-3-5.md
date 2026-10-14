@@ -1,12 +1,13 @@
 # Il Relitto Silente — strati 3, 4 e 5
 
-Versione 1.0, 14 ottobre 2026. Segue `02-strato-2-atti-I-II.md`. Con questo documento il remake
+Versione 1.1, 14 ottobre 2026. Segue `02-strato-2-atti-I-II.md`. Dalla 1.1 i numeri e le note
+tecniche descrivono il gioco dopo le correzioni della revisione (`04-revisione.md`, §5). Con questo documento il remake
 descritto in `01-mappa-espansione.md` è completo: tutti e cinque gli atti sono scritti,
 implementati e collaudati, e non restano parti dell'originale da riscrivere.
 
 Per leggere il gioco come lo vede chi gioca ci sono tre trascrizioni in `collaudo/`:
 `trascrizione-atti-I-II.txt` (gli Atti I e II, ogni oggetto), `trascrizione-vivi.txt` (la partita
-più breve, 77 comandi) e `trascrizione-tutto.txt` (la partita più ricca: tutte le voci, tutte le
+più breve, 78 comandi) e `trascrizione-tutto.txt` (la partita più ricca: tutte le voci, tutte le
 tracce, «La prima nota»).
 
 ---
@@ -22,7 +23,7 @@ tracce, «La prima nota»).
 | Finali | 1 | 5, più una variante segreta | |
 | Nodi di dialogo | 7 | 23 (Anziano 14, Yusuf 5, eco del Piccolo 4) | |
 | Voci del Sintonizzatore | 11 + 4 | 14 + 7 | |
-| Percorso minimo vincente | 54 comandi | 77 comandi | |
+| Percorso minimo vincente | 54 comandi | 78 comandi | |
 
 I file del gioco, in `relitto-silente/`:
 
@@ -60,8 +61,9 @@ con Matthew e con l'indizio sul cavo e sulla parete fredda.
 La tavoletta è nel vivaio, oltre la sala delle teche. Il groviglio sente luce e calore: col faro al
 massimo prima si avvicina (−4), poi afferra e respinge nella gola di mezzo (−8). Si passa in tre
 modi: faro basso e mano sulla parete (`segui la parete`, `costeggia`), il bengala come finto sole
-per tre turni, oppure il campo che regge a tratti dopo l'energia. Nelle teche c'è il cavo tranciato
-di L.V. (T3).
+per tre turni, oppure il campo che regge a tratti dopo l'energia, in tutti e due i sensi: anche al ritorno dal vivaio.
+Nelle teche c'è il cavo guida tranciato di L.V. (T3); il suo cavo di sicurezza, che la nave gli ha
+tagliato all'ingresso come a te, gli pende ancora dalla cintura.
 L'arca biologica non ha più il corpo; la lettura delle capsule non chiama più «K'tharr» un animale
 (audit A8).
 
@@ -127,34 +129,43 @@ placca, la risposta al Piccolo, la promessa e la confessione a Yusuf.
 | Traduzione | −1 |
 | Groviglio col faro al massimo: si avvicina / afferra | −4 / −8 |
 | Risuonatore: mano / ogni taglio / portarlo / portarlo nella fuga | −2 / −2 / −1 a turno / −4 a turno |
-| Fuga | −4 a turno |
+| Fuga | −4 a turno (non nella stiva della Santa Maria) |
 | Nella fuga, strapparsi dal groviglio o restare presi | −6 |
 | Cella di riserva / ricarica al generatore | +25 / +25, una volta ciascuna |
 | Protezione vitale / avviso del Ponte / ipossia | sotto 30 / sotto 45 / sotto 15 |
+| Protezione vitale, prima della fuga | niente ascolti né traduzioni, faro al minimo, venature chiuse |
 
 ### 4.2 Gli invarianti, verificati
 
 | Invariante | Percorso | Esito |
 |---|---|---|
-| I1: il percorso critico consuma al massimo il 35% | `vivi.txt` | 38 su 150 (25%), aria finale 62 |
-| I2: chi ascolta tutto torna, ma solo con entrambe le ricariche | `tutto.txt` | «La prima nota», aria finale 29 |
-| I3: chi ascolta tutto non ha aria per il risuonatore | `limite-I3.txt` | «Due lettere» nella fuga |
-| I4: prima della fuga non si muore ascoltando | protezione vitale | nessun ascolto sotto il 30% |
+| I1: il percorso critico consuma al massimo il 35% | `vivi.txt` | 34 su 150 (23%), aria finale 66 |
+| I2: chi ascolta tutto torna, ma solo con entrambe le ricariche | `tutto.txt` | «La prima nota», aria finale 25, con le 21 voci (echi 14, risonanze 7) e tutte le traduzioni |
+| I3: chi ascolta tutto non ha aria per il risuonatore | `limite-I3.txt` | «Due lettere» sullo scafo, aria −5 |
+| I4: prima della fuga si muore solo portando il risuonatore | `groviglio-ostinato.txt`, 200 partite a caso | la protezione vitale ferma gli ascolti e abbassa il faro; nessuna morte fuori dalla fuga senza il risuonatore |
 | I5: ogni soglia si annuncia | tutti | 60, 30, 15 e l'avviso del Ponte |
 
 ### 4.3 Percorsi di collaudo
 
 | Percorso | Finale | Comandi |
 |---|---|---|
-| `soluzione.txt` = `vivi.txt` | «Vivi» | 77 |
-| `prima-nota.txt` | «La prima nota» | 136 |
-| `tutto.txt` | «La prima nota», ascoltando tutto | 146 |
-| `stiva-piena.txt` | «La stiva piena» | 79 |
-| `doppio-fondo.txt` | «Doppio fondo» | 80 |
-| `mani-vuote.txt` | «Mani vuote» | 76 |
+| `soluzione.txt` = `vivi.txt` | «Vivi» | 78 |
+| `prima-nota.txt` | «La prima nota» | 137 |
+| `tutto.txt` | «La prima nota», ascoltando tutto | 151 |
+| `stiva-piena.txt` | «La stiva piena» | 80 |
+| `doppio-fondo.txt` | «Doppio fondo» | 81 |
+| `mani-vuote.txt` | «Mani vuote» | 77 |
 | `due-lettere.txt` | «Due lettere», portando il risuonatore | 110 |
-| `limite-I3.txt` | «Due lettere», nella fuga | 149 |
+| `limite-I3.txt` | «Due lettere», nella fuga | 153 |
 | `prova-atti-I-II.txt` | (nessuno: ogni oggetto degli Atti I e II) | 101 |
+| `riprendi-risuonatore.txt` | «La stiva piena», con il risuonatore posato e ripreso | 82 |
+| `stiva-al-limite.txt` | «Vivi», entrando in stiva con l'aria a 2 | 94 |
+| `groviglio-ostinato.txt` | (nessuno: il groviglio non uccide prima della fuga) | 45 |
+| `vivaio-ritorno.txt` | (nessuno: il groviglio sbarra anche il ritorno) | 27 |
+
+Ogni percorso dichiara in testa quello che deve succedere (`# atteso: …`), e
+`python collaudo/regressioni.py --riprese` lo controlla, insieme alla prova di ripresa di ogni
+oggetto.
 
 Collaudo dei finali con tutti i percorsi: **6 finali dichiarati, 6 raggiunti**. Collaudatore
 statico: nessun avviso del linter, nessuna regola irraggiungibile. Esploratore (partite a caso dai
@@ -200,7 +211,14 @@ dell'aria che mostravano il valore del turno prima (strato 5).
 - Le etichette dei nodi valgono per tutta la storia: due personaggi non possono avere un nodo con lo
   stesso nome.
 - I consumi d'aria per turno sono dichiarati prima delle soglie, perché i demoni si valutano
-  nell'ordine in cui sono scritti.
+  nell'ordine in cui sono scritti. Per lo stesso motivo `aria.fav` è incluso per penultimo: le
+  soglie devono vedere anche quello che tolgono il groviglio, il primo contatto e la connessione.
+- La sala delle teche ha due sponde (lo stato `la sponda`): il groviglio sbarra `ovest` a chi
+  viene dalla gola e `su` a chi viene dal vivaio o, nella fuga, dalla gola del ritorno.
+- Disco, stele e nucleo sono «incastrati» fino alla prima presa, come il risuonatore: il testo
+  della prima presa non si ripete.
+- Il risuonatore diventa prendibile al terzo taglio: un oggetto messo in inventario da una regola
+  non è prendibile, se non lo si dichiara.
 
 ---
 
@@ -210,4 +228,4 @@ Niente del piano. Restano scelte che spettano all'autore:
 
 - rileggere il testo nelle trascrizioni e indicare le battute da cambiare;
 - decidere se pubblicare il gioco, per esempio con `favella1 esporta` (un HTML giocabile);
-- decidere se mettere il progetto sotto git, che ancora non c'è.
+- il progetto è sotto git dal 14 ottobre 2026.
