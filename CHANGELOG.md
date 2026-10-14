@@ -10,6 +10,14 @@ documenti di `progettazione/`.
 
 ### Aggiunto
 
+- **Le fondamenta del sistema visivo** (fase 3): i quattro caratteri dentro l’app (Newsreader, IBM
+  Plex Mono, Big Shoulders Stencil, Atkinson Hyperlegible Next; SIL OFL, dai pacchetti Fontsource,
+  solo il sottoinsieme latino, 457 KB); le atmosfere come variabili CSS da un modulo solo
+  (`app/src/stile/atmosfere.ts`): Santa Maria, visore, relitto con le sue zone, fuga, e la protezione
+  vitale e l’ipossia sopra; la forma, acciaio fino al primo contatto e membrana dopo; i contrasti di
+  ogni testo in 54 climi provati sopra 4,5:1 (`app/prove/atmosfere.test.ts`); il movimento ridotto
+  come attributo unico della radice; le opzioni di chi gioca (movimento, carattere, testo grande); il
+  campionario delle misure (`?campionario`).
 - **L’animatic dell’intro** (`app/src/intro/`, §10 di `progettazione/09-intro-storyboard.md`): tutte
   le scene sulla scaletta di 2:40,75, calcolata con la regola di lettura e provata contro la tabella
   dello storyboard; il motore della scala in un modulo (la scena E definitiva, e il margine di B); i

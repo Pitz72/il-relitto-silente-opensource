@@ -1,0 +1,120 @@
+/* ==========================================================================
+   Le fondamenta del sistema visivo (06-app-desktop.md, §2 e §5).
+   I colori arrivano da src/stile/atmosfere.ts come variabili CSS sulla radice
+   dello schermo; qui le si registra, così un cambio d'atmosfera dura un
+   secondo e mezzo invece di scattare (§5: «mai di colpo»).
+
+   Il movimento ridotto è un attributo solo, data-movimento="ridotto" sulla
+   radice (la preferenza del sistema, o l'opzione): ogni animazione decorativa
+   del gioco sta dietro data-movimento="pieno", e con «ridotto» non esiste.
+   Restano i passaggi di colore e di opacità, che non muovono niente.
+   ========================================================================== */
+@import "./caratteri.css";
+
+@property --fondo-1 { syntax: "<color>"; inherits: true; initial-value: #060708; }
+@property --fondo-2 { syntax: "<color>"; inherits: true; initial-value: #020303; }
+@property --lamina-1 { syntax: "<color>"; inherits: true; initial-value: #101213; }
+@property --lamina-2 { syntax: "<color>"; inherits: true; initial-value: #0b0d0e; }
+@property --testo { syntax: "<color>"; inherits: true; initial-value: #e6eae8; }
+@property --tenue { syntax: "<color>"; inherits: true; initial-value: #9fa9a6; }
+@property --accento { syntax: "<color>"; inherits: true; initial-value: #5fd4dc; }
+@property --accento-2 { syntax: "<color>"; inherits: true; initial-value: #8bf0a2; }
+@property --vena { syntax: "<color>"; inherits: true; initial-value: #5fd4dc; }
+@property --vena-2 { syntax: "<color>"; inherits: true; initial-value: #8bf0a2; }
+@property --spenta { syntax: "<color>"; inherits: true; initial-value: #2c5352; }
+@property --bordo { syntax: "<color>"; inherits: true; initial-value: #1e2626; }
+@property --alone { syntax: "<color>"; inherits: true; initial-value: transparent; }
+@property --fuoco { syntax: "<color>"; inherits: true; initial-value: #8bf0a2; }
+@property --rosso { syntax: "<color>"; inherits: true; initial-value: #ff5247; }
+@property --targa { syntax: "<color>"; inherits: true; initial-value: #918069; }
+@property --aria { syntax: "<color>"; inherits: true; initial-value: #8f9a97; }
+
+/* I caratteri e il corpo valgono per tutto il documento; le opzioni li
+   cambiano da qualunque antenato (la radice dello schermo). */
+:root {
+  --serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --mono: "IBM Plex Mono", Consolas, "Cascadia Mono", ui-monospace, monospace;
+  --stencil: "Big Shoulders Stencil", "Arial Narrow", Impact, sans-serif;
+  /* il corpo del testo: 21 px a 1920, mai sotto 17 (§4) */
+  --corpo: clamp(17px, 1.1vw, 22px);
+}
+/* L'alternativa di leggibilità (§5): Atkinson Hyperlegible Next per il testo. */
+[data-carattere="atkinson"] { --serif: "Atkinson Hyperlegible Next", Verdana, sans-serif; }
+/* Il testo più grande, nelle opzioni. */
+[data-testo="grande"] { --corpo: clamp(20px, 1.3vw, 26px); }
+
+/* .tema porta i colori di un clima (la radice del gioco, i riquadri del
+   campionario); .schermo è la radice a finestra intera. */
+.schermo {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+.tema {
+  /* il passaggio fra le atmosfere */
+  --passaggio: 1.6s;
+  color: var(--testo);
+  background: radial-gradient(ellipse 70% 80% at 30% 40%, var(--fondo-1), var(--fondo-2) 75%);
+  font-family: var(--serif);
+  font-size: var(--corpo);
+  line-height: 1.55;
+  font-kerning: normal;
+  font-variant-ligatures: common-ligatures;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  /* niente web (§2, principio 5): niente selezione per sbaglio, niente barre */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  cursor: default;
+  transition:
+    --fondo-1 var(--passaggio), --fondo-2 var(--passaggio), --lamina-1 var(--passaggio), --lamina-2 var(--passaggio),
+    --testo var(--passaggio), --tenue var(--passaggio), --accento var(--passaggio), --accento-2 var(--passaggio),
+    --vena var(--passaggio), --vena-2 var(--passaggio), --spenta var(--passaggio), --bordo var(--passaggio),
+    --alone var(--passaggio), --fuoco var(--passaggio), --rosso var(--passaggio), --targa var(--passaggio),
+    --aria 0.9s;
+}
+.tema *, .tema *::before, .tema *::after { box-sizing: border-box; }
+.tema * { scrollbar-width: none; }
+.tema *::-webkit-scrollbar { display: none; }
+
+/* I pulsanti del gioco: nessuno stile del sistema. */
+.tema button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.tema button:disabled { cursor: default; }
+
+/* Il fuoco sempre visibile, con lo stile del visore (§6.2): nell'acciaio un
+   filo squadrato, nella membrana un alone che segue la forma. */
+.tema :focus { outline: none; }
+.tema :focus-visible {
+  outline: 2px solid var(--fuoco);
+  outline-offset: 3px;
+}
+.tema[data-forma="membrana"] :focus-visible {
+  outline-offset: 4px;
+  box-shadow: 0 0 0 1px var(--fondo-2), 0 0 18px color-mix(in srgb, var(--fuoco) 45%, transparent);
+}
+
+/* Solo per i lettori di schermo. */
+.tema .solo-lettori {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Con il movimento ridotto i passaggi di colore restano, più brevi; ogni
+   animazione decorativa sta dietro [data-movimento="pieno"]. */
+.tema[data-movimento="ridotto"] { --passaggio: 0.6s; }
