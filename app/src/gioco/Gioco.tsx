@@ -15,6 +15,7 @@ import Lamina, { type VoceDiario } from "./lamina/Lamina";
 import Ramo from "./ramo/Ramo";
 import { accesiDa, attrezzoDelVerbo, bersagli, NESSUNA, type Azione, type Selezione } from "./ramo/azioni";
 import type { Filo } from "./ramo/geometria";
+import Visore, { CartelloAtto, useCartelloAtto } from "./visore/Visore";
 import "../stile/base.css";
 import "./gioco.css";
 
@@ -243,9 +244,14 @@ export default function Gioco() {
     };
   }, [gioca, opzioni.nomiToccabili]);
 
+  const [cartello, chiudiCartello] = useCartelloAtto(turno?.stato.atto);
   const clima = turno ? climaDi(turno.stato) : null;
   const stile = (clima ? variabiliCss(tavolozza(clima), turno!.stato.aria) : {}) as CSSProperties;
   const inMano = selezione.tipo === "inMano";
+  const ultima = diario[diario.length - 1];
+  const aria = turno?.stato.mostra.aria ? turno.stato.aria : null;
+  // il bordo del visore respira al ritmo del fiato, che accelera quando l'aria scende
+  const respiro = aria === null ? 4.4 : aria >= 60 ? 4.4 : aria >= 30 ? 3.4 : aria > 15 ? 2.2 : 6.4;
 
   return (
     <div
@@ -283,11 +289,25 @@ export default function Gioco() {
             palco={palco}
             azione={azione}
             altri={altri}
+            canaliChiusi={clima?.protezione}
             apriAltri={(filo, gruppo) => {
               setSelezione(NESSUNA);
               setAltri({ filo, gruppo });
             }}
           />
+        )}
+        {turno && clima && (
+          <Visore turno={turno} clima={clima} ridotto={ridotto} differenza={ultima?.differenza ?? null} battito={ultima?.chiave ?? 0} />
+        )}
+        {aria !== null && <div className="vetro" style={{ ["--respiro" as string]: `${respiro}s` }} aria-hidden="true" />}
+        {clima?.protezione && (
+          <div className="velo-protezione" role="status">
+            protezione vitale · canali secondari chiusi
+          </div>
+        )}
+        {clima?.ipossia && <div className="ipossia-velo" aria-hidden="true" />}
+        {cartello !== null && turno && (
+          <CartelloAtto atto={cartello} titolo={turno.stato.titolo_atto} acciaio={clima?.forma === "acciaio"} chiudi={chiudiCartello} />
         )}
         {!turno && !errore && <div className="avvio">{passo}</div>}
         {errore && <pre className="avvio errore">{errore}</pre>}

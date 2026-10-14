@@ -11,7 +11,7 @@ import type { Forma } from "../../stile/atmosfere";
 import type { Cosa } from "../../motore/tipi";
 import type { ModelloAzione } from "../../azione/modello";
 import { disponiFilo, disponiFiore, gambo, percorsoDelFilo, quantiStanno, type Disposizione, type Filo, type PostoPetalo } from "./geometria";
-import { baccelliDi, bersagli, GLIFO_TASTO, petaliDi, type Azione, type Baccello, type Fili, type Selezione, type VocePetalo } from "./azioni";
+import { baccelliDi, bersagli, CANALI_SECONDARI, GLIFO_TASTO, MOTIVO_CANALI, petaliDi, type Azione, type Baccello, type Fili, type Selezione, type VocePetalo } from "./azioni";
 import "./ramo.css";
 
 interface Props {
@@ -29,6 +29,8 @@ interface Props {
   /** «altri» apre il gruppo nascosto di un filo */
   apriAltri: (filo: Filo, gruppo: string) => void;
   altri: { filo: Filo; gruppo: string } | null;
+  /** la protezione vitale: l'ascolto e la traduzione sono spenti */
+  canaliChiusi?: boolean;
 }
 
 interface Pezzo extends Baccello {
@@ -38,7 +40,7 @@ interface Pezzo extends Baccello {
 
 const STRINGI = "+";
 
-export default function Ramo({ modello, cose, forma, selezione, accesi, costi, palco, azione, apriAltri, altri }: Props) {
+export default function Ramo({ modello, cose, forma, selezione, accesi, costi, palco, azione, apriAltri, altri, canaliChiusi = false }: Props) {
   const fili = useMemo(() => baccelliDi(modello, cose), [modello, cose]);
   const pezzi: Pezzo[] = useMemo(
     () => (["alto", "basso"] as Filo[]).flatMap((filo) => fili[filo].flatMap((g) => g.baccelli.map((b) => ({ ...b, filo, gruppo: g.nome })))),
@@ -234,8 +236,9 @@ export default function Ramo({ modello, cose, forma, selezione, accesi, costi, p
                     aria-haspopup={b.azione.tipo === "apri" ? "menu" : undefined}
                     aria-expanded={b.azione.tipo === "apri" ? aperta === b.cosa : undefined}
                     aria-keyshortcuts={b.tasto ?? undefined}
-                    aria-label={b.titolo ? `${b.etichetta}, ${b.titolo}` : undefined}
-                    title={b.titolo}
+                    disabled={canaliChiusi && b.attrezzo === "matrice"}
+                    aria-label={b.titolo ? `${b.etichetta}, ${b.titolo}` : canaliChiusi && b.attrezzo === "matrice" ? `${b.etichetta}: ${MOTIVO_CANALI.toLowerCase()}` : undefined}
+                    title={canaliChiusi && b.attrezzo === "matrice" ? MOTIVO_CANALI : b.titolo}
                     onClick={(e) => {
                       e.stopPropagation();
                       toccaBaccello(b);
@@ -302,6 +305,7 @@ export default function Ramo({ modello, cose, forma, selezione, accesi, costi, p
           </svg>
           {petali.map((p, i) => {
             const posto = postiPetali?.[i];
+            const chiuso = canaliChiusi && !!p.verbo && CANALI_SECONDARI.has(p.verbo);
             return (
               <button
                 key={p.chiave}
@@ -311,7 +315,10 @@ export default function Ramo({ modello, cose, forma, selezione, accesi, costi, p
                 }}
                 type="button"
                 role="menuitem"
-                className={`petalo anello-${posto?.anello ?? p.anello} ${p.comando && accesi.has(`comando:${p.comando}`) ? "acceso" : ""}`}
+                className={`petalo anello-${posto?.anello ?? p.anello} ${p.comando && accesi.has(`comando:${p.comando}`) ? "acceso" : ""}${chiuso ? " chiuso" : ""}`}
+                disabled={chiuso}
+                title={chiuso ? MOTIVO_CANALI : undefined}
+                aria-label={chiuso ? `${p.etichetta}: ${MOTIVO_CANALI.toLowerCase()}` : undefined}
                 style={posto ? { left: posto.x, top: posto.y, transitionDelay: `${i * 35}ms` } : { visibility: "hidden", left: -9999, top: 0 }}
                 onClick={(e) => {
                   e.stopPropagation();

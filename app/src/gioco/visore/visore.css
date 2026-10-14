@@ -1,0 +1,196 @@
+/* ==========================================================================
+   Il visore (06-app-desktop.md, §4.3, §4.4, §4.7; la tavola della membrana).
+   La colonna di destra del palco: la lente in alto, gli strumenti, la mappa.
+   Le forme si muovono, le cifre no; ogni stato è anche scritto.
+   ========================================================================== */
+.visore {
+  position: absolute;
+  left: 65.4cqw;
+  top: 2.6cqw;
+  width: 31cqw;
+  height: 41.6cqw;
+  z-index: 2;
+  color: var(--tenue);
+}
+
+/* la lente: la telecamera nell'acciaio, un occhio nella membrana */
+.lente { position: absolute; left: 0; top: 0; width: 100%; margin: 0; }
+.lente-vetro {
+  position: relative;
+  height: 15cqw;
+  background: #020505;
+  overflow: hidden;
+  clip-path: ellipse(50% 50% at 50% 50%);
+  transition: clip-path 3s cubic-bezier(.6, 0, .2, 1);
+}
+.lente-vetro::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 2.6cqw rgba(0, 0, 0, .9);
+  border: 1px solid var(--bordo);
+  pointer-events: none;
+  transition: border-radius 3s;
+}
+.visore[data-forma="acciaio"] .lente-vetro { clip-path: inset(0 round .3cqw); }
+.visore[data-forma="acciaio"] .lente-vetro::after { border-radius: .3cqw; box-shadow: inset 0 0 1cqw rgba(0, 0, 0, .6); }
+.lente-vetro canvas, .lente-vetro img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.lente-vetro img { filter: sepia(.55) saturate(1.2) hue-rotate(-8deg) brightness(.8); }
+.lente figcaption {
+  margin-top: .55cqw;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: max(10.5px, .66cqw);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--tenue);
+}
+
+/* gli strumenti: l'aria e i satelliti */
+.strumenti { position: absolute; left: 0; top: 18.4cqw; width: 100%; height: 13.6cqw; display: flex; gap: 1.6cqw; align-items: center; }
+
+.cellula { position: relative; flex: 0 0 13cqw; height: 13cqw; }
+.cellula svg { position: absolute; inset: -1.2cqw; width: calc(100% + 2.4cqw); height: calc(100% + 2.4cqw); overflow: visible; }
+.cellula .anello-fondo { fill: none; stroke: color-mix(in srgb, var(--bordo) 80%, #000); stroke-width: 7; }
+.cellula .anello { fill: none; stroke: var(--aria); stroke-width: 7; transition: stroke-dasharray .9s cubic-bezier(.3, .7, .3, 1), stroke .9s; }
+.cellula .tacca { stroke: var(--targa); stroke-width: 1.2; }
+.cellula .membrana-esterna { fill: url(#cellula-luce); stroke: var(--aria); stroke-opacity: .75; stroke-width: 1.6; filter: drop-shadow(0 0 6px color-mix(in srgb, var(--aria) 70%, transparent)); }
+.cellula .membrana-interna { fill: none; stroke: var(--aria); stroke-opacity: .22; stroke-width: 1; }
+.cellula .spora { fill: var(--aria); opacity: .5; }
+.cellula .cifra { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; line-height: 1; }
+.cellula .cifra b {
+  display: block;
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: max(30px, 3cqw);
+  color: var(--aria);
+  text-shadow: 0 0 1.2cqw color-mix(in srgb, var(--aria) 45%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+.cellula .cifra i { display: block; font-size: max(12px, .9cqw); color: var(--tenue); margin-top: .45cqw; }
+.visore[data-forma="acciaio"] .cellula .cifra i { font-style: normal; font-family: var(--mono); letter-spacing: .22em; font-size: max(10.5px, .66cqw); }
+.cellula.stato-ipossia .cifra b { color: var(--aria); }
+[data-movimento="pieno"] .cellula.stato-ipossia .cifra b { animation: intermittente 1.6s steps(2, jump-none) infinite; }
+@keyframes intermittente { 50% { opacity: .45; } }
+/* a ogni consumo la cifra scende con un segno che si dissolve (§4.3) */
+.cellula .differenza {
+  position: absolute;
+  right: -.4cqw;
+  top: 2.4cqw;
+  font-family: var(--mono);
+  font-size: max(13px, 1cqw);
+  color: var(--aria);
+  animation: differenza 2.4s ease-out both;
+  pointer-events: none;
+}
+@keyframes differenza { 0% { opacity: 0; } 12% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; } }
+[data-movimento="pieno"] .cellula .differenza { animation-name: differenza-sale; }
+@keyframes differenza-sale { 0% { opacity: 0; transform: translateY(.4cqw); } 12% { opacity: 1; transform: none; } 70% { opacity: 1; } 100% { opacity: 0; transform: translateY(-.8cqw); } }
+
+/* sulla Santa Maria, prima della tuta: la console di bordo */
+.di-bordo { flex: 1 1 auto; margin: 0; display: grid; grid-template-columns: auto 1fr; gap: .55cqw 1cqw; align-content: center; }
+.di-bordo dt { font-family: var(--mono); font-size: max(10.5px, .62cqw); letter-spacing: .2em; text-transform: uppercase; color: var(--tenue); padding-top: .12em; }
+.di-bordo dd { margin: 0; font-family: var(--mono); font-size: max(12px, .78cqw); color: var(--testo); }
+.di-bordo dd.rosso { color: var(--rosso); }
+.di-bordo + .satelliti:empty { display: none; }
+
+/* i satelliti */
+.satelliti { flex: 1; display: flex; flex-direction: column; gap: 1.1cqw; min-width: 0; }
+.satellite { display: flex; flex-wrap: wrap; align-items: center; gap: .3cqw .6cqw; }
+.satellite .etichetta { flex-basis: 100%; font-style: italic; font-size: max(12px, .9cqw); color: var(--tenue); }
+.visore[data-forma="acciaio"] .satellite .etichetta { font-style: normal; font-family: var(--mono); font-size: max(10.5px, .64cqw); letter-spacing: .2em; text-transform: uppercase; }
+.satellite .numero { font-family: var(--mono); font-size: max(12px, .86cqw); color: var(--testo); font-variant-numeric: tabular-nums; }
+.satellite.spento { opacity: .55; }
+.matrice .glifi { display: inline-flex; gap: .22cqw; }
+.matrice .glifi svg { width: 1.05cqw; height: 1.85cqw; overflow: visible; }
+.matrice .glifi path { fill: none; stroke: var(--spenta); stroke-width: 2.6; stroke-linecap: round; }
+.matrice .glifi svg.acceso path { stroke: var(--vena); filter: drop-shadow(0 0 2px color-mix(in srgb, var(--vena) 70%, transparent)); }
+.voci .spore { display: inline-flex; align-items: center; gap: .5cqw; min-height: 1.2cqw; flex-wrap: wrap; }
+.voci .eco { width: .62cqw; height: .62cqw; border-radius: 50%; background: var(--vena); box-shadow: 0 0 .7cqw var(--vena); }
+.voci .risonanza { width: .8cqw; height: .8cqw; transform: rotate(45deg); background: var(--vena-2); box-shadow: 0 0 .9cqw var(--vena-2); }
+.voci .nessuna { font-family: var(--mono); font-size: max(11px, .7cqw); color: var(--tenue); }
+.chiavi .incavi { display: inline-flex; gap: .6cqw; }
+.chiavi svg { width: 1.6cqw; height: 1.6cqw; overflow: visible; }
+.chiavi path { fill: none; stroke: var(--tenue); stroke-width: 1.6; }
+.chiavi svg.piena path { fill: color-mix(in srgb, var(--vena-2) 55%, transparent); stroke: var(--vena-2); filter: drop-shadow(0 0 3px var(--vena-2)); }
+
+/* la mappa: la costellazione delle stanze viste */
+.mappa { position: absolute; left: 0; top: 32.4cqw; width: 100%; margin: 0; }
+.mappa svg { display: block; width: 100%; height: 8cqw; overflow: visible; }
+.mappa .passaggio { fill: none; stroke: var(--vena); stroke-opacity: .45; stroke-width: 1.1; }
+.mappa .moncone { stroke: var(--vena); stroke-opacity: .28; stroke-width: 1; stroke-dasharray: 1.5 2; }
+.mappa .stanza { fill: var(--vena); filter: drop-shadow(0 0 3px color-mix(in srgb, var(--vena) 80%, transparent)); transition: fill .6s; }
+.mappa .stanza.qui { fill: var(--vena-2); }
+.mappa .impulso { fill: none; stroke: var(--vena-2); stroke-opacity: .6; transform-box: fill-box; transform-origin: center; }
+[data-movimento="pieno"] .mappa .impulso { animation: impulso 2.6s ease-out infinite; }
+@keyframes impulso { 0% { transform: scale(.55); stroke-opacity: .7; } 100% { transform: scale(1.6); stroke-opacity: 0; } }
+.visore[data-forma="acciaio"] .mappa .passaggio { stroke: var(--bordo); stroke-opacity: 1; }
+.visore[data-forma="acciaio"] .mappa .moncone { stroke: var(--bordo); stroke-opacity: 1; }
+.visore[data-forma="acciaio"] .mappa .stanza { fill: color-mix(in srgb, var(--lamina-1) 85%, #000); stroke: var(--targa); stroke-width: 1; filter: none; }
+.visore[data-forma="acciaio"] .mappa .stanza.qui { fill: var(--accento-2); stroke: var(--accento-2); }
+.mappa figcaption { margin-top: .35cqw; text-align: right; font-style: italic; font-size: max(11.5px, .82cqw); color: var(--tenue); }
+.visore[data-forma="acciaio"] .mappa figcaption { font-style: normal; font-family: var(--mono); font-size: max(10.5px, .62cqw); letter-spacing: .2em; text-transform: uppercase; }
+
+/* il cartello d'atto (§4.5): due secondi, sopra il gioco, saltabile */
+.cartello-atto {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: .6cqw;
+  background: radial-gradient(ellipse 60% 40% at 50% 50%, color-mix(in srgb, var(--fondo-2) 92%, transparent), color-mix(in srgb, var(--fondo-2) 55%, transparent));
+  animation: cartello 2.6s ease-in-out both;
+  cursor: pointer;
+}
+.cartello-atto .numero { font-weight: 300; font-style: italic; font-size: max(30px, 3.6cqw); color: color-mix(in srgb, var(--testo) 76%, var(--vena-2)); line-height: 1; }
+.cartello-atto .titolo { font-size: max(18px, 1.7cqw); color: var(--testo); letter-spacing: .02em; }
+.cartello-atto.acciaio .numero { font-style: normal; font-family: var(--stencil); font-weight: 700; letter-spacing: .3em; text-transform: uppercase; color: var(--targa); font-size: max(26px, 2.6cqw); }
+.cartello-atto.acciaio .titolo { font-family: var(--mono); text-transform: uppercase; letter-spacing: .24em; font-size: max(14px, 1.1cqw); }
+@keyframes cartello { 0% { opacity: 0; } 18% { opacity: 1; } 78% { opacity: 1; } 100% { opacity: 0; } }
+
+/* la protezione vitale: una fascia rossa sul visore (§4.3) */
+.velo-protezione {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2.6cqw;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: max(11px, .72cqw);
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  color: var(--rosso);
+  background: linear-gradient(transparent, color-mix(in srgb, var(--rosso) 14%, transparent), transparent);
+  pointer-events: none;
+}
+
+/* il bordo del visore, con la tuta: un vetro sottile che respira (§5) */
+.vetro {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+  border-radius: 2.2cqw;
+  box-shadow: inset 0 0 2.2cqw color-mix(in srgb, var(--aria) 16%, transparent), inset 0 0 0 1px color-mix(in srgb, var(--aria) 10%, transparent);
+  opacity: .8;
+}
+[data-movimento="pieno"] .vetro { animation: respiro-vetro var(--respiro, 4.4s) ease-in-out infinite; }
+@keyframes respiro-vetro { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+
+/* l'ipossia: la vignettatura e una leggera aberrazione ai bordi; la spaziatura vacilla */
+.ipossia-velo { position: absolute; inset: 0; z-index: 8; pointer-events: none; background: radial-gradient(ellipse at 40% 45%, transparent 42%, rgba(0, 0, 0, .72)); box-shadow: inset 2px 0 0 rgba(255, 70, 70, .08), inset -2px 0 0 rgba(70, 200, 255, .08); }
+[data-movimento="pieno"] .ipossia-velo { animation: vigna 3.6s ease-in-out infinite; }
+@keyframes vigna { 0%, 100% { opacity: .7; } 50% { opacity: 1; } }
+[data-movimento="pieno"][data-ipossia] .turno.attuale .b-paragrafo { animation: vacilla 4.4s ease-in-out infinite; }
+@keyframes vacilla { 0%, 100% { letter-spacing: 0; } 50% { letter-spacing: .03em; } }
+
+/* la fuga: un tremito leggero del telaio, mai del testo (§5) */
+[data-movimento="pieno"][data-atmosfera="fuga"] .visore, [data-movimento="pieno"][data-atmosfera="fuga"] .ramo { animation: trema 2.8s infinite; }
+@keyframes trema { 0%, 93%, 100% { translate: 0 0; } 94% { translate: .07cqw -.05cqw; } 96% { translate: -.09cqw .05cqw; } 98% { translate: .05cqw .07cqw; } }

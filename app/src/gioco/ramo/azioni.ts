@@ -162,6 +162,8 @@ export function attrezzoDelVerbo(attrezzi: readonly Attrezzo[], verbo: string): 
 
 export interface VocePetalo {
   chiave: string;
+  /** il verbo del petalo (la protezione vitale spegne l'ascolto e la traduzione) */
+  verbo?: string;
   etichetta: string;
   /** la nota piccola: l'attrezzo che fa il verbo, o quanta aria è costato l'ultima volta */
   nota: string | null;
@@ -193,10 +195,11 @@ export function petaliDi(menu: MenuCosa, m: ModelloAzione, costi: ReadonlyMap<st
   for (const v of menu.voci) {
     const anello = v.gruppo === "attrezzo" ? 2 : 1;
     if (v.comando !== null)
-      out.push({ chiave: `${v.verbo}:${v.comando}`, etichetta: v.etichetta, nota: nota(v), anello, azione: { tipo: "comando", comando: v.comando }, comando: v.comando });
+      out.push({ chiave: `${v.verbo}:${v.comando}`, verbo: v.verbo, etichetta: v.etichetta, nota: nota(v), anello, azione: { tipo: "comando", comando: v.comando }, comando: v.comando });
     if (v.secondi.length)
       out.push({
         chiave: `${v.verbo}:con`,
+        verbo: v.verbo,
         etichetta: v.comando !== null ? `${v.etichetta} con…` : v.etichetta,
         nota: null,
         anello,
@@ -210,6 +213,7 @@ export function petaliDi(menu: MenuCosa, m: ModelloAzione, costi: ReadonlyMap<st
     for (const v of attrezzo.verbi)
       out.push({
         chiave: `inMano:${v.verbo}`,
+        verbo: v.verbo,
         etichetta: `${v.etichetta}…`,
         nota: "in mano",
         anello: 2,
@@ -218,6 +222,12 @@ export function petaliDi(menu: MenuCosa, m: ModelloAzione, costi: ReadonlyMap<st
       });
   return out;
 }
+
+/** I verbi che la protezione vitale spegne: «Niente ascolto, niente traduzione,
+ *  finché non le dai altra aria» (aria.fav). Il pulsante resta, spento, e dice
+ *  perché (06, §4.3). */
+export const CANALI_SECONDARI: ReadonlySet<string> = new Set(["ascolta", "sintonizza", "traduci"]);
+export const MOTIVO_CANALI = "Protezione vitale: canali secondari chiusi";
 
 /** I bersagli possibili adesso: in «Usa con…» le seconde cose, con un attrezzo
  *  in mano le cose su cui si usa. Chiave: l'id della cosa; valore: il comando. */

@@ -38,6 +38,15 @@ documenti di `progettazione/`.
   tocchi con tutte le cose possibili accese; gli attrezzi in mano, con il mirino; i suggerimenti che
   accendono il loro pulsante per sei secondi; la tastiera del §6.2 (le uscite, i numeri delle
   risposte, Esc, le frecce dentro il fiore). La geometria è pura e provata (`app/prove/ramo.test.ts`).
+- **Il visore** (06, §4.3, §4.4, §4.7): la lente (la telecamera di bordo sulla Santa Maria, la
+  ricostruzione del multiscanner nel relitto, in attesa delle viste della fase 5); l’aria come anello
+  graduato nell’acciaio e come cellula che respira nella membrana, con il segno del consumo che si
+  dissolve; la matrice con i glifi che si accendono alle soglie, le voci come spore, i tre incavi
+  delle chiavi; prima della tuta, la console di bordo. I contatori compaiono quando il ponte dice
+  `mostra`. La mappa come costellazione delle stanze viste, orientata come la bussola del gioco, con
+  i monconi delle uscite mai prese. Il cartello d’atto, la fascia della protezione vitale (con
+  l’ascolto e la traduzione spenti e il motivo), il bordo del visore che respira, la vignettatura
+  dell’ipossia, il tremito della fuga che non tocca mai il testo.
 - **L’animatic dell’intro** (`app/src/intro/`, §10 di `progettazione/09-intro-storyboard.md`): tutte
   le scene sulla scaletta di 2:40,75, calcolata con la regola di lettura e provata contro la tabella
   dello storyboard; il motore della scala in un modulo (la scena E definitiva, e il margine di B); i

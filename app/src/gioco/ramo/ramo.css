@@ -173,3 +173,6 @@
 .petalo small { font-family: var(--mono); font-size: .7em; color: var(--tenue); letter-spacing: .04em; }
 .petalo.anello-2 { font-size: max(13px, .88cqw); }
 .ramo[data-forma="acciaio"] .petalo { border-radius: .2em; font-family: var(--mono); font-size: max(12.5px, .82cqw); background: var(--lamina-1); box-shadow: none; }
+
+/* la protezione vitale: l'ascolto e la traduzione spenti, con il motivo (§4.3) */
+.petalo.chiuso, .baccello:disabled { opacity: .4; cursor: not-allowed; border-style: dotted; }
