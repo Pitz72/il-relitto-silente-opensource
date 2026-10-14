@@ -66,7 +66,7 @@ export function verboDi(parola: string, verbi: ReadonlySet<string>): { verbo: st
   if (verbi.has(p)) return { verbo: p, pronome: false };
   const daInfinito = infinito(p);
   if (daInfinito && verbi.has(daInfinito)) return { verbo: daInfinito, pronome: false };
-  // «Lo studi meglio se lo ANALIZZI»: il congiuntivo dei verbi in -are, con il
+  // «Lo studi meglio se lo ANALIZZI»: il presente dei verbi in -are, seconda persona, con il
   // pronome davanti (la cosa è quella del comando appena dato)
   if (p.endsWith("i") && p.length > 4 && verbi.has(p.slice(0, -1) + "a")) return { verbo: p.slice(0, -1) + "a", pronome: true };
   for (const c of CLITICI) {

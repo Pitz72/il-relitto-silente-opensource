@@ -64,6 +64,9 @@ documenti di `progettazione/`.
   spengono, nella fuga si lacerano e lampeggiano, nell’ipossia sbiadiscono. Con il movimento ridotto
   sono ferme e compaiono in dissolvenza. Il generatore della prova tecnica è passato al gioco
   (`app/src/gioco/vene/`), e la pagina di prova lo misura da lì.
+- **Il documento della prima metà della fase 3** (`progettazione/14-fase-3-sistema-visivo.md`: che
+  cosa c’è, le decisioni prese, le misure, che cosa resta) e il prompt della sessione dopo
+  (`progettazione/15-prompt-prossima-sessione.md`).
 - **L’animatic dell’intro** (`app/src/intro/`, §10 di `progettazione/09-intro-storyboard.md`): tutte
   le scene sulla scaletta di 2:40,75, calcolata con la regola di lettura e provata contro la tabella
   dello storyboard; il motore della scala in un modulo (la scena E definitiva, e il margine di B); i
@@ -73,10 +76,13 @@ documenti di `progettazione/`.
 
 ### Cambiato
 
-- I suggerimenti riconoscono anche «se lo ANALIZZI» (il congiuntivo, con il pronome davanti): la
+- I suggerimenti riconoscono anche «se lo ANALIZZI» (il presente, seconda persona, con il pronome davanti): la
   proiezione del Ponte accende il suo Analizza.
 - `collaudo/menu.mjs` prende il ponte in Node da `collaudo/ponte.mjs`, che usa anche il collaudo della
   tipografia.
+- Il diario passa da Tab a D (06, §6.2): Tab resta al fuoco della tastiera.
+- La pagina di prova della fase 1 non è più la pagina principale dell’app: si apre con `?prova`, e
+  parte da sola con `RELITTO_PROVA`.
 
 ## [0.2.0] - 2026-10-14
 

@@ -2,7 +2,8 @@
 
 **Visione, stile, design e piano di fattibilità.** Versione 0.4, 14 ottobre 2026. Le decisioni
 prese dopo le tavole sono nel §17 e nel §18 e valgono su tutto il resto del documento; quelle della
-fase 2 (il modello d’azione) sono in `12-fase-2-ponte-e-modello.md`.
+fase 2 (il modello d’azione) sono in `12-fase-2-ponte-e-modello.md`, quelle della fase 3 (il sistema
+visivo) in `14-fase-3-sistema-visivo.md`.
 
 Due tavole visive accompagnano questo documento. `06-proposte-visive.html`: le tre direzioni di
 stile, lo schermo della direzione B nelle sue atmosfere, il visore dell’aria, il dialogo con Yusuf
@@ -366,9 +367,10 @@ insegna il verbo, e l’interfaccia lo indica.
 
 Tutto si fa senza mouse: ogni uscita ha il suo tasto (le frecce per i punti cardinali, `PagSu` e
 `PagGiù` per su e giù, `Inizio` e `Fine` per dentro e fuori, il tastierino per le direzioni
-intermedie: `TASTI_DELLE_USCITE` in `app/src/azione/modello.ts`), `Tab` per il diario, i numeri per le opzioni di dialogo, `Spazio` per completare il testo,
+intermedie: `TASTI_DELLE_USCITE` in `app/src/azione/modello.ts`), `D` per il diario, i numeri per le opzioni di dialogo, `Spazio` per completare il testo,
 `Invio` per confermare, `Esc` per la pausa, `F5`/`F9` per salvare e caricare, `F11` per lo schermo
-intero. Il fuoco è sempre visibile e ha lo stile del visore.
+intero. Il fuoco è sempre visibile e ha lo stile del visore. `Tab` resta al fuoco, come vuole
+l’accessibilità: per questo il diario è passato da `Tab` a `D` (`14-fase-3-sistema-visivo.md`, §5).
 
 ### 6.3 Che cosa garantisce che non ci si blocchi
 
@@ -598,16 +600,17 @@ sessioni di lavoro come quella di oggi.
 **Totale stimato: 17–22 sessioni.** Il gioco diventa giocabile nell’app alla fine della fase 3,
 a circa metà del lavoro; da lì in poi ogni fase aggiunge senza rompere.
 
-**Lo stato, al 14 ottobre 2026 (terza sessione).**
+**Lo stato, al 14 ottobre 2026 (quarta sessione).**
 
 | Fase | Stato |
 |---|---|
 | 0. Decisioni | chiusa; D14 (la musica) decisa nel §18 |
 | 1. Prova tecnica | **chiusa**: `08-fase-1-prova-tecnica.md`. Il motore vero gira in Pyodide dentro Tauri, la partita si gioca a soli pulsanti (14 percorsi su 14, anche con `collaudo/pulsanti.py`), l’audio in Rust tiene. Windows misurato; Linux costruito in WSL (.deb e AppImage) e provato in WSLg; manca la macchina Linux vera (istruzioni nel §8 del documento 08) |
 | 2. Ponte e modello d’azione | **chiusa**: `12-fase-2-ponte-e-modello.md`. Il ponte completo (eventi, pulsanti, cose con le loro regole, visore, suono, salvataggi a riprese); il modello dei menu in TypeScript (`app/src/azione/`). I sei finali si giocano con i soli menu (`collaudo/menu.mjs`, 14 percorsi su 14, 4,1 voci per cosa); 463 salvataggi su 463 tornano identici (`collaudo/salvataggi.py`); 84 eventi del suono su 84 (`collaudo/eventi.py`) |
+| 3. Sistema visivo | **a metà** (prima delle quattro sessioni previste, più la crescita della membrana): `14-fase-3-sistema-visivo.md`. I caratteri dentro l’app; le atmosfere da un modulo solo, con i contrasti provati in 54 climi; la lamina con la grammatica tipografica, provata su tutti i percorsi e su tutto il testo dei `.fav` (`collaudo/tipografia.mjs`); il ramo a due fili e il fiore su due anelli; il visore con i contatori che compaiono quando servono; il dialogo, la conferma, la pausa e le opzioni; i salvataggi su disco (sei posti e l’automatico, F5 e F9), provati nell’eseguibile vero; la membrana che cresce al primo contatto. Il gioco è la pagina principale dell’app. Restano il diario, il menu principale, la schermata dei riconoscimenti, la partita intera giocata a mano, la prova su Linux |
 | 4. Suono | progettata (`10-bibbia-sonora.md`) e provata: il prototipo dei tre ambienti è fatto e misurato (§8 della bibbia; ascolti in `ascolti/`). Il motore è in `app/src-tauri/src/mondo/`. Restano i letti in streaming, i cursori dei canali, il filo del Sintonizzatore, più respiri, i riverberi per convoluzione, la prova su Linux |
 | 6. Intro | storyboard 2 **approvato** (§18), con la tavola e il quadro finito della scala (`09-prova-di-look.html`). **L’animatic è fatto**, dentro l’app (`app/src/intro/`, §10 del 09): tutte le scene sulla scaletta di 2:40,75, la scala e il margine nel motore definitivo, il resto su quadri fermi; il salto, il movimento ridotto, i sottotitoli dei suoni. Prossimi passi: le scene definitive, la musica, la sincronia |
-| le altre | da cominciare. La prossima sul percorso critico è la 3 (il sistema visivo: il gioco si gioca tutto nell’app); l’animatic dell’intro (fase 6) può andare in parallelo |
+| le altre | da cominciare. Sul percorso critico la prossima è ancora la 3, la sua seconda metà; l’intro (fase 6) può andare in parallelo |
 
 Le versioni seguono le fasi (`sviluppo/VERSIONI.md`): la fase 1 chiusa è la **0.1.0**, la fase 2 la
 **0.2.0**.

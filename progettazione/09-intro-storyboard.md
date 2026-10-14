@@ -345,7 +345,7 @@ qualità ridotta). Nella revisione Spazio mette in pausa e le frecce spostano.
 
 | Scena | Nell’animatic | Che cosa manca per la versione finale |
 |---|---|---|
-| A · la traccia | la spia (accesa con il clic, il respiro della luce, i quattro colpi del battito che rallenta), i testi B0–B4 con le loro regole | la grana, il carattere Newsreader (ora c’è il ripiego, Georgia) |
+| A · la traccia | la spia (accesa con il clic, il respiro della luce, i quattro colpi del battito che rallenta), i testi B0–B4 con le loro regole | la grana (il carattere Newsreader c’è dalla fase 3: `14-fase-3-sistema-visivo.md`, §3) |
 | B · il margine | il motore della scala, quadro del margine: il cielo si apre intorno alla stella che prende il posto della spia; la nave entra da destra a 0:48,35 e alla fine della scena è a un quinto del quadro da sinistra | niente: il motore è quello definitivo |
 | C · il radar | il quadro fermo della tavola (`s_01_b` e il suo radar), con il radar, gli echi, l’arco del settore muto e la spia rossa disegnati dal vivo sopra lo schermo verde; il cambio di fuoco è una dissolvenza verso il quadro dell’oblò, con una lieve spinta; le quattro stelle che si spengono sono disegnate sopra | il cambio di fuoco vero sullo stesso quadro (il quadro dell’oblò ora è un’inquadratura più stretta) |
 | D · il faro | il quadro del faro della tavola, in dissolvenza a 1:18,2 | il fascio che si sposta di pochi gradi e cerca |
