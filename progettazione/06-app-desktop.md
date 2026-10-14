@@ -1,10 +1,16 @@
 # Il Relitto Silente — l'app desktop
 
-**Visione, stile, design e piano di fattibilità.** Versione 0.1, 14 ottobre 2026.
+**Visione, stile, design e piano di fattibilità.** Versione 0.2, 14 ottobre 2026.
 
-La tavola visiva che accompagna questo documento è `06-proposte-visive.html`: le tre direzioni di
-stile, lo schermo di gioco nelle quattro atmosfere, il visore dell'aria, il dialogo con Yusuf e un
-abbozzo animato della sequenza d'apertura.
+Due tavole visive accompagnano questo documento. `06-proposte-visive.html`: le tre direzioni di
+stile, lo schermo della direzione B nelle sue atmosfere, il visore dell'aria, il dialogo con Yusuf
+e un abbozzo animato della sequenza d'apertura. `06-proposta-membrana.html`: la direzione C in
+schermate complete, con la membrana che cresce, il menu a fiore, l'aria come cellula e il dialogo
+con l'Anziano.
+
+Dalla 0.1: l'autore preferisce la direzione C. Rivista con la membrana che cresce (§3), la C è
+diventata anche la proposta di questo documento; il §4 descrive lo schermo nella forma B, che
+resta valida come struttura (testo, strumenti, azioni), e il §4.7 dice che cosa cambia con la C.
 
 ---
 
@@ -24,10 +30,10 @@ la cifra dell'aria è il cuore dello schermo: lo colora, lo fa respirare, e quan
 | Piattaforma | Tauri 2 (Rust) + React 19 + TypeScript + Vite; il motore FAVELLA 1.4.4 in Python, dentro Pyodide |
 | Sistemi | Windows 10/11 (installer e versione portatile), Linux (AppImage, .deb; Ubuntu 22.04 e successive) |
 | Interazione | Solo pulsanti. Prova fatta: i 1.294 comandi dei 14 percorsi di collaudo si giocano tutti con i pulsanti del motore |
-| Stile consigliato | «Visore»: l'interfaccia è il visore della tuta, con una colonna di testo da libro al centro |
+| Stile proposto | «Membrana» (C, rivista): sulla Santa Maria l'interfaccia è acciaio; al primo contatto il relitto la colonizza e la fa crescere a modo suo. Da confermare (D11) |
 | Suono | Motore audio in Rust (`kira`): ambienti, respiro legato all'aria, il re del reattore come filo musicale |
 | Intro e outro | Animate in codice (canvas e WebGL), sincronizzate alla colonna sonora; l'intro nasconde il caricamento del motore |
-| Stima | 16–20 sessioni di lavoro, in undici fasi (§14). Il rischio maggiore è Linux (WebKitGTK), e la fase 1 serve a toglierlo per primo |
+| Stima | 17–22 sessioni di lavoro, in undici fasi (§14). Il rischio maggiore è Linux (WebKitGTK), e la fase 1 serve a toglierlo per primo |
 
 ---
 
@@ -134,12 +140,31 @@ colori.
 - **Riferimenti**: le venature e la «madreperla» delle pareti del gioco, *Heaven's Vault* per i
   glifi da tradurre.
 - **Pro**: la più originale.
-- **Contro**: non funziona sulla Santa Maria, che è acciaio; è la più costosa da animare e la
-  meno leggibile per i contatori.
+- **Contro** (nella prima stesura): non funziona sulla Santa Maria, che è acciaio; è la più
+  costosa da animare e la meno leggibile per i contatori.
 
-**Raccomandazione: B**, con due prestiti. Da A la colonna del testo e la pagina del registro, che
-torna in ogni finale. Da C le venature: nel relitto i bordi del visore prendono la luce delle
-pareti, e il seme pulsa con il verde di C.
+**C rivista: la membrana cresce.** I tre limiti si risolvono così (schermate complete in
+`06-proposta-membrana.html`):
+
+- **La Santa Maria è il punto di partenza.** La membrana non c'è dall'inizio. Nell'Atto I
+  l'interfaccia è acciaio: angoli, targhe a stampo, ambra, l'aria come anello preciso. Al primo
+  contatto nel vestibolo («per farsi sentire beve dalla tua stessa batteria») le venature entrano
+  dai bordi, gli angoli della lamina del testo si arrotondano, la lente della vista diventa un
+  occhio, l'anello dell'aria diventa una cellula. La nave che ascolta, il canale «aperto da
+  remoto», la batteria che beve: l'interfaccia lo racconta. Nella protezione vitale le venature si
+  spengono; nella fuga si lacerano e lampeggiano rosse; nel finale «Vivi», di nuovo sulla Santa
+  Maria, resta una venatura verde sola: quella del seme.
+- **La leggibilità.** Le forme si muovono, le cifre no: numeri mono grandi dentro le forme, ogni
+  stato anche scritto. La lamina del testo respira solo ai bordi, in diciotto secondi; le
+  venature crescono dai bordi dello schermo e girano intorno al testo e agli strumenti, senza
+  attraversarli mai.
+- **Il costo.** Le venature non sono disegnate a mano: le genera un algoritmo di crescita a
+  ramificazioni, con le zone da evitare. Rispetto alla B, una o due sessioni in più nella fase 3;
+  le venature su canvas entrano nella prova di prestazioni su Linux della fase 1.
+
+**Proposta: C rivista**, che è la preferita dell'autore e, con la crescita, anche la più forte per
+la storia: lo schermo cambia natura insieme a chi gioca. La B resta l'alternativa più economica e
+più prudente; la struttura dello schermo (§4) vale per tutte e due.
 
 ---
 
@@ -248,6 +273,23 @@ all'Anziano. Il primo ha già il suo avviso nel testo; il secondo merita una con
   traduzioni lette alla soglia più alta raggiunta.
 - **Salvataggi**: sei posti più uno automatico a ogni cambio di stanza. Si salva con F5 e si carica
   con F9, come nel Viaggiatore.
+
+### 4.7 Che cosa cambia con la C
+
+La struttura resta (testo a sinistra, vista e strumenti a destra, azioni in basso); cambia la
+forma, e con la forma alcune interazioni.
+
+| Elemento | Direzione B | Direzione C |
+|---|---|---|
+| Testo | colonna in un riquadro | lamina dai bordi irregolari, che respira lentamente; nell'acciaio è un riquadro con l'intestazione del registro |
+| Vista | riquadro | lente ovale, un occhio; nell'acciaio il riquadro della telecamera |
+| Aria | anello, e la cifra nella barra del visore | cellula che respira e si contrae; nell'acciaio un anello graduato |
+| Strumenti | righe di telemetria | satelliti intorno alla cellula: la matrice come glifi, le voci come spore |
+| Mappa | stanze come riquadri | una costellazione: le stanze sono punti, i passaggi venature |
+| Azioni | barra con bussola e pulsanti | un ramo che attraversa il fondo dello schermo; le cose sono baccelli, le uscite «bocche» |
+| Menu di una cosa | pannello a destra | un fiore: i verbi si aprono a ghirlanda sopra il baccello, nella fascia libera sotto il testo |
+| Suggerimenti in maiuscolo | pulsante acceso | la parola si accende di luce propria, come le venature |
+| Dialogo con l'Anziano | carte numerate | la figura fatta di punti, i semi come risposte |
 
 ---
 
@@ -538,7 +580,7 @@ sessioni di lavoro come quella di oggi.
 | **0. Decisioni** | Questo documento; le scelte D11–D20 (§16); la cartella dell'app | le decisioni sono prese | — |
 | **1. Prova tecnica** | Tauri 2 + React + Vite; Pyodide con il motore 1.4.4 e il gioco; un ponte minimo; un suono da `kira`; una pagina con canvas e WebGL. Su Windows e su Linux (WSL per costruire, una macchina vera per provare) | il percorso «Vivi» si gioca con i pulsanti dentro la finestra Tauri, su tutti e due i sistemi; si misurano avvio, fotogrammi, audio | 1–2 |
 | **2. Ponte e modello d'azione** | `ponte.py` per la 1.4 (eventi, pulsanti, stato del visore, salvataggi); il modello dei menu (§6) in TypeScript, puro e provabile; la tabella delle azioni di situazione; i suggerimenti in maiuscolo; il collaudo dei finali con i soli menu | i sei finali si giocano in CPython con il solo modello d'azione; salva e carica tornano allo stesso stato | 2 |
-| **3. Sistema visivo** | caratteri, variabili, componenti: colonna del testo con la grammatica tipografica, visore, barra delle azioni, menu degli oggetti, dialogo, conferma, diario, menu e opzioni; le quattro atmosfere e l'ipossia | il gioco si gioca dall'inizio alla fine nell'app, con lo stile definitivo, senza suoni né cinematiche | 3 |
+| **3. Sistema visivo** | caratteri, variabili, componenti: lamina del testo con la grammatica tipografica, strumenti, ramo delle azioni e menu a fiore, dialogo, conferma, diario, menu e opzioni; l'acciaio, la crescita della membrana, le atmosfere e l'ipossia; il generatore delle venature | il gioco si gioca dall'inizio alla fine nell'app, con lo stile definitivo, senza suoni né cinematiche | 4 |
 | 4. Suono | motore audio in Rust, protocollo dei segnali, il re, il fiato, gli ambienti, il brusio, gli effetti, il mix e le opzioni | ogni stanza, ogni attrezzo e ogni evento ha il suo suono; il fiato segue l'aria | 2 |
 | 5. Riferimenti visivi | le telecamere di bordo (trattamento delle immagini del sequel, la cuccetta da rifare), le ricostruzioni dello scanner per le 18 stanze del relitto, il comunicatore di Yusuf, l'eco, l'Anziano, la scatola nera | ogni stanza e ogni dialogo ha la sua vista, con i suoi stati | 2 |
 | **6. Intro** | storyboard approvato, animatic, scene definitive, sincronia con la musica, caricamento del motore dietro | l'intro scorre, si salta, e consegna la plancia | 2–3 |
@@ -547,7 +589,7 @@ sessioni di lavoro come quella di oggi.
 | **9. Pacchetti** | icone, installer NSIS, portatile, AppImage, .deb; registro tecnico; aggiornamento automatico firmato; `--autoverifica`; CI su GitHub Actions (Windows e Ubuntu 22.04) | la CI costruisce i pacchetti e li autoverifica (avvia, gioca, salva, ricarica) | 1–2 |
 | 10. Prova finale | partite complete su hardware vero: Windows 10 e 11, Ubuntu 22.04 e 24.04, una Fedora, una macchina con NVIDIA; una partita di qualcuno che non conosce il gioco | nessun difetto bloccante; la release 1.0 | 1+ |
 
-**Totale stimato: 16–20 sessioni.** Il gioco diventa giocabile nell'app alla fine della fase 3,
+**Totale stimato: 17–22 sessioni.** Il gioco diventa giocabile nell'app alla fine della fase 3,
 a circa metà del lavoro; da lì in poi ogni fase aggiunge senza rompere.
 
 **Che cosa serve dall'autore.** Le decisioni del §16; l'approvazione dello storyboard dell'intro
@@ -577,7 +619,7 @@ Si aggiunge a quello del gioco, che resta com'è.
 
 | # | Domanda | Proposta |
 |---|---|---|
-| D11 | Quale stile? | B, «Visore», con la colonna del Registro e le venature della Membrana |
+| D11 | Quale stile? | C, «Membrana», rivista: la membrana cresce dal primo contatto (preferita dall'autore). B come alternativa prudente |
 | D12 | I riferimenti visivi | telecamere di bordo con le immagini del sequel per la Santa Maria; ricostruzioni dello scanner in codice per il relitto |
 | D13 | L'audio | in Rust con `kira`; il Web Audio come piano B |
 | D14 | La musica | un tema composto per intro, Anziano e outro (come il brano del Viaggiatore), tutto il resto in codice; il re come nota base |
