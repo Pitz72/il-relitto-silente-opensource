@@ -8,6 +8,8 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+## [0.1.0] - 2026-10-14
+
 ### Aggiunto
 
 - **Il gioco, rifatto.** Il remake de «Il Relitto Silente» in FAVELLA 1.4.4: 23 stanze, 93 oggetti,
@@ -21,3 +23,10 @@ documenti di `progettazione/`.
 - **Il collaudo a pulsanti** (`collaudo/pulsanti.py`): i 14 percorsi giocati con i soli pulsanti del
   motore, attraverso lo stesso ponte dell’app.
 - **Le versioni**: `versione.json`, `sviluppo/VERSIONI.md`, `strumenti/versione.mjs`, questo registro.
+- **L’intro, storyboard 2** (`progettazione/09-intro-storyboard.md`): otto scene, 2:40, i testi fermi
+  il tempo di leggerli. La tavola dei fotogrammi chiave e il quadro finito della scala in WebGL2
+  (`09-intro-tavola.html`, `09-prova-di-look.html`); gli strumenti con cui sono fatti in
+  `strumenti/intro/`. In attesa di approvazione.
+- **La bibbia sonora** (`progettazione/10-bibbia-sonora.md`): le 23 stanze e gli eventi, le cinque
+  strade del suono con la fisica del vuoto, il fiato, il brusio, le fonti e le licenze. Il registro
+  delle licenze dei suoni (`audio/LICENZE.md`).
