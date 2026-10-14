@@ -12,6 +12,7 @@
     "prebuild": "node scripts/sincronizza.mjs",
     "build": "tsc --noEmit && vite build",
     "anteprima": "vite preview",
+    "prove": "node --test prove/azione.test.ts",
     "tauri": "tauri"
   },
   "dependencies": {
