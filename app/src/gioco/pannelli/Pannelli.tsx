@@ -15,10 +15,11 @@ function useTrappola(ref: React.RefObject<HTMLElement | null>) {
     const el = ref.current;
     if (!el) return;
     const prima = document.activeElement as HTMLElement | null;
-    el.querySelector<HTMLElement>("[data-primo], button:not(:disabled)")?.focus({ preventScroll: true });
+    el.querySelector<HTMLElement>("[data-primo], button:not(:disabled):not([tabindex='-1'])")?.focus({ preventScroll: true });
     const tab = (e: KeyboardEvent) => {
       if (e.key !== "Tab") return;
-      const tutti = [...el.querySelectorAll<HTMLElement>("button:not(:disabled), [tabindex='0']")];
+      // le schede non scelte (tabindex −1) si raggiungono con le frecce, non con Tab
+      const tutti = [...el.querySelectorAll<HTMLElement>("button:not(:disabled):not([tabindex='-1']), [tabindex='0']")];
       if (!tutti.length) return;
       const i = tutti.indexOf(document.activeElement as HTMLElement);
       const prossimo = e.shiftKey ? (i <= 0 ? tutti.length - 1 : i - 1) : i === tutti.length - 1 ? 0 : i + 1;
@@ -33,7 +34,7 @@ function useTrappola(ref: React.RefObject<HTMLElement | null>) {
   }, [ref]);
 }
 
-function Pannello({ forma, titolo, children, classe = "", etichetta }: { forma: Forma; titolo?: string; children: ReactNode; classe?: string; etichetta?: string }) {
+export function Pannello({ forma, titolo, children, classe = "", etichetta }: { forma: Forma; titolo?: string; children: ReactNode; classe?: string; etichetta?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   useTrappola(ref);
   return (
@@ -111,6 +112,7 @@ export function Conferma({ domanda, forma, chiudi }: { domanda: Domanda; forma: 
 // ----------------------------------------------------------------------------
 export interface VociPausa {
   riprendi: () => void;
+  diario: () => void;
   salva: () => void;
   carica: () => void;
   annulla: (() => void) | null;
@@ -125,6 +127,9 @@ export function Pausa({ forma, voci }: { forma: Forma; voci: VociPausa }) {
       <nav className="voci-pausa">
         <button type="button" data-primo="" onClick={voci.riprendi}>
           Riprendi <span className="tasto">Esc</span>
+        </button>
+        <button type="button" onClick={voci.diario}>
+          Diario <span className="tasto">D</span>
         </button>
         <button type="button" onClick={voci.salva}>
           Salva <span className="tasto">F5</span>

@@ -1,7 +1,8 @@
-# Fase 3 — il sistema visivo, prima metà
+# Fase 3 — il sistema visivo
 
 **Che cosa si è costruito, che cosa si è deciso, che cosa si è misurato.** 14 ottobre 2026, quarta
-sessione. È la prima metà della fase 3 del piano (`06-app-desktop.md`, §14), che si chiude quando il
+sessione, per la prima metà (§1–§11); dal 15 ottobre, quinta sessione, la seconda (§12 in poi). È la
+fase 3 del piano (`06-app-desktop.md`, §14), che si chiude quando il
 gioco si gioca dall’inizio alla fine nell’app, con lo stile definitivo, senza suoni né cinematiche.
 La fase non è chiusa: la versione resta la 0.2.0 finché non lo sarà (sarà la 0.3.0).
 
@@ -234,3 +235,64 @@ fotogramma passano solo le luci (il modo economico misurato nella fase 1).
   «nave»), il cartello d’atto, i testi lunghi nel dialogo, la scala a 1280 × 720 con il testo grande.
 - **Le prestazioni**: i livelli di qualità delle venature, la prova su Linux.
 - **Un passaggio con un lettore di schermo.**
+
+---
+
+## 12. Il diario (quinta sessione)
+
+Si apre con D, dalla pausa o con il pulsante «diario» in alto; si chiude con D o con Esc. Ha quattro
+pagine, e una pagina compare solo quando ha qualcosa, come i contatori del visore (06, §4.3).
+
+| Pagina | Che cosa | Da dove |
+|---|---|---|
+| Trascrizione | tutta la partita: il prologo, la prima stanza, poi ogni comando con la sua risposta e il suo costo in aria; un cartello dove cambia l’atto | sempre |
+| Prima di te, poi L.V. | il fascicolo: le tracce di chi è passato prima, nell’ordine della sua strada (la giuntura, le tacche, il cavo guida, l’uomo, la sua voce) | dalla prima traccia |
+| Voci | le voci ascoltate, da rileggere, nell’ordine in cui le hai sentite | dalla prima eco |
+| Traduzioni | i reperti decifrati, e ogni iscrizione nella lettura fatta con la matrice più avanti | dalla prima lettura |
+
+**La cronaca sta nel ponte.** Il ponte tiene una voce per ogni comando della sequenza effettiva del
+motore (`_voce_di_cronaca` in `ponte.py`): gli eventi del turno, il costo in aria, la stanza, l’atto, e
+i segni con cui l’app compone le pagine. I segni si trovano come quelli del suono, per differenza fra
+prima e dopo e dal comando, mai dal testo: una traccia di L.V. è uno dei cinque stati che la segnano
+(`TRACCE_LV`), una voce è un’eco o una risonanza in più, una lettura è «traduci» su una delle sei
+iscrizioni quando il traduttore è acceso (non nella protezione vitale, non sulla mappa stellare
+spenta), un reperto è uno dei quattro che diventa «decifrato», le iniziali sono la placca esaminata.
+L’app riceve a ogni turno la voce nuova e la lunghezza della cronaca (`cronaca` nel turno), e le pagine
+le compone `app/src/gioco/diario/pagine.ts`, puro.
+
+- **Deciso: la cronaca segue la sequenza effettiva del motore** (`_registro_comandi`). Un turno
+  disfatto con ANNULLA esce anche dal diario, con la traccia che aveva trovato; dopo un caricamento la
+  cronaca si ricostruisce rigiocando la sequenza su una copia, raccogliendo ciò che il caricamento del
+  motore rigioca in silenzio. Il salvataggio resta com’era, senza il testo della partita: costa circa
+  40 ms su un caricamento di 230 (in CPython, il percorso «tutto», 151 comandi). Il comando si legge
+  come il motore l’ha registrato («esci» è «fuori»), così il diario è lo stesso prima e dopo un
+  caricamento; una scelta del dialogo si legge con le sue parole.
+- **Deciso: il fascicolo non dice quante tracce mancano**: niente posti vuoti, niente numeri. Le
+  tracce stanno nell’ordine della strada di L.V. (`vita.fav`), non in quello in cui le trovi.
+- **Deciso: il nome L.V. lo dice il gioco, non il diario.** Le iniziali stanno solo sulla placca della
+  serra; finché il giocatore non l’ha esaminata, la pagina si chiama «Prima di te» e il fascicolo
+  «Qualcuno, prima di te». Il percorso «tutto» non esamina la placca, e il suo diario non dice mai L.V.
+- **Deciso: una lettura per iscrizione**, quella fatta con la matrice più avanti (a pari matrice,
+  l’ultima), con la soglia scritta accanto («matrice al 18%», «allo 0%»). I reperti, tutti, nell’ordine
+  in cui li hai decifrati.
+- **Deciso: nelle schede il nome della stanza non si ristampa** (lo dice la riga sopra, con il turno);
+  nella trascrizione sì, perché è la partita come l’hai letta.
+- **Deciso: i suggerimenti del passato restano accesi ma non si premono** (`TestoInerte` nella lamina):
+  il loro momento è passato, e la grammatica li riconosce lo stesso, con tutte le parole dei verbi che
+  il motore conosce (`verbi` nella compilazione).
+- **Deciso: il diario è una pagina**, larga quanto la colonna della lamina e i suoi margini (41 em),
+  non un pannello a tutto schermo; la trascrizione si apre sull’ultimo turno, le altre pagine
+  dall’inizio. Le schede si scorrono con le frecce (il modello ARIA delle schede); Tab resta dentro il
+  pannello, e le schede non scelte si raggiungono con le frecce.
+- **Deciso: «diario» e «menu» hanno due pulsanti discreti** sopra l’angolo destro della lamina, per
+  chi gioca con il mouse: fino a qui la pausa si apriva solo con Esc. Il 06 metteva il «menu» nella
+  barra del visore (§4). Nella pausa c’è la voce «Diario», e D funziona anche da lì.
+
+Un difetto trovato strada facendo: le righe per i lettori di schermo, che sono assolute, dentro un
+foglio che scorre si appoggiavano al velo del pannello e allungavano lo schermo (che poteva scorrere di
+lato a un `scrollIntoView`). Il foglio ha adesso la sua posizione.
+
+| Prova | Esito |
+|---|---|
+| `python collaudo/diario.py` | **nuovo**: 14 percorsi su 14, 1.291 voci; la cronaca ricostruita dopo un caricamento è uguale a quella giocata, voce per voce; ANNULLA toglie il turno disfatto; le iniziali solo con la placca; la protezione vitale non è una lettura; il diario non cambia la partita |
+| `npm --prefix app run prove` | 63 su 63 (sette nuove, `prove/diario.test.ts`) |

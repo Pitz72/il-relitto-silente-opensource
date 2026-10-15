@@ -3,12 +3,13 @@
 //  Il motore vero in Pyodide; il modello d'azione fa i menu; la grammatica
 //  tipografica veste il testo; le atmosfere seguono lo stato del gioco.
 //  Le modalità (§4.5): l'esplorazione, il dialogo, la conferma, il cartello
-//  d'atto; sopra, la pausa (Esc), i salvataggi (F5, F9), le opzioni.
+//  d'atto; sopra, la pausa (Esc), il diario (D), i salvataggi (F5, F9), le
+//  opzioni.
 // ============================================================================
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { caricaMotore, type Motore } from "../motore/runtime";
-import type { Turno } from "../motore/tipi";
+import type { Evento, Turno, VoceCronaca } from "../motore/tipi";
 import { costruisciModello, type ModelloAzione, type SceltaModello } from "../azione/modello";
 import { AZIONI_DI_SITUAZIONE } from "../azione/situazione";
 import { climaDi, tavolozza, variabiliCss } from "../stile/atmosfere";
@@ -21,6 +22,8 @@ import { accesiDa, attrezzoDelVerbo, bersagli, NESSUNA, type Azione, type Selezi
 import type { Filo } from "./ramo/geometria";
 import Visore, { CartelloAtto, useCartelloAtto } from "./visore/Visore";
 import Dialogo from "./dialogo/Dialogo";
+import Diario from "./diario/Diario";
+import type { IdPagina } from "./diario/pagine";
 import Vene from "./vene/Vene";
 import { Avviso, Conferma, PannelloOpzioni, Pausa, Salvataggi, useAvviso, type Domanda } from "./pannelli/Pannelli";
 import { archivio, type IdPosto, type Posto } from "./salvataggi";
@@ -57,7 +60,7 @@ const semeNuovo = () => 1 + Math.floor(Math.random() * 2147483646);
 /** Il congedo dell'Anziano: il punto di non ritorno che chiede una conferma (D16). */
 const CONGEDO = /^\[Chiudi gli occhi/;
 
-type Pannello = null | "pausa" | "salva" | "carica" | "opzioni";
+type Pannello = null | "pausa" | "diario" | "salva" | "carica" | "opzioni";
 
 /** La prova dei salvataggi nell'eseguibile vero (RELITTO_PROVA=salvataggi):
  *  sei comandi, il salvataggio nel posto 6 attraverso il processo Tauri,
@@ -73,6 +76,11 @@ export default function Gioco({ prova }: { prova?: "salvataggi" } = {}) {
   const [passo, setPasso] = useState("Avvio…");
   const [turno, setTurno] = useState<Turno | null>(null);
   const [diario, setDiario] = useState<VoceDiario[]>([]);
+  /** il diario (D): il prologo con la prima stanza, la cronaca del ponte, la pagina aperta */
+  const [aperturaDiario, setAperturaDiario] = useState<readonly Evento[]>([]);
+  const [cronaca, setCronaca] = useState<readonly VoceCronaca[]>([]);
+  const [paginaDiario, setPaginaDiario] = useState<IdPagina>("trascrizione");
+  const [verbi, setVerbi] = useState<ReadonlySet<string>>(new Set());
   const [completa, setCompleta] = useState(0);
   const [selezione, setSelezione] = useState<Selezione>(NESSUNA);
   const [altri, setAltri] = useState<{ filo: Filo; gruppo: string } | null>(null);
@@ -107,6 +115,8 @@ export default function Gioco({ prova }: { prova?: "salvataggi" } = {}) {
         { chiave: contatore.current++, comando: null, differenza: null, blocchi: blocchiDelTurno(primo.apertura ?? []) },
         { chiave: contatore.current++, comando: null, differenza: null, blocchi: blocchiDi(primo, m, opzioni.nomiToccabili) },
       ]);
+      setAperturaDiario([...(primo.apertura ?? []), ...primo.eventi]);
+      setCronaca([]);
     },
     [opzioni.nomiToccabili],
   );
@@ -120,6 +130,7 @@ export default function Gioco({ prova }: { prova?: "salvataggi" } = {}) {
         const { motore } = await caricamento;
         if (!vivo) return;
         motoreRef.current = motore;
+        setVerbi(new Set(motore.compilazione.verbi ?? []));
         comincia(motore.avvia(semeNuovo()));
       } catch (e) {
         setErrore(String(e instanceof Error ? (e.stack ?? e.message) : e));
@@ -173,6 +184,8 @@ export default function Gioco({ prova }: { prova?: "salvataggi" } = {}) {
         setSelezione(NESSUNA);
         setAltri(null);
         setDiario([{ chiave: contatore.current++, comando: null, differenza: null, blocchi: blocchiDi(r.turno, mod, opzioni.nomiToccabili) }]);
+        setAperturaDiario(r.diario.apertura);
+        setCronaca(r.diario.cronaca);
         if (r.esito === "identica") mostraAvviso(posto === "automatico" ? "Partita ripresa dall’ultima stanza." : `Partita caricata dal posto ${posto}.`);
         else mostraAvviso(r.messaggio, r.esito === "diversa");
       } catch (e) {
@@ -217,6 +230,9 @@ export default function Gioco({ prova }: { prova?: "salvataggi" } = {}) {
         ...d.slice(-40),
         { chiave: contatore.current++, comando: comeSiLegge ?? comando, differenza, blocchi: blocchiDi(t, mod, opzioni.nomiToccabili) },
       ]);
+      // la cronaca segue la sequenza del motore: ANNULLA la accorcia
+      const c = t.cronaca;
+      if (c) setCronaca((v) => [...v.slice(0, c.lunghezza - (c.nuova ? 1 : 0)), ...(c.nuova ? [c.nuova] : [])]);
       // il salvataggio automatico, a ogni cambio di stanza (§4.6)
       if (t.stato.stanza !== prima && t.esito === "in_corso" && t.pulsanti.fase === "gioco") void salvaNel("automatico", true);
     },
@@ -334,11 +350,23 @@ export default function Gioco({ prova }: { prova?: "salvataggi" } = {}) {
         return;
       }
       if (domanda) return; // la conferma ha i suoi tasti
+      const d = e.key === "d" || e.key === "D";
       if (pannello) {
-        if (e.key === "Escape") {
+        if (pannello === "diario" && (e.key === "Escape" || d)) {
+          e.preventDefault();
+          setPannello(null);
+        } else if (pannello === "pausa" && d) {
+          e.preventDefault();
+          setPannello("diario");
+        } else if (e.key === "Escape") {
           e.preventDefault();
           setPannello(pannello === "pausa" ? null : "pausa");
         }
+        return;
+      }
+      if (d && turno) {
+        e.preventDefault();
+        setPannello("diario");
         return;
       }
       const suPulsante = e.target instanceof HTMLButtonElement;
@@ -423,6 +451,7 @@ export default function Gioco({ prova }: { prova?: "salvataggi" } = {}) {
         // i primi in fretta, gli ultimi tre come se li si giocasse adesso (il diario, il turno)
         const veloci = Math.max(0, lista.length - 3);
         for (const c of lista.slice(0, veloci)) m.comando(c);
+        setCronaca(m.diario().cronaca);
         for (const c of lista.slice(veloci)) gioca(c);
         return `${nome}: ${lista.length} comandi`;
       },
@@ -470,6 +499,16 @@ export default function Gioco({ prova }: { prova?: "salvataggi" } = {}) {
               Atto {["I", "II", "III", "IV", "V"][turno.stato.atto - 1]} · {turno.stato.titolo_atto.toLowerCase()}
             </div>
           )}
+          {turno && (
+            <nav className="comandi-app" aria-label="Diario e menu">
+              <button type="button" onClick={() => setPannello("diario")}>
+                diario <span className="tasto">D</span>
+              </button>
+              <button type="button" onClick={() => setPannello("pausa")}>
+                menu <span className="tasto">Esc</span>
+              </button>
+            </nav>
+          )}
           <Lamina
             diario={diario}
             forma={forma}
@@ -515,6 +554,7 @@ export default function Gioco({ prova }: { prova?: "salvataggi" } = {}) {
             forma={forma}
             voci={{
               riprendi: () => setPannello(null),
+              diario: () => setPannello("diario"),
               salva: () => void apriSalvataggi("salva"),
               carica: () => void apriSalvataggi("carica"),
               annulla: turno && turno.stato.turno > 0 ? () => (setPannello(null), gioca("annulla", "annulla l’ultima mossa")) : null,
@@ -546,6 +586,17 @@ export default function Gioco({ prova }: { prova?: "salvataggi" } = {}) {
               if (p.presente) setDomanda({ testo: `Sovrascrivere il posto ${p.posto}?`, si: "Sovrascrivi", no: "Lascia stare", allora: salva });
               else salva();
             }}
+          />
+        )}
+        {pannello === "diario" && (
+          <Diario
+            forma={forma}
+            apertura={aperturaDiario}
+            cronaca={cronaca}
+            verbi={verbi}
+            pagina={paginaDiario}
+            sceglie={setPaginaDiario}
+            chiudi={() => setPannello(null)}
           />
         )}
         {pannello === "opzioni" && <PannelloOpzioni forma={forma} opzioni={opzioni} cambia={cambiaOpzioni} chiudi={() => setPannello("pausa")} />}

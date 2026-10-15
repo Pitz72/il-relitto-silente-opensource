@@ -21,8 +21,10 @@
 #    suono     gli stati che servono al suono e gli eventi del turno, trovati
 #              per differenza fra prima e dopo (bibbia sonora, §1.6 e §2.4)
 #    comando   il comando del turno, scomposto in verbo e cose
-#  In più: i salvataggi a riprese (rel_salva, rel_carica) e la ricerca del
-#  pulsante che gioca un comando di un percorso di collaudo.
+#    cronaca   il diario: la voce nuova del turno, e quante ce ne sono
+#  In più: i salvataggi a riprese (rel_salva, rel_carica), il diario intero
+#  (rel_diario) e la ricerca del pulsante che gioca un comando di un percorso
+#  di collaudo.
 # ============================================================================
 import contextlib
 import copy
@@ -46,6 +48,9 @@ _seme = None      # il seme del caso della partita in corso (entra nei salvatagg
 _indice = None    # le regole dell'autore, per cosa e per verbo (vedi _indicizza)
 _versione = {}    # versione.json: la versione del gioco e il formato dei salvataggi
 _ultimi = None    # i pulsanti dell'ultimo turno: servono a scomporre il comando dopo
+_cronaca = []     # il diario: una voce per comando della sequenza effettiva (vedi _voce_di_cronaca)
+_apertura = []    # il diario: gli eventi del prologo e della prima stanza
+_chiave = 0       # il numero dell'ultima voce di cronaca, unico nella sessione
 
 FORMATO = "il-relitto-silente/salvataggio"
 
@@ -83,7 +88,10 @@ def rel_compila(percorso):
     _indice = _indicizza(copia)
     return _json({"ok": True, "ms": _ms(t0), "stanze": len(mondo.stanze),
                   "oggetti": len(mondo.oggetti), "motore": VERSIONE_MOTORE,
-                  "impronta_storia": impronta_storia(), "versione": _versione})
+                  "impronta_storia": impronta_storia(), "versione": _versione,
+                  # tutte le parole dei verbi: la grammatica tipografica riconosce
+                  # i suggerimenti anche nei turni passati (il diario)
+                  "verbi": sorted(copia.azioni_del_verbo)})
 
 
 def _leggi_versione(percorso):
@@ -113,26 +121,33 @@ def rel_avvia(seme=None):
     usa 1); senza, vale quello del motore. L'intestazione e il prologo escono a
     parte, in «apertura»: nell'app il prologo è nell'intro, e sulla plancia non
     si ristampa."""
-    global _mondo, _seme, _ultimi
+    global _mondo, _seme, _ultimi, _cronaca, _apertura
     t0 = time.perf_counter()
     _seme = SEME_CASUALE_DEFAULT if seme is None else int(seme)
     _mondo, apertura, eventi = _nuova_partita(_seme)
     _ultimi = None
+    _apertura = [e.come_dizionario() for e in apertura + eventi]
+    _cronaca = []
     return _turno(eventi, t0, time.perf_counter(), prima=None, comando=None,
-                  extra={"apertura": [e.come_dizionario() for e in apertura]})
+                  extra={"apertura": [e.come_dizionario() for e in apertura],
+                         "cronaca": {"lunghezza": 0, "nuova": None}})
 
 
 def rel_comando(comando):
     global _ultimi
     t0 = time.perf_counter()
     prima = _suono_stati()
+    prima_diario = _diario_stati(_mondo)
     analisi = _analizza(comando)
     try:
         with raccogli_uscita(_mondo) as uscita:
             elabora_comando(_mondo, comando)
     except Exception as e:                                  # noqa: BLE001
         return _json({"ok": False, "errore": f"{type(e).__name__}: {e}"})
-    return _turno(uscita.eventi, t0, time.perf_counter(), prima=prima, comando=analisi)
+    t1 = time.perf_counter()
+    nuova = _aggiorna_cronaca(_mondo, comando, analisi, prima_diario, uscita.eventi)
+    return _turno(uscita.eventi, t0, t1, prima=prima, comando=analisi,
+                  extra={"cronaca": {"lunghezza": len(_cronaca), "nuova": nuova}})
 
 
 def _turno(eventi, t0, t1, prima, comando, extra=None):
@@ -661,8 +676,11 @@ def _analizza(comando):
     p = _ultimi if _ultimi is not None else pulsanti(_mondo)
     for v in _voci(p):
         if _norm(v["comando"]) == chiave:
-            return {"testo": comando, "verbo": v.get("verbo"), "cosa": v.get("cosa"),
-                    "secondo": v.get("secondo"), "gruppo": v["gruppo"]}
+            analisi = {"testo": comando, "verbo": v.get("verbo"), "cosa": v.get("cosa"),
+                       "secondo": v.get("secondo"), "gruppo": v["gruppo"]}
+            if v["gruppo"] == "scelta":
+                analisi["etichetta"] = v["etichetta"]
+            return analisi
     parole = chiave.split()
     if not parole:
         return {"testo": comando, "verbo": None, "cosa": None, "secondo": None, "gruppo": None}
@@ -681,6 +699,130 @@ def _analizza(comando):
     elif parole[0] in m.direzioni:
         verbo, cosa = "vai", m.direzioni[parole[0]]
     return {"testo": comando, "verbo": verbo, "cosa": cosa, "secondo": None, "gruppo": "scritto"}
+
+
+# ----------------------------------------------------------------------------
+#  Il diario: la cronaca della partita (06-app-desktop.md, §4.6)
+# ----------------------------------------------------------------------------
+#  Una voce per ogni comando della sequenza effettiva del motore
+#  (_registro_comandi): un turno disfatto con ANNULLA esce anche dal diario, e
+#  dopo un caricamento la cronaca si ricostruisce rigiocando la sequenza. Ogni
+#  voce porta i segni con cui l'app compone le pagine del diario, trovati come
+#  quelli del suono, per differenza fra prima e dopo e dal comando, mai dal
+#  testo: le tracce di L.V., le voci ascoltate, le iscrizioni tradotte, i
+#  reperti decifrati, la placca con le iniziali.
+
+# Le cinque tracce di L.V. (relitto.fav, «tracce»; 06, §4.3), nell'ordine della
+# sua strada, ognuna con lo stato che la segna.
+TRACCE_LV = (("giuntura", "datazione", "nota"), ("tacche", "solco", "misurato"),
+             ("cavo", "ritrovamento", "fatto"), ("uomo", "specchio", "visto"),
+             ("voce", "diario", "ascoltato"))
+# Le iscrizioni che la matrice legge a soglie, e i reperti che la fanno crescere
+# (traduci.fav).
+ISCRIZIONI = ("bassorilievo", "globo olografico", "lastra incisa", "mappa stellare",
+              "tabelle di semina", "sostegno")
+REPERTI = ("lastra dati", "cilindro mnemonico", "stele", "nucleo")
+
+
+def _diario_stati(m):
+    v = m.variabili
+    aria = _intero(v.get("aria"))
+    return {
+        "tracce": [nome for nome, stato, valore in TRACCE_LV if v.get(stato) == valore],
+        "decifrati": [r for r in REPERTI if _prop(m, r, "decifrato") == "decifrato"],
+        "echi": _intero(v.get("echi")) or 0,
+        "risonanze": _intero(v.get("risonanze")) or 0,
+        "traduzione": _intero(v.get("traduzione")) or 0,
+        "aria": aria,
+        # le due regole che tengono spento il traduttore (traduci.fav)
+        "protezione": aria is not None and aria < 30 and v.get("fuga") == "lontana",
+        "proiezione": v.get("proiezione"),
+    }
+
+
+def _nome_di(m, id_ogg):
+    o = m.oggetti.get(id_ogg)
+    return o.nome_visualizzato if o is not None else id_ogg
+
+
+def _voce_di_cronaca(m, comando, analisi, prima, dopo, eventi):
+    """La voce del diario per un comando appena giocato su `m`."""
+    global _chiave
+    _chiave += 1
+    verbo, cosa = analisi.get("verbo"), analisi.get("cosa")
+    lettura = None
+    if (verbo == "traduci" and cosa in ISCRIZIONI and not prima["protezione"]
+            and not (cosa == "mappa stellare" and prima["proiezione"] == "spenta")):
+        lettura = {"cosa": cosa, "nome": _nome_di(m, cosa), "matrice": prima["traduzione"]}
+    a0, a1 = prima["aria"], dopo["aria"]
+    stanza = m.trova_stanza(m.posizione_giocatore)
+    return {
+        "chiave": _chiave,
+        # come lo si legge: una scelta del dialogo con le sue parole
+        "comando": analisi.get("etichetta") or comando,
+        "eventi": [e.come_dizionario() for e in eventi],
+        "differenza": a1 - a0 if a0 is not None and a1 is not None and a1 != a0 else None,
+        "stanza": m.posizione_giocatore,
+        "nome_stanza": stanza.nome_visualizzato if stanza is not None else None,
+        "atto": _atto(m),
+        "titolo_atto": ATTI[_atto(m)],
+        "turno": m.turno_corrente,
+        "tracce": [t for t in dopo["tracce"] if t not in prima["tracce"]],
+        "voce": dopo["echi"] > prima["echi"] or dopo["risonanze"] > prima["risonanze"],
+        "lettura": lettura,
+        "reperti": [{"cosa": r, "nome": _nome_di(m, r)} for r in dopo["decifrati"]
+                    if r not in prima["decifrati"]],
+        # le iniziali di L.V. si leggono soltanto sulla placca (vita.fav)
+        "iniziali": verbo in ("esamina", "leggi") and cosa == "placca",
+    }
+
+
+def _aggiorna_cronaca(m, comando, analisi, prima, eventi):
+    """Allinea la cronaca alla sequenza effettiva del motore dopo un comando:
+    la voce nuova, se il comando ci è entrato; nessuna, se non è entrato (un
+    comando di servizio) o se ANNULLA l'ha accorciata."""
+    n = len(m._registro_comandi)
+    del _cronaca[n:]
+    if n != len(_cronaca) + 1:
+        return None
+    # il comando come il motore l'ha registrato («esci» è «fuori»): lo stesso
+    # che la cronaca ricostruita rilegge dopo un caricamento
+    voce = _voce_di_cronaca(m, m._registro_comandi[-1], analisi, prima, _diario_stati(m), eventi)
+    _cronaca.append(voce)
+    return voce
+
+
+_NESSUN_PULSANTE = {"scelte": [], "uscite": [], "verbi": [], "servizio": []}
+
+
+def _ricostruisci_cronaca(seme, comandi):
+    """La cronaca di una partita caricata: la sequenza rigiocata su una copia,
+    raccogliendo ciò che il caricamento del motore rigioca in silenzio."""
+    global _mondo, _ultimi
+    vero, ultimi = _mondo, _ultimi
+    m, apertura, stanza = _nuova_partita(seme)
+    m._senza_istantanee = True        # nessun ANNULLA su questa copia: si va più in fretta
+    _mondo, cronaca = m, []
+    try:
+        for c in comandi:
+            if m.stato_partita != "in_corso":
+                break
+            # le scelte (un dialogo, una conferma) si leggono con le loro parole
+            scelte = m.in_dialogo() or getattr(m, "_in_conferma", None) or getattr(m, "_ambiguita", None)
+            _ultimi = pulsanti(m) if scelte else _NESSUN_PULSANTE
+            prima = _diario_stati(m)
+            analisi = _analizza(c)
+            with raccogli_uscita(m) as uscita:
+                elabora_comando(m, c)
+            cronaca.append(_voce_di_cronaca(m, c, analisi, prima, _diario_stati(m), uscita.eventi))
+    finally:
+        _mondo, _ultimi = vero, ultimi
+    return [e.come_dizionario() for e in apertura + stanza], cronaca
+
+
+def rel_diario():
+    """Il diario intero: il prologo con la prima stanza, e la cronaca."""
+    return _json({"apertura": _apertura, "cronaca": _cronaca})
 
 
 # ----------------------------------------------------------------------------
@@ -746,7 +888,7 @@ def _migra(dati):
 
 
 def rel_carica(testo):
-    global _mondo, _seme, _ultimi
+    global _mondo, _seme, _ultimi, _apertura, _cronaca
     t0 = time.perf_counter()
 
     def rifiuto(motivo, messaggio):
@@ -794,11 +936,14 @@ def rel_carica(testo):
         messaggio = (f"Partita caricata (turno {m.turno_corrente}), ma non è identica a quella "
                      f"salvata. Controlla che tutto sia come lo ricordi.")
     _mondo, _seme, _ultimi = m, seme, None
+    _apertura, _cronaca = _ricostruisci_cronaca(seme, list(m._registro_comandi))
     eventi = _mostra_su_un_ramo(m)
     turno = json.loads(_turno(eventi, t0, time.perf_counter(), prima=None, comando=None))
     turno["suono"]["eventi"] = [{"evento": "caricamento", "stanza": m.posizione_giocatore}]
+    turno["cronaca"] = {"lunghezza": len(_cronaca), "nuova": None}
     return _json({"ok": True, "esito": esito, "messaggio": messaggio, "impronta": m.impronta_stato(),
-                  "turno": turno, "ms": _ms(t0)})
+                  "turno": turno, "diario": {"apertura": _apertura, "cronaca": _cronaca},
+                  "ms": _ms(t0)})
 
 
 def _mostra_su_un_ramo(m):

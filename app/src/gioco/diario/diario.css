@@ -1,0 +1,139 @@
+/* ==========================================================================
+   Il diario (Diario.tsx; 06-app-desktop.md, §4.6). Un pannello alto sopra il
+   gioco: il titolo e le schede in testa, il foglio che scorre, il piede.
+   Il testo ha la colonna e la tipografia della lamina (lamina.css): qui solo
+   ciò che cambia, e le varianti dell'acciaio e della membrana. I colori di
+   testo vengono da atmosfere.ts (sopra 4,5:1).
+   ========================================================================== */
+.pannello.diario {
+  display: flex;
+  flex-direction: column;
+  /* una pagina: la colonna della lamina e i suoi margini */
+  width: min(41em, 86cqw);
+  max-width: none;
+  height: 88cqh;
+  max-height: 88cqh;
+  overflow: hidden;
+  padding: 1.9cqw 2.4cqw 1.1cqw;
+  font-size: var(--corpo);
+  line-height: 1.58;
+}
+
+/* la testa: il titolo, poi le schede */
+.diario-testa {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: .6cqw 2.2cqw;
+  padding-bottom: .9cqw;
+  border-bottom: 1px solid color-mix(in srgb, var(--bordo) 70%, transparent);
+}
+.pannello.diario .diario-testa h2 { margin: 0; }
+.diario-schede { display: flex; flex-wrap: wrap; gap: .4cqw; }
+.pannello .diario-schede button {
+  min-height: 32px;
+  padding: .3em 1.05em;
+  font-size: max(14px, .9cqw);
+  color: var(--tenue);
+  background: none;
+  border-color: transparent;
+}
+.pannello .diario-schede button:hover { color: var(--testo); border-color: var(--bordo); }
+.pannello .diario-schede button[aria-selected="true"] {
+  color: var(--testo);
+  border-color: var(--bordo);
+  background: color-mix(in srgb, var(--lamina-2) 80%, transparent);
+}
+.pannello[data-forma="acciaio"] .diario-schede button { text-transform: uppercase; letter-spacing: .12em; font-size: max(12px, .78cqw); }
+
+/* il foglio: scorre, e il testo entra ed esce sfumando come nella lamina */
+.diario-foglio {
+  /* le righe per i lettori di schermo (assolute) restano dentro il foglio che scorre */
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1.8cqw 1cqw 2cqw .4cqw;
+  -webkit-mask-image: linear-gradient(transparent, #000 1.6em, #000 calc(100% - 1.8em), transparent);
+  mask-image: linear-gradient(transparent, #000 1.6em, #000 calc(100% - 1.8em), transparent);
+}
+.diario-foglio:focus-visible { outline-offset: -3px; }
+.diario-colonna { max-width: 34em; margin: 0 auto; }
+
+/* la trascrizione */
+.diario-turno { padding: .1em 0 .5em; }
+.diario-turno + .diario-turno { padding-top: .8em; border-top: 1px solid color-mix(in srgb, var(--bordo) 32%, transparent); }
+.pannello.diario .b-stanza h2 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: 1.45em;
+  line-height: 1.12;
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: color-mix(in srgb, var(--testo) 76%, var(--vena-2));
+}
+.pannello.diario[data-forma="acciaio"] .b-stanza h2 { font-style: normal; font-weight: 400; color: var(--testo); }
+.pannello.diario .vena-titolo { margin: .22em 0 .55em; }
+.pannello.diario[data-forma="acciaio"] .vena-titolo { height: 1px; background: linear-gradient(90deg, var(--accento-2), transparent 70%); opacity: .6; }
+.pannello.diario[data-forma="membrana"] .comando-testo { font-style: italic; }
+.diario-atto {
+  margin: .5em 0 1.1em;
+  font-family: var(--mono);
+  font-size: max(11.5px, .64em);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--accento);
+}
+
+/* le schede del fascicolo, delle voci, delle traduzioni */
+.diario-titolo {
+  margin: 0 0 1em;
+  font-weight: 300;
+  font-style: italic;
+  font-size: 1.3em;
+  color: color-mix(in srgb, var(--testo) 82%, var(--vena-2));
+}
+.pannello.diario[data-forma="acciaio"] .diario-titolo { font-style: normal; font-weight: 400; }
+.diario-scheda + .diario-titolo { margin-top: 1.8em; }
+.diario-scheda {
+  margin: 0 0 1.5em;
+  padding: 0 0 1.1em;
+  border-bottom: 1px solid color-mix(in srgb, var(--bordo) 32%, transparent);
+}
+.diario-scheda > header { margin-bottom: .55em; }
+.diario-scheda h4 { margin: 0 0 .1em; font-weight: 400; font-size: 1.12em; color: var(--testo); }
+.diario-dove {
+  display: block;
+  font-family: var(--mono);
+  font-size: max(11.5px, .62em);
+  letter-spacing: .14em;
+  color: var(--tenue);
+}
+
+/* i suggerimenti del passato: accesi, ma non si premono */
+.s-suggerimento.inerte { cursor: text; }
+.s-suggerimento.inerte:hover { color: var(--accento-2); }
+.pannello.diario[data-forma="acciaio"] .s-suggerimento {
+  font-family: var(--mono);
+  font-size: .86em;
+  letter-spacing: .04em;
+  padding: .05em .4em;
+  color: #120d08;
+  background: var(--accento-2);
+  text-shadow: none;
+  border-bottom: 0;
+  border-radius: .12em;
+}
+.pannello.diario[data-forma="acciaio"] .s-suggerimento.inerte:hover { color: #120d08; }
+
+/* il piede */
+.diario-piede {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: .8cqw;
+  border-top: 1px solid color-mix(in srgb, var(--bordo) 70%, transparent);
+}
+.pannello.diario .chiudi { margin-top: 0; }

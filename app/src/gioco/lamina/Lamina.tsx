@@ -7,7 +7,7 @@
 //  lamina dai bordi irregolari che respira, solo ai bordi.
 //  I blocchi arrivano già riconosciuti (grammatica.ts): qui li si veste.
 // ============================================================================
-import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { createContext, Fragment, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import type { Forma } from "../../stile/atmosfere";
 import type { Blocco, RigaRegistrazione, Segmento } from "./grammatica";
 import "./lamina.css";
@@ -140,7 +140,14 @@ export default function Lamina({ diario, forma, rivelazione, passati = 2, suNome
 // ----------------------------------------------------------------------------
 //  Un turno: il comando, poi i blocchi
 // ----------------------------------------------------------------------------
-function Turno({ voce, forma, suSuggerimento, rivela = false }: { voce: VoceDiario; forma: Forma; suSuggerimento?: Props["suSuggerimento"]; rivela?: boolean }) {
+/** Dentro un testo inerte (il diario) i suggerimenti non sono pulsanti: si
+ *  leggono accesi come nella lamina, ma il loro momento è passato. */
+const Inerte = createContext(false);
+export function TestoInerte({ children }: { children: ReactNode }) {
+  return <Inerte.Provider value={true}>{children}</Inerte.Provider>;
+}
+
+export function Turno({ voce, forma, suSuggerimento, rivela = false }: { voce: VoceDiario; forma: Forma; suSuggerimento?: Props["suSuggerimento"]; rivela?: boolean }) {
   const riv = rivela ? { "data-riv": "" } : {};
   return (
     <>
@@ -267,6 +274,7 @@ function RigaDellaTraccia({ r }: { r: RigaRegistrazione }) {
 //  I segmenti
 // ----------------------------------------------------------------------------
 function Segmenti({ s, suSuggerimento }: { s: readonly Segmento[]; suSuggerimento?: Props["suSuggerimento"] }) {
+  const inerte = useContext(Inerte);
   const out: ReactNode[] = [];
   s.forEach((x, i) => {
     const att = x.attenuato ? " attenuato" : "";
@@ -275,6 +283,14 @@ function Segmenti({ s, suSuggerimento }: { s: readonly Segmento[]; suSuggeriment
         out.push(x.attenuato ? <span key={i} className="attenuato">{x.testo}</span> : x.testo);
         break;
       case "suggerimento":
+        if (inerte) {
+          out.push(
+            <span key={i} className={`s-suggerimento inerte${att}`}>
+              {x.testo}
+            </span>,
+          );
+          break;
+        }
         out.push(
           <button
             key={i}

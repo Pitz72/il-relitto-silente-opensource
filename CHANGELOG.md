@@ -10,6 +10,14 @@ documenti di `progettazione/`.
 
 ### Aggiunto
 
+- **Il diario** (06, §4.6; D, la pausa o il pulsante in alto): la trascrizione di tutta la partita,
+  con i cartelli degli atti; il fascicolo di chi è passato prima, che si compone da sé e prende il
+  nome di L.V. solo dopo la placca; le voci ascoltate, da rileggere; le traduzioni, ognuna nella
+  lettura fatta con la matrice più avanti, e i reperti. La cronaca la tiene il ponte, comando per
+  comando, e dopo un caricamento la ricostruisce rigiocando (`rel_diario`, `cronaca` nel turno);
+  le pagine le compone `app/src/gioco/diario/pagine.ts`. Il collaudo `collaudo/diario.py` e sette
+  prove nuove.
+- I pulsanti «diario» e «menu» sopra la lamina, per chi gioca con il mouse.
 - **Le fondamenta del sistema visivo** (fase 3): i quattro caratteri dentro l’app (Newsreader, IBM
   Plex Mono, Big Shoulders Stencil, Atkinson Hyperlegible Next; SIL OFL, dai pacchetti Fontsource,
   solo il sottoinsieme latino, 457 KB); le atmosfere come variabili CSS da un modulo solo

@@ -178,6 +178,49 @@ export interface ComandoAnalizzato {
   cosa: string | null;
   secondo: string | null;
   gruppo: "scelta" | "uscita" | "verbo" | "servizio" | "scritto" | null;
+  /** per una scelta (dialogo, conferma): le sue parole */
+  etichetta?: string;
+}
+
+/** Le cinque tracce di L.V. (ponte.py, TRACCE_LV), nell'ordine della sua strada. */
+export type TracciaLV = "giuntura" | "tacche" | "cavo" | "uomo" | "voce";
+
+/** Una voce della cronaca della partita, per il diario (ponte.py, _voce_di_cronaca). */
+export interface VoceCronaca {
+  /** unica nella sessione: la chiave per React */
+  chiave: number;
+  /** il comando come il motore l'ha registrato; una scelta con le sue parole */
+  comando: string;
+  eventi: Evento[];
+  /** quanta aria è costato il turno, se la cifra è cambiata */
+  differenza: number | null;
+  stanza: string;
+  nome_stanza: string | null;
+  atto: number;
+  titolo_atto: string;
+  turno: number;
+  /** le tracce di L.V. trovate in questo turno */
+  tracce: TracciaLV[];
+  /** un'eco o una risonanza in più: una voce ascoltata */
+  voce: boolean;
+  /** un'iscrizione tradotta, con la matrice di quel momento */
+  lettura: { cosa: string; nome: string; matrice: number } | null;
+  /** i reperti decifrati in questo turno */
+  reperti: { cosa: string; nome: string }[];
+  /** la placca esaminata: le iniziali di L.V. */
+  iniziali: boolean;
+}
+
+/** Il diario nel turno: la voce nuova, e quante voci ha la cronaca (ANNULLA la accorcia). */
+export interface CronacaDelTurno {
+  lunghezza: number;
+  nuova: VoceCronaca | null;
+}
+
+/** Il diario intero: il prologo con la prima stanza, e la cronaca. */
+export interface DiarioIntero {
+  apertura: Evento[];
+  cronaca: VoceCronaca[];
 }
 
 export interface Turno {
@@ -191,6 +234,8 @@ export interface Turno {
   suono: { stati: StatiSuono; eventi: EventoSuono[] };
   comando: ComandoAnalizzato | null;
   esito: "in_corso" | "vinta" | "persa" | string;
+  /** il diario: la voce nuova del turno (assente nelle prove costruite a mano) */
+  cronaca?: CronacaDelTurno;
   /** i tempi misurati dentro Python, in ms */
   ms: { motore: number; pulsanti: number; stato: number; json: number };
 }
@@ -203,6 +248,8 @@ export interface Compilazione {
   motore?: string;
   impronta_storia?: string;
   versione?: { gioco: string | null; formatoSalvataggi: number };
+  /** tutte le parole dei verbi che il motore conosce (la grammatica del diario) */
+  verbi?: string[];
   errore?: string;
   rapporto?: string;
 }
@@ -248,5 +295,5 @@ export interface Salvataggio {
 }
 
 export type EsitoCaricamento =
-  | { ok: true; esito: "identica" | "ricostruita" | "diversa"; messaggio: string; impronta: string; turno: Turno; ms: number }
+  | { ok: true; esito: "identica" | "ricostruita" | "diversa"; messaggio: string; impronta: string; turno: Turno; diario: DiarioIntero; ms: number }
   | { ok: false; motivo: "illeggibile" | "formato" | "piu_recente" | "danneggiato" | "motore"; messaggio: string; ms: number };

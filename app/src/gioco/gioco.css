@@ -42,6 +42,32 @@
 
 .palco .lamina { left: 4cqw; top: 4.4cqw; width: 54cqw; height: 34cqw; z-index: 3; }
 
+/* il diario e il menu, per chi gioca con il mouse: sopra l'angolo destro della
+   lamina, discreti come l'atto (06, §4: il «menu» nella barra del visore) */
+.comandi-app {
+  position: absolute;
+  right: 42cqw;
+  top: 1.15cqw;
+  z-index: 3;
+  display: flex;
+  gap: .5cqw;
+}
+.comandi-app button {
+  min-height: 28px;
+  padding: .2em .8em;
+  font-family: var(--mono);
+  font-size: max(11.5px, .7cqw);
+  letter-spacing: .14em;
+  color: var(--tenue);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: none;
+  transition: color .25s, border-color .25s;
+}
+.comandi-app button:hover { color: var(--testo); border-color: var(--bordo); }
+.comandi-app .tasto { margin-left: .5em; font-size: .9em; opacity: .8; }
+.gioco[data-forma="acciaio"] .comandi-app button { border-radius: .2em; text-transform: uppercase; }
+
 .avvio {
   position: absolute;
   inset: 0;
