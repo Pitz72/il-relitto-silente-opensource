@@ -58,12 +58,27 @@ export type ComandoMondo =
   | { tipo: "evento"; valore: EventoMondo }
   | { tipo: "volume"; valore: number }
   | { tipo: "solo"; valore: string | null }
-  | { tipo: "ferma" };
+  | { tipo: "ferma" }
+  | { tipo: "prova"; valore: ProvaMondo };
 
+/** I colpi che la pagina di prova fa suonare a comando (mondo/mod.rs, `Comando::Prova`). */
+export type ProvaMondo =
+  | "lamiera"
+  | "rele"
+  | "cigolio"
+  | "goccia"
+  | "crepa"
+  | "granello"
+  | "gemito"
+  | "spinta"
+  | "arpione"
+  | "urto"
+  | "una_voce"
+  | "coro";
+
+/** Il mondo sonoro è tutto sintetizzato: non c’è niente da caricare. */
 export interface AvvioMondo {
-  campioni: number;
-  memoria_mb: number;
-  caricamento_ms: number;
+  avvio_ms: number;
 }
 
 export interface IstantaneaMondo {

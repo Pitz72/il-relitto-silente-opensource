@@ -14,7 +14,6 @@ use serde::Serialize;
 use tauri::{AppHandle, Manager, State};
 
 use audio::{InfoAudio, MisureAudio, MotoreAudio};
-use mondo::campioni::Banca;
 use mondo::{Comando, Istantanea};
 
 #[derive(Default)]
@@ -80,27 +79,22 @@ fn audio_azzera(stato: State<StatoAudio>) -> Result<(), String> {
 
 #[derive(Serialize)]
 struct AvvioMondo {
-    campioni: usize,
-    memoria_mb: f64,
-    caricamento_ms: f64,
+    /// quanto ci ha messo il mondo sonoro a partire (nessun campione da caricare:
+    /// è tutto sintetizzato)
+    avvio_ms: f64,
 }
 
-/// Il prototipo dei tre ambienti (bibbia sonora, §8): carica i campioni fuori dal
-/// thread principale, poi avvia il mondo sonoro (e il motore audio, se serve).
+/// Il prototipo dei tre ambienti (bibbia sonora, §8): avvia il mondo sonoro (e il
+/// motore audio, se serve). Niente da caricare: ogni suono nasce dal codice.
 #[tauri::command]
-async fn audio_mondo_avvia(app: AppHandle, stato: State<'_, StatoAudio>) -> Result<AvvioMondo, String> {
-    let radice = app.path().resource_dir().map_err(|e| e.to_string())?.join("risorse").join("audio").join("prototipo");
+fn audio_mondo_avvia(stato: State<'_, StatoAudio>) -> Result<AvvioMondo, String> {
     let t0 = std::time::Instant::now();
-    let banca = tauri::async_runtime::spawn_blocking(move || Banca::carica(&radice))
-        .await
-        .map_err(|e| e.to_string())??;
-    let caricamento_ms = t0.elapsed().as_secs_f64() * 1000.0;
     let mut guardia = stato.0.lock().map_err(|_| "audio bloccato".to_string())?;
     if guardia.is_none() {
         *guardia = Some(MotoreAudio::nuovo()?);
     }
-    guardia.as_mut().unwrap().mondo_avvia(&banca)?;
-    Ok(AvvioMondo { campioni: banca.quanti(), memoria_mb: banca.memoria() as f64 / 1e6, caricamento_ms })
+    guardia.as_mut().unwrap().mondo_avvia()?;
+    Ok(AvvioMondo { avvio_ms: t0.elapsed().as_secs_f64() * 1000.0 })
 }
 
 #[tauri::command]

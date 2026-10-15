@@ -3,6 +3,7 @@
 # Uso (dalla radice del progetto, dopo «npm --prefix app run tauri build -- --no-bundle»):
 #   python strumenti/prova_eseguibile.py finali       i sei finali attraverso l'interfaccia
 #   python strumenti/prova_eseguibile.py salvataggi   salva, elenca, rilegge e carica
+#   python strumenti/prova_eseguibile.py mondo        il mondo sonoro sintetizzato, misurato
 #   python strumenti/prova_eseguibile.py finali --exe <percorso>
 #
 # Lancia l'eseguibile con RELITTO_PROVA, i salvataggi e i rapporti in cartelle
@@ -16,6 +17,9 @@
 #                finali devono finire nel registro.
 #   salvataggi   app/src/gioco/Gioco.tsx: sei comandi, il posto 6 scritto, riletto
 #                e caricato «identica».
+#   mondo        app/src/prova/ProvaSuono.tsx: i tre ambienti del prototipo nei loro
+#                stati, con la CPU del thread audio, i buchi del flusso e gli errori;
+#                riesce se il flusso non ha errori e nessun buco supera i 50 ms.
 
 import argparse
 import glob
@@ -40,7 +44,7 @@ def eseguibile():
 
 def main():
     ap = argparse.ArgumentParser(description="Le prove automatiche nell'eseguibile vero.")
-    ap.add_argument("prova", choices=["finali", "salvataggi"])
+    ap.add_argument("prova", choices=["finali", "salvataggi", "mondo"])
     ap.add_argument("--exe", help="l'eseguibile (di base quello di rilascio)")
     ap.add_argument("--attesa", type=int, default=600, help="secondi al più (di base 600)")
     a = ap.parse_args()
@@ -78,6 +82,16 @@ def main():
         print(f"Il registro dei finali: {', '.join(r.get('registro', [])) or 'vuoto'}")
         if r.get("errore"):
             print(f"     {r['errore']}")
+    elif a.prova == "mondo":
+        ok = bool(r.get("passi"))
+        print(f"Avvio del mondo sonoro: {r.get('caricamento', {}).get('avvio_ms', 0):.1f} ms")
+        for p in r.get("passi", []):
+            m = p["misure"]
+            buono = m["errori_flusso"] == 0 and m["gap_max_ms"] < 50
+            ok = ok and buono
+            print(f"[{'OK' if buono else 'NO'}] {p['passo']}: CPU media {m['cpu_media'] * 100:.1f}%, "
+                  f"max {m['cpu_max'] * 100:.1f}%; buco massimo {m['gap_max_ms']:.1f} ms; errori {m['errori_flusso']}")
+        r["ok"] = ok
     else:
         print(f"Caricamento: {r.get('caricamento')}; letto uguale: {r.get('letto_uguale')}; "
               f"stessa impronta: {r.get('impronta_uguale')}")

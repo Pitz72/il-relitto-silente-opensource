@@ -1,6 +1,6 @@
 # Il Relitto Silente — la bibbia sonora
 
-Documento 10 della progettazione · prima versione, 14 ottobre 2026
+Documento 10 della progettazione · prima versione, 14 ottobre 2026 · seconda, 15 ottobre 2026: il suono tutto sintetizzato (§10)
 
 Che cosa si sente in ogni stanza e in ogni evento del gioco, da quali registrazioni nasce e come si lavora. Vale insieme al §9 di `06-app-desktop.md` e al punto 3 del suo §17: suono credibile e realistico, registrazioni vere con licenza compatibile, la fisica giusta. Per l’intro vale il §5 di `09-intro-storyboard.md`. La musica (D14) non è ancora decisa: qui compare solo dove tocca il resto del suono.
 
@@ -8,11 +8,11 @@ Che cosa si sente in ogni stanza e in ogni evento del gioco, da quali registrazi
 
 - **Cinque strade.** Un suono arriva a William per l’aria, attraverso il guscio del casco, dalla cuffia della tuta, dentro il casco o per contatto, nelle ossa. Ogni suono ne prende una o più, e la fisica decide quali. Nel vuoto l’aria non c’è (§1.1).
 - **Il re è la nota di casa.** Il reattore lo tiene sotto i piedi per tutto l’Atto I. Nel relitto non suona mai, finché non lo suona il sonaglio del Nido. Le macchine della Santa Maria si ripuliscono dalle note che litigherebbero con lui (§1.3).
-- **Vero dove esiste, sintetico dove serve.** Macchine, aria, metallo, acqua, ghiaccio, la tuta e il fiato vengono da microfoni veri. Il re e i segnali del visore sono sintesi. Il brusio nasce da voci vere, smontate in frammenti più corti di una sillaba (§5.2).
+- **Tutto sintetizzato, per ora (§10).** Il 15 ottobre 2026, ascoltato il prototipo fatto con le registrazioni, l’autore ha deciso che non andavano: niente suoni campionati, ogni suono si fa con il codice. Macchine, aria, metallo, acqua, ghiaccio, la tuta, il fiato e il brusio nascono da modelli fisici nel motore in Rust. Più avanti l’autore potrà portare suoni veri, generati o cercati da lui.
 - **Il fiato è lo strumento dell’aria.** La cifra sul visore decide quanto spesso e quanto a fondo respiri (§5.1).
 - **Sei silenzi diversi**, ognuno costruito (§1.5).
-- **Le fonti.** Freesound in CC0, l’archivio Sonniss GDC (senza attribuzione) e LibriVox (pubblico dominio). Il fiato, la tuta e il sonaglio conviene registrarli apposta (§7.4). Ogni file passa da `audio/LICENZE.md` prima di entrare nel gioco.
-- **Stato.** Il prototipo dei tre ambienti è fatto e misurato (§8): dodici sorgenti CC0 e di pubblico dominio, un motore in Rust con le cinque strade, il fiato e il brusio, tre ascolti in `progettazione/ascolti/`.
+- **Le fonti.** Il §7 resta come strada possibile per il giorno in cui torneranno le registrazioni: Freesound in CC0, l’archivio Sonniss GDC, LibriVox, le registrazioni in casa. Oggi il gioco non usa nessun file: i dodici del prototipo sono usciti dal gioco e dai riconoscimenti, e restano in `audio/LICENZE.md` come storia.
+- **Stato.** Il prototipo dei tre ambienti è stato fatto con le registrazioni (§8) e poi rifatto tutto in sintesi (§10): un motore in Rust con le cinque strade, il riverbero delle stanze, il fiato, la voce e il brusio, il metallo, l’acqua e il ghiaccio; gli ascolti sono in `progettazione/ascolti/` (i nuovi cominciano con 11).
 
 ## 1. I principi
 
@@ -54,6 +54,8 @@ Che cosa si sente in ogni stanza e in ogni evento del gioco, da quali registrazi
 - **Sintesi** per il re, che è una nota e deve restare esatta, e per i segnali del visore, che sono elettronica.
 - **Il brusio** è un caso a sé: nasce da voci vere (LibriVox, pubblico dominio) e passa da un motore granulare che le smonta in frammenti più corti di una sillaba. Nessuna parola sopravvive (§5.2).
 - **Niente suoni generati dall’IA.** Il realismo che l’autore chiede passa da microfoni veri. Anche il divieto della licenza Sonniss (§7.1) va in questa direzione.
+
+*Il 15 ottobre 2026 questo paragrafo è superato dal §10: per decisione dell’autore, per ora anche quello che esiste nel mondo si sintetizza, con modelli fisici scritti nel codice. La sintesi non è un suono generato dall’IA: è fisica in forma di programma.*
 
 ### 1.5 I sei silenzi
 
@@ -804,6 +806,8 @@ Tutti con licenza verificata sulla pagina di ciascuno, il 14 ottobre 2026.
 
 ### 8.3 Com’è costruito
 
+*Così era il prototipo del 14 ottobre. Il 15 ottobre la catena offline, i campioni lavorati e la loro banca sono stati tolti dal repository (restano nella storia di git): il motore adesso sintetizza tutto (§10).*
+
 - **Una catena offline** (`strumenti/audio/prepara_prototipo.py`, con gli attrezzi di `comune.py`) prende le sorgenti da `audio/sorgenti/` e scrive 109 file Ogg in `app/src-tauri/risorse/audio/prototipo/` (9 MB), con `indice.json` che dice da quale sorgente viene ciascuno:
   - tre letti ad anello, a −28 LUFS: la ventilazione (P2, senza il rombo a 32 Hz e senza il ronzio di rete a 60 e 120 Hz), le pompe (P1, senza le cinque righe tonali che litigavano con il re: 65, 141, 746, 858 e 1000 Hz), la ventola della tuta (C5: il motore a 62 Hz teneva quasi tutta l’energia, e un passa-alto ripido a 110 Hz lascia l’aria);
   - quindici cicli di respiro, tagliati dove l’inspirazione (più acuta) cede all’espirazione: calmo, sospiro, teso, pesante, veloce, sorpresa;
@@ -829,13 +833,13 @@ Tutti con licenza verificata sulla pagina di ciascuno, il 14 ottobre 2026.
 | Flusso, nell’app | buco massimo 10,3 ms (il periodo di WASAPI), zero errori, in tutti e sette i passi della prova |
 | Memoria e caricamento | 86 MB di campioni a 16 bit, caricati in 1,1 s fuori dal thread principale |
 
-**Che cosa manca prima del gioco vero** (fase 4):
+**Che cosa manca prima del gioco vero** (fase 4; aggiornato dal §10, che ha tolto i campioni: i letti in streaming e la memoria non servono più):
 
-- i letti lunghi in streaming dal disco invece che in memoria (86 MB sono troppi per 23 stanze);
+- ~~i letti lunghi in streaming dal disco invece che in memoria (86 MB sono troppi per 23 stanze)~~;
 - i cinque cursori dei canali (oggi c’è solo il volume generale);
 - il «filo» del Sintonizzatore e lo spostamento di frequenza delle echi (§5.3);
-- più materiale per il fiato: quindici cicli si riconoscono, dopo qualche minuto. Servono una libreria di respiri della stessa voce, o una sessione registrata;
-- i riverberi delle stanze grandi per convoluzione, offline;
+- ~~più materiale per il fiato: quindici cicli si riconoscono, dopo qualche minuto~~ (sintetizzato, ogni respiro è diverso);
+- ~~i riverberi delle stanze grandi per convoluzione, offline~~ (ora un riverbero algoritmico in tempo reale, §10.2);
 - la prova sulla macchina Linux vera.
 
 ## 9. Decisioni dell’autore
@@ -847,3 +851,89 @@ Il 14 ottobre, la sera, l’autore ha delegato le decisioni di questa fase (06, 
 3. l’archivio Sonniss solo dove manca un’alternativa CC0 o di pubblico dominio;
 4. la musica (D14) è fatta con i materiali del gioco, e il sol diesis del §1.3 è deciso;
 5. le licenze vanno in una schermata «Riconoscimenti e licenze» prima del gioco, generata dal registro.
+
+## 10. Il suono sintetizzato
+
+### 10.1 La decisione
+
+Il 15 ottobre 2026 l’autore ha ascoltato i tre ascolti del prototipo (§8) e ha detto che i suoni scelti non andavano. Ha deciso: per ora niente suoni campionati; ogni suono si fa con il codice, al meglio possibile; più avanti, se servirà, porterà lui dei suoni veri, generati o cercati.
+
+Il prototipo è stato rifatto tutto in sintesi, lo stesso giorno. Valgono ancora i principi del §1 (le cinque strade, il re e la sua assenza, i sei silenzi, i tempi, i livelli), le scene del mix (§2.2) e le stanze, gli eventi e gli strumenti dei §3–§5: cambia soltanto da dove nasce il suono. Il motore resta pronto a ricevere un suono vero al posto di uno strato, se un giorno arriverà.
+
+### 10.2 I modelli
+
+Tutto gira in tempo reale dentro il motore audio (`app/src-tauri/src/mondo/`), nello stesso `Sound` di kira, senza un file e senza memoria allocata nel thread dell’audio. Ogni modello ha le sue derive lente, così niente si ripete mai uguale.
+
+| Suono | Modello | Dove |
+|---|---|---|
+| **il re** | sintesi additiva: otto armonici di re₂, un secondo banco scordato che batte; ogni armonico deriva piano di volume per conto suo (±12%), e sotto i primi quattro c’è una banda di rumore larga un hertz, che li fa vivere come il ronzio di un trasformatore vero. L’altezza non si muove mai | `re.rs` |
+| **la ventilazione** | rumore rosa con un polo a 800 Hz (circa −5 dB per ottava, come un impianto vero), i condotti che risuonano piano sugli armonici del re, il sibilo della griglia intorno ai 2,2 kHz che trema con la turbolenza | `fondi.rs` |
+| **le pompe e il fluido** | due pompe a pistone a ritmi diversi (1,37 e 0,91 corse al secondo, che si incontrano e si perdono): a ogni corsa il soffio del fluido spinto, all’inizio il colpo della valvola su quattro modi; il fluido in due bande che derivano, e ogni tanto un gorgoglio (bolle grandi, il modello di van den Doel) | `fondi.rs` |
+| **la ventola della tuta** | rumore rosa in banda, il fremito delle sette pale, un tono di passaggio intorno ai 236 Hz che deriva e non si posa mai su una nota (nel relitto il re deve mancare) | `fondi.rs` |
+| **le lamiere** | sintesi modale di lastre appoggiate: i modi seguono f(m,n) ∝ m² + ρ²·n², e il punto dove la lastra scatta decide quanto suona ogni modo; sei lastre per la plancia, ognuna con la sua voce; a volte scattano due volte | `colpi.rs` |
+| **i relè** | l’ancora che batte sul nucleo e rimbalza due volte (a 1,6 e 3,2 ms), su sei modi piccoli; quando si apre, un colpo solo e più debole | `colpi.rs` |
+| **gli stivali, le spinte** | tonfi: una sinusoide che cade di altezza e si spegne, con un soffio sordo davanti; nelle ossa | `colpi.rs` |
+| **gli arpioni** | otto modi bassi di uno scafo, colpiti da un impulso e da un soffio | `colpi.rs` |
+| **l’urto lungo, il gemito, i cigolii** | attrito a scatti (*stick-slip*): due superfici che si premono scivolano a strappi, e ogni strappo fa suonare i modi di una struttura; il ritmo degli strappi deriva, ed è quello il lamento. Il gemito è lento (16–28 strappi al secondo) su modi di una struttura enorme, fra 40 e 440 Hz | `colpi.rs` |
+| **le gocce** | la bolla che risuona (van den Doel, la frequenza di Minnaert): una sinusoide che sale e si spegne, dopo lo schiocco dell’impatto; una goccia su cinque fa solo «tic» | `colpi.rs` |
+| **i granelli, le crepe** | una pietra piccola che rimbalza sempre più vicino; un crepitio che si dirada su modi alti | `colpi.rs` |
+| **il fiato** | il rumore dell’aria che passa, che trema come la turbolenza vera, colorato da tre strade: il naso (una banda larga intorno ai 3,3 kHz), la bocca (quattro formanti alla maniera di Klatt, come in una «h»), le labbra e i denti (un sibilo in alto che cresce più in fretta del flusso). Più forte si respira, più il soffio si schiarisce. Nei sospiri e nella fatica la voce si accende appena, all’inizio dell’espirazione; a volte le labbra schioccano prima di prendere aria. La tabella del §5.1 decide il ritmo; ogni respiro è diverso nella durata, nella forza e nel colore | `fiato.rs` |
+| **il brusio** | fino a quaranta voci sintetiche: la glottide che si apre e si chiude (KLGLOTT88) con il suo tremito, il tratto vocale a cinque formanti, le fricative in parallelo. Ogni voce parla per sillabe inventate (vocali, nasali, liquide, fricative, occlusive) con l’intonazione che scende lungo la frase e gli accenti che la sollevano; nessuna lingua, quindi nessuna parola. Le formanti stanno più basse delle nostre (le creature sono «alte e sottili») | `voce.rs`, `brusio.rs` |
+| **il riverbero delle stanze** | una rete di sedici linee di ritardo che si scambiano il suono con una matrice di Hadamard, con le prime riflessioni davanti; i bassi e gli acuti si spengono ognuno nel suo tempo, quattro linee ondeggiano appena perché la coda non suoni di metallo. La plancia: 0,45 s; il vestibolo: 1,3 s; nel vuoto niente | `riverbero.rs` |
+| **il visore** | tic modali brevissimi (mai un bip), note sottovoce, i relè della protezione vitale | `colpi.rs`, `mod.rs` |
+
+### 10.3 Come si è tarato
+
+- **I volumi interni**: ogni generatore misurato da solo (`cargo run --release --example misura_strati`), con il valore efficace e il picco; i fondi a 0,1 di valore efficace, i colpi con il picco intorno a 1.
+- **Il timbro del fiato**: lo spettro medio del respiro sintetizzato messo accanto a quello di quattro respiri veri, solo come misura (il naso che inspira, la bocca che espira, l’affanno, il respiro veloce). Il primo fiato era troppo scuro dal naso e troppo sibilante dalla bocca; adesso il naso ha il suo altopiano fra 1,5 e 4 kHz e la bocca cade sopra i 2–3 kHz, come quelli veri.
+- **I livelli del mix**, in LUFS sui rendering, come chiede il §1.7.
+
+### 10.4 Le misure
+
+Dai rendering dei tre ambienti e del campionario (`cargo run --release --example rendi_ambienti`), il 15 ottobre 2026.
+
+| Misura | Risultato |
+|---|---|
+| La plancia calma | −25,8 LUFS (il re da solo −28,7, la ventilazione −30, le pompe −38) |
+| Il fiato, dentro il casco | verde −26 LUFS, ambra −23,3, fame d’aria −18,9, ipossia −25 |
+| La ventola | −35 LUFS |
+| Il brusio, sedici voci nella cuffia | −28,6 LUFS |
+| Scatti | nessuno: la sorpresa interrompe il respiro in corso senza un clic (la forza scorre in otto millisecondi) |
+| CPU, fuori dall’app | da 31 a 54 volte più veloce del tempo reale, su un core (il vestibolo, con sedici voci, è il più caro) |
+| CPU, nell’app (Windows, WASAPI; `python strumenti/prova_eseguibile.py mondo`) | thread audio in media dal 2,3 al 4,6%, al massimo il 9,2% (il vestibolo) |
+| Flusso, nell’app | buco massimo 10,2 ms (il periodo di WASAPI), zero errori, in tutti e sette i passi della prova |
+| Avvio | 26 ms (il prototipo con le registrazioni caricava i campioni in 1,1 s) |
+| Memoria | nessun campione: il prototipo con le registrazioni ne caricava 86 MB |
+| Le prove | sei prove nuove in Rust (il modo che si spegne, il rosa, il riverbero che si spegne nel suo tempo, ogni colpo che finisce, il fiato che segue l’aria, la voce che parla e tace) |
+
+### 10.5 Gli ascolti
+
+In `progettazione/ascolti/`, in MP3: `11-plancia`, `11-scafo`, `11-vestibolo` (le tre scene del §8.1, con gli stessi comandi del prototipo) e `11-campionario`, i suoni uno per uno:
+
+| Da | Che cosa |
+|---|---|
+| 0:00 | il re da solo, sotto il pavimento della plancia |
+| 0:08 | la ventilazione |
+| 0:16 | le pompe e il fluido |
+| 0:25 | quattro lamiere |
+| 0:33 | due relè, che si chiudono e poi si riaprono |
+| 0:40 | due cigolii |
+| 0:47 | due spinte dei propulsori, nelle ossa e nell’aria |
+| 0:50 | due arpioni |
+| 0:56 | l’urto lungo degli scafi |
+| 1:01 | la ventola della tuta |
+| 1:07 | il fiato: verde (dal naso), poi dalle 1:29 ambra, dalle 1:44 la fame d’aria, dalle 1:59 l’ipossia, alle 2:18 una sorpresa |
+| 2:25 | gli stivali magnetici sullo scafo |
+| 2:33 | una voce sola del brusio, poi dalle 2:43 il coro di sedici voci |
+| 3:01 | quattro gocce |
+| 3:08 | due granelli |
+| 3:14 | tre crepe |
+| 3:21 | due gemiti della nave |
+
+Gli ascolti 10 (le registrazioni) restano per confronto.
+
+### 10.6 Che cosa resta
+
+- **Il giudizio dell’autore**, sugli ascolti: è l’orecchio che decide. Le misure dicono che i suoni hanno la forma giusta, non che sono belli.
+- I punti deboli che si conoscono: una voce sintetica sola, da vicino, tradisce un poco la sua origine (nel coro e nella cuffia no); il fiato non ha i dettagli minuti di una bocca vera (la saliva, la deglutizione); il gemito è un attrito costruito, e può suonare più di macchina che di nave.
+- Poi il resto della fase 4, come prima: il filo dal gioco al motore, gli ambienti delle 23 stanze, gli eventi, gli strumenti, il mix e le opzioni. Senza più la ricerca delle sorgenti.

@@ -113,6 +113,17 @@ documenti di `progettazione/`.
 
 ### Cambiato
 
+- **Il suono è tutto sintetizzato** (decisione dell’autore, 15 ottobre 2026; bibbia sonora, §10). Il
+  motore audio in Rust non legge più nessun file: il re, la ventilazione, le pompe, la ventola della
+  tuta, il fiato, le voci del brusio, le lamiere, i relè, gli stivali, gli arpioni, l’urto degli
+  scafi, il gemito della nave, le gocce, i granelli, le crepe e il riverbero delle stanze nascono da
+  modelli fisici, in tempo reale (sintesi modale, attrito a scatti, bolle di van den Doel, voci a
+  formanti, una rete di ritardi per le stanze). I dodici campioni del prototipo e i 109 file lavorati
+  sono usciti dal pacchetto, dal repository e dalla schermata dei riconoscimenti, che adesso dice che
+  ogni suono è sintetizzato. Il mondo sonoro parte in 26 ms invece di un secondo, e senza 86 MB di
+  campioni in memoria. La pagina di prova fa suonare i colpi uno per uno; `examples/misura_strati.rs`
+  misura ogni generatore; `python strumenti/prova_eseguibile.py mondo` misura il suono
+  nell’eseguibile.
 - L’app parte a schermo intero, nel nero, con i loghi; il nome dell’autore nei riconoscimenti è Simone
   Pizzi; le risposte dei dialoghi stanno una sotto l’altra.
 - L’app si apre sul menu principale (o sui riconoscimenti, al primo avvio), non più dentro la partita;

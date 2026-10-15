@@ -1,16 +1,17 @@
-//! Rende i tre ambienti del prototipo su file WAV, per ascoltarli e per misurarli,
-//! con lo stesso motore che suona nell’app (src/mondo).
+//! Rende su file WAV i tre ambienti del prototipo e un campionario dei suoni uno per
+//! uno, per ascoltarli e per misurarli, con lo stesso motore che suona nell’app
+//! (src/mondo). Tutto è sintetizzato: non serve nessun file.
 //!
-//!   cargo run --release --example rendi_ambienti -- <cartella d’uscita> [strato]
+//!   cargo run --release --example rendi_ambienti -- <cartella d’uscita> [strato] [scena]
 //!
-//! Con uno strato («re», «ventilazione», «fiato», «brusio»…) rende solo quello: serve
-//! a tarare i livelli. Le scene seguono la bibbia sonora, §8.1.
+//! Con uno strato («re», «ventilazione», «fiato», «brusio»…; «tutti» per nessun
+//! filtro) rende solo quello: serve a tarare i livelli. Con il nome di una scena
+//! rende solo quella. Le scene seguono la bibbia sonora, §8.1.
 
 use std::io::Write;
 use std::path::{Path, PathBuf};
 
 use kira::Frame;
-use relitto_lib::mondo::campioni::Banca;
 use relitto_lib::mondo::{Ambiente, Comando, Evento, Mondo, Nave};
 
 const SR: f32 = 48000.0;
@@ -19,6 +20,14 @@ struct Scena {
     nome: &'static str,
     durata: f32,
     comandi: Vec<(f32, Comando)>,
+}
+
+fn prova(nome: &str) -> Comando {
+    Comando::Prova(nome.to_string())
+}
+
+fn solo(nome: Option<&str>) -> Comando {
+    Comando::Solo(nome.map(str::to_string))
 }
 
 fn scene() -> Vec<Scena> {
@@ -39,6 +48,68 @@ fn scene() -> Vec<Scena> {
     for k in 0..=10 {
         scafo.push((5.0 + k as f32, C::Rampa(1.0 - k as f32 / 10.0)));
     }
+
+    // il campionario: ogni suono da solo, con le pause per sentirlo finire
+    let mut c: Vec<(f32, Comando)> = vec![
+        (0.0, C::Ambiente(Ambiente::Plancia)),
+        (0.0, solo(Some("re"))),
+        (8.0, solo(Some("ventilazione"))),
+        (16.0, solo(Some("pompe"))),
+        (24.0, solo(Some("voci"))),
+    ];
+    for (t, nome) in [
+        (25.0, "lamiera"),
+        (27.0, "lamiera"),
+        (29.0, "lamiera"),
+        (31.0, "lamiera"),
+        (33.5, "rele"),
+        (37.0, "rele"),
+        (40.5, "cigolio"),
+        (43.5, "cigolio"),
+        (47.0, "spinta"),
+        (48.4, "spinta"),
+        (50.5, "arpione"),
+        (53.0, "arpione"),
+        (56.0, "urto"),
+    ] {
+        c.push((t, prova(nome)));
+    }
+    c.extend([
+        (61.0, C::Ambiente(Ambiente::Scafo)),
+        (61.0, C::Aria(100.0)),
+        (61.0, solo(Some("ventola"))),
+        (67.0, solo(Some("fiato"))),
+        (89.0, C::Aria(50.0)),
+        (104.0, C::Aria(25.0)),
+        (119.0, C::Aria(10.0)),
+        (136.0, C::Aria(80.0)),
+        (138.0, C::Evento(Evento::Sorpresa)),
+        (145.0, solo(Some("voci"))),
+        (145.0, C::Rampa(0.0)),
+        (145.5, C::Cammina(true)),
+        (152.0, C::Cammina(false)),
+        (153.0, C::Ambiente(Ambiente::Vestibolo)),
+        (153.0, solo(Some("brusio"))),
+        (153.5, prova("una_voce")),
+        (163.0, prova("coro")),
+        (180.0, solo(Some("voci"))),
+    ]);
+    for (t, nome) in [
+        (181.0, "goccia"),
+        (182.6, "goccia"),
+        (184.1, "goccia"),
+        (185.9, "goccia"),
+        (188.0, "granello"),
+        (191.0, "granello"),
+        (194.5, "crepa"),
+        (196.5, "crepa"),
+        (198.5, "crepa"),
+        (201.0, "gemito"),
+        (209.0, "gemito"),
+    ] {
+        c.push((t, prova(nome)));
+    }
+
     vec![
         Scena {
             nome: "plancia",
@@ -65,6 +136,7 @@ fn scene() -> Vec<Scena> {
                 (76.0, C::Aria(45.0)),
             ],
         },
+        Scena { nome: "campionario", durata: 218.0, comandi: c },
     ]
 }
 
@@ -89,13 +161,17 @@ fn scrivi_wav(percorso: &Path, pcm: &[i16]) -> std::io::Result<()> {
     f.flush()
 }
 
-fn rendi(banca: &Banca, scena: &Scena, solo: Option<&str>, uscita: &Path) -> Result<f64, String> {
-    let (mut mondo, tx, _stato) = Mondo::nuovo(banca, SR, 7)?;
+fn rendi(scena: &Scena, solo: Option<&str>, uscita: &Path) -> Result<f64, String> {
+    let (mut mondo, tx, _stato) = Mondo::nuovo(SR, 7);
     if let Some(s) = solo {
         tx.send(Comando::Solo(Some(s.to_string()))).map_err(|e| e.to_string())?;
     }
     let mut comandi = scena.comandi.clone();
     comandi.sort_by(|a, b| a.0.total_cmp(&b.0));
+    // con uno strato chiesto da fuori, la scena non cambia la maschera
+    if solo.is_some() {
+        comandi.retain(|(_, c)| !matches!(c, Comando::Solo(_)));
+    }
     let blocco = 128;
     let dt = 1.0 / SR as f64;
     let n = (scena.durata * SR) as usize;
@@ -126,23 +202,18 @@ fn rendi(banca: &Banca, scena: &Scena, solo: Option<&str>, uscita: &Path) -> Res
 fn main() -> Result<(), String> {
     let argomenti: Vec<String> = std::env::args().skip(1).collect();
     let uscita = PathBuf::from(argomenti.first().map(String::as_str).unwrap_or("rendering"));
-    let solo = argomenti.get(1).map(String::as_str);
+    let solo = argomenti.get(1).map(String::as_str).filter(|s| *s != "tutti");
+    let quale = argomenti.get(2).map(String::as_str);
     std::fs::create_dir_all(&uscita).map_err(|e| e.to_string())?;
-    let radice = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("risorse/audio/prototipo");
-    let t0 = std::time::Instant::now();
-    let banca = Banca::carica(&radice)?;
-    println!(
-        "banca: {} campioni, {:.1} MB in memoria, caricata in {:.2} s",
-        banca.quanti(),
-        banca.memoria() as f64 / 1e6,
-        t0.elapsed().as_secs_f64()
-    );
     for s in scene() {
+        if quale.is_some_and(|q| q != s.nome) {
+            continue;
+        }
         let nome = match solo {
             Some(x) => format!("{}-solo-{}.wav", s.nome, x),
             None => format!("{}.wav", s.nome),
         };
-        let volte = rendi(&banca, &s, solo, &uscita.join(&nome))?;
+        let volte = rendi(&s, solo, &uscita.join(&nome))?;
         println!("{nome}: {:.0} s di audio, {:.0} volte il tempo reale", s.durata, volte);
     }
     Ok(())

@@ -25,7 +25,6 @@ use kira::sound::{Sound, SoundData};
 use kira::{AudioManager, AudioManagerSettings, Decibels, Frame, Tween};
 use serde::Serialize;
 
-use crate::mondo::campioni::Banca;
 use crate::mondo::{Comando, DatiMondo, Istantanea, Mondo, StatoMondo};
 
 /// L'istante in cui il processo è partito: l'origine di tutti i tempi.
@@ -413,11 +412,11 @@ impl MotoreAudio {
         }
     }
 
-    /// Avvia il mondo sonoro con i campioni già caricati. Se c’era, il vecchio sfuma.
-    pub fn mondo_avvia(&mut self, banca: &Banca) -> Result<(), String> {
+    /// Avvia il mondo sonoro, tutto sintetizzato. Se c’era, il vecchio sfuma.
+    pub fn mondo_avvia(&mut self) -> Result<(), String> {
         self.mondo_ferma();
         let seme = adesso_ns() ^ 0x5EED;
-        let (mondo, tx, stato) = Mondo::nuovo(banca, self.info.frequenza.max(1) as f32, seme)?;
+        let (mondo, tx, stato) = Mondo::nuovo(self.info.frequenza.max(1) as f32, seme);
         let telemetria = self.telemetria.clone();
         let dati = DatiMondo { mondo, prima_del_blocco: Some(Box::new(move |n| telemetria.blocco(n))) };
         self.manager.play(dati).map_err(|e| format!("{e:?}"))?;

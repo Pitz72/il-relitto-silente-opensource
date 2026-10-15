@@ -166,8 +166,13 @@ def senza_codice(s):
 
 
 def suoni():
+    """I suoni registrati che il gioco usa davvero. Dal 15 ottobre 2026 tutto il
+    suono è sintetizzato: le righe del registro con «nessuno» restano come storia e
+    non entrano nei riconoscimenti."""
     out = []
     for r in tabella(os.path.join(RADICE, "audio", "LICENZE.md"), "## I file"):
+        if r["Usato in"].startswith("nessuno"):
+            continue
         fonte, url = collegamento(r["Fonte"])
         out.append({"sigla": r["Sigla"], "titolo": r["Titolo"], "autore": r["Autore"], "fonte": fonte, "url": url,
                     "licenza": r["Licenza"], "ridistribuibile": r["Ridistribuibile"], "uso": r["Usato in"]})

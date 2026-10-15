@@ -1,8 +1,8 @@
 // ============================================================================
 //  La sezione «Suono» della pagina di prova: il prototipo dei tre ambienti
-//  (progettazione/10-bibbia-sonora.md, §8). Si ascolta dal vivo, con i comandi
-//  del mondo sonoro; con RELITTO_PROVA=mondo misura da sola, scrive il rapporto
-//  e chiude.
+//  (progettazione/10-bibbia-sonora.md, §8), tutto sintetizzato nel motore in
+//  Rust. Si ascolta dal vivo, con i comandi del mondo sonoro e i colpi uno per
+//  uno; con RELITTO_PROVA=mondo misura da sola, scrive il rapporto e chiude.
 // ============================================================================
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -16,6 +16,7 @@ import {
   type IstantaneaMondo,
   type MisureAudio,
   type NaveMondo,
+  type ProvaMondo,
 } from "../lib/tauri";
 import { arrotonda, attesa } from "./statistiche";
 
@@ -33,6 +34,22 @@ const EVENTI: { id: EventoMondo; etichetta: string; dove: AmbienteMondo[] }[] = 
   { id: "gemito", etichetta: "Un gemito", dove: ["vestibolo"] },
   { id: "goccia", etichetta: "Una goccia", dove: ["vestibolo"] },
   { id: "sorpresa", etichetta: "Sorpresa", dove: ["scafo", "vestibolo"] },
+];
+
+// i colpi uno per uno, dove si sentono (la plancia per il metallo, il vestibolo per il resto)
+const COLPI: { id: ProvaMondo; etichetta: string; dove: AmbienteMondo[] }[] = [
+  { id: "lamiera", etichetta: "Lamiera", dove: ["plancia"] },
+  { id: "rele", etichetta: "Relè", dove: ["plancia"] },
+  { id: "cigolio", etichetta: "Cigolio", dove: ["plancia"] },
+  { id: "spinta", etichetta: "Spinta", dove: ["plancia"] },
+  { id: "arpione", etichetta: "Arpione", dove: ["plancia"] },
+  { id: "urto", etichetta: "Urto lungo", dove: ["plancia"] },
+  { id: "goccia", etichetta: "Goccia", dove: ["vestibolo"] },
+  { id: "granello", etichetta: "Granello", dove: ["vestibolo"] },
+  { id: "crepa", etichetta: "Crepa", dove: ["vestibolo"] },
+  { id: "gemito", etichetta: "Gemito", dove: ["vestibolo"] },
+  { id: "una_voce", etichetta: "Una voce sola", dove: ["vestibolo"] },
+  { id: "coro", etichetta: "Il coro", dove: ["vestibolo"] },
 ];
 
 const VERSIONE = __VERSIONE__;
@@ -61,7 +78,7 @@ export default function ProvaSuono({ sistema, scrivi }: Props) {
   const avvia = useCallback(async () => {
     const a = await comando<AvvioMondo>("audio_mondo_avvia");
     setAvvio(a);
-    scrivi(`Mondo sonoro: ${a.campioni} campioni, ${arrotonda(a.memoria_mb)} MB in memoria, caricati in ${arrotonda(a.caricamento_ms)} ms`);
+    scrivi(`Mondo sonoro: tutto sintetizzato, avviato in ${arrotonda(a.avvio_ms)} ms`);
     return a;
   }, [scrivi]);
 
@@ -143,6 +160,7 @@ export default function ProvaSuono({ sistema, scrivi }: Props) {
 
   const fuori = !dentroTauri();
   const eventiQui = EVENTI.filter((e) => e.dove.includes(ambiente));
+  const colpiQui = COLPI.filter((c) => c.dove.includes(ambiente));
 
   return (
     <div className="suono">
@@ -231,6 +249,15 @@ export default function ProvaSuono({ sistema, scrivi }: Props) {
               {eventiQui.map((e) => (
                 <button key={e.id} onClick={() => manda({ tipo: "evento", valore: e.id })}>
                   {e.etichetta}
+                </button>
+              ))}
+            </div>
+          )}
+          {colpiQui.length > 0 && (
+            <div className="riga" role="group" aria-label="I colpi, uno per uno">
+              {colpiQui.map((c) => (
+                <button key={c.id} onClick={() => manda({ tipo: "prova", valore: c.id })}>
+                  {c.etichetta}
                 </button>
               ))}
             </div>

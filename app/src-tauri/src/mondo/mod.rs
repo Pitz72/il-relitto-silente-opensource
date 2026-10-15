@@ -1,18 +1,26 @@
 //! Il mondo sonoro: tutti gli strati del suono in un solo `Sound` di kira, mescolati
 //! lungo le cinque strade della bibbia sonora (§1.1): l’aria, il guscio del casco, la
-//! cuffia, il casco, le ossa. È il prototipo dei tre ambienti (§8): la plancia con
-//! il reattore, il casco sullo scafo, il vestibolo con il brusio.
+//! cuffia, il casco, le ossa. Tutto è sintetizzato qui dentro, in tempo reale:
+//! nessun campione registrato (decisione dell’autore, 15 ottobre 2026). Il re, la
+//! ventilazione, le pompe, le lamiere, i relè, il fiato, la ventola, gli stivali, il
+//! brusio delle voci, le gocce, le crepe, il gemito della nave, il riverbero delle
+//! stanze: tutto viene da `dsp.rs` e dai modelli dei moduli qui sotto.
+//!
+//! Per ora suonano i tre ambienti del prototipo (§8): la plancia con il reattore, il
+//! casco sullo scafo, il vestibolo con il brusio.
 //!
 //! La pagina manda comandi (`Comando`) per un canale; il thread dell’audio li legge a
 //! ogni blocco. Lo stesso motore gira anche fuori dall’app, in `examples/`, per
 //! rendere gli ambienti su file e misurarli.
 
 pub mod brusio;
-pub mod campioni;
+pub mod colpi;
 pub mod dsp;
 pub mod fiato;
+pub mod fondi;
 pub mod re;
-pub mod strati;
+pub mod riverbero;
+pub mod voce;
 
 use std::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 use std::sync::mpsc::{channel, Receiver, Sender};
@@ -24,11 +32,12 @@ use kira::Frame;
 use serde::{Deserialize, Serialize};
 
 use brusio::Brusio;
-use campioni::{Banca, Campione};
+use colpi::{Bus, Colpo, Corpo, Lastra};
 use dsp::{db, morbido, Biquad, Caso, Inseguitore, Pettine, Scorrevole, UnPolo};
-use fiato::{Classi, Fiato};
+use fiato::Fiato;
+use fondi::{Pompe, Ventilazione, Ventola};
 use re::Re;
-use strati::{Blip, Bus, Letto, Pioggia, Voce};
+use riverbero::Riverbero;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
@@ -77,6 +86,10 @@ pub enum Comando {
     Solo(Option<String>),
     /// sfuma tutto e chiude
     Ferma,
+    /// per le prove: fa suonare un colpo per nome («lamiera», «rele», «cigolio»,
+    /// «goccia», «crepa», «granello», «gemito», «spinta», «arpione», «urto»), o mette
+    /// il brusio a una voce sola («una_voce») o al coro («coro»)
+    Prova(String),
 }
 
 const S_RE: u32 = 1;
@@ -137,6 +150,52 @@ impl StatoMondo {
     }
 }
 
+/// Le piogge di eventi: a intervalli casuali, un colpo della sua specie.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+enum Specie {
+    Lamiera,
+    Rele,
+    Cigolio,
+    Goccia,
+    Crepa,
+    Granello,
+}
+
+struct Pioggia {
+    specie: Specie,
+    intervallo: (f32, f32),
+    guadagno: (f32, f32),
+    pan: (f32, f32),
+    attiva: bool,
+    prossimo: f32,
+}
+
+impl Pioggia {
+    fn nuova(specie: Specie, intervallo: (f32, f32), guadagno: (f32, f32)) -> Self {
+        Pioggia { specie, intervallo, guadagno, pan: (-0.8, 0.8), attiva: false, prossimo: 0.0 }
+    }
+
+    fn accendi(&mut self, si: bool, caso: &mut Caso) {
+        if si && !self.attiva {
+            self.prossimo = caso.tra(self.intervallo.0 * 0.3, self.intervallo.1);
+        }
+        self.attiva = si;
+    }
+
+    /// Vero quando è il momento di un colpo.
+    fn passo(&mut self, dt: f32, caso: &mut Caso) -> bool {
+        if !self.attiva {
+            return false;
+        }
+        self.prossimo -= dt;
+        if self.prossimo <= 0.0 {
+            self.prossimo = caso.tra(self.intervallo.0, self.intervallo.1);
+            return true;
+        }
+        false
+    }
+}
+
 enum Azione {
     Brusio(f32, f32),
     BrusioQuanti(f32, f32),
@@ -149,6 +208,8 @@ struct Automazione {
     azione: Azione,
 }
 
+const MAX_COLPI: usize = 96;
+
 pub struct Mondo {
     sr: f32,
     rx: Receiver<Comando>,
@@ -160,26 +221,20 @@ pub struct Mondo {
     re_pavimento: Biquad,
     re_aria: Scorrevole,
     re_ossa: Scorrevole,
-    ventilazione: Letto,
-    pompe: Letto,
+    ventilazione: Ventilazione,
+    pompe: Pompe,
     pompe_pavimento: Biquad,
-    ventola: Letto,
+    ventola: Ventola,
     fiato: Fiato,
     fiato_g: Scorrevole,
     brusio: Brusio,
     brusio_base: f32,
     brusio_radio: bool,
-    lamiere: Pioggia,
-    cigolii: Pioggia,
-    gocce: Pioggia,
-    crepe: Pioggia,
-    gemiti: Vec<Arc<Campione>>,
-    gemito_ultimo: usize,
-    colpi: Vec<Arc<Campione>>,
-    cigolii_lunghi: Vec<Arc<Campione>>,
-    voci: Vec<Voce>,
-    segnali: Vec<Blip>,
+    piogge: Vec<Pioggia>,
+    lastre: Vec<Lastra>,
+    colpi: Vec<Colpo>,
     automazioni: Vec<Automazione>,
+    riverbero: Riverbero,
     // --- le strade
     w_aria: Scorrevole,
     w_guscio: Scorrevole,
@@ -196,6 +251,7 @@ pub struct Mondo {
     radio_lp: Biquad,
     casco_eq1: Biquad,
     casco_eq2: Biquad,
+    casco_vicino: Biquad,
     casco_pettine: Pettine,
     ossa_lp1: Biquad,
     ossa_lp2: Biquad,
@@ -222,59 +278,45 @@ pub struct Mondo {
 }
 
 impl Mondo {
-    pub fn nuovo(banca: &Banca, sr: f32, seme: u64) -> Result<(Self, Sender<Comando>, Arc<StatoMondo>), String> {
+    pub fn nuovo(sr: f32, seme: u64) -> (Self, Sender<Comando>, Arc<StatoMondo>) {
         let (tx, rx) = channel();
         let stato = Arc::new(StatoMondo::default());
         let mut caso = Caso::nuovo(seme);
-        let uno = |nome: &str| banca.uno(nome).ok_or_else(|| format!("manca {nome}"));
-        let classi = Classi {
-            calmo: banca.gruppo("fiato/calmo"),
-            sospiro: banca.gruppo("fiato/sospiro"),
-            teso: banca.gruppo("fiato/teso"),
-            pesante: banca.gruppo("fiato/pesante"),
-            veloce: banca.gruppo("fiato/veloce"),
-            sorpresa: banca.gruppo("fiato/sorpresa"),
-        };
-        let mut lamiere = Pioggia::nuova(banca.gruppo("colpi/colpo"), Bus::Esterno, (15.0, 60.0), (-40.0, -32.0));
-        lamiere.filtro = (600.0, 7000.0);
-        lamiere.velocita = (1.0, 1.4);
-        let mut cigolii = Pioggia::nuova(banca.gruppo("colpi/cigolio"), Bus::Esterno, (60.0, 150.0), (-40.0, -33.0));
-        cigolii.filtro = (80.0, 3000.0);
-        cigolii.velocita = (0.7, 0.9);
-        let mut gocce = Pioggia::nuova(banca.gruppo("gocce/goccia"), Bus::Esterno, (3.0, 11.0), (-40.0, -30.0));
-        gocce.pan = (-0.9, 0.9);
-        let mut crepe = Pioggia::nuova(banca.gruppo("ghiaccio/crepa"), Bus::Esterno, (25.0, 70.0), (-42.0, -34.0));
-        crepe.filtro = (60.0, 4000.0);
-        crepe.velocita = (0.5, 0.8);
+        // le lamiere della plancia: sei pannelli, ognuno con il suo suono
+        let lastre = (0..6).map(|_| Lastra::a_caso((380.0, 1100.0), (0.25, 0.7), &mut caso)).collect();
+        let mut lamiere = Pioggia::nuova(Specie::Lamiera, (15.0, 60.0), (-40.0, -31.0));
+        lamiere.pan = (-0.9, 0.9);
+        let piogge = vec![
+            lamiere,
+            Pioggia::nuova(Specie::Rele, (20.0, 40.0), (-38.0, -32.0)),
+            Pioggia::nuova(Specie::Cigolio, (60.0, 150.0), (-42.0, -35.0)),
+            Pioggia::nuova(Specie::Goccia, (6.0, 22.0), (-34.0, -26.0)),
+            Pioggia::nuova(Specie::Crepa, (25.0, 70.0), (-44.0, -36.0)),
+            Pioggia::nuova(Specie::Granello, (20.0, 55.0), (-38.0, -30.0)),
+        ];
         let m = Mondo {
             sr,
             rx,
             stato: stato.clone(),
             maschera: u32::MAX,
-            re: Re::nuovo(),
+            re: Re::nuovo(sr, seme ^ 0x7E),
             re_pavimento: Biquad::passabasso(180.0, 0.7, sr),
             re_aria: Scorrevole::nuovo(0.0),
             re_ossa: Scorrevole::nuovo(0.0),
-            ventilazione: Letto::nuovo(uno("letti/ventilazione")?, sr, &mut caso),
-            pompe: Letto::nuovo(uno("letti/pompe")?, sr, &mut caso),
-            pompe_pavimento: Biquad::passabasso(200.0, 0.7, sr),
-            ventola: Letto::nuovo(uno("letti/ventola")?, sr, &mut caso),
-            fiato: Fiato::nuovo(classi, sr, seme ^ 0xF1A7),
+            ventilazione: Ventilazione::nuova(sr, seme ^ 0x7E47),
+            pompe: Pompe::nuove(sr, seme ^ 0x90),
+            pompe_pavimento: Biquad::passabasso(240.0, 0.7, sr),
+            ventola: Ventola::nuova(sr, seme ^ 0x7E0),
+            fiato: Fiato::nuovo(sr, seme ^ 0xF1A7),
             fiato_g: Scorrevole::nuovo(1.0),
-            brusio: Brusio::nuovo(banca.gruppo("voci/voce"), sr, seme ^ 0xB2),
+            brusio: Brusio::nuovo(sr, seme ^ 0xB2),
             brusio_base: 0.0,
             brusio_radio: false,
-            lamiere,
-            cigolii,
-            gocce,
-            crepe,
-            gemiti: banca.gruppo("ghiaccio/gemito"),
-            gemito_ultimo: 0,
-            colpi: banca.gruppo("colpi/colpo"),
-            cigolii_lunghi: banca.gruppo("colpi/cigolio"),
-            voci: Vec::with_capacity(64),
-            segnali: Vec::with_capacity(64),
-            automazioni: Vec::new(),
+            piogge,
+            lastre,
+            colpi: Vec::with_capacity(MAX_COLPI),
+            automazioni: Vec::with_capacity(32),
+            riverbero: Riverbero::nuovo(sr),
             w_aria: Scorrevole::nuovo(0.0),
             w_guscio: Scorrevole::nuovo(0.0),
             w_cuffia: Scorrevole::nuovo(0.0),
@@ -289,9 +331,10 @@ impl Mondo {
             compressore: Inseguitore::nuovo(0.005, 0.12, sr),
             radio_hp: Biquad::passaalto(300.0, 0.7, sr),
             radio_lp: Biquad::passabasso(3400.0, 0.9, sr),
-            // la bolla: due risonanze e le riflessioni a mezzo millisecondo
+            // la bolla: due risonanze, la vicinanza della bocca e le riflessioni a mezzo millisecondo
             casco_eq1: Biquad::picco(700.0, 1.2, 4.0, sr),
             casco_eq2: Biquad::picco(1500.0, 2.0, 3.0, sr),
+            casco_vicino: Biquad::mensola_bassa(220.0, 3.0, sr),
             casco_pettine: Pettine::nuovo((0.00046 * sr) as usize, 0.22),
             ossa_lp1: Biquad::passabasso(250.0, 0.7, sr),
             ossa_lp2: Biquad::passabasso(250.0, 0.7, sr),
@@ -316,7 +359,7 @@ impl Mondo {
             campioni_misurati: 0,
             caso,
         };
-        Ok((m, tx, stato))
+        (m, tx, stato)
     }
 
     pub fn finito(&self) -> bool {
@@ -327,8 +370,14 @@ impl Mondo {
         matches!(self.ambiente, Ambiente::Scafo | Ambiente::Vestibolo)
     }
 
+    fn suona(&mut self, corpo: Corpo, bus: Bus, guadagno_db: f32, p: f32, ritardo: f32) {
+        if self.colpi.len() < MAX_COLPI {
+            self.colpi.push(Colpo::nuovo(corpo, bus, guadagno_db, p, ritardo, self.sr));
+        }
+    }
+
     // --------------------------------------------------------------------------------
-    //  Le scene: i pesi delle strade e i volumi degli strati
+    //  Le scene: i pesi delle strade, i volumi degli strati, la stanza
     // --------------------------------------------------------------------------------
     fn applica_scena(&mut self, t: f32) {
         let sr = self.sr;
@@ -350,10 +399,17 @@ impl Mondo {
         self.w_ossa.verso(ossa, t, sr);
         self.w_fruscio.verso(fruscio, t, sr);
         // con la protezione vitale il fiato si fa più vicino
-        self.fiato_g.verso(if p { db(1.0) } else { 1.0 }, t, sr);
+        self.fiato_g.verso(if p { db(2.0) } else { 1.0 }, t, sr);
 
         let plancia = self.ambiente == Ambiente::Plancia;
         let vestibolo = self.ambiente == Ambiente::Vestibolo;
+        // la stanza: plancia piccola e piena di superfici, vestibolo basso e tondo; nel
+        // vuoto, niente
+        match self.ambiente {
+            Ambiente::Plancia => self.riverbero.stanza(0.45, 0.25, 0.55, 0.45, t),
+            Ambiente::Vestibolo => self.riverbero.stanza(1.3, 0.6, 0.7, 1.0, t),
+            _ => self.riverbero.stanza(0.5, 0.3, 0.0, 1.0, t),
+        }
         self.ventilazione.g.verso(if plancia { db(LIV_VENTILAZIONE) } else { 0.0 }, t, sr);
         self.pompe.g.verso(if plancia { db(LIV_POMPE) } else { 0.0 }, t, sr);
         self.ventola.g.verso(if tuta { db(LIV_VENTOLA) } else { 0.0 }, t, sr);
@@ -388,10 +444,13 @@ impl Mondo {
         }
 
         let caso = &mut self.caso;
-        self.lamiere.accendi(plancia, caso);
-        self.cigolii.accendi(plancia, caso);
-        self.gocce.accendi(vestibolo, caso);
-        self.crepe.accendi(vestibolo, caso);
+        for pioggia in self.piogge.iter_mut() {
+            let si = match pioggia.specie {
+                Specie::Lamiera | Specie::Rele | Specie::Cigolio => plancia,
+                Specie::Goccia | Specie::Crepa | Specie::Granello => vestibolo,
+            };
+            pioggia.accendi(si, caso);
+        }
         if self.nave == Nave::Agganciata && plancia {
             if self.t_radio > 1e8 {
                 self.t_radio = 6.0;
@@ -411,24 +470,29 @@ impl Mondo {
             let d = (self.aria - vecchia).round() as i32;
             // un tic per punto: in discesa sempre uguale, in salita sempre più chiaro
             for i in 0..d.unsigned_abs().min(25) {
-                let f = if d < 0 { 2400.0 } else { 2400.0 + 45.0 * i as f32 };
-                self.segnali.push(Blip::nuovo(f, 0.006, -32.0, i as f32 * 0.06, Bus::Casco));
+                let chiaro = if d < 0 { 0.0 } else { 45.0 * i as f32 };
+                self.suona(colpi::tic(chiaro, sr), Bus::Casco, -30.0, 0.0, i as f32 * 0.06);
             }
             if vecchia > 60.0 && self.aria <= 60.0 {
-                self.segnali.push(Blip::nuovo(880.0, 0.12, -30.0, 0.2, Bus::Casco));
-                self.segnali.push(Blip::nuovo(660.0, 0.16, -30.0, 0.36, Bus::Casco));
+                // l’ambra: due note che scendono, sottovoce
+                self.suona(colpi::nota(880.0, 0.14, sr), Bus::Casco, -33.0, 0.0, 0.2);
+                self.suona(colpi::nota(660.0, 0.2, sr), Bus::Casco, -33.0, 0.0, 0.38);
             }
             if vecchia >= 30.0 && self.aria < 30.0 {
                 // tre note d’allarme, poi i relè: la tuta stacca i canali secondari
                 for (k, f) in [988.0, 988.0, 740.0].into_iter().enumerate() {
-                    self.segnali.push(Blip::nuovo(f, 0.13, -26.0, k as f32 * 0.18, Bus::Casco));
+                    self.suona(colpi::nota(f, 0.15, sr), Bus::Casco, -28.0, 0.0, k as f32 * 0.18);
                 }
-                self.segnali.push(Blip::rele(-24.0, 0.75, Bus::Casco));
-                self.segnali.push(Blip::rele(-26.0, 0.9, Bus::Casco));
+                let r1 = colpi::rele(true, &mut self.caso, sr);
+                let r2 = colpi::rele(true, &mut self.caso, sr);
+                self.suona(r1, Bus::Casco, -24.0, -0.3, 0.75);
+                self.suona(r2, Bus::Casco, -26.0, 0.3, 0.9);
                 self.automazioni.push(Automazione { tra: 0.75, azione: Azione::Scena(1.2) });
             } else if vecchia < 30.0 && self.aria >= 30.0 {
-                self.segnali.push(Blip::rele(-26.0, 0.0, Bus::Casco));
-                self.segnali.push(Blip::rele(-24.0, 0.15, Bus::Casco));
+                let r1 = colpi::rele(false, &mut self.caso, sr);
+                let r2 = colpi::rele(true, &mut self.caso, sr);
+                self.suona(r1, Bus::Casco, -26.0, 0.3, 0.0);
+                self.suona(r2, Bus::Casco, -24.0, -0.3, 0.15);
                 self.automazioni.push(Automazione { tra: 0.15, azione: Azione::Scena(1.2) });
             }
         }
@@ -451,25 +515,12 @@ impl Mondo {
     // --------------------------------------------------------------------------------
     //  Gli eventi
     // --------------------------------------------------------------------------------
-    fn colpo(&mut self, velocita: f32, guadagno_db: f32, bus: Bus, ritardo: f32, lp: f32) {
-        if self.colpi.is_empty() {
-            return;
-        }
-        let c = self.colpi[self.caso.indice(self.colpi.len())].clone();
-        let v = Voce::nuova(c, self.sr, velocita, guadagno_db, 0.0, bus, ritardo);
-        self.voci.push(if lp > 0.0 { v.con_filtro(0.0, lp, self.sr) } else { v });
-    }
-
     fn gemito(&mut self) {
-        if self.gemiti.is_empty() {
-            return;
-        }
-        self.gemito_ultimo = self.caso.indice_nuovo(self.gemiti.len(), self.gemito_ultimo);
-        let c = self.gemiti[self.gemito_ultimo].clone();
+        let corpo = colpi::gemito(&mut self.caso, self.sr);
         let p = self.caso.tra(-0.6, 0.6);
         // «ti arriva nei denti prima che nelle cuffie»: prima le ossa, poi la cuffia
-        self.voci.push(Voce::nuova(c.clone(), self.sr, 1.0, -10.0, 0.0, Bus::Ossa, 0.0));
-        self.voci.push(Voce::nuova(c, self.sr, 1.0, -20.0, p, Bus::Esterno, 0.3));
+        self.suona(corpo, Bus::Ossa, LIV_GEMITO, 0.0, 0.0);
+        self.suona(corpo, Bus::Esterno, LIV_GEMITO - 12.0, p, 0.3);
     }
 
     fn evento(&mut self, e: Evento) {
@@ -478,14 +529,14 @@ impl Mondo {
             Evento::PrimoContatto => {
                 // il multiscanner si impenna, e il brusio entra nella cuffia
                 for _ in 0..14 {
-                    let f = self.caso.tra(1500.0, 4200.0);
+                    let chiaro = self.caso.tra(-600.0, 1800.0);
                     let t = self.caso.tra(0.0, 1.2);
-                    self.segnali.push(Blip::nuovo(f, 0.015, -30.0, t, Bus::Casco));
+                    self.suona(colpi::tic(chiaro, sr), Bus::Casco, -30.0, 0.0, t);
                 }
                 self.brusio.guadagno.verso(0.0, 0.03, sr);
                 self.automazioni.push(Automazione { tra: 0.3, azione: Azione::Brusio(self.brusio_base, 0.8) });
-                self.segnali.push(Blip::nuovo(2400.0, 0.006, -32.0, 1.0, Bus::Casco));
-                self.segnali.push(Blip::nuovo(2400.0, 0.006, -32.0, 1.06, Bus::Casco));
+                self.suona(colpi::tic(0.0, sr), Bus::Casco, -30.0, 0.0, 1.0);
+                self.suona(colpi::tic(0.0, sr), Bus::Casco, -30.0, 0.0, 1.06);
             }
             Evento::ToccaVenature => {
                 if self.brusio_base > 0.0 {
@@ -493,7 +544,7 @@ impl Mondo {
                     self.brusio.quanti.verso(24.0, 0.4, sr);
                     self.automazioni.push(Automazione { tra: 1.2, azione: Azione::Brusio(self.brusio_base, 1.5) });
                     self.automazioni.push(Automazione { tra: 1.2, azione: Azione::BrusioQuanti(16.0, 1.5) });
-                    self.segnali.push(Blip::nuovo(2400.0, 0.006, -32.0, 0.3, Bus::Casco));
+                    self.suona(colpi::tic(0.0, sr), Bus::Casco, -30.0, 0.0, 0.3);
                 }
             }
             Evento::SalaTace => {
@@ -505,36 +556,74 @@ impl Mondo {
             }
             Evento::Gemito => self.gemito(),
             Evento::Goccia => {
-                if let Some(v) = self.gocce.voce(sr, &mut self.caso) {
-                    self.voci.push(v);
-                }
+                let c = colpi::goccia(&mut self.caso, sr);
+                let p = self.caso.tra(-0.7, 0.7);
+                self.suona(c, Bus::Esterno, -30.0, p, 0.0);
             }
             Evento::Sorpresa => self.fiato.sorpresa(),
         }
     }
 
     fn evento_nave(&mut self, n: Nave) {
+        let sr = self.sr;
         match n {
             Nave::Libera => {}
             Nave::Accostata => {
                 // «a spinte corte»: i propulsori, dentro, sono colpi sordi nella struttura
                 for k in 0..4 {
                     let t = k as f32 * 0.6 + self.caso.tra(0.0, 0.15);
-                    self.colpo(0.55, -6.0, Bus::Ossa, t, 0.0);
-                    self.colpo(0.55, -26.0, Bus::Esterno, t, 400.0);
+                    let c = colpi::spinta(&mut self.caso, sr);
+                    self.suona(c, Bus::Ossa, -4.0, 0.0, t);
+                    self.suona(c, Bus::Esterno, -22.0, 0.0, t);
                 }
             }
             Nave::Agganciata => {
                 // «Due colpi sordi, che senti nelle ossa più che nelle orecchie»
-                self.colpo(0.42, -2.0, Bus::Ossa, 0.0, 0.0);
-                self.colpo(0.42, -18.0, Bus::Esterno, 0.0, 300.0);
-                self.colpo(0.42, -3.0, Bus::Ossa, 0.45, 0.0);
-                self.colpo(0.42, -19.0, Bus::Esterno, 0.45, 300.0);
-                // «un urto lungo che fa tremare la plancia»
-                if let Some(c) = self.cigolii_lunghi.first().cloned() {
-                    self.voci.push(Voce::nuova(c.clone(), self.sr, 0.55, -6.0, 0.0, Bus::Ossa, 1.6));
-                    self.voci.push(Voce::nuova(c, self.sr, 0.55, -18.0, 0.0, Bus::Esterno, 1.6).con_filtro(0.0, 1500.0, self.sr));
+                for t in [0.0, 0.45] {
+                    let c = colpi::arpione(&mut self.caso, sr);
+                    self.suona(c, Bus::Ossa, -2.0, 0.0, t);
+                    self.suona(c, Bus::Esterno, -20.0, 0.0, t);
                 }
+                // «un urto lungo che fa tremare la plancia»
+                let c = colpi::urto_lungo(&mut self.caso, sr);
+                self.suona(c, Bus::Ossa, -11.0, 0.0, 1.6);
+                self.suona(c, Bus::Esterno, -25.0, 0.0, 1.6);
+            }
+        }
+    }
+
+    fn colpo_di_pioggia(&mut self, specie: Specie, g: f32, p: f32) {
+        let sr = self.sr;
+        match specie {
+            Specie::Lamiera => {
+                let k = self.caso.indice(self.lastre.len());
+                let lastra = self.lastre[k];
+                let c = colpi::lamiera(&lastra, &mut self.caso, sr);
+                self.suona(c, Bus::Esterno, g, p, 0.0);
+            }
+            Specie::Rele => {
+                // un relè che scatta, e dopo un poco si riapre
+                let chiude = colpi::rele(true, &mut self.caso, sr);
+                let apre = colpi::rele(false, &mut self.caso, sr);
+                let dopo = self.caso.tra(0.4, 6.0);
+                self.suona(chiude, Bus::Esterno, g, p, 0.0);
+                self.suona(apre, Bus::Esterno, g - 3.0, p, dopo);
+            }
+            Specie::Cigolio => {
+                let c = colpi::cigolio(&mut self.caso, sr);
+                self.suona(c, Bus::Esterno, g, p, 0.0);
+            }
+            Specie::Goccia => {
+                let c = colpi::goccia(&mut self.caso, sr);
+                self.suona(c, Bus::Esterno, g, p, 0.0);
+            }
+            Specie::Crepa => {
+                let c = colpi::crepa(&mut self.caso, sr);
+                self.suona(c, Bus::Esterno, g, p, 0.0);
+            }
+            Specie::Granello => {
+                let c = colpi::granello(&mut self.caso, sr);
+                self.suona(c, Bus::Esterno, g, p, 0.0);
             }
         }
     }
@@ -570,6 +659,39 @@ impl Mondo {
                 self.fermo = true;
                 self.volume.verso(0.0, 1.5, sr);
             }
+            Comando::Prova(nome) => self.prova(&nome),
+        }
+    }
+
+    fn prova(&mut self, nome: &str) {
+        let sr = self.sr;
+        let p = self.caso.tra(-0.5, 0.5);
+        match nome {
+            "lamiera" => self.colpo_di_pioggia(Specie::Lamiera, -32.0, p),
+            "rele" => self.colpo_di_pioggia(Specie::Rele, -33.0, p),
+            "cigolio" => self.colpo_di_pioggia(Specie::Cigolio, -35.0, p),
+            "goccia" => self.colpo_di_pioggia(Specie::Goccia, -27.0, p),
+            "crepa" => self.colpo_di_pioggia(Specie::Crepa, -36.0, p),
+            "granello" => self.colpo_di_pioggia(Specie::Granello, -31.0, p),
+            "gemito" => self.gemito(),
+            "spinta" => {
+                let c = colpi::spinta(&mut self.caso, sr);
+                self.suona(c, Bus::Ossa, -4.0, 0.0, 0.0);
+                self.suona(c, Bus::Esterno, -22.0, 0.0, 0.0);
+            }
+            "arpione" => {
+                let c = colpi::arpione(&mut self.caso, sr);
+                self.suona(c, Bus::Ossa, -2.0, 0.0, 0.0);
+                self.suona(c, Bus::Esterno, -20.0, 0.0, 0.0);
+            }
+            "urto" => {
+                let c = colpi::urto_lungo(&mut self.caso, sr);
+                self.suona(c, Bus::Ossa, -11.0, 0.0, 0.0);
+                self.suona(c, Bus::Esterno, -25.0, 0.0, 0.0);
+            }
+            "una_voce" => self.brusio.quanti.verso(1.0, 0.5, sr),
+            "coro" => self.brusio.quanti.verso(16.0, 0.5, sr),
+            _ => {}
         }
     }
 
@@ -590,10 +712,15 @@ impl Mondo {
     /// Una volta per blocco: le piogge, i passi, la radio, le automazioni.
     fn passo_blocco(&mut self, dt: f32) {
         let sr = self.sr;
-        self.lamiere.passo(dt, sr, &mut self.caso, &mut self.voci);
-        self.cigolii.passo(dt, sr, &mut self.caso, &mut self.voci);
-        self.gocce.passo(dt, sr, &mut self.caso, &mut self.voci);
-        self.crepe.passo(dt, sr, &mut self.caso, &mut self.voci);
+        for i in 0..self.piogge.len() {
+            if self.piogge[i].passo(dt, &mut self.caso) {
+                let p = &self.piogge[i];
+                let (specie, gg, pp) = (p.specie, p.guadagno, p.pan);
+                let g = self.caso.tra(gg.0, gg.1);
+                let pan = self.caso.tra(pp.0, pp.1);
+                self.colpo_di_pioggia(specie, g, pan);
+            }
+        }
         if self.ambiente == Ambiente::Vestibolo {
             self.t_gemito -= dt;
             if self.t_gemito <= 0.0 {
@@ -606,11 +733,8 @@ impl Mondo {
             self.t_stivali -= dt;
             if self.t_stivali <= 0.0 {
                 self.piede = !self.piede;
-                if self.piede {
-                    self.colpo(0.75, -8.0, Bus::Ossa, 0.0, 0.0);
-                } else {
-                    self.colpo(1.2, -20.0, Bus::Ossa, 0.0, 0.0);
-                }
+                let c = colpi::stivale(self.piede, &mut self.caso, sr);
+                self.suona(c, Bus::Ossa, if self.piede { -6.0 } else { -12.0 }, 0.0, 0.0);
                 self.t_stivali = if self.piede { 0.42 } else { 0.5 } * self.caso.tra(0.92, 1.08);
             }
         }
@@ -667,24 +791,24 @@ impl Mondo {
             est.1 += fr * wa;
             ossa += (rl + rr) * 0.5 * wo;
 
-            // i letti
+            // i fondi
             let (vl, vr) = self.ventilazione.campione();
             est.0 += vl * s_vent;
             est.1 += vr * s_vent;
             let (pl, pr) = self.pompe.campione();
             est.0 += self.pompe_pavimento.elabora(pl, 0) * s_pompe;
             est.1 += self.pompe_pavimento.elabora(pr, 1) * s_pompe;
-            let (kl, kr) = self.ventola.campione();
-            casco.0 += kl * s_ventola;
-            casco.1 += kr * s_ventola;
+            let k = self.ventola.campione() * s_ventola;
+            casco.0 += k;
+            casco.1 += k;
 
             // il fiato, al centro, dentro il casco
-            let f = self.fiato.campione(dtf) * self.fiato_g.passo() * s_fiato;
+            let f = self.fiato.campione() * self.fiato_g.passo() * s_fiato;
             casco.0 += f;
             casco.1 += f;
 
             // il brusio: dalla radio nella plancia, dalla cuffia nel relitto
-            let (bl, br) = self.brusio.campione(dtf);
+            let (bl, br) = self.brusio.campione();
             if self.brusio_radio {
                 alt += (bl + br) * 0.5 * s_brusio;
             } else {
@@ -692,13 +816,15 @@ impl Mondo {
                 em.1 += br * s_brusio;
             }
 
-            // le voci di un colpo solo
+            // i colpi
             let mut k = 0;
-            while k < self.voci.len() {
-                match self.voci[k].campione() {
+            while k < self.colpi.len() {
+                let bus = self.colpi[k].bus;
+                match self.colpi[k].campione(&mut self.caso) {
                     Some((l, r)) => {
-                        let (l, r) = (l * s_voci, r * s_voci);
-                        match self.voci[k].bus {
+                        let s = if bus == Bus::Casco { s_segnali } else { s_voci };
+                        let (l, r) = (l * s, r * s);
+                        match bus {
                             Bus::Esterno => {
                                 est.0 += l;
                                 est.1 += r;
@@ -717,30 +843,7 @@ impl Mondo {
                         k += 1;
                     }
                     None => {
-                        self.voci.swap_remove(k);
-                    }
-                }
-            }
-            let mut k = 0;
-            while k < self.segnali.len() {
-                match self.segnali[k].campione(dtf) {
-                    Some(s) => {
-                        let s = s * s_segnali;
-                        match self.segnali[k].bus {
-                            Bus::Casco => {
-                                casco.0 += s;
-                                casco.1 += s;
-                            }
-                            Bus::Ossa => ossa += s,
-                            _ => {
-                                est.0 += s;
-                                est.1 += s;
-                            }
-                        }
-                        k += 1;
-                    }
-                    None => {
-                        self.segnali.swap_remove(k);
+                        self.colpi.swap_remove(k);
                     }
                 }
             }
@@ -749,6 +852,11 @@ impl Mondo {
             let a = morbido(self.radio_lp.elabora(self.radio_hp.elabora(alt, 0), 0) * 1.6) / 1.6;
             est.0 += a * 0.55;
             est.1 += a * 0.83;
+
+            // la stanza
+            let (rvl, rvr) = self.riverbero.elabora(est.0, est.1);
+            est.0 += rvl;
+            est.1 += rvr;
 
             // ---- le strade
             let wa = self.w_aria.passo();
@@ -765,13 +873,13 @@ impl Mondo {
             let cr = self.cuffia_lp.elabora(self.cuffia_hp.elabora(est.1 * wc + em.1 * we, 1), 1);
             let e = self.compressore.segui(cl.abs().max(cr.abs()));
             let gc = if e > soglia { (soglia / e).powf(2.0 / 3.0) } else { 1.0 } * ricarica;
-            let rumore = self.fruscio_lp.elabora(self.caso.f() * 2.0 - 1.0, 0) * fruscio_g * self.w_fruscio.passo() * s_fruscio;
+            let rumore = self.fruscio_lp.elabora(self.caso.bianco(), 0) * fruscio_g * self.w_fruscio.passo() * s_fruscio;
             l += cl * gc + rumore;
             r += cr * gc + rumore;
             // il casco: la bolla
             let wk = self.w_casco.passo();
-            let k1 = self.casco_eq2.elabora(self.casco_eq1.elabora(casco.0, 0), 0);
-            let k2 = self.casco_eq2.elabora(self.casco_eq1.elabora(casco.1, 1), 1);
+            let k1 = self.casco_vicino.elabora(self.casco_eq2.elabora(self.casco_eq1.elabora(casco.0, 0), 0), 0);
+            let k2 = self.casco_vicino.elabora(self.casco_eq2.elabora(self.casco_eq1.elabora(casco.1, 1), 1), 1);
             let (k1, k2) = self.casco_pettine.elabora(k1, k2);
             l += k1 * wk;
             r += k2 * wk;
@@ -798,7 +906,7 @@ impl Mondo {
         let s = &self.stato;
         s.fase.store(self.fiato.fase().to_bits(), Ordering::Relaxed);
         s.al_minuto.store(if self.fiato.acceso { self.fiato.al_minuto() } else { 0.0 }.to_bits(), Ordering::Relaxed);
-        s.voci.store((self.voci.len() + self.segnali.len()) as u32, Ordering::Relaxed);
+        s.voci.store(self.colpi.len() as u32, Ordering::Relaxed);
         if self.campioni_misurati as f32 >= self.sr * 0.1 {
             let rms = (self.energia / self.campioni_misurati as f64).sqrt();
             s.livello.store((20.0 * (rms + 1e-9).log10() as f32).to_bits(), Ordering::Relaxed);
@@ -808,17 +916,18 @@ impl Mondo {
     }
 }
 
-// I livelli degli strati, in dB, rispetto ai file lavorati (fondi a −28 LUFS). Tarati
-// con le misure dei rendering (examples/rendi_ambienti.rs): una plancia calma intorno a
-// −24 LUFS, il re sotto il pavimento intorno a −30, il fiato calmo intorno a −26.
-const LIV_VENTILAZIONE: f32 = -1.0;
-const LIV_POMPE: f32 = 6.0;
+// I livelli degli strati, in dB. Tarati con le misure dei rendering
+// (examples/rendi_ambienti.rs): una plancia calma intorno a −24 LUFS, il re sotto il
+// pavimento intorno a −30, il fiato calmo intorno a −27.
+const LIV_VENTILAZIONE: f32 = -15.5;
+const LIV_POMPE: f32 = -7.0;
 const LIV_RE: f32 = -10.0;
 const LIV_RE_OSSA: f32 = -14.0;
 const LIV_RE_RAMPA: f32 = -10.0;
-const LIV_VENTOLA: f32 = -9.0;
-const LIV_BRUSIO: f32 = -5.0;
+const LIV_VENTOLA: f32 = -17.0;
+const LIV_BRUSIO: f32 = -10.0;
 const LIV_RADIO: f32 = -9.0;
+const LIV_GEMITO: f32 = -18.0;
 
 // -------------------------------------------------------------------------------------
 //  Il mondo come suono di kira

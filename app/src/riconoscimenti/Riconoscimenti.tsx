@@ -113,6 +113,9 @@ export default function Riconoscimenti({ elenco: e, primoAvvio, avanti: poi }: P
 
           <section>
             <h2>I suoni</h2>
+            {e.suoni.length === 0 && (
+              <p className="ric-nota">Ogni suono del gioco è sintetizzato nel suo motore audio, senza registrazioni.</p>
+            )}
             <ul className="ric-voci">
               {e.suoni.map((s) => (
                 <li key={s.sigla}>
