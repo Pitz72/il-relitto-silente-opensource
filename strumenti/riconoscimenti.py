@@ -272,14 +272,36 @@ def autori_cargo(percorso):
     return [re.sub(r"\s*<[^>]*>", "", a).strip() for a in re.findall(r'"([^"]+)"', m.group(1))][:4]
 
 
+def caratteri_dei_loghi():
+    """Sora e Inter, i caratteri dei loghi d'apertura (app/src/loghi/caratteri/,
+    copiati dal Viaggiatore con la loro licenza)."""
+    p = os.path.join(APP, "src", "loghi", "caratteri", "LICENZA.txt")
+    if not os.path.isfile(p):
+        return []
+    ruoli = {"Sora": "la scritta del logo di FAVELLA 1", "Inter": "il motto del logo di FAVELLA 1"}
+    out = []
+    with open(p, encoding="utf-8") as f:
+        for riga in f:
+            m = re.match(r"^(\w[\w ]*?) — (Copyright .+)$", riga.strip())
+            if m and m.group(1) in ruoli:
+                sorgente = re.search(r"\((https?://[^)]+)\)", m.group(2))
+                out.append({"nome": m.group(1).lower(), "famiglia": m.group(1), "versione": "", "licenza": "OFL-1.1",
+                            "usata": ["OFL-1.1"], "copyright": [m.group(2)], "ruolo": ruoli[m.group(1)],
+                            "sorgente": sorgente.group(1) if sorgente else None})
+    return out
+
+
 def principali(js, rust):
     """I pezzi su cui il gioco sta in piedi, prima dell'elenco completo."""
     out = []
     # il motore del gioco
     with open(os.path.join(RADICE, "motore", "strutture.py"), encoding="utf-8") as f:
         versione = re.search(r'^VERSIONE_MOTORE = "([^"]+)"', f.read(), re.M).group(1)
+    # l'autore si firma Simone Pizzi (i suoi appunti, 15 ottobre 2026): la licenza del motore
+    # dice «Simone (Pitz72)», ed è la stessa persona
+    favella = [r.replace("Simone (Pitz72)", "Simone Pizzi") for r in copyright_in(os.path.join(RADICE, "motore"))]
     out.append({"nome": "FAVELLA 1", "versione": versione, "licenza": "MIT", "usata": ["MIT"],
-                "copyright": copyright_in(os.path.join(RADICE, "motore")), "ruolo": "il motore del gioco",
+                "copyright": favella, "ruolo": "il motore del gioco",
                 "sorgente": "https://github.com/Pitz72/FAVELLA1"})
     # Python nella pagina
     with open(os.path.join(APP, "node_modules", "pyodide", "package.json"), encoding="utf-8") as f:
@@ -343,7 +365,7 @@ def elenco(vecchio):
         "gioco": gioco(),
         "suoni": suoni(),
         "immagini": immagini(),
-        "caratteri": caratteri,
+        "caratteri": caratteri + caratteri_dei_loghi(),
         "principali": principali(js, rust),
         "javascript": js,
         "rust": dict(sorted(tutte_rust.items())),

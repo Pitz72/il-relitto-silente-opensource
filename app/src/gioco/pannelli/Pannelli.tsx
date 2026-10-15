@@ -256,6 +256,7 @@ export function PannelloOpzioni({ forma, opzioni, cambia, chiudi }: { forma: For
       {riga("Rivelazione del testo", "rivelazione", [[true, "a righe"], [false, "tutto subito"]])}
       {riga("Carattere", "carattere", [["newsreader", "Newsreader"], ["atkinson", "Atkinson Hyperlegible"]])}
       {riga("Testo", "testoGrande", [[false, "normale"], [true, "grande"]])}
+      {riga("Schermo intero", "schermoIntero", [[true, "sì"], [false, "no, in una finestra"]], "Si cambia anche con F11.")}
       {riga("Nomi toccabili nel testo", "nomiToccabili", [[true, "sì"], [false, "no"]], "Toccare un nome nella descrizione apre il menu di quella cosa.")}
       <button type="button" className="chiudi" onClick={chiudi}>
         chiudi <span className="tasto">Esc</span>

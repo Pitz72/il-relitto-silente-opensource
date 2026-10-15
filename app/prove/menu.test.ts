@@ -76,5 +76,9 @@ test("l'elenco dei riconoscimenti ha un testo per ogni licenza che usa", () => {
   const tutti = [...e.caratteri, ...e.principali, ...e.javascript, ...Object.values(e.rust).flat()];
   for (const p of tutti) for (const l of p.usata) assert.ok(e.testi[l], `${p.nome}: manca il testo di ${l}`);
   for (const p of tutti) assert.ok(p.copyright.length || p.autori?.length, `${p.nome}: né copyright né autori`);
-  assert.ok(e.suoni.length && e.immagini.length && e.caratteri.length === 4);
+  assert.ok(e.suoni.length && e.immagini.length);
+  // i quattro del gioco, e Sora e Inter dei loghi d'apertura
+  assert.deepEqual(e.caratteri.map((c) => c.famiglia).sort(), ["Atkinson Hyperlegible Next", "Big Shoulders Stencil", "IBM Plex Mono", "Inter", "Newsreader", "Sora"]);
+  // l'autore si firma Simone Pizzi
+  assert.ok(e.principali.find((p) => p.nome === "FAVELLA 1")?.copyright.some((c) => c.includes("Simone Pizzi")));
 });

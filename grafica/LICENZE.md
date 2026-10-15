@@ -20,5 +20,6 @@ Ogni immagine che entra nell’app ha una riga qui, prima di essere usata, come 
 | `app/public/intro/plancia-oblo.webp` | l’oblò della plancia, da vicino | `s_01_b` del sequel; la vista resa in codice | Simone Pizzi | dell’autore |
 | `app/public/intro/plancia-faro.webp` | l’oblò con il faro di prua acceso | `s_01_b` del sequel; il faro reso in codice | Simone Pizzi | dell’autore |
 | `app/public/intro/lente.webp` | la plancia nella lente del visore | `s_01_b` del sequel, dalla tavola dell’intro | Simone Pizzi | dell’autore |
+| `app/public/viste/yusuf.webp` | Yusuf al comunicatore del Magazzino Quattro | il ritratto del sequel (`YUSUF_COM`, nella versione del gioco `com-yusuf.webp`) | Simone Pizzi | dell’autore |
 
 Tutto il resto che si vede (le stelle, la massa, le venature, la mappa, la cellula dell’aria, l’Anziano fatto di punti) è disegnato in codice dall’app.

@@ -1,8 +1,13 @@
 // ============================================================================
-//  L'app, dall'avvio alla partita (06-app-desktop.md, §4.6, §10, §18.3).
-//    all'avvio      il motore comincia a caricarsi, dietro; al primo avvio, e
-//                   dopo un aggiornamento che aggiunge nomi, i riconoscimenti
-//                   e le licenze (si va avanti dopo tre secondi)
+//  L'app, dall'avvio alla partita (06-app-desktop.md, §4.6, §10, §18.3; gli
+//  appunti dell'autore del 15 ottobre 2026).
+//    all'avvio      lo schermo intero, nero; il motore comincia a caricarsi,
+//                   dietro. Dopo un attimo i loghi di Runtime Multimedia e di
+//                   FAVELLA 1 (loghi/, pari pari dal Viaggiatore; Esc li salta).
+//                   Al primo avvio, e dopo un aggiornamento che aggiunge nomi,
+//                   i riconoscimenti e le licenze (si va avanti dopo tre
+//                   secondi); poi, a ogni avvio, la dichiarazione su come è
+//                   nato il gioco, sullo stesso fondo
 //    il menu        Continua, Nuova partita, Carica, Opzioni, Registro dei
 //                   finali, Riconoscimenti, Esci, sopra la scena finale
 //                   dell'intro
@@ -19,6 +24,7 @@ import { avviaMotore, usaPassoMotore } from "./motore/condiviso";
 import { tavolozza, variabiliCss } from "./stile/atmosfere";
 import { attributiSchermo, useMovimentoRidotto, useOpzioni } from "./stile/opzioni";
 import { comando, dentroTauri } from "./lib/tauri";
+import { schermoIntero } from "./lib/finestra";
 import { archivio, type Posto } from "./gioco/salvataggi";
 import type { Inizio } from "./gioco/Gioco";
 import { Avviso, Conferma, PannelloOpzioni, Salvataggi, useAvviso, type Domanda } from "./gioco/pannelli/Pannelli";
@@ -31,16 +37,27 @@ import { ciSonoNomiNuovi, nomi, nomiVisti, segnaVisti, type Elenco } from "./ric
 import elencoJson from "./riconoscimenti/elenco.json";
 import "./stile/base.css";
 import "./menu/menu.css";
+import "./loghi/caratteri.css";
+import "./riconoscimenti/riconoscimenti.css";
 
 const Gioco = lazy(() => import("./gioco/Gioco"));
 const Intro = lazy(() => import("./intro/Intro"));
 const Riconoscimenti = lazy(() => import("./riconoscimenti/Riconoscimenti"));
+const Loghi = lazy(() => import("./loghi/Loghi"));
+const Dichiarazione = lazy(() => import("./riconoscimenti/Dichiarazione"));
+
+/** Il nero prima dei loghi: «avvii il gioco, va in fullscreen nero; dopo un secondo…»
+ *  (la luce del primo logo arriva 0,6 secondi dopo che i loghi partono). */
+const NERO = 400;
 
 const ELENCO = elencoJson as unknown as Elenco;
 const VERSIONE = __VERSIONE__;
 
 type Schermata =
+  | { tipo: "nero" }
+  | { tipo: "loghi" }
   | { tipo: "riconoscimenti"; primoAvvio: boolean }
+  | { tipo: "dichiarazione" }
   | { tipo: "menu" }
   | { tipo: "intro" }
   | { tipo: "gioco"; inizio: Inizio; chiave: number };
@@ -55,9 +72,7 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   const ridotto = useMovimentoRidotto(opzioni.movimento);
   const passo = usaPassoMotore();
   const nomiAttuali = useMemo(() => nomi(ELENCO), []);
-  const [schermata, setSchermata] = useState<Schermata>(() =>
-    ciSonoNomiNuovi(nomiAttuali, nomiVisti()) ? { tipo: "riconoscimenti", primoAvvio: true } : { tipo: "menu" },
-  );
+  const [schermata, setSchermata] = useState<Schermata>({ tipo: "nero" });
   /** c'è una partita nel motore, non finita: Continua la riprende */
   const [inCorso, setInCorso] = useState(false);
   const [registro, setRegistro] = useState<VoceRegistro[]>([]);
@@ -69,13 +84,15 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   const [avviso, mostraAvviso] = useAvviso();
   const partite = useRef(0);
 
-  // all'avvio: il motore comincia a caricarsi, e il registro dei finali si legge
+  // all'avvio: il nero, poi i loghi; il motore comincia a caricarsi, e il registro dei finali si legge
   useEffect(() => {
+    const t = setTimeout(() => setSchermata((s) => (s.tipo === "nero" ? { tipo: "loghi" } : s)), NERO);
     void avviaMotore().catch(() => undefined);
     void leggiRegistro().then((r) => {
       registroRef.current = r;
       setRegistro(r);
     });
+    return () => clearTimeout(t);
   }, []);
 
   const leggiPosti = useCallback(async () => {
@@ -114,11 +131,31 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
     void scriviRegistro(nuovo).catch(() => undefined);
   }, []);
 
+  // dopo i loghi: i riconoscimenti, se ci sono nomi nuovi; poi la dichiarazione
+  const dopoILoghi = useCallback(() => {
+    setSchermata(ciSonoNomiNuovi(nomiAttuali, nomiVisti()) ? { tipo: "riconoscimenti", primoAvvio: true } : { tipo: "dichiarazione" });
+  }, [nomiAttuali]);
+
   const dopoIRiconoscimenti = useCallback(() => {
     // la prova non segna niente come visto: chi gioca li vedrà lo stesso
     if (!prova) segnaVisti(nomiAttuali);
-    setSchermata({ tipo: "menu" });
+    setSchermata((s) => (s.tipo === "riconoscimenti" && s.primoAvvio ? { tipo: "dichiarazione" } : { tipo: "menu" }));
   }, [nomiAttuali, prova]);
+
+  // lo schermo intero: come dice l'opzione (l'app ci parte); F11 lo cambia, e l'opzione lo ricorda
+  useEffect(() => {
+    void schermoIntero(opzioni.schermoIntero);
+  }, [opzioni.schermoIntero]);
+  useEffect(() => {
+    if (schermata.tipo === "gioco") return; // nel gioco F11 lo tiene Gioco.tsx
+    const tasto = (e: KeyboardEvent) => {
+      if (e.key !== "F11") return;
+      e.preventDefault();
+      void schermoIntero().then((v) => cambiaOpzioni({ schermoIntero: v }));
+    };
+    addEventListener("keydown", tasto);
+    return () => removeEventListener("keydown", tasto);
+  }, [schermata.tipo, cambiaOpzioni]);
 
   // la prova dei finali: la guida il pilota, dal DOM, come chi gioca con il mouse
   // (uno solo: nello sviluppo React esegue gli effetti due volte)
@@ -172,6 +209,13 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   }, [schermata.tipo, pannello, domanda]);
 
   // ---- le schermate -------------------------------------------------------------
+  if (schermata.tipo === "nero") return <div className="nero-avvio" aria-hidden="true" />;
+  if (schermata.tipo === "loghi")
+    return (
+      <Suspense fallback={<div className="nero-avvio" aria-hidden="true" />}>
+        <Loghi onFine={dopoILoghi} />
+      </Suspense>
+    );
   if (schermata.tipo === "gioco")
     return (
       <Suspense fallback={null}>
@@ -220,6 +264,11 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
         {schermata.tipo === "riconoscimenti" && (
           <Suspense fallback={null}>
             <Riconoscimenti elenco={ELENCO} primoAvvio={schermata.primoAvvio} avanti={dopoIRiconoscimenti} />
+          </Suspense>
+        )}
+        {schermata.tipo === "dichiarazione" && (
+          <Suspense fallback={null}>
+            <Dichiarazione onFine={() => setSchermata({ tipo: "menu" })} />
           </Suspense>
         )}
         {avviso && <Avviso testo={avviso.testo} grave={avviso.grave} />}

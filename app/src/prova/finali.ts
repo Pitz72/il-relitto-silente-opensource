@@ -161,17 +161,30 @@ async function gioca(c: string): Promise<string> {
   return modo;
 }
 
-/** Dalla schermata in cui si è al menu principale. */
+/** Dalla schermata in cui si è al menu principale: i loghi (Esc), i riconoscimenti
+ *  («Continua» dopo tre secondi), la dichiarazione («continua»), il gioco (la pausa). */
 async function alMenu() {
-  await finche(() => document.querySelector(".menu-voci button") || document.querySelector(".riconoscimenti") || document.querySelector(".gioco"), "una schermata");
-  if (document.querySelector(".riconoscimenti")) {
-    const avanti = await finche(() => pulsante(".ric-piede button:not(:disabled)"), "«Continua» dopo i riconoscimenti", 10000);
-    await tocca(avanti, "Continua");
-  }
-  if (document.querySelector(".gioco")) {
-    if (!document.querySelector(".voci-pausa")) esc();
-    const menu = await finche(() => [...document.querySelectorAll<HTMLElement>(".voci-pausa button")].find((b) => etichetta(b).startsWith("Menu principale") && visibile(b)), "«Menu principale» nella pausa");
-    await tocca(menu, "Menu principale");
+  for (let giri = 0; giri < 8; giri++) {
+    if (pulsante(".menu-voci button[data-voce='nuova']")) return;
+    await finche(
+      () => document.querySelector(".menu-voci button, .riconoscimenti, .gioco, [aria-label='Loghi di apertura']"),
+      "una schermata",
+    );
+    if (document.querySelector("[aria-label='Loghi di apertura']")) {
+      esc();
+      await finche(() => !document.querySelector("[aria-label='Loghi di apertura']"), "la fine dei loghi", 5000);
+    } else if (document.querySelector(".dichiarazione")) {
+      await tocca(await finche(() => pulsante(".dichiarazione button"), "«continua» della dichiarazione", 5000), "continua");
+    } else if (document.querySelector(".riconoscimenti")) {
+      const avanti = await finche(() => pulsante(".ric-piede button:not(:disabled)"), "«Continua» dopo i riconoscimenti", 10000);
+      await tocca(avanti, "Continua");
+      await finche(() => !document.querySelector(".ric-piede"), "la fine dei riconoscimenti", 5000);
+    } else if (document.querySelector(".gioco")) {
+      if (!document.querySelector(".voci-pausa")) esc();
+      const menu = await finche(() => [...document.querySelectorAll<HTMLElement>(".voci-pausa button")].find((b) => etichetta(b).startsWith("Menu principale") && visibile(b)), "«Menu principale» nella pausa");
+      await tocca(menu, "Menu principale");
+    }
+    await aspetta(50);
   }
   await finche(() => pulsante(".menu-voci button[data-voce='nuova']"), "il menu principale");
 }

@@ -9,7 +9,6 @@
 //  salvataggio, o ripresa (tornando dal menu).
 // ============================================================================
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-import { getCurrentWindow } from "@tauri-apps/api/window";
 import type { Motore } from "../motore/runtime";
 import { avviaMotore, usaPassoMotore } from "../motore/condiviso";
 import type { DiarioIntero, Evento, Turno, VoceCronaca } from "../motore/tipi";
@@ -17,7 +16,8 @@ import { costruisciModello, type ModelloAzione, type SceltaModello } from "../az
 import { AZIONI_DI_SITUAZIONE } from "../azione/situazione";
 import { climaDi, tavolozza, variabiliCss } from "../stile/atmosfere";
 import { attributiSchermo, useMovimentoRidotto, useOpzioni } from "../stile/opzioni";
-import { comando, dentroTauri } from "../lib/tauri";
+import { comando } from "../lib/tauri";
+import { schermoIntero as cambiaSchermo } from "../lib/finestra";
 import { blocchiDelTurno, segnaNomi, type Blocco } from "./lamina/grammatica";
 import Lamina, { type VoceDiario } from "./lamina/Lamina";
 import Ramo from "./ramo/Ramo";
@@ -381,13 +381,15 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
     [modello, gioca, azione],
   );
 
+  // lo schermo intero come dice l'opzione (anche aperto da solo, con ?gioco)
+  useEffect(() => {
+    void cambiaSchermo(opzioni.schermoIntero);
+  }, [opzioni.schermoIntero]);
+
+  // F11: lo schermo intero, e l'opzione lo ricorda
   const schermoIntero = useCallback(async () => {
-    if (dentroTauri()) {
-      const w = getCurrentWindow();
-      await w.setFullscreen(!(await w.isFullscreen()));
-    } else if (document.fullscreenElement) await document.exitFullscreen();
-    else await document.documentElement.requestFullscreen();
-  }, []);
+    cambiaOpzioni({ schermoIntero: await cambiaSchermo() });
+  }, [cambiaOpzioni]);
 
   // ---- la tastiera (§6.2) ----------------------------------------------------
   useEffect(() => {

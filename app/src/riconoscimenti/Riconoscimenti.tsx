@@ -43,8 +43,20 @@ interface Props {
   avanti: () => void;
 }
 
-export default function Riconoscimenti({ elenco: e, primoAvvio, avanti }: Props) {
+/** Quanto sfumano le scritte prima della dichiarazione (riconoscimenti.css). */
+const SFUMA = 800;
+
+export default function Riconoscimenti({ elenco: e, primoAvvio, avanti: poi }: Props) {
   const [pronto, setPronto] = useState(!primoAvvio);
+  // al primo avvio le scritte sfumano, e sullo stesso fondo arriva la dichiarazione
+  const [uscita, setUscita] = useState(false);
+  const avanti = () => {
+    if (!primoAvvio) return poi();
+    if (uscita) return;
+    setUscita(true);
+    const ridotto = document.querySelector("[data-movimento='ridotto']") !== null;
+    setTimeout(poi, ridotto ? 300 : SFUMA);
+  };
   const foglio = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -64,10 +76,10 @@ export default function Riconoscimenti({ elenco: e, primoAvvio, avanti }: Props)
     };
     addEventListener("keydown", tasto);
     return () => removeEventListener("keydown", tasto);
-  }, [pronto, primoAvvio, avanti]);
+  }, [pronto, primoAvvio, avanti]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="riconoscimenti">
+    <div className={`riconoscimenti${uscita ? " uscita" : ""}`}>
       <div className="ric-foglio" ref={foglio} tabIndex={0} aria-label="Riconoscimenti e licenze">
         <div className="ric-colonna">
           <h1>Riconoscimenti e licenze</h1>
@@ -77,6 +89,10 @@ export default function Riconoscimenti({ elenco: e, primoAvvio, avanti }: Props)
             <p>di {e.gioco.autore}</p>
             <p className="ric-racconto">
               <i>dal racconto «Il Relitto», in</i> Dal registro della Santa Maria
+            </p>
+            <p className="ric-marchi">
+              I loghi d’apertura vengono da Il Viaggiatore, dello stesso autore. I marchi di Runtime Multimedia e di FAVELLA 1 sono
+              dei loro titolari, e non rientrano nelle licenze del gioco.
             </p>
           </section>
 

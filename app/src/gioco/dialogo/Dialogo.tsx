@@ -3,7 +3,9 @@
 //  La vista diventa grande: Yusuf al comunicatore, l'onda della voce giovane
 //  che gira su sé stessa, la figura dell'Anziano fatta di punti, i bordi che
 //  si sfanno «come una fotografia esposta troppe volte». Le risposte sono semi
-//  numerati, da 1 a 9 sulla tastiera. Le viste definitive sono della fase 5.
+//  numerati, da 1 a 9 sulla tastiera, uno sotto l'altro sotto le battute. Yusuf ha il suo ritratto, quello del
+//  sequel (il comunicatore del Magazzino Quattro); le altre viste definitive
+//  sono della fase 5.
 // ============================================================================
 import { useEffect, useRef } from "react";
 import type { Forma } from "../../stile/atmosfere";
@@ -38,6 +40,7 @@ export default function Dialogo({ personaggio, blocchi, detto, scelte, forma, ri
   return (
     <section className={`dialogo dialogo-${personaggio}`} data-forma={forma} aria-label={`Dialogo con ${CHI[personaggio] ?? personaggio}`}>
       <Vista personaggio={personaggio} ridotto={ridotto} />
+      <div className="sinistra">
       <div className="parole">
         <div className="chi">{CHI[personaggio] ?? personaggio}</div>
         {detto && <div className="detto">› {detto}</div>}
@@ -62,6 +65,7 @@ export default function Dialogo({ personaggio, blocchi, detto, scelte, forma, ri
           </button>
         ))}
       </nav>
+      </div>
     </section>
   );
 }
@@ -148,9 +152,14 @@ function Vista({ personaggio, ridotto }: { personaggio: string; ridotto: boolean
       cancelAnimationFrame(id);
     };
   }, [personaggio, ridotto]);
-  const etichetta = personaggio === "anziano" ? "La figura dell’Anziano, fatta di punti di luce" : personaggio === "eco" ? "L’onda della registrazione, che gira su se stessa" : "Il comunicatore: Magazzino Quattro";
+  const etichetta = personaggio === "anziano" ? "La figura dell’Anziano, fatta di punti di luce" : personaggio === "eco" ? "L’onda della registrazione, che gira su se stessa" : "Il comunicatore: Yusuf, dal Magazzino Quattro";
   return (
     <div className="vista">
+      {personaggio === "yusuf" && (
+        <div className="ritratto" aria-hidden="true">
+          <img src={`${import.meta.env.BASE_URL}viste/yusuf.webp`} alt="" draggable={false} />
+        </div>
+      )}
       <canvas ref={ref} role="img" aria-label={etichetta} />
       {personaggio === "yusuf" && <div className="canale">canale · magazzino quattro</div>}
     </div>
@@ -227,25 +236,25 @@ function eco(g: CanvasRenderingContext2D, w: number, h: number, t: number, c1: s
   g.globalAlpha = 1;
 }
 
-/** Il comunicatore della Santa Maria: l'onda della voce sul canale. */
+/** Il comunicatore della Santa Maria: sopra il ritratto di Yusuf, in una fascia
+ *  in basso, l'onda della voce sul canale. */
 function comunicatore(g: CanvasRenderingContext2D, w: number, h: number, t: number, colore: string) {
-  const y0 = h * 0.5;
+  const alto = h * 0.78;
+  const y0 = h * 0.89;
+  const fascia = g.createLinearGradient(0, alto, 0, h);
+  fascia.addColorStop(0, "rgba(4,6,6,0)");
+  fascia.addColorStop(0.45, "rgba(4,6,6,.62)");
+  fascia.addColorStop(1, "rgba(4,6,6,.8)");
+  g.fillStyle = fascia;
+  g.fillRect(0, alto, w, h - alto);
   g.strokeStyle = colore;
-  g.globalAlpha = 0.18;
-  g.lineWidth = 1;
-  for (let k = 1; k < 8; k++) {
-    g.beginPath();
-    g.moveTo(0, (h * k) / 8);
-    g.lineTo(w, (h * k) / 8);
-    g.stroke();
-  }
-  g.globalAlpha = 0.9;
-  g.lineWidth = 1.6;
+  g.globalAlpha = 0.85;
+  g.lineWidth = 1.4;
   g.beginPath();
   for (let x = 0; x <= w; x += 2) {
     const u = x / w;
     const inviluppo = Math.max(0, Math.sin(t / 900 + u * 3)) * Math.sin(u * Math.PI);
-    const y = y0 + Math.sin(u * 80 + t / 60) * h * 0.18 * inviluppo + Math.sin(u * 31 - t / 90) * h * 0.04 * inviluppo;
+    const y = y0 + Math.sin(u * 80 + t / 60) * h * 0.05 * inviluppo + Math.sin(u * 31 - t / 90) * h * 0.012 * inviluppo;
     if (x) g.lineTo(x, y);
     else g.moveTo(x, y);
   }

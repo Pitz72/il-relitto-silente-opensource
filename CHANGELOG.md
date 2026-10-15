@@ -18,6 +18,12 @@ documenti di `progettazione/`.
   le pagine le compone `app/src/gioco/diario/pagine.ts`. Il collaudo `collaudo/diario.py` e sette
   prove nuove.
 - I pulsanti «diario» e «menu» sopra la lamina, per chi gioca con il mouse.
+- **I loghi d’apertura** di Runtime Multimedia e di FAVELLA 1, animati e sonori, copiati pari pari dal
+  Viaggiatore (`app/src/loghi/`), dopo un attimo di nero; Esc li salta. Con loro, i caratteri Sora e
+  Inter (SIL OFL) nei riconoscimenti.
+- **La dichiarazione d’apertura**: come è nato il gioco, a ogni avvio, sul fondo dei riconoscimenti.
+- **Yusuf al comunicatore**: il suo ritratto del sequel nella vista del dialogo.
+- L’opzione «Schermo intero», che si ricorda; F11 la cambia anche nel menu.
 - **La prova dei finali nell’eseguibile** (`RELITTO_PROVA=finali`; `python strumenti/prova_eseguibile.py
   finali`): dal menu principale, l’intro saltata, poi i sei finali giocati cliccando nell’interfaccia vera
   ogni pulsante, che deve essere in vista; l’impronta finale deve essere quella del motore in CPython
@@ -103,6 +109,8 @@ documenti di `progettazione/`.
 
 ### Cambiato
 
+- L’app parte a schermo intero, nel nero, con i loghi; il nome dell’autore nei riconoscimenti è Simone
+  Pizzi; le risposte dei dialoghi stanno una sotto l’altra.
 - L’app si apre sul menu principale (o sui riconoscimenti, al primo avvio), non più dentro la partita;
   `?gioco` porta ancora dritti al gioco, per lo sviluppo. Le opzioni sono una sola per tutta l’app, e
   l’intro prende da lì il movimento ridotto.

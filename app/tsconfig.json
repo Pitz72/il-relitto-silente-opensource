@@ -11,7 +11,10 @@
     "noFallthroughCasesInSwitch": true,
     "isolatedModules": true,
     "allowImportingTsExtensions": true,
-    "erasableSyntaxOnly": true,
+    // false per i loghi copiati pari pari dal Viaggiatore (src/loghi/suono.ts usa le
+    // proprietà nei parametri del costruttore). I moduli che le prove leggono in Node
+    // (prove/*.test.ts, con i tipi tolti da Node) non devono usarle: Node fallirebbe.
+    "erasableSyntaxOnly": false,
     "skipLibCheck": true,
     "noEmit": true,
     "types": ["vite/client"]

@@ -5,6 +5,8 @@
    dalle variabili delle atmosfere (il relitto, nella membrana).
    ========================================================================== */
 .relitto-app { display: grid; place-items: center; }
+/* il nero dell'avvio, prima dei loghi */
+.nero-avvio { position: fixed; inset: 0; background: #000; cursor: none; }
 .relitto-app .palco-app {
   position: relative;
   width: min(100vw, calc(100vh * 16 / 9));

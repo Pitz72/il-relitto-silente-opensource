@@ -59,6 +59,7 @@
 .ric-gioco p { margin: 0; }
 .ric-titolo { font-weight: 300; font-size: 2.2em; letter-spacing: .06em; text-transform: uppercase; line-height: 1.1; margin-bottom: .3em !important; }
 .ric-racconto { color: var(--tenue); margin-top: .2em !important; }
+.ric-marchi { margin-top: 1.1em !important; font-size: .86em; color: var(--tenue); }
 
 /* le voci: il nome, poi le righe piccole */
 .ric-voci { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.05em; }
@@ -153,3 +154,43 @@
 .ric-piede button.pronto .ric-attesa { opacity: 0; transition: opacity .6s; }
 @keyframes ric-attesa { to { transform: scaleX(1); } }
 [data-movimento="ridotto"] .ric-attesa { animation: none; transform: scaleX(1); opacity: .5; }
+
+/* al primo avvio, «Continua»: le scritte sfumano e sullo stesso fondo arriva la dichiarazione */
+.riconoscimenti.uscita .ric-foglio, .riconoscimenti.uscita .ric-piede { opacity: 0; transition: opacity .8s ease-in; }
+[data-movimento="ridotto"] .riconoscimenti.uscita .ric-foglio, [data-movimento="ridotto"] .riconoscimenti.uscita .ric-piede { transition-duration: .3s; }
+
+/* la dichiarazione: una colonna al centro, Newsreader, e il saluto a sé */
+.riconoscimenti.dichiarazione { align-items: center; justify-content: center; cursor: pointer; animation: none; }
+.dic-colonna {
+  max-width: 34em;
+  padding: 0 4cqw;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 1.1s ease;
+}
+.dic-colonna.visibile { opacity: 1; }
+[data-movimento="ridotto"] .dic-colonna { transition-duration: .4s; }
+.dic-vena {
+  width: 9em;
+  height: 2px;
+  margin: 0 auto 2.2em;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--vena-2), transparent);
+  opacity: .6;
+}
+.dic-testo { margin: 0; font-size: 1.32em; font-weight: 340; line-height: 1.7; text-wrap: balance; color: var(--testo); }
+.dic-saluto { margin: 1.1em 0 0; font-size: 1.32em; font-style: italic; font-weight: 300; color: var(--tenue); }
+.dichiarazione button {
+  margin-top: 3.2em;
+  min-height: 36px;
+  padding: .45em 1.4em;
+  font-family: var(--mono);
+  font-size: max(11.5px, .66cqw);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--tenue);
+  border: 1px solid var(--bordo);
+  border-radius: 999px;
+}
+.dichiarazione button:hover { color: var(--testo); border-color: var(--accento-2); }
+.dichiarazione .tasto { margin-left: .8em; letter-spacing: .08em; opacity: .8; }

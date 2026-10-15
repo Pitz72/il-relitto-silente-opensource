@@ -175,6 +175,13 @@
    "da_dove": "s_01_b del sequel, dalla tavola dell’intro",
    "autore": "Simone Pizzi",
    "licenza": "dell’autore"
+  },
+  {
+   "file": "yusuf.webp",
+   "che_cosa": "Yusuf al comunicatore del Magazzino Quattro",
+   "da_dove": "il ritratto del sequel (YUSUF_COM, nella versione del gioco com-yusuf.webp)",
+   "autore": "Simone Pizzi",
+   "licenza": "dell’autore"
   }
  ],
  "caratteri": [
@@ -233,6 +240,34 @@
    ],
    "famiglia": "IBM Plex Mono",
    "ruolo": "gli strumenti, le letture dello scanner"
+  },
+  {
+   "nome": "inter",
+   "famiglia": "Inter",
+   "versione": "",
+   "licenza": "OFL-1.1",
+   "usata": [
+    "OFL-1.1"
+   ],
+   "copyright": [
+    "Copyright 2020 The Inter Project Authors (https://github.com/rsms/inter)"
+   ],
+   "ruolo": "il motto del logo di FAVELLA 1",
+   "sorgente": "https://github.com/rsms/inter"
+  },
+  {
+   "nome": "sora",
+   "famiglia": "Sora",
+   "versione": "",
+   "licenza": "OFL-1.1",
+   "usata": [
+    "OFL-1.1"
+   ],
+   "copyright": [
+    "Copyright 2019 The Sora Project Authors (https://github.com/sora-xor/sora-font)"
+   ],
+   "ruolo": "la scritta del logo di FAVELLA 1",
+   "sorgente": "https://github.com/sora-xor/sora-font"
   }
  ],
  "principali": [
@@ -244,7 +279,7 @@
     "MIT"
    ],
    "copyright": [
-    "Copyright (c) 2026 Simone (Pitz72) — FAVELLA 1"
+    "Copyright (c) 2026 Simone Pizzi — FAVELLA 1"
    ],
    "ruolo": "il motore del gioco",
    "sorgente": "https://github.com/Pitz72/FAVELLA1"

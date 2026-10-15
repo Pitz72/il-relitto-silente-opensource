@@ -420,3 +420,27 @@ prima che lo schermo si ridisegni.
 
 Resta la partita giocata a mano dall’autore, con il mouse e con la sola tastiera: la prova dice che
 ogni pulsante c’è, si vede e fa quello che deve; non dice se si trova, né se è comodo.
+
+---
+
+## 15. Gli appunti dell’autore, prima tornata (15 ottobre 2026)
+
+L’autore ha giocato l’eseguibile 0.2.0+3b82cec con i salvataggi degli atti e ha scritto i suoi appunti.
+Che cosa dicevano, e che cosa ne è stato fatto.
+
+| Appunto | Che cosa si è fatto |
+|---|---|
+| «È un videogioco di qualità e deve partire a tutto schermo» | **fatto**: la finestra parte a schermo intero (`tauri.conf.json`); l’opzione «Schermo intero» (sì, o una finestra) si ricorda, e F11 la cambia ovunque, anche nel menu (`app/src/lib/finestra.ts`) |
+| All’avvio, nero; dopo un secondo l’animazione di Runtime Multimedia, poi quella di FAVELLA 1, presi pari pari dal Viaggiatore | **fatto**: i file dei loghi (`LogoRuntime.tsx`, `LogoFavella.tsx`, `forme.ts`, `suono.ts`, `esporta.ts`, `Loghi.tsx`) e `trailer/tempo.ts` sono copiati identici, negli stessi percorsi relativi, con il loro suono sintetizzato. Le sole aggiunte del Relitto: `lib/desktop.ts` (il «siamo nell’app desktop?» per Tauri, al posto del ponte di Electron), i due caratteri dei loghi (Sora e Inter, i file latini del Viaggiatore, SIL OFL) e una regola del `tsconfig` spenta perché `suono.ts` usa le proprietà nei parametri del costruttore. Il nero dura 0,4 secondi, e la luce del primo logo arriva 0,6 secondi dopo |
+| La schermata dei riconoscimenti, verde petrolio, va molto bene; poi le scritte sfumano e compare la dichiarazione sull’IA | **fatto**: al primo avvio, «Continua» fa sfumare le scritte e sullo stesso fondo arriva la dichiarazione; negli altri avvii la dichiarazione arriva dopo i loghi. Si comporta come l’avviso del Viaggiatore (a ogni avvio, prosegue da sola dopo venti secondi o con Invio, Spazio, Esc, un clic), nello stile del Relitto (`riconoscimenti/Dichiarazione.tsx`) |
+| Il testo sull’IA, dal Viaggiatore, con il senso: sviluppato con l’ausilio dei modelli Claude, ma frutto di una progettazione metodica e accurata dell’autore | **da approvare**: il Viaggiatore ha un testo suo («nato come demo… generato con un importante ausilio dei modelli LLM della famiglia Claude…»), non la frase sulla progettazione. Il testo del Relitto unisce le due cose (`TESTO_DICHIARAZIONE`, una costante sola): «Il Relitto Silente è nato come demo di Favella1, il linguaggio di programmazione e motore di narrativa interattiva in italiano. È stato sviluppato con l’ausilio dell’intelligenza artificiale dei modelli Claude, ma è il frutto di una progettazione metodica e accurata del suo autore. *Buon divertimento.*» |
+| «Vengo citato come Simone (Pitz72), preferisco Simone Pizzi» | **fatto**: nei riconoscimenti FAVELLA 1 è «Copyright (c) 2026 Simone Pizzi». La licenza del motore copiata dal suo repository dice ancora «Simone (Pitz72)»: la copia non si tocca, lo strumento dei riconoscimenti sostituisce il nome |
+| Il menu principale | va bene |
+| L’intro è abbastanza ok, ci si aspettava qualcosa di più bello; un po’ di sound design (musica ambient spaziale, il suono del radar); forse un doppiaggio con il TTS | **da fare**, con il suono (fase 4) e l’intro (fase 6): la musica e i suoni dell’intro, poi le scene definitive. Il doppiaggio si deciderà dopo |
+| I comandi con il mouse funzionano perfettamente | — |
+| Perché manca l’immagine di Yusuf? | **fatto**: il ritratto del sequel (`com-yusuf.webp`, la versione che il sequel usa nel gioco, registrata in `grafica/LICENZE.md`) è nello schermo del comunicatore, con le righe di scansione, un vetro scuro ai bordi e un piccolo disturbo del segnale; l’onda della voce sta in una fascia in basso |
+| Le risposte potrebbero stare in verticale | **fatto**: i semi stanno uno sotto l’altro, in basso a sinistra, sotto le battute |
+| (prima) La copertina e il logo dell’eseguibile | **da fare**: la direzione è dell’autore |
+
+La prova dei finali nell’eseguibile adesso parte dai loghi (li salta con Esc), passa i riconoscimenti e la
+dichiarazione, e gioca i sei finali: verde, a schermo intero.

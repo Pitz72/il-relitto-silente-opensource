@@ -1,0 +1,72 @@
+// ============================================================================
+//  La dichiarazione d'apertura (gli appunti dell'autore, 15 ottobre 2026):
+//  come è nato il gioco. Dopo i loghi e, al primo avvio, dopo i riconoscimenti,
+//  sullo stesso fondo: le scritte dei riconoscimenti sfumano e compare questa.
+//  Il comportamento è quello dell'avviso del Viaggiatore (components/Avviso.tsx):
+//  a ogni avvio, anche con il movimento ridotto (è una comunicazione, non un
+//  effetto); si legge in una ventina di secondi, poi prosegue da sé, oppure
+//  subito con Invio, Spazio, Esc o un clic. Lo stile è quello del Relitto.
+//  Il testo è dell'autore: si cambia solo qui.
+// ============================================================================
+import { useEffect, useRef, useState } from "react";
+
+export const TESTO_DICHIARAZIONE =
+  "Il Relitto Silente è nato come demo di Favella1, il linguaggio di programmazione e motore di narrativa " +
+  "interattiva in italiano. È stato sviluppato con l’ausilio dell’intelligenza artificiale dei modelli Claude, " +
+  "ma è il frutto di una progettazione metodica e accurata del suo autore.";
+/** L'ultima frase sta a sé, come un saluto (come nel Viaggiatore). */
+export const SALUTO = "Buon divertimento.";
+
+const ATTESA_MASSIMA = 20_000; // ms: poi prosegue da solo
+
+export default function Dichiarazione({ onFine }: { onFine: () => void }) {
+  const [visibile, setVisibile] = useState(false);
+  const fatto = useRef(false);
+  const fine = useRef(onFine);
+  fine.current = onFine;
+  const prosegui = () => {
+    if (!fatto.current) {
+      fatto.current = true;
+      fine.current();
+    }
+  };
+
+  useEffect(() => {
+    const comparsa = window.setTimeout(() => setVisibile(true), 120);
+    const scadenza = window.setTimeout(prosegui, ATTESA_MASSIMA);
+    const tasto = (e: KeyboardEvent) => {
+      if (e.key === "Escape" || e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        prosegui();
+      }
+    };
+    window.addEventListener("keydown", tasto);
+    return () => {
+      window.clearTimeout(comparsa);
+      window.clearTimeout(scadenza);
+      window.removeEventListener("keydown", tasto);
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return (
+    <div className="riconoscimenti dichiarazione" role="alertdialog" aria-modal="true" aria-label="Come è nato il gioco" aria-describedby="dichiarazione-testo" onClick={prosegui}>
+      <div className={`dic-colonna${visibile ? " visibile" : ""}`}>
+        <div className="dic-vena" aria-hidden="true" />
+        <p id="dichiarazione-testo" className="dic-testo">
+          {TESTO_DICHIARAZIONE}
+        </p>
+        <p className="dic-saluto">{SALUTO}</p>
+        <button
+          type="button"
+          autoFocus
+          onClick={(e) => {
+            e.stopPropagation();
+            prosegui();
+          }}
+        >
+          continua <span className="tasto">Invio</span>
+        </button>
+      </div>
+    </div>
+  );
+}

@@ -21,6 +21,34 @@
   background: linear-gradient(var(--lamina-1), var(--lamina-2));
   border-radius: .3cqw;
 }
+/* il ritratto di Yusuf nello schermo del comunicatore: le righe di scansione, il vetro, i bordi scuri */
+.dialogo .ritratto { position: absolute; inset: 0; overflow: hidden; }
+.dialogo .ritratto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 49% 32%;
+  display: block;
+  filter: saturate(.82) contrast(1.06) brightness(.92);
+  user-select: none;
+}
+.dialogo .ritratto::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, .16) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse 85% 80% at 50% 45%, transparent 55%, rgba(0, 0, 0, .55) 100%);
+}
+[data-movimento="pieno"] .dialogo .ritratto img { animation: ritratto-segnale 7s steps(1) infinite; }
+@keyframes ritratto-segnale {
+  0%, 100% { opacity: 1; transform: none; }
+  61% { opacity: .9; transform: translateX(.15%); }
+  62% { opacity: 1; transform: none; }
+  83% { opacity: .94; }
+  84% { opacity: 1; }
+}
 .dialogo .canale {
   position: absolute;
   left: 0;
@@ -33,7 +61,9 @@
   text-transform: uppercase;
   color: var(--tenue);
 }
-.dialogo .parole { position: absolute; left: 5cqw; top: 5cqw; width: 45cqw; bottom: 12cqw; overflow-y: auto; }
+/* a sinistra le parole, e sotto, uno per riga, i semi delle risposte */
+.dialogo .sinistra { position: absolute; left: 5cqw; top: 5cqw; width: 45cqw; bottom: 3.6cqw; display: flex; flex-direction: column; gap: 2.2cqw; }
+.dialogo .parole { flex: 1; min-height: 0; overflow-y: auto; }
 .dialogo .chi { font-style: italic; font-size: max(17px, 1.3cqw); color: var(--accento); margin-bottom: 1cqw; }
 .dialogo[data-forma="acciaio"] .chi { font-style: normal; font-family: var(--mono); font-size: max(12px, .8cqw); letter-spacing: .24em; text-transform: uppercase; }
 .dialogo .detto { font-family: var(--mono); font-size: max(12px, .74cqw); letter-spacing: .1em; color: var(--tenue); margin-bottom: .9cqw; font-style: italic; }
@@ -44,11 +74,13 @@
 .dialogo .battuta .racconto { color: color-mix(in srgb, var(--testo) 82%, var(--tenue)); }
 .dialogo .s-intraducibile { font-family: var(--mono); font-size: .78em; color: var(--tenue); }
 
-.dialogo .semi { position: absolute; left: 5cqw; right: 5cqw; bottom: 3.6cqw; display: flex; flex-wrap: wrap; gap: 1cqw; }
+.dialogo .semi { flex: none; display: flex; flex-direction: column; align-items: flex-start; gap: .7cqw; }
 .dialogo .semi button {
   display: inline-flex;
   align-items: baseline;
   gap: .8em;
+  max-width: 100%;
+  text-align: left;
   font-size: max(16px, 1.15cqw);
   color: var(--testo);
   padding: .65em 1.4em;

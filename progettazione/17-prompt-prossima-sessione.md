@@ -20,7 +20,9 @@ Riprendiamo l’app de «Il Relitto Silente». Carica la memoria del progetto, p
 - Prima di scaricare qualunque file (anche i pacchetti npm e i crate), si dice nome, fonte e dimensione. Per Freesound l’autore entra da sé nel pannello del browser; le sue credenziali non si scrivono mai.
 - Le versioni seguono le fasi (`sviluppo/VERSIONI.md`): la fase 3 chiusa sarà la 0.3.0, e porterà anche il motore 1.5.0.
 
-**Prima di tutto, gli appunti dell’autore.** Il 15 ottobre 2026, a fine sessione, l’autore si è preso un eseguibile (`consegne/Il Relitto Silente 0.2.0+3b82cec/`: l’installer e la versione portatile) e cinque salvataggi, uno all’inizio di ogni atto (posti 1–5 della sua cartella), per prendere appunti su che cosa migliorare. La sessione comincia da quegli appunti: si leggono, si discutono, si decide l’ordine, e solo dopo si riprende la lista qui sotto.
+**Gli appunti dell’autore: la prima tornata è fatta** (14, §15; schermo intero, loghi, dichiarazione, nome, Yusuf, risposte in colonna). Se ne arrivano altri, si comincia da quelli. Resta da sentire che cosa pensa del testo della dichiarazione.
+
+**Com’era: gli appunti dell’autore.** Il 15 ottobre 2026, a fine sessione, l’autore si è preso un eseguibile (`consegne/Il Relitto Silente 0.2.0+3b82cec/`: l’installer e la versione portatile) e cinque salvataggi, uno all’inizio di ogni atto (posti 1–5 della sua cartella), per prendere appunti su che cosa migliorare. La sessione comincia da quegli appunti: si leggono, si discutono, si decide l’ordine, e solo dopo si riprende la lista qui sotto.
 
 **Il lavoro: il resto della seconda metà della fase 3** (§14 del 06; si chiude quando il gioco si gioca dall’inizio alla fine nell’app, con lo stile definitivo, senza suoni né cinematiche). In quest’ordine.
 
