@@ -1,5 +1,5 @@
 # ============================================================================
-#  ponte.py — il ponte fra l'interfaccia e il motore FAVELLA 1.4.4
+#  ponte.py — il ponte fra l'interfaccia e il motore FAVELLA 1.5.0
 # ----------------------------------------------------------------------------
 #  Gira dentro Pyodide (l'app lo scrive nel filesystem di Pyodide e lo importa)
 #  e, identico, in CPython (i collaudi). Ogni funzione rel_* restituisce una
@@ -30,13 +30,12 @@ import hashlib
 import io
 import json
 import os
-import random
 import time
 
 from compilatore import compila_mondo
 from favella_utils import radice_proprieta, raccogli_uscita
-from gioco import (_mostra_nodo, carica_da_dati, dati_salvataggio, elabora_comando,
-                   intestazione, mostra_stanza, pulsanti, risolvi_in_silenzio)
+from gioco import (carica_da_dati, dati_salvataggio, elabora_comando, mostra_situazione,
+                   nuova_partita, prova, pulsanti, risolvi_in_silenzio)
 from libreria_azioni import LIBRERIA_AZIONI
 from strutture import SEME_CASUALE_DEFAULT, VERSIONE_MOTORE, ConseguenzaProprieta, Mondo
 
@@ -74,11 +73,14 @@ def rel_compila(percorso):
                       "rapporto": rapporto.getvalue()})
     if mondo is None:
         return _json({"ok": False, "errore": "compilazione fallita", "rapporto": rapporto.getvalue()})
+    # il modo «solo pulsanti» è della partita, non della storia: si mette sul
+    # mondo compilato, e ogni partita, che ne è una copia, lo eredita
+    mondo.modo_comandi = "pulsanti"
     _base, _storia = mondo, percorso
     _versione = _leggi_versione(percorso)
-    prova = copy.deepcopy(mondo)
-    prova.carica_azioni(LIBRERIA_AZIONI)
-    _indice = _indicizza(prova)
+    copia = copy.deepcopy(mondo)
+    copia.carica_azioni(LIBRERIA_AZIONI)
+    _indice = _indicizza(copia)
     return _json({"ok": True, "ms": _ms(t0), "stanze": len(mondo.stanze),
                   "oggetti": len(mondo.oggetti), "motore": VERSIONE_MOTORE,
                   "impronta_storia": impronta_storia(), "versione": _versione})
@@ -100,25 +102,10 @@ def _leggi_versione(percorso):
 def _nuova_partita(seme):
     """Una partita nuova, copia del mondo compilato, con l'apertura già detta:
     restituisce il mondo e gli eventi dell'intestazione (con il prologo) e
-    della prima stanza, separati.
-
-    Il punto di partenza dei salvataggi (_stato_iniziale) si fissa DOPO
-    l'apertura. Il motore lo fissa prima (imposta_posizione_iniziale), ma la
-    prima stanza mostrata cambia lo stato (le stanze visitate): rigiocando un
-    salvataggio da lì, la plancia risultava mai vista e l'impronta non tornava.
-    Il seme va messo prima dell'apertura per la stessa ragione."""
-    m = copy.deepcopy(_base)
-    m.carica_azioni(LIBRERIA_AZIONI)
-    m.rng = random.Random(seme)
-    m.imposta_posizione_iniziale()
-    m.modo_comandi = "pulsanti"
-    with raccogli_uscita(m) as apertura:
-        intestazione(m)
-    with raccogli_uscita(m) as stanza:
-        mostra_stanza(m)
-    m._stato_iniziale = m.cattura_stato()
-    m._impronta_iniziale = m.impronta_stato()
-    return m, apertura.eventi, stanza.eventi
+    della prima stanza, separati. È nuova_partita del motore (dalla 1.5.0), che
+    mette il seme prima dell'apertura e fissa il punto di partenza dei
+    salvataggi dopo (L18): fino alla 0.2.0 il ponte lo faceva a mano."""
+    return nuova_partita(_base, seme)
 
 
 def rel_avvia(seme=None):
@@ -699,8 +686,11 @@ def _analizza(comando):
 # ----------------------------------------------------------------------------
 #  L'impronta della storia: i sorgenti e il motore (per i salvataggi)
 # ----------------------------------------------------------------------------
-def impronta_storia():
-    h = hashlib.sha256(VERSIONE_MOTORE.encode())
+def impronta_storia(motore=VERSIONE_MOTORE):
+    """`motore`: la versione del motore con cui contare. Con quella scritta in un
+    salvataggio dice se i sorgenti sono gli stessi anche quando il motore è
+    cambiato dopo (rel_carica)."""
+    h = hashlib.sha256(str(motore).encode())
     cartella = os.path.dirname(_storia) if _storia else "."
     for nome in sorted(os.listdir(cartella)):
         if nome.endswith(".fav"):
@@ -720,6 +710,9 @@ def impronta_storia():
 #    ricostruita  la storia è cambiata dopo il salvataggio: la partita si
 #                 rigioca sulla versione nuova, e il gioco lo dice;
 #    diversa      stessa storia e impronta diversa: un difetto, mai una scelta.
+#  Se è cambiato soltanto il motore (gli stessi .fav, 1.4.4 → 1.5.0) e la
+#  partita rigiocata torna alla stessa impronta, è identica: non c'è niente da
+#  controllare. Se l'impronta non torna, è ricostruita.
 #  Il file lo scrive e lo legge l'app (Tauri, nella cartella dei salvataggi);
 #  il ponte dà e riceve il testo.
 def rel_salva(identita=None, creato=None):
@@ -784,13 +777,17 @@ def rel_carica(testo):
     if not ok:
         return rifiuto("motore", messaggio)
     stessa_storia = dati.get("impronta_storia") == impronta_storia()
+    motore = dati.get("motore")
+    solo_il_motore = (not stessa_storia and isinstance(motore, str) and motore != VERSIONE_MOTORE
+                      and dati.get("impronta_storia") == impronta_storia(motore))
     identica = m.impronta_stato() == partita.get("impronta")
-    if stessa_storia and identica:
+    if (stessa_storia or solo_il_motore) and identica:
         esito, messaggio = "identica", f"Partita caricata: turno {m.turno_corrente}."
     elif not stessa_storia:
         esito = "ricostruita"
+        perche = "il motore del gioco è cambiato" if solo_il_motore else "la storia è cambiata"
         messaggio = (f"La partita è stata ricostruita sulla versione nuova del gioco (turno "
-                     f"{m.turno_corrente}): la storia è cambiata dopo il salvataggio. "
+                     f"{m.turno_corrente}): {perche} dopo il salvataggio. "
                      f"Controlla che tutto sia come lo ricordi.")
     else:
         esito = "diversa"
@@ -806,23 +803,13 @@ def rel_carica(testo):
 
 def _mostra_su_un_ramo(m):
     """La stanza (o la battuta del dialogo) da mostrare dopo un caricamento,
-    senza cambiare la partita. Il motore, dopo CARICA, rimostra la stanza, e
-    mostrarla la segna come vista: una stanza raggiunta da una regola che non la
-    mostra (la gola del ritorno, nella fuga) diventava vista solo nella partita
-    caricata, e l'impronta non tornava più."""
-    istantanea, caso = m.cattura_stato(), m.rng.getstate()
-    sessione = {k: copy.copy(m.__dict__[k]) for k in _SESSIONE if k in m.__dict__}
-    try:
-        with raccogli_uscita(m) as uscita:
-            if m.in_dialogo():
-                _mostra_nodo(m)
-            else:
-                mostra_stanza(m)
-        return uscita.eventi
-    finally:
-        m.ripristina_stato(istantanea)
-        m.rng.setstate(caso)
-        m.__dict__.update(sessione)
+    senza cambiare la partita: mostra_situazione del motore (dalla 1.5.0, L19).
+    Mostrare la stanza la segnerebbe come vista: una stanza raggiunta da una
+    regola che non la mostra (la gola del ritorno, nella fuga) diventava vista
+    solo nella partita caricata, e l'impronta non tornava più."""
+    with raccogli_uscita(m) as uscita:
+        mostra_situazione(m)
+    return uscita.eventi
 
 
 def rel_impronta():
@@ -846,29 +833,17 @@ def rel_impronta():
 #                  pulsanti non si preme niente, e la partita resta la stessa.
 #  I pulsanti sono quelli del motore oppure, con `candidati`, soltanto quelli
 #  che il modello d'azione dell'app mostra nei suoi menu (collaudo/menu.mjs).
-#  Ogni prova si fa su un ramo della partita, poi disfatto.
-_SESSIONE = ("_storia_stati", "ultimo_comando", "verbi_scoperti", "argomenti_scoperti",
-             "_snap_dialogo", "annunci", "_registro_comandi", "_pos_registro",
-             "_reg_ingresso_dialogo", "_turno_libero", "_in_conferma", "_uscita_richiesta",
-             "_azione_riuscita", "_ambiguita", "_usa_in_sospeso", "_regola_scattata")
-
-
+#  Ogni prova si fa su un ramo della partita, poi disfatto: prova del motore
+#  (dalla 1.5.0, N4), che copre da sé ogni campo di sessione. Fino alla 0.2.0 il
+#  ponte ne copiava sedici a mano.
 def _ramo(comando):
     """Gioca `comando` su un ramo della partita e torna indietro: l'impronta
     dello stato a cui porta e il testo della risposta."""
-    m = _mondo
-    istantanea, caso = m.cattura_stato(), m.rng.getstate()
-    sessione = {k: copy.copy(m.__dict__[k]) for k in _SESSIONE if k in m.__dict__}
     try:
-        with raccogli_uscita(m) as uscita:
-            elabora_comando(m, comando)
-        return m.impronta_stato(), uscita.testo()
+        r = prova(_mondo, comando)
     except Exception:                                       # noqa: BLE001
         return None, None
-    finally:
-        m.ripristina_stato(istantanea)
-        m.rng.setstate(caso)
-        m.__dict__.update(sessione)
+    return r["impronta"], r["testo"]
 
 
 # Fra i pulsanti di servizio, quelli che giocano un turno; «aspetta» per primo:

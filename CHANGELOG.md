@@ -76,6 +76,14 @@ documenti di `progettazione/`.
 
 ### Cambiato
 
+- **Il motore passa a FAVELLA 1.5.0** (ambito `motore`; `progettazione/16-favella-1-5-0.md`). La copia in
+  `motore/` si rifà dal tag `v1.5.0` del repository FAVELLA1; i `.fav` non cambiano e il gioco gioca
+  identico, con lo stesso testo e la stessa impronta a ogni passo. Il ponte lascia i suoi tre rimedi
+  per l’interfaccia pubblica degli ospiti: `nuova_partita` (il punto di partenza dopo l’apertura, L18),
+  `prova` (il ramo disfatto, senza più sedici campi di sessione copiati a mano, N4) e
+  `mostra_situazione` (la stanza ridisegnata dopo un caricamento senza segnarla come vista, L19).
+  L’impronta della storia cambia con il motore: un salvataggio della 0.2.0 si carica comunque
+  identico, perché il ponte riconosce che è cambiato soltanto il motore (`sviluppo/VERSIONI.md`, §4).
 - I suggerimenti riconoscono anche «se lo ANALIZZI» (il presente, seconda persona, con il pronome davanti): la
   proiezione del Ponte accende il suo Analizza.
 - `collaudo/menu.mjs` prende il ponte in Node da `collaudo/ponte.mjs`, che usa anche il collaudo della

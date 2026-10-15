@@ -124,7 +124,7 @@ def gioca(percorso):
 
 def rifiuti():
     """I caricamenti che devono essere rifiutati, o segnalati."""
-    problemi = []
+    problemi, casi = [], []
     ponte.rel_avvia(1)
     for cmd in ("analizza la nave aliena", "accosta", "ovest"):
         ponte.rel_comando(cmd)
@@ -132,6 +132,7 @@ def rifiuti():
     prima = ponte._mondo.impronta_stato()
 
     def carica(dati, atteso_ok, atteso):
+        casi.append(atteso)
         testo = dati if isinstance(dati, str) else json.dumps(dati)
         r = json.loads(ponte.rel_carica(testo))
         chiave = r.get("esito") if r["ok"] else r.get("motivo")
@@ -160,6 +161,11 @@ def rifiuti():
             problemi.append(f"il rifiuto «{motivo}» ha cambiato la partita in corso")
     carica(con(impronta_storia="0" * 64), True, "ricostruita")
     carica(con(**{"partita.impronta": "0" * 64}), True, "diversa")
+    # gli stessi .fav con un motore di prima (un salvataggio della 0.2.0, motore
+    # 1.4.4): identica se la partita torna, ricostruita se no
+    vecchio = {"motore": "1.4.4", "impronta_storia": ponte.impronta_storia("1.4.4")}
+    carica(con(**vecchio), True, "identica")
+    carica(con(**vecchio, **{"partita.impronta": "0" * 64}), True, "ricostruita")
     carica(buono, True, "identica")
     if ponte._mondo.impronta_stato() != prima:
         problemi.append("il salvataggio buono non torna alla stessa impronta")
@@ -169,7 +175,7 @@ def rifiuti():
             problemi.append(f"nel salvataggio manca «{chiave}»")
     if buono["versione"] != ponte._versione["formatoSalvataggi"]:
         problemi.append("il formato del salvataggio non è quello di versione.json")
-    return problemi
+    return problemi, len(casi)
 
 
 def main():
@@ -196,8 +202,8 @@ def main():
                 print(f"     {p}")
         else:
             print(f"[OK] {riga}")
-    problemi = rifiuti()
-    print(f"[{'NO' if problemi else 'OK'}] i rifiuti e le segnalazioni (9 casi)")
+    problemi, casi = rifiuti()
+    print(f"[{'NO' if problemi else 'OK'}] i rifiuti e le segnalazioni ({casi} casi)")
     for p in problemi:
         print(f"     {p}")
     print(f"\nPercorsi: {len(percorsi)}; falliti: {falliti}. Salvataggi provati: {totale}.")

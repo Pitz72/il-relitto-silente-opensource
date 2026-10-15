@@ -8,7 +8,7 @@ fatto che qui l’app è ancora in costruzione. Lo strumento che le applica è `
 | Che cosa | Dove | Forma | Chi la decide |
 |---|---|---|---|
 | **Il gioco** | `versione.json` → `gioco` | SemVer 2.0.0: `MAJOR.MINOR.PATCH[-pre]` | questo documento |
-| **Il motore FAVELLA** | `motore/strutture.py` → `VERSIONE_MOTORE` | SemVer del motore: 1.4.4, congelato | il repository del motore |
+| **Il motore FAVELLA** | `motore/strutture.py` → `VERSIONE_MOTORE` | SemVer del motore: 1.5.0 (dal 15 ottobre 2026; prima 1.4.4) | il repository del motore; l’aggiornamento della copia, l’autore |
 | **Il formato dei salvataggi** | `versione.json` → `formatoSalvataggi` | intero: 1, 2, 3… | cresce solo se i file cambiano in modo incompatibile |
 
 `versione.json` è l’**unica fonte di verità**. Devono dire la stessa versione:
@@ -61,7 +61,8 @@ una versione e l’altra: **i suoi salvataggi** e **la storia che ha cominciato*
 
 - contenuti nuovi: una stanza, una voce, un finale in più; la scatola nera di L.V. recitata (D18);
 - funzioni nuove dell’app: un’opzione, una lingua, un livello di qualità;
-- un nuovo motore FAVELLA *minor* (che oggi non è previsto: il motore è congelato);
+- un nuovo motore FAVELLA *minor* (la copia in `motore/` si rifà dal tag e non si cambia mai a mano;
+  la 1.5.0 è entrata prima della 1.0, con la fase 3);
 - ribilanciamenti che cambiano **l’esito** di sequenze già giocate: i salvataggi si rigiocano (§4),
   quindi un salvataggio vecchio si carica ma può arrivare in uno stato diverso. Il gioco lo dice.
 
@@ -82,12 +83,16 @@ deve restare verde.
 
 Un salvataggio contiene la **sequenza effettiva dei comandi** e l’**impronta** dello stato (SHA-256
 di luogo, turno, variabili, oggetti, demoni, stato del generatore casuale). Caricare vuol dire
-rigiocare e confrontare l’impronta, come nel Viaggiatore e come fa il motore 1.4.
+rigiocare e confrontare l’impronta, come nel Viaggiatore e come fa il motore dalla 1.4.
 
 - **Stessa storia e stesso motore** (impronta della storia uguale): il caricamento deve dare
   un’impronta **identica**. Se no è un difetto, non una scelta di versione.
 - **Storia cambiata**: il salvataggio si rigioca sulla versione nuova e il gioco avvisa che la partita
   è stata ricostruita. È il caso MINOR del §3.
+- **Solo il motore cambiato** (gli stessi `.fav`, un motore più nuovo: l’impronta della storia
+  ricalcolata con la versione del motore scritta nel salvataggio torna): se la partita rigiocata
+  arriva alla stessa impronta è **identica**, e il gioco non avvisa; se no è ricostruita, e il gioco
+  dice che è cambiato il motore.
 - **`formatoSalvataggi`** cresce quando cambia la *struttura del file*. Chi legge un formato più vecchio
   lo migra; un formato più nuovo viene rifiutato con un messaggio che chiede di aggiornare il gioco.
   Un formato che non si migra è MAJOR.

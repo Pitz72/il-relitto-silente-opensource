@@ -1,4 +1,4 @@
-# FAVELLA 1 — Specifica formale della grammatica (v1.4.0)
+# FAVELLA 1 — Specifica formale della grammatica (v1.5.0)
 
 > Documento **tecnico** versionato. Fissa lo *scheletro statico* della grammatica
 > di FAVELLA 1 e il modello dei *terminali chiusi generati per-file*. **Non** è il
@@ -10,7 +10,34 @@
 >
 > **Versione.** Dalla v0.18.0 grammatica, compilatore e motore condividono **una
 > sola linea di versione**: questa specifica avanza in lockstep col motore.
-> Versione corrente: **1.4.0** (grammatica e motore).
+> Versione corrente: **1.5.0** (grammatica e motore).
+>
+> **Novità v1.5.0 — le lezioni del remake de «Il Relitto Silente» e le idee
+> rimaste.** Frasi nuove, tutte additive: le frasi valide in 1.4 restano valide e
+> significano la stessa cosa; il testo che il motore scrive per le storie che non
+> usano le frasi nuove è identico (verificato su undici storie ufficiali, Il
+> Viaggiatore compreso, comando per comando). Regole nuove: **`def_stato_calcolato`**
+> (`La protezione è attiva quando …`), **`def_testo`** (`Il testo "nome" è "…".`),
+> **`def_tempo_libero`** (`"esamina" non fa passare il tempo.`), **`def_arrivo`**
+> (`Quando il giocatore entra in X …: …`), **`def_riga_stato`**, **`def_ifid`**,
+> **`def_demoni_fine_turno`** (`I demoni guardano la fine del turno.`);
+> **`uscita_condizionata`** in coda a `def_connessione` (`… collega est a la gola se
+> …; altrimenti "…"`); **`altri_verbi`** e **`prima_volta`** in `def_regola`
+> (`Invece di usa oppure accendi il faro per la prima volta: …`); `prima_volta` anche
+> in `demone_quando`; **`poi_dire`** e **`basta`** nella coda degli esiti (`e poi dire
+> "…"`, `e basta`, solo nelle regole `Prima di`); le conseguenze **`cons_giocatore_va`**
+> (`il giocatore va in X`), **`cons_giocatore_ritrova`** (`il giocatore si ritrova in
+> X`) e **`cons_segnala`** (`segnala "gemito"`); `def_alias` con `si chiamano anche` e
+> più nomi; `(voluto)` dopo `è uno stato` / `è un contatore`. Il resto è motore e
+> strumenti: correzioni (salvataggi, caricamento, scanner, testi condizionali,
+> linter), `[se]` annidati, la tipografia italiana nei testi, l'interfaccia per gli
+> ospiti, i fatti nei pulsanti, i collaudi con le attese. Keyword aggiunte: `chiamano`,
+> `quando` (in `def_stato_calcolato`), `testo`, `fa`, `passare`, `tempo`, `riga`,
+> `ifid`, `demoni`, `guardano`, `fine`, `del`, `entra`, `oppure` (fra i verbi), `per`,
+> `prima`, `volta`, `poi`, `basta`, `ritrova`, `segnala`, `voluto` (dopo una
+> dichiarazione di stato). Riservate: `basta`, `poi`, `volta`, `ritrova`, `segnala`,
+> `chiamano`, `entra`, `ifid`; vietate come nome intero: `basta`, `poi`, `segnala`.
+> Vedi §28.
 >
 > **Novità v1.4.0 — i pulsanti-verbo e l'architettura (L-7).** Una sola frase
 > nuova, additiva: **`def_comandi`** (`I comandi si scrivono.` / `I comandi si
@@ -373,6 +400,13 @@ di Lark (EBNF con azioni `-> nome`).
                   | def_prologo
                   | def_messaggio
                   | def_comandi           // [1.4.0]
+                  | def_stato_calcolato   // [1.5.0 / C2]
+                  | def_testo             // [1.5.0 / C9]
+                  | def_tempo_libero      // [1.5.0 / C10]
+                  | def_arrivo            // [1.5.0 / C12]
+                  | def_riga_stato        // [1.5.0]
+                  | def_ifid              // [1.5.0]
+                  | def_demoni_fine_turno // [1.5.0 / D]
 
     // --- COPULA FLESSIBILE NEL NUMERO (A5) ---
     _copula: "è" | "sono"
@@ -412,8 +446,11 @@ di Lark (EBNF con azioni `-> nome`).
     // ('La cantina è buia.') è una proprietà speciale (def_proprieta), non una regola.
     def_illumina: ENTITA "illumina" "."
     def_opposti: PROPRIETA "e" PROPRIETA "sono" "opposte" "."
-    def_alias: ENTITA "si" "chiama" "anche" TESTO_QUOTATO "."
-    def_connessione: ENTITA "collega" DIREZIONE "a" ENTITA "."
+    // [1.5.0 / L12] 'si chiamano anche' e più nomi in una riga.
+    def_alias: ENTITA "si" ( "chiama" | "chiamano" ) "anche" TESTO_QUOTATO ( ( "," | "e" ) TESTO_QUOTATO )* "."
+    // [1.5.0 / C13] Un'uscita con una condizione (e il testo per chi prova a passare).
+    def_connessione: ENTITA "collega" DIREZIONE "a" ENTITA uscita_condizionata? "."
+    uscita_condizionata: "se" condizione ( ( ";" | "," )? "altrimenti" TESTO_QUOTATO )?
     def_giocatore: "Il" "giocatore" ( "comincia" | "inizia" | "parte" ) PREP_LUOGO ENTITA "."
 
     // --- CAPACITÀ DI TRASPORTO (Livello 7) E INVENTARIO INIZIALE (A8) ---
@@ -454,12 +491,22 @@ di Lark (EBNF con azioni `-> nome`).
                 | "scelgono" "con" "i" "pulsanti"                            -> modo_pulsanti
                 | "scrivono" "oppure" "si" "scelgono" "con" "i" "pulsanti"   -> modo_entrambi
 
+    // --- [1.5.0] TESTI CON UN NOME, TEMPO, RIGA DI STATO, IFID, DEMONI ---
+    def_testo: "Il" "testo" TESTO_QUOTATO "è" TESTO_QUOTATO "."
+    def_tempo_libero: TESTO_QUOTATO "non" "fa" "passare" "il" "tempo" "."
+    def_riga_stato: "La" "riga" "di" "stato" "è" TESTO_QUOTATO "."
+    def_ifid: _L_APOSTROFO "ifid" "è" TESTO_QUOTATO "."
+    def_demoni_fine_turno: "I" "demoni" "guardano" "la" "fine" "del" "turno" "."
+
     // --- STATO ASTRATTO (stati e contatori) ---
     // [0.27.0/A] _copula (è|sono) e "parte"|"partono": i nomi di stato/contatore
     // sono spesso plurali ('le vite', 'i punti', 'le munizioni').
-    def_stato: VARIABILE _copula "uno" "stato" "."
+    // [1.5.0 / L4] «(voluto)»: lo legge l'interfaccia, non la storia.
+    def_stato: VARIABILE _copula "uno" "stato" voluto? "."
     def_stato_valore: VARIABILE _copula PROPRIETA "."
-    def_contatore: VARIABILE _copula "un" "contatore" "."
+    // [1.5.0 / C2] Stato calcolato: dopo PROPRIETA il lookahead "quando" vs ".".
+    def_stato_calcolato: VARIABILE _copula PROPRIETA "quando" condizione "."
+    def_contatore: VARIABILE _copula "un" "contatore" voluto? "."
     def_contatore_iniziale: VARIABILE ( "parte" | "partono" ) "da" _numero "."
 
     // --- TOPOLOGIA: DIREZIONI PERSONALIZZATE ---
@@ -470,8 +517,17 @@ di Lark (EBNF con azioni `-> nome`).
     // coda, OPPURE una o più conseguenze SENZA testo (tick silenzioso). Dopo ':'
     // il lookahead "dire" vs primo-token-di-conseguenza distingue → 0-ambiguo.
     // [1.3.0 / M-1] 'e adesso' (o 'adesso') anche davanti alla prima conseguenza.
-    _esito_temporale: "dire" TESTO_QUOTATO ( "e" "adesso" conseguenza ( "e" "adesso"? conseguenza )* )?
-                    | ( "e"? "adesso" )? conseguenza ( "e" "adesso"? conseguenza )*
+    // [1.5.0 / C5, C1] 'e poi dire "…"' e 'e basta' nella stessa ripetizione delle
+    // conseguenze (dopo "e": "adesso" | FIRST(conseguenza) | "poi" | "basta").
+    _esito_temporale: "dire" TESTO_QUOTATO _coda_dire?
+                    | ( "e"? "adesso" )? conseguenza ( "e" _seguito )*
+    _coda_dire: "e" "adesso" conseguenza ( "e" _seguito )*
+              | "e" _chiusura ( "e" _seguito )*
+    _seguito: "adesso"? conseguenza
+            | _chiusura
+    _chiusura: poi_dire | basta
+    poi_dire: "poi" "dire" TESTO_QUOTATO
+    basta: "basta"
 
     // --- EVENTI A TURNI ---
     def_evento: "Al" "turno" _numero ":" _esito_temporale "." -> evento_al
@@ -479,11 +535,13 @@ di Lark (EBNF con azioni `-> nome`).
 
     // --- DEMONI / EVENTI CONDIZIONALI (Livello 8) ---
     def_demone: "Ogni" "turno" "se" condizione ":" _esito_temporale "." -> demone_ogni
-              | "Quando" condizione ( "diventa" "vera" )? ":" _esito_temporale "." -> demone_quando
+              | "Quando" condizione ( "diventa" "vera" )? prima_volta? ":" _esito_temporale "." -> demone_quando
               // [1.3.0 / M-7] Timer che parte da un fatto (N turni dopo il fronte di salita).
               | _numero ( "turno" | "turni" ) "dopo" "che" condizione ":" _esito_temporale "." -> demone_dopo
 
     // --- NPC E DIALOGHI ---
+    // [1.5.0 / C12] L'arrivo: dopo 'Quando il giocatore' il lookahead "entra".
+    def_arrivo: "Quando" "il" "giocatore" "entra" PREP_LUOGO ENTITA prima_volta? ( "se" condizione )? ":" _esito_temporale "."
     def_dialogo_inizio: "Il" "dialogo" _PREP_DESCR ENTITA "comincia" "con" TESTO_QUOTATO "."
     // [0.33.0 / Tema 4b] Battuta CONDIZIONALE: clausola 'se' opzionale dopo il
     // testo (parità con def_descrizione). Dopo il 2° TESTO_QUOTATO il lookahead
@@ -497,7 +555,10 @@ di Lark (EBNF con azioni `-> nome`).
 
     // --- REGOLE (INVECE DI) ---
     // [1.3.0 / M-9] Tre fasi (Invece/Prima/Dopo), ramo 'altrimenti', categorie.
-    def_regola: fase_regola "di" ( VERBO_MULTI | VERBO ) regola_target? ( "se" condizione )? ":" _esito_temporale ramo_altrimenti? "."
+    // [1.5.0 / L10, C3] Più verbi ('oppure') e 'per la prima volta'.
+    def_regola: fase_regola "di" ( VERBO_MULTI | VERBO ) altri_verbi? regola_target? prima_volta? ( "se" condizione )? ":" _esito_temporale ramo_altrimenti? "."
+    altri_verbi: ( "oppure" ( VERBO_MULTI | VERBO ) )+
+    prima_volta: "per" "la" "prima" "volta"
     fase_regola: "Invece" -> fase_invece
                | "Prima"  -> fase_prima
                | "Dopo"   -> fase_dopo
@@ -588,6 +649,11 @@ di Lark (EBNF con azioni `-> nome`).
                 // [1.3.0 / M-10] L'oggetto passa a un personaggio.
                 | ENTITA "ha" ENTITA               -> cons_png_riceve
                 | "il" "giocatore" _copula PREP_LUOGO ENTITA -> cons_giocatore_sposta
+                // [1.5.0 / C4] 'va in' mostra sempre la stanza, 'si ritrova in' mai.
+                | "il" "giocatore" "va" PREP_LUOGO ENTITA -> cons_giocatore_va
+                | "il" "giocatore" "si" "ritrova" PREP_LUOGO ENTITA -> cons_giocatore_ritrova
+                // [1.5.0 / N6] Un segnale per l'ospite.
+                | "segnala" TESTO_QUOTATO -> cons_segnala
                 | ENTITA "va" PREP_LUOGO ENTITA  -> cons_png_va
                 | ENTITA "cambia" "stanza"       -> cons_png_cambia
                 // [0.33.0 / Tema 4a] Buio COMMUTABILE di una stanza: 'la radura
@@ -1709,3 +1775,176 @@ come pezzo di un'altra parola e anche in un commento. Dalla 1.4.4:
   prima.
 
 Gli errori di sintassi avevano già la posizione esatta dal parser e non cambiano.
+
+
+## 28. Le lezioni del Relitto e le idee rimaste (1.5.0)
+
+La 1.5.0 raccoglie le lezioni del remake de «Il Relitto Silente» (venti lezioni e sei
+reperti, verificati sul codice e con storie di prova) e le idee di evoluzione ancora
+aperte nella documentazione di lavoro (`analisi-critica-1.2.1.md` §7–§8). Il piano, con i
+motivi di ogni scelta, è in `documentazione/piano-1.5.0.md`.
+
+**Compatibilità.** Le frasi valide in 1.4 restano valide e significano la stessa cosa.
+Il testo che il motore scrive per una storia che non usa le frasi nuove è identico: la
+prova è stata fatta su undici storie ufficiali (La Casa, Il Relitto Silente, Salerno-Reggio,
+Notte di gara, La notte lunga, Cuori al caffè, La cripta del lich, I tre sigilli, Il faro,
+Il giardino murato, Il Viaggiatore), confrontando impronta e testo a ogni comando con la
+1.4.4 (23.477 comandi, nessuna differenza). Cambiano soltanto, perché erano difetti, i
+punti segnati **cambia** qui sotto.
+
+### 28.1 Correzioni (pacchetto A)
+
+- **L18 — il punto di partenza dei salvataggi.** `imposta_posizione_iniziale` segna la
+  stanza di partenza come vista (se non è al buio) prima di fissare il punto di partenza;
+  `gioco.apri_partita` (§28.5) lo fissa dopo l'apertura. **Cambia**: con `Le uscite
+  nominano solo le stanze visitate` un salvataggio fatto dopo la prima stanza non si
+  carica più dicendo, a torto, che la storia è cambiata. Le impronte di partenza della 1.4
+  restano accettate (`Mondo._impronte_accettate`): i vecchi salvataggi si caricano.
+- **L19 — caricare non segna la stanza.** Dopo CARICA la stanza (o la battuta del dialogo)
+  si mostra con `gioco.mostra_situazione`, su un ramo della partita poi disfatto: nessuna
+  stanza segnata come vista, nessuna variante pescata, nessun pronome. **Cambia**: prima una
+  stanza raggiunta in silenzio diventava vista solo nella partita caricata. RICOMINCIA fa lo
+  stesso quando il punto di partenza è stato fissato dopo l'apertura; ANNULLA resta com'era.
+- **N1 — le opzioni di dialogo con `collega`.** Lo scanner della prima passata salta le
+  frasi che cominciano con `Al nodo` (le opzioni non hanno i due punti). Prima compilavano
+  con un errore «nome non valido» alla riga 1.
+- **N2 — testi condizionali sbilanciati.** Un `[se …]` senza `[fine]`, un `[fine]` o un
+  `[altrimenti]` fuori posto, due `[altrimenti]` nello stesso blocco sono errori di
+  compilazione. **Cambia**: prima la storia compilava e il giocatore leggeva i marcatori.
+- **N3 — il linter conta le condizioni dei testi.** Uno stato letto solo in un `[se …]`
+  non risulta più «dichiarato ma mai usato».
+- **L3 — avviso: in inventario ma non prendibile.** Un oggetto che una conseguenza (di una
+  regola, un evento, un demone, un argomento, un arrivo, un'opzione) mette in inventario,
+  o con cui il giocatore comincia, e che non è prendibile né lo diventa, né ha una regola
+  `Invece di lascia/prendi` sua: avviso «non potrà riprenderlo».
+- **L4 — avviso: scritto e mai letto.** Il linter separa le letture (condizioni, anche dei
+  testi; segnaposto; quantità; sorgenti di una copia) dalle scritture. Uno stato o un
+  contatore che si scrive e non si legge mai ha il suo avviso; `(voluto)` in fondo alla
+  dichiarazione lo zittisce (lo legge l'interfaccia). `voluto` è una parola della
+  grammatica solo dopo la parentesi.
+
+### 28.2 Il linguaggio (pacchetto C)
+
+- **C1 — `e basta` (vincoli).** Solo nelle regole `Prima di`, in coda a un ramo. Una regola
+  con un ramo che ferma è un **vincolo**: prima della precedenza delle regole (oggetti,
+  categorie, globali), `gioco._cerca_vincolo` scorre i vincoli del verbo nell'ordine in cui
+  sono scritti, qualunque sia il bersaglio, e il primo il cui ramo applicabile ferma scatta
+  e chiude il comando (il turno passa, come per ogni regola). Sul movimento,
+  `_cerca_vincolo_movimento` guarda i vincoli `Prima di vai <direzione>` e `Prima di vai`
+  senza direzione. Un ramo che non ferma vale come una normale `Prima di`. Altrove `e basta`
+  è un errore con la spiegazione.
+- **C2 — stati calcolati.** `VARIABILE (è|sono) PROPRIETA quando COND.`: lo scanner
+  raccoglie il nome fra le VARIABILE (frasi senza i due punti che non cominciano con
+  `Quando`); `Mondo.stati_calcolati[nome]` è l'elenco (valore, condizione); il valore è
+  quello della prima condizione vera, altrimenti nessuno (`Mondo.valore_variabile`).
+  Si leggono come ogni stato (condizioni, `[nome]`, `[se …]`, copie). Errori: assegnarli,
+  dichiararli anche con `è uno stato`/un valore, un ciclo fra stati calcolati.
+- **C3 — `per la prima volta`.** Sulle regole (dopo il bersaglio) è una condizione in più,
+  vera finché il ramo principale non è scattato una volta (`Regola.vale`); con `altrimenti`,
+  dalla seconda volta vale quel ramo. Una frase su più verbi ha una memoria sola. Su
+  `Quando` (e sugli arrivi) vuol dire «una volta sola in tutta la partita». La memoria è
+  `Mondo.prime_volte` (coppie tipo/indice): stato del mondo, in ANNULLA e nei salvataggi, e
+  nell'impronta solo per le storie che la usano (`_stato_esteso`). Su `Ogni turno se` e `N
+  turni dopo che` è un errore.
+- **C4 — spostare il giocatore.** `il giocatore va in X` mostra sempre la stanza d'arrivo;
+  `il giocatore si ritrova in X` mai; `il giocatore è in X` come sempre (la mostra dopo una
+  regola su un oggetto, non dopo una regola `vai`, un demone, un evento, un'opzione). La
+  stanza si mostra dopo i testi e le conseguenze (`gioco._dopo_lo_spostamento`), e dopo gli
+  arrivi.
+- **C5 — `e poi dire "…"`.** Un testo dopo tutte le conseguenze, che legge i valori nuovi:
+  nelle regole (per ramo), negli eventi, nei demoni, negli argomenti, negli arrivi. Viene
+  dopo gli annunci, prima della fine della partita e della stanza d'arrivo. Uno solo per
+  ramo, dopo l'ultima conseguenza.
+- **C6 — `si chiamano anche` e più nomi** separati da virgole (e `e` prima dell'ultimo).
+- **C7 — la tipografia.** `normalizza_tipografia` conserva `’ ‘ “ ”` dentro le stringhe fra
+  virgolette dritte; fuori dalle stringhe (e dentro le stringhe delimitate da virgolette
+  curve, come prima) raddrizza. `normalizza_apostrofi` vale dove la tipografia non deve
+  contare: nomi, segnaposto, condizioni dei testi, etichette dei nodi, verbi, sinonimi,
+  chiavi dei messaggi, e il comando del giocatore («l’ancora» scritto dal telefono vale
+  «l'ancora»). Nessuna storia ufficiale aveva caratteri curvi nelle stringhe.
+- **C8 — `[se]` annidati.** `favella_utils.struttura_condizionale` legge i blocchi a pila,
+  a ogni profondità; `rendi_testo` tiene il ramo giusto di ciascuno. Un blocco la cui
+  condizione il compilatore non conosce resta com'è scritto.
+- **C9 — testi con un nome e regole su più verbi.** `Il testo "nome" è "…".` si richiama con
+  `[nome]` in qualunque testo e si rende a sua volta (segnaposto e `[se]` compresi, fino a
+  dieci livelli). Un nome di testo che è anche uno stato, un oggetto o un segnaposto del
+  motore è un errore. `Invece di usa oppure accendi …` diventa una regola per verbo, con le
+  stesse condizioni, conseguenze e memoria della prima volta (`Regola.gruppo`,
+  `Regola.verbi_frase`).
+- **C10 — `"verbo" non fa passare il tempo.`** Vale per i verbi della libreria che non
+  cambiano il mondo (esamina, guarda, inventario, ascolta, annusa, tocca) con tutti i loro
+  sinonimi, e per i verbi d'autore (`Mondo.azioni_senza_tempo`). Un comando di quel verbo
+  non fa passare il turno se nessuna regola scattata ha conseguenze o memoria della prima
+  volta: entra nella sequenza salvabile (guardare può pescare una variante), non in ANNULLA,
+  e non fa scattare eventi né demoni. Per un verbo che cambia il mondo è un errore.
+  Parlare con un personaggio non consuma turni (era già così).
+- **C11 — `segnala "nome"`.** Conseguenza senza effetti sul mondo: accoda un segnale
+  (`Mondo.segnali`), che il motore manda come evento `segnale` (dati: `nome`). Il terminale
+  non lo scrive (`favella_utils.EVENTI_SILENZIOSI`).
+- **C12 — gli arrivi.** `Quando il giocatore entra in X [per la prima volta] [se COND]: …`
+  scatta, nell'ordine della storia, quando il giocatore arriva in X (un movimento, una
+  regola, un demone, un evento, un'opzione), prima della descrizione; se chiude la partita
+  la stanza non si stampa. Un arrivo che sposta il giocatore fa scattare gli arrivi della
+  nuova stanza (fino a cinque passaggi). Diverso dal demone `Quando il giocatore è in X`.
+- **C13 — uscite con una condizione.** `Mondo.condizioni_uscite[(stanza, direzione)] =
+  (condizione, testo)`, per le due direzioni. L'uscita resta in `Stanza.uscite` (la
+  raggiungibilità e la mappa la vedono); mentre la condizione è falsa non compare nella riga
+  «Uscite» (`Mondo.uscite_visibili`), nei pulsanti, nei movimenti casuali dei personaggi, e
+  non si passa: con il testo lo si legge (ed è un turno), senza è come un'uscita che non c'è.
+  La condizione si valuta senza consumare il caso. Una conseguenza `collega` o `non collega
+  più` sulla stessa uscita toglie la condizione. Lo scanner toglie la condizione dal nome
+  della stanza.
+
+### 28.3 La semantica dei demoni (pacchetto D)
+
+`I demoni guardano la fine del turno.` accende due comportamenti
+(`Mondo.fronti_a_fine_turno`):
+
+- **D1** — dopo il passaggio dei demoni, i fronti (`Quando` e l'apertura dei conti di `N
+  turni dopo che`) che nel turno non sono scattati si rivalutano sullo stato di fine turno,
+  finché nessuno scatta più; ogni demone scatta al più una volta per turno; le condizioni
+  con `càpita` non si rivalutano (`gioco._rivaluta_fronti`).
+- **D2** — quando un dialogo si chiude, si valutano i soli fronti (senza turno e senza
+  eventi a tempo).
+
+Senza la frase i demoni fanno come sempre (§6). La frase esiste perché, accese per tutti,
+le due regole avrebbero cambiato storie già scritte: con D2 Cuori al caffè e Il Viaggiatore
+alla chiusura dei dialoghi, e D1 potrebbe anticipare un fronte in 173 coppie di demoni di
+Il Viaggiatore.
+
+### 28.4 Riga di stato e IFID
+
+- `La riga di stato è "…".` — dopo l'apertura e dopo ogni comando il motore emette un
+  evento `stato` con il testo interpolato (`gioco.riga_di_stato`, che non consuma il caso).
+  La pagina esportata e le cassette del sito lo mostrano in una barra; il terminale lo mette
+  davanti al prompt. Senza la frase non cambia niente.
+- `L'IFID è "…".` — l'identificatore della storia (Treaty of Babel), da 8 a 63 lettere
+  maiuscole, cifre e trattini; `favella1 ifid` ne genera uno. La pagina esportata lo scrive
+  nei metadati (`<meta property="ifiction:ifid">`).
+
+### 28.5 Ospiti e strumenti (pacchetto B)
+
+- **L'interfaccia per gli ospiti (N4)**, in `gioco.py`: `apri_partita(mondo, invito="",
+  con_intestazione=True)` (intestazione, prima stanza, riga di stato, poi il punto di
+  partenza), `fissa_punto_di_partenza(mondo)`, `nuova_partita(mondo_base, seme=None)`
+  (copia, seme, apertura: restituisce mondo ed eventi), `prova(mondo, comando)` (un comando su
+  un ramo disfatto: impronta, testo, eventi, esito, turno), `mostra_situazione(mondo)`,
+  `riga_di_stato(mondo)`. Il ramo copre da sé ogni campo volatile e ogni campo nuovo. Il
+  terminale, il playground, il sidecar di Studio, l'esploratore, la pagina esportata e le
+  cassette del sito usano `apri_partita`.
+- **I fatti nei pulsanti (L20).** `pulsanti()` ha la chiave `fatti`: per le cose in vista i
+  verbi con una regola sulla cosa sola (`per_cosa`), quelli con una regola a due cose
+  (`in_coppia`), i verbi senza cosa (`senza_cosa`), gli effetti (`effetti`: le proprietà, per
+  radice, che le regole di un verbo danno alla cosa). Il verbo è quello del pulsante. Il
+  motore non filtra: scegliere resta all'ospite (§23.2).
+- **Il collaudo (L15).** `favella1 trascrivi storia percorso [-o] [--seme] [--traccia
+  NOME]`; `favella1 collaudo storia --percorsi … [--traccia NOME] [--riprese]` gioca i
+  percorsi e controlla le attese scritte in commento (`# atteso: esito …`, `stanza …`,
+  `NOME op VALORE`, una condizione di FAVELLA, `finale «…»`, `compare «…»`, `mai «…»`; in
+  testa valgono alla fine, fra i comandi in quel punto); `--riprese` lascia e riprende ogni
+  oggetto portato a ogni cambio di stanza. L'esploratore prova anche i verbi equivalenti
+  della stessa azione sugli stessi oggetti (anomalia `SINONIMO`).
+- **Studio.** `analizza_regole` riporta `verbs`, `firstTime`, `thenSay`, `stops` (e per
+  `otherwise`); una frase su più verbi è una regola sola; il serializzatore riscrive le
+  frasi nuove e conserva la tipografia; l'outline segnala le uscite con una condizione e
+  riporta tutti gli alias di una frase.

@@ -1,6 +1,6 @@
 # Il Relitto Silente — remake
 
-Avventura testuale in FAVELLA 1 (motore 1.4.4), di Simone Pizzi. Ispirata a «Il Relitto», racconto
+Avventura testuale in FAVELLA 1 (scritta sul motore 1.4.4, gira identica sul 1.5.0), di Simone Pizzi. Ispirata a «Il Relitto», racconto
 primo di *Dal registro della Santa Maria*.
 
 Intorno al 2201. Sei William T. Eriksonn, unico abitante della Santa Maria, cargo TSC-1972. La stiva
