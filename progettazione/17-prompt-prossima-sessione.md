@@ -20,9 +20,9 @@ Riprendiamo l’app de «Il Relitto Silente». Carica la memoria del progetto, p
 - Prima di scaricare qualunque file (anche i pacchetti npm e i crate), si dice nome, fonte e dimensione. Per Freesound l’autore entra da sé nel pannello del browser; le sue credenziali non si scrivono mai.
 - Le versioni seguono le fasi (`sviluppo/VERSIONI.md`): la fase 3 chiusa sarà la 0.3.0, e porterà anche il motore 1.5.0.
 
-**Il repository.** Il remake non ha ancora un remoto su GitHub: il 15 ottobre 2026 l’autore ha chiesto il push, ma non c’era dove spingere. `Pitz72/il-relitto-silente-opensource` è un altro progetto (il gioco originale, pubblico): non ci si spinge. Il nome e la visibilità del repository nuovo li decide l’autore; poi `git remote add` e push.
+**Il repository.** Il remake non ha ancora un remoto su GitHub: il 15 ottobre 2026 l’autore ha chiesto il push, ma non c’era dove spingere. `Pitz72/il-relitto-silente-opensource` è un altro progetto (il gioco originale, pubblico): non ci si spinge. Il nome e la visibilità del repository nuovo li decide l’autore; poi `git remote add` e push. Il 15 ottobre 2026 l’autore ha detto di lasciarlo stare per ora: lo spiegherà lui a tempo debito. Fino ad allora non se ne parla.
 
-**Gli appunti dell’autore: la prima tornata è fatta** (14, §15; schermo intero, loghi, dichiarazione, nome, Yusuf, risposte in colonna). Se ne arrivano altri, si comincia da quelli. Resta da sentire che cosa pensa del testo della dichiarazione.
+**Gli appunti dell’autore: la prima tornata è fatta** (14, §15; schermo intero, loghi, dichiarazione, nome, Yusuf, risposte in colonna). Se ne arrivano altri, si comincia da quelli. Il testo della dichiarazione sull’IA l’autore l’ha approvato così com’è.
 
 **Com’era: gli appunti dell’autore.** Il 15 ottobre 2026, a fine sessione, l’autore si è preso un eseguibile (`consegne/Il Relitto Silente 0.2.0+3b82cec/`: l’installer e la versione portatile) e cinque salvataggi, uno all’inizio di ogni atto (posti 1–5 della sua cartella), per prendere appunti su che cosa migliorare. La sessione comincia da quegli appunti: si leggono, si discutono, si decide l’ordine, e solo dopo si riprende la lista qui sotto.
 
@@ -30,7 +30,7 @@ Riprendiamo l’app de «Il Relitto Silente». Carica la memoria del progetto, p
 
 1. **Lo sguardo dell’autore**, se non è già stato dato: con l’eseguibile (`app/src-tauri/target/release/il-relitto-silente.exe`) o il pannello del browser in vista, la rivelazione a righe, la crescita della membrana al primo contatto, il fiore che si apre, il cartello d’atto, il dialogo con l’Anziano, il diario, e adesso il menu principale (lo sfondo che respira), il registro dei finali e i riconoscimenti (14, §12 e §13). Correggere quello che non convince, e scriverlo nel documento 14.
 2. **La copertina e il logo dell’eseguibile**, chiesti dall’autore: la direzione la dà lui; il logo diventa l’icona (fase 9) e la copertina va nel registro delle immagini e nei riconoscimenti.
-3. **La partita intera nell’app.** La prova automatica c’è ed è verde (14, §14: `python strumenti/prova_eseguibile.py finali`). Resta una partita giocata a mano dall’autore, con il mouse e con la sola tastiera, e quello che lui trova scomodo o difficile da trovare.
+3. **La partita intera nell’app.** La prova automatica c’è ed è verde (14, §14: `python strumenti/prova_eseguibile.py finali`). L’autore ha giocato a mano con il solo mouse, e gli va benissimo; con la tastiera non ha giocato perché non sapeva come (14, §15, «La partita a mano»): i tasti delle cose e del fiore (Tab, Invio, le frecce, Spazio) non li insegna nulla. Una pagina dei tasti nella pausa, se l’autore la vuole.
 4. **La rifinitura e le prestazioni**: i nomi toccabili (oggi segnano anche parole generiche come «nave»), il testo grande a 1280 × 720, i testi lunghi nel dialogo, i livelli di qualità delle venature; la prova su Linux (WSL per costruire), dove si lancia anche `python strumenti/riconoscimenti.py` per aggiungere i crate di Linux all’elenco.
 5. **La chiusura della fase**: la 0.3.0 (`node strumenti/versione.mjs`), il registro delle modifiche, il documento 14 completato.
 
