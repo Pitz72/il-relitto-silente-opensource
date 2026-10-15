@@ -18,6 +18,10 @@ documenti di `progettazione/`.
   le pagine le compone `app/src/gioco/diario/pagine.ts`. Il collaudo `collaudo/diario.py` e sette
   prove nuove.
 - I pulsanti «diario» e «menu» sopra la lamina, per chi gioca con il mouse.
+- **La pagina dei tasti**, nella pausa (06, §6.2): come si gioca senza mouse, in quattro gruppi
+  (muoversi, le cose, il testo e le voci, la partita). Prima lo schermo mostrava i tasti delle uscite e
+  dei pannelli, ma non che le cose si raggiungono con Tab e che Invio apre il fiore: l’autore, a mano,
+  non aveva trovato come si gioca con la tastiera.
 - **I loghi d’apertura** di Runtime Multimedia e di FAVELLA 1, animati e sonori, copiati pari pari dal
   Viaggiatore (`app/src/loghi/`), dopo un attimo di nero; Esc li salta. Con loro, i caratteri Sora e
   Inter (SIL OFL) nei riconoscimenti.
@@ -132,6 +136,10 @@ documenti di `progettazione/`.
 
 ### Corretto
 
+- Con la tastiera, dopo un comando scelto nel fiore il fuoco si perdeva e Tab ripartiva da «diario»: ora
+  torna sulla cosa da cui il comando era partito, anche alla fine di un dialogo. «Usa con…» e un
+  attrezzo in mano portano il fuoco sulla prima cosa accesa, ed Esc lo riporta sulla cosa di partenza.
+  Spazio su una cosa, mentre il testo sta comparendo, lo completa invece di riaprire il fiore.
 - Con «Usa con…», quando la seconda cosa stava dietro un «+N», il ramo leggeva un petalo che non c’era
   più e l’app intera si smontava (succedeva con «usa il disco con l’altare»). L’ha trovato la prova dei
   finali nell’eseguibile.

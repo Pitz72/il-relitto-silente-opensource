@@ -28,7 +28,7 @@ import Dialogo from "./dialogo/Dialogo";
 import Diario from "./diario/Diario";
 import type { IdPagina } from "./diario/pagine";
 import Vene from "./vene/Vene";
-import { Avviso, Conferma, PannelloOpzioni, Pausa, Salvataggi, useAvviso, type Domanda } from "./pannelli/Pannelli";
+import { Avviso, Conferma, PannelloOpzioni, PannelloTasti, Pausa, Salvataggi, useAvviso, type Domanda } from "./pannelli/Pannelli";
 import { archivio, type IdPosto, type Posto } from "./salvataggi";
 import { rigaDelRegistro } from "../menu/registro";
 import "../stile/base.css";
@@ -81,7 +81,7 @@ const semeNuovo = () => 1 + Math.floor(Math.random() * 2147483646);
 /** Il congedo dell'Anziano: il punto di non ritorno che chiede una conferma (D16). */
 const CONGEDO = /^\[Chiudi gli occhi/;
 
-type Pannello = null | "pausa" | "diario" | "salva" | "carica" | "opzioni";
+type Pannello = null | "pausa" | "diario" | "salva" | "carica" | "opzioni" | "tasti";
 
 /** La prova dei salvataggi nell'eseguibile vero (RELITTO_PROVA=salvataggi):
  *  sei comandi, il salvataggio nel posto 6 attraverso il processo Tauri,
@@ -122,6 +122,8 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
   /** i comandi giocati da quando la partita è cominciata, e il finale (per la sonda della prova) */
   const passi = useRef(0);
   const finaleRef = useRef<string | null>(null);
+  /** il baccello su cui torna il fuoco dopo il comando partito dal ramo (la tastiera, 06 §6.2) */
+  const ritornoRef = useRef<string | null>(null);
 
   const modello = useMemo(() => (turno ? costruisciModello(turno) : null), [turno]);
 
@@ -323,6 +325,14 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
         // alla fine della partita, ricominciare e caricare sono dell'app
         if (modello?.fase === "fine" && a.comando === "ricomincia") return ricomincia();
         if (modello?.fase === "fine" && a.comando === "carica") return void apriSalvataggi("carica");
+        // il fuoco tornerà sulla cosa da cui il comando è partito: con la tastiera non si riparte da capo
+        const qui = document.activeElement;
+        ritornoRef.current =
+          qui instanceof HTMLElement && qui.closest(".ramo")
+            ? selezione.tipo === "fiore" || selezione.tipo === "usaCon"
+              ? `cosa:${selezione.cosa}`
+              : (qui.dataset.chiave ?? null)
+            : null;
         gioca(a.comando, a.comeSiLegge);
       } else if (a.tipo === "chiudi") chiudi();
       else if (a.tipo === "apri") {
@@ -338,8 +348,36 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
         setSelezione({ tipo: "inMano", attrezzo: a.attrezzo, verbo: a.verbo, etichetta: verbo ? `${attrezzo!.etichetta} (${verbo.etichetta.toLowerCase()})` : (attrezzo?.etichetta ?? a.attrezzo) });
       }
     },
-    [gioca, chiudi, modello, ricomincia, apriSalvataggi],
+    [gioca, chiudi, modello, selezione, ricomincia, apriSalvataggi],
   );
+
+  // dopo il turno, il fuoco torna sul baccello, se c'è ancora e nessun altro l'ha preso;
+  // il dialogo e le domande hanno i loro tasti: si torna sulla cosa quando finiscono
+  useEffect(() => {
+    const chiave = ritornoRef.current;
+    const fase = turno?.pulsanti.fase;
+    if (!chiave || fase === "dialogo" || fase === "conferma" || fase === "scelta") return;
+    ritornoRef.current = null;
+    if (fase !== "gioco") return;
+    const t = setTimeout(() => {
+      const ora = document.activeElement;
+      if (ora && ora !== document.body) return;
+      document.querySelector<HTMLButtonElement>(`.baccello[data-chiave="${CSS.escape(chiave)}"]`)?.focus({ preventScroll: true });
+    }, 0);
+    return () => clearTimeout(t);
+  }, [turno]);
+
+  // «Usa con…» e l'attrezzo in mano: il fuoco va sulla prima cosa accesa (non se il fiore
+  // mostra i bersagli come petali: lì il primo petalo l'ha già preso)
+  useEffect(() => {
+    if (selezione.tipo !== "usaCon" && selezione.tipo !== "inMano") return;
+    const t = setTimeout(() => {
+      const ora = document.activeElement;
+      if (ora && ora !== document.body && !ora.classList.contains("baccello")) return;
+      [...document.querySelectorAll<HTMLButtonElement>(".baccello.possibile")].find((b) => b.tabIndex === 0)?.focus({ preventScroll: true });
+    }, 0);
+    return () => clearTimeout(t);
+  }, [selezione]);
 
   /** Una risposta del dialogo: il congedo dell'Anziano chiede conferma. */
   const scegli = useCallback(
@@ -430,14 +468,28 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
       if (e.key === "Escape") {
         e.preventDefault();
         if (selezione.tipo !== "nessuna" || altri) {
-          const cosa = selezione.tipo === "fiore" ? selezione.cosa : null;
+          // il fuoco torna sulla cosa da cui il fiore o «Usa con…» era partito, o sull'attrezzo
+          // (che è della tuta, o una cosa che porti, come la taglierina)
+          const chiavi =
+            selezione.tipo === "fiore" || selezione.tipo === "usaCon"
+              ? [`cosa:${selezione.cosa}`]
+              : selezione.tipo === "inMano"
+                ? [`attrezzo:${selezione.attrezzo}`, `cosa:${selezione.attrezzo}`]
+                : [];
           chiudi();
-          // il fuoco torna sulla cosa da cui il fiore si era aperto
-          if (cosa) setTimeout(() => document.querySelector<HTMLButtonElement>(`.baccello[data-chiave="cosa:${CSS.escape(cosa)}"]`)?.focus(), 0);
+          if (chiavi.length)
+            setTimeout(() => {
+              for (const k of chiavi) {
+                const b = document.querySelector<HTMLButtonElement>(`.baccello[data-chiave="${CSS.escape(k)}"]`);
+                if (b) return b.focus();
+              }
+            }, 0);
         } else if (turno) setPannello("pausa");
         return;
       }
-      if (e.key === " " && !suPulsante) {
+      // Spazio completa il testo; su un pulsante lo preme, tranne su una cosa mentre il testo sta comparendo
+      const suCosa = e.target instanceof HTMLButtonElement && e.target.classList.contains("baccello") && !!document.querySelector(".turno.attuale.in-rivelazione");
+      if (e.key === " " && (!suPulsante || suCosa)) {
         e.preventDefault();
         setCompleta((n) => n + 1);
         return;
@@ -634,6 +686,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
               carica: () => void apriSalvataggi("carica"),
               annulla: turno && turno.stato.turno > 0 ? () => (setPannello(null), gioca("annulla", "annulla l’ultima mossa")) : null,
               opzioni: () => setPannello("opzioni"),
+              tasti: () => setPannello("tasti"),
               ricomincia: () =>
                 setDomanda({ testo: "Ricominciare da capo?", sotto: "La partita in corso si perde, se non l’hai salvata.", si: "Ricomincia", no: "Torna al gioco", allora: ricomincia }),
               misure: () => (location.search = "?prova"),
@@ -676,6 +729,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
           />
         )}
         {pannello === "opzioni" && <PannelloOpzioni forma={forma} opzioni={opzioni} cambia={cambiaOpzioni} chiudi={() => setPannello("pausa")} />}
+        {pannello === "tasti" && <PannelloTasti forma={forma} chiudi={() => setPannello("pausa")} />}
         {(domanda ?? domandaDelMotore) && <Conferma domanda={(domanda ?? domandaDelMotore)!} forma={forma} chiudi={() => setDomanda(null)} />}
         {avviso && <Avviso testo={avviso.testo} grave={avviso.grave} />}
         {!turno && !errore && <div className="avvio">{passo}</div>}

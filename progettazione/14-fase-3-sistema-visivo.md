@@ -450,4 +450,19 @@ tastiera non ha giocato perché non sapeva come si fa: è un appunto anche quest
 tasti delle uscite (le frecce sulle bocche), dei semi del dialogo (i numeri), della pausa e del diario
 (Esc, D, F5, F9, S e N), ma non dice da nessuna parte che le cose si raggiungono con Tab, che Invio apre
 il fiore, che le frecce passano da un petalo all’altro e che Spazio completa il testo. Chi gioca con la
-tastiera deve trovarlo scritto: una pagina dei tasti nella pausa, da decidere con l’autore.
+tastiera deve trovarlo scritto.
+
+**Fatto, su richiesta dell’autore: la pagina «Tasti» nella pausa** (`PannelloTasti`), fra Opzioni e
+Ricomincia. Quattro gruppi in due colonne (muoversi, le cose, il testo e le voci, la partita); i tasti
+sono piccole targhe in carattere mono, le frecce si leggono «freccia su» ai lettori di schermo; Esc o
+«chiudi» tornano alla pausa. Contrasti misurati nella membrana: il più basso 6,7:1. Provandola a mano
+con la sola tastiera sono venuti fuori tre inciampi, corretti:
+
+- dopo un comando scelto nel fiore il petalo spariva, il fuoco cadeva sulla pagina e Tab ripartiva da
+  «diario»: ora torna sulla cosa da cui il comando era partito, e se il comando apre un dialogo o una
+  domanda ci torna quando finiscono;
+- dopo «Usa con…» il fuoco cadeva allo stesso modo: ora va sulla prima cosa accesa (anche con un
+  attrezzo in mano), fra le cose Tab passa solo da un’accesa all’altra, ed Esc lo riporta sulla cosa di
+  partenza;
+- con il fuoco su una cosa, Spazio la premeva e riapriva il fiore anche mentre il testo stava ancora
+  comparendo: ora, finché compare, lo completa.

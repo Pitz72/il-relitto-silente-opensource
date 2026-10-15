@@ -371,6 +371,10 @@ intermedie: `TASTI_DELLE_USCITE` in `app/src/azione/modello.ts`), `D` per il dia
 `Invio` per confermare, `Esc` per la pausa, `F5`/`F9` per salvare e caricare, `F11` per lo schermo
 intero. Il fuoco è sempre visibile e ha lo stile del visore. `Tab` resta al fuoco, come vuole
 l’accessibilità: per questo il diario è passato da `Tab` a `D` (`14-fase-3-sistema-visivo.md`, §5).
+Tutto questo sta scritto nella pagina «Tasti» della pausa (`PannelloTasti` in
+`app/src/gioco/pannelli/Pannelli.tsx`), perché lo schermo da solo non insegna Tab e Invio (14, §15).
+Dopo un comando il fuoco torna sulla cosa da cui era partito, anche alla fine di un dialogo; «Usa con…» e
+l’attrezzo in mano lo portano sulla prima cosa accesa.
 
 ### 6.3 Che cosa garantisce che non ci si blocchi
 

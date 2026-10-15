@@ -1,7 +1,7 @@
 // ============================================================================
 //  I pannelli sopra il gioco (06-app-desktop.md, §4.5 e §4.6): la conferma, la
 //  pausa (Esc), i salvataggi (F5 salva, F9 carica: sei posti più l'automatico),
-//  le opzioni, l'avviso breve. Hanno la forma del momento: acciaio o membrana.
+//  le opzioni, i tasti, l'avviso breve. Hanno la forma del momento: acciaio o membrana.
 // ============================================================================
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { Forma } from "../../stile/atmosfere";
@@ -124,6 +124,7 @@ export interface VociPausa {
   carica: () => void;
   annulla: (() => void) | null;
   opzioni: () => void;
+  tasti: () => void;
   ricomincia: () => void;
   misure: () => void;
   /** il menu principale: la partita resta, e Continua la riprende */
@@ -153,6 +154,9 @@ export function Pausa({ forma, voci }: { forma: Forma; voci: VociPausa }) {
         )}
         <button type="button" onClick={voci.opzioni}>
           Opzioni
+        </button>
+        <button type="button" onClick={voci.tasti}>
+          Tasti
         </button>
         <button type="button" onClick={voci.ricomincia}>
           Ricomincia da capo
@@ -258,6 +262,90 @@ export function PannelloOpzioni({ forma, opzioni, cambia, chiudi }: { forma: For
       {riga("Testo", "testoGrande", [[false, "normale"], [true, "grande"]])}
       {riga("Schermo intero", "schermoIntero", [[true, "sì"], [false, "no, in una finestra"]], "Si cambia anche con F11.")}
       {riga("Nomi toccabili nel testo", "nomiToccabili", [[true, "sì"], [false, "no"]], "Toccare un nome nella descrizione apre il menu di quella cosa.")}
+      <button type="button" className="chiudi" onClick={chiudi}>
+        chiudi <span className="tasto">Esc</span>
+      </button>
+    </Pannello>
+  );
+}
+
+// ----------------------------------------------------------------------------
+//  I tasti: come si gioca senza mouse (06, §6.2). Tutto quello che fa la
+//  tastiera, scritto in un posto solo: lo schermo mostra i tasti delle uscite
+//  e dei pannelli, ma non Tab, Invio e le frecce nel fiore (14, §15).
+// ----------------------------------------------------------------------------
+const NOMI_DEI_TASTI: Readonly<Record<string, string>> = { "↑": "freccia su", "↓": "freccia giù", "←": "freccia sinistra", "→": "freccia destra" };
+
+const TASTI: readonly { gruppo: string; righe: readonly { tasti: readonly string[]; fa: string }[] }[] = [
+  {
+    gruppo: "Muoversi",
+    righe: [
+      { tasti: ["↑", "↓", "←", "→"], fa: "nord, sud, ovest, est" },
+      { tasti: ["PgSu", "PgGiù"], fa: "su, giù" },
+      { tasti: ["Inizio", "Fine"], fa: "dentro, fuori" },
+      { tasti: ["7", "9", "1", "3"], fa: "dal tastierino, le diagonali: nordovest, nordest, sudovest, sudest" },
+    ],
+  },
+  {
+    gruppo: "Le cose",
+    righe: [
+      { tasti: ["Tab"], fa: "da una cosa all’altra (con Maiusc, all’indietro)" },
+      { tasti: ["Invio"], fa: "apre il fiore della cosa; nel fiore, sceglie" },
+      { tasti: ["←", "→"], fa: "nel fiore, da un petalo all’altro" },
+      { tasti: ["Esc"], fa: "chiude il fiore, annulla «Usa con…», posa l’attrezzo" },
+    ],
+  },
+  {
+    gruppo: "Il testo e le voci",
+    righe: [
+      { tasti: ["Spazio"], fa: "completa il testo che sta comparendo" },
+      { tasti: ["1–9"], fa: "le risposte, nel dialogo" },
+      { tasti: ["S", "N"], fa: "sì e no, quando il gioco lo chiede" },
+    ],
+  },
+  {
+    gruppo: "La partita",
+    righe: [
+      { tasti: ["D"], fa: "il diario; le pagine con ← →" },
+      { tasti: ["Esc"], fa: "la pausa" },
+      { tasti: ["F5", "F9"], fa: "salva, carica" },
+      { tasti: ["F11"], fa: "schermo intero, o in una finestra" },
+    ],
+  },
+];
+
+export function PannelloTasti({ forma, chiudi }: { forma: Forma; chiudi: () => void }) {
+  return (
+    <Pannello forma={forma} titolo="Tasti" classe="tasti">
+      <p className="sotto">Tutto si fa anche senza mouse, e si può passare dall’uno all’altra quando si vuole.</p>
+      <div className="gruppi-tasti">
+        {TASTI.map((g) => (
+          <section key={g.gruppo} className="gruppo-tasti" aria-label={g.gruppo}>
+            <h3>{g.gruppo}</h3>
+            <dl>
+              {g.righe.map((r) => (
+                <div key={r.tasti.join(" ") + r.fa} className="riga-tasti">
+                  <dt>
+                    {r.tasti.map((t) => (
+                      <kbd key={t}>
+                        {NOMI_DEI_TASTI[t] ? (
+                          <>
+                            <span aria-hidden="true">{t}</span>
+                            <span className="solo-lettori">{NOMI_DEI_TASTI[t]}</span>
+                          </>
+                        ) : (
+                          t
+                        )}
+                      </kbd>
+                    ))}
+                  </dt>
+                  <dd>{r.fa}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        ))}
+      </div>
       <button type="button" className="chiudi" onClick={chiudi}>
         chiudi <span className="tasto">Esc</span>
       </button>
