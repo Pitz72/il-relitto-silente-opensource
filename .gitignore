@@ -22,3 +22,6 @@ app/src-tauri/gen/
 
 # Suoni: le sorgenti grezze restano fuori da git (registro in audio/LICENZE.md)
 audio/sorgenti/
+
+# Le consegne all'autore: installer e versioni portatili (si rifanno con tauri build)
+consegne/

@@ -45,7 +45,7 @@ def main():
     ap.add_argument("--attesa", type=int, default=600, help="secondi al più (di base 600)")
     a = ap.parse_args()
     sys.stdout.reconfigure(encoding="utf-8")
-    exe = a.exe or eseguibile()
+    exe = os.path.abspath(a.exe) if a.exe else eseguibile()
     if not exe:
         print("Manca l'eseguibile: npm --prefix app run tauri build -- --no-bundle")
         return 2
