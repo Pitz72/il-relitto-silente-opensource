@@ -152,6 +152,16 @@ python collaudo/pulsanti.py
 python strumenti/riconoscimenti.py --verifica
 ```
 
+Poi l’eseguibile di rilascio (`npm --prefix app run tauri build -- --no-bundle`), e le prove dentro di lui:
+
+```bash
+python strumenti/prova_eseguibile.py finali
+```
+
+```bash
+python strumenti/prova_eseguibile.py salvataggi
+```
+
 ```bash
 node strumenti/versione.mjs verifica --rilascio
 ```

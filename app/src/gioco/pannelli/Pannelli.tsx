@@ -58,6 +58,9 @@ export interface Domanda {
   allora: () => void;
   /** se No deve fare qualcosa oltre a chiudere */
   altrimenti?: () => void;
+  /** i comandi del motore che Sì e No mandano, quando la domanda è sua */
+  comandoSi?: string;
+  comandoNo?: string;
 }
 
 export function Conferma({ domanda, forma, chiudi }: { domanda: Domanda; forma: Forma; chiudi: () => void }) {
@@ -86,6 +89,8 @@ export function Conferma({ domanda, forma, chiudi }: { domanda: Domanda; forma: 
         <button
           type="button"
           data-primo=""
+          data-risposta="si"
+          data-comando={domanda.comandoSi}
           onClick={() => {
             chiudi();
             domanda.allora();
@@ -95,6 +100,8 @@ export function Conferma({ domanda, forma, chiudi }: { domanda: Domanda; forma: 
         </button>
         <button
           type="button"
+          data-risposta="no"
+          data-comando={domanda.comandoNo}
           onClick={() => {
             chiudi();
             domanda.altrimenti?.();

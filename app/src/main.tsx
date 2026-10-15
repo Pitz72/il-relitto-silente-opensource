@@ -13,6 +13,8 @@ addEventListener("keydown", (e) => {
 //   (niente)          l'app: i riconoscimenti al primo avvio, il menu principale,
 //                     l'intro, il gioco (Relitto.tsx)
 //   ?gioco            il gioco, subito (lo sviluppo: window.__gioco)
+//   ?prova=finali     la prova dei sei finali attraverso l'interfaccia (come
+//                     RELITTO_PROVA=finali nell'eseguibile)
 //   ?prova            la pagina di prova della fase 1: le misure tecniche (anche
 //                     con RELITTO_PROVA impostata, per le prove automatiche;
 //                     RELITTO_PROVA=salvataggi prova invece i salvataggi nel gioco)
@@ -29,6 +31,7 @@ const parametri = new URLSearchParams(location.search);
 async function pagina() {
   if (parametri.has("intro")) return <Intro revisione={parametri.has("revisione")} />;
   if (parametri.has("campionario")) return <Campionario />;
+  if (parametri.get("prova") === "finali") return <Relitto prova="finali" />;
   if (parametri.has("prova")) return <Prova />;
   if (parametri.has("gioco")) return <Gioco />;
   // le prove automatiche: quella dei salvataggi sul gioco, le altre della fase 1 sulla pagina di prova
@@ -36,6 +39,7 @@ async function pagina() {
     try {
       const prova = (await comando<InfoSistema>("info_sistema")).prova;
       if (prova === "salvataggi") return <Gioco prova="salvataggi" />;
+      if (prova === "finali") return <Relitto prova="finali" />;
       if (prova) return <Prova />;
     } catch {
       /* senza le informazioni del sistema, il gioco */

@@ -10,6 +10,9 @@
 //    il gioco       dalla pausa si torna al menu: la partita resta nel motore,
 //                   e Continua la riprende
 //  I finali raggiunti si scrivono nel registro dei finali, su disco.
+//  RELITTO_PROVA=finali (o ?prova=finali nel browser): la prova dei sei finali
+//  attraverso l'interfaccia (prova/finali.ts), con il seme 1; alla fine il
+//  rapporto, e nell'eseguibile si esce.
 // ============================================================================
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { avviaMotore, usaPassoMotore } from "./motore/condiviso";
@@ -47,7 +50,7 @@ type PannelloMenu = null | "carica" | "opzioni" | "registro";
 /** Il clima del menu e dei riconoscimenti: il relitto, nella membrana. */
 const STILE = variabiliCss(tavolozza({ atmosfera: "relitto", forma: "membrana", stanza: null, protezione: false, ipossia: false }), null) as CSSProperties;
 
-export default function Relitto() {
+export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   const [opzioni, cambiaOpzioni] = useOpzioni();
   const ridotto = useMovimentoRidotto(opzioni.movimento);
   const passo = usaPassoMotore();
@@ -112,9 +115,28 @@ export default function Relitto() {
   }, []);
 
   const dopoIRiconoscimenti = useCallback(() => {
-    segnaVisti(nomiAttuali);
+    // la prova non segna niente come visto: chi gioca li vedrà lo stesso
+    if (!prova) segnaVisti(nomiAttuali);
     setSchermata({ tipo: "menu" });
-  }, [nomiAttuali]);
+  }, [nomiAttuali, prova]);
+
+  // la prova dei finali: la guida il pilota, dal DOM, come chi gioca con il mouse
+  // (uno solo: nello sviluppo React esegue gli effetti due volte)
+  const pilota = useRef(false);
+  useEffect(() => {
+    if (prova !== "finali" || pilota.current) return;
+    pilota.current = true;
+    (async () => {
+      const { provaDeiFinali } = await import("./prova/finali");
+      const r = await provaDeiFinali();
+      const rapporto = { data: new Date().toISOString(), versione: VERSIONE, ...r };
+      console.info("[prova dei finali]", rapporto);
+      (window as unknown as Record<string, unknown>).__rapportoFinali = rapporto;
+      if (!dentroTauri()) return;
+      await comando("scrivi_rapporto", { nome: `prova-finali-${Date.now()}.json`, contenuto: JSON.stringify(rapporto, null, 2) });
+      await comando("esci", { codice: r.ok ? 0 : 1 });
+    })();
+  }, [prova]);
 
   // ---- le voci del menu ---------------------------------------------------------
   const salvato = daContinuare(posti);
@@ -153,13 +175,13 @@ export default function Relitto() {
   if (schermata.tipo === "gioco")
     return (
       <Suspense fallback={null}>
-        <Gioco key={schermata.chiave} inizio={schermata.inizio} alMenu={alMenu} alFinale={alFinale} />
+        <Gioco key={schermata.chiave} prova={prova} inizio={schermata.inizio} alMenu={alMenu} alFinale={alFinale} />
       </Suspense>
     );
   if (schermata.tipo === "intro")
     return (
       <Suspense fallback={null}>
-        <Intro ridotto={ridotto} onFine={() => gioca({ tipo: "nuova" })} />
+        <Intro ridotto={ridotto} onFine={() => gioca({ tipo: "nuova", seme: prova ? 1 : undefined })} />
       </Suspense>
     );
 

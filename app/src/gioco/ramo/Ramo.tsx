@@ -5,6 +5,9 @@
 //  nella fascia libera sotto il testo. «Usa con…» si fa in due tocchi: le cose
 //  possibili si accendono tutte. Un attrezzo in mano accende le cose su cui si
 //  usa. I suggerimenti del testo accendono il loro pulsante per qualche secondo.
+//  Ogni pulsante dice che cosa fa: data-comando il comando che manda,
+//  data-avvia il passo che apre (il fiore, «Usa con…», l'attrezzo in mano, le
+//  cose in più). La prova dei finali nell'eseguibile clicca seguendo questi.
 // ============================================================================
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import type { Forma } from "../../stile/atmosfere";
@@ -228,6 +231,8 @@ export default function Ramo({ modello, cose, forma, selezione, accesi, costi, p
                     }}
                     type="button"
                     data-chiave={b.chiave}
+                    data-comando={scegliendo ? (b.cosa ? possibili.get(b.cosa) : undefined) : b.azione.tipo === "comando" ? b.azione.comando : undefined}
+                    data-avvia={!scegliendo && b.azione.tipo !== "comando" ? b.azione.tipo : undefined}
                     className={classeBaccello(b)}
                     style={p ? { left: p.x, top: p.y, ["--scala" as string]: p.scala } : { visibility: "hidden", left: -9999, top: 0 }}
                     data-scala={p?.scala ?? 1}
@@ -258,6 +263,8 @@ export default function Ramo({ modello, cose, forma, selezione, accesi, costi, p
             className={`baccello piu ${x.gruppo === "con te" ? "con-te" : ""} ${altri?.gruppo === x.gruppo && altri.filo === x.filo ? "aperto" : ""} ${x.nascosti.some((b) => accesi.has(b.chiave)) ? "acceso" : ""}`}
             style={{ left: x.x, top: x.y, ["--scala" as string]: x.scala }}
             aria-haspopup="menu"
+            data-avvia="altri"
+            data-nascosti={x.nascosti.map((b) => b.chiave).join(" ")}
             aria-expanded={altri?.gruppo === x.gruppo}
             aria-label={`altre ${x.nascosti.length} cose: ${x.nascosti.map((b) => b.etichetta).join(", ")}`}
             onClick={(e) => {
@@ -299,8 +306,12 @@ export default function Ramo({ modello, cose, forma, selezione, accesi, costi, p
         <div className={`fiore ${postiPetali ? "aperto" : ""}`} ref={fioreRef} role="menu" aria-label={menu ? `Che cosa fare con ${nomeDiCosa(menu.id, cose)}` : "Altre cose"} onKeyDown={frecceNelFiore}>
           <svg className="gambi" viewBox={`0 0 ${palco.W} ${H}`} aria-hidden="true">
             {postiPetali?.map((p, i) => {
-              const el = misurePetali.current.get(petali[i].chiave);
-              return <path key={petali[i].chiave} d={gambo({ x: ancora.x, y: ancora.y - (el?.offsetHeight ?? 32) / 2 }, p, el?.offsetHeight ?? 32)} />;
+              // i posti sono del fiore di prima finché l'effetto non li rifà: quando i petali
+              // cambiano numero («Usa con…» che apre i bersagli) qualcuno non ha ancora petalo
+              const v = petali[i];
+              if (!v) return null;
+              const el = misurePetali.current.get(v.chiave);
+              return <path key={v.chiave} d={gambo({ x: ancora.x, y: ancora.y - (el?.offsetHeight ?? 32) / 2 }, p, el?.offsetHeight ?? 32)} />;
             })}
           </svg>
           {petali.map((p, i) => {
@@ -315,6 +326,9 @@ export default function Ramo({ modello, cose, forma, selezione, accesi, costi, p
                 }}
                 type="button"
                 role="menuitem"
+                data-chiave={p.chiave}
+                data-comando={p.azione.tipo === "comando" ? p.azione.comando : undefined}
+                data-avvia={p.azione.tipo !== "comando" ? p.azione.tipo : undefined}
                 className={`petalo anello-${posto?.anello ?? p.anello} ${p.comando && accesi.has(`comando:${p.comando}`) ? "acceso" : ""}${chiuso ? " chiuso" : ""}`}
                 disabled={chiuso}
                 title={chiuso ? MOTIVO_CANALI : undefined}

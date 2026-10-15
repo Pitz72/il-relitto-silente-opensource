@@ -18,6 +18,12 @@ documenti di `progettazione/`.
   le pagine le compone `app/src/gioco/diario/pagine.ts`. Il collaudo `collaudo/diario.py` e sette
   prove nuove.
 - I pulsanti «diario» e «menu» sopra la lamina, per chi gioca con il mouse.
+- **La prova dei finali nell’eseguibile** (`RELITTO_PROVA=finali`; `python strumenti/prova_eseguibile.py
+  finali`): dal menu principale, l’intro saltata, poi i sei finali giocati cliccando nell’interfaccia vera
+  ogni pulsante, che deve essere in vista; l’impronta finale deve essere quella del motore in CPython
+  (`collaudo/finali-menu.json`, che scrive `collaudo/menu.mjs`), e i sei finali devono finire nel
+  registro. Ogni pulsante del ramo, del fiore, del dialogo e della conferma dice nel DOM che cosa manda
+  (`data-comando`, `data-avvia`).
 - **Il menu principale** (06, §4.6): Continua (la partita in corso, o il salvataggio più recente),
   Nuova partita (con l’intro, che Esc salta), Carica, Opzioni, Registro dei finali, Riconoscimenti,
   Esci, sopra la scena finale dell’intro, viva e lentissima. Dalla pausa si torna al menu, e la partita
@@ -115,6 +121,12 @@ documenti di `progettazione/`.
 - Il diario passa da Tab a D (06, §6.2): Tab resta al fuoco della tastiera.
 - La pagina di prova della fase 1 non è più la pagina principale dell’app: si apre con `?prova`, e
   parte da sola con `RELITTO_PROVA`.
+
+### Corretto
+
+- Con «Usa con…», quando la seconda cosa stava dietro un «+N», il ramo leggeva un petalo che non c’era
+  più e l’app intera si smontava (succedeva con «usa il disco con l’altare»). L’ha trovato la prova dei
+  finali nell’eseguibile.
 
 ## [0.2.0] - 2026-10-14
 

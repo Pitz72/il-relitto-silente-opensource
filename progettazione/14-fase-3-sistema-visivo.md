@@ -372,3 +372,51 @@ licenza di ogni pacchetto; dove non ce ne sono, gli autori dichiarati. Nessuna r
 
 Restano da vedere a velocità piena, con il pannello in vista o nell’eseguibile: il respiro dello sfondo,
 la vena dei tre secondi, il passaggio fra menu e intro.
+
+---
+
+## 14. La partita intera nell’app: la prova dei finali (quinta sessione)
+
+`collaudo/menu.mjs` provava già che i sei finali si giocano con i soli menu del modello d’azione, ma con
+il motore in CPython e senza l’interfaccia. Adesso li gioca l’app vera, nell’eseguibile, come chi gioca
+con il mouse: **`RELITTO_PROVA=finali`** (o `python strumenti/prova_eseguibile.py finali`, che usa
+cartelle temporanee e riassume il rapporto; `?prova=finali` nel browser dello sviluppo).
+
+- **Il riferimento.** `menu.mjs`, quando gioca tutti i percorsi, scrive `collaudo/finali-menu.json`: per
+  ognuno dei sei finali le voci dei menu che ha giocato, una per passo (563 in tutto), l’esito, il
+  finale e l’impronta dello stato alla fine, con il seme 1.
+- **Il pilota** (`app/src/prova/finali.ts`) parte dal menu principale (dopo i riconoscimenti, se ci
+  sono), sceglie «Nuova partita», salta l’intro con Esc, e per ogni passo clicca nel DOM il pulsante che
+  lo manda: un’uscita, un’azione, un seme del dialogo o una conferma direttamente; il comando di una
+  cosa aprendo il suo baccello (o il «+N» che la nasconde) e toccando il petalo del fiore; un comando a
+  due cose passando da «… con…» e dalla cosa accesa. Dove cliccare lo decide il modello d’azione del
+  turno, che il gioco lascia vedere alla prova (la «sonda», solo in prova); che cosa manda ogni pulsante
+  lo dice il DOM (`data-comando`, e `data-avvia` per i pulsanti che aprono un passo). **Ogni pulsante
+  deve essere in vista e attivo quando lo si tocca.** A fine partita la pausa e «Menu principale», poi il
+  finale dopo; in fondo, il registro dei finali aperto dal menu.
+- **Le verifiche**: l’esito e il finale di ogni partita, l’impronta finale del motore dentro l’app uguale
+  a quella del motore in CPython, i sei nomi nel registro dei finali (su disco, nella cartella
+  temporanea). Nessun salvataggio e nessun registro di chi gioca si tocca, e i riconoscimenti non si
+  segnano come visti.
+
+| Finale | Passi | Come si è arrivati ai pulsanti |
+|---|---|---|
+| Vivi | 78 | 39 diretti, 29 dal fiore, 9 con «… con…», 1 seme con la conferma del congedo |
+| La prima nota | 137 | 63 diretti, 59 dal fiore, 6 con «… con…», 5 dal fiore e 3 con «… con…» passando dalle cose in più, 1 con la conferma |
+| La stiva piena | 80 | 39, 31, 9, 1 |
+| Doppio fondo | 81 | 39, 32, 9, 1 |
+| Mani vuote | 77 | 39, 28, 9, 1 |
+| Due lettere | 110 | 96 diretti, 12 dal fiore, 2 con «… con…» |
+
+Nell’eseguibile di rilascio: **sei finali su sei, 563 passi in 42 secondi**, l’impronta uguale in tutti e
+sei, il registro con i sei nomi.
+
+**Un difetto trovato dalla prova, e corretto.** Con «Usa con…», quando la seconda cosa non è un
+baccello in vista (sta dietro un «+N»), il fiore passa dai petali della cosa a quelli dei bersagli: i
+petali cambiano numero, ma per un rendering le loro posizioni sono ancora quelle di prima, e il ramo
+leggeva un petalo che non c’era più. L’app intera si smontava, schermo vuoto. Succedeva al giocatore
+vero, con «usa il disco con l’altare». Il ramo ora salta i posti senza petalo, e l’effetto li rifà
+prima che lo schermo si ridisegni.
+
+Resta la partita giocata a mano dall’autore, con il mouse e con la sola tastiera: la prova dice che
+ogni pulsante c’è, si vede e fa quello che deve; non dice se si trova, né se è comodo.

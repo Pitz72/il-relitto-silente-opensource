@@ -41,11 +41,13 @@ const VERSIONE = __VERSIONE__;
 const costi = new Map<string, number>();
 
 /** Come comincia la partita: la sceglie il menu principale (06, §4.6). */
-export type Inizio = { tipo: "nuova" } | { tipo: "carica"; posto: IdPosto } | { tipo: "riprendi" };
+export type Inizio = { tipo: "nuova"; seme?: number } | { tipo: "carica"; posto: IdPosto } | { tipo: "riprendi" };
 
 interface Props {
-  /** RELITTO_PROVA=salvataggi: la prova dei salvataggi nell'eseguibile */
-  prova?: "salvataggi";
+  /** RELITTO_PROVA: «salvataggi», la prova dei salvataggi nell'eseguibile;
+   *  «finali», la prova dei finali attraverso l'interfaccia (prova/finali.ts),
+   *  che legge il turno dalla sonda del gioco */
+  prova?: "salvataggi" | "finali";
   inizio?: Inizio;
   /** torna al menu principale, dicendo come sta la partita («invariata» se un caricamento è stato
    *  rifiutato e la partita di prima resta), con un avviso se serve */
@@ -117,6 +119,9 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
   /** il contatto dell'ultimo turno: quando diventa «avvenuto», la membrana cresce */
   const contattoRef = useRef<string | null>(null);
   const [crescita, setCrescita] = useState(0);
+  /** i comandi giocati da quando la partita è cominciata, e il finale (per la sonda della prova) */
+  const passi = useRef(0);
+  const finaleRef = useRef<string | null>(null);
 
   const modello = useMemo(() => (turno ? costruisciModello(turno) : null), [turno]);
 
@@ -135,6 +140,8 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
       ]);
       setAperturaDiario([...(primo.apertura ?? []), ...primo.eventi]);
       setCronaca([]);
+      passi.current = 0;
+      finaleRef.current = null;
     },
     [opzioni.nomiToccabili],
   );
@@ -158,7 +165,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
           else alMenu?.("nessuna", "Non c’è una partita da riprendere.");
         } else {
           costi.clear();
-          comincia(motore.avvia(semeNuovo()));
+          comincia(motore.avvia(inizio.seme ?? semeNuovo()));
         }
       } catch (e) {
         setErrore(String(e instanceof Error ? (e.stack ?? e.message) : e));
@@ -256,6 +263,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
       if (!m) return;
       const prima = stanzaRef.current;
       const t = m.comando(comando);
+      passi.current += 1;
       stanzaRef.current = t.stato.stanza;
       // il primo contatto: la membrana entra dai bordi (§3)
       if (contattoRef.current === "nuovo" && t.stato.contatto === "avvenuto") setCrescita((n) => n + 1);
@@ -278,7 +286,10 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
       if (t.stato.stanza !== prima && t.esito === "in_corso" && t.pulsanti.fase === "gioco") void salvaNel("automatico", true);
       // un finale: la sua riga nel registro dei finali (§4.6)
       const finale = t.suono.eventi.find((e) => e.evento === "finale");
-      if (finale && typeof finale.finale === "string") alFinale?.(finale.finale, rigaDelRegistro(t.eventi));
+      if (finale && typeof finale.finale === "string") {
+        finaleRef.current = finale.finale;
+        alFinale?.(finale.finale, rigaDelRegistro(t.eventi));
+      }
     },
     [opzioni.nomiToccabili, salvaNel, alFinale],
   );
@@ -448,6 +459,22 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
     return () => removeEventListener("keydown", giu);
   }, [modello, selezione, altri, gioca, chiudi, scegli, pannello, domanda, turno, apriSalvataggi, schermoIntero]);
 
+  // la sonda della prova dei finali: il turno come lo vede il modello, i passi, il finale
+  useEffect(() => {
+    if (prova !== "finali") return;
+    const w = window as unknown as Record<string, unknown>;
+    w.__sondaGioco = {
+      esito: turno?.esito ?? "in_corso",
+      modello,
+      passi: passi.current,
+      finale: finaleRef.current,
+      impronta: () => motoreRef.current?.impronta() ?? "",
+    };
+    return () => {
+      delete w.__sondaGioco;
+    };
+  }, [prova, turno, modello]);
+
   // la prova dei salvataggi nell'eseguibile (RELITTO_PROVA=salvataggi)
   const provaFatta = useRef(false);
   useEffect(() => {
@@ -521,6 +548,8 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
           no: modello.scelte.find((s) => s.tasto === "n")?.etichetta ?? "No",
           allora: () => gioca(modello.scelte.find((s) => s.tasto === "s")?.comando ?? "sì", "sì"),
           altrimenti: () => gioca(modello.scelte.find((s) => s.tasto === "n")?.comando ?? "no", "no"),
+          comandoSi: modello.scelte.find((s) => s.tasto === "s")?.comando ?? "sì",
+          comandoNo: modello.scelte.find((s) => s.tasto === "n")?.comando ?? "no",
         }
       : null;
 

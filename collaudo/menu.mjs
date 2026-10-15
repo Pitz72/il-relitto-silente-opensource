@@ -16,8 +16,12 @@
 // controllano le attese del percorso.
 // In più: ogni suggerimento in maiuscolo del gioco deve accendere un pulsante
 // dei menu (o, se non nomina una cosa, almeno l'attrezzo del suo verbo).
+// Giocati tutti i percorsi, scrive collaudo/finali-menu.json: per i sei finali
+// le voci dei menu giocate, una per passo, e l'impronta dello stato alla fine.
+// È il riferimento della prova dei finali nell'eseguibile (RELITTO_PROVA=finali),
+// che clicca quelle voci nell'interfaccia vera e deve arrivare alla stessa impronta.
 
-import { readdirSync, readFileSync } from "node:fs";
+import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { comandiDelModello, costruisciModello } from "../app/src/azione/modello.ts";
@@ -40,6 +44,8 @@ async function gioca(ponte, percorso, verboso) {
   const suggerimenti = { tutti: 0, senza: [] };
   const misure = { cose: 0, voci: 0, massimo: 0, grezze: 0 };
   let giocati = 0;
+  const scelte = [];
+  let finale = null;
   for (const cmd of dati.comandi) {
     if (turno.esito !== "in_corso") break;
     const modello = costruisciModello(turno);
@@ -81,6 +87,8 @@ async function gioca(ponte, percorso, verboso) {
       break;
     }
     giocati += 1;
+    scelte.push(scelto);
+    finale = turno.suono.eventi.find((e) => e.evento === "finale")?.finale ?? finale;
     const dopo = costruisciModello(turno);
     const disponibili = new Set(comandiDelModello(dopo).map(norm));
     for (const s of dopo.suggerimenti) {
@@ -91,7 +99,9 @@ async function gioca(ponte, percorso, verboso) {
     }
   }
   for (const [attesa, motivo] of await ponte.chiama("controlla", dati.attese)) problemi.push([attesa, motivo]);
-  return { problemi, giocati, modi, suggerimenti, misure };
+  const { impronta } = await ponte.chiama("rel_impronta");
+  const riferimento = { scelte, impronta, esito: turno.esito, finale };
+  return { problemi, giocati, modi, suggerimenti, misure, riferimento };
 }
 
 async function main() {
@@ -116,6 +126,7 @@ async function main() {
   const totale = { comandi: 0, uguale: 0, equivalente: 0, stesso: 0, fermi: 0, suggerimenti: 0, spenti: 0 };
   const misure = { cose: 0, voci: 0, massimo: 0, grezze: 0 };
   const finali = new Set();
+  const riferimenti = {};
   for (const percorso of percorsi) {
     const t0 = performance.now();
     const r = await gioca(ponte, percorso, verboso);
@@ -141,13 +152,21 @@ async function main() {
     } else {
       console.log(`[OK] ${nome} (${dettaglio})`);
       const finale = FINALI.find((f) => nome.endsWith(`/${f}.txt`));
-      if (finale) finali.add(finale);
+      if (finale) {
+        finali.add(finale);
+        riferimenti[finale] = { percorso: nome, ...r.riferimento };
+      }
     }
     for (const riga of [...new Set(r.modi["stesso stato"])].sort()) console.log(`     ~ ${riga} (risposta diversa)`);
     for (const riga of [...new Set(r.modi["nessun effetto"])].sort())
       console.log(`     ∅ ${riga} (non cambia niente: nessun pulsante)`);
   }
   ponte.chiudi();
+  // il riferimento della prova nell'eseguibile, solo quando i sei finali ci sono tutti
+  if (!scelti.length && !falliti && finali.size === FINALI.length) {
+    const ordinati = Object.fromEntries(FINALI.map((f) => [f, riferimenti[f]]));
+    writeFileSync(join(QUI, "finali-menu.json"), JSON.stringify(ordinati, null, 1) + "\n");
+  }
   const media = (misure.voci / Math.max(1, misure.cose)).toFixed(1);
   const grezza = (misure.grezze / Math.max(1, misure.cose)).toFixed(1);
   console.log(

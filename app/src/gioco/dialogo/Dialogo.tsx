@@ -56,7 +56,7 @@ export default function Dialogo({ personaggio, blocchi, detto, scelte, forma, ri
       </div>
       <nav className="semi" aria-label="Le risposte">
         {scelte.map((s, i) => (
-          <button key={s.comando} ref={i === 0 ? primoSeme : undefined} type="button" className={s.comando === "esci" ? "esci" : ""} onClick={() => scegli(s)} aria-keyshortcuts={s.tasto ?? undefined}>
+          <button key={s.comando} ref={i === 0 ? primoSeme : undefined} type="button" data-comando={s.comando} className={s.comando === "esci" ? "esci" : ""} onClick={() => scegli(s)} aria-keyshortcuts={s.tasto ?? undefined}>
             {s.tasto && <span className="numero">{s.tasto}</span>}
             {s.etichetta.replace(/'/g, "’")}
           </button>
