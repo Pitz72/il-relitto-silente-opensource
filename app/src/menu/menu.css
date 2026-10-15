@@ -1,0 +1,154 @@
+/* ==========================================================================
+   Il menu principale e la sua regia (Menu.tsx, Relitto.tsx; 06, §4.6).
+   Il palco 16:9 come nel gioco; sopra lo sfondo, un velo da sinistra che
+   tiene il testo sopra 4,5:1 qualunque cosa faccia la scena. I colori vengono
+   dalle variabili delle atmosfere (il relitto, nella membrana).
+   ========================================================================== */
+.relitto-app { display: grid; place-items: center; }
+.relitto-app .palco-app {
+  position: relative;
+  width: min(100vw, calc(100vh * 16 / 9));
+  aspect-ratio: 16 / 9;
+  container-type: size;
+  --corpo: max(16px, 1.1cqw);
+}
+.relitto-app[data-testo="grande"] .palco-app { --corpo: max(19px, 1.32cqw); }
+.relitto-app .avvio-app {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--tenue);
+}
+
+.menu-principale { position: absolute; inset: 0; overflow: hidden; }
+.sfondo-menu { position: absolute; inset: 0; width: 100%; height: 100%; display: block; background: var(--fondo-2); }
+.menu-velo {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--fondo-2) 92%, transparent) 0%, color-mix(in srgb, var(--fondo-2) 82%, transparent) 30%, transparent 58%),
+    linear-gradient(0deg, color-mix(in srgb, var(--fondo-2) 70%, transparent), transparent 22%);
+}
+
+/* il titolo, come lo chiude l'intro: Newsreader leggero, spaziato */
+.menu-titolo { position: absolute; left: 7cqw; top: 8.5cqw; max-width: 46cqw; }
+.menu-titolo h1 {
+  margin: 0;
+  font-weight: 300;
+  font-size: max(30px, 3.9cqw);
+  line-height: 1.05;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--testo);
+}
+.menu-vena {
+  width: 18cqw;
+  height: 2px;
+  margin: 1.1cqw 0 .9cqw;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--vena-2), transparent);
+  opacity: .7;
+}
+.menu-titolo p { margin: 0; font-weight: 300; font-size: max(15px, 1.1cqw); color: var(--tenue); }
+
+/* le voci */
+.menu-voci {
+  position: absolute;
+  left: 7cqw;
+  top: 21cqw;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .25cqw;
+}
+.menu-voci button {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 40px;
+  padding: .32em 1.1em .32em 1.15em;
+  border-radius: 999px;
+  font-size: max(19px, 1.45cqw);
+  font-weight: 340;
+  color: color-mix(in srgb, var(--testo) 82%, var(--tenue));
+  text-align: left;
+  transition: color .25s;
+}
+/* il filo che si accende accanto alla voce scelta */
+.menu-voci button::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 2px;
+  height: 0;
+  border-radius: 2px;
+  background: var(--vena-2);
+  box-shadow: 0 0 .6em color-mix(in srgb, var(--vena-2) 70%, transparent);
+  transform: translateY(-50%);
+  transition: height .3s ease-out;
+}
+.menu-voci button:hover, .menu-voci button:focus-visible { color: var(--testo); }
+.menu-voci button:hover::before, .menu-voci button:focus-visible::before { height: 1.1em; }
+[data-movimento="ridotto"] .menu-voci button::before { transition: none; }
+.menu-dettaglio {
+  font-family: var(--mono);
+  font-size: max(11.5px, .5em);
+  letter-spacing: .1em;
+  color: var(--tenue);
+}
+
+.menu-piede {
+  position: absolute;
+  left: 7cqw;
+  right: 4cqw;
+  bottom: 2.2cqw;
+  display: flex;
+  justify-content: space-between;
+  gap: 2em;
+  font-family: var(--mono);
+  font-size: max(11.5px, .66cqw);
+  letter-spacing: .12em;
+  color: var(--tenue);
+}
+
+/* il registro dei finali: una pagina del registro di bordo */
+.pannello.registro-finali { width: min(860px, 72cqw); max-width: none; }
+.registro-targa {
+  margin: -.6cqw 0 1.4cqw;
+  font-family: var(--stencil);
+  font-weight: 700;
+  font-size: max(11px, .78cqw);
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--targa);
+}
+.registro-righe { list-style: none; margin: 0; padding: 0; counter-reset: riga; }
+.registro-righe li {
+  display: grid;
+  grid-template-columns: minmax(9em, 12cqw) 1fr;
+  column-gap: 1.6em;
+  align-items: baseline;
+  min-height: 3.4em;
+  padding: .7em 0 .55em;
+  border-bottom: 1px solid color-mix(in srgb, var(--bordo) 90%, var(--tenue));
+}
+.registro-righe li.vuota { border-bottom-style: dashed; border-bottom-color: color-mix(in srgb, var(--bordo) 80%, transparent); }
+.registro-data { font-family: var(--mono); font-size: max(11.5px, .72cqw); letter-spacing: .06em; color: var(--tenue); }
+.registro-titolo { font-family: var(--serif); font-style: italic; font-size: max(18px, 1.3cqw); color: var(--testo); }
+.registro-riga {
+  grid-column: 2;
+  margin-top: .25em;
+  font-family: var(--mono);
+  font-size: max(12px, .78cqw);
+  line-height: 1.5;
+  letter-spacing: .02em;
+  color: color-mix(in srgb, var(--testo) 88%, var(--tenue));
+}

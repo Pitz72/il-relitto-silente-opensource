@@ -203,7 +203,9 @@ pub fn run() {
             salvataggi::salvataggi_elenco,
             salvataggi::salvataggio_scrivi,
             salvataggi::salvataggio_leggi,
-            salvataggi::salvataggi_cartella
+            salvataggi::salvataggi_cartella,
+            salvataggi::registro_finali_leggi,
+            salvataggi::registro_finali_scrivi
         ])
         .run(tauri::generate_context!())
         .expect("errore all'avvio dell'applicazione");

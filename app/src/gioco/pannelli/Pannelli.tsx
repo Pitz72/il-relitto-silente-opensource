@@ -119,6 +119,8 @@ export interface VociPausa {
   opzioni: () => void;
   ricomincia: () => void;
   misure: () => void;
+  /** il menu principale: la partita resta, e Continua la riprende */
+  menu: (() => void) | null;
 }
 
 export function Pausa({ forma, voci }: { forma: Forma; voci: VociPausa }) {
@@ -148,6 +150,11 @@ export function Pausa({ forma, voci }: { forma: Forma; voci: VociPausa }) {
         <button type="button" onClick={voci.ricomincia}>
           Ricomincia da capo
         </button>
+        {voci.menu && (
+          <button type="button" onClick={voci.menu}>
+            Menu principale
+          </button>
+        )}
       </nav>
       <button type="button" className="misure" onClick={voci.misure}>
         la pagina delle misure tecniche

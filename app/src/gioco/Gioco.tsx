@@ -4,12 +4,15 @@
 //  tipografica veste il testo; le atmosfere seguono lo stato del gioco.
 //  Le modalità (§4.5): l'esplorazione, il dialogo, la conferma, il cartello
 //  d'atto; sopra, la pausa (Esc), il diario (D), i salvataggi (F5, F9), le
-//  opzioni.
+//  opzioni. Il motore lo carica l'app all'avvio (motore/condiviso.ts); la
+//  partita comincia come la sceglie il menu principale: nuova, da un
+//  salvataggio, o ripresa (tornando dal menu).
 // ============================================================================
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { caricaMotore, type Motore } from "../motore/runtime";
-import type { Evento, Turno, VoceCronaca } from "../motore/tipi";
+import type { Motore } from "../motore/runtime";
+import { avviaMotore, usaPassoMotore } from "../motore/condiviso";
+import type { DiarioIntero, Evento, Turno, VoceCronaca } from "../motore/tipi";
 import { costruisciModello, type ModelloAzione, type SceltaModello } from "../azione/modello";
 import { AZIONI_DI_SITUAZIONE } from "../azione/situazione";
 import { climaDi, tavolozza, variabiliCss } from "../stile/atmosfere";
@@ -27,13 +30,29 @@ import type { IdPagina } from "./diario/pagine";
 import Vene from "./vene/Vene";
 import { Avviso, Conferma, PannelloOpzioni, Pausa, Salvataggi, useAvviso, type Domanda } from "./pannelli/Pannelli";
 import { archivio, type IdPosto, type Posto } from "./salvataggi";
+import { rigaDelRegistro } from "../menu/registro";
 import "../stile/base.css";
 import "./gioco.css";
 
 const VERSIONE = __VERSIONE__;
 
-// Un solo motore per pagina, anche quando React (StrictMode) monta due volte.
-let caricamento: ReturnType<typeof caricaMotore> | null = null;
+/** Quanto costa in aria un tipo di azione, imparato giocando (D16): resta per
+ *  tutta la sessione, anche tornando dal menu; una partita nuova lo azzera. */
+const costi = new Map<string, number>();
+
+/** Come comincia la partita: la sceglie il menu principale (06, §4.6). */
+export type Inizio = { tipo: "nuova" } | { tipo: "carica"; posto: IdPosto } | { tipo: "riprendi" };
+
+interface Props {
+  /** RELITTO_PROVA=salvataggi: la prova dei salvataggi nell'eseguibile */
+  prova?: "salvataggi";
+  inizio?: Inizio;
+  /** torna al menu principale, dicendo come sta la partita («invariata» se un caricamento è stato
+   *  rifiutato e la partita di prima resta), con un avviso se serve */
+  alMenu?: (esito: string, avviso?: string) => void;
+  /** un finale raggiunto, con la riga del registro di bordo se il finale la scrive */
+  alFinale?: (finale: string, riga: string | null) => void;
+}
 
 const ARTICOLO = /^(?:il|lo|la|i|gli|le|l['’]|un|uno|una|dei|degli|delle)\s*/i;
 
@@ -67,13 +86,13 @@ type Pannello = null | "pausa" | "diario" | "salva" | "carica" | "opzioni";
  *  l'elenco, la rilettura, il caricamento; poi un rapporto, e si esce. */
 const PROVA_SALVATAGGI = ["analizza la nave aliena", "accosta", "spara gli arpioni", "ovest", "prendi la tuta", "indossa la tuta"];
 
-export default function Gioco({ prova }: { prova?: "salvataggi" } = {}) {
+export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFinale }: Props = {}) {
   const [opzioni, cambiaOpzioni] = useOpzioni();
   const ridotto = useMovimentoRidotto(opzioni.movimento);
   const motoreRef = useRef<Motore | null>(null);
   const palcoRef = useRef<HTMLElement>(null);
   const [errore, setErrore] = useState<string | null>(null);
-  const [passo, setPasso] = useState("Avvio…");
+  const passo = usaPassoMotore();
   const [turno, setTurno] = useState<Turno | null>(null);
   const [diario, setDiario] = useState<VoceDiario[]>([]);
   /** il diario (D): il prologo con la prima stanza, la cronaca del ponte, la pagina aperta */
@@ -91,7 +110,6 @@ export default function Gioco({ prova }: { prova?: "salvataggi" } = {}) {
   const [posti, setPosti] = useState<Posto[] | null>(null);
   const [dove, setDove] = useState("");
   const [avviso, mostraAvviso] = useAvviso();
-  const costi = useRef(new Map<string, number>());
   const contatore = useRef(0);
   const ultimoPosto = useRef<IdPosto>("1");
   /** la stanza dell'ultimo turno: il salvataggio automatico scatta quando cambia */
@@ -121,17 +139,27 @@ export default function Gioco({ prova }: { prova?: "salvataggi" } = {}) {
     [opzioni.nomiToccabili],
   );
 
-  // ---- l'avvio --------------------------------------------------------------
+  // ---- l'avvio: la partita come l'ha scelta il menu ---------------------------
   useEffect(() => {
     let vivo = true;
     (async () => {
       try {
-        caricamento ??= caricaMotore(setPasso);
-        const { motore } = await caricamento;
+        const { motore } = await avviaMotore();
         if (!vivo) return;
         motoreRef.current = motore;
         setVerbi(new Set(motore.compilazione.verbi ?? []));
-        comincia(motore.avvia(semeNuovo()));
+        if (inizio.tipo === "carica") {
+          const errore = await caricaDa(inizio.posto);
+          // un caricamento rifiutato non tocca la partita che c'era nel motore
+          if (errore && vivo) alMenu?.("invariata", errore);
+        } else if (inizio.tipo === "riprendi") {
+          const r = motore.riprendi();
+          if (r.ok) mostra(r.turno, r.diario);
+          else alMenu?.("nessuna", "Non c’è una partita da riprendere.");
+        } else {
+          costi.clear();
+          comincia(motore.avvia(semeNuovo()));
+        }
       } catch (e) {
         setErrore(String(e instanceof Error ? (e.stack ?? e.message) : e));
       }
@@ -166,33 +194,46 @@ export default function Gioco({ prova }: { prova?: "salvataggi" } = {}) {
     [mostraAvviso],
   );
 
+  /** Una partita ridisegnata da capo (un caricamento, il ritorno dal menu): il
+   *  turno che la mostra, e il diario intero. */
+  const mostra = useCallback(
+    (t: Turno, d: DiarioIntero) => {
+      const mod = costruisciModello(t);
+      stanzaRef.current = t.stato.stanza;
+      contattoRef.current = t.stato.contatto;
+      setTurno(t);
+      setSelezione(NESSUNA);
+      setAltri(null);
+      setDiario([{ chiave: contatore.current++, comando: null, differenza: null, blocchi: blocchiDi(t, mod, opzioni.nomiToccabili) }]);
+      setAperturaDiario(d.apertura);
+      setCronaca(d.cronaca);
+    },
+    [opzioni.nomiToccabili],
+  );
+
+  /** Carica un posto; restituisce il motivo, se non ci riesce (la partita in corso resta). */
   const caricaDa = useCallback(
-    async (posto: IdPosto) => {
+    async (posto: IdPosto): Promise<string | null> => {
       const m = motoreRef.current;
-      if (!m) return;
+      if (!m) return "Il motore non è pronto.";
       try {
         const testo = await archivio().leggi(posto);
         const r = m.carica(testo);
         if (!r.ok) {
           mostraAvviso(r.messaggio, true);
-          return;
+          return r.messaggio;
         }
-        const mod = costruisciModello(r.turno);
-        stanzaRef.current = r.turno.stato.stanza;
-        contattoRef.current = r.turno.stato.contatto;
-        setTurno(r.turno);
-        setSelezione(NESSUNA);
-        setAltri(null);
-        setDiario([{ chiave: contatore.current++, comando: null, differenza: null, blocchi: blocchiDi(r.turno, mod, opzioni.nomiToccabili) }]);
-        setAperturaDiario(r.diario.apertura);
-        setCronaca(r.diario.cronaca);
+        mostra(r.turno, r.diario);
         if (r.esito === "identica") mostraAvviso(posto === "automatico" ? "Partita ripresa dall’ultima stanza." : `Partita caricata dal posto ${posto}.`);
         else mostraAvviso(r.messaggio, r.esito === "diversa");
+        return null;
       } catch (e) {
-        mostraAvviso(`Il caricamento non è riuscito: ${String(e instanceof Error ? e.message : e)}`, true);
+        const motivo = `Il caricamento non è riuscito: ${String(e instanceof Error ? e.message : e)}`;
+        mostraAvviso(motivo, true);
+        return motivo;
       }
     },
-    [mostraAvviso, opzioni.nomiToccabili],
+    [mostraAvviso, mostra],
   );
 
   const apriSalvataggi = useCallback(async (modo: "salva" | "carica") => {
@@ -222,7 +263,7 @@ export default function Gioco({ prova }: { prova?: "salvataggi" } = {}) {
       const mod = costruisciModello(t);
       const differenza = differenzaAria(t);
       // D16: quanto costa un tipo di azione lo si sa dopo averla provata
-      if (differenza && t.comando?.verbo) costi.current.set(t.comando.verbo, differenza);
+      if (differenza && t.comando?.verbo) costi.set(t.comando.verbo, differenza);
       setTurno(t);
       setSelezione(NESSUNA);
       setAltri(null);
@@ -235,8 +276,11 @@ export default function Gioco({ prova }: { prova?: "salvataggi" } = {}) {
       if (c) setCronaca((v) => [...v.slice(0, c.lunghezza - (c.nuova ? 1 : 0)), ...(c.nuova ? [c.nuova] : [])]);
       // il salvataggio automatico, a ogni cambio di stanza (§4.6)
       if (t.stato.stanza !== prima && t.esito === "in_corso" && t.pulsanti.fase === "gioco") void salvaNel("automatico", true);
+      // un finale: la sua riga nel registro dei finali (§4.6)
+      const finale = t.suono.eventi.find((e) => e.evento === "finale");
+      if (finale && typeof finale.finale === "string") alFinale?.(finale.finale, rigaDelRegistro(t.eventi));
     },
-    [opzioni.nomiToccabili, salvaNel],
+    [opzioni.nomiToccabili, salvaNel, alFinale],
   );
 
   // i suggerimenti del turno accendono i loro pulsanti per qualche secondo
@@ -258,7 +302,7 @@ export default function Gioco({ prova }: { prova?: "salvataggi" } = {}) {
     const m = motoreRef.current;
     if (!m) return;
     setPannello(null);
-    costi.current.clear();
+    costi.clear();
     comincia(m.avvia(semeNuovo()));
   }, [comincia]);
 
@@ -524,7 +568,7 @@ export default function Gioco({ prova }: { prova?: "salvataggi" } = {}) {
               forma={forma}
               selezione={selezione}
               accesi={accesi}
-              costi={costi.current}
+              costi={costi}
               palco={palco}
               azione={azione}
               altri={altri}
@@ -562,6 +606,7 @@ export default function Gioco({ prova }: { prova?: "salvataggi" } = {}) {
               ricomincia: () =>
                 setDomanda({ testo: "Ricominciare da capo?", sotto: "La partita in corso si perde, se non l’hai salvata.", si: "Ricomincia", no: "Torna al gioco", allora: ricomincia }),
               misure: () => (location.search = "?prova"),
+              menu: alMenu ? () => alMenu(turno?.esito ?? "in_corso") : null,
             }}
           />
         )}

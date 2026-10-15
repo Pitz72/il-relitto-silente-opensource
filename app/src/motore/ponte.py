@@ -957,6 +957,19 @@ def _mostra_su_un_ramo(m):
     return uscita.eventi
 
 
+def rel_riprendi():
+    """La partita in corso, ridisegnata senza cambiarla: per tornare al gioco dal
+    menu principale. Come dopo un caricamento, la stanza (o la battuta del
+    dialogo) si mostra con mostra_situazione; in più il diario intero."""
+    if _mondo is None:
+        return _json({"ok": False, "errore": "nessuna partita in corso"})
+    t0 = time.perf_counter()
+    turno = json.loads(_turno(_mostra_su_un_ramo(_mondo), t0, time.perf_counter(), prima=None, comando=None))
+    turno["suono"]["eventi"] = [{"evento": "caricamento", "stanza": _mondo.posizione_giocatore}]
+    turno["cronaca"] = {"lunghezza": len(_cronaca), "nuova": None}
+    return _json({"ok": True, "turno": turno, "diario": {"apertura": _apertura, "cronaca": _cronaca}})
+
+
 def rel_impronta():
     """L'impronta dello stato della partita in corso (per i collaudi)."""
     return _json({"impronta": _mondo.impronta_stato(), "turno": _mondo.turno_corrente})

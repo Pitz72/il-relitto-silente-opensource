@@ -149,6 +149,10 @@ python collaudo/pulsanti.py
 ```
 
 ```bash
+python strumenti/riconoscimenti.py --verifica
+```
+
+```bash
 node strumenti/versione.mjs verifica --rilascio
 ```
 

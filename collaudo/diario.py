@@ -17,7 +17,8 @@
 #      voci, le iscrizioni tradotte, i reperti; le iniziali solo quando si
 #      esamina la placca; una traduzione chiusa dalla protezione vitale non è
 #      una lettura;
-#   5. il diario non cambia la partita: la stessa impronta con e senza.
+#   5. il diario non cambia la partita: la stessa impronta con e senza; e
+#      riprendere la partita dal menu principale (rel_riprendi) non la cambia.
 
 import argparse
 import glob
@@ -209,6 +210,14 @@ def main():
     if not uguale:
         falliti += 1
     print(f"[{'OK' if uguale else 'NO'}] il diario non cambia la partita («Vivi»)")
+    # tornare al gioco dal menu principale: la stessa partita, lo stesso diario
+    prima, voci = ponte._mondo.impronta_stato(), senza_chiave(ponte._cronaca)
+    r = json.loads(ponte.rel_riprendi())
+    ripresa = (r["ok"] and ponte._mondo.impronta_stato() == prima
+               and senza_chiave(r["diario"]["cronaca"]) == voci and r["turno"]["eventi"])
+    if not ripresa:
+        falliti += 1
+    print(f"[{'OK' if ripresa else 'NO'}] riprendere dal menu non cambia la partita né il diario")
     print(f"\nPercorsi: {len(percorsi)}; falliti: {falliti}. Voci di cronaca: {voci_in_tutto}; "
           f"il caricamento più lento: {piu_lento:.0f} ms.")
     return 1 if falliti else 0

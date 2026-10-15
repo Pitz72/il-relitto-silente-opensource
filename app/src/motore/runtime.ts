@@ -5,7 +5,7 @@
 //  ponte. Ogni passo è misurato: la fase 1 deve sapere quanto costa l'avvio.
 // ============================================================================
 import { fileDaScrivere, STORIA } from "./sorgenti";
-import type { Compilazione, DiarioIntero, EsitoCaricamento, Percorso, SceltaPulsante, StatoStrumenti, Turno } from "./tipi";
+import type { Compilazione, DiarioIntero, EsitoCaricamento, EsitoRipresa, Percorso, SceltaPulsante, StatoStrumenti, Turno } from "./tipi";
 
 const RUOTA_LARK = "lark-1.3.1-py3-none-any.whl";
 
@@ -40,6 +40,8 @@ export interface Motore {
   impronta(): string;
   /** il diario intero: il prologo con la prima stanza, e la cronaca */
   diario(): DiarioIntero;
+  /** la partita in corso, ridisegnata senza cambiarla (il ritorno dal menu principale) */
+  riprendi(): EsitoRipresa;
   compilazione: Compilazione;
   versionePython: string;
   versionePyodide: string;
@@ -110,6 +112,7 @@ import ponte
   const carica = f("rel_carica");
   const impronta = f("rel_impronta");
   const diario = f("rel_diario");
+  const riprendi = f("rel_riprendi");
 
   const motore: Motore = {
     avvia: (seme) => JSON.parse(avvia(seme ?? null)) as Turno,
@@ -126,6 +129,7 @@ import ponte
     carica: (testo) => JSON.parse(carica(testo)) as EsitoCaricamento,
     impronta: () => (JSON.parse(impronta()) as { impronta: string }).impronta,
     diario: () => JSON.parse(diario()) as DiarioIntero,
+    riprendi: () => JSON.parse(riprendi()) as EsitoRipresa,
     compilazione,
     versionePython: pyodide.runPython("import sys; sys.version.split()[0]") as string,
     versionePyodide: pyodide.version as string,

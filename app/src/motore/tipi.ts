@@ -294,6 +294,9 @@ export interface Salvataggio {
   partita: Record<string, unknown>;
 }
 
+/** Il ritorno alla partita in corso dal menu principale (ponte.py, rel_riprendi). */
+export type EsitoRipresa = { ok: true; turno: Turno; diario: DiarioIntero } | { ok: false; errore: string };
+
 export type EsitoCaricamento =
   | { ok: true; esito: "identica" | "ricostruita" | "diversa"; messaggio: string; impronta: string; turno: Turno; diario: DiarioIntero; ms: number }
   | { ok: false; motivo: "illeggibile" | "formato" | "piu_recente" | "danneggiato" | "motore"; messaggio: string; ms: number };

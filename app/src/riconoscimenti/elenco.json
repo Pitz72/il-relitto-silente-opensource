@@ -1,0 +1,3296 @@
+{
+ "gioco": {
+  "titolo": "Il Relitto Silente",
+  "autore": "Simone Pizzi",
+  "racconto": "dal racconto «Il Relitto», in Dal registro della Santa Maria"
+ },
+ "suoni": [
+  {
+   "sigla": "P1",
+   "titolo": "Industrial plant atmos 1 of 4",
+   "autore": "apintofmild",
+   "fonte": "freesound.org",
+   "url": "https://freesound.org/people/apintofmild/sounds/839813/",
+   "licenza": "CC0 1.0",
+   "ridistribuibile": "sì",
+   "uso": "prototipo: plancia (pompe sotto il re)"
+  },
+  {
+   "sigla": "P2",
+   "titolo": "Ambient Industrial Ventilation Soundscape",
+   "autore": "amenhotepIV",
+   "fonte": "freesound.org",
+   "url": "https://freesound.org/people/amenhotepIV/sounds/166014/",
+   "licenza": "CC0 1.0",
+   "ridistribuibile": "sì",
+   "uso": "prototipo: plancia (ventilazione)"
+  },
+  {
+   "sigla": "P3",
+   "titolo": "Metal door hit – contact mic",
+   "autore": "Salomé_Lubczanski",
+   "fonte": "freesound.org",
+   "url": "https://freesound.org/people/Salom%C3%A9_Lubczanski/sounds/733837/",
+   "licenza": "CC0 1.0",
+   "ridistribuibile": "sì",
+   "uso": "prototipo: lamiere, colpi a contatto"
+  },
+  {
+   "sigla": "C1",
+   "titolo": "Male_Breath_Fast_Loop_Stereo",
+   "autore": "Nox_Sound",
+   "fonte": "freesound.org",
+   "url": "https://freesound.org/people/Nox_Sound/sounds/554907/",
+   "licenza": "CC0 1.0",
+   "ridistribuibile": "sì",
+   "uso": "prototipo: il fiato veloce"
+  },
+  {
+   "sigla": "C2",
+   "titolo": "Male_Breath_Scared_Frozen_Loop_Stereo",
+   "autore": "Nox_Sound",
+   "fonte": "freesound.org",
+   "url": "https://freesound.org/people/Nox_Sound/sounds/554906/",
+   "licenza": "CC0 1.0",
+   "ridistribuibile": "sì",
+   "uso": "prototipo: il fiato trattenuto"
+  },
+  {
+   "sigla": "C3",
+   "titolo": "Heavy Breathing",
+   "autore": "Under7dude",
+   "fonte": "freesound.org",
+   "url": "https://freesound.org/people/Under7dude/sounds/163383/",
+   "licenza": "CC0 1.0",
+   "ridistribuibile": "sì",
+   "uso": "prototipo: il fiato pesante"
+  },
+  {
+   "sigla": "C4",
+   "titolo": "Sigh – man – voice – breath in nose – breath out mouth",
+   "autore": "ValentinPetiteau",
+   "fonte": "freesound.org",
+   "url": "https://freesound.org/people/ValentinPetiteau/sounds/569568/",
+   "licenza": "CC0 1.0",
+   "ridistribuibile": "sì",
+   "uso": "prototipo: il fiato calmo"
+  },
+  {
+   "sigla": "C5",
+   "titolo": "Fan_01",
+   "autore": "moai15",
+   "fonte": "freesound.org",
+   "url": "https://freesound.org/people/moai15/sounds/336387/",
+   "licenza": "CC0 1.0",
+   "ridistribuibile": "sì",
+   "uso": "prototipo: la ventola della tuta"
+  },
+  {
+   "sigla": "C6",
+   "titolo": "metallic door contact mic",
+   "autore": "bruno.auzet",
+   "fonte": "freesound.org",
+   "url": "https://freesound.org/people/bruno.auzet/sounds/718386/",
+   "licenza": "CC0 1.0",
+   "ridistribuibile": "sì",
+   "uso": "prototipo: stivali, colpi a contatto"
+  },
+  {
+   "sigla": "V1",
+   "titolo": "Multilingual Poetry Collection 001 (20 letture, 17 lettori, 12 lingue)",
+   "autore": "LibriVox",
+   "fonte": "librivox.org",
+   "url": "https://librivox.org/multilingual-poetry-collection-001",
+   "licenza": "pubblico dominio",
+   "ridistribuibile": "sì",
+   "uso": "prototipo: la materia del brusio"
+  },
+  {
+   "sigla": "V2",
+   "titolo": "Ambience INT water drip dropping cave grotto spooky (Quinta da Regaleira, Portugal)",
+   "autore": "corkob",
+   "fonte": "freesound.org",
+   "url": "https://freesound.org/people/corkob/sounds/392668/",
+   "licenza": "CC0 1.0",
+   "ridistribuibile": "sì",
+   "uso": "prototipo: gocce"
+  },
+  {
+   "sigla": "V3",
+   "titolo": "Ice – Lake fractures",
+   "autore": "Vrymaa",
+   "fonte": "freesound.org",
+   "url": "https://freesound.org/people/Vrymaa/sounds/737896/",
+   "licenza": "CC0 1.0",
+   "ridistribuibile": "sì",
+   "uso": "prototipo: gemiti, assestamenti, incrinature"
+  }
+ ],
+ "immagini": [
+  {
+   "file": "poppa.webp",
+   "che_cosa": "la Santa Maria da poppa, scontornata",
+   "da_dove": "lo still canonico della poppa (clip03) del sequel, scontornato con strumenti/intro/scontorna_poppa.py",
+   "autore": "Simone Pizzi",
+   "licenza": "dell’autore"
+  },
+  {
+   "file": "prua.webp",
+   "che_cosa": "la Santa Maria di tre quarti dal davanti, scontornata",
+   "da_dove": "lo still canonico di tre quarti (v2) del sequel, scontornato con strumenti/intro/scontorna_prua.py",
+   "autore": "Simone Pizzi",
+   "licenza": "dell’autore"
+  },
+  {
+   "file": "plancia.webp",
+   "che_cosa": "la plancia, con la massa nell’oblò",
+   "da_dove": "s_01_b del sequel; la vista nell’oblò resa in codice (strumenti/intro/plancia.py)",
+   "autore": "Simone Pizzi",
+   "licenza": "dell’autore"
+  },
+  {
+   "file": "plancia-radar.webp",
+   "che_cosa": "la plancia, con il radar sullo schermo verde",
+   "da_dove": "s_01_b del sequel; il radar disegnato in codice",
+   "autore": "Simone Pizzi",
+   "licenza": "dell’autore"
+  },
+  {
+   "file": "plancia-oblo.webp",
+   "che_cosa": "l’oblò della plancia, da vicino",
+   "da_dove": "s_01_b del sequel; la vista resa in codice",
+   "autore": "Simone Pizzi",
+   "licenza": "dell’autore"
+  },
+  {
+   "file": "plancia-faro.webp",
+   "che_cosa": "l’oblò con il faro di prua acceso",
+   "da_dove": "s_01_b del sequel; il faro reso in codice",
+   "autore": "Simone Pizzi",
+   "licenza": "dell’autore"
+  },
+  {
+   "file": "lente.webp",
+   "che_cosa": "la plancia nella lente del visore",
+   "da_dove": "s_01_b del sequel, dalla tavola dell’intro",
+   "autore": "Simone Pizzi",
+   "licenza": "dell’autore"
+  }
+ ],
+ "caratteri": [
+  {
+   "nome": "@fontsource-variable/atkinson-hyperlegible-next",
+   "versione": "5.3.0",
+   "licenza": "OFL-1.1",
+   "copyright": [
+    "Copyright 2020-2024 The Atkinson Hyperlegible Next Project Authors (https://github.com/googlefonts/atkinson-hyperlegible-next)"
+   ],
+   "sorgente": "https://github.com/fontsource/font-files",
+   "usata": [
+    "OFL-1.1"
+   ],
+   "famiglia": "Atkinson Hyperlegible Next",
+   "ruolo": "la leggibilità, nelle opzioni"
+  },
+  {
+   "nome": "@fontsource-variable/big-shoulders-stencil",
+   "versione": "5.3.0",
+   "licenza": "OFL-1.1",
+   "copyright": [
+    "Copyright 2019 The Big Shoulders Project Authors (https://github.com/xotypeco/big_shoulders)"
+   ],
+   "sorgente": "https://github.com/fontsource/font-files",
+   "usata": [
+    "OFL-1.1"
+   ],
+   "famiglia": "Big Shoulders Stencil",
+   "ruolo": "le targhe della Santa Maria"
+  },
+  {
+   "nome": "@fontsource-variable/newsreader",
+   "versione": "5.3.0",
+   "licenza": "OFL-1.1",
+   "copyright": [
+    "Copyright 2020 The Newsreader Project Authors (http://github.com/productiontype/Newsreader)"
+   ],
+   "sorgente": "https://github.com/fontsource/font-files",
+   "usata": [
+    "OFL-1.1"
+   ],
+   "famiglia": "Newsreader",
+   "ruolo": "il testo"
+  },
+  {
+   "nome": "@fontsource/ibm-plex-mono",
+   "versione": "5.3.0",
+   "licenza": "OFL-1.1",
+   "copyright": [
+    "Copyright 2017 IBM Corp. All rights reserved."
+   ],
+   "sorgente": "https://github.com/fontsource/font-files",
+   "usata": [
+    "OFL-1.1"
+   ],
+   "famiglia": "IBM Plex Mono",
+   "ruolo": "gli strumenti, le letture dello scanner"
+  }
+ ],
+ "principali": [
+  {
+   "nome": "FAVELLA 1",
+   "versione": "1.5.0",
+   "licenza": "MIT",
+   "usata": [
+    "MIT"
+   ],
+   "copyright": [
+    "Copyright (c) 2026 Simone (Pitz72) — FAVELLA 1"
+   ],
+   "ruolo": "il motore del gioco",
+   "sorgente": "https://github.com/Pitz72/FAVELLA1"
+  },
+  {
+   "nome": "Pyodide",
+   "versione": "0.27.8",
+   "licenza": "MPL-2.0",
+   "usata": [
+    "MPL-2.0"
+   ],
+   "copyright": [],
+   "autori": [
+    "i contributori di Pyodide"
+   ],
+   "ruolo": "Python dentro l’app",
+   "sorgente": "https://github.com/pyodide/pyodide"
+  },
+  {
+   "nome": "CPython",
+   "versione": "3.12.7",
+   "licenza": "PSF-2.0",
+   "usata": [
+    "PSF-2.0"
+   ],
+   "copyright": [
+    "Copyright (c) 2001-2023 Python Software Foundation; All Rights Reserved"
+   ],
+   "ruolo": "l’interprete, dentro Pyodide",
+   "sorgente": "https://github.com/python/cpython"
+  },
+  {
+   "nome": "lark",
+   "versione": "1.3.1",
+   "licenza": "MIT",
+   "usata": [
+    "MIT"
+   ],
+   "copyright": [
+    "Copyright © 2017 Erez Shinan",
+    "COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER"
+   ],
+   "ruolo": "la grammatica di FAVELLA",
+   "sorgente": "https://github.com/lark-parser/lark"
+  },
+  {
+   "nome": "Tauri",
+   "versione": "2.12.3",
+   "licenza": "Apache-2.0 OR MIT",
+   "usata": [
+    "MIT"
+   ],
+   "copyright": [
+    "Copyright (c) 2017 - Present Tauri Apps Contributors"
+   ],
+   "sorgente": "https://github.com/tauri-apps/tauri",
+   "ruolo": "la finestra e il processo dell’app"
+  },
+  {
+   "nome": "kira",
+   "versione": "0.12.5",
+   "licenza": "MIT OR Apache-2.0",
+   "usata": [
+    "MIT"
+   ],
+   "copyright": [],
+   "sorgente": "https://github.com/tesselode/kira",
+   "autori": [
+    "Andrew Minnich"
+   ],
+   "ruolo": "il motore audio"
+  },
+  {
+   "nome": "React",
+   "versione": "19.3.0",
+   "licenza": "MIT",
+   "copyright": [
+    "Copyright (c) Meta Platforms, Inc. and affiliates."
+   ],
+   "sorgente": "https://github.com/react/react",
+   "usata": [
+    "MIT"
+   ],
+   "ruolo": "l’interfaccia"
+  }
+ ],
+ "javascript": [
+  {
+   "nome": "@tauri-apps/api",
+   "versione": "2.12.3",
+   "licenza": "Apache-2.0 OR MIT",
+   "copyright": [
+    "Copyright (c) 2017 - Present Tauri Apps Contributors"
+   ],
+   "sorgente": "https://github.com/tauri-apps/tauri",
+   "usata": [
+    "MIT"
+   ]
+  },
+  {
+   "nome": "react",
+   "versione": "19.3.0",
+   "licenza": "MIT",
+   "copyright": [
+    "Copyright (c) Meta Platforms, Inc. and affiliates."
+   ],
+   "sorgente": "https://github.com/react/react",
+   "usata": [
+    "MIT"
+   ]
+  },
+  {
+   "nome": "react-dom",
+   "versione": "19.3.0",
+   "licenza": "MIT",
+   "copyright": [
+    "Copyright (c) Meta Platforms, Inc. and affiliates."
+   ],
+   "sorgente": "https://github.com/react/react",
+   "usata": [
+    "MIT"
+   ]
+  },
+  {
+   "nome": "scheduler",
+   "versione": "0.28.0",
+   "licenza": "MIT",
+   "copyright": [
+    "Copyright (c) Meta Platforms, Inc. and affiliates."
+   ],
+   "sorgente": "https://github.com/react/react",
+   "usata": [
+    "MIT"
+   ]
+  }
+ ],
+ "rust": {
+  "x86_64-pc-windows-msvc": [
+   {
+    "nome": "adler2",
+    "versione": "2.0.1",
+    "licenza": "0BSD OR MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (C) Jonas Schievink <jonasschievink@gmail.com>"
+    ],
+    "sorgente": "https://github.com/oyvindln/adler2"
+   },
+   {
+    "nome": "aho-corasick",
+    "versione": "1.1.5",
+    "licenza": "Unlicense OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2015 Andrew Gallant"
+    ],
+    "sorgente": "https://github.com/BurntSushi/aho-corasick"
+   },
+   {
+    "nome": "alloc-no-stdlib",
+    "versione": "3.0.0",
+    "licenza": "BSD-3-Clause",
+    "usata": [
+     "BSD-3-Clause"
+    ],
+    "copyright": [
+     "Copyright (c) 2016 Dropbox, Inc."
+    ],
+    "sorgente": "https://github.com/dropbox/rust-alloc-no-stdlib"
+   },
+   {
+    "nome": "alloc-stdlib",
+    "versione": "0.3.0",
+    "licenza": "BSD-3-Clause",
+    "usata": [
+     "BSD-3-Clause"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/dropbox/rust-alloc-no-stdlib",
+    "autori": [
+     "Daniel Reiter Horn"
+    ]
+   },
+   {
+    "nome": "anyhow",
+    "versione": "1.0.104",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/dtolnay/anyhow",
+    "autori": [
+     "David Tolnay"
+    ]
+   },
+   {
+    "nome": "atomic-arena",
+    "versione": "0.1.2",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright 2021 Andrew Minnich"
+    ],
+    "sorgente": "https://github.com/tesselode/atomic-arena"
+   },
+   {
+    "nome": "audio_thread_priority",
+    "versione": "0.35.1",
+    "licenza": "MPL-2.0",
+    "usata": [
+     "MPL-2.0"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/padenot/audio_thread_priority",
+    "autori": [
+     "Paul Adenot"
+    ]
+   },
+   {
+    "nome": "base64",
+    "versione": "0.23.1",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2025 Alice Maz, Marshall Pierce"
+    ],
+    "sorgente": "https://github.com/marshallpierce/rust-base64"
+   },
+   {
+    "nome": "bit-set",
+    "versione": "0.8.0",
+    "licenza": "Apache-2.0 OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2023 The Rust Project Developers"
+    ],
+    "sorgente": "https://github.com/contain-rs/bit-set"
+   },
+   {
+    "nome": "bit-vec",
+    "versione": "0.8.0",
+    "licenza": "Apache-2.0 OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2023 The Rust Project Developers"
+    ],
+    "sorgente": "https://github.com/contain-rs/bit-vec"
+   },
+   {
+    "nome": "bitflags",
+    "versione": "1.3.2",
+    "licenza": "MIT/Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2014 The Rust Project Developers"
+    ],
+    "sorgente": "https://github.com/bitflags/bitflags"
+   },
+   {
+    "nome": "bitflags",
+    "versione": "2.13.2",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2014 The Rust Project Developers"
+    ],
+    "sorgente": "https://github.com/bitflags/bitflags"
+   },
+   {
+    "nome": "block-buffer",
+    "versione": "0.10.4",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2018-2019 The RustCrypto Project Developers"
+    ],
+    "sorgente": "https://github.com/RustCrypto/utils"
+   },
+   {
+    "nome": "brotli",
+    "versione": "9.0.0",
+    "licenza": "BSD-3-Clause AND MIT",
+    "usata": [
+     "MIT",
+     "BSD-3-Clause"
+    ],
+    "copyright": [
+     "Copyright (c) 2016 Dropbox, Inc.",
+     "Copyright (c) 2009, 2010, 2013-2016 by the Brotli Authors."
+    ],
+    "sorgente": "https://github.com/dropbox/rust-brotli"
+   },
+   {
+    "nome": "brotli-decompressor",
+    "versione": "6.0.1",
+    "licenza": "BSD-3-Clause/MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2016 Dropbox, Inc."
+    ],
+    "sorgente": "https://github.com/dropbox/rust-brotli-decompressor"
+   },
+   {
+    "nome": "bytemuck",
+    "versione": "1.25.2",
+    "licenza": "Zlib OR Apache-2.0 OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2019 Daniel \"Lokathor\" Gee."
+    ],
+    "sorgente": "https://github.com/Lokathor/bytemuck"
+   },
+   {
+    "nome": "byteorder",
+    "versione": "1.5.0",
+    "licenza": "Unlicense OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2015 Andrew Gallant"
+    ],
+    "sorgente": "https://github.com/BurntSushi/byteorder"
+   },
+   {
+    "nome": "bytes",
+    "versione": "1.12.1",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2018 Carl Lerche"
+    ],
+    "sorgente": "https://github.com/tokio-rs/bytes"
+   },
+   {
+    "nome": "camino",
+    "versione": "1.2.6",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/camino-rs/camino",
+    "autori": [
+     "Without Boats",
+     "Ashley Williams",
+     "Steve Klabnik",
+     "Rain"
+    ]
+   },
+   {
+    "nome": "cargo-platform",
+    "versione": "0.1.9",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/rust-lang/cargo",
+    "autori": [
+     "gli autori di cargo-platform"
+    ]
+   },
+   {
+    "nome": "cargo_metadata",
+    "versione": "0.19.2",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/oli-obk/cargo_metadata",
+    "autori": [
+     "Oliver Schneider"
+    ]
+   },
+   {
+    "nome": "cfb",
+    "versione": "0.14.0",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2017 Matthew D. Steele"
+    ],
+    "sorgente": "https://github.com/mdsteele/rust-cfb"
+   },
+   {
+    "nome": "cfg-if",
+    "versione": "1.0.5",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2014 Alex Crichton"
+    ],
+    "sorgente": "https://github.com/rust-lang/cfg-if"
+   },
+   {
+    "nome": "cookie",
+    "versione": "0.18.2",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright 2017 Sergio Benitez",
+     "Copyright 2014 Alex Chricton",
+     "Copyright (c) 2014 Alex Crichton"
+    ],
+    "sorgente": "https://github.com/SergioBenitez/cookie-rs"
+   },
+   {
+    "nome": "cpal",
+    "versione": "0.18.2",
+    "licenza": "Apache-2.0",
+    "usata": [
+     "Apache-2.0"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/RustAudio/cpal",
+    "autori": [
+     "gli autori di cpal"
+    ]
+   },
+   {
+    "nome": "cpufeatures",
+    "versione": "0.2.17",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2020-2025 The RustCrypto Project Developers"
+    ],
+    "sorgente": "https://github.com/RustCrypto/utils"
+   },
+   {
+    "nome": "crc32fast",
+    "versione": "1.5.2",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2018 Sam Rijs, Alex Crichton and contributors"
+    ],
+    "sorgente": "https://github.com/srijs/rust-crc32fast"
+   },
+   {
+    "nome": "crossbeam-channel",
+    "versione": "0.5.17",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2019 The Crossbeam Project Developers",
+     "COPYRIGHT AND/OR OTHER APPLICABLE LAW. ANY USE OF THE WORK OTHER THAN AS",
+     "Copyright (c) 2009 The Go Authors. All rights reserved."
+    ],
+    "sorgente": "https://github.com/crossbeam-rs/crossbeam"
+   },
+   {
+    "nome": "crossbeam-utils",
+    "versione": "0.8.23",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2019 The Crossbeam Project Developers"
+    ],
+    "sorgente": "https://github.com/crossbeam-rs/crossbeam"
+   },
+   {
+    "nome": "crypto-common",
+    "versione": "0.1.7",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2021 RustCrypto Developers"
+    ],
+    "sorgente": "https://github.com/RustCrypto/traits"
+   },
+   {
+    "nome": "cssparser",
+    "versione": "0.37.0",
+    "licenza": "MPL-2.0",
+    "usata": [
+     "MPL-2.0"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/servo/rust-cssparser",
+    "autori": [
+     "Simon Sapin"
+    ]
+   },
+   {
+    "nome": "cssparser-macros",
+    "versione": "0.7.1",
+    "licenza": "MPL-2.0",
+    "usata": [
+     "MPL-2.0"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/servo/rust-cssparser",
+    "autori": [
+     "Simon Sapin"
+    ]
+   },
+   {
+    "nome": "ctor",
+    "versione": "1.0.13",
+    "licenza": "Apache-2.0 OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/mmastrac/linktime",
+    "autori": [
+     "Matt Mastracci"
+    ]
+   },
+   {
+    "nome": "darling",
+    "versione": "0.24.1",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2017 Ted Driggs"
+    ],
+    "sorgente": "https://github.com/TedDriggs/darling"
+   },
+   {
+    "nome": "darling_core",
+    "versione": "0.24.1",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2017 Ted Driggs"
+    ],
+    "sorgente": "https://github.com/TedDriggs/darling"
+   },
+   {
+    "nome": "darling_macro",
+    "versione": "0.24.1",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2017 Ted Driggs"
+    ],
+    "sorgente": "https://github.com/TedDriggs/darling"
+   },
+   {
+    "nome": "dasp_sample",
+    "versione": "0.11.0",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/rustaudio/sample.git",
+    "autori": [
+     "mitchmindtree"
+    ]
+   },
+   {
+    "nome": "deranged",
+    "versione": "0.5.9",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright 2024 Jacob Pratt et al."
+    ],
+    "sorgente": "https://github.com/jhpratt/deranged"
+   },
+   {
+    "nome": "derive_more",
+    "versione": "2.1.1",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2016 Jelte Fennema"
+    ],
+    "sorgente": "https://github.com/JelteF/derive_more"
+   },
+   {
+    "nome": "derive_more-impl",
+    "versione": "2.1.1",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2016 Jelte Fennema"
+    ],
+    "sorgente": "https://github.com/JelteF/derive_more"
+   },
+   {
+    "nome": "digest",
+    "versione": "0.10.7",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2017 Artyom Pavlov"
+    ],
+    "sorgente": "https://github.com/RustCrypto/traits"
+   },
+   {
+    "nome": "dirs",
+    "versione": "7.0.0",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2018-2019 dirs-rs contributors"
+    ],
+    "sorgente": "https://codeberg.org/dirs/dirs-rs"
+   },
+   {
+    "nome": "dirs-sys",
+    "versione": "0.5.0",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2018-2019 dirs-rs contributors"
+    ],
+    "sorgente": "https://github.com/dirs-dev/dirs-sys-rs"
+   },
+   {
+    "nome": "displaydoc",
+    "versione": "0.2.7",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/yaahc/displaydoc",
+    "autori": [
+     "Jane Lusby"
+    ]
+   },
+   {
+    "nome": "dom_query",
+    "versione": "0.28.0",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2023 Mykola Humanov"
+    ],
+    "sorgente": "https://github.com/niklak/dom_query"
+   },
+   {
+    "nome": "dpi",
+    "versione": "0.1.2",
+    "licenza": "Apache-2.0 AND MIT",
+    "usata": [
+     "MIT",
+     "Apache-2.0"
+    ],
+    "copyright": [
+     "Copyright (c) 2018 Jorge Aparicio",
+     "Copyright © 2005-2020 Rich Felker, et al.",
+     "Copyright © 1993,2004 Sun Microsystems or",
+     "Copyright © 2003-2011 David Schultz or"
+    ],
+    "sorgente": "https://github.com/rust-windowing/winit"
+   },
+   {
+    "nome": "dtoa",
+    "versione": "1.0.11",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/dtolnay/dtoa",
+    "autori": [
+     "David Tolnay"
+    ]
+   },
+   {
+    "nome": "dtoa-short",
+    "versione": "0.3.5",
+    "licenza": "MPL-2.0",
+    "usata": [
+     "MPL-2.0"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/upsuper/dtoa-short",
+    "autori": [
+     "Xidorn Quan"
+    ]
+   },
+   {
+    "nome": "dunce",
+    "versione": "1.0.5",
+    "licenza": "CC0-1.0 OR MIT-0 OR Apache-2.0",
+    "usata": [
+     "Apache-2.0"
+    ],
+    "copyright": [],
+    "sorgente": "https://gitlab.com/kornelski/dunce",
+    "autori": [
+     "Kornel"
+    ]
+   },
+   {
+    "nome": "dyn-clone",
+    "versione": "1.0.20",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/dtolnay/dyn-clone",
+    "autori": [
+     "David Tolnay"
+    ]
+   },
+   {
+    "nome": "equivalent",
+    "versione": "1.0.3",
+    "licenza": "Apache-2.0 OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2016--2023"
+    ],
+    "sorgente": "https://github.com/indexmap-rs/equivalent"
+   },
+   {
+    "nome": "erased-serde",
+    "versione": "0.4.10",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/dtolnay/erased-serde",
+    "autori": [
+     "David Tolnay"
+    ]
+   },
+   {
+    "nome": "extended",
+    "versione": "0.1.0",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright 2022 Dietrich Epp"
+    ],
+    "sorgente": "https://github.com/depp/extended-rs"
+   },
+   {
+    "nome": "fastrand",
+    "versione": "2.5.0",
+    "licenza": "Apache-2.0 OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/smol-rs/fastrand",
+    "autori": [
+     "Stjepan Glavina"
+    ]
+   },
+   {
+    "nome": "fdeflate",
+    "versione": "0.3.7",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/image-rs/fdeflate",
+    "autori": [
+     "The image-rs Developers"
+    ]
+   },
+   {
+    "nome": "flate2",
+    "versione": "1.1.10",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2014-2026 Alex Crichton"
+    ],
+    "sorgente": "https://github.com/rust-lang/flate2-rs"
+   },
+   {
+    "nome": "fnv",
+    "versione": "1.0.7",
+    "licenza": "Apache-2.0 / MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2017 Contributors"
+    ],
+    "sorgente": "https://github.com/servo/rust-fnv"
+   },
+   {
+    "nome": "foldhash",
+    "versione": "0.2.0",
+    "licenza": "Zlib",
+    "usata": [
+     "Zlib"
+    ],
+    "copyright": [
+     "Copyright (c) 2024 Orson Peters"
+    ],
+    "sorgente": "https://github.com/orlp/foldhash"
+   },
+   {
+    "nome": "form_urlencoded",
+    "versione": "1.2.2",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2013-2016 The rust-url developers"
+    ],
+    "sorgente": "https://github.com/servo/rust-url"
+   },
+   {
+    "nome": "generic-array",
+    "versione": "0.14.7",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2015 Bartłomiej Kamiński"
+    ],
+    "sorgente": "https://github.com/fizyk20/generic-array.git"
+   },
+   {
+    "nome": "getrandom",
+    "versione": "0.3.4",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2018-2025 The rust-random Project Developers",
+     "Copyright (c) 2014 The Rust Project Developers"
+    ],
+    "sorgente": "https://github.com/rust-random/getrandom"
+   },
+   {
+    "nome": "getrandom",
+    "versione": "0.4.3",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2018-2026 The rust-random Project Developers",
+     "Copyright (c) 2014 The Rust Project Developers"
+    ],
+    "sorgente": "https://github.com/rust-random/getrandom"
+   },
+   {
+    "nome": "glam",
+    "versione": "0.33.12",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright 2020 Cameron Hart"
+    ],
+    "sorgente": "https://github.com/bitshifter/glam-rs"
+   },
+   {
+    "nome": "glob",
+    "versione": "0.3.4",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2014 The Rust Project Developers"
+    ],
+    "sorgente": "https://github.com/rust-lang/glob"
+   },
+   {
+    "nome": "hashbrown",
+    "versione": "0.12.3",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2016 Amanieu d'Antras"
+    ],
+    "sorgente": "https://github.com/rust-lang/hashbrown"
+   },
+   {
+    "nome": "hashbrown",
+    "versione": "0.17.1",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2016 Amanieu d'Antras"
+    ],
+    "sorgente": "https://github.com/rust-lang/hashbrown"
+   },
+   {
+    "nome": "heck",
+    "versione": "0.5.0",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2015 The Rust Project Developers"
+    ],
+    "sorgente": "https://github.com/withoutboats/heck"
+   },
+   {
+    "nome": "html5ever",
+    "versione": "0.39.0",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2014 The html5ever Project Developers"
+    ],
+    "sorgente": "https://github.com/servo/html5ever"
+   },
+   {
+    "nome": "http",
+    "versione": "1.5.0",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright 2017 http-rs authors"
+    ],
+    "sorgente": "https://github.com/hyperium/http"
+   },
+   {
+    "nome": "ico",
+    "versione": "0.5.0",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2018 Matthew D. Steele"
+    ],
+    "sorgente": "https://github.com/mdsteele/rust-ico"
+   },
+   {
+    "nome": "icu_collections",
+    "versione": "2.3.0",
+    "licenza": "Unicode-3.0",
+    "usata": [
+     "Unicode-3.0"
+    ],
+    "copyright": [
+     "Copyright © 2020-2024 Unicode, Inc."
+    ],
+    "sorgente": "https://github.com/unicode-org/icu4x"
+   },
+   {
+    "nome": "icu_locale_core",
+    "versione": "2.3.0",
+    "licenza": "Unicode-3.0",
+    "usata": [
+     "Unicode-3.0"
+    ],
+    "copyright": [
+     "Copyright © 2020-2024 Unicode, Inc."
+    ],
+    "sorgente": "https://github.com/unicode-org/icu4x"
+   },
+   {
+    "nome": "icu_normalizer",
+    "versione": "2.3.0",
+    "licenza": "Unicode-3.0",
+    "usata": [
+     "Unicode-3.0"
+    ],
+    "copyright": [
+     "Copyright © 2020-2024 Unicode, Inc."
+    ],
+    "sorgente": "https://github.com/unicode-org/icu4x"
+   },
+   {
+    "nome": "icu_normalizer_data",
+    "versione": "2.3.0",
+    "licenza": "Unicode-3.0",
+    "usata": [
+     "Unicode-3.0"
+    ],
+    "copyright": [
+     "Copyright © 2020-2024 Unicode, Inc."
+    ],
+    "sorgente": "https://github.com/unicode-org/icu4x"
+   },
+   {
+    "nome": "icu_properties",
+    "versione": "2.3.0",
+    "licenza": "Unicode-3.0",
+    "usata": [
+     "Unicode-3.0"
+    ],
+    "copyright": [
+     "Copyright © 2020-2024 Unicode, Inc."
+    ],
+    "sorgente": "https://github.com/unicode-org/icu4x"
+   },
+   {
+    "nome": "icu_properties_data",
+    "versione": "2.3.0",
+    "licenza": "Unicode-3.0",
+    "usata": [
+     "Unicode-3.0"
+    ],
+    "copyright": [
+     "Copyright © 2020-2024 Unicode, Inc."
+    ],
+    "sorgente": "https://github.com/unicode-org/icu4x"
+   },
+   {
+    "nome": "icu_provider",
+    "versione": "2.3.1",
+    "licenza": "Unicode-3.0",
+    "usata": [
+     "Unicode-3.0"
+    ],
+    "copyright": [
+     "Copyright © 2020-2024 Unicode, Inc."
+    ],
+    "sorgente": "https://github.com/unicode-org/icu4x"
+   },
+   {
+    "nome": "ident_case",
+    "versione": "1.0.1",
+    "licenza": "MIT/Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/TedDriggs/ident_case",
+    "autori": [
+     "Ted Driggs"
+    ]
+   },
+   {
+    "nome": "idna",
+    "versione": "1.1.0",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2013-2025 The rust-url developers"
+    ],
+    "sorgente": "https://github.com/servo/rust-url/"
+   },
+   {
+    "nome": "idna_adapter",
+    "versione": "1.2.2",
+    "licenza": "Apache-2.0 OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) The rust-url developers"
+    ],
+    "sorgente": "https://github.com/hsivonen/idna_adapter"
+   },
+   {
+    "nome": "indexmap",
+    "versione": "1.9.3",
+    "licenza": "Apache-2.0 OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2016--2017"
+    ],
+    "sorgente": "https://github.com/bluss/indexmap"
+   },
+   {
+    "nome": "indexmap",
+    "versione": "2.14.2",
+    "licenza": "Apache-2.0 OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2016--2017"
+    ],
+    "sorgente": "https://github.com/indexmap-rs/indexmap"
+   },
+   {
+    "nome": "infer",
+    "versione": "0.22.0",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2019 Bojan"
+    ],
+    "sorgente": "https://github.com/bojand/infer"
+   },
+   {
+    "nome": "itoa",
+    "versione": "1.0.18",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/dtolnay/itoa",
+    "autori": [
+     "David Tolnay"
+    ]
+   },
+   {
+    "nome": "json-patch",
+    "versione": "4.2.0",
+    "licenza": "MIT/Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2017 Ivan Dubrov"
+    ],
+    "sorgente": "https://github.com/idubrov/json-patch"
+   },
+   {
+    "nome": "jsonptr",
+    "versione": "0.7.1",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright 2024 Chance Dinkins",
+     "Copyright (c) 2022 Chance Dinkins"
+    ],
+    "sorgente": "https://github.com/chanced/jsonptr"
+   },
+   {
+    "nome": "keyboard-types",
+    "versione": "0.8.3",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2017 Pyfisch"
+    ],
+    "sorgente": "https://github.com/rust-windowing/keyboard-types"
+   },
+   {
+    "nome": "kira",
+    "versione": "0.12.5",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/tesselode/kira",
+    "autori": [
+     "Andrew Minnich"
+    ]
+   },
+   {
+    "nome": "lazy_static",
+    "versione": "1.5.1",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/rust-lang-nursery/lazy-static.rs",
+    "autori": [
+     "Marvin Löbel"
+    ]
+   },
+   {
+    "nome": "libc",
+    "versione": "0.2.190",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) The Rust Project Developers"
+    ],
+    "sorgente": "https://github.com/rust-lang/libc"
+   },
+   {
+    "nome": "litemap",
+    "versione": "0.8.3",
+    "licenza": "Unicode-3.0",
+    "usata": [
+     "Unicode-3.0"
+    ],
+    "copyright": [
+     "Copyright © 2020-2024 Unicode, Inc."
+    ],
+    "sorgente": "https://github.com/unicode-org/icu4x"
+   },
+   {
+    "nome": "lock_api",
+    "versione": "0.4.14",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2016 The Rust Project Developers"
+    ],
+    "sorgente": "https://github.com/Amanieu/parking_lot"
+   },
+   {
+    "nome": "log",
+    "versione": "0.4.34",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2014 The Rust Project Developers"
+    ],
+    "sorgente": "https://github.com/rust-lang/log"
+   },
+   {
+    "nome": "markup5ever",
+    "versione": "0.39.0",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2014 The html5ever Project Developers"
+    ],
+    "sorgente": "https://github.com/servo/html5ever"
+   },
+   {
+    "nome": "memchr",
+    "versione": "2.8.3",
+    "licenza": "Unlicense OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2015 Andrew Gallant"
+    ],
+    "sorgente": "https://github.com/BurntSushi/memchr"
+   },
+   {
+    "nome": "mime",
+    "versione": "0.3.17",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2014 Sean McArthur"
+    ],
+    "sorgente": "https://github.com/hyperium/mime"
+   },
+   {
+    "nome": "miniz_oxide",
+    "versione": "0.8.9",
+    "licenza": "MIT OR Zlib OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright 2013-2014 RAD Game Tools and Valve Software",
+     "Copyright 2010-2014 Rich Geldreich and Tenacious Software LLC",
+     "Copyright (c) 2017 Frommi",
+     "Copyright (c) 2017-2024 oyvindln"
+    ],
+    "sorgente": "https://github.com/Frommi/miniz_oxide/tree/master/miniz_oxide"
+   },
+   {
+    "nome": "miniz_oxide",
+    "versione": "0.9.1",
+    "licenza": "MIT OR Zlib OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright 2013-2014 RAD Game Tools and Valve Software",
+     "Copyright 2010-2014 Rich Geldreich and Tenacious Software LLC",
+     "Copyright (c) 2017 Frommi",
+     "Copyright (c) 2017-2024 oyvindln"
+    ],
+    "sorgente": "https://github.com/Frommi/miniz_oxide/tree/master/miniz_oxide"
+   },
+   {
+    "nome": "mint",
+    "versione": "0.5.9",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2017 Dzmitry Malyshau"
+    ],
+    "sorgente": "https://github.com/kvark/mint"
+   },
+   {
+    "nome": "muda",
+    "versione": "0.20.0",
+    "licenza": "Apache-2.0 OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2022-2022 Tauri Programme within The Commons Conservancy"
+    ],
+    "sorgente": "https://github.com/tauri-apps/muda"
+   },
+   {
+    "nome": "new_debug_unreachable",
+    "versione": "1.0.6",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2015 Jonathan Reem"
+    ],
+    "sorgente": "https://github.com/mbrubeck/rust-debug-unreachable"
+   },
+   {
+    "nome": "num-complex",
+    "versione": "0.4.6",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2014 The Rust Project Developers"
+    ],
+    "sorgente": "https://github.com/rust-num/num-complex"
+   },
+   {
+    "nome": "num-conv",
+    "versione": "0.2.2",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) Jacob Pratt"
+    ],
+    "sorgente": "https://github.com/jhpratt/num-conv"
+   },
+   {
+    "nome": "num-traits",
+    "versione": "0.2.19",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2014 The Rust Project Developers"
+    ],
+    "sorgente": "https://github.com/rust-num/num-traits"
+   },
+   {
+    "nome": "once_cell",
+    "versione": "1.21.4",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/matklad/once_cell",
+    "autori": [
+     "Aleksey Kladov"
+    ]
+   },
+   {
+    "nome": "option-ext",
+    "versione": "0.2.0",
+    "licenza": "MPL-2.0",
+    "usata": [
+     "MPL-2.0"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/soc/option-ext.git",
+    "autori": [
+     "Simon Ochsenreither"
+    ]
+   },
+   {
+    "nome": "parking_lot",
+    "versione": "0.12.5",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2016 The Rust Project Developers"
+    ],
+    "sorgente": "https://github.com/Amanieu/parking_lot"
+   },
+   {
+    "nome": "parking_lot_core",
+    "versione": "0.9.12",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2016 The Rust Project Developers"
+    ],
+    "sorgente": "https://github.com/Amanieu/parking_lot"
+   },
+   {
+    "nome": "pastey",
+    "versione": "0.2.3",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/as1100k/pastey",
+    "autori": [
+     "Aditya Kumar",
+     "David Tolnay"
+    ]
+   },
+   {
+    "nome": "percent-encoding",
+    "versione": "2.3.2",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2013-2025 The rust-url developers"
+    ],
+    "sorgente": "https://github.com/servo/rust-url/"
+   },
+   {
+    "nome": "phf",
+    "versione": "0.13.1",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2014-2022 Steven Fackler, Yuki Okushi"
+    ],
+    "sorgente": "https://github.com/rust-phf/rust-phf"
+   },
+   {
+    "nome": "phf_generator",
+    "versione": "0.13.1",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2014-2022 Steven Fackler, Yuki Okushi"
+    ],
+    "sorgente": "https://github.com/rust-phf/rust-phf"
+   },
+   {
+    "nome": "phf_macros",
+    "versione": "0.13.1",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2014-2022 Steven Fackler, Yuki Okushi"
+    ],
+    "sorgente": "https://github.com/rust-phf/rust-phf"
+   },
+   {
+    "nome": "phf_shared",
+    "versione": "0.13.1",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2014-2022 Steven Fackler, Yuki Okushi"
+    ],
+    "sorgente": "https://github.com/rust-phf/rust-phf"
+   },
+   {
+    "nome": "pin-project-lite",
+    "versione": "0.2.17",
+    "licenza": "Apache-2.0 OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/taiki-e/pin-project-lite",
+    "autori": [
+     "gli autori di pin-project-lite"
+    ]
+   },
+   {
+    "nome": "plist",
+    "versione": "1.10.1",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2015 Edward Barnard"
+    ],
+    "sorgente": "https://github.com/ebarnard/rust-plist/"
+   },
+   {
+    "nome": "png",
+    "versione": "0.17.16",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2015 nwin"
+    ],
+    "sorgente": "https://github.com/image-rs/image-png"
+   },
+   {
+    "nome": "png",
+    "versione": "0.18.1",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2015 nwin"
+    ],
+    "sorgente": "https://github.com/image-rs/image-png"
+   },
+   {
+    "nome": "potential_utf",
+    "versione": "0.1.6",
+    "licenza": "Unicode-3.0",
+    "usata": [
+     "Unicode-3.0"
+    ],
+    "copyright": [
+     "Copyright © 2020-2024 Unicode, Inc."
+    ],
+    "sorgente": "https://github.com/unicode-org/icu4x"
+   },
+   {
+    "nome": "powerfmt",
+    "versione": "0.2.1",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright 2023 Jacob Pratt et al."
+    ],
+    "sorgente": "https://github.com/jhpratt/powerfmt"
+   },
+   {
+    "nome": "precomputed-hash",
+    "versione": "0.1.1",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2017 Emilio Cobos Álvarez"
+    ],
+    "sorgente": "https://github.com/emilio/precomputed-hash"
+   },
+   {
+    "nome": "proc-macro2",
+    "versione": "1.0.107",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/dtolnay/proc-macro2",
+    "autori": [
+     "David Tolnay",
+     "Alex Crichton"
+    ]
+   },
+   {
+    "nome": "quick-xml",
+    "versione": "0.42.0",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2016 Johann Tuffe"
+    ],
+    "sorgente": "https://github.com/tafia/quick-xml"
+   },
+   {
+    "nome": "quote",
+    "versione": "1.0.47",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/dtolnay/quote",
+    "autori": [
+     "David Tolnay"
+    ]
+   },
+   {
+    "nome": "raw-window-handle",
+    "versione": "0.6.2",
+    "licenza": "MIT OR Apache-2.0 OR Zlib",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2019 Osspial",
+     "Copyright (c) 2020 Osspial"
+    ],
+    "sorgente": "https://github.com/rust-windowing/raw-window-handle"
+   },
+   {
+    "nome": "regex",
+    "versione": "1.13.1",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2014 The Rust Project Developers"
+    ],
+    "sorgente": "https://github.com/rust-lang/regex"
+   },
+   {
+    "nome": "regex-automata",
+    "versione": "0.4.18",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2014 The Rust Project Developers"
+    ],
+    "sorgente": "https://github.com/rust-lang/regex"
+   },
+   {
+    "nome": "regex-lite",
+    "versione": "0.1.9",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2014 The Rust Project Developers"
+    ],
+    "sorgente": "https://github.com/rust-lang/regex"
+   },
+   {
+    "nome": "regex-syntax",
+    "versione": "0.8.11",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2014 The Rust Project Developers"
+    ],
+    "sorgente": "https://github.com/rust-lang/regex"
+   },
+   {
+    "nome": "rtrb",
+    "versione": "0.4.0",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/mgeier/rtrb",
+    "autori": [
+     "Stjepan Glavina",
+     "Matthias Geier"
+    ]
+   },
+   {
+    "nome": "rustc-hash",
+    "versione": "2.1.3",
+    "licenza": "Apache-2.0 OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/rust-lang/rustc-hash",
+    "autori": [
+     "The Rust Project Developers"
+    ]
+   },
+   {
+    "nome": "same-file",
+    "versione": "1.0.6",
+    "licenza": "Unlicense/MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2017 Andrew Gallant"
+    ],
+    "sorgente": "https://github.com/BurntSushi/same-file"
+   },
+   {
+    "nome": "schemars",
+    "versione": "0.8.22",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2019 Graham Esau"
+    ],
+    "sorgente": "https://github.com/GREsau/schemars"
+   },
+   {
+    "nome": "schemars_derive",
+    "versione": "0.8.22",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2019 Graham Esau"
+    ],
+    "sorgente": "https://github.com/GREsau/schemars"
+   },
+   {
+    "nome": "scopeguard",
+    "versione": "1.2.0",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2016-2019 Ulrik Sverdrup \"bluss\" and scopeguard developers"
+    ],
+    "sorgente": "https://github.com/bluss/scopeguard"
+   },
+   {
+    "nome": "selectors",
+    "versione": "0.38.0",
+    "licenza": "MPL-2.0",
+    "usata": [
+     "MPL-2.0"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/servo/stylo",
+    "autori": [
+     "The Servo Project Developers"
+    ]
+   },
+   {
+    "nome": "semver",
+    "versione": "1.0.28",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/dtolnay/semver",
+    "autori": [
+     "David Tolnay"
+    ]
+   },
+   {
+    "nome": "serde",
+    "versione": "1.0.229",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/serde-rs/serde",
+    "autori": [
+     "Erick Tryzelaar",
+     "David Tolnay"
+    ]
+   },
+   {
+    "nome": "serde-untagged",
+    "versione": "0.1.9",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/dtolnay/serde-untagged",
+    "autori": [
+     "David Tolnay"
+    ]
+   },
+   {
+    "nome": "serde_core",
+    "versione": "1.0.229",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/serde-rs/serde",
+    "autori": [
+     "Erick Tryzelaar",
+     "David Tolnay"
+    ]
+   },
+   {
+    "nome": "serde_derive",
+    "versione": "1.0.229",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/serde-rs/serde",
+    "autori": [
+     "Erick Tryzelaar",
+     "David Tolnay"
+    ]
+   },
+   {
+    "nome": "serde_derive_internals",
+    "versione": "0.29.1",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/serde-rs/serde",
+    "autori": [
+     "Erick Tryzelaar",
+     "David Tolnay"
+    ]
+   },
+   {
+    "nome": "serde_json",
+    "versione": "1.0.154",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/serde-rs/json",
+    "autori": [
+     "gli autori di serde_json"
+    ]
+   },
+   {
+    "nome": "serde_repr",
+    "versione": "0.1.21",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/dtolnay/serde-repr",
+    "autori": [
+     "David Tolnay"
+    ]
+   },
+   {
+    "nome": "serde_spanned",
+    "versione": "1.1.2",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) Individual contributors"
+    ],
+    "sorgente": "https://github.com/toml-rs/toml"
+   },
+   {
+    "nome": "serde_with",
+    "versione": "3.24.0",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2015"
+    ],
+    "sorgente": "https://github.com/jonasbb/serde_with/"
+   },
+   {
+    "nome": "serde_with_macros",
+    "versione": "3.24.0",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2015"
+    ],
+    "sorgente": "https://github.com/jonasbb/serde_with/"
+   },
+   {
+    "nome": "serialize-to-javascript",
+    "versione": "0.1.2",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2021 Chip Reed"
+    ],
+    "sorgente": "https://github.com/chippers/serialize-to-javascript"
+   },
+   {
+    "nome": "serialize-to-javascript-impl",
+    "versione": "0.1.2",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2021 Chip Reed"
+    ],
+    "sorgente": "https://github.com/chippers/serialize-to-javascript"
+   },
+   {
+    "nome": "servo_arc",
+    "versione": "0.4.3",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/servo/stylo",
+    "autori": [
+     "The Servo Project Developers"
+    ]
+   },
+   {
+    "nome": "sha2",
+    "versione": "0.10.9",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2006-2009 Graydon Hoare",
+     "Copyright (c) 2009-2013 Mozilla Foundation",
+     "Copyright (c) 2016 Artyom Pavlov"
+    ],
+    "sorgente": "https://github.com/RustCrypto/hashes"
+   },
+   {
+    "nome": "simd-adler32",
+    "versione": "0.3.10",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) [2021] [Marvin Countryman]"
+    ],
+    "sorgente": "https://github.com/mcountryman/simd-adler32"
+   },
+   {
+    "nome": "siphasher",
+    "versione": "1.0.4",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright 2012-2016 The Rust Project Developers.",
+     "Copyright 2016-2026 Frank Denis."
+    ],
+    "sorgente": "https://github.com/jedisct1/rust-siphash"
+   },
+   {
+    "nome": "smallvec",
+    "versione": "1.16.3",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2018 The Servo Project Developers"
+    ],
+    "sorgente": "https://github.com/servo/rust-smallvec"
+   },
+   {
+    "nome": "softbuffer",
+    "versione": "0.4.8",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright 2022 Kirill Chibisov"
+    ],
+    "sorgente": "https://github.com/rust-windowing/softbuffer"
+   },
+   {
+    "nome": "stable_deref_trait",
+    "versione": "1.2.1",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2017 Robert Grosse"
+    ],
+    "sorgente": "https://github.com/storyyeller/stable_deref_trait"
+   },
+   {
+    "nome": "string_cache",
+    "versione": "0.9.0",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2012-2013 Mozilla Foundation"
+    ],
+    "sorgente": "https://github.com/servo/string-cache"
+   },
+   {
+    "nome": "strsim",
+    "versione": "0.11.1",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2015 Danny Guo",
+     "Copyright (c) 2016 Titus Wormer <tituswormer@gmail.com>",
+     "Copyright (c) 2018 Akash Kurdekar"
+    ],
+    "sorgente": "https://github.com/rapidfuzz/strsim-rs"
+   },
+   {
+    "nome": "symphonia",
+    "versione": "0.6.1",
+    "licenza": "MPL-2.0",
+    "usata": [
+     "MPL-2.0"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/pdeljanov/Symphonia",
+    "autori": [
+     "Philip Deljanov"
+    ]
+   },
+   {
+    "nome": "symphonia-bundle-flac",
+    "versione": "0.6.1",
+    "licenza": "MPL-2.0",
+    "usata": [
+     "MPL-2.0"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/pdeljanov/Symphonia",
+    "autori": [
+     "Philip Deljanov"
+    ]
+   },
+   {
+    "nome": "symphonia-bundle-mp3",
+    "versione": "0.6.1",
+    "licenza": "MPL-2.0",
+    "usata": [
+     "MPL-2.0"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/pdeljanov/Symphonia",
+    "autori": [
+     "Philip Deljanov"
+    ]
+   },
+   {
+    "nome": "symphonia-codec-pcm",
+    "versione": "0.6.1",
+    "licenza": "MPL-2.0",
+    "usata": [
+     "MPL-2.0"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/pdeljanov/Symphonia",
+    "autori": [
+     "Philip Deljanov"
+    ]
+   },
+   {
+    "nome": "symphonia-codec-vorbis",
+    "versione": "0.6.1",
+    "licenza": "MPL-2.0",
+    "usata": [
+     "MPL-2.0"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/pdeljanov/Symphonia",
+    "autori": [
+     "Philip Deljanov"
+    ]
+   },
+   {
+    "nome": "symphonia-common",
+    "versione": "0.6.1",
+    "licenza": "MPL-2.0",
+    "usata": [
+     "MPL-2.0"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/pdeljanov/Symphonia",
+    "autori": [
+     "Philip Deljanov"
+    ]
+   },
+   {
+    "nome": "symphonia-core",
+    "versione": "0.6.1",
+    "licenza": "MPL-2.0",
+    "usata": [
+     "MPL-2.0"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/pdeljanov/Symphonia",
+    "autori": [
+     "Philip Deljanov"
+    ]
+   },
+   {
+    "nome": "symphonia-format-ogg",
+    "versione": "0.6.1",
+    "licenza": "MPL-2.0",
+    "usata": [
+     "MPL-2.0"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/pdeljanov/Symphonia",
+    "autori": [
+     "Philip Deljanov"
+    ]
+   },
+   {
+    "nome": "symphonia-format-riff",
+    "versione": "0.6.1",
+    "licenza": "MPL-2.0",
+    "usata": [
+     "MPL-2.0"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/pdeljanov/Symphonia",
+    "autori": [
+     "Philip Deljanov",
+     "dedobbin"
+    ]
+   },
+   {
+    "nome": "symphonia-metadata",
+    "versione": "0.6.1",
+    "licenza": "MPL-2.0",
+    "usata": [
+     "MPL-2.0"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/pdeljanov/Symphonia",
+    "autori": [
+     "Philip Deljanov"
+    ]
+   },
+   {
+    "nome": "syn",
+    "versione": "2.0.119",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/dtolnay/syn",
+    "autori": [
+     "David Tolnay"
+    ]
+   },
+   {
+    "nome": "syn",
+    "versione": "3.0.9",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/dtolnay/syn",
+    "autori": [
+     "David Tolnay"
+    ]
+   },
+   {
+    "nome": "synstructure",
+    "versione": "0.14.0",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright 2016 Nika Layzell"
+    ],
+    "sorgente": "https://github.com/mystor/synstructure"
+   },
+   {
+    "nome": "tao",
+    "versione": "0.37.1",
+    "licenza": "Apache-2.0",
+    "usata": [
+     "Apache-2.0"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/tauri-apps/tao",
+    "autori": [
+     "Tauri Programme within The Commons Conservancy",
+     "The winit contributors"
+    ]
+   },
+   {
+    "nome": "tauri",
+    "versione": "2.12.3",
+    "licenza": "Apache-2.0 OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2017 - Present Tauri Apps Contributors"
+    ],
+    "sorgente": "https://github.com/tauri-apps/tauri"
+   },
+   {
+    "nome": "tauri-codegen",
+    "versione": "2.7.2",
+    "licenza": "Apache-2.0 OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2017 - Present Tauri Apps Contributors"
+    ],
+    "sorgente": "https://github.com/tauri-apps/tauri"
+   },
+   {
+    "nome": "tauri-macros",
+    "versione": "2.7.2",
+    "licenza": "Apache-2.0 OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2017 - Present Tauri Apps Contributors"
+    ],
+    "sorgente": "https://github.com/tauri-apps/tauri"
+   },
+   {
+    "nome": "tauri-runtime",
+    "versione": "2.12.1",
+    "licenza": "Apache-2.0 OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2017 - Present Tauri Apps Contributors"
+    ],
+    "sorgente": "https://github.com/tauri-apps/tauri"
+   },
+   {
+    "nome": "tauri-runtime-wry",
+    "versione": "2.12.1",
+    "licenza": "Apache-2.0 OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2017 - Present Tauri Apps Contributors"
+    ],
+    "sorgente": "https://github.com/tauri-apps/tauri"
+   },
+   {
+    "nome": "tauri-utils",
+    "versione": "2.10.1",
+    "licenza": "Apache-2.0 OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2017 - Present Tauri Apps Contributors"
+    ],
+    "sorgente": "https://github.com/tauri-apps/tauri"
+   },
+   {
+    "nome": "tendril",
+    "versione": "0.5.1",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2015 Keegan McAllister"
+    ],
+    "sorgente": "https://github.com/servo/html5ever"
+   },
+   {
+    "nome": "thiserror",
+    "versione": "2.0.21",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/dtolnay/thiserror",
+    "autori": [
+     "David Tolnay"
+    ]
+   },
+   {
+    "nome": "thiserror-impl",
+    "versione": "2.0.21",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/dtolnay/thiserror",
+    "autori": [
+     "David Tolnay"
+    ]
+   },
+   {
+    "nome": "time",
+    "versione": "0.3.55",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) Jacob Pratt et al."
+    ],
+    "sorgente": "https://github.com/time-rs/time"
+   },
+   {
+    "nome": "time-core",
+    "versione": "0.1.9",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) Jacob Pratt et al."
+    ],
+    "sorgente": "https://github.com/time-rs/time"
+   },
+   {
+    "nome": "time-macros",
+    "versione": "0.2.32",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) Jacob Pratt et al."
+    ],
+    "sorgente": "https://github.com/time-rs/time"
+   },
+   {
+    "nome": "tinystr",
+    "versione": "0.8.4",
+    "licenza": "Unicode-3.0",
+    "usata": [
+     "Unicode-3.0"
+    ],
+    "copyright": [
+     "Copyright © 2020-2024 Unicode, Inc."
+    ],
+    "sorgente": "https://github.com/unicode-org/icu4x"
+   },
+   {
+    "nome": "tokio",
+    "versione": "1.53.3",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) Tokio Contributors"
+    ],
+    "sorgente": "https://github.com/tokio-rs/tokio"
+   },
+   {
+    "nome": "toml",
+    "versione": "1.1.8+spec-1.1.0",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) Individual contributors"
+    ],
+    "sorgente": "https://github.com/toml-rs/toml"
+   },
+   {
+    "nome": "toml_datetime",
+    "versione": "1.1.2+spec-1.1.0",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) Individual contributors"
+    ],
+    "sorgente": "https://github.com/toml-rs/toml"
+   },
+   {
+    "nome": "toml_parser",
+    "versione": "1.1.5+spec-1.1.0",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) Individual contributors"
+    ],
+    "sorgente": "https://github.com/toml-rs/toml"
+   },
+   {
+    "nome": "toml_writer",
+    "versione": "1.1.3+spec-1.1.0",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) Individual contributors"
+    ],
+    "sorgente": "https://github.com/toml-rs/toml"
+   },
+   {
+    "nome": "tracing",
+    "versione": "0.1.44",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2019 Tokio Contributors"
+    ],
+    "sorgente": "https://github.com/tokio-rs/tracing"
+   },
+   {
+    "nome": "tracing-core",
+    "versione": "0.1.36",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2019 Tokio Contributors"
+    ],
+    "sorgente": "https://github.com/tokio-rs/tracing"
+   },
+   {
+    "nome": "triple_buffer",
+    "versione": "9.0.0",
+    "licenza": "MPL-2.0",
+    "usata": [
+     "MPL-2.0"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/HadrienG2/triple-buffer",
+    "autori": [
+     "Hadrien G."
+    ]
+   },
+   {
+    "nome": "typeid",
+    "versione": "1.0.3",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/dtolnay/typeid",
+    "autori": [
+     "David Tolnay"
+    ]
+   },
+   {
+    "nome": "typenum",
+    "versione": "1.20.1",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright 2014 Paho Lurie-Gregg"
+    ],
+    "sorgente": "https://github.com/paholg/typenum"
+   },
+   {
+    "nome": "unicode-ident",
+    "versione": "1.0.27",
+    "licenza": "(MIT OR Apache-2.0) AND Unicode-3.0",
+    "usata": [
+     "MIT",
+     "Unicode-3.0"
+    ],
+    "copyright": [
+     "Copyright © 1991-2023 Unicode, Inc."
+    ],
+    "sorgente": "https://github.com/dtolnay/unicode-ident"
+   },
+   {
+    "nome": "unicode-segmentation",
+    "versione": "1.13.3",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2015 The Rust Project Developers"
+    ],
+    "sorgente": "https://github.com/unicode-rs/unicode-segmentation"
+   },
+   {
+    "nome": "url",
+    "versione": "2.5.8",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2013-2025 The rust-url developers"
+    ],
+    "sorgente": "https://github.com/servo/rust-url"
+   },
+   {
+    "nome": "urlpattern",
+    "versione": "0.6.0",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2021 the Deno authors"
+    ],
+    "sorgente": "https://github.com/denoland/rust-urlpattern"
+   },
+   {
+    "nome": "utf8_iter",
+    "versione": "1.0.4",
+    "licenza": "Apache-2.0 OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright Mozilla Foundation"
+    ],
+    "sorgente": "https://github.com/hsivonen/utf8_iter"
+   },
+   {
+    "nome": "uuid",
+    "versione": "1.28.0",
+    "licenza": "Apache-2.0 OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2014 The Rust Project Developers",
+     "Copyright (c) 2018 Ashley Mannix, Christopher Armstrong, Dylan DPC, Hunar Roop Kahlon"
+    ],
+    "sorgente": "https://github.com/uuid-rs/uuid"
+   },
+   {
+    "nome": "walkdir",
+    "versione": "2.5.0",
+    "licenza": "Unlicense/MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2015 Andrew Gallant"
+    ],
+    "sorgente": "https://github.com/BurntSushi/walkdir"
+   },
+   {
+    "nome": "web-time",
+    "versione": "1.1.0",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright 2023 dAxpeDDa"
+    ],
+    "sorgente": "https://github.com/daxpedda/web-time"
+   },
+   {
+    "nome": "web_atoms",
+    "versione": "0.2.6",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2014 The html5ever Project Developers"
+    ],
+    "sorgente": "https://github.com/servo/html5ever"
+   },
+   {
+    "nome": "webview2-com",
+    "versione": "0.39.1",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/wravery/webview2-rs",
+    "autori": [
+     "gli autori di webview2-com"
+    ]
+   },
+   {
+    "nome": "webview2-com-macros",
+    "versione": "0.8.1",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/wravery/webview2-rs",
+    "autori": [
+     "gli autori di webview2-com-macros"
+    ]
+   },
+   {
+    "nome": "webview2-com-sys",
+    "versione": "0.39.1",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/wravery/webview2-rs",
+    "autori": [
+     "gli autori di webview2-com-sys"
+    ]
+   },
+   {
+    "nome": "winapi-util",
+    "versione": "0.1.11",
+    "licenza": "Unlicense OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2017 Andrew Gallant"
+    ],
+    "sorgente": "https://github.com/BurntSushi/winapi-util"
+   },
+   {
+    "nome": "window-vibrancy",
+    "versione": "0.8.1",
+    "licenza": "Apache-2.0 OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2020-2022 Tauri Programme within The Commons Conservancy"
+    ],
+    "sorgente": "https://github.com/tauri-apps/tauri-plugin-vibrancy"
+   },
+   {
+    "nome": "windows",
+    "versione": "0.62.2",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) Microsoft Corporation."
+    ],
+    "sorgente": "https://github.com/microsoft/windows-rs"
+   },
+   {
+    "nome": "windows-collections",
+    "versione": "0.3.2",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) Microsoft Corporation."
+    ],
+    "sorgente": "https://github.com/microsoft/windows-rs"
+   },
+   {
+    "nome": "windows-core",
+    "versione": "0.62.2",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) Microsoft Corporation."
+    ],
+    "sorgente": "https://github.com/microsoft/windows-rs"
+   },
+   {
+    "nome": "windows-future",
+    "versione": "0.3.2",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) Microsoft Corporation."
+    ],
+    "sorgente": "https://github.com/microsoft/windows-rs"
+   },
+   {
+    "nome": "windows-implement",
+    "versione": "0.60.2",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) Microsoft Corporation."
+    ],
+    "sorgente": "https://github.com/microsoft/windows-rs"
+   },
+   {
+    "nome": "windows-interface",
+    "versione": "0.59.3",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) Microsoft Corporation."
+    ],
+    "sorgente": "https://github.com/microsoft/windows-rs"
+   },
+   {
+    "nome": "windows-link",
+    "versione": "0.2.1",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) Microsoft Corporation."
+    ],
+    "sorgente": "https://github.com/microsoft/windows-rs"
+   },
+   {
+    "nome": "windows-numerics",
+    "versione": "0.3.1",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) Microsoft Corporation."
+    ],
+    "sorgente": "https://github.com/microsoft/windows-rs"
+   },
+   {
+    "nome": "windows-result",
+    "versione": "0.4.1",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) Microsoft Corporation."
+    ],
+    "sorgente": "https://github.com/microsoft/windows-rs"
+   },
+   {
+    "nome": "windows-strings",
+    "versione": "0.5.1",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) Microsoft Corporation."
+    ],
+    "sorgente": "https://github.com/microsoft/windows-rs"
+   },
+   {
+    "nome": "windows-sys",
+    "versione": "0.61.2",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) Microsoft Corporation."
+    ],
+    "sorgente": "https://github.com/microsoft/windows-rs"
+   },
+   {
+    "nome": "windows-threading",
+    "versione": "0.2.1",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) Microsoft Corporation."
+    ],
+    "sorgente": "https://github.com/microsoft/windows-rs"
+   },
+   {
+    "nome": "windows-version",
+    "versione": "0.1.7",
+    "licenza": "MIT OR Apache-2.0",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) Microsoft Corporation."
+    ],
+    "sorgente": "https://github.com/microsoft/windows-rs"
+   },
+   {
+    "nome": "winnow",
+    "versione": "1.0.4",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/winnow-rs/winnow",
+    "autori": [
+     "gli autori di winnow"
+    ]
+   },
+   {
+    "nome": "writeable",
+    "versione": "0.6.4",
+    "licenza": "Unicode-3.0",
+    "usata": [
+     "Unicode-3.0"
+    ],
+    "copyright": [
+     "Copyright © 2020-2024 Unicode, Inc."
+    ],
+    "sorgente": "https://github.com/unicode-org/icu4x"
+   },
+   {
+    "nome": "wry",
+    "versione": "0.57.0",
+    "licenza": "Apache-2.0 OR MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [
+     "Copyright (c) 2020-2023 Ngo Iok Ui & Tauri Programme within The Commons Conservancy"
+    ],
+    "sorgente": "https://github.com/tauri-apps/wry"
+   },
+   {
+    "nome": "yoke",
+    "versione": "0.8.3",
+    "licenza": "Unicode-3.0",
+    "usata": [
+     "Unicode-3.0"
+    ],
+    "copyright": [
+     "Copyright © 2020-2024 Unicode, Inc."
+    ],
+    "sorgente": "https://github.com/unicode-org/icu4x"
+   },
+   {
+    "nome": "yoke-derive",
+    "versione": "0.8.4",
+    "licenza": "Unicode-3.0",
+    "usata": [
+     "Unicode-3.0"
+    ],
+    "copyright": [
+     "Copyright © 2020-2024 Unicode, Inc."
+    ],
+    "sorgente": "https://github.com/unicode-org/icu4x"
+   },
+   {
+    "nome": "zerofrom",
+    "versione": "0.1.8",
+    "licenza": "Unicode-3.0",
+    "usata": [
+     "Unicode-3.0"
+    ],
+    "copyright": [
+     "Copyright © 2020-2024 Unicode, Inc."
+    ],
+    "sorgente": "https://github.com/unicode-org/icu4x"
+   },
+   {
+    "nome": "zerofrom-derive",
+    "versione": "0.1.8",
+    "licenza": "Unicode-3.0",
+    "usata": [
+     "Unicode-3.0"
+    ],
+    "copyright": [
+     "Copyright © 2020-2024 Unicode, Inc."
+    ],
+    "sorgente": "https://github.com/unicode-org/icu4x"
+   },
+   {
+    "nome": "zerotrie",
+    "versione": "0.2.5",
+    "licenza": "Unicode-3.0",
+    "usata": [
+     "Unicode-3.0"
+    ],
+    "copyright": [
+     "Copyright © 2020-2024 Unicode, Inc."
+    ],
+    "sorgente": "https://github.com/unicode-org/icu4x"
+   },
+   {
+    "nome": "zerovec",
+    "versione": "0.11.8",
+    "licenza": "Unicode-3.0",
+    "usata": [
+     "Unicode-3.0"
+    ],
+    "copyright": [
+     "Copyright © 2020-2024 Unicode, Inc."
+    ],
+    "sorgente": "https://github.com/unicode-org/icu4x"
+   },
+   {
+    "nome": "zerovec-derive",
+    "versione": "0.11.6",
+    "licenza": "Unicode-3.0",
+    "usata": [
+     "Unicode-3.0"
+    ],
+    "copyright": [
+     "Copyright © 2020-2024 Unicode, Inc."
+    ],
+    "sorgente": "https://github.com/unicode-org/icu4x"
+   },
+   {
+    "nome": "zmij",
+    "versione": "1.0.23",
+    "licenza": "MIT",
+    "usata": [
+     "MIT"
+    ],
+    "copyright": [],
+    "sorgente": "https://github.com/dtolnay/zmij",
+    "autori": [
+     "David Tolnay"
+    ]
+   }
+  ]
+ },
+ "testi": {
+  "Apache-2.0": "                              Apache License\n                        Version 2.0, January 2004\n                     http://www.apache.org/licenses/\n\nTERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION\n\n1. Definitions.\n\n   \"License\" shall mean the terms and conditions for use, reproduction,\n   and distribution as defined by Sections 1 through 9 of this document.\n\n   \"Licensor\" shall mean the copyright owner or entity authorized by\n   the copyright owner that is granting the License.\n\n   \"Legal Entity\" shall mean the union of the acting entity and all\n   other entities that control, are controlled by, or are under common\n   control with that entity. For the purposes of this definition,\n   \"control\" means (i) the power, direct or indirect, to cause the\n   direction or management of such entity, whether by contract or\n   otherwise, or (ii) ownership of fifty percent (50%) or more of the\n   outstanding shares, or (iii) beneficial ownership of such entity.\n\n   \"You\" (or \"Your\") shall mean an individual or Legal Entity\n   exercising permissions granted by this License.\n\n   \"Source\" form shall mean the preferred form for making modifications,\n   including but not limited to software source code, documentation\n   source, and configuration files.\n\n   \"Object\" form shall mean any form resulting from mechanical\n   transformation or translation of a Source form, including but\n   not limited to compiled object code, generated documentation,\n   and conversions to other media types.\n\n   \"Work\" shall mean the work of authorship, whether in Source or\n   Object form, made available under the License, as indicated by a\n   copyright notice that is included in or attached to the work\n   (an example is provided in the Appendix below).\n\n   \"Derivative Works\" shall mean any work, whether in Source or Object\n   form, that is based on (or derived from) the Work and for which the\n   editorial revisions, annotations, elaborations, or other modifications\n   represent, as a whole, an original work of authorship. For the purposes\n   of this License, Derivative Works shall not include works that remain\n   separable from, or merely link (or bind by name) to the interfaces of,\n   the Work and Derivative Works thereof.\n\n   \"Contribution\" shall mean any work of authorship, including\n   the original version of the Work and any modifications or additions\n   to that Work or Derivative Works thereof, that is intentionally\n   submitted to Licensor for inclusion in the Work by the copyright owner\n   or by an individual or Legal Entity authorized to submit on behalf of\n   the copyright owner. For the purposes of this definition, \"submitted\"\n   means any form of electronic, verbal, or written communication sent\n   to the Licensor or its representatives, including but not limited to\n   communication on electronic mailing lists, source code control systems,\n   and issue tracking systems that are managed by, or on behalf of, the\n   Licensor for the purpose of discussing and improving the Work, but\n   excluding communication that is conspicuously marked or otherwise\n   designated in writing by the copyright owner as \"Not a Contribution.\"\n\n   \"Contributor\" shall mean Licensor and any individual or Legal Entity\n   on behalf of whom a Contribution has been received by Licensor and\n   subsequently incorporated within the Work.\n\n2. Grant of Copyright License. Subject to the terms and conditions of\n   this License, each Contributor hereby grants to You a perpetual,\n   worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n   copyright license to reproduce, prepare Derivative Works of,\n   publicly display, publicly perform, sublicense, and distribute the\n   Work and such Derivative Works in Source or Object form.\n\n3. Grant of Patent License. Subject to the terms and conditions of\n   this License, each Contributor hereby grants to You a perpetual,\n   worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n   (except as stated in this section) patent license to make, have made,\n   use, offer to sell, sell, import, and otherwise transfer the Work,\n   where such license applies only to those patent claims licensable\n   by such Contributor that are necessarily infringed by their\n   Contribution(s) alone or by combination of their Contribution(s)\n   with the Work to which such Contribution(s) was submitted. If You\n   institute patent litigation against any entity (including a\n   cross-claim or counterclaim in a lawsuit) alleging that the Work\n   or a Contribution incorporated within the Work constitutes direct\n   or contributory patent infringement, then any patent licenses\n   granted to You under this License for that Work shall terminate\n   as of the date such litigation is filed.\n\n4. Redistribution. You may reproduce and distribute copies of the\n   Work or Derivative Works thereof in any medium, with or without\n   modifications, and in Source or Object form, provided that You\n   meet the following conditions:\n\n   (a) You must give any other recipients of the Work or\n       Derivative Works a copy of this License; and\n\n   (b) You must cause any modified files to carry prominent notices\n       stating that You changed the files; and\n\n   (c) You must retain, in the Source form of any Derivative Works\n       that You distribute, all copyright, patent, trademark, and\n       attribution notices from the Source form of the Work,\n       excluding those notices that do not pertain to any part of\n       the Derivative Works; and\n\n   (d) If the Work includes a \"NOTICE\" text file as part of its\n       distribution, then any Derivative Works that You distribute must\n       include a readable copy of the attribution notices contained\n       within such NOTICE file, excluding those notices that do not\n       pertain to any part of the Derivative Works, in at least one\n       of the following places: within a NOTICE text file distributed\n       as part of the Derivative Works; within the Source form or\n       documentation, if provided along with the Derivative Works; or,\n       within a display generated by the Derivative Works, if and\n       wherever such third-party notices normally appear. The contents\n       of the NOTICE file are for informational purposes only and\n       do not modify the License. You may add Your own attribution\n       notices within Derivative Works that You distribute, alongside\n       or as an addendum to the NOTICE text from the Work, provided\n       that such additional attribution notices cannot be construed\n       as modifying the License.\n\n   You may add Your own copyright statement to Your modifications and\n   may provide additional or different license terms and conditions\n   for use, reproduction, or distribution of Your modifications, or\n   for any such Derivative Works as a whole, provided Your use,\n   reproduction, and distribution of the Work otherwise complies with\n   the conditions stated in this License.\n\n5. Submission of Contributions. Unless You explicitly state otherwise,\n   any Contribution intentionally submitted for inclusion in the Work\n   by You to the Licensor shall be under the terms and conditions of\n   this License, without any additional terms or conditions.\n   Notwithstanding the above, nothing herein shall supersede or modify\n   the terms of any separate license agreement you may have executed\n   with Licensor regarding such Contributions.\n\n6. Trademarks. This License does not grant permission to use the trade\n   names, trademarks, service marks, or product names of the Licensor,\n   except as required for reasonable and customary use in describing the\n   origin of the Work and reproducing the content of the NOTICE file.\n\n7. Disclaimer of Warranty. Unless required by applicable law or\n   agreed to in writing, Licensor provides the Work (and each\n   Contributor provides its Contributions) on an \"AS IS\" BASIS,\n   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or\n   implied, including, without limitation, any warranties or conditions\n   of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A\n   PARTICULAR PURPOSE. You are solely responsible for determining the\n   appropriateness of using or redistributing the Work and assume any\n   risks associated with Your exercise of permissions under this License.\n\n8. Limitation of Liability. In no event and under no legal theory,\n   whether in tort (including negligence), contract, or otherwise,\n   unless required by applicable law (such as deliberate and grossly\n   negligent acts) or agreed to in writing, shall any Contributor be\n   liable to You for damages, including any direct, indirect, special,\n   incidental, or consequential damages of any character arising as a\n   result of this License or out of the use or inability to use the\n   Work (including but not limited to damages for loss of goodwill,\n   work stoppage, computer failure or malfunction, or any and all\n   other commercial damages or losses), even if such Contributor\n   has been advised of the possibility of such damages.\n\n9. Accepting Warranty or Additional Liability. While redistributing\n   the Work or Derivative Works thereof, You may choose to offer,\n   and charge a fee for, acceptance of support, warranty, indemnity,\n   or other liability obligations and/or rights consistent with this\n   License. However, in accepting such obligations, You may act only\n   on Your own behalf and on Your sole responsibility, not on behalf\n   of any other Contributor, and only if You agree to indemnify,\n   defend, and hold each Contributor harmless for any liability\n   incurred by, or claims asserted against, such Contributor by reason\n   of your accepting any such warranty or additional liability.\n\nEND OF TERMS AND CONDITIONS\n",
+  "BSD-3-Clause": "Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:\n\n1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.\n\n2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.\n\n3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n",
+  "MIT": "Permission is hereby granted, free of charge, to any\nperson obtaining a copy of this software and associated\ndocumentation files (the \"Software\"), to deal in the\nSoftware without restriction, including without\nlimitation the rights to use, copy, modify, merge,\npublish, distribute, sublicense, and/or sell copies of\nthe Software, and to permit persons to whom the Software\nis furnished to do so, subject to the following\nconditions:\n\nThe above copyright notice and this permission notice\nshall be included in all copies or substantial portions\nof the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF\nANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED\nTO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A\nPARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT\nSHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY\nCLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR\nIN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER\nDEALINGS IN THE SOFTWARE.\n",
+  "MPL-2.0": "Mozilla Public License Version 2.0\n==================================\n\n1. Definitions\n--------------\n\n1.1. \"Contributor\"\n    means each individual or legal entity that creates, contributes to\n    the creation of, or owns Covered Software.\n\n1.2. \"Contributor Version\"\n    means the combination of the Contributions of others (if any) used\n    by a Contributor and that particular Contributor's Contribution.\n\n1.3. \"Contribution\"\n    means Covered Software of a particular Contributor.\n\n1.4. \"Covered Software\"\n    means Source Code Form to which the initial Contributor has attached\n    the notice in Exhibit A, the Executable Form of such Source Code\n    Form, and Modifications of such Source Code Form, in each case\n    including portions thereof.\n\n1.5. \"Incompatible With Secondary Licenses\"\n    means\n\n    (a) that the initial Contributor has attached the notice described\n        in Exhibit B to the Covered Software; or\n\n    (b) that the Covered Software was made available under the terms of\n        version 1.1 or earlier of the License, but not also under the\n        terms of a Secondary License.\n\n1.6. \"Executable Form\"\n    means any form of the work other than Source Code Form.\n\n1.7. \"Larger Work\"\n    means a work that combines Covered Software with other material, in \n    a separate file or files, that is not Covered Software.\n\n1.8. \"License\"\n    means this document.\n\n1.9. \"Licensable\"\n    means having the right to grant, to the maximum extent possible,\n    whether at the time of the initial grant or subsequently, any and\n    all of the rights conveyed by this License.\n\n1.10. \"Modifications\"\n    means any of the following:\n\n    (a) any file in Source Code Form that results from an addition to,\n        deletion from, or modification of the contents of Covered\n        Software; or\n\n    (b) any new file in Source Code Form that contains any Covered\n        Software.\n\n1.11. \"Patent Claims\" of a Contributor\n    means any patent claim(s), including without limitation, method,\n    process, and apparatus claims, in any patent Licensable by such\n    Contributor that would be infringed, but for the grant of the\n    License, by the making, using, selling, offering for sale, having\n    made, import, or transfer of either its Contributions or its\n    Contributor Version.\n\n1.12. \"Secondary License\"\n    means either the GNU General Public License, Version 2.0, the GNU\n    Lesser General Public License, Version 2.1, the GNU Affero General\n    Public License, Version 3.0, or any later versions of those\n    licenses.\n\n1.13. \"Source Code Form\"\n    means the form of the work preferred for making modifications.\n\n1.14. \"You\" (or \"Your\")\n    means an individual or a legal entity exercising rights under this\n    License. For legal entities, \"You\" includes any entity that\n    controls, is controlled by, or is under common control with You. For\n    purposes of this definition, \"control\" means (a) the power, direct\n    or indirect, to cause the direction or management of such entity,\n    whether by contract or otherwise, or (b) ownership of more than\n    fifty percent (50%) of the outstanding shares or beneficial\n    ownership of such entity.\n\n2. License Grants and Conditions\n--------------------------------\n\n2.1. Grants\n\nEach Contributor hereby grants You a world-wide, royalty-free,\nnon-exclusive license:\n\n(a) under intellectual property rights (other than patent or trademark)\n    Licensable by such Contributor to use, reproduce, make available,\n    modify, display, perform, distribute, and otherwise exploit its\n    Contributions, either on an unmodified basis, with Modifications, or\n    as part of a Larger Work; and\n\n(b) under Patent Claims of such Contributor to make, use, sell, offer\n    for sale, have made, import, and otherwise transfer either its\n    Contributions or its Contributor Version.\n\n2.2. Effective Date\n\nThe licenses granted in Section 2.1 with respect to any Contribution\nbecome effective for each Contribution on the date the Contributor first\ndistributes such Contribution.\n\n2.3. Limitations on Grant Scope\n\nThe licenses granted in this Section 2 are the only rights granted under\nthis License. No additional rights or licenses will be implied from the\ndistribution or licensing of Covered Software under this License.\nNotwithstanding Section 2.1(b) above, no patent license is granted by a\nContributor:\n\n(a) for any code that a Contributor has removed from Covered Software;\n    or\n\n(b) for infringements caused by: (i) Your and any other third party's\n    modifications of Covered Software, or (ii) the combination of its\n    Contributions with other software (except as part of its Contributor\n    Version); or\n\n(c) under Patent Claims infringed by Covered Software in the absence of\n    its Contributions.\n\nThis License does not grant any rights in the trademarks, service marks,\nor logos of any Contributor (except as may be necessary to comply with\nthe notice requirements in Section 3.4).\n\n2.4. Subsequent Licenses\n\nNo Contributor makes additional grants as a result of Your choice to\ndistribute the Covered Software under a subsequent version of this\nLicense (see Section 10.2) or under the terms of a Secondary License (if\npermitted under the terms of Section 3.3).\n\n2.5. Representation\n\nEach Contributor represents that the Contributor believes its\nContributions are its original creation(s) or it has sufficient rights\nto grant the rights to its Contributions conveyed by this License.\n\n2.6. Fair Use\n\nThis License is not intended to limit any rights You have under\napplicable copyright doctrines of fair use, fair dealing, or other\nequivalents.\n\n2.7. Conditions\n\nSections 3.1, 3.2, 3.3, and 3.4 are conditions of the licenses granted\nin Section 2.1.\n\n3. Responsibilities\n-------------------\n\n3.1. Distribution of Source Form\n\nAll distribution of Covered Software in Source Code Form, including any\nModifications that You create or to which You contribute, must be under\nthe terms of this License. You must inform recipients that the Source\nCode Form of the Covered Software is governed by the terms of this\nLicense, and how they can obtain a copy of this License. You may not\nattempt to alter or restrict the recipients' rights in the Source Code\nForm.\n\n3.2. Distribution of Executable Form\n\nIf You distribute Covered Software in Executable Form then:\n\n(a) such Covered Software must also be made available in Source Code\n    Form, as described in Section 3.1, and You must inform recipients of\n    the Executable Form how they can obtain a copy of such Source Code\n    Form by reasonable means in a timely manner, at a charge no more\n    than the cost of distribution to the recipient; and\n\n(b) You may distribute such Executable Form under the terms of this\n    License, or sublicense it under different terms, provided that the\n    license for the Executable Form does not attempt to limit or alter\n    the recipients' rights in the Source Code Form under this License.\n\n3.3. Distribution of a Larger Work\n\nYou may create and distribute a Larger Work under terms of Your choice,\nprovided that You also comply with the requirements of this License for\nthe Covered Software. If the Larger Work is a combination of Covered\nSoftware with a work governed by one or more Secondary Licenses, and the\nCovered Software is not Incompatible With Secondary Licenses, this\nLicense permits You to additionally distribute such Covered Software\nunder the terms of such Secondary License(s), so that the recipient of\nthe Larger Work may, at their option, further distribute the Covered\nSoftware under the terms of either this License or such Secondary\nLicense(s).\n\n3.4. Notices\n\nYou may not remove or alter the substance of any license notices\n(including copyright notices, patent notices, disclaimers of warranty,\nor limitations of liability) contained within the Source Code Form of\nthe Covered Software, except that You may alter any license notices to\nthe extent required to remedy known factual inaccuracies.\n\n3.5. Application of Additional Terms\n\nYou may choose to offer, and to charge a fee for, warranty, support,\nindemnity or liability obligations to one or more recipients of Covered\nSoftware. However, You may do so only on Your own behalf, and not on\nbehalf of any Contributor. You must make it absolutely clear that any\nsuch warranty, support, indemnity, or liability obligation is offered by\nYou alone, and You hereby agree to indemnify every Contributor for any\nliability incurred by such Contributor as a result of warranty, support,\nindemnity or liability terms You offer. You may include additional\ndisclaimers of warranty and limitations of liability specific to any\njurisdiction.\n\n4. Inability to Comply Due to Statute or Regulation\n---------------------------------------------------\n\nIf it is impossible for You to comply with any of the terms of this\nLicense with respect to some or all of the Covered Software due to\nstatute, judicial order, or regulation then You must: (a) comply with\nthe terms of this License to the maximum extent possible; and (b)\ndescribe the limitations and the code they affect. Such description must\nbe placed in a text file included with all distributions of the Covered\nSoftware under this License. Except to the extent prohibited by statute\nor regulation, such description must be sufficiently detailed for a\nrecipient of ordinary skill to be able to understand it.\n\n5. Termination\n--------------\n\n5.1. The rights granted under this License will terminate automatically\nif You fail to comply with any of its terms. However, if You become\ncompliant, then the rights granted under this License from a particular\nContributor are reinstated (a) provisionally, unless and until such\nContributor explicitly and finally terminates Your grants, and (b) on an\nongoing basis, if such Contributor fails to notify You of the\nnon-compliance by some reasonable means prior to 60 days after You have\ncome back into compliance. Moreover, Your grants from a particular\nContributor are reinstated on an ongoing basis if such Contributor\nnotifies You of the non-compliance by some reasonable means, this is the\nfirst time You have received notice of non-compliance with this License\nfrom such Contributor, and You become compliant prior to 30 days after\nYour receipt of the notice.\n\n5.2. If You initiate litigation against any entity by asserting a patent\ninfringement claim (excluding declaratory judgment actions,\ncounter-claims, and cross-claims) alleging that a Contributor Version\ndirectly or indirectly infringes any patent, then the rights granted to\nYou by any and all Contributors for the Covered Software under Section\n2.1 of this License shall terminate.\n\n5.3. In the event of termination under Sections 5.1 or 5.2 above, all\nend user license agreements (excluding distributors and resellers) which\nhave been validly granted by You or Your distributors under this License\nprior to termination shall survive termination.\n\n************************************************************************\n*                                                                      *\n*  6. Disclaimer of Warranty                                           *\n*  -------------------------                                           *\n*                                                                      *\n*  Covered Software is provided under this License on an \"as is\"       *\n*  basis, without warranty of any kind, either expressed, implied, or  *\n*  statutory, including, without limitation, warranties that the       *\n*  Covered Software is free of defects, merchantable, fit for a        *\n*  particular purpose or non-infringing. The entire risk as to the     *\n*  quality and performance of the Covered Software is with You.        *\n*  Should any Covered Software prove defective in any respect, You     *\n*  (not any Contributor) assume the cost of any necessary servicing,   *\n*  repair, or correction. This disclaimer of warranty constitutes an   *\n*  essential part of this License. No use of any Covered Software is   *\n*  authorized under this License except under this disclaimer.         *\n*                                                                      *\n************************************************************************\n\n************************************************************************\n*                                                                      *\n*  7. Limitation of Liability                                          *\n*  --------------------------                                          *\n*                                                                      *\n*  Under no circumstances and under no legal theory, whether tort      *\n*  (including negligence), contract, or otherwise, shall any           *\n*  Contributor, or anyone who distributes Covered Software as          *\n*  permitted above, be liable to You for any direct, indirect,         *\n*  special, incidental, or consequential damages of any character      *\n*  including, without limitation, damages for lost profits, loss of    *\n*  goodwill, work stoppage, computer failure or malfunction, or any    *\n*  and all other commercial damages or losses, even if such party      *\n*  shall have been informed of the possibility of such damages. This   *\n*  limitation of liability shall not apply to liability for death or   *\n*  personal injury resulting from such party's negligence to the       *\n*  extent applicable law prohibits such limitation. Some               *\n*  jurisdictions do not allow the exclusion or limitation of           *\n*  incidental or consequential damages, so this exclusion and          *\n*  limitation may not apply to You.                                    *\n*                                                                      *\n************************************************************************\n\n8. Litigation\n-------------\n\nAny litigation relating to this License may be brought only in the\ncourts of a jurisdiction where the defendant maintains its principal\nplace of business and such litigation shall be governed by laws of that\njurisdiction, without reference to its conflict-of-law provisions.\nNothing in this Section shall prevent a party's ability to bring\ncross-claims or counter-claims.\n\n9. Miscellaneous\n----------------\n\nThis License represents the complete agreement concerning the subject\nmatter hereof. If any provision of this License is held to be\nunenforceable, such provision shall be reformed only to the extent\nnecessary to make it enforceable. Any law or regulation which provides\nthat the language of a contract shall be construed against the drafter\nshall not be used to construe this License against a Contributor.\n\n10. Versions of the License\n---------------------------\n\n10.1. New Versions\n\nMozilla Foundation is the license steward. Except as provided in Section\n10.3, no one other than the license steward has the right to modify or\npublish new versions of this License. Each version will be given a\ndistinguishing version number.\n\n10.2. Effect of New Versions\n\nYou may distribute the Covered Software under the terms of the version\nof the License under which You originally received the Covered Software,\nor under the terms of any subsequent version published by the license\nsteward.\n\n10.3. Modified Versions\n\nIf you create software not governed by this License, and you want to\ncreate a new license for such software, you may create and use a\nmodified version of this License if you rename the license and remove\nany references to the name of the license steward (except to note that\nsuch modified license differs from this License).\n\n10.4. Distributing Source Code Form that is Incompatible With Secondary\nLicenses\n\nIf You choose to distribute Source Code Form that is Incompatible With\nSecondary Licenses under the terms of this version of the License, the\nnotice described in Exhibit B of this License must be attached.\n\nExhibit A - Source Code Form License Notice\n-------------------------------------------\n\n  This Source Code Form is subject to the terms of the Mozilla Public\n  License, v. 2.0. If a copy of the MPL was not distributed with this\n  file, You can obtain one at http://mozilla.org/MPL/2.0/.\n\nIf it is not possible or desirable to put the notice in a particular\nfile, then You may include the notice in a location (such as a LICENSE\nfile in a relevant directory) where a recipient would be likely to look\nfor such a notice.\n\nYou may add additional accurate notices of copyright ownership.\n\nExhibit B - \"Incompatible With Secondary Licenses\" Notice\n---------------------------------------------------------\n\n  This Source Code Form is \"Incompatible With Secondary Licenses\", as\n  defined by the Mozilla Public License, v. 2.0.\n",
+  "OFL-1.1": "This Font Software is licensed under the SIL Open Font License, Version 1.1.\nThis license is copied below, and is also available with a FAQ at:\nhttp://scripts.sil.org/OFL\n\n\n-----------------------------------------------------------\nSIL OPEN FONT LICENSE Version 1.1 - 26 February 2007\n-----------------------------------------------------------\n\nPREAMBLE\nThe goals of the Open Font License (OFL) are to stimulate worldwide\ndevelopment of collaborative font projects, to support the font creation\nefforts of academic and linguistic communities, and to provide a free and\nopen framework in which fonts may be shared and improved in partnership\nwith others.\n\nThe OFL allows the licensed fonts to be used, studied, modified and\nredistributed freely as long as they are not sold by themselves. The\nfonts, including any derivative works, can be bundled, embedded,\nredistributed and/or sold with any software provided that any reserved\nnames are not used by derivative works. The fonts and derivatives,\nhowever, cannot be released under any other type of license. The\nrequirement for fonts to remain under this license does not apply\nto any document created using the fonts or their derivatives.\n\nDEFINITIONS\n\"Font Software\" refers to the set of files released by the Copyright\nHolder(s) under this license and clearly marked as such. This may\ninclude source files, build scripts and documentation.\n\n\"Reserved Font Name\" refers to any names specified as such after the\ncopyright statement(s).\n\n\"Original Version\" refers to the collection of Font Software components as\ndistributed by the Copyright Holder(s).\n\n\"Modified Version\" refers to any derivative made by adding to, deleting,\nor substituting -- in part or in whole -- any of the components of the\nOriginal Version, by changing formats or by porting the Font Software to a\nnew environment.\n\n\"Author\" refers to any designer, engineer, programmer, technical\nwriter or other person who contributed to the Font Software.\n\nPERMISSION & CONDITIONS\nPermission is hereby granted, free of charge, to any person obtaining\na copy of the Font Software, to use, study, copy, merge, embed, modify,\nredistribute, and sell modified and unmodified copies of the Font\nSoftware, subject to the following conditions:\n\n1) Neither the Font Software nor any of its individual components,\nin Original or Modified Versions, may be sold by itself.\n\n2) Original or Modified Versions of the Font Software may be bundled,\nredistributed and/or sold with any software, provided that each copy\ncontains the above copyright notice and this license. These can be\nincluded either as stand-alone text files, human-readable headers or\nin the appropriate machine-readable metadata fields within text or\nbinary files as long as those fields can be easily viewed by the user.\n\n3) No Modified Version of the Font Software may use the Reserved Font\nName(s) unless explicit written permission is granted by the corresponding\nCopyright Holder. This restriction only applies to the primary font name as\npresented to the users.\n\n4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font\nSoftware shall not be used to promote, endorse or advertise any\nModified Version, except to acknowledge the contribution(s) of the\nCopyright Holder(s) and the Author(s) or with their explicit written\npermission.\n\n5) The Font Software, modified or unmodified, in part or in whole,\nmust be distributed entirely under this license, and must not be\ndistributed under any other license. The requirement for fonts to\nremain under this license does not apply to any document created\nusing the Font Software.\n\nTERMINATION\nThis license becomes null and void if any of the above conditions are\nnot met.\n\nDISCLAIMER\nTHE FONT SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT\nOF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE\nCOPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,\nINCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL\nDAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING\nFROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM\nOTHER DEALINGS IN THE FONT SOFTWARE.\n",
+  "PSF-2.0": "A. HISTORY OF THE SOFTWARE\n==========================\n\nPython was created in the early 1990s by Guido van Rossum at Stichting\nMathematisch Centrum (CWI, see https://www.cwi.nl) in the Netherlands\nas a successor of a language called ABC.  Guido remains Python's\nprincipal author, although it includes many contributions from others.\n\nIn 1995, Guido continued his work on Python at the Corporation for\nNational Research Initiatives (CNRI, see https://www.cnri.reston.va.us)\nin Reston, Virginia where he released several versions of the\nsoftware.\n\nIn May 2000, Guido and the Python core development team moved to\nBeOpen.com to form the BeOpen PythonLabs team.  In October of the same\nyear, the PythonLabs team moved to Digital Creations, which became\nZope Corporation.  In 2001, the Python Software Foundation (PSF, see\nhttps://www.python.org/psf/) was formed, a non-profit organization\ncreated specifically to own Python-related Intellectual Property.\nZope Corporation was a sponsoring member of the PSF.\n\nAll Python releases are Open Source (see https://opensource.org for\nthe Open Source Definition).  Historically, most, but not all, Python\nreleases have also been GPL-compatible; the table below summarizes\nthe various releases.\n\n    Release         Derived     Year        Owner       GPL-\n                    from                                compatible? (1)\n\n    0.9.0 thru 1.2              1991-1995   CWI         yes\n    1.3 thru 1.5.2  1.2         1995-1999   CNRI        yes\n    1.6             1.5.2       2000        CNRI        no\n    2.0             1.6         2000        BeOpen.com  no\n    1.6.1           1.6         2001        CNRI        yes (2)\n    2.1             2.0+1.6.1   2001        PSF         no\n    2.0.1           2.0+1.6.1   2001        PSF         yes\n    2.1.1           2.1+2.0.1   2001        PSF         yes\n    2.1.2           2.1.1       2002        PSF         yes\n    2.1.3           2.1.2       2002        PSF         yes\n    2.2 and above   2.1.1       2001-now    PSF         yes\n\nFootnotes:\n\n(1) GPL-compatible doesn't mean that we're distributing Python under\n    the GPL.  All Python licenses, unlike the GPL, let you distribute\n    a modified version without making your changes open source.  The\n    GPL-compatible licenses make it possible to combine Python with\n    other software that is released under the GPL; the others don't.\n\n(2) According to Richard Stallman, 1.6.1 is not GPL-compatible,\n    because its license has a choice of law clause.  According to\n    CNRI, however, Stallman's lawyer has told CNRI's lawyer that 1.6.1\n    is \"not incompatible\" with the GPL.\n\nThanks to the many outside volunteers who have worked under Guido's\ndirection to make these releases possible.\n\n\nB. TERMS AND CONDITIONS FOR ACCESSING OR OTHERWISE USING PYTHON\n===============================================================\n\nPython software and documentation are licensed under the\nPython Software Foundation License Version 2.\n\nStarting with Python 3.8.6, examples, recipes, and other code in\nthe documentation are dual licensed under the PSF License Version 2\nand the Zero-Clause BSD license.\n\nSome software incorporated into Python is under different licenses.\nThe licenses are listed with code falling under that license.\n\n\nPYTHON SOFTWARE FOUNDATION LICENSE VERSION 2\n--------------------------------------------\n\n1. This LICENSE AGREEMENT is between the Python Software Foundation\n(\"PSF\"), and the Individual or Organization (\"Licensee\") accessing and\notherwise using this software (\"Python\") in source or binary form and\nits associated documentation.\n\n2. Subject to the terms and conditions of this License Agreement, PSF hereby\ngrants Licensee a nonexclusive, royalty-free, world-wide license to reproduce,\nanalyze, test, perform and/or display publicly, prepare derivative works,\ndistribute, and otherwise use Python alone or in any derivative version,\nprovided, however, that PSF's License Agreement and PSF's notice of copyright,\ni.e., \"Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010,\n2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023 Python Software Foundation;\nAll Rights Reserved\" are retained in Python alone or in any derivative version\nprepared by Licensee.\n\n3. In the event Licensee prepares a derivative work that is based on\nor incorporates Python or any part thereof, and wants to make\nthe derivative work available to others as provided herein, then\nLicensee hereby agrees to include in any such work a brief summary of\nthe changes made to Python.\n\n4. PSF is making Python available to Licensee on an \"AS IS\"\nbasis.  PSF MAKES NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR\nIMPLIED.  BY WAY OF EXAMPLE, BUT NOT LIMITATION, PSF MAKES NO AND\nDISCLAIMS ANY REPRESENTATION OR WARRANTY OF MERCHANTABILITY OR FITNESS\nFOR ANY PARTICULAR PURPOSE OR THAT THE USE OF PYTHON WILL NOT\nINFRINGE ANY THIRD PARTY RIGHTS.\n\n5. PSF SHALL NOT BE LIABLE TO LICENSEE OR ANY OTHER USERS OF PYTHON\nFOR ANY INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES OR LOSS AS\nA RESULT OF MODIFYING, DISTRIBUTING, OR OTHERWISE USING PYTHON,\nOR ANY DERIVATIVE THEREOF, EVEN IF ADVISED OF THE POSSIBILITY THEREOF.\n\n6. This License Agreement will automatically terminate upon a material\nbreach of its terms and conditions.\n\n7. Nothing in this License Agreement shall be deemed to create any\nrelationship of agency, partnership, or joint venture between PSF and\nLicensee.  This License Agreement does not grant permission to use PSF\ntrademarks or trade name in a trademark sense to endorse or promote\nproducts or services of Licensee, or any third party.\n\n8. By copying, installing or otherwise using Python, Licensee\nagrees to be bound by the terms and conditions of this License\nAgreement.\n\n\nBEOPEN.COM LICENSE AGREEMENT FOR PYTHON 2.0\n-------------------------------------------\n\nBEOPEN PYTHON OPEN SOURCE LICENSE AGREEMENT VERSION 1\n\n1. This LICENSE AGREEMENT is between BeOpen.com (\"BeOpen\"), having an\noffice at 160 Saratoga Avenue, Santa Clara, CA 95051, and the\nIndividual or Organization (\"Licensee\") accessing and otherwise using\nthis software in source or binary form and its associated\ndocumentation (\"the Software\").\n\n2. Subject to the terms and conditions of this BeOpen Python License\nAgreement, BeOpen hereby grants Licensee a non-exclusive,\nroyalty-free, world-wide license to reproduce, analyze, test, perform\nand/or display publicly, prepare derivative works, distribute, and\notherwise use the Software alone or in any derivative version,\nprovided, however, that the BeOpen Python License is retained in the\nSoftware, alone or in any derivative version prepared by Licensee.\n\n3. BeOpen is making the Software available to Licensee on an \"AS IS\"\nbasis.  BEOPEN MAKES NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR\nIMPLIED.  BY WAY OF EXAMPLE, BUT NOT LIMITATION, BEOPEN MAKES NO AND\nDISCLAIMS ANY REPRESENTATION OR WARRANTY OF MERCHANTABILITY OR FITNESS\nFOR ANY PARTICULAR PURPOSE OR THAT THE USE OF THE SOFTWARE WILL NOT\nINFRINGE ANY THIRD PARTY RIGHTS.\n\n4. BEOPEN SHALL NOT BE LIABLE TO LICENSEE OR ANY OTHER USERS OF THE\nSOFTWARE FOR ANY INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES OR LOSS\nAS A RESULT OF USING, MODIFYING OR DISTRIBUTING THE SOFTWARE, OR ANY\nDERIVATIVE THEREOF, EVEN IF ADVISED OF THE POSSIBILITY THEREOF.\n\n5. This License Agreement will automatically terminate upon a material\nbreach of its terms and conditions.\n\n6. This License Agreement shall be governed by and interpreted in all\nrespects by the law of the State of California, excluding conflict of\nlaw provisions.  Nothing in this License Agreement shall be deemed to\ncreate any relationship of agency, partnership, or joint venture\nbetween BeOpen and Licensee.  This License Agreement does not grant\npermission to use BeOpen trademarks or trade names in a trademark\nsense to endorse or promote products or services of Licensee, or any\nthird party.  As an exception, the \"BeOpen Python\" logos available at\nhttp://www.pythonlabs.com/logos.html may be used according to the\npermissions granted on that web page.\n\n7. By copying, installing or otherwise using the software, Licensee\nagrees to be bound by the terms and conditions of this License\nAgreement.\n\n\nCNRI LICENSE AGREEMENT FOR PYTHON 1.6.1\n---------------------------------------\n\n1. This LICENSE AGREEMENT is between the Corporation for National\nResearch Initiatives, having an office at 1895 Preston White Drive,\nReston, VA 20191 (\"CNRI\"), and the Individual or Organization\n(\"Licensee\") accessing and otherwise using Python 1.6.1 software in\nsource or binary form and its associated documentation.\n\n2. Subject to the terms and conditions of this License Agreement, CNRI\nhereby grants Licensee a nonexclusive, royalty-free, world-wide\nlicense to reproduce, analyze, test, perform and/or display publicly,\nprepare derivative works, distribute, and otherwise use Python 1.6.1\nalone or in any derivative version, provided, however, that CNRI's\nLicense Agreement and CNRI's notice of copyright, i.e., \"Copyright (c)\n1995-2001 Corporation for National Research Initiatives; All Rights\nReserved\" are retained in Python 1.6.1 alone or in any derivative\nversion prepared by Licensee.  Alternately, in lieu of CNRI's License\nAgreement, Licensee may substitute the following text (omitting the\nquotes): \"Python 1.6.1 is made available subject to the terms and\nconditions in CNRI's License Agreement.  This Agreement together with\nPython 1.6.1 may be located on the internet using the following\nunique, persistent identifier (known as a handle): 1895.22/1013.  This\nAgreement may also be obtained from a proxy server on the internet\nusing the following URL: http://hdl.handle.net/1895.22/1013\".\n\n3. In the event Licensee prepares a derivative work that is based on\nor incorporates Python 1.6.1 or any part thereof, and wants to make\nthe derivative work available to others as provided herein, then\nLicensee hereby agrees to include in any such work a brief summary of\nthe changes made to Python 1.6.1.\n\n4. CNRI is making Python 1.6.1 available to Licensee on an \"AS IS\"\nbasis.  CNRI MAKES NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR\nIMPLIED.  BY WAY OF EXAMPLE, BUT NOT LIMITATION, CNRI MAKES NO AND\nDISCLAIMS ANY REPRESENTATION OR WARRANTY OF MERCHANTABILITY OR FITNESS\nFOR ANY PARTICULAR PURPOSE OR THAT THE USE OF PYTHON 1.6.1 WILL NOT\nINFRINGE ANY THIRD PARTY RIGHTS.\n\n5. CNRI SHALL NOT BE LIABLE TO LICENSEE OR ANY OTHER USERS OF PYTHON\n1.6.1 FOR ANY INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES OR LOSS AS\nA RESULT OF MODIFYING, DISTRIBUTING, OR OTHERWISE USING PYTHON 1.6.1,\nOR ANY DERIVATIVE THEREOF, EVEN IF ADVISED OF THE POSSIBILITY THEREOF.\n\n6. This License Agreement will automatically terminate upon a material\nbreach of its terms and conditions.\n\n7. This License Agreement shall be governed by the federal\nintellectual property law of the United States, including without\nlimitation the federal copyright law, and, to the extent such\nU.S. federal law does not apply, by the law of the Commonwealth of\nVirginia, excluding Virginia's conflict of law provisions.\nNotwithstanding the foregoing, with regard to derivative works based\non Python 1.6.1 that incorporate non-separable material that was\npreviously distributed under the GNU General Public License (GPL), the\nlaw of the Commonwealth of Virginia shall govern this License\nAgreement only as to issues arising under or with respect to\nParagraphs 4, 5, and 7 of this License Agreement.  Nothing in this\nLicense Agreement shall be deemed to create any relationship of\nagency, partnership, or joint venture between CNRI and Licensee.  This\nLicense Agreement does not grant permission to use CNRI trademarks or\ntrade name in a trademark sense to endorse or promote products or\nservices of Licensee, or any third party.\n\n8. By clicking on the \"ACCEPT\" button where indicated, or by copying,\ninstalling or otherwise using Python 1.6.1, Licensee agrees to be\nbound by the terms and conditions of this License Agreement.\n\n        ACCEPT\n\n\nCWI LICENSE AGREEMENT FOR PYTHON 0.9.0 THROUGH 1.2\n--------------------------------------------------\n\nCopyright (c) 1991 - 1995, Stichting Mathematisch Centrum Amsterdam,\nThe Netherlands.  All rights reserved.\n\nPermission to use, copy, modify, and distribute this software and its\ndocumentation for any purpose and without fee is hereby granted,\nprovided that the above copyright notice appear in all copies and that\nboth that copyright notice and this permission notice appear in\nsupporting documentation, and that the name of Stichting Mathematisch\nCentrum or CWI not be used in advertising or publicity pertaining to\ndistribution of the software without specific, written prior\npermission.\n\nSTICHTING MATHEMATISCH CENTRUM DISCLAIMS ALL WARRANTIES WITH REGARD TO\nTHIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND\nFITNESS, IN NO EVENT SHALL STICHTING MATHEMATISCH CENTRUM BE LIABLE\nFOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES\nWHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN\nACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT\nOF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.\n\nZERO-CLAUSE BSD LICENSE FOR CODE IN THE PYTHON DOCUMENTATION\n----------------------------------------------------------------------\n\nPermission to use, copy, modify, and/or distribute this software for any\npurpose with or without fee is hereby granted.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH\nREGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY\nAND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,\nINDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM\nLOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR\nOTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR\nPERFORMANCE OF THIS SOFTWARE.\n\n\n\nAdditional Conditions for this Windows binary build\n---------------------------------------------------\n\nThis program is linked with and uses Microsoft Distributable Code,\ncopyrighted by Microsoft Corporation. The Microsoft Distributable Code\nis embedded in each .exe, .dll and .pyd file as a result of running\nthe code through a linker.\n\nIf you further distribute programs that include the Microsoft\nDistributable Code, you must comply with the restrictions on\ndistribution specified by Microsoft. In particular, you must require\ndistributors and external end users to agree to terms that protect the\nMicrosoft Distributable Code at least as much as Microsoft's own\nrequirements for the Distributable Code. See Microsoft's documentation\n(included in its developer tools and on its website at microsoft.com)\nfor specific details.\n\nRedistribution of the Windows binary build of the Python interpreter\ncomplies with this agreement, provided that you do not:\n\n- alter any copyright, trademark or patent notice in Microsoft's\nDistributable Code;\n\n- use Microsoft's trademarks in your programs' names or in a way that\nsuggests your programs come from or are endorsed by Microsoft;\n\n- distribute Microsoft's Distributable Code to run on a platform other\nthan Microsoft operating systems, run-time technologies or application\nplatforms; or\n\n- include Microsoft Distributable Code in malicious, deceptive or\nunlawful programs.\n\nThese restrictions apply only to the Microsoft Distributable Code as\ndefined above, not to Python itself or any programs running on the\nPython interpreter. The redistribution of the Python interpreter and\nlibraries is governed by the Python Software License included with this\nfile, or by other licenses as marked.\n\n\n\n--------------------------------------------------------------------------\n\nThis program, \"bzip2\", the associated library \"libbzip2\", and all\ndocumentation, are copyright (C) 1996-2019 Julian R Seward.  All\nrights reserved.\n\nRedistribution and use in source and binary forms, with or without\nmodification, are permitted provided that the following conditions\nare met:\n\n1. Redistributions of source code must retain the above copyright\n   notice, this list of conditions and the following disclaimer.\n\n2. The origin of this software must not be misrepresented; you must \n   not claim that you wrote the original software.  If you use this \n   software in a product, an acknowledgment in the product \n   documentation would be appreciated but is not required.\n\n3. Altered source versions must be plainly marked as such, and must\n   not be misrepresented as being the original software.\n\n4. The name of the author may not be used to endorse or promote \n   products derived from this software without specific prior written \n   permission.\n\nTHIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS\nOR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\nWARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE\nARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY\nDIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL\nDAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE\nGOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS\nINTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,\nWHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING\nNEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\nSOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n\nJulian Seward, jseward@acm.org\nbzip2/libbzip2 version 1.0.8 of 13 July 2019\n\n--------------------------------------------------------------------------\n\nlibffi - Copyright (c) 1996-2022  Anthony Green, Red Hat, Inc and others.\nSee source files for details.\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n``Software''), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.\nIN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY\nCLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,\nTORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE\nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n\n\n                                 Apache License\n                           Version 2.0, January 2004\n                        https://www.apache.org/licenses/\n\n   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION\n\n   1. Definitions.\n\n      \"License\" shall mean the terms and conditions for use, reproduction,\n      and distribution as defined by Sections 1 through 9 of this document.\n\n      \"Licensor\" shall mean the copyright owner or entity authorized by\n      the copyright owner that is granting the License.\n\n      \"Legal Entity\" shall mean the union of the acting entity and all\n      other entities that control, are controlled by, or are under common\n      control with that entity. For the purposes of this definition,\n      \"control\" means (i) the power, direct or indirect, to cause the\n      direction or management of such entity, whether by contract or\n      otherwise, or (ii) ownership of fifty percent (50%) or more of the\n      outstanding shares, or (iii) beneficial ownership of such entity.\n\n      \"You\" (or \"Your\") shall mean an individual or Legal Entity\n      exercising permissions granted by this License.\n\n      \"Source\" form shall mean the preferred form for making modifications,\n      including but not limited to software source code, documentation\n      source, and configuration files.\n\n      \"Object\" form shall mean any form resulting from mechanical\n      transformation or translation of a Source form, including but\n      not limited to compiled object code, generated documentation,\n      and conversions to other media types.\n\n      \"Work\" shall mean the work of authorship, whether in Source or\n      Object form, made available under the License, as indicated by a\n      copyright notice that is included in or attached to the work\n      (an example is provided in the Appendix below).\n\n      \"Derivative Works\" shall mean any work, whether in Source or Object\n      form, that is based on (or derived from) the Work and for which the\n      editorial revisions, annotations, elaborations, or other modifications\n      represent, as a whole, an original work of authorship. For the purposes\n      of this License, Derivative Works shall not include works that remain\n      separable from, or merely link (or bind by name) to the interfaces of,\n      the Work and Derivative Works thereof.\n\n      \"Contribution\" shall mean any work of authorship, including\n      the original version of the Work and any modifications or additions\n      to that Work or Derivative Works thereof, that is intentionally\n      submitted to Licensor for inclusion in the Work by the copyright owner\n      or by an individual or Legal Entity authorized to submit on behalf of\n      the copyright owner. For the purposes of this definition, \"submitted\"\n      means any form of electronic, verbal, or written communication sent\n      to the Licensor or its representatives, including but not limited to\n      communication on electronic mailing lists, source code control systems,\n      and issue tracking systems that are managed by, or on behalf of, the\n      Licensor for the purpose of discussing and improving the Work, but\n      excluding communication that is conspicuously marked or otherwise\n      designated in writing by the copyright owner as \"Not a Contribution.\"\n\n      \"Contributor\" shall mean Licensor and any individual or Legal Entity\n      on behalf of whom a Contribution has been received by Licensor and\n      subsequently incorporated within the Work.\n\n   2. Grant of Copyright License. Subject to the terms and conditions of\n      this License, each Contributor hereby grants to You a perpetual,\n      worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n      copyright license to reproduce, prepare Derivative Works of,\n      publicly display, publicly perform, sublicense, and distribute the\n      Work and such Derivative Works in Source or Object form.\n\n   3. Grant of Patent License. Subject to the terms and conditions of\n      this License, each Contributor hereby grants to You a perpetual,\n      worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n      (except as stated in this section) patent license to make, have made,\n      use, offer to sell, sell, import, and otherwise transfer the Work,\n      where such license applies only to those patent claims licensable\n      by such Contributor that are necessarily infringed by their\n      Contribution(s) alone or by combination of their Contribution(s)\n      with the Work to which such Contribution(s) was submitted. If You\n      institute patent litigation against any entity (including a\n      cross-claim or counterclaim in a lawsuit) alleging that the Work\n      or a Contribution incorporated within the Work constitutes direct\n      or contributory patent infringement, then any patent licenses\n      granted to You under this License for that Work shall terminate\n      as of the date such litigation is filed.\n\n   4. Redistribution. You may reproduce and distribute copies of the\n      Work or Derivative Works thereof in any medium, with or without\n      modifications, and in Source or Object form, provided that You\n      meet the following conditions:\n\n      (a) You must give any other recipients of the Work or\n          Derivative Works a copy of this License; and\n\n      (b) You must cause any modified files to carry prominent notices\n          stating that You changed the files; and\n\n      (c) You must retain, in the Source form of any Derivative Works\n          that You distribute, all copyright, patent, trademark, and\n          attribution notices from the Source form of the Work,\n          excluding those notices that do not pertain to any part of\n          the Derivative Works; and\n\n      (d) If the Work includes a \"NOTICE\" text file as part of its\n          distribution, then any Derivative Works that You distribute must\n          include a readable copy of the attribution notices contained\n          within such NOTICE file, excluding those notices that do not\n          pertain to any part of the Derivative Works, in at least one\n          of the following places: within a NOTICE text file distributed\n          as part of the Derivative Works; within the Source form or\n          documentation, if provided along with the Derivative Works; or,\n          within a display generated by the Derivative Works, if and\n          wherever such third-party notices normally appear. The contents\n          of the NOTICE file are for informational purposes only and\n          do not modify the License. You may add Your own attribution\n          notices within Derivative Works that You distribute, alongside\n          or as an addendum to the NOTICE text from the Work, provided\n          that such additional attribution notices cannot be construed\n          as modifying the License.\n\n      You may add Your own copyright statement to Your modifications and\n      may provide additional or different license terms and conditions\n      for use, reproduction, or distribution of Your modifications, or\n      for any such Derivative Works as a whole, provided Your use,\n      reproduction, and distribution of the Work otherwise complies with\n      the conditions stated in this License.\n\n   5. Submission of Contributions. Unless You explicitly state otherwise,\n      any Contribution intentionally submitted for inclusion in the Work\n      by You to the Licensor shall be under the terms and conditions of\n      this License, without any additional terms or conditions.\n      Notwithstanding the above, nothing herein shall supersede or modify\n      the terms of any separate license agreement you may have executed\n      with Licensor regarding such Contributions.\n\n   6. Trademarks. This License does not grant permission to use the trade\n      names, trademarks, service marks, or product names of the Licensor,\n      except as required for reasonable and customary use in describing the\n      origin of the Work and reproducing the content of the NOTICE file.\n\n   7. Disclaimer of Warranty. Unless required by applicable law or\n      agreed to in writing, Licensor provides the Work (and each\n      Contributor provides its Contributions) on an \"AS IS\" BASIS,\n      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or\n      implied, including, without limitation, any warranties or conditions\n      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A\n      PARTICULAR PURPOSE. You are solely responsible for determining the\n      appropriateness of using or redistributing the Work and assume any\n      risks associated with Your exercise of permissions under this License.\n\n   8. Limitation of Liability. In no event and under no legal theory,\n      whether in tort (including negligence), contract, or otherwise,\n      unless required by applicable law (such as deliberate and grossly\n      negligent acts) or agreed to in writing, shall any Contributor be\n      liable to You for damages, including any direct, indirect, special,\n      incidental, or consequential damages of any character arising as a\n      result of this License or out of the use or inability to use the\n      Work (including but not limited to damages for loss of goodwill,\n      work stoppage, computer failure or malfunction, or any and all\n      other commercial damages or losses), even if such Contributor\n      has been advised of the possibility of such damages.\n\n   9. Accepting Warranty or Additional Liability. While redistributing\n      the Work or Derivative Works thereof, You may choose to offer,\n      and charge a fee for, acceptance of support, warranty, indemnity,\n      or other liability obligations and/or rights consistent with this\n      License. However, in accepting such obligations, You may act only\n      on Your own behalf and on Your sole responsibility, not on behalf\n      of any other Contributor, and only if You agree to indemnify,\n      defend, and hold each Contributor harmless for any liability\n      incurred by, or claims asserted against, such Contributor by reason\n      of your accepting any such warranty or additional liability.\n\n   END OF TERMS AND CONDITIONS\n\nThis software is copyrighted by the Regents of the University of\nCalifornia, Sun Microsystems, Inc., Scriptics Corporation, ActiveState\nCorporation and other parties.  The following terms apply to all files\nassociated with the software unless explicitly disclaimed in\nindividual files.\n\nThe authors hereby grant permission to use, copy, modify, distribute,\nand license this software and its documentation for any purpose, provided\nthat existing copyright notices are retained in all copies and that this\nnotice is included verbatim in any distributions. No written agreement,\nlicense, or royalty fee is required for any of the authorized uses.\nModifications to this software may be copyrighted by their authors\nand need not follow the licensing terms described here, provided that\nthe new terms are clearly indicated on the first page of each file where\nthey apply.\n\nIN NO EVENT SHALL THE AUTHORS OR DISTRIBUTORS BE LIABLE TO ANY PARTY\nFOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES\nARISING OUT OF THE USE OF THIS SOFTWARE, ITS DOCUMENTATION, OR ANY\nDERIVATIVES THEREOF, EVEN IF THE AUTHORS HAVE BEEN ADVISED OF THE\nPOSSIBILITY OF SUCH DAMAGE.\n\nTHE AUTHORS AND DISTRIBUTORS SPECIFICALLY DISCLAIM ANY WARRANTIES,\nINCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.  THIS SOFTWARE\nIS PROVIDED ON AN \"AS IS\" BASIS, AND THE AUTHORS AND DISTRIBUTORS HAVE\nNO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR\nMODIFICATIONS.\n\nGOVERNMENT USE: If you are acquiring this software on behalf of the\nU.S. government, the Government shall have only \"Restricted Rights\"\nin the software and related documentation as defined in the Federal\nAcquisition Regulations (FARs) in Clause 52.227.19 (c) (2).  If you\nare acquiring the software on behalf of the Department of Defense, the\nsoftware shall be classified as \"Commercial Computer Software\" and the\nGovernment shall have only \"Restricted Rights\" as defined in Clause\n252.227-7014 (b) (3) of DFARs.  Notwithstanding the foregoing, the\nauthors grant the U.S. Government and others acting in its behalf\npermission to use and distribute the software in accordance with the\nterms specified in this license.\n\nThis software is copyrighted by the Regents of the University of\nCalifornia, Sun Microsystems, Inc., Scriptics Corporation, ActiveState\nCorporation, Apple Inc. and other parties.  The following terms apply to\nall files associated with the software unless explicitly disclaimed in\nindividual files.\n\nThe authors hereby grant permission to use, copy, modify, distribute,\nand license this software and its documentation for any purpose, provided\nthat existing copyright notices are retained in all copies and that this\nnotice is included verbatim in any distributions. No written agreement,\nlicense, or royalty fee is required for any of the authorized uses.\nModifications to this software may be copyrighted by their authors\nand need not follow the licensing terms described here, provided that\nthe new terms are clearly indicated on the first page of each file where\nthey apply.\n\nIN NO EVENT SHALL THE AUTHORS OR DISTRIBUTORS BE LIABLE TO ANY PARTY\nFOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES\nARISING OUT OF THE USE OF THIS SOFTWARE, ITS DOCUMENTATION, OR ANY\nDERIVATIVES THEREOF, EVEN IF THE AUTHORS HAVE BEEN ADVISED OF THE\nPOSSIBILITY OF SUCH DAMAGE.\n\nTHE AUTHORS AND DISTRIBUTORS SPECIFICALLY DISCLAIM ANY WARRANTIES,\nINCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.  THIS SOFTWARE\nIS PROVIDED ON AN \"AS IS\" BASIS, AND THE AUTHORS AND DISTRIBUTORS HAVE\nNO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR\nMODIFICATIONS.\n\nGOVERNMENT USE: If you are acquiring this software on behalf of the\nU.S. government, the Government shall have only \"Restricted Rights\"\nin the software and related documentation as defined in the Federal\nAcquisition Regulations (FARs) in Clause 52.227.19 (c) (2).  If you\nare acquiring the software on behalf of the Department of Defense, the\nsoftware shall be classified as \"Commercial Computer Software\" and the\nGovernment shall have only \"Restricted Rights\" as defined in Clause\n252.227-7013 (b) (3) of DFARs.  Notwithstanding the foregoing, the\nauthors grant the U.S. Government and others acting in its behalf\npermission to use and distribute the software in accordance with the\nterms specified in this license.\n\nCopyright (c) 1993-1999 Ioi Kim Lam.\nCopyright (c) 2000-2001 Tix Project Group.\nCopyright (c) 2004 ActiveState\n\nThis software is copyrighted by the above entities\nand other parties.  The following terms apply to all files associated\nwith the software unless explicitly disclaimed in individual files.\n\nThe authors hereby grant permission to use, copy, modify, distribute,\nand license this software and its documentation for any purpose, provided\nthat existing copyright notices are retained in all copies and that this\nnotice is included verbatim in any distributions. No written agreement,\nlicense, or royalty fee is required for any of the authorized uses.\nModifications to this software may be copyrighted by their authors\nand need not follow the licensing terms described here, provided that\nthe new terms are clearly indicated on the first page of each file where\nthey apply.\n\nIN NO EVENT SHALL THE AUTHORS OR DISTRIBUTORS BE LIABLE TO ANY PARTY\nFOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES\nARISING OUT OF THE USE OF THIS SOFTWARE, ITS DOCUMENTATION, OR ANY\nDERIVATIVES THEREOF, EVEN IF THE AUTHORS HAVE BEEN ADVISED OF THE\nPOSSIBILITY OF SUCH DAMAGE.\n\nTHE AUTHORS AND DISTRIBUTORS SPECIFICALLY DISCLAIM ANY WARRANTIES,\nINCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.  THIS SOFTWARE\nIS PROVIDED ON AN \"AS IS\" BASIS, AND THE AUTHORS AND DISTRIBUTORS HAVE\nNO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR\nMODIFICATIONS.\n\nGOVERNMENT USE: If you are acquiring this software on behalf of the\nU.S. government, the Government shall have only \"Restricted Rights\"\nin the software and related documentation as defined in the Federal \nAcquisition Regulations (FARs) in Clause 52.227.19 (c) (2).  If you\nare acquiring the software on behalf of the Department of Defense, the\nsoftware shall be classified as \"Commercial Computer Software\" and the\nGovernment shall have only \"Restricted Rights\" as defined in Clause\n252.227-7013 (c) (1) of DFARs.  Notwithstanding the foregoing, the\nauthors grant the U.S. Government and others acting in its behalf\npermission to use and distribute the software in accordance with the\nterms specified in this license. \n\n----------------------------------------------------------------------\n\nParts of this software are based on the Tcl/Tk software copyrighted by\nthe Regents of the University of California, Sun Microsystems, Inc.,\nand other parties. The original license terms of the Tcl/Tk software\ndistribution is included in the file docs/license.tcltk.\n\nParts of this software are based on the HTML Library software\ncopyrighted by Sun Microsystems, Inc. The original license terms of\nthe HTML Library software distribution is included in the file\ndocs/license.html_lib.\n",
+  "Unicode-3.0": "UNICODE LICENSE V3\n\nCOPYRIGHT AND PERMISSION NOTICE\n\nCopyright © 2020-2024 Unicode, Inc.\n\nNOTICE TO USER: Carefully read the following legal agreement. BY\nDOWNLOADING, INSTALLING, COPYING OR OTHERWISE USING DATA FILES, AND/OR\nSOFTWARE, YOU UNEQUIVOCALLY ACCEPT, AND AGREE TO BE BOUND BY, ALL OF THE\nTERMS AND CONDITIONS OF THIS AGREEMENT. IF YOU DO NOT AGREE, DO NOT\nDOWNLOAD, INSTALL, COPY, DISTRIBUTE OR USE THE DATA FILES OR SOFTWARE.\n\nPermission is hereby granted, free of charge, to any person obtaining a\ncopy of data files and any associated documentation (the \"Data Files\") or\nsoftware and any associated documentation (the \"Software\") to deal in the\nData Files or Software without restriction, including without limitation\nthe rights to use, copy, modify, merge, publish, distribute, and/or sell\ncopies of the Data Files or Software, and to permit persons to whom the\nData Files or Software are furnished to do so, provided that either (a)\nthis copyright and permission notice appear with all copies of the Data\nFiles or Software, or (b) this copyright and permission notice appear in\nassociated Documentation.\n\nTHE DATA FILES AND SOFTWARE ARE PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY\nKIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF\nTHIRD PARTY RIGHTS.\n\nIN NO EVENT SHALL THE COPYRIGHT HOLDER OR HOLDERS INCLUDED IN THIS NOTICE\nBE LIABLE FOR ANY CLAIM, OR ANY SPECIAL INDIRECT OR CONSEQUENTIAL DAMAGES,\nOR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,\nWHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,\nARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THE DATA\nFILES OR SOFTWARE.\n\nExcept as contained in this notice, the name of a copyright holder shall\nnot be used in advertising or otherwise to promote the sale, use or other\ndealings in these Data Files or Software without prior written\nauthorization of the copyright holder.\n\nSPDX-License-Identifier: Unicode-3.0\n\n—\n\nPortions of ICU4X may have been adapted from ICU4C and/or ICU4J.\nICU 1.8.1 to ICU 57.1 © 1995-2016 International Business Machines Corporation and others.\n",
+  "Zlib": "This software is provided 'as-is', without any express or implied warranty. In no event will the authors be held liable for any damages arising from the use of this software.\n\nPermission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:\n\n1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.\n\n2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.\n\n3. This notice may not be removed or altered from any source distribution.\n"
+ }
+}

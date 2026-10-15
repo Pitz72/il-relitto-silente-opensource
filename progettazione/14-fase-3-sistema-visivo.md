@@ -296,3 +296,79 @@ lato a un `scrollIntoView`). Il foglio ha adesso la sua posizione.
 |---|---|
 | `python collaudo/diario.py` | **nuovo**: 14 percorsi su 14, 1.291 voci; la cronaca ricostruita dopo un caricamento è uguale a quella giocata, voce per voce; ANNULLA toglie il turno disfatto; le iniziali solo con la placca; la protezione vitale non è una lettura; il diario non cambia la partita |
 | `npm --prefix app run prove` | 63 su 63 (sette nuove, `prove/diario.test.ts`) |
+
+---
+
+## 13. Il menu principale, i riconoscimenti, il registro dei finali (quinta sessione)
+
+L’app non parte più dentro la partita. All’avvio il motore comincia a caricarsi, dietro
+(`app/src/motore/condiviso.ts`), e intanto si vede il resto; la regia delle schermate sta in
+`app/src/Relitto.tsx`.
+
+| Schermata | Quando | Che cosa |
+|---|---|---|
+| Riconoscimenti e licenze | al primo avvio, e quando un aggiornamento aggiunge un nome | si va avanti dopo tre secondi (una vena riempie il pulsante); dal menu, sempre |
+| Menu principale | dopo i riconoscimenti, e dalla pausa | Continua, Nuova partita, Carica, Opzioni, Registro dei finali, Riconoscimenti, Esci, sopra la scena finale dell’intro |
+| Intro | Nuova partita | l’animatic; Esc la salta e porta alla plancia |
+| Gioco | Continua, Carica, la fine dell’intro | la pausa ha in più «Menu principale» |
+
+- **Deciso: lo sfondo del menu è la scena della scala** (09, scena E), disegnata dallo stesso motore
+  WebGL dell’intro: la Santa Maria è un punto di luce davanti alla massa nera che taglia la Via
+  Lattea. La camera respira fra 12 e 18 chilometri dalla poppa in quattro minuti, a metà risoluzione e
+  al più a venti fotogrammi al secondo; con il movimento ridotto è un quadro fermo; senza WebGL2 resta
+  il colore. Un velo da sinistra tiene il titolo e le voci sopra 4,5:1 qualunque cosa faccia la scena.
+- **Deciso: il titolo del menu è quello con cui l’intro si chiude**: Newsreader leggero, maiuscolo,
+  spaziato, con la riga del racconto sotto. Le voci in serif, con un filo verde che si accende accanto
+  a quella scelta; le frecce passano da una all’altra, Invio sceglie.
+- **Deciso: «Continua» riprende la partita in corso** se si è tornati al menu dalla pausa (la partita
+  resta nel motore: `rel_riprendi` nel ponte la ridisegna senza cambiarla, con il diario intero);
+  **altrimenti il salvataggio più recente** che si legge e non è finito, automatico compreso, e sotto
+  dice dove («Lo scafo · atto V · turno 70»). Senza né l’una né l’altro, non c’è.
+- **Deciso: Nuova partita e Carica chiedono conferma solo se c’è una partita in corso** («La partita in
+  corso si perde, se non l’hai salvata.»). Un caricamento rifiutato torna al menu con l’avviso, e la
+  partita che c’era resta.
+- **Deciso: le opzioni sono una sola per tutta l’app** (`stile/opzioni.ts` è un deposito unico): quelle
+  cambiate dal menu valgono nel gioco e viceversa. L’intro prende il movimento ridotto dall’opzione,
+  non più solo dal sistema.
+
+**Il registro dei finali.** Sei righe su una pagina del registro di bordo (la forma d’acciaio, la targa
+«TSC-1972 · registro di bordo»): quelle scritte, nell’ordine in cui le hai scritte, con la data; sotto,
+le righe ancora vuote, tratteggiate. Nessun conto e nessuna percentuale (06, §4.6: «senza parlare di
+trofei»).
+
+- **Deciso: ogni riga ha il nome del finale e la riga del registro di bordo come il gioco l’ha scritta.**
+  La sola riga del registro non bastava: «Vivi» e «La prima nota» chiudono con la stessa, e in «Due
+  lettere» Eriksonn non torna a scriverla. I nomi sono quelli dell’autore, nei commenti di `finali.fav`
+  (la prova `prove/menu.test.ts` controlla che ci siano ancora).
+- Il finale lo dice il ponte (l’evento «finale» del suono); la riga si prende dal testo del finale. Il
+  registro sta su disco accanto ai salvataggi (`registro-dei-finali.json`, scritto intero come i posti,
+  e una lista vuota se è rovinato: non deve impedire di giocare), nel browser dello sviluppo nel
+  localStorage.
+
+**I riconoscimenti e le licenze.** L’elenco lo genera `strumenti/riconoscimenti.py` in
+`app/src/riconoscimenti/elenco.json`, dalle fonti vere: il titolo e l’autore da `relitto.fav`, i suoni
+da `audio/LICENZE.md`, le immagini dal registro nuovo `grafica/LICENZE.md`, i caratteri e i pacchetti
+JavaScript da `package-lock.json` (solo quelli che entrano nell’app), i crate Rust da `cargo tree` (233
+per Windows), Pyodide, CPython, lark e FAVELLA dai loro file. Le righe di copyright si leggono dai file di
+licenza di ogni pacchetto; dove non ce ne sono, gli autori dichiarati. Nessuna rete.
+
+- **Deciso: dove un pacchetto si può usare con più licenze, il gioco sceglie** (MIT prima di Apache 2.0,
+  e così via, nella lista `PREFERENZA`), e la schermata lo dice. Gli otto testi che servono (MIT, Apache
+  2.0, MPL 2.0, Unicode v3, BSD a tre clausole, zlib, SIL OFL 1.1, PSF) stanno in `strumenti/licenze/`,
+  presi dai file dei pacchetti già sul disco; quello della PSF dall’installazione di Python.
+- **Deciso: gli indirizzi si leggono e si copiano, ma non si aprono**: l’app non va in rete.
+- **Deciso: i crate Rust sono per piattaforma.** Lo strumento elenca quelli della macchina su cui gira e
+  lascia gli altri come sono: quelli di Linux si aggiungono lanciandolo nella WSL, al passo di Linux.
+- `python strumenti/riconoscimenti.py --verifica` fallisce se l’elenco non è più quello che le fonti
+  darebbero: va lanciato prima di ogni rilascio (`sviluppo/VERSIONI.md`, §8).
+
+| Prova | Esito |
+|---|---|
+| `npm --prefix app run prove` | 70 su 70 (sette nuove, `prove/menu.test.ts`: i finali e i loro nomi, la riga del registro, un registro rovinato, Continua, i nomi nuovi dei riconoscimenti, un testo per ogni licenza usata) |
+| `cargo test --lib` | 4 su 4 (una nuova: il registro dei finali si scrive intero e resta una lista) |
+| `python collaudo/diario.py` | riprendere dal menu non cambia la partita né il diario |
+| `python strumenti/riconoscimenti.py --verifica` | l’elenco è aggiornato |
+| nel pannello del browser | i riconoscimenti al primo avvio, poi il menu; Continua da un salvataggio, la pausa e «Menu principale», Continua sulla partita in corso; il percorso «Vivi» fino in fondo e la sua riga nel registro; Nuova partita, l’intro, Esc, la plancia |
+
+Restano da vedere a velocità piena, con il pannello in vista o nell’eseguibile: il respiro dello sfondo,
+la vena dei tre secondi, il passaggio fra menu e intro.

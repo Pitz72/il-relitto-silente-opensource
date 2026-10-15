@@ -18,6 +18,19 @@ documenti di `progettazione/`.
   le pagine le compone `app/src/gioco/diario/pagine.ts`. Il collaudo `collaudo/diario.py` e sette
   prove nuove.
 - I pulsanti «diario» e «menu» sopra la lamina, per chi gioca con il mouse.
+- **Il menu principale** (06, §4.6): Continua (la partita in corso, o il salvataggio più recente),
+  Nuova partita (con l’intro, che Esc salta), Carica, Opzioni, Registro dei finali, Riconoscimenti,
+  Esci, sopra la scena finale dell’intro, viva e lentissima. Dalla pausa si torna al menu, e la partita
+  resta (`rel_riprendi` nel ponte). Il motore comincia a caricarsi all’avvio, dietro.
+- **Il registro dei finali**: sei righe del registro di bordo, con il nome del finale, la riga che il
+  gioco scrive e la data; su disco accanto ai salvataggi (`registro_finali_leggi` e
+  `registro_finali_scrivi` nel processo Tauri).
+- **La schermata «Riconoscimenti e licenze»** (06, §18.3), al primo avvio e quando arrivano nomi nuovi,
+  saltabile dopo tre secondi: il gioco, le fondamenta (FAVELLA, Pyodide, CPython, lark, Tauri, kira,
+  React), i suoni, le immagini, i caratteri, le librerie della pagina e del programma con le loro righe
+  di copyright, i testi delle licenze. La genera `strumenti/riconoscimenti.py` dalle fonti vere
+  (`--verifica` controlla che non resti indietro); i testi delle licenze in `strumenti/licenze/`; il
+  registro delle immagini nuovo, `grafica/LICENZE.md`.
 - **Le fondamenta del sistema visivo** (fase 3): i quattro caratteri dentro l’app (Newsreader, IBM
   Plex Mono, Big Shoulders Stencil, Atkinson Hyperlegible Next; SIL OFL, dai pacchetti Fontsource,
   solo il sottoinsieme latino, 457 KB); le atmosfere come variabili CSS da un modulo solo
@@ -84,6 +97,9 @@ documenti di `progettazione/`.
 
 ### Cambiato
 
+- L’app si apre sul menu principale (o sui riconoscimenti, al primo avvio), non più dentro la partita;
+  `?gioco` porta ancora dritti al gioco, per lo sviluppo. Le opzioni sono una sola per tutta l’app, e
+  l’intro prende da lì il movimento ridotto.
 - **Il motore passa a FAVELLA 1.5.0** (ambito `motore`; `progettazione/16-favella-1-5-0.md`). La copia in
   `motore/` si rifà dal tag `v1.5.0` del repository FAVELLA1; i `.fav` non cambiano e il gioco gioca
   identico, con lo stesso testo e la stessa impronta a ogni passo. Il ponte lascia i suoi tre rimedi

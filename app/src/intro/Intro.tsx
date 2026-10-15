@@ -84,7 +84,7 @@ function tempoMargine(t: number, calibra: { t0: number; k: number; meta: number 
   return ridotto ? calibra.meta : calibra.t0 + (t - M.naveB) * calibra.k;
 }
 
-export default function Intro({ revisione = false, onFine }: { revisione?: boolean; onFine?: () => void }) {
+export default function Intro({ revisione = false, onFine, ridotto }: { revisione?: boolean; onFine?: () => void; ridotto?: boolean }) {
   const palco = useRef<HTMLDivElement>(null);
   const spazio = useRef<HTMLCanvasElement>(null);
   const sopra = useRef<HTMLCanvasElement>(null);
@@ -103,7 +103,8 @@ export default function Intro({ revisione = false, onFine }: { revisione?: boole
   const tempo = useRef(0);
   const pausa = useRef(false);
   const finita = useRef(false);
-  const [opzioni, setOpzioni] = useState<Opzioni>(() => ({ ridotto: preferisceMenoMovimento(), sottotitoli: revisione, ridotta: false }));
+  // il movimento ridotto: l'opzione dell'app, se arriva dal gioco; se no, il sistema
+  const [opzioni, setOpzioni] = useState<Opzioni>(() => ({ ridotto: ridotto ?? preferisceMenoMovimento(), sottotitoli: revisione, ridotta: false }));
   const opz = useRef(opzioni);
   opz.current = opzioni;
   const [pronta, setPronta] = useState(false);

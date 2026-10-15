@@ -45,14 +45,20 @@ function scrivi(o: Opzioni) {
   }
 }
 
+// Un deposito solo per tutta l'app: il menu e il gioco vedono le stesse opzioni.
+let attuali: Opzioni | null = null;
+const ascoltatori = new Set<(o: Opzioni) => void>();
+
 export function useOpzioni(): [Opzioni, (cambio: Partial<Opzioni>) => void] {
-  const [opzioni, setOpzioni] = useState<Opzioni>(leggi);
+  const [opzioni, setOpzioni] = useState<Opzioni>(() => (attuali ??= leggi()));
+  useEffect(() => {
+    ascoltatori.add(setOpzioni);
+    return () => void ascoltatori.delete(setOpzioni);
+  }, []);
   const cambia = useCallback((cambio: Partial<Opzioni>) => {
-    setOpzioni((o) => {
-      const nuove = { ...o, ...cambio };
-      scrivi(nuove);
-      return nuove;
-    });
+    attuali = { ...(attuali ?? leggi()), ...cambio };
+    scrivi(attuali);
+    for (const a of ascoltatori) a(attuali);
   }, []);
   return [opzioni, cambia];
 }

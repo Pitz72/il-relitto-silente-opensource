@@ -1,0 +1,155 @@
+/* ==========================================================================
+   «Riconoscimenti e licenze» (Riconoscimenti.tsx). Un foglio lungo, nella
+   colonna della lamina, sul fondo del relitto; il piede resta fermo in basso.
+   I colori vengono dalle variabili delle atmosfere (sopra 4,5:1).
+   ========================================================================== */
+.riconoscimenti {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(ellipse at 50% 30%, var(--fondo-1), var(--fondo-2));
+  color: var(--testo);
+  font-size: var(--corpo);
+  line-height: 1.55;
+  animation: ric-entra .5s ease-out both;
+}
+@keyframes ric-entra { from { opacity: 0; } to { opacity: 1; } }
+[data-movimento="ridotto"] .riconoscimenti { animation-duration: .2s; }
+
+.ric-foglio {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 4.6cqw 4cqw 3cqw;
+  -webkit-mask-image: linear-gradient(transparent, #000 2.4em, #000 calc(100% - 2.4em), transparent);
+  mask-image: linear-gradient(transparent, #000 2.4em, #000 calc(100% - 2.4em), transparent);
+}
+.ric-foglio:focus-visible { outline-offset: -4px; }
+.ric-colonna { max-width: 40em; margin: 0 auto; }
+
+.riconoscimenti h1 {
+  margin: 0 0 1.6em;
+  font-weight: 300;
+  font-style: italic;
+  font-size: 1.9em;
+  letter-spacing: -.005em;
+  color: color-mix(in srgb, var(--testo) 80%, var(--vena-2));
+}
+.riconoscimenti h2 {
+  display: flex;
+  align-items: baseline;
+  gap: .8em;
+  margin: 2.6em 0 1em;
+  padding-bottom: .45em;
+  border-bottom: 1px solid color-mix(in srgb, var(--bordo) 75%, transparent);
+  font-family: var(--mono);
+  font-weight: 400;
+  font-size: max(12px, .66em);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--accento);
+}
+.ric-conto { color: var(--tenue); letter-spacing: .08em; }
+
+/* il gioco */
+.ric-gioco p { margin: 0; }
+.ric-titolo { font-weight: 300; font-size: 2.2em; letter-spacing: .06em; text-transform: uppercase; line-height: 1.1; margin-bottom: .3em !important; }
+.ric-racconto { color: var(--tenue); margin-top: .2em !important; }
+
+/* le voci: il nome, poi le righe piccole */
+.ric-voci { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.05em; }
+.ric-voci li { display: flex; flex-direction: column; gap: .08em; }
+.ric-nome { color: var(--testo); }
+.ric-versione { font-family: var(--mono); font-size: .72em; color: var(--tenue); letter-spacing: .04em; }
+.ric-ruolo { font-style: italic; color: var(--tenue); font-size: .92em; }
+.ric-licenza, .ric-copyright, .ric-sorgente {
+  font-family: var(--mono);
+  font-size: max(11.5px, .66em);
+  letter-spacing: .02em;
+  color: var(--tenue);
+  overflow-wrap: anywhere;
+}
+.ric-licenza { color: color-mix(in srgb, var(--accento) 70%, var(--testo)); }
+.ric-sorgente { user-select: text; }
+
+/* i crate: fitti, su due colonne quando c'è posto */
+.ric-crate {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  columns: 2 18em;
+  column-gap: 2.4em;
+}
+.ric-crate li { break-inside: avoid; padding: .3em 0 .45em; border-bottom: 1px solid color-mix(in srgb, var(--bordo) 28%, transparent); }
+.ric-crate .ric-nome { font-family: var(--mono); font-size: max(12px, .72em); }
+.ric-crate .ric-licenza, .ric-crate .ric-copyright { display: block; }
+.ric-crate .ric-copyright:empty { display: none; }
+
+/* i testi delle licenze */
+.ric-nota { color: var(--tenue); font-size: .92em; margin: 0 0 1em; }
+.ric-testo { border-top: 1px solid color-mix(in srgb, var(--bordo) 45%, transparent); }
+.ric-testo:last-child { border-bottom: 1px solid color-mix(in srgb, var(--bordo) 45%, transparent); }
+.ric-testo summary {
+  cursor: pointer;
+  padding: .6em 0;
+  color: var(--testo);
+  list-style-position: inside;
+}
+.ric-testo summary:hover { color: var(--accento-2); }
+.ric-testo pre {
+  margin: 0 0 1.2em;
+  max-height: 24em;
+  overflow: auto;
+  padding: .9em 1.1em;
+  white-space: pre-wrap;
+  font-family: var(--mono);
+  font-size: max(11.5px, .64em);
+  line-height: 1.55;
+  color: var(--tenue);
+  background: color-mix(in srgb, var(--fondo-2) 70%, transparent);
+  border-left: 2px solid var(--vena-2);
+  user-select: text;
+}
+
+/* il piede */
+.ric-piede {
+  display: flex;
+  justify-content: center;
+  padding: 1.2cqw 0 1.8cqw;
+  border-top: 1px solid color-mix(in srgb, var(--bordo) 55%, transparent);
+  background: color-mix(in srgb, var(--fondo-2) 85%, transparent);
+}
+.ric-piede button {
+  position: relative;
+  overflow: hidden;
+  min-height: 40px;
+  padding: .5em 1.6em;
+  font-size: max(16px, 1.05cqw);
+  color: var(--testo);
+  border: 1px solid var(--bordo);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--lamina-2) 70%, transparent);
+  transition: border-color .25s, color .25s, opacity .4s;
+}
+.ric-piede button:hover:not(:disabled) { border-color: var(--accento-2); }
+.ric-piede button:disabled { cursor: default; color: var(--tenue); }
+.ric-piede .tasto { font-family: var(--mono); font-size: .72em; color: var(--tenue); margin-left: .6em; }
+/* i tre secondi: una vena che riempie il pulsante */
+.ric-attesa {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 100%;
+  background: var(--vena-2);
+  transform-origin: left;
+  transform: scaleX(0);
+  animation: ric-attesa 3s linear forwards;
+}
+.ric-piede button.pronto .ric-attesa { opacity: 0; transition: opacity .6s; }
+@keyframes ric-attesa { to { transform: scaleX(1); } }
+[data-movimento="ridotto"] .ric-attesa { animation: none; transform: scaleX(1); opacity: .5; }

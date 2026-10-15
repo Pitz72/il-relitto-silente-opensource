@@ -10,12 +10,15 @@ addEventListener("keydown", (e) => {
 });
 
 // Le pagine, ognuna con i suoi stili (si caricano solo quando servono):
-//   (niente)          il gioco
+//   (niente)          l'app: i riconoscimenti al primo avvio, il menu principale,
+//                     l'intro, il gioco (Relitto.tsx)
+//   ?gioco            il gioco, subito (lo sviluppo: window.__gioco)
 //   ?prova            la pagina di prova della fase 1: le misure tecniche (anche
 //                     con RELITTO_PROVA impostata, per le prove automatiche;
 //                     RELITTO_PROVA=salvataggi prova invece i salvataggi nel gioco)
 //   ?intro            l'intro (con &revisione, la barra per rivedere l'animatic)
 //   ?campionario      il campionario del sistema visivo: caratteri, atmosfere, contrasti
+const Relitto = lazy(() => import("./Relitto"));
 const Gioco = lazy(() => import("./gioco/Gioco"));
 const Intro = lazy(() => import("./intro/Intro"));
 const Prova = lazy(() => import("./prova/Prova"));
@@ -27,6 +30,7 @@ async function pagina() {
   if (parametri.has("intro")) return <Intro revisione={parametri.has("revisione")} />;
   if (parametri.has("campionario")) return <Campionario />;
   if (parametri.has("prova")) return <Prova />;
+  if (parametri.has("gioco")) return <Gioco />;
   // le prove automatiche: quella dei salvataggi sul gioco, le altre della fase 1 sulla pagina di prova
   if (dentroTauri()) {
     try {
@@ -37,7 +41,7 @@ async function pagina() {
       /* senza le informazioni del sistema, il gioco */
     }
   }
-  return <Gioco />;
+  return <Relitto />;
 }
 
 pagina().then((p) =>

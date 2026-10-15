@@ -1,0 +1,385 @@
+# riconoscimenti.py — l'elenco della schermata «Riconoscimenti e licenze»
+# (progettazione/06-app-desktop.md, §18.3), generato dagli elenchi così che non
+# resti mai indietro.
+#
+# Uso (dalla radice del progetto):
+#   python strumenti/riconoscimenti.py              scrive app/src/riconoscimenti/elenco.json
+#   python strumenti/riconoscimenti.py --verifica   controlla che il file sia aggiornato
+#                                                   (esce con 1 se non lo è)
+#
+# Le fonti:
+#   relitto-silente/relitto.fav   il titolo e l'autore del gioco
+#   audio/LICENZE.md              i suoni, riga per riga
+#   grafica/LICENZE.md            le immagini, riga per riga
+#   app/package-lock.json         i pacchetti JavaScript che entrano nell'app (non quelli
+#                                 dello sviluppo); i caratteri stanno a parte
+#   cargo tree                    i crate Rust dell'eseguibile, per la piattaforma su cui
+#                                 si lancia lo strumento: le altre restano come sono nel
+#                                 file (per Linux lo si lancia nella WSL, dove si costruisce)
+#   motore/, app/public/pyodide   FAVELLA, Pyodide, CPython, lark
+#   strumenti/licenze/            i testi delle licenze, uno per licenza
+# Le righe di copyright di ogni pacchetto si leggono dai suoi file di licenza
+# (LICENSE, COPYING, NOTICE…); dove non ce ne sono, valgono gli autori dichiarati.
+# Nessuna rete: cargo lavora --offline, e tutto il resto è già sul disco.
+
+import argparse
+import glob
+import json
+import os
+import re
+import subprocess
+import sys
+import zipfile
+
+QUI = os.path.dirname(os.path.abspath(__file__))
+RADICE = os.path.dirname(QUI)
+APP = os.path.join(RADICE, "app")
+USCITA = os.path.join(APP, "src", "riconoscimenti", "elenco.json")
+LICENZE = os.path.join(QUI, "licenze")
+
+# Quando un pacchetto si può usare con più licenze («MIT OR Apache-2.0»), il
+# gioco lo usa con la prima di questa lista: meno testo, stessi diritti.
+PREFERENZA = ("MIT", "Apache-2.0", "Zlib", "BSD-3-Clause", "Unlicense", "0BSD", "CC0-1.0", "MIT-0",
+              "BSL-1.0", "ISC", "MPL-2.0", "Unicode-3.0", "OFL-1.1", "PSF-2.0")
+
+# I nomi delle famiglie dei caratteri, dai pacchetti Fontsource.
+CARATTERI = {
+    "@fontsource-variable/newsreader": ("Newsreader", "il testo"),
+    "@fontsource/ibm-plex-mono": ("IBM Plex Mono", "gli strumenti, le letture dello scanner"),
+    "@fontsource-variable/big-shoulders-stencil": ("Big Shoulders Stencil", "le targhe della Santa Maria"),
+    "@fontsource-variable/atkinson-hyperlegible-next": ("Atkinson Hyperlegible Next", "la leggibilità, nelle opzioni"),
+}
+
+
+# ----------------------------------------------------------------------------
+#  Le licenze: le espressioni SPDX e le righe di copyright
+# ----------------------------------------------------------------------------
+def scelta(espressione):
+    """Le licenze con cui il gioco usa un pacchetto: per «A OR B» la preferita,
+    per «A AND B» tutte e due. «MIT/Apache-2.0» (la forma vecchia) vale OR."""
+    testo = espressione.replace("/", " OR ")
+    pezzi = re.findall(r"\(|\)|\bAND\b|\bOR\b|[A-Za-z0-9.+-]+", testo)
+    pos = 0
+
+    def rango(insieme):
+        return sum(PREFERENZA.index(x) if x in PREFERENZA else 99 for x in insieme) + 10 * len(insieme)
+
+    def primario():
+        nonlocal pos
+        if pezzi[pos] == "(":
+            pos += 1
+            r = espr()
+            pos += 1  # «)»
+            return r
+        pos += 1
+        return {pezzi[pos - 1]}
+
+    def termine():
+        nonlocal pos
+        r = primario()
+        while pos < len(pezzi) and pezzi[pos] == "AND":
+            pos += 1
+            r = r | primario()
+        return r
+
+    def espr():
+        nonlocal pos
+        alternative = [termine()]
+        while pos < len(pezzi) and pezzi[pos] == "OR":
+            pos += 1
+            alternative.append(termine())
+        return min(alternative, key=rango)
+
+    return sorted(espr(), key=lambda x: PREFERENZA.index(x) if x in PREFERENZA else 99)
+
+
+_FILE_DI_LICENZA = re.compile(r"^(licen[cs]e|copying|notice|copyright|unlicense|authors)", re.I)
+_RIGA = re.compile(r"^\s*(copyright\b|©|\(c\)\s*\d)", re.I)
+_MODELLO = re.compile(r"\[yyyy\]|\{yyyy\}|<year>|\[name of|\{name of|copyright holder|copyright notice|copyright owner|"
+                      r"copyright and permission|copyright license|copyrights? in|copyright law|copyright to|"
+                      r"copyright statement|copyright and related", re.I)
+
+
+def separa(riga):
+    """Una riga con più copyright in fila (i caratteri di Fontsource ne mettono uno
+    per file: «… Authors (url) Newsreader-Italic[opsz,wght].ttf: Copyright …»)
+    diventa una riga per copyright, senza i nomi dei file."""
+    out = []
+    for pezzo in re.split(r"(?=\bCopyright\b)", riga):
+        pezzo = re.sub(r"\s*\S+\.(?:ttf|otf|woff2?):\s*$", "", pezzo.strip())
+        if pezzo:
+            out.append(pezzo)
+    return out
+
+
+def copyright_in(cartella):
+    """Le righe di copyright dei file di licenza di un pacchetto (al più quattro)."""
+    righe = []
+    try:
+        nomi = sorted(os.listdir(cartella))
+    except OSError:
+        return []
+    for nome in nomi:
+        p = os.path.join(cartella, nome)
+        if not _FILE_DI_LICENZA.match(nome) or not os.path.isfile(p):
+            continue
+        with open(p, encoding="utf-8", errors="replace") as f:
+            for riga in f:
+                r = " ".join(riga.strip().split())
+                if not _RIGA.match(r) or _MODELLO.search(r):
+                    continue
+                for pezzo in separa(r):
+                    if len(pezzo) > 12 and chiave_di(pezzo) not in {chiave_di(x) for x in righe}:
+                        righe.append(pezzo[:240])
+    return righe[:4]
+
+
+def chiave_di(riga):
+    """La stessa nota scritta in due file («Copyright 2023 X» e «Copyright (c) 2023 X.»)."""
+    return re.sub(r"\W+", " ", re.sub(r"\(c\)|©", " ", riga.lower())).strip()
+
+
+# ----------------------------------------------------------------------------
+#  Le fonti
+# ----------------------------------------------------------------------------
+def tabella(percorso, intestazione):
+    """Le righe della tabella che sta sotto il titolo `intestazione` di un .md."""
+    with open(percorso, encoding="utf-8") as f:
+        testo = f.read()
+    parte = testo.split(intestazione, 1)[1].split("\n## ", 1)[0]
+    righe = [r for r in parte.splitlines() if r.startswith("|")]
+    colonne = [c.strip() for c in righe[0].strip("|").split("|")]
+    out = []
+    for r in righe[2:]:
+        celle = [c.strip() for c in r.strip("|").split("|")]
+        out.append(dict(zip(colonne, celle)))
+    return out
+
+
+def collegamento(cella):
+    m = re.match(r"\[([^\]]+)\]\(([^)]+)\)", cella)
+    return (m.group(1), m.group(2)) if m else (cella, None)
+
+
+def senza_codice(s):
+    return s.replace("`", "")
+
+
+def suoni():
+    out = []
+    for r in tabella(os.path.join(RADICE, "audio", "LICENZE.md"), "## I file"):
+        fonte, url = collegamento(r["Fonte"])
+        out.append({"sigla": r["Sigla"], "titolo": r["Titolo"], "autore": r["Autore"], "fonte": fonte, "url": url,
+                    "licenza": r["Licenza"], "ridistribuibile": r["Ridistribuibile"], "uso": r["Usato in"]})
+    return out
+
+
+def immagini():
+    return [{"file": os.path.basename(senza_codice(r["File"])), "che_cosa": r["Che cosa"], "da_dove": senza_codice(r["Da dove"]),
+             "autore": r["Autore"], "licenza": r["Licenza"]}
+            for r in tabella(os.path.join(RADICE, "grafica", "LICENZE.md"), "## I file")]
+
+
+def gioco():
+    with open(os.path.join(RADICE, "relitto-silente", "relitto.fav"), encoding="utf-8") as f:
+        fav = f.read()
+    titolo = re.search(r'^Il titolo è "([^"]+)"', fav, re.M).group(1)
+    autore = re.search(r'^L\'autore è "([^"]+)"', fav, re.M).group(1)
+    return {"titolo": titolo, "autore": autore,
+            "racconto": "dal racconto «Il Relitto», in Dal registro della Santa Maria"}
+
+
+def pacchetti_js():
+    """I pacchetti JavaScript che entrano nell'app, e i caratteri."""
+    with open(os.path.join(APP, "package-lock.json"), encoding="utf-8") as f:
+        lock = json.load(f)
+    js, caratteri = [], []
+    for chiave, v in sorted(lock["packages"].items()):
+        if not chiave or v.get("dev"):
+            continue
+        nome = chiave.split("node_modules/")[-1]
+        cartella = os.path.join(APP, *chiave.split("/"))
+        with open(os.path.join(cartella, "package.json"), encoding="utf-8") as f:
+            pj = json.load(f)
+        repo = pj.get("repository")
+        repo = repo.get("url") if isinstance(repo, dict) else repo
+        voce = {"nome": nome, "versione": v["version"], "licenza": v.get("license") or pj.get("license"),
+                "copyright": copyright_in(cartella), "sorgente": pulisci_url(repo)}
+        voce["usata"] = scelta(voce["licenza"])
+        if nome in CARATTERI:
+            famiglia, ruolo = CARATTERI[nome]
+            caratteri.append({**voce, "famiglia": famiglia, "ruolo": ruolo})
+        else:
+            autore = pj.get("author")
+            if not voce["copyright"] and autore:
+                voce["autori"] = [autore if isinstance(autore, str) else autore.get("name", "")]
+            js.append(voce)
+    return js, caratteri
+
+
+def pulisci_url(u):
+    if not u:
+        return None
+    u = re.sub(r"^git\+", "", u)
+    u = re.sub(r"\.git$", "", u)
+    u = re.sub(r"^git://", "https://", u)
+    return u
+
+
+def crate_rust():
+    """I crate dell'eseguibile per la piattaforma di questa macchina."""
+    host = re.search(r"^host: (\S+)", subprocess.run(["rustc", "-vV"], capture_output=True, text=True, check=True).stdout,
+                     re.M).group(1)
+    r = subprocess.run(["cargo", "tree", "--offline", "-e", "normal", "--prefix", "none", "--target", host,
+                        "-f", "{p}\t{l}\t{r}"], cwd=os.path.join(APP, "src-tauri"), capture_output=True, text=True)
+    if r.returncode != 0:
+        raise SystemExit(f"cargo tree non riesce: {r.stderr.strip()}")
+    registro = glob.glob(os.path.join(os.environ.get("CARGO_HOME", os.path.expanduser("~/.cargo")),
+                                      "registry", "src", "*"))
+    visti, out = set(), []
+    for riga in r.stdout.splitlines():
+        parti = riga.split("\t")
+        if len(parti) < 2:
+            continue
+        testa = parti[0].split()
+        nome, versione = testa[0], testa[1].lstrip("v")
+        if nome == "il-relitto-silente" or (nome, versione) in visti:
+            continue
+        visti.add((nome, versione))
+        licenza = parti[1].strip() or "?"
+        cartella = next((c for base in registro for c in [os.path.join(base, f"{nome}-{versione}")] if os.path.isdir(c)),
+                        None)
+        voce = {"nome": nome, "versione": versione, "licenza": licenza, "usata": scelta(licenza),
+                "copyright": copyright_in(cartella) if cartella else [],
+                "sorgente": parti[2].strip() if len(parti) > 2 and parti[2].strip() else None}
+        if not voce["copyright"]:
+            # senza righe di copyright né autori dichiarati: gli autori del progetto, alla sua sorgente
+            voce["autori"] = (autori_cargo(os.path.join(cartella, "Cargo.toml")) if cartella else []) or [f"gli autori di {nome}"]
+        out.append(voce)
+    out.sort(key=lambda v: (v["nome"].lower(), v["versione"]))
+    return host, out
+
+
+def autori_cargo(percorso):
+    try:
+        with open(percorso, encoding="utf-8") as f:
+            testo = f.read()
+    except OSError:
+        return []
+    m = re.search(r"^authors\s*=\s*\[(.*?)\]", testo, re.M | re.S)
+    if not m:
+        return []
+    return [re.sub(r"\s*<[^>]*>", "", a).strip() for a in re.findall(r'"([^"]+)"', m.group(1))][:4]
+
+
+def principali(js, rust):
+    """I pezzi su cui il gioco sta in piedi, prima dell'elenco completo."""
+    out = []
+    # il motore del gioco
+    with open(os.path.join(RADICE, "motore", "strutture.py"), encoding="utf-8") as f:
+        versione = re.search(r'^VERSIONE_MOTORE = "([^"]+)"', f.read(), re.M).group(1)
+    out.append({"nome": "FAVELLA 1", "versione": versione, "licenza": "MIT", "usata": ["MIT"],
+                "copyright": copyright_in(os.path.join(RADICE, "motore")), "ruolo": "il motore del gioco",
+                "sorgente": "https://github.com/Pitz72/FAVELLA1"})
+    # Python nella pagina
+    with open(os.path.join(APP, "node_modules", "pyodide", "package.json"), encoding="utf-8") as f:
+        pyo = json.load(f)
+    with open(os.path.join(APP, "public", "pyodide", "pyodide-lock.json"), encoding="utf-8") as f:
+        info = json.load(f)["info"]
+    out.append({"nome": "Pyodide", "versione": pyo["version"], "licenza": pyo.get("license", "MPL-2.0"),
+                "usata": scelta(pyo.get("license", "MPL-2.0")), "copyright": [], "autori": ["i contributori di Pyodide"],
+                "ruolo": "Python dentro l’app", "sorgente": pulisci_url((pyo.get("repository") or {}).get("url"))
+                or "https://github.com/pyodide/pyodide"})
+    # la nota di copyright della PSF sta nel testo della licenza, su più righe e con
+    # tutti gli anni: qui il primo e l'ultimo
+    with open(os.path.join(LICENZE, "PSF-2.0.txt"), encoding="utf-8") as f:
+        psf = re.search(r'"Copyright \(c\) ([\d,\s]+?)\s*Python Software Foundation;\s*All Rights Reserved"', f.read())
+    anni = re.findall(r"\d{4}", psf.group(1)) if psf else []
+    out.append({"nome": "CPython", "versione": info["python"], "licenza": "PSF-2.0", "usata": ["PSF-2.0"],
+                "copyright": [f"Copyright (c) {anni[0]}-{anni[-1]} Python Software Foundation; All Rights Reserved"]
+                if anni else [],
+                "ruolo": "l’interprete, dentro Pyodide", "sorgente": "https://github.com/python/cpython"})
+    ruota = glob.glob(os.path.join(APP, "public", "pyodide", "lark-*.whl"))[0]
+    with zipfile.ZipFile(ruota) as z:
+        meta = z.read(next(n for n in z.namelist() if n.endswith("METADATA"))).decode("utf-8")
+        lic = next(n for n in z.namelist() if "licenses/" in n or n.upper().endswith("LICENSE"))
+        righe = [" ".join(r.split()) for r in z.read(lic).decode("utf-8").splitlines() if _RIGA.match(r)]
+    out.append({"nome": "lark", "versione": re.search(r"^Version: (\S+)", meta, re.M).group(1), "licenza": "MIT",
+                "usata": ["MIT"], "copyright": righe[:2], "ruolo": "la grammatica di FAVELLA",
+                "sorgente": "https://github.com/lark-parser/lark"})
+    for nome, ruolo, elenco in (("tauri", "la finestra e il processo dell’app", rust), ("kira", "il motore audio", rust),
+                                ("react", "l’interfaccia", js)):
+        v = next((x for x in elenco if x["nome"] == nome), None)
+        if v:
+            out.append({**v, "nome": {"tauri": "Tauri", "kira": "kira", "react": "React"}[nome], "ruolo": ruolo})
+    return out
+
+
+def testi(usate):
+    out = {}
+    for spdx in sorted(usate):
+        p = os.path.join(LICENZE, f"{spdx}.txt")
+        if not os.path.isfile(p):
+            raise SystemExit(f"manca il testo della licenza {spdx}: aggiungilo in strumenti/licenze/{spdx}.txt")
+        with open(p, encoding="utf-8") as f:
+            out[spdx] = f.read()
+    return out
+
+
+# ----------------------------------------------------------------------------
+#  L'elenco
+# ----------------------------------------------------------------------------
+def elenco(vecchio):
+    js, caratteri = pacchetti_js()
+    host, rust = crate_rust()
+    # le altre piattaforme restano come sono (si generano là, nella WSL per Linux)
+    tutte_rust = dict((vecchio or {}).get("rust", {}))
+    tutte_rust[host] = rust
+    usate = {"OFL-1.1", "PSF-2.0", "MPL-2.0", "MIT"}
+    for gruppo in (js, caratteri, *tutte_rust.values()):
+        for v in gruppo:
+            usate.update(v["usata"])
+    return {
+        "gioco": gioco(),
+        "suoni": suoni(),
+        "immagini": immagini(),
+        "caratteri": caratteri,
+        "principali": principali(js, rust),
+        "javascript": js,
+        "rust": dict(sorted(tutte_rust.items())),
+        "testi": testi(usate),
+    }
+
+
+def testo_di(dati):
+    return json.dumps(dati, ensure_ascii=False, indent=1) + "\n"
+
+
+def main():
+    ap = argparse.ArgumentParser(description="L'elenco dei riconoscimenti e delle licenze.")
+    ap.add_argument("--verifica", action="store_true", help="controlla soltanto che il file sia aggiornato")
+    a = ap.parse_args()
+    sys.stdout.reconfigure(encoding="utf-8")
+    vecchio = None
+    if os.path.isfile(USCITA):
+        with open(USCITA, encoding="utf-8") as f:
+            vecchio = json.load(f)
+    nuovo = elenco(vecchio)
+    if a.verifica:
+        if vecchio is None or testo_di(vecchio) != testo_di(nuovo):
+            print("L'elenco dei riconoscimenti non è aggiornato: python strumenti/riconoscimenti.py")
+            return 1
+        print("L'elenco dei riconoscimenti è aggiornato.")
+        return 0
+    os.makedirs(os.path.dirname(USCITA), exist_ok=True)
+    with open(USCITA, "w", encoding="utf-8", newline="\n") as f:
+        f.write(testo_di(nuovo))
+    n_rust = {k: len(v) for k, v in nuovo["rust"].items()}
+    print(f"Scritto {os.path.relpath(USCITA, RADICE)}: {len(nuovo['suoni'])} suoni, {len(nuovo['immagini'])} immagini, "
+          f"{len(nuovo['caratteri'])} caratteri, {len(nuovo['javascript'])} pacchetti JavaScript, crate Rust {n_rust}, "
+          f"{len(nuovo['testi'])} testi di licenza.")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
