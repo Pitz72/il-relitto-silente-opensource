@@ -25,3 +25,6 @@ audio/sorgenti/
 
 # Le consegne all'autore: installer e versioni portatili (si rifanno con tauri build)
 consegne/
+
+# Le tracce sonore delle partite di collaudo (si rifanno con strumenti/audio/traccia.py --tutti)
+collaudo/tracce/

@@ -43,6 +43,8 @@ export interface MisureAudio {
   campione_acceso: boolean;
 }
 
+import type { EventoSuono, StatiSuono } from "../motore/tipi";
+
 // --- il mondo sonoro del prototipo (src-tauri/src/mondo) ------------------------
 export type AmbienteMondo = "silenzio" | "plancia" | "scafo" | "vestibolo";
 export type NaveMondo = "libera" | "accostata" | "agganciata";
@@ -59,7 +61,21 @@ export type ComandoMondo =
   | { tipo: "volume"; valore: number }
   | { tipo: "solo"; valore: string | null }
   | { tipo: "ferma" }
-  | { tipo: "prova"; valore: ProvaMondo };
+  | { tipo: "prova"; valore: ProvaMondo }
+  | { tipo: "turno"; valore: { stati: Partial<StatiSuono>; eventi: EventoSuono[] } }
+  | { tipo: "mix"; valore: MixMondo }
+  | { tipo: "pausa"; valore: boolean };
+
+/** I cursori e le opzioni del suono (mondo/mod.rs, `Mix`): i volumi da 0 a 1. */
+export interface MixMondo {
+  generale: number;
+  ambienti: number;
+  effetti: number;
+  voci: number;
+  mono: boolean;
+  dinamica_ridotta: boolean;
+  intensi_ridotti: boolean;
+}
 
 /** I colpi che la pagina di prova fa suonare a comando (mondo/mod.rs, `Comando::Prova`). */
 export type ProvaMondo =

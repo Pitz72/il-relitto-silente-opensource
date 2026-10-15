@@ -10,6 +10,14 @@ documenti di `progettazione/`.
 
 ### Aggiunto
 
+- **Il gioco suona** (bibbia sonora, §11): a ogni turno la partita manda al motore audio gli stati e gli
+  eventi del ponte, e la regia in Rust fa le ventitré stanze (ognuna con la sua aria, il suo fondo e i
+  suoi passi), le scene del mix, gli ottantacinque eventi e i finali. Il mondo sonoro si abbassa nella
+  pausa e tace tornando al menu.
+- Nelle opzioni, il suono: il volume, gli ambienti, gli effetti, le voci, il mono, la dinamica ridotta, i
+  suoni intensi ridotti (bibbia, §2.5).
+- `strumenti/audio/traccia.py` (le tracce sonore dei percorsi), gli esempi `prova_partite` (le quattordici
+  partite giocate dal motore audio, con i loro controlli) e `rendi_partita` (una partita intera su file).
 - **Il diario** (06, §4.6; D, la pausa o il pulsante in alto): la trascrizione di tutta la partita,
   con i cartelli degli atti; il fascicolo di chi è passato prima, che si compone da sé e prende il
   nome di L.V. solo dopo la placca; le voci ascoltate, da rileggere; le traduzioni, ognuna nella

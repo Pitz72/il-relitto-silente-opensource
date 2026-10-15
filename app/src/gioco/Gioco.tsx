@@ -18,6 +18,7 @@ import { climaDi, tavolozza, variabiliCss } from "../stile/atmosfere";
 import { attributiSchermo, useMovimentoRidotto, useOpzioni } from "../stile/opzioni";
 import { comando } from "../lib/tauri";
 import { schermoIntero as cambiaSchermo } from "../lib/finestra";
+import { avviaSuono, mixSuono, pausaSuono, suonaTurno, taciSuono } from "./suono";
 import { blocchiDelTurno, segnaNomi, type Blocco } from "./lamina/grammatica";
 import Lamina, { type VoceDiario } from "./lamina/Lamina";
 import Ramo from "./ramo/Ramo";
@@ -126,6 +127,22 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
   const ritornoRef = useRef<string | null>(null);
 
   const modello = useMemo(() => (turno ? costruisciModello(turno) : null), [turno]);
+
+  // ---- il suono: parte con la partita, segue ogni turno, si abbassa nella pausa,
+  // tace tornando al menu (06, §9.1; bibbia sonora, §10). Nelle prove resta muto.
+  useEffect(() => {
+    avviaSuono(prova !== undefined);
+    return () => void taciSuono();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (turno) void suonaTurno(turno);
+  }, [turno]);
+  useEffect(() => {
+    void pausaSuono(pannello !== null);
+  }, [pannello]);
+  useEffect(() => {
+    if (prova === undefined) void mixSuono(opzioni);
+  }, [opzioni, prova]);
 
   /** Una partita che comincia (o ricomincia): il prologo spento sopra la prima stanza. */
   const comincia = useCallback(

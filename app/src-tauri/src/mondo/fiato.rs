@@ -134,6 +134,8 @@ pub struct Fiato {
     pub sforzo: bool,
     pub ascolto: bool,
     pub acceso: bool,
+    /// gli ultimi respiri: quanti ne restano (0 = si respira come sempre)
+    morente: u32,
 }
 
 impl Fiato {
@@ -166,7 +168,26 @@ impl Fiato {
             sforzo: false,
             ascolto: false,
             acceso: false,
+            morente: 0,
         }
+    }
+
+    /// Il fiato trattenuto per `secondi`: in cima, se si stava prendendo aria;
+    /// altrimenti a polmoni vuoti, dopo l’espirazione.
+    pub fn trattieni(&mut self, secondi: f32) {
+        match self.fase {
+            Fase::Inspira => self.resp.cima = self.resp.cima.max(secondi),
+            Fase::Cima => self.resp.cima = self.resp.cima.max(self.t + secondi),
+            Fase::Espira => self.resp.fondo = self.resp.fondo.max(secondi),
+            Fase::Fondo => self.resp.fondo = self.resp.fondo.max(self.t + secondi),
+            Fase::Fermo => self.t = self.t.min(0.6 - secondi),
+        }
+    }
+
+    /// «Il fiato si fa lento, poi l’ultimo»: quattro respiri sempre più deboli e più
+    /// lunghi, poi niente.
+    pub fn ultimi(&mut self) {
+        self.morente = 5;
     }
 
     /// Respiri al minuto, quelli che il motore sta seguendo.
@@ -188,7 +209,7 @@ impl Fiato {
 
     /// Un’inspirazione di sorpresa, poi il fiato trattenuto per un secondo e mezzo.
     pub fn sorpresa(&mut self) {
-        let mut ins = inspira(0.32, 1.3, 1.0, 1.0);
+        let mut ins = inspira(0.32, 1.0, 1.0, 1.0);
         ins.cima = 0.3;
         let esp = espira(1.7, 0.45, 0.6, 0.4);
         self.resp = Respiro { ins, cima: 1.5, esp, fondo: 0.5 };
@@ -254,7 +275,7 @@ impl Fiato {
             let k = nuovo / periodo;
             for m in [&mut r.ins, &mut r.esp] {
                 m.durata *= k;
-                m.picco *= 1.3;
+                m.picco *= 1.15;
                 m.bocca = m.bocca.max(0.85);
                 m.luce = (m.luce + 0.2).min(1.0);
             }
@@ -314,7 +335,25 @@ impl Fiato {
     }
 
     fn inizia(&mut self) {
+        if self.morente == 1 {
+            self.morente = 0;
+            self.acceso = false;
+            self.fase = Fase::Fermo;
+            self.t = -1e9;
+            return;
+        }
         self.resp = self.politica();
+        if self.morente > 1 {
+            // ogni respiro più lento e più debole del precedente
+            let k = (6 - self.morente) as f32;
+            for m in [&mut self.resp.ins, &mut self.resp.esp] {
+                m.durata *= 1.0 + 0.3 * k;
+                m.picco *= 0.75f32.powf(k);
+                m.bocca = 0.9;
+            }
+            self.resp.fondo = 1.5 + 1.2 * k;
+            self.morente -= 1;
+        }
         self.conta = self.conta.wrapping_add(1);
         self.fase = Fase::Inspira;
         self.t = 0.0;

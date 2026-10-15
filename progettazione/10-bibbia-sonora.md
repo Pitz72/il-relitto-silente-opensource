@@ -1,6 +1,6 @@
 # Il Relitto Silente — la bibbia sonora
 
-Documento 10 della progettazione · prima versione, 14 ottobre 2026 · seconda, 15 ottobre 2026: il suono tutto sintetizzato (§10)
+Documento 10 della progettazione · prima versione, 14 ottobre 2026 · seconda, 15 ottobre 2026: il suono tutto sintetizzato (§10) · terza, 16 ottobre 2026: il gioco che suona (§11)
 
 Che cosa si sente in ogni stanza e in ogni evento del gioco, da quali registrazioni nasce e come si lavora. Vale insieme al §9 di `06-app-desktop.md` e al punto 3 del suo §17: suono credibile e realistico, registrazioni vere con licenza compatibile, la fisica giusta. Per l’intro vale il §5 di `09-intro-storyboard.md`. La musica (D14) non è ancora decisa: qui compare solo dove tocca il resto del suono.
 
@@ -937,3 +937,28 @@ Gli ascolti 10 (le registrazioni) restano per confronto.
 - **Il giudizio dell’autore**, sugli ascolti: è l’orecchio che decide. Le misure dicono che i suoni hanno la forma giusta, non che sono belli.
 - I punti deboli che si conoscono: una voce sintetica sola, da vicino, tradisce un poco la sua origine (nel coro e nella cuffia no); il fiato non ha i dettagli minuti di una bocca vera (la saliva, la deglutizione); il gemito è un attrito costruito, e può suonare più di macchina che di nave.
 - Poi il resto della fase 4, come prima: il filo dal gioco al motore, gli ambienti delle 23 stanze, gli eventi, gli strumenti, il mix e le opzioni. Senza più la ricerca delle sorgenti.
+
+## 11. Il filo: il gioco che suona
+
+Il 16 ottobre 2026 l’autore ha ascoltato gli ascolti sintetizzati e ha detto che lo convincono; da lì il gioco è stato collegato al motore audio, e adesso la partita intera si sente.
+
+### 11.1 Come passa il suono
+
+- **La pagina non decide niente** (06, §9.1). A ogni turno il gioco manda al motore `turno.suono` così come lo calcola il ponte: gli stati e gli eventi (`app/src/gioco/suono.ts`, `Comando::Turno`). Il mondo sonoro parte con la partita, si abbassa di 10 dB nella pausa e nei pannelli, tace tornando al menu; nelle prove automatiche resta muto.
+- **La regia** (`app/src-tauri/src/mondo/regia.rs`) ricava dallo stato tutto quello che dura e dagli eventi quello che accade una volta. Un caricamento rimette lo stato senza suonare gli eventi; la partita nuova sale dal nero in tre secondi.
+- **Le ventitré stanze** stanno in una tabella (`stanze.rs`, dal §3): il mondo (la Santa Maria, il vuoto, la camera, il relitto), il riverbero, il re, la ventilazione, le pompe, il fondo dell’aria ferma, il brusio, le piogge di eventi, gli strati che sono solo loro, la superficie dei passi.
+- **Le scene del §2.2** vengono dallo stato: la tuta (vera per il suono quando il casco si blocca, tre secondi dopo l’inizio della vestizione), la protezione vitale (dopo i relè), la fuga (le ossa più forti, il fiato sotto sforzo, il tremito), l’ipossia, l’anticamera (il casco asciutto), la casa (il casco tolto).
+- **Gli strati nuovi** (`ambienti.rs`): il fondo dell’aria ferma, che nel santuario centrale respira ogni dieci secondi; i ronzii intorno al sol diesis (i proiettori in coro, il pilastro che pulsa e che, salutato, resta acceso, il laboratorio con l’energia, il campo che passa lungo le teche); il groviglio, che segue il faro, il bengala, l’energia e la fuga; il battito della serra e del seme nelle ossa; il cuore e il fischio dell’anticamera; il tremito; i soffi (il germinatoio, il filo d’aria nella gola, le canne); i crepitii (le scintille, la statica, la polvere); il canale della radio con Magazzino Quattro; le tre toppe della sala macchine.
+- **Gli eventi**: tutti gli ottantacinque che il ponte può mandare sono conosciuti (`EVENTI_NOTI`); suonano i passi da una stanza all’altra, il boccaporto che si svuota, il rientro, il varco, la porta interna con il soffio di brusio, il primo contatto, i tre tagli con le voci che si staccano, la connessione, il groviglio, il bengala, la Grande Porta (il ronzio che accelera, il tam-tam, la dissoluzione), l’energia, l’altare, la teca della serra e la porta tonda (il clic armonioso), il sonaglio (il fiato si ferma), la fuga, la voce dei nomi, le echi, la traduzione completa (un accordo di voci tenute), i finali (il silenzio, la plancia del risveglio; con il risuonatore il brusio sale dalla stiva per l’aria; nelle due lettere la ventola rallenta e il fiato si spegne).
+- **Il mix e le opzioni** (§2.5): i cursori del volume, degli ambienti, degli effetti e delle voci, il mono, la dinamica ridotta, i suoni intensi ridotti; un tetto vero a −2 dB sui picchi.
+
+### 11.2 Le prove
+
+- `python strumenti/audio/traccia.py --tutti` gioca i quattordici percorsi di collaudo con il ponte vero e scrive le loro tracce sonore in `collaudo/tracce/` (fuori da git).
+- `cargo run --release --example prova_partite -- ../../collaudo/tracce` le fa giocare al motore: ogni evento conosciuto, ogni stanza nella tabella, nessun turno muto, nessun picco sopra −1 dB, da 21 a 33 volte più veloce del tempo reale. Il 16 ottobre: quattordici partite su quattordici.
+- `cargo run --release --example rendi_partita -- <traccia> <file.wav>` rende una partita intera con il tempo di leggere ogni turno, e accanto scrive le note (a che minuto arriva ogni comando). «Vivi» dura undici minuti e sta a −24,3 LUFS.
+- Quattro prove nuove in Rust (quattordici in tutto), fra cui una partita corta attraverso la regia; nell’eseguibile, i sei finali cliccati nell’interfaccia con il mondo sonoro acceso (muto), e la prova del suono: dal 2,7 al 4,9% della CPU in media, al massimo l’11%, nessun buco oltre i 10,5 ms, nessun errore.
+
+### 11.3 Che cosa manca
+
+La musica (D14: l’Anziano, le chiusure, l’intro), il suono dell’interfaccia (§5.8), il filo del Sintonizzatore con lo spostamento di frequenza (§5.3: oggi le echi sono una voce in primo piano), le luci del Navarca nella gola del ritorno, il montacarichi, la prova su Linux; e l’orecchio dell’autore sulla partita intera.

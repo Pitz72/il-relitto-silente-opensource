@@ -16,7 +16,8 @@
 
 use std::f32::consts::{PI, TAU};
 
-use super::dsp::{campana, campioni, db, pan, Caso, Lento, Modo, Svf, UnPolo};
+use super::dsp::{campana, campioni, db, pan, Caso, Lento, Modo, Rosa, Svf, UnPolo};
+use super::stanze::Superficie;
 
 /// La strada di un suono (bibbia sonora, §1.1). L’altoparlante è la radio di bordo;
 /// «Em» è la cuffia sola (il brusio, che non passa dall’aria).
@@ -395,6 +396,275 @@ impl Nota {
     }
 }
 
+/// Il filtro di un fruscio.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub enum Filtro {
+    Banda,
+    Basso,
+    Alto,
+}
+
+/// Un fruscio modellato: rumore che passa per un filtro che si sposta, con il suo
+/// inviluppo. Le pagine, il tessuto, le cerniere, i sibili dell’aria, il boccaporto
+/// che si svuota, la polvere, la fiamma, la taglierina, la sintonia.
+#[derive(Clone, Copy)]
+pub struct Fruscio {
+    t: f32,
+    durata: f32,
+    cima: f32,
+    curva: f32,
+    fc0: f32,
+    fc1: f32,
+    andata_e_ritorno: bool,
+    q: f32,
+    tipo: Filtro,
+    filtro: Svf,
+    rosa: Rosa,
+    usa_rosa: bool,
+    am: (f32, f32),
+    fase_am: f32,
+    ruvido: f32,
+    lento: UnPolo,
+    conto: u32,
+    sr: f32,
+    dt: f32,
+    g: f32,
+}
+
+impl Fruscio {
+    /// `fc`: la banda all’inizio e alla fine (Hz); `cima`: dove sta il massimo (0–1).
+    pub fn nuovo(durata: f32, cima: f32, fc: (f32, f32), q: f32, tipo: Filtro, sr: f32) -> Self {
+        let mut filtro = Svf::default();
+        filtro.imposta(fc.0, q, sr);
+        Fruscio {
+            t: 0.0,
+            durata: durata.max(0.005),
+            cima,
+            curva: 1.0,
+            fc0: fc.0,
+            fc1: fc.1,
+            andata_e_ritorno: false,
+            q,
+            tipo,
+            filtro,
+            rosa: Rosa::default(),
+            usa_rosa: false,
+            am: (0.0, 0.0),
+            fase_am: 0.0,
+            ruvido: 0.0,
+            lento: UnPolo::nuovo(40.0, sr),
+            conto: 0,
+            sr,
+            dt: 1.0 / sr,
+            g: 1.0,
+        }
+    }
+
+    /// Un tremolio a scatti: i denti di una cerniera, lo sfrigolio (Hz, profondità 0–1).
+    pub fn con_am(mut self, f: f32, profondita: f32) -> Self {
+        self.am = (f, profondita);
+        self
+    }
+
+    /// La ruvidezza: il rumore trema lento, come la carta e il tessuto (0–1).
+    pub fn ruvido(mut self, r: f32) -> Self {
+        self.ruvido = r;
+        self
+    }
+
+    /// Il rumore rosa invece del bianco: più corpo, meno sibilo.
+    pub fn rosa(mut self) -> Self {
+        self.usa_rosa = true;
+        self
+    }
+
+    /// L’esponente dell’inviluppo: più alto, più netto.
+    pub fn curva(mut self, c: f32) -> Self {
+        self.curva = c;
+        self
+    }
+
+    /// La banda va da fc0 a fc1 e torna indietro (la sintonia).
+    pub fn andata_e_ritorno(mut self) -> Self {
+        self.andata_e_ritorno = true;
+        self
+    }
+
+    #[inline]
+    fn campione(&mut self, caso: &mut Caso) -> Option<f32> {
+        let x = self.t / self.durata;
+        if x >= 1.0 {
+            return None;
+        }
+        self.conto = self.conto.wrapping_add(1);
+        if self.conto.is_multiple_of(16) {
+            let y = if self.andata_e_ritorno { (PI * x).sin() } else { x };
+            // la banda si sposta su una scala logaritmica, come l’orecchio
+            let fc = self.fc0 * (self.fc1 / self.fc0).powf(y);
+            self.filtro.imposta(fc, self.q, self.sr);
+        }
+        let w = caso.bianco();
+        let mut n = if self.usa_rosa { self.rosa.campione(w) * 5.0 } else { w };
+        if self.ruvido > 0.0 {
+            let l = self.lento.elabora(caso.bianco(), 0).abs() * 12.0;
+            n *= 1.0 - self.ruvido + self.ruvido * l;
+        }
+        if self.am.1 > 0.0 {
+            self.fase_am = (self.fase_am + self.am.0 * self.dt * (1.0 + 0.25 * caso.bianco())) % 1.0;
+            let dente = if self.fase_am < 0.35 { 1.0 } else { 0.0 };
+            n *= 1.0 - self.am.1 + self.am.1 * dente;
+        }
+        let (b, bp, h) = self.filtro.elabora(n);
+        let y = match self.tipo {
+            Filtro::Banda => bp,
+            Filtro::Basso => b,
+            Filtro::Alto => h,
+        };
+        let inv = campana(x, self.cima).powf(self.curva);
+        self.t += self.dt;
+        Some(y * inv * self.g)
+    }
+}
+
+/// Il tam-tam della Grande Porta (§4.3): i modi bassi colpiti dalla mazza, e i modi
+/// alti che fioriscono dopo, come in un tam-tam vero, dove l’energia sale verso
+/// l’acuto per qualche decimo di secondo. Un tam-tam non ha un’altezza precisa:
+/// non è un re.
+#[derive(Clone, Copy)]
+pub struct Gong {
+    bassi: [Modo; 12],
+    alti: [Modo; 12],
+    t: f32,
+    dt: f32,
+    mazza: UnPolo,
+    fiore: UnPolo,
+    conto: u32,
+}
+
+impl Gong {
+    pub fn nuovo(caso: &mut Caso, sr: f32) -> Self {
+        let base = caso.tra(62.0, 74.0);
+        let bassi = std::array::from_fn(|k| {
+            let f = base * (1.0 + k as f32).powf(1.42) * caso.tra(0.97, 1.03);
+            Modo::nuovo(f, caso.tra(6.0, 10.0) * (1.0 - 0.04 * k as f32), 1.0 / (1.0 + 0.25 * k as f32), sr)
+        });
+        let alti = std::array::from_fn(|k| {
+            let f = base * (13.0 + k as f32 * 1.7).powf(1.42) * caso.tra(0.97, 1.03);
+            Modo::nuovo(f.min(sr * 0.4), caso.tra(2.0, 4.5) * (1.0 - 0.03 * k as f32), 0.5 / (1.0 + 0.15 * k as f32), sr)
+        });
+        Gong { bassi, alti, t: 0.0, dt: 1.0 / sr, mazza: UnPolo::nuovo(700.0, sr), fiore: UnPolo::nuovo(3000.0, sr), conto: 0 }
+    }
+
+    #[inline]
+    fn campione(&mut self, caso: &mut Caso) -> Option<f32> {
+        let t = self.t;
+        // la mazza: dodici millisecondi di rumore morbido
+        let mazza = if t < 0.012 { self.mazza.elabora(caso.bianco(), 0) * (1.0 - t / 0.012) * 6.0 } else { 0.0 };
+        // il fiore: un soffio che cresce fino a 0,6 s e si spegne a 2 s
+        let fiore = if t < 2.0 { self.fiore.elabora(caso.bianco(), 0) * campana(t / 2.0, 0.3) * 0.08 } else { 0.0 };
+        let mut y = 0.0;
+        for m in self.bassi.iter_mut() {
+            y += m.elabora(mazza);
+        }
+        for m in self.alti.iter_mut() {
+            y += m.elabora(fiore + mazza * 0.1);
+        }
+        self.t += self.dt;
+        if t > 2.0 {
+            self.conto = self.conto.wrapping_add(1);
+            if self.conto.is_multiple_of(512) {
+                let e: f32 = self.bassi.iter().chain(self.alti.iter()).map(|m| m.energia()).sum();
+                if e < 3e-5 {
+                    return None;
+                }
+            }
+        }
+        Some(y * 0.2)
+    }
+}
+
+/// Il re₅ del sonaglio: l’ottavo armonico del reattore (§1.3).
+pub const RE5: f32 = 587.329_5;
+
+/// Il sonaglio del Nido (§5.4): prima il tintinnio del metallo leggero, poi la nota,
+/// che resta nell’aria più del dovuto: dopo il primo secondo e mezzo smette di calare
+/// e si allarga, invece di stringersi.
+#[derive(Clone, Copy)]
+pub struct Sonaglio {
+    tintinnio: Modale,
+    fasi: [f32; 4],
+    t: f32,
+    dt: f32,
+    g: f32,
+}
+
+impl Sonaglio {
+    pub fn nuovo(caso: &mut Caso, sr: f32) -> Self {
+        let modi = [(3650.0, 0.06, 1.0), (5220.0, 0.04, 0.7), (7390.0, 0.03, 0.5), (4410.0, 0.05, 0.6)];
+        let mut e = Eccitatore::default();
+        let mut t = 0.0;
+        for _ in 0..(4 + caso.indice(3)) {
+            e.aggiungi(campioni(t, sr), caso.tra(0.3, 1.0));
+            t += caso.tra(0.025, 0.07);
+        }
+        Sonaglio { tintinnio: Modale::nuovo(&modi, e, 12000.0, sr), fasi: [0.0; 4], t: 0.0, dt: 1.0 / sr, g: 1.0 }
+    }
+
+    #[inline]
+    fn campione(&mut self, caso: &mut Caso) -> Option<f32> {
+        let t = self.t;
+        if t > 9.5 {
+            return None;
+        }
+        let mut y = self.tintinnio.campione(caso).unwrap_or(0.0) * 0.5;
+        let n = t - 0.18;
+        if n > 0.0 {
+            let attacco = (n / 0.004).min(1.0);
+            // cala per un secondo e mezzo, poi quasi si ferma, e si allarga
+            let corpo = if n < 1.5 { (-n * 1.5).exp() } else { (-2.25f32).exp() * (-(n - 1.5) * 0.45).exp() };
+            let largo = ((n - 1.5) / 3.0).clamp(0.0, 1.0);
+            let coda = if t > 8.5 { (9.5 - t).max(0.0) } else { 1.0 };
+            let parziali = [(RE5, 1.0), (RE5 * 1.0006, 0.6 * largo), (RE5 * 2.0, 0.12), (RE5 * 3.0, 0.05)];
+            let mut s = 0.0;
+            for (k, (f, a)) in parziali.iter().enumerate() {
+                self.fasi[k] = (self.fasi[k] + TAU * f * self.dt) % TAU;
+                s += self.fasi[k].sin() * a;
+            }
+            y += s * corpo * attacco * coda * 0.5;
+        }
+        self.t += self.dt;
+        Some(y * self.g)
+    }
+}
+
+/// Un tono che scivola da un’altezza all’altra: il motorino del multiscanner.
+#[derive(Clone, Copy)]
+pub struct Glissato {
+    fase: f32,
+    f0: f32,
+    f1: f32,
+    t: f32,
+    durata: f32,
+    armonici: f32,
+    dt: f32,
+    g: f32,
+}
+
+impl Glissato {
+    #[inline]
+    fn campione(&mut self) -> Option<f32> {
+        let x = self.t / self.durata;
+        if x >= 1.0 {
+            return None;
+        }
+        let f = self.f0 * (self.f1 / self.f0).powf(x);
+        self.fase = (self.fase + TAU * f * self.dt) % TAU;
+        let s = self.fase.sin() + self.armonici * (0.5 * (2.0 * self.fase).sin() + 0.25 * (3.0 * self.fase).sin());
+        self.t += self.dt;
+        Some(s * campana(x, 0.2) * self.g)
+    }
+}
+
 #[derive(Clone, Copy)]
 pub enum Corpo {
     Modale(Modale),
@@ -402,12 +672,80 @@ pub enum Corpo {
     Bolla(Bolla),
     Attrito(Attrito),
     Nota(Nota),
+    Fruscio(Fruscio),
+    Gong(Gong),
+    Sonaglio(Sonaglio),
+    Glissato(Glissato),
 }
 
-/// Un suono di un colpo solo, con la sua strada, il suo posto e il suo ritardo.
+impl Corpo {
+    /// Lo stesso colpo, `k` volte più forte: i colpi degli eventi stanno con il picco
+    /// intorno a 1 (0 dB), così i livelli della regia sono picchi veri.
+    pub fn per(self, k: f32) -> Corpo {
+        match self {
+            Corpo::Modale(mut m) => {
+                for modo in m.modi[..m.n].iter_mut() {
+                    modo.scala(k);
+                }
+                Corpo::Modale(m)
+            }
+            Corpo::Tonfo(mut t) => {
+                t.a *= k;
+                t.soffio_g *= k;
+                Corpo::Tonfo(t)
+            }
+            Corpo::Bolla(mut b) => {
+                b.a *= k;
+                b.schiocco_g *= k;
+                Corpo::Bolla(b)
+            }
+            Corpo::Attrito(mut a) => {
+                for modo in a.modi[..a.n].iter_mut() {
+                    modo.scala(k);
+                }
+                a.rombo_g *= k;
+                Corpo::Attrito(a)
+            }
+            Corpo::Nota(mut n) => {
+                n.g *= k;
+                Corpo::Nota(n)
+            }
+            Corpo::Fruscio(mut f) => {
+                f.g *= k;
+                Corpo::Fruscio(f)
+            }
+            Corpo::Gong(mut g) => {
+                for modo in g.bassi.iter_mut().chain(g.alti.iter_mut()) {
+                    modo.scala(k);
+                }
+                Corpo::Gong(g)
+            }
+            Corpo::Sonaglio(mut s) => {
+                s.g *= k;
+                Corpo::Sonaglio(s)
+            }
+            Corpo::Glissato(mut g) => {
+                g.g *= k;
+                Corpo::Glissato(g)
+            }
+        }
+    }
+}
+
+/// Il cursore che comanda un suono (06, §9.2): gli ambienti, gli effetti, le voci.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub enum Canale {
+    Ambienti,
+    Effetti,
+    Voci,
+}
+
+/// Un suono di un colpo solo, con la sua strada, il suo canale, il suo posto e il
+/// suo ritardo.
 #[derive(Clone, Copy)]
 pub struct Colpo {
     pub bus: Bus,
+    pub canale: Canale,
     gl: f32,
     gr: f32,
     ritardo: u32,
@@ -418,7 +756,12 @@ impl Colpo {
     pub fn nuovo(corpo: Corpo, bus: Bus, guadagno_db: f32, p: f32, ritardo: f32, sr: f32) -> Self {
         let (pl, pr) = pan(p);
         let g = db(guadagno_db) * std::f32::consts::SQRT_2;
-        Colpo { bus, gl: g * pl, gr: g * pr, ritardo: campioni(ritardo, sr), corpo }
+        Colpo { bus, canale: Canale::Effetti, gl: g * pl, gr: g * pr, ritardo: campioni(ritardo, sr), corpo }
+    }
+
+    pub fn nel_canale(mut self, c: Canale) -> Self {
+        self.canale = c;
+        self
     }
 
     /// `None` quando è finito.
@@ -434,6 +777,10 @@ impl Colpo {
             Corpo::Bolla(b) => b.campione(caso),
             Corpo::Attrito(a) => a.campione(caso),
             Corpo::Nota(n) => n.campione(),
+            Corpo::Fruscio(f) => f.campione(caso),
+            Corpo::Gong(g) => g.campione(caso),
+            Corpo::Sonaglio(s) => s.campione(caso),
+            Corpo::Glissato(g) => g.campione(),
         }?;
         Some((y * self.gl, y * self.gr))
     }
@@ -660,6 +1007,302 @@ pub fn nota(f: f32, durata: f32, sr: f32) -> Corpo {
     Corpo::Nota(Nota { f, durata, t: 0.0, dt: 1.0 / sr, g: 1.0 })
 }
 
+// -------------------------------------------------------------------------------------
+//  I colpi degli eventi del gioco
+// -------------------------------------------------------------------------------------
+
+/// Una pagina di carta spessa che si volta.
+pub fn pagina(caso: &mut Caso, sr: f32) -> Corpo {
+    let fc = caso.tra(1400.0, 2200.0);
+    Corpo::Fruscio(Fruscio::nuovo(caso.tra(0.3, 0.5), 0.3, (fc, fc * 1.8), 0.8, Filtro::Banda, sr).ruvido(0.6)).per(1.6)
+}
+
+/// Il tessuto tecnico che si piega e si tira.
+pub fn tessuto(caso: &mut Caso, sr: f32) -> Corpo {
+    let fc = caso.tra(600.0, 1100.0);
+    Corpo::Fruscio(Fruscio::nuovo(caso.tra(0.3, 0.7), caso.tra(0.2, 0.5), (fc, fc * 1.4), 0.7, Filtro::Banda, sr).ruvido(0.8)).per(2.0)
+}
+
+/// Una cerniera: i denti, uno dopo l’altro.
+pub fn cerniera(caso: &mut Caso, sr: f32) -> Corpo {
+    let fc = caso.tra(2600.0, 3400.0);
+    Corpo::Fruscio(Fruscio::nuovo(caso.tra(0.5, 0.9), 0.5, (fc, fc * 1.15), 1.0, Filtro::Banda, sr).con_am(caso.tra(70.0, 110.0), 0.9)).per(1.3)
+}
+
+/// L’aria che entra da una fessura: il sibilo della porta interna, della valvola.
+pub fn sibilo(durata: f32, caso: &mut Caso, sr: f32) -> Corpo {
+    let fc = caso.tra(2300.0, 2800.0);
+    Corpo::Fruscio(Fruscio::nuovo(durata, 0.15, (fc, fc * 0.6), 1.5, Filtro::Banda, sr)).per(1.5)
+}
+
+/// La tuta che si pressurizza: un soffio breve, che le orecchie sentono.
+pub fn pressione(sr: f32) -> Corpo {
+    Corpo::Fruscio(Fruscio::nuovo(0.6, 0.2, (500.0, 1800.0), 0.7, Filtro::Basso, sr).rosa()).per(1.0)
+}
+
+/// Le pompe che svuotano il boccaporto: il suono muore con la pressione, e perde gli
+/// acuti prima dei bassi (§1.2).
+pub fn svuota(sr: f32) -> Corpo {
+    Corpo::Fruscio(Fruscio::nuovo(6.5, 0.06, (3200.0, 140.0), 0.7, Filtro::Basso, sr).rosa().curva(1.6)).per(0.68)
+}
+
+/// Il contrario: la pressione che torna, il sibilo che cresce.
+pub fn riempie(sr: f32) -> Corpo {
+    Corpo::Fruscio(Fruscio::nuovo(4.0, 0.85, (180.0, 4200.0), 0.7, Filtro::Basso, sr).rosa()).per(0.7)
+}
+
+/// Il casco strappato prima che la pressione sia pareggiata: un colpo d’aria.
+pub fn colpo_d_aria(sr: f32) -> Corpo {
+    Corpo::Fruscio(Fruscio::nuovo(0.45, 0.04, (2500.0, 300.0), 0.6, Filtro::Basso, sr).rosa().curva(2.0)).per(0.77)
+}
+
+/// Polvere fine che cade dalle pareti.
+pub fn polvere(caso: &mut Caso, sr: f32) -> Corpo {
+    let fc = caso.tra(2500.0, 3500.0);
+    Corpo::Fruscio(Fruscio::nuovo(caso.tra(1.0, 2.2), 0.25, (fc, fc * 0.7), 0.9, Filtro::Banda, sr).ruvido(0.9)).per(1.4)
+}
+
+/// Il bengala: la linguetta strappata e l’accensione.
+pub fn accensione(sr: f32) -> Corpo {
+    Corpo::Fruscio(Fruscio::nuovo(0.5, 0.1, (700.0, 2600.0), 0.6, Filtro::Banda, sr).ruvido(0.5)).per(2.9)
+}
+
+/// La taglierina in atmosfera: il sibilo del getto, che sfrigola.
+pub fn getto(durata: f32, caso: &mut Caso, sr: f32) -> Corpo {
+    let fc = caso.tra(3800.0, 5200.0);
+    Corpo::Fruscio(Fruscio::nuovo(durata, 0.1, (fc, fc * 0.85), 0.6, Filtro::Banda, sr).con_am(caso.tra(25.0, 45.0), 0.35).curva(0.5)).per(1.0)
+}
+
+/// Un terminale che sfrigola.
+pub fn sfrigolio(caso: &mut Caso, sr: f32) -> Corpo {
+    Corpo::Fruscio(Fruscio::nuovo(caso.tra(0.8, 1.4), 0.3, (5200.0, 3800.0), 0.8, Filtro::Alto, sr).con_am(caso.tra(28.0, 40.0), 0.8)).per(0.69)
+}
+
+/// La sintonia di un apparecchio che cerca: un fruscio stretto che scorre e torna.
+pub fn sintonia(caso: &mut Caso, sr: f32) -> Corpo {
+    let lo = caso.tra(700.0, 1000.0);
+    Corpo::Fruscio(Fruscio::nuovo(caso.tra(1.2, 2.0), 0.5, (lo, lo * caso.tra(2.5, 3.5)), 9.0, Filtro::Banda, sr).andata_e_ritorno()).per(3.5)
+}
+
+/// Lo squelch della radio: il canale che si apre o si chiude.
+pub fn squelch(sr: f32) -> Corpo {
+    Corpo::Fruscio(Fruscio::nuovo(0.13, 0.05, (1500.0, 1800.0), 0.5, Filtro::Banda, sr).curva(2.0)).per(1.5)
+}
+
+/// Una luce che corre giù per la gola: un soffio vetroso che scende e si allontana.
+pub fn soffio_vetroso(sr: f32) -> Corpo {
+    Corpo::Fruscio(Fruscio::nuovo(1.4, 0.15, (3600.0, 700.0), 7.0, Filtro::Banda, sr)).per(3.0)
+}
+
+/// Qualcosa di bagnato e pesante che frusta o afferra.
+pub fn frustata(caso: &mut Caso, sr: f32) -> Corpo {
+    let fc = caso.tra(300.0, 650.0);
+    Corpo::Fruscio(Fruscio::nuovo(caso.tra(0.12, 0.3), 0.08, (fc * 1.6, fc), 1.8, Filtro::Banda, sr).ruvido(0.9).curva(1.5)).per(9.0)
+}
+
+/// Un passo, sulla sua superficie (§3). `None`: i passi che non fanno rumore.
+pub fn passo(superficie: Superficie, caso: &mut Caso, sr: f32) -> Option<Corpo> {
+    let s = caso.tra(0.92, 1.08);
+    let tonfo = |f0: f32, f1: f32, spegne: f32, g: f32, soffio: f32, soffio_f: f32| {
+        Corpo::Tonfo(Tonfo::nuovo(f0 * s, f1 * s, 0.03, spegne, g, 0.012, soffio, soffio_f, sr))
+    };
+    // niente memoria allocata: i modi scalati stanno in un vettore fisso
+    let modale = |modi: &[(f32, f32, f32)], soffio: f32, taglio: f32| {
+        let mut m = [(0.0f32, 0.0f32, 0.0f32); 8];
+        let n = modi.len().min(8);
+        for (i, (f, t, a)) in modi.iter().take(n).enumerate() {
+            m[i] = (f * s, *t, *a);
+        }
+        Corpo::Modale(Modale::nuovo(&m[..n], Eccitatore::impulso(0.6).con_soffio(0.012, soffio, taglio, sr), 9000.0, sr))
+    };
+    let norma = match superficie {
+        Superficie::Lamiera => 0.1,
+        Superficie::Tappeto => 2.0,
+        Superficie::Grigliato => 0.27,
+        Superficie::Magneti => 1.0,
+        Superficie::Osso => 0.24,
+        Superficie::Filamenti => 1.0,
+        Superficie::Morbido => 2.5,
+        Superficie::Pietra => 0.23,
+        Superficie::Cristallo => 0.21,
+        Superficie::Brina => 1.65,
+        Superficie::Polvere => 2.0,
+        Superficie::Vibrante => 0.16,
+        Superficie::Navata => 0.31,
+        Superficie::Nessuna => 1.0,
+        Superficie::Sbriciola => 0.72,
+    };
+    Some(match superficie {
+        Superficie::Lamiera => modale(&[(165.0, 0.09, 1.0), (390.0, 0.07, 0.5), (820.0, 0.05, 0.3), (1540.0, 0.04, 0.15)], 1.2, 900.0),
+        Superficie::Tappeto => tonfo(110.0, 70.0, 0.08, 0.6, 0.5, 450.0),
+        Superficie::Grigliato => {
+            let mut e = Eccitatore::impulso(0.7).con_soffio(0.01, 0.8, 1200.0, sr);
+            e.aggiungi(campioni(caso.tra(0.012, 0.02), sr), 0.35);
+            e.aggiungi(campioni(caso.tra(0.03, 0.045), sr), 0.15);
+            let modi = [(140.0 * s, 0.08, 1.0), (980.0 * s, 0.06, 0.45), (2150.0 * s, 0.05, 0.35), (3420.0 * s, 0.04, 0.2)];
+            Corpo::Modale(Modale::nuovo(&modi, e, 9000.0, sr))
+        }
+        Superficie::Magneti => stivale(true, caso, sr),
+        Superficie::Osso => modale(&[(180.0, 0.12, 1.0), (410.0, 0.08, 0.6), (760.0, 0.05, 0.35), (1250.0, 0.03, 0.2)], 1.0, 700.0),
+        Superficie::Filamenti => frustata(caso, sr),
+        Superficie::Morbido => tonfo(95.0, 60.0, 0.07, 0.45, 0.6, 350.0),
+        Superficie::Pietra => modale(&[(150.0, 0.06, 1.0), (920.0, 0.05, 0.4), (1730.0, 0.04, 0.3), (2620.0, 0.03, 0.2), (3910.0, 0.02, 0.1)], 1.0, 1500.0),
+        Superficie::Cristallo => modale(&[(160.0, 0.05, 1.0), (1930.0, 0.15, 0.35), (3120.0, 0.12, 0.25), (4710.0, 0.09, 0.18), (6890.0, 0.06, 0.1)], 0.8, 2000.0),
+        Superficie::Brina => Corpo::Fruscio(Fruscio::nuovo(0.12, 0.2, (520.0, 380.0), 0.7, Filtro::Basso, sr).rosa().ruvido(0.5)),
+        Superficie::Polvere => Corpo::Fruscio(Fruscio::nuovo(caso.tra(0.15, 0.25), 0.2, (1800.0, 1300.0), 0.5, Filtro::Banda, sr).ruvido(0.8)),
+        Superficie::Vibrante => modale(&[(120.0, 0.35, 1.0), (240.0, 0.3, 0.5), (360.0, 0.25, 0.3), (980.0, 0.05, 0.2)], 1.0, 900.0),
+        Superficie::Navata => modale(&[(130.0, 0.08, 1.0), (880.0, 0.06, 0.45), (1690.0, 0.05, 0.3), (2540.0, 0.04, 0.2)], 1.2, 1300.0),
+        Superficie::Nessuna => return None,
+        Superficie::Sbriciola => {
+            let e = Eccitatore::impulso(0.6).con_crepitio(caso.tra(300.0, 600.0), caso.tra(0.08, 0.16), sr);
+            let modi = [(140.0 * s, 0.06, 1.0), (1650.0 * s, 0.03, 0.5), (2900.0 * s, 0.02, 0.4), (4300.0 * s, 0.015, 0.3)];
+            Corpo::Modale(Modale::nuovo(&modi, e, 8000.0, sr))
+        }
+    }
+    .per(norma))
+}
+
+/// Un arco elettrico che corre fra le bobine: un crepitio ruvido.
+pub fn scarica(caso: &mut Caso, sr: f32) -> Corpo {
+    let fc = caso.tra(2500.0, 4000.0);
+    Corpo::Fruscio(Fruscio::nuovo(caso.tra(0.15, 0.5), 0.1, (fc, fc * 0.7), 0.5, Filtro::Banda, sr).con_am(caso.tra(80.0, 150.0), 0.85)).per(1.0)
+}
+
+/// «Qualcosa crolla, con un rumore che non arriva: lo senti nelle suole»: solo ossa,
+/// fra 25 e 60 Hz, lungo.
+pub fn crollo(caso: &mut Caso, sr: f32) -> Corpo {
+    Corpo::Tonfo(Tonfo::nuovo(caso.tra(45.0, 58.0), 25.0, 0.4, caso.tra(1.8, 2.8), 1.0, 0.9, 1.4, 70.0, sr))
+}
+
+/// Uno scatto meccanico piccolo: un fermo, un interruttore.
+pub fn scatto(caso: &mut Caso, sr: f32) -> Corpo {
+    let s = caso.tra(0.9, 1.1);
+    let modi = [(3100.0 * s, 0.008, 1.0), (4800.0 * s, 0.006, 0.6), (7200.0 * s, 0.004, 0.4), (900.0 * s, 0.015, 0.5)];
+    Corpo::Modale(Modale::nuovo(&modi, Eccitatore::impulso(1.0), 11000.0, sr)).per(0.59)
+}
+
+/// La chiusura a scatto di una valigetta di metallo.
+pub fn chiusura(caso: &mut Caso, sr: f32) -> Corpo {
+    let s = caso.tra(0.92, 1.08);
+    let mut e = Eccitatore::impulso(1.0);
+    e.aggiungi(campioni(caso.tra(0.006, 0.01), sr), 0.4);
+    let modi = [(1250.0 * s, 0.05, 1.0), (2870.0 * s, 0.03, 0.6), (4410.0 * s, 0.02, 0.4), (430.0 * s, 0.04, 0.5)];
+    Corpo::Modale(Modale::nuovo(&modi, e, 10000.0, sr)).per(0.65)
+}
+
+/// La ghiera del faro: quattro o cinque fermi.
+pub fn ghiera(caso: &mut Caso, sr: f32) -> Corpo {
+    let mut e = Eccitatore::default();
+    let mut t = 0.0;
+    for _ in 0..(4 + caso.indice(2)) {
+        e.aggiungi(campioni(t, sr), caso.tra(0.6, 1.0));
+        t += caso.tra(0.06, 0.09);
+    }
+    let modi = [(2600.0, 0.01, 1.0), (4100.0, 0.007, 0.6), (6300.0, 0.005, 0.4)];
+    Corpo::Modale(Modale::nuovo(&modi, e, 10000.0, sr)).per(0.73)
+}
+
+/// La chiavetta d’ottone in una serratura piccola: i suoi scatti, e il giro.
+pub fn chiave(caso: &mut Caso, sr: f32) -> Corpo {
+    let mut e = Eccitatore::default();
+    let mut t = 0.0;
+    for _ in 0..4 {
+        e.aggiungi(campioni(t, sr), caso.tra(0.3, 0.8));
+        t += caso.tra(0.05, 0.12);
+    }
+    e.aggiungi(campioni(t + 0.15, sr), 1.0);
+    let modi = [(2200.0, 0.03, 1.0), (3500.0, 0.02, 0.6), (5100.0, 0.015, 0.4), (7700.0, 0.01, 0.2)];
+    Corpo::Modale(Modale::nuovo(&modi, e, 11000.0, sr)).per(0.6)
+}
+
+/// Il campanello minuscolo della chiavetta che scivola fra le pagine.
+pub fn ottone(sr: f32) -> Corpo {
+    let modi = [(3480.0, 0.35, 1.0), (5230.0, 0.25, 0.5), (7710.0, 0.15, 0.3)];
+    Corpo::Modale(Modale::nuovo(&modi, Eccitatore::impulso(0.5), 12000.0, sr)).per(1.0)
+}
+
+/// L’anello del casco che si blocca sul collo della tuta.
+pub fn anello(sr: f32) -> Corpo {
+    let mut e = Eccitatore::impulso(1.0).con_soffio(0.004, 0.5, 3000.0, sr);
+    e.aggiungi(campioni(0.012, sr), 0.6);
+    let modi = [(520.0, 0.25, 1.0), (1180.0, 0.18, 0.6), (2150.0, 0.12, 0.4), (3330.0, 0.08, 0.25)];
+    Corpo::Modale(Modale::nuovo(&modi, e, 9000.0, sr)).per(0.3)
+}
+
+/// Un connettore che entra nel suo incavo.
+pub fn connettore(caso: &mut Caso, sr: f32) -> Corpo {
+    let mut e = Eccitatore::impulso(0.7);
+    e.aggiungi(campioni(caso.tra(0.03, 0.06), sr), 1.0);
+    let modi = [(820.0, 0.04, 1.0), (1910.0, 0.03, 0.5), (3300.0, 0.02, 0.3)];
+    Corpo::Modale(Modale::nuovo(&modi, e, 7000.0, sr)).per(0.76)
+}
+
+/// Il motorino del multiscanner: un ronzio piccolo che sale.
+pub fn motorino(caso: &mut Caso, sr: f32) -> Corpo {
+    let f0 = caso.tra(520.0, 640.0);
+    Corpo::Glissato(Glissato { fase: 0.0, f0, f1: f0 * caso.tra(1.4, 1.7), t: 0.0, durata: caso.tra(0.35, 0.6), armonici: 0.6, dt: 1.0 / sr, g: 0.88 })
+}
+
+/// La taglierina nel vuoto: «un getto di luce che non fa rumore», solo il suo ronzio
+/// nel guanto, che si fa irregolare quando il materiale si ritira.
+pub fn taglierina_nel_guanto(durata: f32, caso: &mut Caso, sr: f32) -> Corpo {
+    let modi = [(118.0, 0.25, 1.0), (236.0, 0.2, 0.5), (354.0, 0.15, 0.3), (472.0, 0.1, 0.2)];
+    Corpo::Attrito(Attrito::nuovo(&modi, durata, 0.15, 118.0, 0.12, (0.1, 0.4), 0.15, 0.1, 0.0, 600.0, caso, sr)).per(0.44)
+}
+
+/// Una nota vetrosa: un pezzo del clic armonioso (§5.5).
+pub fn vetro(f: f32, sr: f32) -> Corpo {
+    let modi = [(f, 0.9, 1.0), (f * 2.32, 0.45, 0.45), (f * 4.25, 0.2, 0.25), (f * 6.8, 0.08, 0.12)];
+    let e = Eccitatore::impulso(1.0).con_soffio(0.0008, 0.3, 9000.0, sr);
+    Corpo::Modale(Modale::nuovo(&modi, e, 12000.0, sr)).per(0.52)
+}
+
+/// Il clic armonioso: sol♯, una terza minore settimale sopra, la quinta (§5.5).
+pub const CLIC_ARMONIOSO: [f32; 3] = [415.305, 484.522, 622.254];
+
+/// La pietra: un disco nel suo incavo, una sezione che scorre.
+pub fn pietra(caso: &mut Caso, sr: f32) -> Corpo {
+    let s = caso.tra(0.9, 1.1);
+    let modi = [(240.0 * s, 0.15, 1.0), (610.0 * s, 0.1, 0.6), (1130.0 * s, 0.07, 0.4), (1870.0 * s, 0.05, 0.25)];
+    Corpo::Attrito(Attrito::nuovo(&modi, caso.tra(0.5, 0.9), 0.4, caso.tra(55.0, 80.0), 0.3, (0.1, 0.3), 0.6, 0.15, 0.2, 2500.0, caso, sr)).per(0.9)
+}
+
+/// Un tono che sale (o scende) da un’altezza all’altra: il ronzio della Grande Porta
+/// che accelera, il rombo dei macchinari che si svegliano, la ricarica.
+pub fn salita(f0: f32, f1: f32, durata: f32, armonici: f32, sr: f32) -> Corpo {
+    Corpo::Glissato(Glissato { fase: 0.0, f0, f1, t: 0.0, durata, armonici, dt: 1.0 / sr, g: 1.0 / (1.0 + 0.4 * armonici) })
+}
+
+/// Un gancio vuoto che oscilla e tintinna contro il suo vicino.
+pub fn gancio(caso: &mut Caso, sr: f32) -> Corpo {
+    let s = caso.tra(0.85, 1.2);
+    let mut e = Eccitatore::default();
+    let mut t = 0.0;
+    for _ in 0..(1 + caso.indice(3)) {
+        e.aggiungi(campioni(t, sr), caso.tra(0.4, 1.0));
+        t += caso.tra(0.08, 0.2);
+    }
+    let modi = [(1830.0 * s, 0.4, 1.0), (3120.0 * s, 0.25, 0.6), (4690.0 * s, 0.15, 0.4), (6400.0 * s, 0.08, 0.2)];
+    Corpo::Modale(Modale::nuovo(&modi, e, 11000.0, sr)).per(0.83)
+}
+
+/// Il tam-tam.
+pub fn gong(caso: &mut Caso, sr: f32) -> Corpo {
+    Corpo::Gong(Gong::nuovo(caso, sr)).per(0.044)
+}
+
+/// Il sonaglio.
+pub fn sonaglio(caso: &mut Caso, sr: f32) -> Corpo {
+    Corpo::Sonaglio(Sonaglio::nuovo(caso, sr))
+}
+
+/// La dissoluzione: lo stesso tam-tam smontato in granelli acuti.
+pub fn granelli_acuti(caso: &mut Caso, sr: f32) -> Corpo {
+    let e = Eccitatore::impulso(0.2).con_crepitio(caso.tra(500.0, 800.0), caso.tra(1.6, 2.4), sr);
+    let modi = [(3150.0, 0.12, 0.8), (4470.0, 0.1, 0.6), (5820.0, 0.08, 0.5), (7310.0, 0.06, 0.4), (2480.0, 0.15, 0.5)];
+    Corpo::Modale(Modale::nuovo(&modi, e, 12000.0, sr)).per(0.27)
+}
+
 #[cfg(test)]
 mod prove {
     use super::*;
@@ -686,7 +1329,61 @@ mod prove {
             crepa(&mut caso, sr),
             tic(0.0, sr),
             nota(880.0, 0.12, sr),
+            pagina(&mut caso, sr),
+            tessuto(&mut caso, sr),
+            cerniera(&mut caso, sr),
+            sibilo(2.0, &mut caso, sr),
+            pressione(sr),
+            svuota(sr),
+            riempie(sr),
+            colpo_d_aria(sr),
+            polvere(&mut caso, sr),
+            accensione(sr),
+            getto(1.5, &mut caso, sr),
+            sfrigolio(&mut caso, sr),
+            sintonia(&mut caso, sr),
+            squelch(sr),
+            soffio_vetroso(sr),
+            frustata(&mut caso, sr),
+            scarica(&mut caso, sr),
+            crollo(&mut caso, sr),
+            scatto(&mut caso, sr),
+            chiusura(&mut caso, sr),
+            ghiera(&mut caso, sr),
+            chiave(&mut caso, sr),
+            ottone(sr),
+            anello(sr),
+            connettore(&mut caso, sr),
+            motorino(&mut caso, sr),
+            taglierina_nel_guanto(1.5, &mut caso, sr),
+            vetro(CLIC_ARMONIOSO[0], sr),
+            pietra(&mut caso, sr),
+            gong(&mut caso, sr),
+            sonaglio(&mut caso, sr),
+            granelli_acuti(&mut caso, sr),
+            salita(207.0, 415.0, 1.5, 0.6, sr),
+            gancio(&mut caso, sr),
         ];
+        let mut corpi = corpi.to_vec();
+        for superficie in [
+            Superficie::Lamiera,
+            Superficie::Tappeto,
+            Superficie::Grigliato,
+            Superficie::Magneti,
+            Superficie::Osso,
+            Superficie::Filamenti,
+            Superficie::Morbido,
+            Superficie::Pietra,
+            Superficie::Cristallo,
+            Superficie::Brina,
+            Superficie::Polvere,
+            Superficie::Vibrante,
+            Superficie::Navata,
+            Superficie::Sbriciola,
+        ] {
+            corpi.push(passo(superficie, &mut caso, sr).expect("un passo"));
+        }
+        assert!(passo(Superficie::Nessuna, &mut caso, sr).is_none());
         for (k, c) in corpi.into_iter().enumerate() {
             let mut colpo = Colpo::nuovo(c, Bus::Esterno, 0.0, 0.0, 0.0, sr);
             let mut n = 0;

@@ -88,6 +88,8 @@ pub struct Voce {
     tratto: [Risonatore; 5],
     fricativa: Svf,
     conto: u32,
+    /// una nota tenuta, con il suo tempo: l’intonazione si ferma lì
+    tenuta: (f32, f32),
 }
 
 impl Voce {
@@ -127,10 +129,38 @@ impl Voce {
             tratto: [Risonatore::default(); 5],
             fricativa: Svf::nuovo(3000.0, 1.0, sr),
             conto: 0,
+            tenuta: (0.0, 0.0),
             caso,
         };
         v.aggiorna_filtri();
         v
+    }
+
+    /// Chi parla: l’altezza, la misura del tratto, il ritmo.
+    pub fn regola(&mut self, f0_base: f32, scala: f32, ritmo: f32) {
+        self.f0_base = f0_base;
+        self.scala = scala;
+        self.ritmo = ritmo;
+    }
+
+    /// Smette di dire sillabe e tiene una vocale aperta su un’altezza ferma, per
+    /// `durata` secondi: le voci tenute dell’accordo.
+    pub fn tieni(&mut self, f0: f32, durata: f32) {
+        self.n = 0;
+        self.seg = Segmento {
+            durata,
+            f: VOCALI[3],
+            bw: VOCALI_BW,
+            voce: 1.0,
+            soffio: self.soffio_base,
+            morbido: 0.15,
+            fric_f: 3000.0,
+            fric_q: 1.0,
+            ..Default::default()
+        };
+        self.t_seg = 0.0;
+        self.k_ampiezza = 1.0 - (-1.0 / (0.15 * self.sr)).exp();
+        self.tenuta = (f0, durata);
     }
 
     fn accoda(&mut self, s: Segmento) {
@@ -273,6 +303,9 @@ impl Voce {
     #[inline]
     pub fn campione(&mut self) -> f32 {
         self.t_seg += self.dt;
+        if self.tenuta.1 > 0.0 {
+            self.tenuta.1 -= self.dt;
+        }
         if self.t_seg >= self.seg.durata {
             self.t_seg -= self.seg.durata;
             self.prossimo();
@@ -320,7 +353,11 @@ impl Voce {
             if self.domanda && x > 0.75 {
                 curva += 0.7 * (x - 0.75);
             }
-            let f0 = self.f0_base * curva * (1.0 + 0.22 * self.accento) * (1.0 + 0.006 * self.vibrato.sin());
+            let f0 = if self.tenuta.1 > 0.0 {
+                self.tenuta.0 * (1.0 + 0.005 * self.vibrato.sin())
+            } else {
+                self.f0_base * curva * (1.0 + 0.22 * self.accento) * (1.0 + 0.006 * self.vibrato.sin())
+            };
             self.f0 = f0 * (1.0 + 0.012 * self.caso.bianco());
             self.ampiezza = 1.0 + 0.08 * self.caso.bianco();
         }

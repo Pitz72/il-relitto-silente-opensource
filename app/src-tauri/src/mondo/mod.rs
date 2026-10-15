@@ -1,25 +1,29 @@
 //! Il mondo sonoro: tutti gli strati del suono in un solo `Sound` di kira, mescolati
 //! lungo le cinque strade della bibbia sonora (§1.1): l’aria, il guscio del casco, la
 //! cuffia, il casco, le ossa. Tutto è sintetizzato qui dentro, in tempo reale:
-//! nessun campione registrato (decisione dell’autore, 15 ottobre 2026). Il re, la
-//! ventilazione, le pompe, le lamiere, i relè, il fiato, la ventola, gli stivali, il
-//! brusio delle voci, le gocce, le crepe, il gemito della nave, il riverbero delle
-//! stanze: tutto viene da `dsp.rs` e dai modelli dei moduli qui sotto.
+//! nessun campione registrato (decisione dell’autore, 15 ottobre 2026; bibbia, §10).
 //!
-//! Per ora suonano i tre ambienti del prototipo (§8): la plancia con il reattore, il
-//! casco sullo scafo, il vestibolo con il brusio.
+//! Il gioco manda un turno alla volta (`Comando::Turno`): gli stati e gli eventi che il
+//! ponte calcola, così come sono. La regia (regia.rs) ne ricava la stanza, la scena del
+//! mix e il suono di ogni evento; le stanze sono in stanze.rs, gli strati continui in
+//! fondi.rs e ambienti.rs, i colpi in colpi.rs. Le scene del prototipo
+//! (`Comando::Ambiente` e gli altri) restano per la pagina di prova e per i rendering.
 //!
-//! La pagina manda comandi (`Comando`) per un canale; il thread dell’audio li legge a
-//! ogni blocco. Lo stesso motore gira anche fuori dall’app, in `examples/`, per
-//! rendere gli ambienti su file e misurarli.
+//! La pagina manda comandi per un canale; il thread dell’audio li legge a ogni blocco.
+//! Lo stesso motore gira anche fuori dall’app, in `examples/`, per rendere gli ambienti
+//! e le partite su file e misurarli.
 
+pub mod ambienti;
 pub mod brusio;
 pub mod colpi;
 pub mod dsp;
 pub mod fiato;
 pub mod fondi;
 pub mod re;
+mod regia;
 pub mod riverbero;
+pub mod stanze;
+pub mod stato;
 pub mod voce;
 
 use std::sync::atomic::{AtomicBool, AtomicU32, Ordering};
@@ -31,13 +35,19 @@ use kira::sound::{Sound, SoundData};
 use kira::Frame;
 use serde::{Deserialize, Serialize};
 
+use ambienti::{Acufene, Battito, Canale as CanaleRadio, Crepitio, Fondo, FormaRonzio, Groviglio, Ronzio, Soffio, Toppe, Tremito};
 use brusio::Brusio;
-use colpi::{Bus, Colpo, Corpo, Lastra};
+use colpi::{Bus, Canale, Colpo, Corpo, Lastra};
 use dsp::{db, morbido, Biquad, Caso, Inseguitore, Pettine, Scorrevole, UnPolo};
 use fiato::Fiato;
 use fondi::{Pompe, Ventilazione, Ventola};
 use re::Re;
 use riverbero::Riverbero;
+use stanze::{Specie, Stanza};
+use voce::Voce;
+
+pub use regia::EVENTI_NOTI;
+pub use stato::{EventoGioco, StatiGioco, TurnoSuono};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
@@ -67,9 +77,40 @@ pub enum Evento {
     Sorpresa,
 }
 
+/// I cursori e le opzioni del suono (06, §9.2; bibbia sonora, §2.5). I volumi vanno
+/// da 0 a 1, come i cursori; il motore li sente al quadrato, come l’orecchio.
+#[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(default)]
+pub struct Mix {
+    pub generale: f32,
+    pub ambienti: f32,
+    pub effetti: f32,
+    pub voci: f32,
+    /// i due canali sommati, con le differenze di volume
+    pub mono: bool,
+    /// la dinamica ridotta: per chi gioca piano o di notte (3:1 sopra −30 dBFS)
+    pub dinamica_ridotta: bool,
+    /// riduci i suoni intensi: le ossa e i bassi profondi a −12 dB, niente picchi,
+    /// niente battito né fischio nell’anticamera
+    pub intensi_ridotti: bool,
+}
+
+impl Default for Mix {
+    fn default() -> Self {
+        Mix { generale: 1.0, ambienti: 1.0, effetti: 1.0, voci: 1.0, mono: false, dinamica_ridotta: false, intensi_ridotti: false }
+    }
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(tag = "tipo", content = "valore", rename_all = "snake_case")]
 pub enum Comando {
+    /// un turno del gioco: gli stati e gli eventi del suono, come li manda il ponte
+    Turno(TurnoSuono),
+    /// i cursori e le opzioni
+    Mix(Mix),
+    /// la pausa, il diario, i pannelli: il mondo si abbassa, non si ferma
+    Pausa(bool),
+    // ---- il prototipo dei tre ambienti (la pagina di prova, i rendering)
     Ambiente(Ambiente),
     /// la cifra dell’aria, da 0 a 100
     Aria(f32),
@@ -82,7 +123,7 @@ pub enum Comando {
     /// il volume generale, in dB
     Volume(f32),
     /// per le misure: suona solo uno strato («re», «ventilazione», «pompe», «ventola»,
-    /// «fiato», «brusio», «voci», «segnali», «fruscio»); `None` li riaccende tutti
+    /// «fiato», «brusio», «voci», «segnali», «fruscio», «stanza»); `None` li riaccende
     Solo(Option<String>),
     /// sfuma tutto e chiude
     Ferma,
@@ -101,6 +142,7 @@ const S_BRUSIO: u32 = 32;
 const S_VOCI: u32 = 64;
 const S_SEGNALI: u32 = 128;
 const S_FRUSCIO: u32 = 256;
+const S_STANZA: u32 = 512;
 
 fn maschera(solo: Option<&str>) -> u32 {
     match solo {
@@ -114,6 +156,7 @@ fn maschera(solo: Option<&str>) -> u32 {
         Some("voci") => S_VOCI,
         Some("segnali") => S_SEGNALI,
         Some("fruscio") => S_FRUSCIO,
+        Some("stanza") => S_STANZA,
         Some(_) => 0,
     }
 }
@@ -150,36 +193,28 @@ impl StatoMondo {
     }
 }
 
-/// Le piogge di eventi: a intervalli casuali, un colpo della sua specie.
-#[derive(Clone, Copy, PartialEq, Eq, Debug)]
-enum Specie {
-    Lamiera,
-    Rele,
-    Cigolio,
-    Goccia,
-    Crepa,
-    Granello,
-}
-
+/// Una pioggia di eventi: a intervalli casuali, un colpo della sua specie.
+#[derive(Clone, Copy)]
 struct Pioggia {
     specie: Specie,
     intervallo: (f32, f32),
     guadagno: (f32, f32),
-    pan: (f32, f32),
     attiva: bool,
     prossimo: f32,
 }
 
 impl Pioggia {
-    fn nuova(specie: Specie, intervallo: (f32, f32), guadagno: (f32, f32)) -> Self {
-        Pioggia { specie, intervallo, guadagno, pan: (-0.8, 0.8), attiva: false, prossimo: 0.0 }
-    }
+    const SPENTA: Pioggia = Pioggia { specie: Specie::Lamiera, intervallo: (60.0, 60.0), guadagno: (-60.0, -60.0), attiva: false, prossimo: 0.0 };
 
-    fn accendi(&mut self, si: bool, caso: &mut Caso) {
-        if si && !self.attiva {
-            self.prossimo = caso.tra(self.intervallo.0 * 0.3, self.intervallo.1);
+    fn accendi(&mut self, specie: Specie, intervallo: (f32, f32), guadagno: (f32, f32), caso: &mut Caso) {
+        let era = self.attiva && self.specie == specie;
+        self.specie = specie;
+        self.intervallo = intervallo;
+        self.guadagno = guadagno;
+        if !era {
+            self.prossimo = caso.tra(intervallo.0 * 0.3, intervallo.1);
         }
-        self.attiva = si;
+        self.attiva = true;
     }
 
     /// Vero quando è il momento di un colpo.
@@ -196,19 +231,43 @@ impl Pioggia {
     }
 }
 
+const PIOGGE: usize = 6;
+
+#[derive(Clone, Copy, Debug)]
 enum Azione {
+    /// il brusio verso un volume (lineare), in secondi
     Brusio(f32, f32),
     BrusioQuanti(f32, f32),
-    Scena(f32),
     RadioFine,
+    /// il casco si blocca: la tuta diventa vera per il suono
+    Tuta,
+    /// il re nelle ossa sullo scafo: (quanto, 0–1; secondi)
+    Rampa(f32, f32),
+    /// i fondi della Santa Maria per un attimo: (moltiplicatore, secondi)
+    Fondi(f32, f32),
+    /// il fondo del relitto per un attimo: (moltiplicatore, secondi)
+    Fondo(f32, f32),
+    /// la voce in primo piano: (volume lineare, secondi)
+    Filo(f32, f32),
+    /// il re toccato: il moltiplicatore nelle ossa
+    Tocco(f32, f32),
+    /// la protezione vitale arriva dopo i relè: la cuffia si spegne (o si riaccende)
+    Protezione(bool),
+    /// il fiato torna come prima
+    Ascolto(bool),
+    /// tutto scende a zero, in secondi
+    Silenzio(f32),
+    /// la plancia del risveglio, alla fine
+    Risveglio,
 }
 
+#[derive(Clone, Copy, Debug)]
 struct Automazione {
     tra: f32,
     azione: Azione,
 }
 
-const MAX_COLPI: usize = 96;
+const MAX_COLPI: usize = 128;
 
 pub struct Mondo {
     sr: f32,
@@ -216,21 +275,71 @@ pub struct Mondo {
     stato: Arc<StatoMondo>,
     caso: Caso,
     maschera: u32,
+    // --- lo stato del gioco, per il suono
+    gioco: StatiGioco,
+    stanza: Option<&'static Stanza>,
+    /// il gioco manda i turni (altrimenti: il prototipo dei tre ambienti)
+    modo_gioco: bool,
+    /// la tuta per il suono: diventa vera quando il casco si blocca
+    tuta: bool,
+    /// il casco tolto nella stiva, alla fine
+    casa: bool,
+    /// la fine: dopo il silenzio, il mondo non riparte da sé
+    spento: bool,
+    /// la protezione vitale come la dice il gioco, e come la sente il suono (dopo i relè)
+    protezione: bool,
+    protezione_eff: bool,
+    /// la fine con il risuonatore: il brusio sale dalla stiva, per l’aria
+    stiva_viva: bool,
+    /// il dialogo del turno prima: la voce dell’eco si spegne quando finisce
+    prima_dialogo: Option<String>,
+    aria: f32,
+    nave: Nave,
+    rampa: f32,
+    t_stanza: f32,
+    t_aggancio: f32,
+    ventola_spenta: bool,
     // --- gli strati
     re: Re,
     re_pavimento: Biquad,
+    re_taglio: Scorrevole,
     re_aria: Scorrevole,
     re_ossa: Scorrevole,
+    re_tocco: Scorrevole,
+    re_rampa: Scorrevole,
     ventilazione: Ventilazione,
     pompe: Pompe,
     pompe_pavimento: Biquad,
+    pompe_taglio: Scorrevole,
+    fondi_mul: Scorrevole,
     ventola: Ventola,
     fiato: Fiato,
     fiato_g: Scorrevole,
     brusio: Brusio,
     brusio_base: f32,
-    brusio_radio: bool,
-    piogge: Vec<Pioggia>,
+    brusio_quanti: f32,
+    brusio_via: Bus,
+    filo: Voce,
+    filo_g: Scorrevole,
+    fondo: Fondo,
+    fondo_mul: Scorrevole,
+    ronzio: Ronzio,
+    ronzio_forma: Option<FormaRonzio>,
+    groviglio: Groviglio,
+    vento: Soffio,
+    vento_cfg: u8,
+    crepitio: Crepitio,
+    crepitio_cfg: u8,
+    crepitio_casco: bool,
+    fuoco: Soffio,
+    fuoco_crepitio: Crepitio,
+    tremito: Tremito,
+    seme: Battito,
+    cuore: Battito,
+    acufene: Acufene,
+    canale: CanaleRadio,
+    toppe: Toppe,
+    piogge: [Pioggia; PIOGGE],
     lastre: Vec<Lastra>,
     colpi: Vec<Colpo>,
     automazioni: Vec<Automazione>,
@@ -243,6 +352,7 @@ pub struct Mondo {
     w_casco: Scorrevole,
     w_ossa: Scorrevole,
     w_fruscio: Scorrevole,
+    asciutto: Scorrevole,
     guscio: UnPolo,
     cuffia_hp: Biquad,
     cuffia_lp: Biquad,
@@ -259,20 +369,27 @@ pub struct Mondo {
     ipossia: Biquad,
     ipossia_attiva: bool,
     larghezza: Scorrevole,
+    // --- il mix
+    mix: Mix,
+    c_ambienti: Scorrevole,
+    c_effetti: Scorrevole,
+    c_voci: Scorrevole,
+    c_generale: Scorrevole,
+    c_ossa: Scorrevole,
+    pausa: Scorrevole,
+    ingresso: Scorrevole,
     volume: Scorrevole,
+    dinamica: Inseguitore,
+    limitatore: Inseguitore,
     fermo: bool,
-    // --- lo stato
-    ambiente: Ambiente,
-    nave: Nave,
-    aria: f32,
-    protezione: bool,
-    rampa: f32,
+    // --- il prototipo
     cammina: bool,
     piede: bool,
     t_stivali: f32,
     t_gemito: f32,
     t_radio: f32,
     radio_accesa: bool,
+    conto: u32,
     energia: f64,
     campioni_misurati: u32,
 }
@@ -282,40 +399,72 @@ impl Mondo {
         let (tx, rx) = channel();
         let stato = Arc::new(StatoMondo::default());
         let mut caso = Caso::nuovo(seme);
-        // le lamiere della plancia: sei pannelli, ognuno con il suo suono
+        // le lamiere della Santa Maria: sei pannelli, ognuno con il suo suono
         let lastre = (0..6).map(|_| Lastra::a_caso((380.0, 1100.0), (0.25, 0.7), &mut caso)).collect();
-        let mut lamiere = Pioggia::nuova(Specie::Lamiera, (15.0, 60.0), (-40.0, -31.0));
-        lamiere.pan = (-0.9, 0.9);
-        let piogge = vec![
-            lamiere,
-            Pioggia::nuova(Specie::Rele, (20.0, 40.0), (-38.0, -32.0)),
-            Pioggia::nuova(Specie::Cigolio, (60.0, 150.0), (-42.0, -35.0)),
-            Pioggia::nuova(Specie::Goccia, (6.0, 22.0), (-34.0, -26.0)),
-            Pioggia::nuova(Specie::Crepa, (25.0, 70.0), (-44.0, -36.0)),
-            Pioggia::nuova(Specie::Granello, (20.0, 55.0), (-38.0, -30.0)),
-        ];
-        let m = Mondo {
+        let mut m = Mondo {
             sr,
             rx,
             stato: stato.clone(),
             maschera: u32::MAX,
+            gioco: StatiGioco::default(),
+            stanza: None,
+            modo_gioco: false,
+            tuta: false,
+            casa: false,
+            spento: false,
+            protezione: false,
+            protezione_eff: false,
+            stiva_viva: false,
+            prima_dialogo: None,
+            aria: 100.0,
+            nave: Nave::Libera,
+            rampa: 1.0,
+            t_stanza: 0.0,
+            t_aggancio: 1e9,
+            ventola_spenta: false,
             re: Re::nuovo(sr, seme ^ 0x7E),
             re_pavimento: Biquad::passabasso(180.0, 0.7, sr),
+            re_taglio: Scorrevole::nuovo(180.0),
             re_aria: Scorrevole::nuovo(0.0),
             re_ossa: Scorrevole::nuovo(0.0),
+            re_tocco: Scorrevole::nuovo(1.0),
+            re_rampa: Scorrevole::nuovo(1.0),
             ventilazione: Ventilazione::nuova(sr, seme ^ 0x7E47),
             pompe: Pompe::nuove(sr, seme ^ 0x90),
             pompe_pavimento: Biquad::passabasso(240.0, 0.7, sr),
+            pompe_taglio: Scorrevole::nuovo(240.0),
+            fondi_mul: Scorrevole::nuovo(1.0),
             ventola: Ventola::nuova(sr, seme ^ 0x7E0),
             fiato: Fiato::nuovo(sr, seme ^ 0xF1A7),
             fiato_g: Scorrevole::nuovo(1.0),
             brusio: Brusio::nuovo(sr, seme ^ 0xB2),
             brusio_base: 0.0,
-            brusio_radio: false,
-            piogge,
+            brusio_quanti: 0.0,
+            brusio_via: Bus::Em,
+            filo: Voce::nuova(sr, seme ^ 0xF110, 95.0, 0.84, 0.85, 0.06),
+            filo_g: Scorrevole::nuovo(0.0),
+            fondo: Fondo::nuovo(sr, seme ^ 0xF0),
+            fondo_mul: Scorrevole::nuovo(1.0),
+            ronzio: Ronzio::nuovo(sr, seme ^ 0x2A),
+            ronzio_forma: None,
+            groviglio: Groviglio::nuovo(sr, seme ^ 0x6206),
+            vento: Soffio::nuovo(sr, seme ^ 0x7E7),
+            vento_cfg: 0,
+            crepitio: Crepitio::nuovo(sr, seme ^ 0xC2E),
+            crepitio_cfg: 0,
+            crepitio_casco: false,
+            fuoco: Soffio::nuovo(sr, seme ^ 0xF0C),
+            fuoco_crepitio: Crepitio::nuovo(sr, seme ^ 0xF0CC),
+            tremito: Tremito::nuovo(sr, seme ^ 0x7E3),
+            seme: Battito::nuovo(sr, seme ^ 0x5E, 1.15, 40.0, false, 0.45),
+            cuore: Battito::nuovo(sr, seme ^ 0xC0, 0.95, 55.0, true, 0.12),
+            acufene: Acufene::nuovo(sr),
+            canale: CanaleRadio::nuovo(sr, seme ^ 0xCA),
+            toppe: Toppe::nuove(sr, seme ^ 0x70),
+            piogge: [Pioggia::SPENTA; PIOGGE],
             lastre,
             colpi: Vec::with_capacity(MAX_COLPI),
-            automazioni: Vec::with_capacity(32),
+            automazioni: Vec::with_capacity(64),
             riverbero: Riverbero::nuovo(sr),
             w_aria: Scorrevole::nuovo(0.0),
             w_guscio: Scorrevole::nuovo(0.0),
@@ -324,6 +473,7 @@ impl Mondo {
             w_casco: Scorrevole::nuovo(0.0),
             w_ossa: Scorrevole::nuovo(0.0),
             w_fruscio: Scorrevole::nuovo(0.0),
+            asciutto: Scorrevole::nuovo(0.0),
             // la legge di massa di un casco di policarbonato: un polo solo a 140 Hz
             guscio: UnPolo::nuovo(140.0, sr),
             cuffia_hp: Biquad::passaalto(150.0, 0.7, sr),
@@ -342,23 +492,32 @@ impl Mondo {
             ipossia: Biquad::passabasso(20000.0, 0.7, sr),
             ipossia_attiva: false,
             larghezza: Scorrevole::nuovo(1.0),
+            mix: Mix::default(),
+            c_ambienti: Scorrevole::nuovo(1.0),
+            c_effetti: Scorrevole::nuovo(1.0),
+            c_voci: Scorrevole::nuovo(1.0),
+            c_generale: Scorrevole::nuovo(1.0),
+            c_ossa: Scorrevole::nuovo(1.0),
+            pausa: Scorrevole::nuovo(1.0),
+            ingresso: Scorrevole::nuovo(1.0),
             volume: Scorrevole::nuovo(1.0),
+            dinamica: Inseguitore::nuovo(0.01, 0.25, sr),
+            limitatore: Inseguitore::nuovo(0.0008, 0.12, sr),
             fermo: false,
-            ambiente: Ambiente::Silenzio,
-            nave: Nave::Libera,
-            aria: 100.0,
-            protezione: false,
-            rampa: 1.0,
             cammina: false,
             piede: false,
             t_stivali: 0.0,
             t_gemito: 30.0,
             t_radio: 1e9,
             radio_accesa: false,
+            conto: 0,
             energia: 0.0,
             campioni_misurati: 0,
             caso,
         };
+        // il fuoco del bengala: il soffio della fiamma e i suoi crepitii
+        m.fuoco.imposta((2500.0, 5000.0), 0.8);
+        m.fuoco_crepitio.imposta(14.0, 0.7, [1200.0, 2500.0, 4100.0], 0.01, 1500.0, sr);
         (m, tx, stato)
     }
 
@@ -366,289 +525,62 @@ impl Mondo {
         self.fermo && self.volume.v < 1e-4
     }
 
-    fn tuta(&self) -> bool {
-        matches!(self.ambiente, Ambiente::Scafo | Ambiente::Vestibolo)
-    }
-
+    /// Un colpo nella sua strada, sul canale degli effetti.
     fn suona(&mut self, corpo: Corpo, bus: Bus, guadagno_db: f32, p: f32, ritardo: f32) {
+        self.suona_in(Canale::Effetti, corpo, bus, guadagno_db, p, ritardo);
+    }
+
+    fn suona_in(&mut self, canale: Canale, corpo: Corpo, bus: Bus, guadagno_db: f32, p: f32, ritardo: f32) {
         if self.colpi.len() < MAX_COLPI {
-            self.colpi.push(Colpo::nuovo(corpo, bus, guadagno_db, p, ritardo, self.sr));
+            self.colpi.push(Colpo::nuovo(corpo, bus, guadagno_db, p, ritardo, self.sr).nel_canale(canale));
         }
     }
 
-    // --------------------------------------------------------------------------------
-    //  Le scene: i pesi delle strade, i volumi degli strati, la stanza
-    // --------------------------------------------------------------------------------
-    fn applica_scena(&mut self, t: f32) {
+    fn dopo(&mut self, tra: f32, azione: Azione) {
+        if self.automazioni.len() < 64 {
+            self.automazioni.push(Automazione { tra, azione });
+        }
+    }
+
+    fn mix(&mut self, m: Mix) {
         let sr = self.sr;
-        let tuta = self.tuta();
-        let p = tuta && self.aria < 30.0;
-        self.protezione = p;
-        let (aria, guscio, cuffia, em, casco, ossa, fruscio) = match self.ambiente {
-            Ambiente::Silenzio => (0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0),
-            Ambiente::Plancia => (1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0),
-            Ambiente::Scafo => (0.0, 0.0, 0.0, 0.0, 1.0, 1.0, if p { 0.0 } else { 1.0 }),
-            Ambiente::Vestibolo if p => (0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0),
-            Ambiente::Vestibolo => (0.0, db(-8.0), 1.0, 1.0, 1.0, 1.0, 1.0),
-        };
-        self.w_aria.verso(aria, t, sr);
-        self.w_guscio.verso(guscio, t, sr);
-        self.w_cuffia.verso(cuffia, t, sr);
-        self.w_em.verso(em, t, sr);
-        self.w_casco.verso(casco, t, sr);
-        self.w_ossa.verso(ossa, t, sr);
-        self.w_fruscio.verso(fruscio, t, sr);
-        // con la protezione vitale il fiato si fa più vicino
-        self.fiato_g.verso(if p { db(2.0) } else { 1.0 }, t, sr);
-
-        let plancia = self.ambiente == Ambiente::Plancia;
-        let vestibolo = self.ambiente == Ambiente::Vestibolo;
-        // la stanza: plancia piccola e piena di superfici, vestibolo basso e tondo; nel
-        // vuoto, niente
-        match self.ambiente {
-            Ambiente::Plancia => self.riverbero.stanza(0.45, 0.25, 0.55, 0.45, t),
-            Ambiente::Vestibolo => self.riverbero.stanza(1.3, 0.6, 0.7, 1.0, t),
-            _ => self.riverbero.stanza(0.5, 0.3, 0.0, 1.0, t),
-        }
-        self.ventilazione.g.verso(if plancia { db(LIV_VENTILAZIONE) } else { 0.0 }, t, sr);
-        self.pompe.g.verso(if plancia { db(LIV_POMPE) } else { 0.0 }, t, sr);
-        self.ventola.g.verso(if tuta { db(LIV_VENTOLA) } else { 0.0 }, t, sr);
-        self.fiato.acceso = tuta;
-
-        // il re: sotto il pavimento della plancia; sullo scafo, solo dalla rampa, nelle ossa
-        let libera = self.nave == Nave::Libera;
-        let (re_aria, re_ossa) = match self.ambiente {
-            Ambiente::Plancia if libera => (db(LIV_RE), db(LIV_RE_OSSA)),
-            Ambiente::Plancia => (db(LIV_RE - 6.0), db(LIV_RE_OSSA - 6.0)),
-            Ambiente::Scafo => (0.0, self.rampa * self.rampa * db(LIV_RE_RAMPA)),
-            _ => (0.0, 0.0),
-        };
-        self.re.g.verso(if re_aria + re_ossa > 0.0 { 1.0 } else { 0.0 }, t, sr);
-        self.re_aria.verso(re_aria, t, sr);
-        self.re_ossa.verso(re_ossa, t.min(1.5), sr);
-        // «Il reattore abbassa il suo lamento»: meno armonici alti, l’altezza ferma
-        self.re.alti.verso(if libera { 1.0 } else { db(-12.0) }, 4.0, sr);
-        // agganciata, «ogni minuto così costa reattore»: i battimenti si stringono
-        self.re.scarto.verso(if self.nave == Nave::Agganciata { 0.2 } else { 0.11 }, 6.0, sr);
-
-        // il brusio: nel vestibolo dalla cuffia; nella plancia agganciata, dalla radio
-        self.brusio_radio = plancia;
-        if vestibolo && !p {
-            self.brusio_base = db(LIV_BRUSIO);
-            self.brusio.quanti.verso(16.0, t, sr);
-            self.brusio.guadagno.verso(self.brusio_base, t, sr);
-        } else if !(plancia && self.radio_accesa) {
-            self.brusio_base = 0.0;
-            self.brusio.guadagno.verso(0.0, t.min(1.0), sr);
-            self.brusio.quanti.verso(0.0, t, sr);
-        }
-
-        let caso = &mut self.caso;
-        for pioggia in self.piogge.iter_mut() {
-            let si = match pioggia.specie {
-                Specie::Lamiera | Specie::Rele | Specie::Cigolio => plancia,
-                Specie::Goccia | Specie::Crepa | Specie::Granello => vestibolo,
-            };
-            pioggia.accendi(si, caso);
-        }
-        if self.nave == Nave::Agganciata && plancia {
-            if self.t_radio > 1e8 {
-                self.t_radio = 6.0;
-            }
-        } else {
-            self.t_radio = 1e9;
-        }
-        self.stato.protezione.store(p, Ordering::Relaxed);
-    }
-
-    fn imposta_aria(&mut self, nuova: f32) {
-        let vecchia = self.aria;
-        self.aria = nuova.clamp(0.0, 100.0);
-        self.fiato.aria = self.aria;
-        let sr = self.sr;
-        if self.tuta() {
-            let d = (self.aria - vecchia).round() as i32;
-            // un tic per punto: in discesa sempre uguale, in salita sempre più chiaro
-            for i in 0..d.unsigned_abs().min(25) {
-                let chiaro = if d < 0 { 0.0 } else { 45.0 * i as f32 };
-                self.suona(colpi::tic(chiaro, sr), Bus::Casco, -30.0, 0.0, i as f32 * 0.06);
-            }
-            if vecchia > 60.0 && self.aria <= 60.0 {
-                // l’ambra: due note che scendono, sottovoce
-                self.suona(colpi::nota(880.0, 0.14, sr), Bus::Casco, -33.0, 0.0, 0.2);
-                self.suona(colpi::nota(660.0, 0.2, sr), Bus::Casco, -33.0, 0.0, 0.38);
-            }
-            if vecchia >= 30.0 && self.aria < 30.0 {
-                // tre note d’allarme, poi i relè: la tuta stacca i canali secondari
-                for (k, f) in [988.0, 988.0, 740.0].into_iter().enumerate() {
-                    self.suona(colpi::nota(f, 0.15, sr), Bus::Casco, -28.0, 0.0, k as f32 * 0.18);
-                }
-                let r1 = colpi::rele(true, &mut self.caso, sr);
-                let r2 = colpi::rele(true, &mut self.caso, sr);
-                self.suona(r1, Bus::Casco, -24.0, -0.3, 0.75);
-                self.suona(r2, Bus::Casco, -26.0, 0.3, 0.9);
-                self.automazioni.push(Automazione { tra: 0.75, azione: Azione::Scena(1.2) });
-            } else if vecchia < 30.0 && self.aria >= 30.0 {
-                let r1 = colpi::rele(false, &mut self.caso, sr);
-                let r2 = colpi::rele(true, &mut self.caso, sr);
-                self.suona(r1, Bus::Casco, -26.0, 0.3, 0.0);
-                self.suona(r2, Bus::Casco, -24.0, -0.3, 0.15);
-                self.automazioni.push(Automazione { tra: 0.15, azione: Azione::Scena(1.2) });
-            }
-        }
-        // l’ipossia: un passa-basso che scende da 9 kHz (a 15) a 2,5 kHz (a 1), e lo stereo che si stringe
-        if self.aria <= 15.0 {
-            let x = ((15.0 - self.aria) / 14.0).clamp(0.0, 1.0);
-            let taglio = 9000.0 * (2500.0f32 / 9000.0).powf(x);
-            self.ipossia.aggiorna(Biquad::passabasso(taglio, 0.7, sr));
-            self.ipossia_attiva = true;
-            self.larghezza.verso(1.0 - 0.7 * x, 3.0, sr);
-        } else {
-            self.ipossia_attiva = false;
-            self.larghezza.verso(1.0, 3.0, sr);
-        }
-        if !(vecchia >= 30.0 && self.aria < 30.0) && !(vecchia < 30.0 && self.aria >= 30.0) {
-            self.applica_scena(1.2);
-        }
-    }
-
-    // --------------------------------------------------------------------------------
-    //  Gli eventi
-    // --------------------------------------------------------------------------------
-    fn gemito(&mut self) {
-        let corpo = colpi::gemito(&mut self.caso, self.sr);
-        let p = self.caso.tra(-0.6, 0.6);
-        // «ti arriva nei denti prima che nelle cuffie»: prima le ossa, poi la cuffia
-        self.suona(corpo, Bus::Ossa, LIV_GEMITO, 0.0, 0.0);
-        self.suona(corpo, Bus::Esterno, LIV_GEMITO - 12.0, p, 0.3);
-    }
-
-    fn evento(&mut self, e: Evento) {
-        let sr = self.sr;
-        match e {
-            Evento::PrimoContatto => {
-                // il multiscanner si impenna, e il brusio entra nella cuffia
-                for _ in 0..14 {
-                    let chiaro = self.caso.tra(-600.0, 1800.0);
-                    let t = self.caso.tra(0.0, 1.2);
-                    self.suona(colpi::tic(chiaro, sr), Bus::Casco, -30.0, 0.0, t);
-                }
-                self.brusio.guadagno.verso(0.0, 0.03, sr);
-                self.automazioni.push(Automazione { tra: 0.3, azione: Azione::Brusio(self.brusio_base, 0.8) });
-                self.suona(colpi::tic(0.0, sr), Bus::Casco, -30.0, 0.0, 1.0);
-                self.suona(colpi::tic(0.0, sr), Bus::Casco, -30.0, 0.0, 1.06);
-            }
-            Evento::ToccaVenature => {
-                if self.brusio_base > 0.0 {
-                    self.brusio.guadagno.verso(self.brusio_base * db(8.0), 0.4, sr);
-                    self.brusio.quanti.verso(24.0, 0.4, sr);
-                    self.automazioni.push(Automazione { tra: 1.2, azione: Azione::Brusio(self.brusio_base, 1.5) });
-                    self.automazioni.push(Automazione { tra: 1.2, azione: Azione::BrusioQuanti(16.0, 1.5) });
-                    self.suona(colpi::tic(0.0, sr), Bus::Casco, -30.0, 0.0, 0.3);
-                }
-            }
-            Evento::SalaTace => {
-                // «come una sala piena che smette di parlare quando entri. Poi riprende»
-                if self.brusio_base > 0.0 {
-                    self.brusio.guadagno.verso(0.0, 2.0, sr);
-                    self.automazioni.push(Automazione { tra: 5.0, azione: Azione::Brusio(self.brusio_base, 4.0) });
-                }
-            }
-            Evento::Gemito => self.gemito(),
-            Evento::Goccia => {
-                let c = colpi::goccia(&mut self.caso, sr);
-                let p = self.caso.tra(-0.7, 0.7);
-                self.suona(c, Bus::Esterno, -30.0, p, 0.0);
-            }
-            Evento::Sorpresa => self.fiato.sorpresa(),
-        }
-    }
-
-    fn evento_nave(&mut self, n: Nave) {
-        let sr = self.sr;
-        match n {
-            Nave::Libera => {}
-            Nave::Accostata => {
-                // «a spinte corte»: i propulsori, dentro, sono colpi sordi nella struttura
-                for k in 0..4 {
-                    let t = k as f32 * 0.6 + self.caso.tra(0.0, 0.15);
-                    let c = colpi::spinta(&mut self.caso, sr);
-                    self.suona(c, Bus::Ossa, -4.0, 0.0, t);
-                    self.suona(c, Bus::Esterno, -22.0, 0.0, t);
-                }
-            }
-            Nave::Agganciata => {
-                // «Due colpi sordi, che senti nelle ossa più che nelle orecchie»
-                for t in [0.0, 0.45] {
-                    let c = colpi::arpione(&mut self.caso, sr);
-                    self.suona(c, Bus::Ossa, -2.0, 0.0, t);
-                    self.suona(c, Bus::Esterno, -20.0, 0.0, t);
-                }
-                // «un urto lungo che fa tremare la plancia»
-                let c = colpi::urto_lungo(&mut self.caso, sr);
-                self.suona(c, Bus::Ossa, -11.0, 0.0, 1.6);
-                self.suona(c, Bus::Esterno, -25.0, 0.0, 1.6);
-            }
-        }
-    }
-
-    fn colpo_di_pioggia(&mut self, specie: Specie, g: f32, p: f32) {
-        let sr = self.sr;
-        match specie {
-            Specie::Lamiera => {
-                let k = self.caso.indice(self.lastre.len());
-                let lastra = self.lastre[k];
-                let c = colpi::lamiera(&lastra, &mut self.caso, sr);
-                self.suona(c, Bus::Esterno, g, p, 0.0);
-            }
-            Specie::Rele => {
-                // un relè che scatta, e dopo un poco si riapre
-                let chiude = colpi::rele(true, &mut self.caso, sr);
-                let apre = colpi::rele(false, &mut self.caso, sr);
-                let dopo = self.caso.tra(0.4, 6.0);
-                self.suona(chiude, Bus::Esterno, g, p, 0.0);
-                self.suona(apre, Bus::Esterno, g - 3.0, p, dopo);
-            }
-            Specie::Cigolio => {
-                let c = colpi::cigolio(&mut self.caso, sr);
-                self.suona(c, Bus::Esterno, g, p, 0.0);
-            }
-            Specie::Goccia => {
-                let c = colpi::goccia(&mut self.caso, sr);
-                self.suona(c, Bus::Esterno, g, p, 0.0);
-            }
-            Specie::Crepa => {
-                let c = colpi::crepa(&mut self.caso, sr);
-                self.suona(c, Bus::Esterno, g, p, 0.0);
-            }
-            Specie::Granello => {
-                let c = colpi::granello(&mut self.caso, sr);
-                self.suona(c, Bus::Esterno, g, p, 0.0);
-            }
-        }
+        let q = |v: f32| v.clamp(0.0, 1.0).powi(2);
+        self.mix = m;
+        self.c_generale.verso(q(m.generale), 0.15, sr);
+        self.c_ambienti.verso(q(m.ambienti), 0.15, sr);
+        self.c_effetti.verso(q(m.effetti), 0.15, sr);
+        self.c_voci.verso(q(m.voci), 0.15, sr);
+        self.c_ossa.verso(if m.intensi_ridotti { db(-12.0) } else { 1.0 }, 0.3, sr);
+        // il cuore e il fischio dell’anticamera si tolgono con i suoni intensi
+        self.applica(0.3);
     }
 
     fn comando(&mut self, c: Comando) {
         let sr = self.sr;
         match c {
-            Comando::Ambiente(a) => {
-                if a != self.ambiente {
-                    self.ambiente = a;
-                    self.t_gemito = self.caso.tra(20.0, 50.0);
-                    self.applica_scena(2.5);
-                }
-            }
-            Comando::Aria(v) => self.imposta_aria(v),
+            Comando::Turno(t) => self.turno(t),
+            Comando::Mix(m) => self.mix(m),
+            Comando::Pausa(si) => self.pausa.verso(if si { db(-10.0) } else { 1.0 }, 0.4, sr),
+            Comando::Ambiente(a) => self.prototipo(a),
+            Comando::Aria(v) => self.aria_prototipo(v),
             Comando::Nave(n) => {
                 if n != self.nave {
                     self.nave = n;
+                    self.gioco.aggancio = Some(
+                        match n {
+                            Nave::Libera => "lontano",
+                            Nave::Accostata => "accostato",
+                            Nave::Agganciata => "fatto",
+                        }
+                        .to_string(),
+                    );
                     self.evento_nave(n);
-                    self.applica_scena(2.0);
+                    self.applica(2.0);
                 }
             }
             Comando::Rampa(r) => {
                 self.rampa = r.clamp(0.0, 1.0);
-                self.applica_scena(1.0);
+                self.re_rampa.verso(self.rampa * self.rampa, 1.0, sr);
             }
             Comando::Cammina(si) => self.cammina = si,
             Comando::Sforzo(si) => self.fiato.sforzo = si,
@@ -663,73 +595,72 @@ impl Mondo {
         }
     }
 
-    fn prova(&mut self, nome: &str) {
-        let sr = self.sr;
-        let p = self.caso.tra(-0.5, 0.5);
-        match nome {
-            "lamiera" => self.colpo_di_pioggia(Specie::Lamiera, -32.0, p),
-            "rele" => self.colpo_di_pioggia(Specie::Rele, -33.0, p),
-            "cigolio" => self.colpo_di_pioggia(Specie::Cigolio, -35.0, p),
-            "goccia" => self.colpo_di_pioggia(Specie::Goccia, -27.0, p),
-            "crepa" => self.colpo_di_pioggia(Specie::Crepa, -36.0, p),
-            "granello" => self.colpo_di_pioggia(Specie::Granello, -31.0, p),
-            "gemito" => self.gemito(),
-            "spinta" => {
-                let c = colpi::spinta(&mut self.caso, sr);
-                self.suona(c, Bus::Ossa, -4.0, 0.0, 0.0);
-                self.suona(c, Bus::Esterno, -22.0, 0.0, 0.0);
-            }
-            "arpione" => {
-                let c = colpi::arpione(&mut self.caso, sr);
-                self.suona(c, Bus::Ossa, -2.0, 0.0, 0.0);
-                self.suona(c, Bus::Esterno, -20.0, 0.0, 0.0);
-            }
-            "urto" => {
-                let c = colpi::urto_lungo(&mut self.caso, sr);
-                self.suona(c, Bus::Ossa, -11.0, 0.0, 0.0);
-                self.suona(c, Bus::Esterno, -25.0, 0.0, 0.0);
-            }
-            "una_voce" => self.brusio.quanti.verso(1.0, 0.5, sr),
-            "coro" => self.brusio.quanti.verso(16.0, 0.5, sr),
-            _ => {}
-        }
-    }
-
     fn esegui(&mut self, a: Azione) {
         let sr = self.sr;
         match a {
             Azione::Brusio(g, t) => self.brusio.guadagno.verso(g, t, sr),
             Azione::BrusioQuanti(n, t) => self.brusio.quanti.verso(n, t, sr),
-            Azione::Scena(t) => self.applica_scena(t),
             Azione::RadioFine => {
                 self.radio_accesa = false;
-                self.brusio.guadagno.verso(0.0, 1.5, sr);
-                self.brusio.quanti.verso(0.0, 2.0, sr);
+                if self.brusio_base <= 0.0 {
+                    self.brusio.guadagno.verso(0.0, 1.5, sr);
+                    self.brusio.quanti.verso(0.0, 2.0, sr);
+                }
             }
+            Azione::Tuta => {
+                self.tuta = self.gioco.tuta;
+                self.applica(2.5);
+            }
+            Azione::Rampa(v, t) => self.re_rampa.verso(v, t, sr),
+            Azione::Fondi(v, t) => self.fondi_mul.verso(v, t, sr),
+            Azione::Fondo(v, t) => self.fondo_mul.verso(v, t, sr),
+            Azione::Filo(v, t) => self.filo_g.verso(v, t, sr),
+            Azione::Tocco(v, t) => self.re_tocco.verso(v, t, sr),
+            Azione::Protezione(on) => {
+                self.protezione_eff = on;
+                self.applica(1.2);
+            }
+            Azione::Ascolto(si) => self.fiato.ascolto = si,
+            Azione::Silenzio(t) => {
+                self.spento = true;
+                self.ingresso.verso(0.0, t, sr);
+            }
+            Azione::Risveglio => self.risveglio(),
         }
     }
 
-    /// Una volta per blocco: le piogge, i passi, la radio, le automazioni.
+    /// Una volta per blocco: le piogge, i tempi della stanza, i passi del prototipo, la
+    /// radio, le automazioni.
     fn passo_blocco(&mut self, dt: f32) {
         let sr = self.sr;
-        for i in 0..self.piogge.len() {
+        self.t_stanza += dt;
+        self.t_aggancio += dt;
+        for i in 0..PIOGGE {
             if self.piogge[i].passo(dt, &mut self.caso) {
-                let p = &self.piogge[i];
-                let (specie, gg, pp) = (p.specie, p.guadagno, p.pan);
-                let g = self.caso.tra(gg.0, gg.1);
-                let pan = self.caso.tra(pp.0, pp.1);
-                self.colpo_di_pioggia(specie, g, pan);
+                let p = self.piogge[i];
+                let g = self.caso.tra(p.guadagno.0, p.guadagno.1);
+                let pan = self.caso.tra(-0.85, 0.85);
+                self.colpo_di_pioggia(p.specie, g, pan);
             }
         }
-        if self.ambiente == Ambiente::Vestibolo {
+        // l’anticamera: dopo dieci secondi il cuore, dopo venti il fischio dell’orecchio
+        if self.stanza.is_some_and(|s| s.id == "anticamera") && !self.spento && !self.mix.intensi_ridotti {
+            if self.t_stanza > 10.0 && self.cuore.g.meta() == 0.0 {
+                self.cuore.g.verso(db(LIV_CUORE), 4.0, sr);
+            }
+            if self.t_stanza > 20.0 && self.acufene.g.meta() == 0.0 {
+                self.acufene.g.verso(db(LIV_ACUFENE), 8.0, sr);
+            }
+        }
+        // il prototipo: i gemiti del vestibolo, i passi sullo scafo
+        if !self.modo_gioco && self.stanza.is_some_and(|s| s.id == "vestibolo delle gole") {
             self.t_gemito -= dt;
             if self.t_gemito <= 0.0 {
                 self.gemito();
                 self.t_gemito = self.caso.tra(45.0, 110.0);
             }
         }
-        // i magneti degli stivali: un colpo sordo a ogni appoggio, uno strappo a ogni distacco
-        if self.ambiente == Ambiente::Scafo && self.cammina {
+        if !self.modo_gioco && self.stanza.is_some_and(|s| s.id == "scafo") && self.cammina {
             self.t_stivali -= dt;
             if self.t_stivali <= 0.0 {
                 self.piede = !self.piede;
@@ -741,12 +672,13 @@ impl Mondo {
         // la radio agganciata: «un fruscio che non è statica», a tratti
         if self.t_radio < 1e8 {
             self.t_radio -= dt;
-            if self.t_radio <= 0.0 && !self.radio_accesa {
+            if self.t_radio <= 0.0 && !self.radio_accesa && self.brusio_base <= 0.0 {
                 self.radio_accesa = true;
+                self.brusio_via = Bus::Altoparlante;
                 self.brusio.quanti.verso(10.0, 0.5, sr);
                 self.brusio.guadagno.verso(db(LIV_RADIO), 1.0, sr);
                 let resta = self.caso.tra(4.0, 10.0);
-                self.automazioni.push(Automazione { tra: resta, azione: Azione::RadioFine });
+                self.dopo(resta, Azione::RadioFine);
                 self.t_radio = resta + self.caso.tra(30.0, 90.0);
             }
         }
@@ -770,60 +702,144 @@ impl Mondo {
         self.passo_blocco(out.len() as f32 * dtf);
         let m = self.maschera;
         let on = |bit: u32| if m & bit != 0 { 1.0f32 } else { 0.0 };
-        let (s_re, s_vent, s_pompe, s_ventola, s_fiato, s_brusio, s_voci, s_segnali, s_fruscio) =
-            (on(S_RE), on(S_VENTILAZIONE), on(S_POMPE), on(S_VENTOLA), on(S_FIATO), on(S_BRUSIO), on(S_VOCI), on(S_SEGNALI), on(S_FRUSCIO));
+        let (s_re, s_vent, s_pompe, s_ventola, s_fiato, s_brusio, s_voci, s_segnali, s_fruscio, s_stanza) = (
+            on(S_RE),
+            on(S_VENTILAZIONE),
+            on(S_POMPE),
+            on(S_VENTOLA),
+            on(S_FIATO),
+            on(S_BRUSIO),
+            on(S_VOCI),
+            on(S_SEGNALI),
+            on(S_FRUSCIO),
+            on(S_STANZA),
+        );
         let soglia = db(-30.0);
         let ricarica = db(4.0);
         let fruscio_g = db(-62.0);
         let guscio_g = db(-3.0);
+        let soglia_dinamica = db(-30.0);
+        let soglia_picchi = db(if self.mix.intensi_ridotti { -14.0 } else { -2.0 });
+        let sr = self.sr;
         for frame in out.iter_mut() {
             let mut est = (0.0f32, 0.0f32);
             let mut em = (0.0f32, 0.0f32);
             let mut casco = (0.0f32, 0.0f32);
             let mut ossa = 0.0f32;
             let mut alt = 0.0f32;
+            let ga = self.c_ambienti.passo();
+            let ge = self.c_effetti.passo();
+            let gv = self.c_voci.passo();
+
+            // ogni 64 campioni i filtri che seguono la stanza
+            self.conto = self.conto.wrapping_add(1);
+            let rt = self.re_taglio.passo();
+            let pt = self.pompe_taglio.passo();
+            if self.conto.is_multiple_of(64) {
+                self.re_pavimento.aggiorna(Biquad::passabasso(rt, 0.7, sr));
+                self.pompe_pavimento.aggiorna(Biquad::passabasso(pt, 0.7, sr));
+            }
 
             // il re
             let (rl, rr) = self.re.campione(dt);
-            let (wa, wo) = (self.re_aria.passo() * s_re, self.re_ossa.passo() * s_re);
+            let tocco = self.re_tocco.passo();
+            let rampa = self.re_rampa.passo();
+            let (wa, wo) = (self.re_aria.passo() * s_re * ga, self.re_ossa.passo() * s_re * ga * tocco * rampa);
             let (fl, fr) = (self.re_pavimento.elabora(rl, 0), self.re_pavimento.elabora(rr, 1));
             est.0 += fl * wa;
             est.1 += fr * wa;
             ossa += (rl + rr) * 0.5 * wo;
 
-            // i fondi
+            // i fondi della Santa Maria
+            let fm = self.fondi_mul.passo() * ga;
             let (vl, vr) = self.ventilazione.campione();
-            est.0 += vl * s_vent;
-            est.1 += vr * s_vent;
+            est.0 += vl * s_vent * fm;
+            est.1 += vr * s_vent * fm;
             let (pl, pr) = self.pompe.campione();
-            est.0 += self.pompe_pavimento.elabora(pl, 0) * s_pompe;
-            est.1 += self.pompe_pavimento.elabora(pr, 1) * s_pompe;
-            let k = self.ventola.campione() * s_ventola;
+            est.0 += self.pompe_pavimento.elabora(pl, 0) * s_pompe * fm;
+            est.1 += self.pompe_pavimento.elabora(pr, 1) * s_pompe * fm;
+
+            // la stanza: il fondo del relitto, i ronzii, il groviglio, i soffi, i crepitii
+            let gs = s_stanza * ga;
+            let fmul = self.fondo_mul.passo();
+            let (a, b) = self.fondo.campione();
+            est.0 += a * gs * fmul;
+            est.1 += b * gs * fmul;
+            let (a, b) = self.ronzio.campione();
+            est.0 += a * gs * fmul;
+            est.1 += b * gs * fmul;
+            let (a, b) = self.groviglio.campione();
+            est.0 += a * gs;
+            est.1 += b * gs;
+            let (a, b) = self.vento.campione();
+            est.0 += a * gs;
+            est.1 += b * gs;
+            let (a, b) = self.crepitio.campione();
+            if self.crepitio_casco {
+                casco.0 += a * gs;
+                casco.1 += b * gs;
+            } else {
+                est.0 += a * gs;
+                est.1 += b * gs;
+            }
+            let (a, b) = self.toppe.campione();
+            est.0 += a * gs;
+            est.1 += b * gs;
+            ossa += self.tremito.campione() * gs;
+            // il fuoco del bengala
+            let (a, b) = self.fuoco.campione();
+            let (c, d) = self.fuoco_crepitio.campione();
+            est.0 += (a + c) * ge;
+            est.1 += (b + d) * ge;
+            // i battiti nelle ossa, il fischio dell’orecchio
+            ossa += (self.seme.campione() + self.cuore.campione()) * ge;
+            let k = self.acufene.campione() * ge;
             casco.0 += k;
             casco.1 += k;
 
-            // il fiato, al centro, dentro il casco
-            let f = self.fiato.campione() * self.fiato_g.passo() * s_fiato;
-            casco.0 += f;
-            casco.1 += f;
+            // la ventola e il fiato, al centro, dentro il casco
+            let k = self.ventola.campione() * s_ventola * ge;
+            let f = self.fiato.campione() * self.fiato_g.passo() * s_fiato * ge;
+            casco.0 += k + f;
+            casco.1 += k + f;
 
-            // il brusio: dalla radio nella plancia, dalla cuffia nel relitto
+            // il brusio: dalla cuffia nel relitto, dalla radio nella plancia, per l’aria alla fine
             let (bl, br) = self.brusio.campione();
-            if self.brusio_radio {
-                alt += (bl + br) * 0.5 * s_brusio;
-            } else {
-                em.0 += bl * s_brusio;
-                em.1 += br * s_brusio;
+            let (bl, br) = (bl * s_brusio * gv, br * s_brusio * gv);
+            match self.brusio_via {
+                Bus::Altoparlante => alt += (bl + br) * 0.5,
+                Bus::Esterno => {
+                    est.0 += bl;
+                    est.1 += br;
+                }
+                _ => {
+                    em.0 += bl;
+                    em.1 += br;
+                }
             }
+            // la voce in primo piano, e il canale della radio
+            let fg = self.filo_g.passo();
+            if fg > 1e-5 {
+                let v = self.filo.campione() * fg * gv * s_brusio;
+                em.0 += v * 0.9;
+                em.1 += v;
+            }
+            alt += self.canale.campione() * gv;
 
             // i colpi
             let mut k = 0;
             while k < self.colpi.len() {
                 let bus = self.colpi[k].bus;
+                let canale = self.colpi[k].canale;
                 match self.colpi[k].campione(&mut self.caso) {
                     Some((l, r)) => {
                         let s = if bus == Bus::Casco { s_segnali } else { s_voci };
-                        let (l, r) = (l * s, r * s);
+                        let c = match canale {
+                            Canale::Ambienti => ga,
+                            Canale::Effetti => ge,
+                            Canale::Voci => gv,
+                        };
+                        let (l, r) = (l * s * c, r * s * c);
                         match bus {
                             Bus::Esterno => {
                                 est.0 += l;
@@ -876,15 +892,16 @@ impl Mondo {
             let rumore = self.fruscio_lp.elabora(self.caso.bianco(), 0) * fruscio_g * self.w_fruscio.passo() * s_fruscio;
             l += cl * gc + rumore;
             r += cr * gc + rumore;
-            // il casco: la bolla
+            // il casco: la bolla; nell’anticamera perde anche i suoi riflessi
             let wk = self.w_casco.passo();
             let k1 = self.casco_vicino.elabora(self.casco_eq2.elabora(self.casco_eq1.elabora(casco.0, 0), 0), 0);
             let k2 = self.casco_vicino.elabora(self.casco_eq2.elabora(self.casco_eq1.elabora(casco.1, 1), 1), 1);
-            let (k1, k2) = self.casco_pettine.elabora(k1, k2);
-            l += k1 * wk;
-            r += k2 * wk;
+            let (p1, p2) = self.casco_pettine.elabora(k1, k2);
+            let asc = self.asciutto.passo();
+            l += (p1 + (k1 - p1) * asc) * wk;
+            r += (p2 + (k2 - p2) * asc) * wk;
             // le ossa: solo i bassi, al centro
-            let o = self.ossa_lp2.elabora(self.ossa_lp1.elabora(ossa, 0), 0) * self.w_ossa.passo();
+            let o = self.ossa_lp2.elabora(self.ossa_lp1.elabora(ossa, 0), 0) * self.w_ossa.passo() * self.c_ossa.passo();
             l += o;
             r += o;
 
@@ -895,8 +912,30 @@ impl Mondo {
             }
             let w = self.larghezza.passo();
             let (mid, side) = ((l + r) * 0.5, (l - r) * 0.5 * w);
-            let v = self.volume.passo();
-            let (l, r) = (morbido((mid + side) * v), morbido((mid - side) * v));
+            let v = self.volume.passo() * self.c_generale.passo() * self.pausa.passo() * self.ingresso.passo();
+            let (mut l, mut r) = ((mid + side) * v, (mid - side) * v);
+            // la dinamica ridotta: 3:1 sopra −30 dBFS, e i suoni piccoli più alti
+            if self.mix.dinamica_ridotta {
+                let e = self.dinamica.segui(l.abs().max(r.abs()));
+                let g = if e > soglia_dinamica { (soglia_dinamica / e).powf(2.0 / 3.0) } else { 1.0 } * db(6.0);
+                l *= g;
+                r *= g;
+            }
+            // i picchi: un tetto vero a −2 dB (più basso con i suoni intensi ridotti); segue
+            // anche il picco di adesso, così nessun transitorio passa prima dell’inviluppo
+            let ora = l.abs().max(r.abs());
+            let e = self.limitatore.segui(ora).max(ora);
+            if e > soglia_picchi {
+                let g = soglia_picchi / e;
+                l *= g;
+                r *= g;
+            }
+            if self.mix.mono {
+                let m = (l + r) * 0.5;
+                l = m;
+                r = m;
+            }
+            let (l, r) = (morbido(l), morbido(r));
             frame.left = l;
             frame.right = r;
             self.energia += (l * l + r * r) as f64 * 0.5;
@@ -907,6 +946,7 @@ impl Mondo {
         s.fase.store(self.fiato.fase().to_bits(), Ordering::Relaxed);
         s.al_minuto.store(if self.fiato.acceso { self.fiato.al_minuto() } else { 0.0 }.to_bits(), Ordering::Relaxed);
         s.voci.store(self.colpi.len() as u32, Ordering::Relaxed);
+        s.protezione.store(self.protezione, Ordering::Relaxed);
         if self.campioni_misurati as f32 >= self.sr * 0.1 {
             let rms = (self.energia / self.campioni_misurati as f64).sqrt();
             s.livello.store((20.0 * (rms + 1e-9).log10() as f32).to_bits(), Ordering::Relaxed);
@@ -918,7 +958,7 @@ impl Mondo {
 
 // I livelli degli strati, in dB. Tarati con le misure dei rendering
 // (examples/rendi_ambienti.rs): una plancia calma intorno a −24 LUFS, il re sotto il
-// pavimento intorno a −30, il fiato calmo intorno a −27.
+// pavimento intorno a −30, il fiato calmo intorno a −26.
 const LIV_VENTILAZIONE: f32 = -15.5;
 const LIV_POMPE: f32 = -7.0;
 const LIV_RE: f32 = -10.0;
@@ -928,6 +968,10 @@ const LIV_VENTOLA: f32 = -17.0;
 const LIV_BRUSIO: f32 = -10.0;
 const LIV_RADIO: f32 = -9.0;
 const LIV_GEMITO: f32 = -18.0;
+const LIV_FILO: f32 = -12.0;
+const LIV_CUORE: f32 = -10.0;
+const LIV_ACUFENE: f32 = -42.0;
+const LIV_PASSI: f32 = -24.0;
 
 // -------------------------------------------------------------------------------------
 //  Il mondo come suono di kira

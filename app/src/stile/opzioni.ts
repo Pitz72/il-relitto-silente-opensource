@@ -18,6 +18,15 @@ export interface Opzioni {
   nomiToccabili: boolean;
   /** lo schermo intero (l'app ci parte; si può scegliere la finestra) */
   schermoIntero: boolean;
+  /** il suono (bibbia sonora, §2.5): i volumi da 0 a 1, il mono, la dinamica ridotta,
+   *  i suoni intensi ridotti (per chi soffre di acufeni, emicrania, ansia da suoni forti) */
+  volume: number;
+  volumeAmbienti: number;
+  volumeEffetti: number;
+  volumeVoci: number;
+  mono: boolean;
+  dinamicaRidotta: boolean;
+  suoniIntensiRidotti: boolean;
 }
 
 export const OPZIONI_DI_BASE: Opzioni = {
@@ -27,6 +36,13 @@ export const OPZIONI_DI_BASE: Opzioni = {
   testoGrande: false,
   nomiToccabili: true,
   schermoIntero: true,
+  volume: 0.75,
+  volumeAmbienti: 1,
+  volumeEffetti: 1,
+  volumeVoci: 1,
+  mono: false,
+  dinamicaRidotta: false,
+  suoniIntensiRidotti: false,
 };
 
 const CHIAVE = "relitto.opzioni";

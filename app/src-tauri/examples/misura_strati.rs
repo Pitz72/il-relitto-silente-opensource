@@ -146,4 +146,82 @@ fn main() {
     colpo("tic", c, &mut caso);
     let c = colpi::nota(880.0, 0.14, SR);
     colpo("nota", c, &mut caso);
+
+    // i colpi degli eventi del gioco
+    use relitto_lib::mondo::stanze::Superficie as S;
+    for (nome, s) in [
+        ("passo lamiera", S::Lamiera),
+        ("passo tappeto", S::Tappeto),
+        ("passo grigliato", S::Grigliato),
+        ("passo osso", S::Osso),
+        ("passo filamenti", S::Filamenti),
+        ("passo morbido", S::Morbido),
+        ("passo pietra", S::Pietra),
+        ("passo cristallo", S::Cristallo),
+        ("passo brina", S::Brina),
+        ("passo polvere", S::Polvere),
+        ("passo vibrante", S::Vibrante),
+        ("passo navata", S::Navata),
+        ("passo sbriciola", S::Sbriciola),
+    ] {
+        let c = colpi::passo(s, &mut caso, SR).unwrap();
+        colpo(nome, c, &mut caso);
+    }
+    let c = colpi::gong(&mut caso, SR);
+    colpo("gong", c, &mut caso);
+    let c = colpi::sonaglio(&mut caso, SR);
+    colpo("sonaglio", c, &mut caso);
+    colpo("salita", colpi::salita(35.0, 90.0, 2.6, 1.0, SR), &mut caso);
+    let c = colpi::crollo(&mut caso, SR);
+    colpo("crollo", c, &mut caso);
+    colpo("vetro", colpi::vetro(415.0, SR), &mut caso);
+    let c = colpi::pietra(&mut caso, SR);
+    colpo("pietra", c, &mut caso);
+    let c = colpi::granelli_acuti(&mut caso, SR);
+    colpo("granelli acuti", c, &mut caso);
+    let c = colpi::scarica(&mut caso, SR);
+    colpo("scarica", c, &mut caso);
+    colpo("svuota", colpi::svuota(SR), &mut caso);
+    colpo("riempie", colpi::riempie(SR), &mut caso);
+    let c = colpi::sibilo(2.8, &mut caso, SR);
+    colpo("sibilo", c, &mut caso);
+    let c = colpi::getto(1.4, &mut caso, SR);
+    colpo("getto", c, &mut caso);
+    let c = colpi::sintonia(&mut caso, SR);
+    colpo("sintonia", c, &mut caso);
+    let c = colpi::frustata(&mut caso, SR);
+    colpo("frustata", c, &mut caso);
+    let c = colpi::pagina(&mut caso, SR);
+    colpo("pagina", c, &mut caso);
+    let c = colpi::tessuto(&mut caso, SR);
+    colpo("tessuto", c, &mut caso);
+    let c = colpi::cerniera(&mut caso, SR);
+    colpo("cerniera", c, &mut caso);
+    let c = colpi::chiusura(&mut caso, SR);
+    colpo("chiusura", c, &mut caso);
+    colpo("anello", colpi::anello(SR), &mut caso);
+    colpo("pressione", colpi::pressione(SR), &mut caso);
+    colpo("colpo d'aria", colpi::colpo_d_aria(SR), &mut caso);
+    let c = colpi::ghiera(&mut caso, SR);
+    colpo("ghiera", c, &mut caso);
+    let c = colpi::chiave(&mut caso, SR);
+    colpo("chiave", c, &mut caso);
+    let c = colpi::connettore(&mut caso, SR);
+    colpo("connettore", c, &mut caso);
+    let c = colpi::motorino(&mut caso, SR);
+    colpo("motorino", c, &mut caso);
+    let c = colpi::taglierina_nel_guanto(1.8, &mut caso, SR);
+    colpo("taglierina guanto", c, &mut caso);
+    let c = colpi::sfrigolio(&mut caso, SR);
+    colpo("sfrigolio", c, &mut caso);
+    let c = colpi::gancio(&mut caso, SR);
+    colpo("gancio", c, &mut caso);
+    colpo("squelch", colpi::squelch(SR), &mut caso);
+    colpo("soffio vetroso", colpi::soffio_vetroso(SR), &mut caso);
+    colpo("accensione", colpi::accensione(SR), &mut caso);
+    let c = colpi::polvere(&mut caso, SR);
+    colpo("polvere", c, &mut caso);
+    let c = colpi::scatto(&mut caso, SR);
+    colpo("scatto", c, &mut caso);
+    colpo("ottone", colpi::ottone(SR), &mut caso);
 }

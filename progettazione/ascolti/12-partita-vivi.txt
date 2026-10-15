@@ -1,0 +1,79 @@
+0:00  (inizio)                                 plancia                    inizio
+0:09  analizza la nave aliena                  plancia                    scansione_lunga, attrezzo
+0:19  accosta                                  plancia                    accostamento
+0:26  spara gli arpioni                        plancia                    arpioni
+0:32  ovest                                    stiva                      stanza
+0:42  prendi la tuta                           stiva                      
+0:46  indossa la tuta                          stiva                      vestizione
+0:54  apri il kit                              stiva                      kit
+0:58  prendi la taglierina                     stiva                      
+1:02  prendi la batteria                       stiva                      
+1:05  prendi la cella di riserva               stiva                      
+1:09  fuori                                    scafo                      stanza, boccaporto
+1:19  analizza lo scafo nero                   scafo                      giuntura_trovata, attrezzo
+1:27  usa la taglierina sulla giuntura         scafo                      giuntura_tagliata
+1:35  giù                                      camera di compensazione    stanza, discesa, varco_richiuso
+1:45  usa la batteria sul pannello             camera di compensazione    pannello
+1:50  apri la porta interna                    camera di compensazione    porta_interna
+1:57  ovest                                    vestibolo delle gole       stanza, primo_contatto
+2:07  giù                                      gola di mezzo              stanza, pareti_lampo
+2:17  abbassa il faro                          gola di mezzo              faro_basso
+2:21  giù                                      sala delle teche           stanza
+2:31  segui la parete                          sala delle teche           
+2:38  ovest                                    vivaio                     stanza, assestamento
+2:48  prendi la tavoletta                      vivaio                     
+2:52  est                                      sala delle teche           stanza
+3:01  segui la parete                          sala delle teche           
+3:09  su                                       gola di mezzo              stanza
+3:19  su                                       vestibolo delle gole       stanza
+3:29  ovest                                    corridoio principale       stanza
+3:39  sud                                      serra morente              stanza, traccia
+3:49  usa la tavoletta sulla teca              serra morente              teca_serra
+3:56  prendi il seme                           serra morente              seme_preso
+4:03  ovest                                    arca biologica             stanza
+4:13  prendi il dispositivo medico             arca biologica             
+4:16  prendi il cristallo                      arca biologica             
+4:20  usa il dispositivo medico sul cristallo  arca biologica             dispositivo_medico
+4:29  est                                      serra morente              stanza
+4:39  nord                                     corridoio principale       stanza
+4:49  giù                                      laboratorio di risonanza   stanza
+4:59  prendi il sintonizzatore                 laboratorio di risonanza   
+5:02  usa il cristallo sul generatore          laboratorio di risonanza   energia
+5:12  su                                       corridoio principale       stanza
+5:22  nord                                     santuario del silenzio     stanza, assestamento
+5:32  ovest                                    scriptorium                stanza
+5:42  prendi il disco                          scriptorium                disco_liberato
+5:47  nord                                     arca della memoria         stanza, terminale, archivio_saluta
+5:57  prendi il nucleo                         arca della memoria         assestamento
+6:04  sud                                      scriptorium                stanza
+6:14  est                                      santuario del silenzio     stanza
+6:24  gira il disco                            santuario del silenzio     
+6:27  gira il disco                            santuario del silenzio     
+6:31  usa il disco sull'altare                 santuario del silenzio     altare
+6:40  prendi la stele                          santuario del silenzio     brusio_cala
+6:46  sud                                      corridoio principale       stanza
+6:56  usa il seme sulla grande porta           corridoio principale       seme_lasciato, chiave
+7:02  usa la stele sulla grande porta          corridoio principale       chiave
+7:07  usa il nucleo sulla grande porta         corridoio principale       grande_porta, chiave
+7:17  ovest                                    ponte di comando           stanza
+7:27  usa la postazione                        ponte di comando           postazione, brusio_cala
+7:37  analizza la mappa stellare               ponte di comando           sistema, attrezzo
+7:47  tocca le punte                           ponte di comando           porta_tonda
+7:52  ovest                                    anticamera                 stanza
+8:00  ovest                                    santuario centrale         stanza
+8:10  parla con l'anziano                      santuario centrale         dialogo
+8:20  Chi eravate?                             santuario centrale         nodo
+8:30  E io che c'entro?                        santuario centrale         nodo
+8:40  Allora cosa devo fare?                   santuario centrale         nodo
+8:50  [Chiudi gli occhi e lascia andare.]      santuario centrale         nodo
+8:57  [Resta.]                                 santuario centrale         nodo
+9:07  [Apri gli occhi.]                        santuario centrale         seme_spento, fuga, groviglio_desto, dialogo_fine
+9:11  prendi il seme                           santuario centrale         seme_preso
+9:20  giù                                      gola del ritorno           stanza
+9:26  ovest                                    sala delle teche           stanza
+9:36  segui la parete                          sala delle teche           crollo, incrinature
+9:46  su                                       gola di mezzo              stanza, voce_dei_nomi
+9:55  su                                       vestibolo delle gole       stanza
+10:05  est                                      camera di compensazione    stanza
+10:13  su                                       scafo                      stanza, crollo
+10:22  dentro                                   stiva                      stanza, rientro, casco_tolto, finale

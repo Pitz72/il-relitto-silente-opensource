@@ -28,6 +28,8 @@ pub struct Brusio {
     dt: f32,
     conto: u32,
     lontananze: [f32; MAX_FLUSSI],
+    /// dove sta tutto il brusio: da −1 (sinistra) a 1 (destra)
+    pub lato: Scorrevole,
 }
 
 impl Brusio {
@@ -54,6 +56,18 @@ impl Brusio {
             dt: 1.0 / sr,
             conto: 0,
             lontananze: [1.0; MAX_FLUSSI],
+            lato: Scorrevole::nuovo(0.0),
+        }
+    }
+
+    /// «Per tre secondi il brusio diventa un accordo di voci tenute»: ogni voce tiene
+    /// una delle note, per `durata` secondi.
+    pub fn accordo(&mut self, note: &[f32], durata: f32) {
+        if note.is_empty() {
+            return;
+        }
+        for (k, f) in self.flussi.iter_mut().enumerate() {
+            f.voce.tieni(note[k % note.len()], durata);
         }
     }
 
@@ -88,6 +102,8 @@ impl Brusio {
         let l = self.diff[1].elabora(l);
         let r = self.diff[2].elabora(r * norma);
         let r = self.diff[3].elabora(r);
-        (l * guadagno, r * guadagno)
+        let (bl, br) = pan(self.lato.passo());
+        let k = guadagno * std::f32::consts::SQRT_2;
+        (l * bl * k, r * br * k)
     }
 }

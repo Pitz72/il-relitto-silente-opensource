@@ -229,6 +229,8 @@ pub struct Ventola {
     deriva: Lento,
     dt: f32,
     pub g: Scorrevole,
+    /// i giri, rispetto a quelli di sempre: quando la tuta muore la ventola rallenta
+    pub giri: Scorrevole,
 }
 
 impl Ventola {
@@ -245,6 +247,7 @@ impl Ventola {
             deriva,
             dt: 1.0 / sr,
             g: Scorrevole::nuovo(0.0),
+            giri: Scorrevole::nuovo(1.0),
         }
     }
 
@@ -255,8 +258,9 @@ impl Ventola {
             return 0.0;
         }
         let d = self.deriva.campione(self.dt, &mut self.caso);
+        let giri = self.giri.passo();
         // le pale: sette, a circa 2000 giri; il tono di passaggio deriva di un poco
-        let f = 236.0 * (1.0 + 0.008 * d);
+        let f = 236.0 * (1.0 + 0.008 * d) * giri;
         self.tono = (self.tono + TAU * f * self.dt) % TAU;
         self.giro = (self.giro + TAU * f / 7.0 * self.dt) % TAU;
         let w = self.caso.bianco();

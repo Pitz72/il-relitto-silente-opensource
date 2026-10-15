@@ -365,6 +365,11 @@ impl Modo {
     pub fn energia(&self) -> f32 {
         self.y1.abs() + self.y2.abs()
     }
+
+    /// Scala quanto il modo risponde: per normalizzare un banco.
+    pub fn scala(&mut self, k: f32) {
+        self.g *= k;
+    }
 }
 
 /// Un parametro che va verso il suo bersaglio senza scatti, su una curva esponenziale.
