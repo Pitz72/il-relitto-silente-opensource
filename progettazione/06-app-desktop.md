@@ -619,7 +619,7 @@ a circa metà del lavoro; da lì in poi ogni fase aggiunge senza rompere.
 Le versioni seguono le fasi (`sviluppo/VERSIONI.md`): la fase 1 chiusa è la **0.1.0**, la fase 2 la
 **0.2.0**.
 
-**Che cosa serve dall’autore.** Le decisioni del documento 18 (una modalità a solo testo, D21–D26) e la risposta al documento 19 (la Santa Maria su FAVELLA); la direzione della copertina e del logo dell’eseguibile (da fare: il 15 ottobre 2026 l’autore li ha chiesti; andranno nel registro `grafica/LICENZE.md` e nei riconoscimenti); le decisioni del §16; l’approvazione dello storyboard dell’intro
+**Che cosa serve dall’autore.** Le decisioni del documento 18 (una modalità a solo testo, D21–D26) la risposta al documento 19 (la Santa Maria su FAVELLA) e le decisioni del documento 20 (il gioco in inglese, D28–D34); la direzione della copertina e del logo dell’eseguibile (da fare: il 15 ottobre 2026 l’autore li ha chiesti; andranno nel registro `grafica/LICENZE.md` e nei riconoscimenti); le decisioni del §16; l’approvazione dello storyboard dell’intro
 prima di animarlo; la musica, se la si vuole composta (D14); la cuccetta con due brande; prove su
 una macchina Linux vera; la creazione del repository su GitHub, quando sarà il momento di
 pubblicare.
