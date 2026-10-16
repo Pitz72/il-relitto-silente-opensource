@@ -130,7 +130,7 @@ Instrumental. Dark, spacious cinematic ambient drone for the main menu of a lone
 
 ### 5.2 Le soglie degli atti (`S2`–`S5`)
 
-Brevi, per il cartello d’atto (da 9 a 15 secondi, con la coda). Lyria dà **almeno 30 secondi**: se ne chiedono 20–30 e si taglia (le tre schede dicono il momento in cui si taglia).
+Brevi, per il cartello d’atto (da 9 a 15 secondi, con la coda). Lyria non le fa brevi: la prima prova (`S2`, 16 ottobre 2026) è uscita di **56 secondi** pur con «20-second» nel prompt, e l’autore non è riuscito a ottenere 30 secondi dal campo della durata. **Non ci si ostina**: si lascia il prompt com’è, si prende quello che esce e **taglio io** (da 15 a 20 secondi, con la dissolvenza in uscita; il motore ne suona l’inizio e lo abbassa nella sala). Le schede dicono che cosa deve esserci nel tratto che si tiene.
 
 **`S2` · Atto II, «L’ingresso»** (20 s)
 
