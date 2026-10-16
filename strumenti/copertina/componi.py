@@ -30,7 +30,8 @@ FONT = os.path.join(RADICE, "app", "node_modules", "@fontsource-variable")
 TITOLO = "IL RELITTO SILENTE"
 RIGA = "dal racconto «Il Relitto», in Dal registro della Santa Maria"
 CREDITO = "un gioco di Simone Pizzi"
-LOGO_RUNTIME = os.path.join(RADICE, "grafica", "logo", "runtime-multimedia.png")
+# il marchio ufficiale di Runtime Multimedia (il kit dei loghi dell'autore): «colore» con i suoi colori (di base), «bianco» in monocromo (LOGO_RUNTIME=bianco)
+LOGO_RUNTIME = os.path.join(RADICE, "grafica", "logo", "runtime-multimedia-" + os.environ.get("LOGO_RUNTIME", "colore") + ".png")
 
 CIANO = np.array([95, 212, 220]) / 255
 SEME = np.array([139, 240, 162]) / 255
@@ -47,7 +48,7 @@ FORMATI = {
     "9x16": dict(L=1440, A=2560, p0=(1.14, 0.64), p1=(-0.16, 0.05), h=0.125, nave=(0.08, 0.515, 0.56), titolo=(0.5, 0.755, 0.050, "c"),
                  riga=0.0135, seme=0.46, via=-58),
     "poster": dict(L=2400, A=3600, p0=(1.14, 0.60), p1=(-0.16, 0.03), h=0.115, nave=(0.07, 0.555, 0.50), titolo=(0.5, 0.745, 0.050, "c"),
-                   riga=0.0135, seme=0.46, via=-58, credito=True, logo=0.17, cornice=True),
+                   riga=0.0135, seme=0.46, via=-58, credito=True, logo=0.22, cornice=True),
     "social": dict(L=1280, A=640, p0=(0.34, 1.12), p1=(1.12, -0.12), h=0.32, nave=(0.05, 0.60, 0.26), titolo=(0.05, 0.16, 0.085, "sx"),
                    riga=0.026, seme=0.50, via=-28),
 }
@@ -244,19 +245,16 @@ def metti_testo(img, s):
 
 
 def metti_logo(img, s):
-    """Il marchio di Runtime Multimedia sotto i credits: l'immagine ha il fondo nero, quindi si schiarisce sul cielo (screen)."""
+    """Il marchio di Runtime Multimedia sotto i credits (un PNG con la trasparenza, dal kit dei loghi dell'autore)."""
     L, A = s["L"], s["A"]
-    lg = Image.open(LOGO_RUNTIME).convert("RGB")
-    a = np.asarray(lg, np.float32) / 255
-    attivo = np.argwhere(a.max(axis=2) > 0.09)
-    (y0, x0), (y1, x1) = attivo.min(axis=0), attivo.max(axis=0)
-    lg = lg.crop((x0, y0, x1 + 1, y1 + 1))
+    lg = Image.open(LOGO_RUNTIME).convert("RGBA")
+    lg = lg.crop(lg.getchannel("A").getbbox())
     larghezza = int(s["logo"] * L)
     lg = lg.resize((larghezza, int(lg.height * larghezza / lg.width)), Image.LANCZOS)
     b = np.asarray(lg, np.float32) / 255
-    x, y = int((L - larghezza) / 2), int(0.903 * A)
+    x, y = int((L - larghezza) / 2), int(0.912 * A)
     zona = img[y:y + b.shape[0], x:x + b.shape[1]]
-    img[y:y + b.shape[0], x:x + b.shape[1]] = 1 - (1 - zona) * (1 - b)
+    img[y:y + b.shape[0], x:x + b.shape[1]] = zona * (1 - b[..., 3:]) + b[..., :3] * b[..., 3:]
     return img
 
 
