@@ -230,6 +230,13 @@
    "da_dove": "lo stesso strumento",
    "autore": "Simone Pizzi",
    "licenza": "dell’autore"
+  },
+  {
+   "file": "relitto-{16x9,21x9,9x16,poster,social}.png",
+   "che_cosa": "le copertine social del gioco in cinque formati (16:9, 21:9, 9:16, poster 2:3, anteprima 2:1): il cielo con la Via Lattea, il fuso nero che mangia le stelle, il seme verde, la Santa Maria canonica e il titolo",
+   "da_dove": "composte in codice da strumenti/copertina/componi.py (progettazione/24-copertina-e-logo.md, §9) con app/public/intro/prua.webp e i caratteri del gioco; **nessuna immagine generata da strumenti di IA**",
+   "autore": "Simone Pizzi",
+   "licenza": "dell’autore"
   }
  ],
  "caratteri": [

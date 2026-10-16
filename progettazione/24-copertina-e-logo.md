@@ -22,7 +22,7 @@ Il gioco è **fantascienza**, non giallo e non horror (come per la musica, 22 §
 
 Il canone visivo, da non rompere (06, §17):
 
-- **La Santa Maria** (TSC-1972) è la nave del sequel: scafo grigio sporco, strisce arancioni, finestre della plancia accese d'ambra. **Si usa l'immagine canonica** (`grafica/prua.webp`, di tre quarti dal davanti, scontornata), non una nuova: così è la stessa nave dei due giochi.
+- **La Santa Maria** (TSC-1972) è la nave del sequel: scafo grigio sporco, strisce arancioni, finestre della plancia accese d'ambra. **Si usa l'immagine canonica** (`app/public/intro/prua.webp`, di tre quarti dal davanti, scontornata), non una nuova: così è la stessa nave dei due giochi.
 - **Il relitto non ha una faccia.** Non si disegnano stanze, creature, l'Anziano, la teca, il corridoio dell'originale. Solo la massa nera, e al più il suo bordo dove la luce non arriva.
 - **Niente che sveli la storia**: né il seme nella teca (`s_01` è esclusa), né il volto di L.V., né un finale. Il verde, se c'è, è un **punto**.
 - **La scala**: il relitto è enormemente più grande della nave (decisione 17.5); la Santa Maria sta in un angolo, di un quinto della larghezza del quadro al più.
@@ -92,3 +92,22 @@ Cinematic wide shot, no text. A small weathered grey industrial cargo spaceship 
 - **D44 · Il titolo in copertina.** Lo stencil dell'acciaio (la Santa Maria) o il corsivo del libro (Newsreader). Raccomandazione: **stencil** per «IL RELITTO SILENTE», corsivo per la riga del racconto.
 
 Quando hai i file, mettili in `grafica/nuovi/` (fuori da git finché non li scegliamo) e dimmi quale è quale; il resto è mio.
+
+## 9. Le copertine social, composte in codice (16 ottobre 2026)
+
+L'autore ha chiesto subito le copertine social in **16:9, 9:16, formato poster e 21:9**. Invece di aspettare uno strumento di immagini, la direzione A («il muro nero») è stata **composta in codice**: `python strumenti/copertina/componi.py` (tutti i formati, in `grafica/copertine/`; oppure `… 16x9 poster`).
+
+| Formato | Misura | A che cosa serve |
+|---|---|---|
+| `16x9` | 2752 × 1536 | testata, YouTube, pagina del gioco |
+| `21x9` | 3440 × 1440 | schermi ultralarghi, banner |
+| `9x16` | 1440 × 2560 | storie e video verticali (titolo sopra la zona dei comandi della piattaforma) |
+| `poster` | 2400 × 3600 (2:3) | stampa, con la cornice e il credito «un'avventura testuale di Simone Pizzi» |
+| `social` | 1280 × 640 (2:1) | l'anteprima del repository su GitHub (Settings → Social preview) |
+
+**Che cosa c'è.** Il cielo (nero azzurro, un chiarore freddo dalla parte del sole, la Via Lattea in diagonale, qualche migliaio di stelle che si fanno più piccole e più spente vicino al fuso); **il fuso nero**, enorme, con un filo di luce fredda sul bordo; **il punto verde del seme** nel suo cuore; **la Santa Maria canonica** (`app/public/intro/prua.webp`, scontornata) piccola in un angolo, un poco più fredda dalla parte opposta al sole; il titolo in stencil e la riga del racconto in corsivo, con i caratteri del gioco. Una grana finissima e la vignettatura tolgono le bande dai gradienti.
+
+**Che cosa non è.** Non è un'illustrazione generata: il cielo è procedurale e il fuso una forma geometrica, quindi la copertina è «pulita» ma meno ricca di quella che potrebbe fare uno strumento di immagini. **La strada del §4 resta aperta**: se l'autore genera un cielo con il fuso (prompt del §6), `componi.py` può prendere il suo posto e continuare a mettere la nave e il titolo. Per questo le copertine, tranne l'anteprima da 1280 × 640 (che serve al README), **non sono in git**: si rigenerano in mezzo minuto.
+
+Il tutto è in `grafica/LICENZE.md` come immagine dell'autore, senza strumenti di IA.
+
