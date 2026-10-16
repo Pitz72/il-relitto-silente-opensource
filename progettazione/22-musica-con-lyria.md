@@ -304,6 +304,27 @@ Quando ci sono i primi file scelti, **io**:
 4. **tengo il sintetizzatore musicale** nel codice come ripiego (se un file manca, suona il vecchio brano) finché la musica nuova non è tutta a posto; poi si toglie.
 5. **aggiorno le prove** (le tredici prove in Rust sulla musica diventano prove sui file) e il collaudo del suono.
 
+### 7.1 La regola dell’integrazione (16 ottobre 2026)
+
+L’autore, ricevuto il tema, ha detto: sui brani che non mi sembrano adeguati posso «integrare con suoni miei», **ma lui si affida a questi mp3**. La regola che ne ricavo:
+
+1. **L’mp3 è la base e non si sostituisce.** Quello che esce da Lyria e da Suno suona nel gioco com’è, con le dissolvenze e i livelli del lettore.
+2. **Dove un brano non fa una cosa che la scheda chiedeva, posso aggiungere sopra uno strato sintetizzato dal motore** (ne ha già i materiali: il re del reattore, il campo del sol♯, il coro di voci formantiche, il vetro, il battito, il sonaglio). Lo strato è piccolo e sta sotto; **per ogni brano, prima lo faccio sentire all’autore in un ascolto, poi lo tengo o lo tolgo**.
+3. Le integrazioni candidate, dalle misure:
+
+| Brano | Che cosa manca | Strato sintetizzato proposto |
+|---|---|---|
+| `C1` Vivi | il cuore a 54 al minuto | il battito del seme, sordo, a 54 al minuto, sotto |
+| `C2` La prima nota | le due onde del re che si allineano | la seconda onda del re (scordata di 3,6 Hz) che si allinea in 26 s: il codice c’è già |
+| `C4` Doppio fondo | i tre tocchi di vetro fissi sul sol♯ | tre note di vetro sul sol♯₅, lontane fra loro |
+| `C5` Due lettere | il re nudo (è un re♯) e la caduta graduale | solo se serve: un re₂ puro che sostituisce il bordone dell’ultima metà |
+| `A2` tensione | il tritono (sol♯ contro il re) | il campo del sol♯ del motore contro il re del brano, battimenti lenti |
+| `T` il tema | le quattro note esatte (sol♯, si, re♯, re) | le quattro note in codice, come segnali lunghi e puri, a quattro secondi l’una dall’altra |
+
+Questo è lavoro mio, nel lettore (§7), dopo gli ascolti dell’autore.
+
+**Il tema.** `T-01` «Hull of the Ancient» (Lyria) non è il motivo di quattro note: è un pezzo di 56 s in re minore. Si tiene come **brano del tema**; **il motivo di quattro note si fa in codice**, nelle note esatte e con il carattere fantascientifico di §5.7, e si sovrappone dove la scheda lo vuole (fine di ogni ciclo del menu, nodo «La musica» dell’Anziano, soglia dell’Atto IV, chiusura di «Vivi»).
+
 ## 8. Che cosa cambia fuori dal suono
 
 - **La dichiarazione sull’IA** (`riconoscimenti/Dichiarazione.tsx`, TESTO_DICHIARAZIONE, approvato il 15 ottobre 2026) dice oggi che cosa ha fatto l’IA nel gioco. Con Lyria si aggiunge una riga: la musica è generata con **Lyria 3.5 di Google (Flow Music)**, e ogni file porta la filigrana SynthID. **Il testo lo approva l’autore** (è suo: come la prima volta, glielo propongo e lo scrive lui, o lo approva).
