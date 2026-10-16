@@ -45,6 +45,22 @@ tutto può cambiare). Il MINOR segue le fasi del piano (`progettazione/06-app-de
 Le correzioni dentro una fase sono PATCH (0.3.1, 0.3.2). Una fase che si chiude in più passi può
 usare le pre-release (0.3.0-alpha.1). Il numero non promette niente a nessuno finché non esce la 1.0.
 
+### 2.1 Il remake è un programma a sé (decisione dell’autore, 16 ottobre 2026)
+
+Il repository GitHub ospita anche il vecchio gioco (`old_version/`, Electron e React), che ha le sue
+release: `v1.2.6`, `v1.5.1` e `v1.5.3`. **Il remake non ne è l’evoluzione: è un altro programma, con un altro
+sviluppo, e comincia la sua numerazione da capo**: il primo rilascio pubblico è la **1.0.0**, come scritto sopra.
+Ne vengono tre conseguenze:
+
+- **Nessun conflitto di aggiornamento**: il vecchio gioco non aveva un aggiornamento automatico, quindi una sua
+  installazione non cercherà mai di «aggiornarsi» al remake, e viceversa. Il remake avrà il suo.
+- **I tag non si devono scontrare.** Il tag del remake è `v` + versione. Se la numerazione del remake arrivasse a
+  un numero già usato dal vecchio gioco (**1.2.6, 1.5.1, 1.5.3**), si **salta al successivo** (1.2.7, 1.5.2…):
+  un tag esistente non si riusa mai. Il flusso di rilascio rifiuta di partire se il tag esiste già.
+- **Si distinguono a parole.** Le release del remake portano nel titolo «Il Relitto Silente (remake)»; GitHub
+  segna «Latest» l’ultima pubblicata (non la versione più alta), e il README dice chiaramente che il
+  vecchio gioco e il remake hanno due numerazioni.
+
 ## 3. Dalla 1.0: che cosa è «incompatibile» per un gioco
 
 SemVer parla di API pubblica. Per il Relitto l’API pubblica è ciò su cui chi gioca fa affidamento fra
@@ -169,7 +185,8 @@ node strumenti/versione.mjs verifica --rilascio
 Poi il commit `chore(versioni): 0.2.0`. Gli altri comandi: `mostra` (le tre versioni), `verifica`
 (la coerenza dei file), `note X.Y.Z` (le note di una versione).
 
-**Tag e rilasci.** Per ora tutto resta locale: niente tag, niente GitHub. Il tag `v` + versione e la
+**Tag e rilasci.** Dal 16 ottobre 2026 il repository è su GitHub (`Pitz72/il-relitto-silente-opensource`), ma
+**non si crea nessun tag del remake a mano** (vedi §2.1). Il tag `v` + versione e la
 release li crea il flusso di rilascio della fase 9 (CI su GitHub Actions, come il Viaggiatore e lo
 standard Runtime), che rifiuta di partire se il tag esiste già. Un tag creato a mano prima di allora
 lo bloccherebbe.
