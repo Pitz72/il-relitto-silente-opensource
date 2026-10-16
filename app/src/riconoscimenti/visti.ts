@@ -8,6 +8,7 @@
 
 export interface Elenco {
   gioco: { titolo: string; autore: string; racconto: string };
+  musica: { sigla: string; titolo: string; modello: string; fonte: string; autore: string; licenza: string; uso: string }[];
   suoni: { sigla: string; titolo: string; autore: string; fonte: string; url: string | null; licenza: string; ridistribuibile: string; uso: string }[];
   immagini: { file: string; che_cosa: string; da_dove: string; autore: string; licenza: string }[];
   caratteri: (Pacchetto & { famiglia: string; ruolo: string })[];
@@ -34,6 +35,7 @@ export interface Pacchetto {
 /** I nomi dell'elenco, uno per cosa. */
 export function nomi(e: Elenco): string[] {
   return [
+    ...e.musica.map((m) => `musica:${m.titolo}|${m.modello}`),
     ...e.suoni.map((s) => `suono:${s.titolo}|${s.autore}`),
     ...e.immagini.map((i) => `immagine:${i.file}`),
     ...e.caratteri.map((c) => `carattere:${c.famiglia}`),

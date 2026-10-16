@@ -8,6 +8,10 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+### Aggiunto
+
+- **I riconoscimenti della musica** (16 ottobre 2026): la schermata «Riconoscimenti e licenze» ha una sezione «La musica» con i 17 brani generati (titolo, dove suona, Lyria 3.5 o Suno, licenza), ricavata da `audio/musica-ia/REGISTRO.md` da `strumenti/riconoscimenti.py`. Poiché aggiunge nomi, la schermata si rivede al primo avvio dopo l'aggiornamento.
+
 ## [0.2.1] - 2026-10-16
 
 ### Aggiunto

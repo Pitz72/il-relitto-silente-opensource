@@ -112,6 +112,25 @@ export default function Riconoscimenti({ elenco: e, primoAvvio, avanti: poi }: P
           </section>
 
           <section>
+            <h2>La musica</h2>
+            <p className="ric-nota">
+              Generata con l'intelligenza artificiale (Lyria 3.5 di Google, in Flow Music, e Suno) su indicazione e scelta dell'autore, che ne è il
+              regista. I brani di Lyria portano la filigrana SynthID.
+            </p>
+            <ul className="ric-voci">
+              {e.musica.map((m) => (
+                <li key={m.sigla + m.titolo}>
+                  <span className="ric-nome">«{m.titolo}»</span>
+                  <span className="ric-ruolo">
+                    {m.uso} · di {m.autore}, con {m.modello}
+                  </span>
+                  <span className="ric-licenza">{m.licenza}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section>
             <h2>I suoni</h2>
             {e.suoni.length === 0 && (
               <p className="ric-nota">Ogni suono del gioco è sintetizzato nel suo motore audio, senza registrazioni.</p>

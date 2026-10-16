@@ -5,6 +5,161 @@
   "racconto": "dal racconto «Il Relitto», in Dal registro della Santa Maria"
  },
  "suoni": [],
+ "musica": [
+  {
+   "sigla": "M1",
+   "titolo": "Bare Resonance",
+   "modello": "Lyria 3.5",
+   "fonte": "Google Flow Music",
+   "autore": "Simone Pizzi",
+   "licenza": "CC BY-NC-SA 4.0",
+   "uso": "il menu principale"
+  },
+  {
+   "sigla": "M1",
+   "titolo": "Resonant Void",
+   "modello": "Lyria 3.5",
+   "fonte": "Google Flow Music",
+   "autore": "Simone Pizzi",
+   "licenza": "CC BY-NC-SA 4.0",
+   "uso": "il menu principale"
+  },
+  {
+   "sigla": "S2",
+   "titolo": "Below the Iron Keel",
+   "modello": "Lyria 3.5",
+   "fonte": "Google Flow Music",
+   "autore": "Simone Pizzi",
+   "licenza": "CC BY-NC-SA 4.0",
+   "uso": "la soglia dell'Atto II"
+  },
+  {
+   "sigla": "S3",
+   "titolo": "Glass Horizon",
+   "modello": "Lyria 3.5",
+   "fonte": "Google Flow Music",
+   "autore": "Simone Pizzi",
+   "licenza": "CC BY-NC-SA 4.0",
+   "uso": "la soglia dell'Atto III"
+  },
+  {
+   "sigla": "S4",
+   "titolo": "Beneath the Stone Weight",
+   "modello": "Lyria 3.5",
+   "fonte": "Google Flow Music",
+   "autore": "Simone Pizzi",
+   "licenza": "CC BY-NC-SA 4.0",
+   "uso": "la soglia dell'Atto IV"
+  },
+  {
+   "sigla": "S5",
+   "titolo": "Below the Keel",
+   "modello": "Lyria 3.5",
+   "fonte": "Google Flow Music",
+   "autore": "Simone Pizzi",
+   "licenza": "CC BY-NC-SA 4.0",
+   "uso": "la soglia dell'Atto V, la fuga"
+  },
+  {
+   "sigla": "A1",
+   "titolo": "Cold Iron Orbit",
+   "modello": "Lyria 3.5",
+   "fonte": "Google Flow Music",
+   "autore": "Simone Pizzi",
+   "licenza": "CC BY-NC-SA 4.0",
+   "uso": "l'Anziano: il primo letto"
+  },
+  {
+   "sigla": "A2",
+   "titolo": "Tritone Loop",
+   "modello": "Suno",
+   "fonte": "Suno",
+   "autore": "Simone Pizzi",
+   "licenza": "CC BY-NC-SA 4.0",
+   "uso": "l'Anziano: il secondo letto"
+  },
+  {
+   "sigla": "A3",
+   "titolo": "Drones of the Deep",
+   "modello": "Suno",
+   "fonte": "Suno",
+   "autore": "Simone Pizzi",
+   "licenza": "CC BY-NC-SA 4.0",
+   "uso": "l'Anziano: il terzo letto"
+  },
+  {
+   "sigla": "A4",
+   "titolo": "Departure and Forgiveness",
+   "modello": "Suno",
+   "fonte": "Suno",
+   "autore": "Simone Pizzi",
+   "licenza": "CC BY-NC-SA 4.0",
+   "uso": "l'Anziano: il quarto letto"
+  },
+  {
+   "sigla": "C1",
+   "titolo": "Homecoming Drone",
+   "modello": "Suno",
+   "fonte": "Suno",
+   "autore": "Simone Pizzi",
+   "licenza": "CC BY-NC-SA 4.0",
+   "uso": "il finale «Vivi»"
+  },
+  {
+   "sigla": "C2",
+   "titolo": "Sustained D",
+   "modello": "Suno",
+   "fonte": "Suno",
+   "autore": "Simone Pizzi",
+   "licenza": "CC BY-NC-SA 4.0",
+   "uso": "il finale «La prima nota»"
+  },
+  {
+   "sigla": "C3",
+   "titolo": "G-sharp Resonance",
+   "modello": "Suno",
+   "fonte": "Suno",
+   "autore": "Simone Pizzi",
+   "licenza": "CC BY-NC-SA 4.0",
+   "uso": "il finale «La stiva piena»"
+  },
+  {
+   "sigla": "C4",
+   "titolo": "Cold Resonance (1)",
+   "modello": "Lyria 3.5",
+   "fonte": "Google Flow Music",
+   "autore": "Simone Pizzi",
+   "licenza": "CC BY-NC-SA 4.0",
+   "uso": "il finale «Doppio fondo»"
+  },
+  {
+   "sigla": "C5",
+   "titolo": "Below the Hull",
+   "modello": "Lyria 3.5",
+   "fonte": "Google Flow Music",
+   "autore": "Simone Pizzi",
+   "licenza": "CC BY-NC-SA 4.0",
+   "uso": "il finale «Due lettere»"
+  },
+  {
+   "sigla": "T",
+   "titolo": "Hull of the Ancient",
+   "modello": "Lyria 3.5",
+   "fonte": "Google Flow Music",
+   "autore": "Simone Pizzi",
+   "licenza": "CC BY-NC-SA 4.0",
+   "uso": "il tema"
+  },
+  {
+   "sigla": "T",
+   "titolo": "Held by the Dark",
+   "modello": "Lyria 3.5",
+   "fonte": "Google Flow Music",
+   "autore": "Simone Pizzi",
+   "licenza": "CC BY-NC-SA 4.0",
+   "uso": "il tema"
+  }
+ ],
  "immagini": [
   {
    "file": "poppa.webp",

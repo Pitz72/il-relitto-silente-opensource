@@ -10,6 +10,7 @@
 # Le fonti:
 #   relitto-silente/relitto.fav   il titolo e l'autore del gioco
 #   audio/LICENZE.md              i suoni, riga per riga
+#   audio/musica-ia/REGISTRO.md   i brani generati (Lyria 3.5, Suno) che entrano nel gioco
 #   grafica/LICENZE.md            le immagini, riga per riga
 #   app/package-lock.json         i pacchetti JavaScript che entrano nell'app (non quelli
 #                                 dello sviluppo); i caratteri stanno a parte
@@ -176,6 +177,35 @@ def suoni():
         fonte, url = collegamento(r["Fonte"])
         out.append({"sigla": r["Sigla"], "titolo": r["Titolo"], "autore": r["Autore"], "fonte": fonte, "url": url,
                     "licenza": r["Licenza"], "ridistribuibile": r["Ridistribuibile"], "uso": r["Usato in"]})
+    return out
+
+
+# Dove suona ogni scheda della musica (progettazione/22-musica-con-lyria.md, §10).
+USO_MUSICA = {
+    "M1": "il menu principale", "S2": "la soglia dell'Atto II", "S3": "la soglia dell'Atto III",
+    "S4": "la soglia dell'Atto IV", "S5": "la soglia dell'Atto V, la fuga",
+    "A1": "l'Anziano: il primo letto", "A2": "l'Anziano: il secondo letto", "A3": "l'Anziano: il terzo letto",
+    "A4": "l'Anziano: il quarto letto", "C1": "il finale «Vivi»", "C2": "il finale «La prima nota»",
+    "C3": "il finale «La stiva piena»", "C4": "il finale «Doppio fondo»", "C5": "il finale «Due lettere»",
+    "T": "il tema",
+}
+
+
+def musica():
+    """I brani generati che entrano nel gioco: quelli del registro che stanno in
+    `audio/musica-ia/<sigla>/` (non gli originali e le alternative, che restano fuori)."""
+    out = []
+    for r in tabella(os.path.join(RADICE, "audio", "musica-ia", "REGISTRO.md"), "## I brani"):
+        cella = senza_codice(r["File"])
+        m = re.match(r"(\S+\.mp3)\s*\(«([^»]+)»", cella)
+        if not m or "/originali/" in m.group(1) or "/anteprime/" in m.group(1):
+            continue
+        if not os.path.isfile(os.path.join(RADICE, "audio", "musica-ia", m.group(1))):
+            continue
+        modello = "Suno" if r["Modello"].startswith("Suno") else "Lyria 3.5"
+        out.append({"sigla": r["Scheda"], "titolo": m.group(2), "modello": modello,
+                    "fonte": "Suno" if modello == "Suno" else "Google Flow Music",
+                    "autore": "Simone Pizzi", "licenza": "CC BY-NC-SA 4.0", "uso": USO_MUSICA.get(r["Scheda"], "")})
     return out
 
 
@@ -369,6 +399,7 @@ def elenco(vecchio):
     return {
         "gioco": gioco(),
         "suoni": suoni(),
+        "musica": musica(),
         "immagini": immagini(),
         "caratteri": caratteri + caratteri_dei_loghi(),
         "principali": principali(js, rust),
