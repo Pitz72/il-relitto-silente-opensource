@@ -23,12 +23,10 @@ app/src-tauri/gen/
 # Suoni: le sorgenti grezze restano fuori da git (registro in audio/LICENZE.md)
 audio/sorgenti/
 
-# Musica di Lyria 3.5: gli MP3 entrano in git (leggeri, l'autore li ha scelti); i formati pesanti no
-audio/lyria/**/*.wav
-audio/lyria/**/*.m4a
-audio/lyria/**/*.flac
-# File che non vengono da Lyria (es. Suno): restano in locale finche' l'autore non decide
-audio/lyria/**/non-lyria/
+# Musica generata (Lyria 3.5, Suno): gli MP3 entrano in git (leggeri, l'autore li ha scelti); i formati pesanti no
+audio/musica-ia/**/*.wav
+audio/musica-ia/**/*.m4a
+audio/musica-ia/**/*.flac
 
 # Le consegne all'autore: installer e versioni portatili (si rifanno con tauri build)
 consegne/

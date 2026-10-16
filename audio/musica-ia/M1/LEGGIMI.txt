@@ -4,4 +4,4 @@ M1, il menu principale: due brani di Lyria 3.5 (Google Flow Music), scelti dall'
   M1-02-resonant-void.mp3    «Resonant Void», 2:40
 
 Sono copie di lavoro, con i tag scritti. Gli originali, intatti (con il manifesto C2PA di Google), stanno in originali/.
-Il prompt di ognuno e le misure sono nel registro: audio/lyria/REGISTRO.md. Il metodo: progettazione/22-musica-con-lyria.md.
+Il prompt di ognuno e le misure sono nel registro: audio/musica-ia/REGISTRO.md. Il metodo: progettazione/22-musica-con-lyria.md.
