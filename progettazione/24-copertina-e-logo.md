@@ -102,7 +102,7 @@ L'autore ha chiesto subito le copertine social in **16:9, 9:16, formato poster e
 | `16x9` | 2752 × 1536 | testata, YouTube, pagina del gioco |
 | `21x9` | 3440 × 1440 | schermi ultralarghi, banner |
 | `9x16` | 1440 × 2560 | storie e video verticali (titolo sopra la zona dei comandi della piattaforma) |
-| `poster` | 2400 × 3600 (2:3) | stampa, con la cornice, i credits «un gioco di Simone Pizzi» e sotto il marchio di Runtime Multimedia (`grafica/logo/runtime-multimedia.png`) |
+| `poster` | 2400 × 3600 (2:3) | stampa, con la cornice, i credits «un gioco di Simone Pizzi» e sotto il marchio di Runtime Multimedia (il marchio ufficiale dal kit dei loghi dell’autore, `grafica/logo/runtime-multimedia-colore.png`) |
 | `social` | 1280 × 640 (2:1) | l'anteprima del repository su GitHub (Settings → Social preview) |
 
 **Che cosa c'è.** Il cielo (nero azzurro, un chiarore freddo dalla parte del sole, la Via Lattea in diagonale, qualche migliaio di stelle che si fanno più piccole e più spente vicino al fuso); **il fuso nero**, enorme, con un filo di luce fredda sul bordo; **il punto verde del seme** nel suo cuore; **la Santa Maria canonica** (`app/public/intro/prua.webp`, scontornata) piccola in un angolo, un poco più fredda dalla parte opposta al sole; il titolo in stencil e la riga del racconto in corsivo, con i caratteri del gioco. Una grana finissima e la vignettatura tolgono le bande dai gradienti.
