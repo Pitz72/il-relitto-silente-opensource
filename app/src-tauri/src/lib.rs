@@ -190,6 +190,9 @@ pub fn run() {
     audio::adesso_ns(); // fissa l'epoca
     prepara_grafica();
     tauri::Builder::default()
+        // l'aggiornamento automatico: controlla le release su GitHub, firmate (documento 06, fase 9)
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_process::init())
         .manage(StatoAudio::default())
         .invoke_handler(tauri::generate_handler![
             audio_avvia,

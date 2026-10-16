@@ -25,6 +25,7 @@ import { tavolozza, variabiliCss } from "./stile/atmosfere";
 import { attributiSchermo, useMovimentoRidotto, useOpzioni } from "./stile/opzioni";
 import { comando, dentroTauri } from "./lib/tauri";
 import { schermoIntero } from "./lib/finestra";
+import { cercaAggiornamento } from "./aggiornamenti";
 import { avviaSuono, menuSuono, mixSuono, suonaTocco } from "./gioco/suono";
 import { gestoDelClic } from "./gioco/tocco";
 import { archivio, type Posto } from "./gioco/salvataggi";
@@ -191,6 +192,35 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
     })();
   }, [prova]);
 
+  // ---- l'aggiornamento: all'avvio in silenzio (se l'opzione lo vuole), dal menu a mano ----
+  const cercaNuova = useCallback(
+    async (aMano: boolean) => {
+      if (aMano) mostraAvviso("Cerco una versione nuova…");
+      const e = await cercaAggiornamento();
+      if (e.tipo === "nuova") {
+        setDomanda({
+          testo: `È uscita la versione ${e.versione}.`,
+          sotto: "Si scarica, si installa e il gioco si riapre. Una partita in corso va salvata prima: il gioco la ricorderà solo se l'hai salvata.",
+          si: "Aggiorna",
+          no: "Più tardi",
+          allora: () => {
+            mostraAvviso("Scarico l'aggiornamento…");
+            void e.installa().catch(() => mostraAvviso("L'aggiornamento non è andato a buon fine.", true));
+          },
+        });
+      } else if (aMano) {
+        mostraAvviso(e.tipo === "aggiornato" ? "Il gioco è aggiornato." : "Non riesco a controllare: serve la rete.", e.tipo === "errore");
+      }
+    },
+    [mostraAvviso],
+  );
+  const cercatoAvvio = useRef(false);
+  useEffect(() => {
+    if (schermata.tipo !== "menu" || cercatoAvvio.current || !opzioni.cercaAggiornamenti || !dentroTauri() || prova !== undefined) return;
+    cercatoAvvio.current = true;
+    void cercaNuova(false);
+  }, [schermata.tipo, opzioni.cercaAggiornamenti, prova, cercaNuova]);
+
   // ---- le voci del menu ---------------------------------------------------------
   const salvato = daContinuare(posti);
   const voci: VoceMenu[] = [];
@@ -210,6 +240,7 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   voci.push({ id: "opzioni", etichetta: "Opzioni", azione: () => setPannello("opzioni") });
   voci.push({ id: "registro", etichetta: "Registro dei finali", azione: () => setPannello("registro") });
   voci.push({ id: "riconoscimenti", etichetta: "Riconoscimenti", azione: () => setSchermata({ tipo: "riconoscimenti", primoAvvio: false }) });
+  if (dentroTauri()) voci.push({ id: "aggiorna", etichetta: "Cerca aggiornamenti", azione: () => void cercaNuova(true) });
   if (dentroTauri()) voci.push({ id: "esci", etichetta: "Esci", azione: () => void comando("esci", { codice: 0 }) });
 
   // Esc chiude il pannello aperto sopra il menu

@@ -320,6 +320,7 @@ export function PannelloOpzioni({ forma, opzioni, cambia, chiudi }: { forma: For
             {riga("Carattere", "carattere", [["newsreader", "Newsreader"], ["atkinson", "Atkinson Hyperlegible"]])}
             {riga("Testo", "testoGrande", [[false, "normale"], [true, "grande"]])}
             {riga("Schermo intero", "schermoIntero", [[true, "sì"], [false, "no, in una finestra"]], "Si cambia anche con F11.")}
+            {riga("Aggiornamenti", "cercaAggiornamenti", [[true, "cercali all'avvio"], [false, "no"]], "All'avvio il gioco chiede a GitHub se è uscita una versione nuova; non manda niente di tuo. Dal menu si può cercare a mano.")}
             {riga("Nomi toccabili nel testo", "nomiToccabili", [[true, "sì"], [false, "no"]], "Toccare un nome nella descrizione apre il menu di quella cosa.")}
           </>
         )}

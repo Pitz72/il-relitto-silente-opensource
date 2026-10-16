@@ -10,6 +10,7 @@ documenti di `progettazione/`.
 
 ### Aggiunto
 
+- **L'aggiornamento automatico** (16 ottobre 2026; `sviluppo/VERSIONI.md`, §7): il gioco cerca una versione nuova nelle release su GitHub (all'avvio se l'opzione «Aggiornamenti» lo vuole, di base sì; a mano dal menu, «Cerca aggiornamenti»), lo dice e chiede; installa solo pacchetti **firmati** con la chiave dell'autore (chiave pubblica in `tauri.conf.json`). Il flusso di rilascio (`.github/workflows/rilascio.yml`) costruisce Windows e Linux su un tag `v` + versione e prepara una bozza di release con il suo `latest.json`. Non provato su GitHub finché non c'è il primo tag.
 - **I riconoscimenti della musica** (16 ottobre 2026): la schermata «Riconoscimenti e licenze» ha una sezione «La musica» con i 17 brani generati (titolo, dove suona, Lyria 3.5 o Suno, licenza), ricavata da `audio/musica-ia/REGISTRO.md` da `strumenti/riconoscimenti.py`. Poiché aggiunge nomi, la schermata si rivede al primo avvio dopo l'aggiornamento. La **dichiarazione sull'IA** dice anche della musica (testo approvato dall'autore).
 
 ## [0.2.1] - 2026-10-16

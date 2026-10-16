@@ -248,6 +248,9 @@ def pacchetti_js():
             autore = pj.get("author")
             if not voce["copyright"] and autore:
                 voce["autori"] = [autore if isinstance(autore, str) else autore.get("name", "")]
+            elif not voce["copyright"] and pj.get("authors"):
+                # i plugin di Tauri dichiarano «authors» (un elenco), non «author»
+                voce["autori"] = [a if isinstance(a, str) else a.get("name", "") for a in pj["authors"]]
             js.append(voce)
     return js, caratteri
 

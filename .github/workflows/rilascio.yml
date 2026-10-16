@@ -1,0 +1,71 @@
+# Il rilascio del remake (documento 06, fase 9; sviluppo/VERSIONI.md, §2.1 e §7).
+#
+# Parte quando si spinge un tag `v` + versione (per esempio v0.9.0 o v1.0.0-rc.1). Il tag è la versione:
+# `versione.json` deve dire lo stesso numero, e il CHANGELOG deve avere la sua sezione datata. Costruisce
+# Windows (installer NSIS) e Linux (.deb, AppImage), firma i pacchetti dell'aggiornamento automatico con
+# la chiave privata dei Secrets e prepara una release in BOZZA con il suo `latest.json`: l'autore la guarda
+# e la pubblica a mano (finché è bozza, GitHub non la segna «Latest» e nessun gioco installato la vede).
+#
+# Prima volta: nei Secrets del repository (Settings → Secrets and variables → Actions) va il contenuto del
+# file della chiave privata come `TAURI_SIGNING_PRIVATE_KEY` (e, se ne ha una, la password come
+# `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`). La chiave pubblica sta già in app/src-tauri/tauri.conf.json.
+# Non provato su GitHub finché non c'è il primo tag: sviluppo/VERSIONI.md, §7.
+name: Rilascio
+
+on:
+  push:
+    tags: ["v[0-9]+.[0-9]+.[0-9]+*"]
+
+permissions:
+  contents: write
+
+jobs:
+  controllo:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Il tag è la versione
+        run: |
+          node strumenti/versione.mjs verifica --rilascio
+          V=$(node -p "require('./versione.json').gioco")
+          test "v$V" = "${GITHUB_REF_NAME}" || { echo "Il tag ${GITHUB_REF_NAME} non è la versione v$V di versione.json"; exit 1; }
+
+  costruisci:
+    needs: controllo
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { sistema: windows-latest, args: "" }
+          - { sistema: ubuntu-22.04, args: "" }
+    runs-on: ${{ matrix.sistema }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: app/package-lock.json }
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: swatinem/rust-cache@v2
+        with: { workspaces: "app/src-tauri -> target" }
+      - name: Le librerie di Linux
+        if: matrix.sistema == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential pkg-config libwebkit2gtk-4.1-dev libxdo-dev libssl-dev \
+            libayatana-appindicator3-dev librsvg2-dev libasound2-dev libdbus-1-dev patchelf
+      - run: npm ci
+        working-directory: app
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          projectPath: app
+          tagName: ${{ github.ref_name }}
+          releaseName: "Il Relitto Silente (remake) ${{ github.ref_name }}"
+          releaseBody: "Il remake de «Il Relitto Silente», un programma a sé. Le note di questa versione sono nel CHANGELOG."
+          releaseDraft: true
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          args: --config src-tauri/tauri.rilascio.conf.json ${{ matrix.args }}

@@ -195,3 +195,24 @@ Poi il commit `chore(versioni): 0.2.0`. Gli altri comandi: `mostra` (le tre vers
 release li crea il flusso di rilascio della fase 9 (CI su GitHub Actions, come il Viaggiatore e lo
 standard Runtime), che rifiuta di partire se il tag esiste già. Un tag creato a mano prima di allora
 lo bloccherebbe.
+
+## 7. L'aggiornamento automatico e il rilascio (16 ottobre 2026)
+
+- **Il flusso.** Si prepara la versione (`node strumenti/versione.mjs prepara …`), si fa il commit «chore(versioni)», si spinge
+  il tag `v` + versione: `.github/workflows/rilascio.yml` costruisce Windows e Linux, firma i pacchetti e prepara una release **in
+  bozza** con il suo `latest.json`; l'autore la pubblica a mano. Finché è bozza nessun gioco installato la vede.
+- **Il gioco** controlla `https://github.com/Pitz72/il-relitto-silente-opensource/releases/latest/download/latest.json`
+  (`app/src/aggiornamenti.ts`): all'avvio, se l'opzione «Aggiornamenti» lo vuole (di base sì), e a mano dal menu («Cerca aggiornamenti»).
+  Se c'è una versione più alta lo dice e chiede; l'installazione la decide chi gioca. Il pacchetto deve essere **firmato** con la chiave
+  privata dell'autore: la chiave pubblica sta in `tauri.conf.json`, e un pacchetto senza la firma giusta non si installa.
+- **La chiave privata** non sta nel repository: è in `C:/Users/Utente/.tauri/relitto-aggiornamenti.key` (senza password) e, per il rilascio,
+  va nei Secrets di GitHub come `TAURI_SIGNING_PRIVATE_KEY`. **Va copiata in un posto sicuro**: se si perde, i giochi già installati non
+  potranno più aggiornarsi (bisognerebbe farli reinstallare con una chiave nuova).
+- **«Latest» di GitHub.** L'endpoint usa l'ultima release *pubblicata*: il vecchio gioco ha le sue (`v1.2.6`, `v1.5.1`, `v1.5.3`) e il flusso
+  del §2.1 le tiene distinte; se la «Latest» fosse una release del vecchio gioco, `latest.json` non si troverebbe e l'aggiornamento tacerebbe,
+  senza errori per chi gioca. Per questo il titolo delle release del remake dice «(remake)» e la bozza si pubblica come ultima.
+- **Le build locali** (le consegne di ascolto) non sono firmate per l'aggiornamento: `createUpdaterArtifacts` sta solo in
+  `app/src-tauri/tauri.rilascio.conf.json`, che usa il flusso di rilascio.
+- **Prova.** Il client e il flusso non si possono provare del tutto prima del primo tag: la prima release (una pre-release, per esempio
+  `v0.9.0-beta.1`) serve anche a questo.
+
