@@ -365,7 +365,7 @@ Questo è lavoro mio, nel lettore (§7), dopo gli ascolti dell’autore.
 
 ## 8. Che cosa cambia fuori dal suono
 
-- **La dichiarazione sull’IA** (`riconoscimenti/Dichiarazione.tsx`, TESTO_DICHIARAZIONE, approvato il 15 ottobre 2026) dice oggi che cosa ha fatto l’IA nel gioco. Con Lyria si aggiunge una riga: la musica è generata con **Lyria 3.5 di Google (Flow Music)**, e ogni file porta la filigrana SynthID. **Il testo lo approva l’autore** (è suo: come la prima volta, glielo propongo e lo scrive lui, o lo approva).
+- **La dichiarazione sull’IA** (`riconoscimenti/Dichiarazione.tsx`, TESTO_DICHIARAZIONE, approvato il 15 ottobre 2026) dice oggi che cosa ha fatto l’IA nel gioco. Con Lyria si aggiunge una riga: la musica è generata con **Lyria 3.5 di Google (Flow Music)**, e ogni file porta la filigrana SynthID. **Il testo lo approva l’autore** (è suo). **Fatto il 16 ottobre 2026**: approvata la frase «La musica è stata generata con l’intelligenza artificiale (Lyria 3.5 di Google e Suno), scelta e diretta dall’autore; ogni suono del gioco è invece sintetizzato dal suo motore audio.», dopo la frase di prima.
 - **I riconoscimenti** (`strumenti/riconoscimenti.py`): una riga per la musica; la verifica delle licenze (`--verifica`) deve sapere dei nuovi file.
 - **La licenza.** Il repository diventa aperto; la licenza del codice, quella dei testi e delle immagini, e **quella dei file di musica generati** non sono ancora scelte. Per la musica pesa quello che dicono i Termini di Flow Music (§2.4). **Decisione dell’autore, da prendere con la licenza** (§9, D38).
 - **La bibbia sonora** (10, §11) e il documento 21 si aggiornano: il 21 resta la **mappa** (che cosa suona dove), il 22 dice come si fa.
