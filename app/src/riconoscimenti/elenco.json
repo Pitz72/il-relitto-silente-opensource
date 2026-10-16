@@ -237,6 +237,13 @@
    "da_dove": "composte in codice da strumenti/copertina/componi.py (progettazione/24-copertina-e-logo.md, §9) con app/public/intro/prua.webp e i caratteri del gioco; **nessuna immagine generata da strumenti di IA**",
    "autore": "Simone Pizzi",
    "licenza": "dell’autore"
+  },
+  {
+   "file": "runtime-multimedia.png",
+   "che_cosa": "il marchio di Runtime Multimedia, per i credits del poster",
+   "da_dove": "il file del logo dell’autore (progetto «Il mistero della Santa Maria», grafica/00 LOGO/logo-runtimemultimedia.png)",
+   "autore": "Simone Pizzi",
+   "licenza": "dell’autore"
   }
  ],
  "caratteri": [

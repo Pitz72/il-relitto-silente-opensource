@@ -7,6 +7,7 @@
 #   python strumenti/copertina/componi.py                 tutti i formati, in grafica/copertine/
 #   python strumenti/copertina/componi.py 16x9 poster     solo questi
 #
+# Il formato poster porta anche «un gioco di Simone Pizzi» e il marchio di Runtime Multimedia (grafica/logo/runtime-multimedia.png).
 # Formati: 16x9 (2752×1536), 21x9 (3440×1440), 9x16 (1440×2560), poster (2400×3600, 2:3), social (1280×640, 2:1: l'anteprima
 # del repository). Nessun caso: stelle e grana vengono da semi fissi, ogni volta lo stesso disegno.
 
@@ -28,7 +29,8 @@ FONT = os.path.join(RADICE, "app", "node_modules", "@fontsource-variable")
 
 TITOLO = "IL RELITTO SILENTE"
 RIGA = "dal racconto «Il Relitto», in Dal registro della Santa Maria"
-CREDITO = "un’avventura testuale di Simone Pizzi"
+CREDITO = "un gioco di Simone Pizzi"
+LOGO_RUNTIME = os.path.join(RADICE, "grafica", "logo", "runtime-multimedia.png")
 
 CIANO = np.array([95, 212, 220]) / 255
 SEME = np.array([139, 240, 162]) / 255
@@ -44,8 +46,8 @@ FORMATI = {
                  riga=0.022, seme=0.50, via=-22),
     "9x16": dict(L=1440, A=2560, p0=(1.14, 0.64), p1=(-0.16, 0.05), h=0.125, nave=(0.08, 0.515, 0.56), titolo=(0.5, 0.755, 0.050, "c"),
                  riga=0.0135, seme=0.46, via=-58),
-    "poster": dict(L=2400, A=3600, p0=(1.14, 0.60), p1=(-0.16, 0.03), h=0.115, nave=(0.07, 0.585, 0.50), titolo=(0.5, 0.775, 0.050, "c"),
-                   riga=0.0135, seme=0.46, via=-58, credito=True, cornice=True),
+    "poster": dict(L=2400, A=3600, p0=(1.14, 0.60), p1=(-0.16, 0.03), h=0.115, nave=(0.07, 0.555, 0.50), titolo=(0.5, 0.745, 0.050, "c"),
+                   riga=0.0135, seme=0.46, via=-58, credito=True, logo=0.17, cornice=True),
     "social": dict(L=1280, A=640, p0=(0.34, 1.12), p1=(1.12, -0.12), h=0.32, nave=(0.05, 0.60, 0.26), titolo=(0.05, 0.16, 0.085, "sx"),
                    riga=0.026, seme=0.50, via=-28),
 }
@@ -229,7 +231,7 @@ def metti_testo(img, s):
     d.text((x, riga_y), RIGA, font=fr, fill=tuple(int(v * 255) for v in FREDDO * 0.66) + (255,), anchor="ls")
     if s.get("credito"):
         fc = font(tipi["corsivo"], s["riga"] * A * 1.02, 400)
-        d.text((L / 2, A * 0.935), CREDITO, font=fc, fill=tuple(int(v * 255) for v in FREDDO * 0.8) + (255,), anchor="ms")
+        d.text((L / 2, A * 0.878), CREDITO, font=fc, fill=tuple(int(v * 255) for v in FREDDO * 0.8) + (255,), anchor="ms")
     if s.get("cornice"):
         m = int(0.035 * L)
         d.rectangle([m, m, L - m, A - m], outline=tuple(int(v * 255) for v in ACCIAIO * 1.1) + (120,), width=max(2, int(L * 0.0016)))
@@ -239,6 +241,23 @@ def metti_testo(img, s):
     nero.putalpha(ombra.getchannel("A").point(lambda v: int(v * 0.65)))
     pil = Image.alpha_composite(Image.alpha_composite(pil, nero), strato)
     return np.asarray(pil.convert("RGB"), np.float32) / 255
+
+
+def metti_logo(img, s):
+    """Il marchio di Runtime Multimedia sotto i credits: l'immagine ha il fondo nero, quindi si schiarisce sul cielo (screen)."""
+    L, A = s["L"], s["A"]
+    lg = Image.open(LOGO_RUNTIME).convert("RGB")
+    a = np.asarray(lg, np.float32) / 255
+    attivo = np.argwhere(a.max(axis=2) > 0.09)
+    (y0, x0), (y1, x1) = attivo.min(axis=0), attivo.max(axis=0)
+    lg = lg.crop((x0, y0, x1 + 1, y1 + 1))
+    larghezza = int(s["logo"] * L)
+    lg = lg.resize((larghezza, int(lg.height * larghezza / lg.width)), Image.LANCZOS)
+    b = np.asarray(lg, np.float32) / 255
+    x, y = int((L - larghezza) / 2), int(0.903 * A)
+    zona = img[y:y + b.shape[0], x:x + b.shape[1]]
+    img[y:y + b.shape[0], x:x + b.shape[1]] = 1 - (1 - zona) * (1 - b)
+    return img
 
 
 def finitura(img, caso):
@@ -257,6 +276,8 @@ def componi(nome):
     img, seme = cielo(s, caso)
     img = metti_nave(img, s)
     img = metti_testo(img, s)
+    if s.get("logo"):
+        img = metti_logo(img, s)
     img = finitura(img, caso)
     os.makedirs(USCITA, exist_ok=True)
     percorso = os.path.join(USCITA, f"relitto-{nome}.png")

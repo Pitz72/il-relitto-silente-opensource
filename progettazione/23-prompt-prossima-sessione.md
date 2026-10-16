@@ -56,3 +56,21 @@ Per «ordine» l'autore ha scelto: i documenti e i registri, e la storia di git.
 - **Ancora aperti**: D35 e D40 (il piano di Flow Music e quello di Suno, Pro o Premier: sono dati da dare per il registro, non scelte); la partita intera giocata a mano.
 - **Fatto**: STRUTTURA.md aggiornata, prompt 07/11/13/15 segnati superati, regola 3 di `audio/LICENZE.md` aggiornata con la licenza della musica.
 
+
+## Dove siamo, a fine giornata (16 ottobre 2026, notte)
+
+Dopo quasi venti ore di lavoro, l'autore ha detto basta: si riprende **domani o domenica**. Tutto è su GitHub, la cartella locale e `origin/main` sono allineate, il backup in `F:\Backup` è aggiornato.
+
+**Fatto oggi** (versione **0.2.3**, nel CHANGELOG le voci): il riordino dei documenti e le decisioni (18, 19, 20, 16, 22); la scheda **Audio** con cursori da mixer (effetti, interfaccia, musica, parlato); il **lettore dei 17 MP3**; il **mix d'autore** (`livelli.json`) e la **console di regia** Ctrl+Maiusc+M (solo nelle consegne di ascolto, `RELITTO_REGIA=1`); il **sound design dell'intro**; il **versioning** (una PATCH a ogni consegna); i riconoscimenti e la dichiarazione IA per la musica; l'**aggiornamento automatico** firmato e il flusso di rilascio; la **modalità a solo testo**; il **logo** (approvato) e le **copertine** in cinque formati (il poster ha i credits e il marchio di Runtime Multimedia).
+
+**La consegna da ascoltare**: `consegne/Il Relitto Silente 0.2.3+b906407 (regia)/` (installer e portatile). L'autore non l'ha ancora provata: tutte le sue note sull'audio (livelli dei canali con la console, musica nel gioco, intro) e sulla modalità a solo testo vengono da lì.
+
+**Da fare, in ordine:**
+
+1. **Le note dell'autore dopo l'ascolto**: i livelli del mix (li regola con la console e mi manda il `livelli.json` copiato), la musica nel gioco (le integrazioni sintetizzate del 22 §7.1 solo dopo il suo ascolto), l'intro, la modalità a solo testo (NVDA e l'eseguibile non sono provati).
+2. **La musica dell'intro** (`I-B`, `I-E`, `I-G`): i prompt sono nel 22 §5.8, li genera lui con Lyria; il lettore li prende al posto della guida del re.
+3. **Il tema** (`T-01`, `T-02`) non è collegato da nessuna parte: decidere dove.
+4. **La copertina**: D42–D44 del documento 24 (le copertine in codice ci sono; se vuole un cielo generato da uno strumento, `componi.py` lo usa).
+5. **Chiave dell'aggiornamento**: copiare `C:\Users\Utente\.tauri\relitto-aggiornamenti.key` in un posto sicuro e metterla nei Secrets di GitHub (`TAURI_SIGNING_PRIVATE_KEY`). Il flusso di rilascio non è provato finché non c'è il primo tag (una pre-release, per esempio `v0.9.0-beta.1`).
+6. **I dati dell'autore** per il registro della musica: i prompt esatti, il piano di Flow Music, il piano di Suno (Pro o Premier).
+7. **Linux** su una macchina vera; **la partita intera giocata a mano** (chiude la fase 3); poi l'inglese in 1.1 e **la revisione angolo per angolo** («quando consideriamo il programma di sviluppo concluso»).
