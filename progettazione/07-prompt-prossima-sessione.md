@@ -1,5 +1,7 @@
 # Prompt per la prossima sessione
 
+> **Superato** (16 ottobre 2026, sera): il prompt in vigore è il `23-prompt-prossima-sessione.md`. Questo resta come storia.
+
 Scritto il 14 ottobre 2026, a chiusura della sessione che ha rivisto e corretto il gioco e
 progettato l’app desktop. Da incollare così com’è all’inizio della sessione nuova.
 

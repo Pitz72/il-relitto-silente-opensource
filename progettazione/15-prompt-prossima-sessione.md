@@ -1,5 +1,7 @@
 # Il prompt della prossima sessione
 
+> **Superato** (16 ottobre 2026, sera): il prompt in vigore è il `23-prompt-prossima-sessione.md`. Questo resta come storia.
+
 Da incollare all’inizio della prossima sessione. Sostituisce `13-prompt-prossima-sessione.md`, che era il prompt della quarta sessione (la prima metà della fase 3).
 
 ---
