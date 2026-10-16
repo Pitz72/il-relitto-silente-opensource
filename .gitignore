@@ -27,6 +27,9 @@ audio/sorgenti/
 audio/musica-ia/**/*.wav
 audio/musica-ia/**/*.m4a
 audio/musica-ia/**/*.flac
+# Solo gli MP3 che il gioco usa stanno in git: gli originali scaricati, le alternative e le anteprime restano in locale e nel backup
+audio/musica-ia/**/originali/
+audio/musica-ia/**/anteprime/
 
 # Le consegne all'autore: installer e versioni portatili (si rifanno con tauri build)
 consegne/

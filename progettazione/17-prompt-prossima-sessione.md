@@ -1,5 +1,7 @@
 # Il prompt della prossima sessione
 
+> **Sostituito dal `23-prompt-prossima-sessione.md`** (16 ottobre 2026, sera). Resta qui come storia: l’elenco delle decisioni è riportato e aggiornato nel 23.
+
 Da incollare all’inizio della prossima sessione. Sostituisce `15-prompt-prossima-sessione.md`, che era il prompt della quinta sessione (la seconda metà della fase 3, cominciata: il motore 1.5.0 e il diario).
 
 ---
