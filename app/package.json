@@ -1,7 +1,7 @@
 {
   "name": "il-relitto-silente",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.2.1",
   "type": "module",
   "description": "Il Relitto Silente — app desktop (Tauri 2): il motore FAVELLA 1.5.0 dentro Pyodide, un'interfaccia a soli pulsanti.",
   "license": "MIT",

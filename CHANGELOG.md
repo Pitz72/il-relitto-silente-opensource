@@ -8,6 +8,8 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+## [0.2.1] - 2026-10-16
+
 ### Aggiunto
 
 - **Il suono dell'intro** (16 ottobre 2026; storyboard, §11): l'intro ha adesso la sua colonna sonora, sintetizzata nel

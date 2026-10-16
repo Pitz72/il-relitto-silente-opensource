@@ -42,7 +42,12 @@ tutto può cambiare). Il MINOR segue le fasi del piano (`progettazione/06-app-de
 | 1.0.0-beta.N, 1.0.0-rc.N | fase 10, la prova finale su hardware vero |
 | **1.0.0** | il primo rilascio pubblico |
 
-Le correzioni dentro una fase sono PATCH (0.3.1, 0.3.2). Una fase che si chiude in più passi può
+**Una PATCH a ogni consegna (decisione dell'autore, 16 ottobre 2026).** Prima il numero si muoveva solo a
+fine fase, e per questo restava 0.2.0 anche dopo settimane di lavoro (suono, musica, opzioni audio, intro). Da
+qui in poi **ogni consegna all'autore prende un numero nuovo** (0.2.1, 0.2.2…), con la sua sezione datata nel
+CHANGELOG (`node strumenti/versione.mjs prepara patch`, poi il commit «chore(versioni): X.Y.Z»); il MINOR sale
+quando si chiude una fase. La consegna si chiama «Il Relitto Silente X.Y.Z+commit»; se porta la console di regia
+(`RELITTO_REGIA=1`, bibbia sonora §12) lo dice nel nome: «… (regia)». Le correzioni dentro una fase sono PATCH (0.3.1, 0.3.2). Una fase che si chiude in più passi può
 usare le pre-release (0.3.0-alpha.1). Il numero non promette niente a nessuno finché non esce la 1.0.
 
 ### 2.1 Il remake è un programma a sé (decisione dell’autore, 16 ottobre 2026)
