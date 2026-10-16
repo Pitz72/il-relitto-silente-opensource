@@ -250,6 +250,42 @@ Il tema si può anche rifare in codice (il motore ha già il vetro) e sovrapporr
 - **La musica dell’intro** (21, §7): aspetta le scene definitive.
 - **Le tracce di «Mani vuote»**: non ce ne sono.
 
+### 5.7 Le seconde stesure (16 ottobre 2026, sera)
+
+Due lezioni dai primi file, che cambiano il modo di scrivere i prompt:
+
+- **Quando un brano deve fare una cosa precisa nel tempo** (come `C5`, un suono che si spoglia degli armonici), il prompt «a ritratto» non basta: Lyria e Suno lo trasformano in un’atmosfera che vaga. Serve **un prompt a partitura**: una sola sorgente sonora nominata con la sua fisica (qui un oscillatore a dente di sega su re₂ che passa in un filtro passa-basso che si chiude), gli armonici elencati per nome (re₂, re₃, la₃, re₄, fa♯₄, la₄, do₅, re₅) e una riga a tempi per ogni cosa che sparisce.
+- **Il carattere.** Un tema di quattro note di vetro scritto come «motivo» suona da **giallo, da mistero** (tasti tintinnanti, note staccate, tonalità minore, tensione di indagine). Il gioco è **fantascienza**: stupore, vastità, solitudine cosmica, una macchina antica che chiama. Per questo il tema si chiede come **quattro segnali puri**, lunghi, in un riverbero enorme, e si dice a parole che cosa non deve essere (inchiesta, sospetto, giocattolo).
+
+**`C5` · Due lettere, seconda stesura (partitura, 60 s)**
+
+```
+Instrumental. A single drone with one sound source from beginning to end: one analog synthesizer voice, a sawtooth oscillator tuned to D2 (73.4 Hz), played through a resonant low-pass filter that closes slowly and steadily over the whole piece, in a huge, dark, long reverb. Free tempo, no beat, no rhythm, no melody, no chords, no other instruments, no vocals, no percussion; nothing is ever added, only taken away. Very quiet, cold, vast and empty, like the last sound in a dead spaceship. The pitch is D and only D, never bending, no vibrato. The upper harmonics are removed one by one by the closing filter, in this order:
+[00:00] The drone starts at once, bright and rich in harmonics: the fundamental D2 and its overtones D3, A3, D4, F-sharp 4, A4, C5 and D5, like a reed organ.
+[00:08] The highest overtones (D5, C5) fade out.
+[00:15] A4 and F-sharp 4 fade out; the tone grows rounder and darker.
+[00:23] D4 and A3 fade out; only D2 and D3 remain, hollow, like a deep wooden pipe.
+[00:32] D3 fades out. Only one bare, pure, low D2 remains, steady, motionless.
+[00:42] The bare D2 slowly decreases in volume.
+[00:50] The last sound dissolves into complete silence, which lasts until the end. 60 seconds in total. Do not restart, do not repeat, never add a note or an instrument.
+```
+
+Se non viene: variante breve, per Suno (che ignora spesso i tempi): *«Instrumental. A single sawtooth synthesizer drone on D2, 73.4 Hz, through a low-pass filter that slowly and steadily closes, removing the overtones one by one until only a bare low D sine remains, which fades to complete silence. Free tempo, one sound only, nothing added, huge dark reverb, very quiet, 60 seconds.»*
+
+**`T` · Il tema, seconda stesura, versione A «segnale di cristallo» (20 s)**
+
+```
+Instrumental. Cosmic, cold, awe-inspiring science-fiction ambient, 20 seconds, in a gigantic empty space: the feeling of a deep-space signal, wonder and cosmic loneliness; not suspense, not investigation, nothing playful, nothing like a detective theme. Four pure tones only, each a long, sustained, crystalline note with a soft metallic shimmer in its overtones, like a crystal singing bowl or a resonating spacecraft hull struck once, no click at the attack, a very slow decay, drowned in a vast, dark, endless reverb, so that each note is still ringing when the next arrives. Played slowly and evenly, about four seconds apart, in the high register (between 830 and 1245 Hz), with no rhythm, no vibrato, no melody shape, no piano, no celesta, no music box, no pizzicato, no strings, no percussion. The pitches in order: G-sharp, B, D-sharp, and then D, one semitone below the last. The first three build up like one hollow chord ringing together, and the last note arrives like a quiet answer, a sense of arrival, not a question.
+```
+
+**versione B «faro nel vuoto»**
+
+```
+Instrumental. Deep-space science-fiction ambient, 20 seconds. Four pure sine-wave beacon tones, like the transmission of an ancient machine intelligence heard across empty space, each lasting about four seconds with a very slow fade, in a huge cold reverb and a barely audible low drone on D far underneath. Sustained, evenly spaced, no rhythm, no staccato, no melody, no instruments. Mood: awe, vastness, distance; never mystery, never tension, never playful. The pitches in order: G-sharp, B, D-sharp, then D. Natural, calm, and ending in silence.
+```
+
+Per correggere un tema che suona ancora da giallo, la frase per il Producer: *«Remove all suspense. No detective feel, no staccato, no tinkling. Make every note long, pure and ringing, like a signal from deep space, awe and vastness, in a huge reverb.»* Se nemmeno così, **il tema si rifà in codice** (additivo, quattro parziali puri con coda lunga, nella tonalità esatta): è la strada sicura per un’opera di fantascienza.
+
 ## 6. I file, dove stanno, come si chiamano
 
 - Cartella: `audio/musica-ia/<sigla>/` (es. `audio/musica-ia/M1/`), con i file nominati `M1-01.wav`, `M1-02.wav`… (in ordine di giro) e, per quelli che l’autore tiene, `M1-scelto.wav`.
