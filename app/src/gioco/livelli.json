@@ -1,0 +1,17 @@
+{
+  "re": -4,
+  "fondi": -6,
+  "stanza": -6,
+  "fiato": -10,
+  "ventola": -6,
+  "corpo": 0,
+  "fuoco": 0,
+  "brusio": 0,
+  "filo": 0,
+  "radio": 0,
+  "colpi_ambienti": 0,
+  "colpi_effetti": 0,
+  "colpi_voci": 0,
+  "interfaccia": 0,
+  "musica": 0
+}

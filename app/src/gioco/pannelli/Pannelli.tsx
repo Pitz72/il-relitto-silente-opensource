@@ -260,7 +260,7 @@ export function PannelloOpzioni({ forma, opzioni, cambia, chiudi }: { forma: For
     </div>
   );
   // un volume: un cursore da 0 a 100, come un mixer; si muove anche con le frecce
-  const cursore = (nome: string, chiave: "volume" | "volumeEffetti" | "volumeMusica" | "volumeParlato", spiega?: string) => {
+  const cursore = (nome: string, chiave: "volume" | "volumeEffetti" | "volumeInterfaccia" | "volumeMusica" | "volumeParlato", spiega?: string) => {
     const valore = Math.round(opzioni[chiave] * 100);
     return (
       <div className="opzione" role="group" aria-label={nome}>
@@ -326,7 +326,8 @@ export function PannelloOpzioni({ forma, opzioni, cambia, chiudi }: { forma: For
         {scheda === "audio" && (
           <>
             {cursore("Volume generale", "volume", "Alza o abbassa tutto insieme.")}
-            {cursore("Effetti", "volumeEffetti", "Il suono del mondo: le stanze, le macchine, l’aria, il fiato, i passi, gli attrezzi, il Sintonizzatore, il brusio, i pulsanti.")}
+            {cursore("Effetti", "volumeEffetti", "Il suono del mondo: le stanze, le macchine, l’aria, il fiato, i passi, gli attrezzi, il Sintonizzatore, il brusio.")}
+            {cursore("Interfaccia", "volumeInterfaccia", "Il tocco dei pulsanti.")}
             {cursore("Musica", "volumeMusica", "Il menu, la soglia degli atti, l’Anziano, la fine.")}
             {cursore("Parlato", "volumeParlato", "Le voci registrate. Per ora non ce ne sono: il cursore è pronto.")}
             {riga("Suono", "mono", [[false, "stereo"], [true, "mono"]], "Mono: i due canali insieme, per chi sente da un orecchio solo.")}

@@ -64,6 +64,7 @@ export type ComandoMondo =
   | { tipo: "prova"; valore: ProvaMondo }
   | { tipo: "turno"; valore: { stati: Partial<StatiSuono>; eventi: EventoSuono[] } }
   | { tipo: "mix"; valore: MixMondo }
+  | { tipo: "livelli"; valore: Record<string, number> }
   | { tipo: "pausa"; valore: boolean }
   | { tipo: "tocco"; valore: "scegli" | "conferma" | "annulla" }
   | { tipo: "menu"; valore: boolean };
@@ -75,6 +76,7 @@ export interface MixMondo {
   effetti: number;
   voci: number;
   musica: number;
+  interfaccia: number;
   parlato: number;
   mono: boolean;
   dinamica_ridotta: boolean;

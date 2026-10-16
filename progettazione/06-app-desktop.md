@@ -463,7 +463,7 @@ nell’AppImage.
 Il mix ha cinque canali (generale, ambienti, musica, effetti, voci) con i loro cursori nelle
 opzioni. **Dal 16 ottobre 2026 le opzioni hanno una scheda «Audio» con tre volumi soltanto per chi
 gioca, oltre al generale: Effetti** (tutto il suono del mondo: ambienti, effetti e le voci del brusio,
-dell’eco e della radio; il motore ne tiene ancora tre bus e li muove insieme), **Musica** e **Parlato**
+dell’eco e della radio; il motore ne tiene ancora tre bus e li muove insieme), **Interfaccia** (il tocco dei pulsanti, che ha il suo canale), **Musica** e **Parlato**
 (le voci registrate, narratore e personaggi: il canale c’è, `Mix.parlato`, ma non vi suona ancora
 niente; l’autore le registrerà con il TTS di Google). Restano nella scheda anche mono, dinamica e suoni
 intensi. L’ipossia è un filtro sul canale generale; la protezione vitale ammutolisce il brusio.

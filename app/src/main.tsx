@@ -25,6 +25,8 @@ const Gioco = lazy(() => import("./gioco/Gioco"));
 const Intro = lazy(() => import("./intro/Intro"));
 const Prova = lazy(() => import("./prova/Prova"));
 const Campionario = lazy(() => import("./campionario/Campionario"));
+// la console di regia (Ctrl+Maiusc+M): i livelli dei canali del suono, in qualunque schermata
+const ConsoleMix = lazy(() => import("./console/ConsoleMix"));
 
 const parametri = new URLSearchParams(location.search);
 
@@ -52,6 +54,9 @@ pagina().then((p) =>
   createRoot(document.getElementById("radice")!).render(
     <StrictMode>
       <Suspense fallback={null}>{p}</Suspense>
+      <Suspense fallback={null}>
+        <ConsoleMix />
+      </Suspense>
     </StrictMode>,
   ),
 );

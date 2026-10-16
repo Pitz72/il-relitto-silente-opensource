@@ -9,6 +9,7 @@ import { comando, dentroTauri, type ComandoMondo, type MixMondo } from "../lib/t
 import type { Turno } from "../motore/tipi";
 import type { Opzioni } from "../stile/opzioni";
 import type { Gesto } from "./tocco";
+import { leggiLivelli } from "./livelli";
 
 let avviato: Promise<unknown> | null = null;
 
@@ -26,6 +27,8 @@ async function manda(c: ComandoMondo): Promise<void> {
 export function avviaSuono(muto = false): void {
   if (!dentroTauri()) return;
   avviato = comando("audio_mondo_avvia").catch(() => null);
+  // il mix d'autore che la console di regia ha lasciato (se non ha toccato niente, quello del file)
+  void manda({ tipo: "livelli", valore: leggiLivelli() });
   if (muto) void manda({ tipo: "volume", valore: -120 });
 }
 
@@ -58,11 +61,15 @@ export function mixDa(o: Opzioni): MixMondo {
     effetti: o.volumeEffetti,
     voci: o.volumeEffetti,
     musica: o.volumeMusica,
+    interfaccia: o.volumeInterfaccia,
     parlato: o.volumeParlato,
     mono: o.mono,
     dinamica_ridotta: o.dinamicaRidotta,
     intensi_ridotti: o.suoniIntensiRidotti,
   };
 }
+
+/** Il mix d'autore (la console di regia): i livelli dei canali in dB. */
+export const livelliSuono = (l: Record<string, number>) => manda({ tipo: "livelli", valore: l });
 
 export const mixSuono = (o: Opzioni) => manda({ tipo: "mix", valore: mixDa(o) });

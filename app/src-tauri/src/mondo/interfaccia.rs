@@ -416,11 +416,11 @@ mod prove {
         tx.send(Comando::Tocco(Gesto::Conferma)).unwrap();
         let in_pausa = dbfs(suona(&mut m, 0.6));
         assert!((in_pausa - pieno).abs() < 4.0, "in pausa il tocco cambia: {pieno:.1} → {in_pausa:.1}");
-        // il cursore degli effetti lo spegne
-        tx.send(Comando::Mix(Mix { effetti: 0.0, ..Mix::default() })).unwrap();
+        // il cursore dell’interfaccia lo spegne
+        tx.send(Comando::Mix(Mix { interfaccia: 0.0, ..Mix::default() })).unwrap();
         suona(&mut m, 0.5);
         tx.send(Comando::Tocco(Gesto::Conferma)).unwrap();
-        assert!(dbfs(suona(&mut m, 0.6)) < -80.0, "col cursore degli effetti a zero il tocco suona");
+        assert!(dbfs(suona(&mut m, 0.6)) < -80.0, "col cursore dell’interfaccia a zero il tocco suona");
         // e il volume generale lo abbassa
         tx.send(Comando::Mix(Mix { generale: 0.5, ..Mix::default() })).unwrap();
         suona(&mut m, 0.5);

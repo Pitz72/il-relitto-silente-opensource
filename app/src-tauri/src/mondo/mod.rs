@@ -20,6 +20,7 @@ pub mod dsp;
 pub mod fiato;
 pub mod fondi;
 pub mod interfaccia;
+pub mod livelli;
 pub mod musica;
 pub mod musica_file;
 pub mod re;
@@ -45,6 +46,7 @@ use colpi::{Bus, Canale, Colpo, Corpo, Lastra};
 use dsp::{db, morbido, Biquad, Caso, Inseguitore, Pettine, Scorrevole, UnPolo};
 use fiato::Fiato;
 use fondi::{Pompe, Ventilazione, Ventola};
+use livelli::Lineari;
 use musica::Musica;
 use re::Re;
 use riverbero::Riverbero;
@@ -53,6 +55,7 @@ use stanze::{Specie, Stanza};
 use voce::Voce;
 
 pub use interfaccia::Gesto;
+pub use livelli::Livelli;
 pub use musica::Brano;
 pub use regia::EVENTI_NOTI;
 pub use stato::{EventoGioco, StatiGioco, TurnoSuono};
@@ -96,6 +99,8 @@ pub struct Mix {
     pub voci: f32,
     /// la musica (06, §9.2: il quinto cursore)
     pub musica: f32,
+    /// il tocco dei pulsanti: un cursore a parte, non è un effetto del mondo
+    pub interfaccia: f32,
     /// il parlato (06, §9.2): le voci registrate, del narratore e dei personaggi. Il canale
     /// c’è già; le registrazioni arriveranno dopo (l’autore le farà con il TTS di Google)
     pub parlato: f32,
@@ -110,7 +115,7 @@ pub struct Mix {
 
 impl Default for Mix {
     fn default() -> Self {
-        Mix { generale: 1.0, ambienti: 1.0, effetti: 1.0, voci: 1.0, musica: 1.0, parlato: 1.0, mono: false, dinamica_ridotta: false, intensi_ridotti: false }
+        Mix { generale: 1.0, ambienti: 1.0, effetti: 1.0, voci: 1.0, musica: 1.0, interfaccia: 1.0, parlato: 1.0, mono: false, dinamica_ridotta: false, intensi_ridotti: false }
     }
 }
 
@@ -123,6 +128,8 @@ pub enum Comando {
     Mix(Mix),
     /// la pausa, il diario, i pannelli: il mondo si abbassa, non si ferma
     Pausa(bool),
+    /// il mix d’autore: i livelli dei canali in dB (la console di regia)
+    Livelli(Livelli),
     /// un tocco su un pulsante: il suono dell’interfaccia (bibbia sonora, §5.8)
     Tocco(Gesto),
     /// il menu principale: il mondo tace, l’interfaccia è tutta membrana, e suona la musica
@@ -428,6 +435,11 @@ pub struct Mondo {
     c_ambienti: Scorrevole,
     c_effetti: Scorrevole,
     c_voci: Scorrevole,
+    /// il cursore dell’interfaccia
+    c_interfaccia: Scorrevole,
+    /// il mix d’autore, in dB, e i suoi valori lineari (che seguono i dB un blocco alla volta)
+    livelli: Livelli,
+    lv: Lineari,
     c_generale: Scorrevole,
     c_ossa: Scorrevole,
     pausa: Scorrevole,
@@ -559,6 +571,9 @@ impl Mondo {
             c_ambienti: Scorrevole::nuovo(1.0),
             c_effetti: Scorrevole::nuovo(1.0),
             c_voci: Scorrevole::nuovo(1.0),
+            c_interfaccia: Scorrevole::nuovo(1.0),
+            livelli: Livelli::default(),
+            lv: Livelli::default().lineari(),
             c_generale: Scorrevole::nuovo(1.0),
             c_ossa: Scorrevole::nuovo(1.0),
             pausa: Scorrevole::nuovo(1.0),
@@ -620,6 +635,7 @@ impl Mondo {
         self.c_ambienti.verso(q(m.ambienti), 0.15, sr);
         self.c_effetti.verso(q(m.effetti), 0.15, sr);
         self.c_voci.verso(q(m.voci), 0.15, sr);
+        self.c_interfaccia.verso(q(m.interfaccia), 0.15, sr);
         self.c_musica.verso(q(m.musica), 0.15, sr);
         self.c_parlato.verso(q(m.parlato), 0.15, sr);
         self.c_ossa.verso(if m.intensi_ridotti { db(-12.0) } else { 1.0 }, 0.3, sr);
@@ -632,6 +648,7 @@ impl Mondo {
         match c {
             Comando::Turno(t) => self.turno(t),
             Comando::Mix(m) => self.mix(m),
+            Comando::Livelli(l) => self.livelli = l,
             Comando::Pausa(si) => self.pausa.verso(if si { db(-10.0) } else { 1.0 }, 0.4, sr),
             Comando::Tocco(g) => self.tocco(g),
             Comando::Menu(si) => {
@@ -788,6 +805,10 @@ impl Mondo {
         }
         let dtf = dt as f32;
         self.passo_blocco(out.len() as f32 * dtf);
+        // il mix d’autore: i livelli seguono i loro dB, un blocco alla volta
+        let meta = self.livelli.lineari();
+        self.lv.verso(&meta, 0.3);
+        let lv = self.lv;
         let m = self.maschera;
         let on = |bit: u32| if m & bit != 0 { 1.0f32 } else { 0.0 };
         let s_musica = on(S_MUSICA);
@@ -823,6 +844,7 @@ impl Mondo {
             let ga = self.c_ambienti.passo();
             let ge = self.c_effetti.passo();
             let gv = self.c_voci.passo();
+            let gi = self.c_interfaccia.passo();
 
             // ogni 64 campioni i filtri che seguono la stanza
             self.conto = self.conto.wrapping_add(1);
@@ -837,14 +859,14 @@ impl Mondo {
             let (rl, rr) = self.re.campione(dt);
             let tocco = self.re_tocco.passo();
             let rampa = self.re_rampa.passo();
-            let (wa, wo) = (self.re_aria.passo() * s_re * ga, self.re_ossa.passo() * s_re * ga * tocco * rampa);
+            let (wa, wo) = (self.re_aria.passo() * s_re * ga * lv.re, self.re_ossa.passo() * s_re * ga * lv.re * tocco * rampa);
             let (fl, fr) = (self.re_pavimento.elabora(rl, 0), self.re_pavimento.elabora(rr, 1));
             est.0 += fl * wa;
             est.1 += fr * wa;
             ossa += (rl + rr) * 0.5 * wo;
 
             // i fondi della Santa Maria
-            let fm = self.fondi_mul.passo() * ga;
+            let fm = self.fondi_mul.passo() * ga * lv.fondi;
             let (vl, vr) = self.ventilazione.campione();
             est.0 += vl * s_vent * fm;
             est.1 += vr * s_vent * fm;
@@ -853,7 +875,7 @@ impl Mondo {
             est.1 += self.pompe_pavimento.elabora(pr, 1) * s_pompe * fm;
 
             // la stanza: il fondo del relitto, i ronzii, il groviglio, i soffi, i crepitii
-            let gs = s_stanza * ga;
+            let gs = s_stanza * ga * lv.stanza;
             let fmul = self.fondo_mul.passo();
             let (a, b) = self.fondo.campione();
             est.0 += a * gs * fmul;
@@ -882,23 +904,23 @@ impl Mondo {
             // il fuoco del bengala
             let (a, b) = self.fuoco.campione();
             let (c, d) = self.fuoco_crepitio.campione();
-            est.0 += (a + c) * ge;
-            est.1 += (b + d) * ge;
+            est.0 += (a + c) * ge * lv.fuoco;
+            est.1 += (b + d) * ge * lv.fuoco;
             // i battiti nelle ossa, il fischio dell’orecchio
-            ossa += (self.seme.campione() + self.cuore.campione()) * ge;
-            let k = self.acufene.campione() * ge;
+            ossa += (self.seme.campione() + self.cuore.campione()) * ge * lv.corpo;
+            let k = self.acufene.campione() * ge * lv.corpo;
             casco.0 += k;
             casco.1 += k;
 
             // la ventola e il fiato, al centro, dentro il casco
-            let k = self.ventola.campione() * s_ventola * ge;
-            let f = self.fiato.campione() * self.fiato_g.passo() * s_fiato * ge;
+            let k = self.ventola.campione() * s_ventola * ge * lv.ventola;
+            let f = self.fiato.campione() * self.fiato_g.passo() * s_fiato * ge * lv.fiato;
             casco.0 += k + f;
             casco.1 += k + f;
 
             // il brusio: dalla cuffia nel relitto, dalla radio nella plancia, per l’aria alla fine
             let (bl, br) = self.brusio.campione();
-            let (bl, br) = (bl * s_brusio * gv, br * s_brusio * gv);
+            let (bl, br) = (bl * s_brusio * gv * lv.brusio, br * s_brusio * gv * lv.brusio);
             match self.brusio_via {
                 Bus::Altoparlante => alt += (bl + br) * 0.5,
                 Bus::Esterno => {
@@ -917,11 +939,11 @@ impl Mondo {
                 // il filo passa per lo spostamento di frequenza: il ritmo e l’intonazione restano,
                 // le parole no (§5.3)
                 let y = self.filo.campione();
-                let v = self.spostatore.elabora(y, shift) * fg * gv * s_filo;
+                let v = self.spostatore.elabora(y, shift) * fg * gv * s_filo * lv.filo;
                 em.0 += v * 0.9;
                 em.1 += v;
             }
-            alt += self.canale.campione() * gv;
+            alt += self.canale.campione() * gv * lv.radio;
 
             // i colpi
             let mut k = 0;
@@ -931,10 +953,16 @@ impl Mondo {
                 match self.colpi[k].campione(&mut self.caso) {
                     Some((l, r)) => {
                         let s = if bus == Bus::Casco { s_segnali } else { s_voci };
-                        let c = match canale {
-                            Canale::Ambienti => ga,
-                            Canale::Effetti => ge,
-                            Canale::Voci => gv,
+                        // il tocco dei pulsanti ha il suo cursore e il suo livello; gli altri colpi quelli del
+                        // loro canale
+                        let c = if bus == Bus::Interfaccia {
+                            gi * lv.interfaccia
+                        } else {
+                            match canale {
+                                Canale::Ambienti => ga * lv.colpi_ambienti,
+                                Canale::Effetti => ge * lv.colpi_effetti,
+                                Canale::Voci => gv * lv.colpi_voci,
+                            }
                         };
                         let (l, r) = (l * s * c, r * s * c);
                         match bus {
@@ -1023,12 +1051,12 @@ impl Mondo {
                 let gm = self.musica.guadagno();
                 let (dl, dr) = self.musica.campione();
                 let (wl, wr) = self.riverbero_musica.elabora(dl, dr);
-                let k = LIV_MUSICA * vp * gmus * s_musica * gm;
+                let k = LIV_MUSICA * vp * gmus * s_musica * lv.musica * gm;
                 l += (dl * MUSICA_ASCIUTTA + wl) * k;
                 r += (dr * MUSICA_ASCIUTTA + wr) * k;
                 // i file hanno già il loro riverbero: non passano dalla sala
                 let (fl, fr) = self.musica.campione_file();
-                let kf = LIV_MUSICA * vp * gmus * s_musica;
+                let kf = LIV_MUSICA * vp * gmus * s_musica * lv.musica;
                 l += fl * kf;
                 r += fr * kf;
             }

@@ -22,8 +22,10 @@ export interface Opzioni {
    *  i suoni intensi ridotti (per chi soffre di acufeni, emicrania, ansia da suoni forti) */
   volume: number;
   /** gli effetti: tutto il suono del mondo (le stanze, le macchine, il fiato, i passi, il
-   *  Sintonizzatore, il brusio, i pulsanti); è il solo cursore, il motore ne fa tre bus */
+   *  Sintonizzatore, il brusio); i livelli fra un suono e l'altro li decide la regia (mondo/livelli.rs) */
   volumeEffetti: number;
+  /** il tocco dei pulsanti: un cursore a parte */
+  volumeInterfaccia: number;
   /** la musica (documenti 21 e 22) */
   volumeMusica: number;
   /** il parlato: le voci registrate (narratore, personaggi). Il canale c'è, le registrazioni no */
@@ -42,6 +44,7 @@ export const OPZIONI_DI_BASE: Opzioni = {
   schermoIntero: true,
   volume: 0.75,
   volumeEffetti: 1,
+  volumeInterfaccia: 1,
   volumeMusica: 1,
   volumeParlato: 1,
   mono: false,
