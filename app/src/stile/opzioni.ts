@@ -16,6 +16,8 @@ export interface Opzioni {
   testoGrande: boolean;
   /** i nomi delle cose toccabili nel testo (D15: sì, attivi di base) */
   nomiToccabili: boolean;
+  /** come si danno i comandi: con i pulsanti (il ramo e il fiore) o scritti (l'avventura testuale, documento 18) */
+  comandi: "pulsanti" | "scritti";
   /** cerca una versione nuova all'avvio (si collega a GitHub; il controllo a mano c'è sempre, nel menu) */
   cercaAggiornamenti: boolean;
   /** lo schermo intero (l'app ci parte; si può scegliere la finestra) */
@@ -44,6 +46,7 @@ export const OPZIONI_DI_BASE: Opzioni = {
   testoGrande: false,
   nomiToccabili: true,
   schermoIntero: true,
+  comandi: "pulsanti",
   cercaAggiornamenti: true,
   volume: 0.75,
   volumeEffetti: 1,

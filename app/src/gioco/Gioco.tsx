@@ -27,6 +27,8 @@ import { accesiDa, attrezzoDelVerbo, bersagli, NESSUNA, type Azione, type Selezi
 import type { Filo } from "./ramo/geometria";
 import Visore, { CartelloAtto, useCartelloAtto } from "./visore/Visore";
 import Dialogo from "./dialogo/Dialogo";
+import RigaComando from "./scritti/RigaComando";
+import { AIUTO_DELL_APP, interpreta, type ComandoApp } from "./scritti/comandiApp";
 import Diario from "./diario/Diario";
 import type { IdPagina } from "./diario/pagine";
 import Vene from "./vene/Vene";
@@ -64,10 +66,11 @@ const ARTICOLO = /^(?:il|lo|la|i|gli|le|l['’]|un|uno|una|dei|degli|delle)\s*/i
 const ACCESI_PER = 6000;
 
 /** I blocchi di un turno, con i nomi toccabili se l'opzione è accesa. */
-function blocchiDi(t: Turno, m: ModelloAzione, nomi: boolean): Blocco[] {
+function blocchiDi(t: Turno, m: ModelloAzione, nomi: boolean, soloTesto = false): Blocco[] {
   const verbi = new Set([...t.pulsanti.verbi.map((v) => v.verbo), ...AZIONI_DI_SITUAZIONE.map((a) => a.comando.split(" ")[0])]);
-  const blocchi = blocchiDelTurno(t.eventi, { suggerimenti: m.suggerimenti, verbi });
-  if (!nomi) return blocchi;
+  // a solo testo i suggerimenti restano nel testo (in maiuscolo, per chi scrive) ma non sono pulsanti
+  const blocchi = blocchiDelTurno(t.eventi, { suggerimenti: soloTesto ? [] : m.suggerimenti, verbi, soloTesto });
+  if (!nomi || soloTesto) return blocchi;
   return segnaNomi(
     blocchi,
     t.cose.map((c) => ({ id: c.id, nomi: [c.id, c.nome.replace(ARTICOLO, ""), c.etichetta, ...c.nomi] })),
@@ -128,6 +131,10 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
   const ritornoRef = useRef<string | null>(null);
 
   const modello = useMemo(() => (turno ? costruisciModello(turno) : null), [turno]);
+  /** la modalità a solo testo (documento 18): la riga di comando al posto del ramo */
+  const scritti = opzioni.comandi === "scritti";
+  /** i comandi scritti, per le frecce su e giù */
+  const storiaScritti = useRef<string[]>([]);
 
   // ---- il suono: parte con la partita, segue ogni turno, si abbassa nella pausa,
   // tace tornando al menu (06, §9.1; bibbia sonora, §10). Nelle prove resta muto.
@@ -156,14 +163,14 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
       setAltri(null);
       setDiario([
         { chiave: contatore.current++, comando: null, differenza: null, blocchi: blocchiDelTurno(primo.apertura ?? []) },
-        { chiave: contatore.current++, comando: null, differenza: null, blocchi: blocchiDi(primo, m, opzioni.nomiToccabili) },
+        { chiave: contatore.current++, comando: null, differenza: null, blocchi: blocchiDi(primo, m, opzioni.nomiToccabili, scritti) },
       ]);
       setAperturaDiario([...(primo.apertura ?? []), ...primo.eventi]);
       setCronaca([]);
       passi.current = 0;
       finaleRef.current = null;
     },
-    [opzioni.nomiToccabili],
+    [opzioni.nomiToccabili, scritti],
   );
 
   // ---- l'avvio: la partita come l'ha scelta il menu ---------------------------
@@ -231,11 +238,11 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
       setTurno(t);
       setSelezione(NESSUNA);
       setAltri(null);
-      setDiario([{ chiave: contatore.current++, comando: null, differenza: null, blocchi: blocchiDi(t, mod, opzioni.nomiToccabili) }]);
+      setDiario([{ chiave: contatore.current++, comando: null, differenza: null, blocchi: blocchiDi(t, mod, opzioni.nomiToccabili, scritti) }]);
       setAperturaDiario(d.apertura);
       setCronaca(d.cronaca);
     },
-    [opzioni.nomiToccabili],
+    [opzioni.nomiToccabili, scritti],
   );
 
   /** Carica un posto; restituisce il motivo, se non ci riesce (la partita in corso resta). */
@@ -297,7 +304,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
       setAltri(null);
       setDiario((d) => [
         ...d.slice(-40),
-        { chiave: contatore.current++, comando: comeSiLegge ?? comando, differenza, blocchi: blocchiDi(t, mod, opzioni.nomiToccabili) },
+        { chiave: contatore.current++, comando: comeSiLegge ?? comando, differenza, blocchi: blocchiDi(t, mod, opzioni.nomiToccabili, scritti) },
       ]);
       // la cronaca segue la sequenza del motore: ANNULLA la accorcia
       const c = t.cronaca;
@@ -311,8 +318,19 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
         alFinale?.(finale.finale, rigaDelRegistro(t.eventi));
       }
     },
-    [opzioni.nomiToccabili, salvaNel, alFinale],
+    [opzioni.nomiToccabili, scritti, salvaNel, alFinale],
   );
+
+  // cambiando modo a metà partita lo stato è lo stesso: il turno di adesso si ricompone
+  const modoPrima = useRef(scritti);
+  useEffect(() => {
+    if (modoPrima.current === scritti) return;
+    modoPrima.current = scritti;
+    if (!turno || !modello) return;
+    setDiario((d) => (d.length ? [...d.slice(0, -1), { ...d[d.length - 1], blocchi: blocchiDi(turno, modello, opzioni.nomiToccabili, scritti) }] : d));
+    setSelezione(NESSUNA);
+    setAltri(null);
+  }, [scritti, turno, modello, opzioni.nomiToccabili]);
 
   // i suggerimenti del turno accendono i loro pulsanti per qualche secondo
   useEffect(() => {
@@ -397,6 +415,76 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
     return () => clearTimeout(t);
   }, [selezione]);
 
+  /** Un posto dove salvare, scritto («salva 3»): chiede conferma se è occupato. */
+  const salvaScritto = useCallback(
+    async (posto: IdPosto) => {
+      let presente = false;
+      try {
+        presente = !!(await archivio().elenco()).find((p) => p.posto === posto)?.presente;
+      } catch {
+        /* senza l'elenco si salva e basta */
+      }
+      const salva = () => {
+        ultimoPosto.current = posto;
+        void salvaNel(posto);
+      };
+      if (presente) setDomanda({ testo: `Sovrascrivere il posto ${posto}?`, si: "Sovrascrivi", no: "Lascia stare", allora: salva });
+      else salva();
+    },
+    [salvaNel],
+  );
+
+  /** Un comando che nella modalità a solo testo è dell'app (documento 18, §5.4). */
+  const eseguiApp = useCallback(
+    (c: ComandoApp) => {
+      switch (c.tipo) {
+        case "salva":
+          if (!c.capito) mostraAvviso("Nell’app i posti sono sei: scrivi SALVA 3, per esempio.", true);
+          else if (c.posto && c.posto !== "automatico") void salvaScritto(c.posto);
+          else if (c.posto === "automatico") mostraAvviso("Il posto automatico lo scrive il gioco da sé.", true);
+          else void apriSalvataggi("salva");
+          break;
+        case "carica":
+          if (!c.capito) mostraAvviso("Nell’app i posti sono sei: scrivi CARICA 3, per esempio.", true);
+          else if (c.posto) void caricaDa(c.posto);
+          else void apriSalvataggi("carica");
+          break;
+        case "ricomincia":
+          setDomanda({ testo: "Ricominciare da capo?", sotto: "La partita in corso si perde, se non l’hai salvata.", si: "Ricomincia", no: "Torna al gioco", allora: ricomincia });
+          break;
+        case "diario":
+          setPannello("diario");
+          break;
+        case "opzioni":
+          setPannello("opzioni");
+          break;
+        case "menu":
+          setPannello("pausa");
+          break;
+        case "tasti":
+          setPannello("tasti");
+          break;
+        case "aiuto":
+          // il testo d'aiuto del motore, e sotto i verbi del gioco e le parole dell'app
+          gioca("aiuto");
+          setDiario((d) => [...d, { chiave: contatore.current++, comando: null, differenza: null, blocchi: blocchiDelTurno([{ tipo: "sistema", testo: AIUTO_DELL_APP }], { soloTesto: true }) }]);
+          break;
+      }
+    },
+    [salvaScritto, apriSalvataggi, caricaDa, ricomincia, gioca, mostraAvviso],
+  );
+
+  /** Una riga scritta: o una parola dell'app, o un comando per il motore. */
+  const inviaScritto = useCallback(
+    (testo: string) => {
+      storiaScritti.current = [...storiaScritti.current.filter((x) => x !== testo), testo].slice(-60);
+      const app = interpreta(testo);
+      if (app) eseguiApp(app);
+      else gioca(testo);
+    },
+    [eseguiApp, gioca],
+  );
+
   /** Una risposta del dialogo: il congedo dell'Anziano chiede conferma. */
   const scegli = useCallback(
     (s: SceltaModello) => {
@@ -463,7 +551,8 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
         return;
       }
       if (domanda) return; // la conferma ha i suoi tasti
-      const d = e.key === "d" || e.key === "D";
+      // a solo testo le lettere sono della riga: il diario si apre scrivendo DIARIO
+      const d = !scritti && (e.key === "d" || e.key === "D");
       if (pannello) {
         if (pannello === "diario" && (e.key === "Escape" || d)) {
           e.preventDefault();
@@ -480,6 +569,14 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
       if (d && turno) {
         e.preventDefault();
         setPannello("diario");
+        return;
+      }
+      if (scritti) {
+        // Esc: la riga lo prende se ha del testo da svuotare; a riga vuota arriva qui, e apre la pausa
+        if (e.key === "Escape") {
+          e.preventDefault();
+          if (turno) setPannello("pausa");
+        }
         return;
       }
       const suPulsante = e.target instanceof HTMLButtonElement;
@@ -529,7 +626,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
     };
     addEventListener("keydown", giu);
     return () => removeEventListener("keydown", giu);
-  }, [modello, selezione, altri, gioca, chiudi, scegli, pannello, domanda, turno, apriSalvataggi, schermoIntero]);
+  }, [modello, selezione, altri, gioca, chiudi, scegli, pannello, domanda, turno, apriSalvataggi, schermoIntero, scritti]);
 
   // la sonda della prova dei finali: il turno come lo vede il modello, i passi, il finale
   useEffect(() => {
@@ -613,7 +710,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
   const inDialogo = modello?.fase === "dialogo" && !!turno?.stato.dialogo;
   // la conferma che chiede il motore (fase «conferma»): Sì e No dai suoi pulsanti
   const domandaDelMotore: Domanda | null =
-    modello?.fase === "conferma" && turno
+    !scritti && modello?.fase === "conferma" && turno
       ? {
           testo: turno.eventi.filter((e) => e.tipo === "domanda").map((e) => e.testo).join(" ") || "Confermi?",
           si: modello.scelte.find((s) => s.tasto === "s")?.etichetta ?? "Sì",
@@ -652,7 +749,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
           {turno && (
             <nav className="comandi-app" aria-label="Diario e menu">
               <button type="button" onClick={() => setPannello("diario")}>
-                diario <span className="tasto">D</span>
+                diario {!scritti && <span className="tasto">D</span>}
               </button>
               <button type="button" onClick={() => setPannello("pausa")}>
                 menu <span className="tasto">Esc</span>
@@ -664,10 +761,13 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
             forma={forma}
             rivelazione={opzioni.rivelazione && !ridotto}
             completa={completa}
-            suNome={suNome}
-            suSuggerimento={suSuggerimento}
+            suNome={scritti ? undefined : suNome}
+            suSuggerimento={scritti ? undefined : suSuggerimento}
           />
-          {modello && turno && !inDialogo && modello.fase !== "conferma" && (
+          {modello && turno && !inDialogo && scritti && (
+            <RigaComando invia={inviaScritto} completa={() => setCompleta((n) => n + 1)} storia={storiaScritti.current} bloccata={!!pannello || !!domanda || cartello !== null} chiave={turno} />
+          )}
+          {modello && turno && !inDialogo && !scritti && modello.fase !== "conferma" && (
             <Ramo
               modello={modello}
               cose={turno.cose}
@@ -688,7 +788,16 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
           {turno && clima && <Visore turno={turno} clima={clima} ridotto={ridotto} differenza={ultima?.differenza ?? null} battito={ultima?.chiave ?? 0} />}
         </div>
         {inDialogo && modello && turno && ultima && (
-          <Dialogo personaggio={turno.stato.dialogo!} blocchi={ultima.blocchi} detto={ultima.comando && ultima.comando !== turno.comando?.testo ? ultima.comando : null} scelte={modello.scelte} forma={forma} ridotto={ridotto} scegli={scegli} />
+          <Dialogo personaggio={turno.stato.dialogo!} blocchi={ultima.blocchi} detto={ultima.comando && ultima.comando !== turno.comando?.testo ? ultima.comando : null} scelte={modello.scelte}
+            forma={forma}
+            ridotto={ridotto}
+            scegli={scegli}
+            riga={
+              scritti ? (
+                <RigaComando inDialogo invia={inviaScritto} completa={() => setCompleta((n) => n + 1)} storia={storiaScritti.current} bloccata={!!pannello || !!domanda || cartello !== null} chiave={turno} />
+              ) : undefined
+            }
+          />
         )}
         {aria !== null && <div className="vetro" style={{ ["--respiro" as string]: `${respiro}s` }} aria-hidden="true" />}
         {clima?.protezione && (
@@ -752,7 +861,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
           />
         )}
         {pannello === "opzioni" && <PannelloOpzioni forma={forma} opzioni={opzioni} cambia={cambiaOpzioni} chiudi={() => setPannello("pausa")} />}
-        {pannello === "tasti" && <PannelloTasti forma={forma} chiudi={() => setPannello("pausa")} />}
+        {pannello === "tasti" && <PannelloTasti forma={forma} chiudi={() => setPannello("pausa")} scritti={scritti} />}
         {(domanda ?? domandaDelMotore) && <Conferma domanda={(domanda ?? domandaDelMotore)!} forma={forma} chiudi={() => setDomanda(null)} />}
         {avviso && <Avviso testo={avviso.testo} grave={avviso.grave} />}
         {!turno && !errore && <div className="avvio">{passo}</div>}

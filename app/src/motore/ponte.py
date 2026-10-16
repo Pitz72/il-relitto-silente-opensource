@@ -32,6 +32,7 @@ import hashlib
 import io
 import json
 import os
+import sys
 import time
 
 from compilatore import compila_mondo
@@ -133,6 +134,58 @@ def rel_avvia(seme=None):
                          "cronaca": {"lunghezza": 0, "nuova": None}})
 
 
+# I verbi si scrivono anche con il pronome attaccato («prendila»): la forma del motore (gioco.py,
+# _risolvi_anafora).
+_CLITICI = ("lo", "la", "li", "le")
+
+
+def _verbo_scritto(m, parola):
+    """Il verbo di una parola scritta da chi gioca: lo stesso che darebbe il pulsante
+    («x» e «guarda» sono «esamina»; «prendila» è «prendi»; «n» è «vai»)."""
+    noto = m.mappa_verbi_giocatore
+    if parola not in noto and parola not in m.direzioni:
+        for cl in _CLITICI:
+            if parola.endswith(cl) and len(parola) > len(cl) and parola[: -len(cl)] in noto:
+                parola = parola[: -len(cl)]
+                break
+    if parola in m.direzioni:
+        return "vai"
+    return _verbo_del_pulsante(m, parola)
+
+
+def _elabora_analizzando(m, comando, analisi):
+    """Gioca un comando. Quello nato da un pulsante è già scomposto (verbo e cose). Uno **scritto**
+    (la modalità a solo testo, documento 18) si scompone da ciò che il motore ha fatto davvero: le
+    cose sono quelle che il motore ha risolto (anche con i pronomi, le abbreviazioni, le domande
+    «Quale intendi…?»), il verbo è quello della riga che il motore ha registrato. Così il diario e il
+    suono capiscono «x placca» e «esaminala» come «esamina la placca» (documento 18, §5.7)."""
+    if analisi.get("gruppo") != "scritto":
+        elabora_comando(m, comando)
+        return
+    registrati = []
+    originale = Mondo.registra_riferito
+
+    def spia(self, id_oggetto):
+        # solo le cose che il comando ha nominato: non quelle che il motore elenca descrivendo la stanza
+        if sys._getframe(1).f_code.co_name == "_esegui_comando":
+            registrati.append(id_oggetto)
+        return originale(self, id_oggetto)
+
+    n0 = len(m._registro_comandi)
+    Mondo.registra_riferito = spia
+    try:
+        elabora_comando(m, comando)
+    finally:
+        Mondo.registra_riferito = originale
+    if registrati:
+        analisi["cosa"] = registrati[0]
+        analisi["secondo"] = registrati[1] if len(registrati) > 1 else None
+    riga = m._registro_comandi[-1] if len(m._registro_comandi) > n0 else comando
+    parole = _norm(riga).split()
+    if parole:
+        analisi["verbo"] = _verbo_scritto(m, parole[0]) or analisi.get("verbo")
+
+
 def rel_comando(comando):
     global _ultimi
     t0 = time.perf_counter()
@@ -141,7 +194,7 @@ def rel_comando(comando):
     analisi = _analizza(comando)
     try:
         with raccogli_uscita(_mondo) as uscita:
-            elabora_comando(_mondo, comando)
+            _elabora_analizzando(_mondo, comando, analisi)
     except Exception as e:                                  # noqa: BLE001
         return _json({"ok": False, "errore": f"{type(e).__name__}: {e}"})
     t1 = time.perf_counter()
@@ -813,7 +866,7 @@ def _ricostruisci_cronaca(seme, comandi):
             prima = _diario_stati(m)
             analisi = _analizza(c)
             with raccogli_uscita(m) as uscita:
-                elabora_comando(m, c)
+                _elabora_analizzando(m, c, analisi)
             cronaca.append(_voce_di_cronaca(m, c, analisi, prima, _diario_stati(m), uscita.eventi))
     finally:
         _mondo, _ultimi = vero, ultimi

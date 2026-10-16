@@ -7,7 +7,7 @@
 //  sequel (il comunicatore del Magazzino Quattro); le altre viste definitive
 //  sono della fase 5.
 // ============================================================================
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import type { Forma } from "../../stile/atmosfere";
 import type { SceltaModello } from "../../azione/modello";
 import type { Blocco, Segmento } from "../lamina/grammatica";
@@ -24,11 +24,13 @@ interface Props {
   forma: Forma;
   ridotto: boolean;
   scegli: (s: SceltaModello) => void;
+  /** la modalità a solo testo: al posto dei semi c'è la riga di comando (le risposte stanno nel testo) */
+  riga?: ReactNode;
 }
 
 const CHI: Record<string, string> = { anziano: "l’Anziano", yusuf: "Yusuf", eco: "l’eco" };
 
-export default function Dialogo({ personaggio, blocchi, detto, scelte, forma, ridotto, scegli }: Props) {
+export default function Dialogo({ personaggio, blocchi, detto, scelte, forma, ridotto, scegli, riga }: Props) {
   const primoSeme = useRef<HTMLButtonElement>(null);
   const chiave = blocchi.map((b) => b.sorgente).join("|");
   // il fuoco sul primo seme a ogni battuta nuova
@@ -57,6 +59,7 @@ export default function Dialogo({ personaggio, blocchi, detto, scelte, forma, ri
           ))}
         </div>
       </div>
+      {riga ?? (
       <nav className="semi" aria-label="Le risposte">
         {scelte.map((s, i) => (
           <button key={s.comando} ref={i === 0 ? primoSeme : undefined} type="button" data-comando={s.comando} className={s.comando === "esci" ? "esci" : ""} onClick={() => scegli(s)} aria-keyshortcuts={s.tasto ?? undefined}>
@@ -65,6 +68,7 @@ export default function Dialogo({ personaggio, blocchi, detto, scelte, forma, ri
           </button>
         ))}
       </nav>
+      )}
       </div>
     </section>
   );

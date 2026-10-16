@@ -235,3 +235,26 @@ Due rimedi, in ordine di bontà:
 ## 7. La risposta dell'autore (16 ottobre 2026)
 
 **D21: sì, nella rifinitura** (fase 8), non prima. Le proposte D22–D26 restano quelle della tabella: due modi (pulsanti e scritti), niente Tab, la scelta nelle Opzioni («Comandi»), i messaggi del parser della libreria, l'aiuto con la pagina dei verbi e dei tasti. Ne parleremo di nuovo al momento di costruirla; per ora non si tocca niente.
+
+---
+
+## 8. Com'è andata (16 ottobre 2026)
+
+La modalità a solo testo c'è. **D21** (sì), **D22** (due modi), **D23** (niente Tab), **D24** (la scelta nelle opzioni), **D25** (i messaggi del parser sono quelli della libreria) e **D26** (l'aiuto: il testo del motore più una pagina) sono stati fatti come proposti.
+
+**Come si usa.** Nelle opzioni, scheda «Gioco», la riga **«Comandi»**: *con i pulsanti* (il ramo e il fiore, com'è sempre stato) o *scritti*. Si cambia in qualunque momento, anche a metà partita: lo stato è lo stesso e il turno di adesso si ricompone. A solo testo:
+
+- **la riga di comando** prende il posto del ramo (`app/src/gioco/scritti/RigaComando.tsx`): il segno `›` e il cursore, di acciaio o di membrana secondo il momento. Invio dà il comando (a riga vuota completa il testo che compare), ↑ ↓ ripetono i comandi dati, Esc svuota la riga e, a riga vuota, apre la pausa. Le lettere sono della riga: il diario non si apre più con D ma scrivendo DIARIO;
+- **il testo del motore resta com'è**: l'elenco («Puoi vedere qui», «Uscite»), le risposte numerate del dialogo e le domande sì/no, che con i pulsanti diventavano il ramo, i semi e la conferma, si leggono nella lamina e si risponde scrivendo (`soloTesto` in `grammatica.ts`). I nomi non sono toccabili e i suggerimenti in maiuscolo restano nel testo, ma non sono pulsanti;
+- **le parole dell'app** (`scritti/comandiApp.ts`): SALVA e CARICA (anche con un posto: «salva 3»; «salva mattina», il salvataggio su file del motore, non c'è: l'app lo spiega), DIARIO e TRASCRIZIONE, OPZIONI, MENU, TASTI, RICOMINCIA (con la conferma), AIUTO (il testo del motore e sotto i verbi del gioco e le parole dell'app). ESCI e FINE restano del motore; ANNULLA e ANCORA anche;
+- **la pagina «Tasti»** mostra la tabella del modo in uso.
+
+**Il punto debole del §5.7, risolto nel ponte** (`app/src/motore/ponte.py`, `_elabora_analizzando`): per un comando scritto il verbo e le cose si ricavano da **ciò che il motore ha fatto davvero**, non dalla frase. Le cose sono quelle che il motore ha risolto (anche con i pronomi, le abbreviazioni, le domande «Quale intendi…?»: si raccolgono le chiamate di `registra_riferito` fatte dal comando, non quelle che il motore fa elencando la stanza); il verbo è quello della riga che il motore ha registrato, con il pronome tolto («prendila» è «prendi», «x» è «esamina»). Così il diario (le tracce, le letture, le iniziali sulla placca) e il suono (quale attrezzo) capiscono «staccalo» come «stacca il risuonatore». La stessa strada serve a ricostruire la cronaca dopo un caricamento. La lezione per una FAVELLA futura resta quella del §5.7, punto 1 (un evento dal motore).
+
+**Come si prova.**
+
+- `python collaudo/scritti.py`: ogni percorso di collaudo si gioca a pulsanti e poi **riscritto a mano** (senza articoli, con «x», con il pronome attaccato: «prendila», «staccalo»; dove una riscrittura è un'altra lettura del comando la si toglie e si conta); a ogni passo il suono e la voce del diario devono essere identici, la partita arriva alla stessa impronta, la cronaca ricostruita dopo un salvataggio è uguale a quella giocata. 12 percorsi, 800 comandi circa, 380 scritti a mano. Senza la correzione del ponte il collaudo trova 5 differenze (il suono della taglierina non partiva con «staccalo»);
+- `node collaudo/tipografia.mjs --solo-testo`: la grammatica tipografica su tutti i percorsi e su tutto il testo dei `.fav` con la modalità a solo testo (nessun evento nascosto tranne l'intestazione: 1308 turni);
+- `npm --prefix app run prove`: le parole dell'app e il testo che i pulsanti nascondono (`prove/scritti.test.ts`).
+
+**Che cosa non è stato provato**: con un lettore di schermo (NVDA), come chiedeva il §5.8; il passaggio fra i modi a metà partita è provato nel browser, non nell'eseguibile.

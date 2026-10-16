@@ -100,6 +100,9 @@ export interface OpzioniGrammatica {
   /** i verbi che il motore conosce adesso: un maiuscolo che comincia con uno di
    *  questi è un suggerimento anche se il modello non ha il suo pulsante */
   verbi?: ReadonlySet<string>;
+  /** la modalità a solo testo (documento 18): l'elenco («Puoi vedere qui», «Uscite»), le risposte del dialogo e le
+   *  domande del motore restano nel testo, perché non ci sono i pulsanti che le mostrano */
+  soloTesto?: boolean;
 }
 
 // ----------------------------------------------------------------------------
@@ -109,8 +112,12 @@ export interface OpzioniGrammatica {
  *  l'intestazione è dell'intro; le opzioni e la domanda sono pulsanti; i
  *  messaggi del motore che chiedono di scrivere un comando non valgono in
  *  un'app senza parser (l'app ha i suoi pulsanti per ricominciare e caricare). */
-export function nascosto(e: Evento): boolean {
-  if (e.tipo === "elenco" || e.tipo === "intestazione" || e.tipo === "opzione" || e.tipo === "domanda") return true;
+export function nascosto(e: Evento, soloTesto = false): boolean {
+  // l'intestazione è dell'intro; in ogni modalità
+  if (e.tipo === "intestazione") return true;
+  // senza pulsanti il testo del motore resta com'è
+  if (soloTesto) return false;
+  if (e.tipo === "elenco" || e.tipo === "opzione" || e.tipo === "domanda") return true;
   if (e.tipo === "sistema" && /\b(Scrivi|scrivi|CARICA|ANNULLA|RICOMINCIA)\b/.test(e.testo)) return true;
   return false;
 }
@@ -260,7 +267,7 @@ const bilancio = (s: string) => [...s].reduce((n, c) => n + (c === "«" ? 1 : c 
 export function blocchiDelTurno(eventi: readonly Evento[], o: OpzioniGrammatica = {}): Blocco[] {
   const out: Blocco[] = [];
   eventi.forEach((e, evento) => {
-    if (nascosto(e)) return;
+    if (nascosto(e, o.soloTesto)) return;
     const quanti = out.length;
     blocchiDellEvento(e, evento, o, out);
     // gli a capo in fondo all'evento restano, sull'ultimo blocco

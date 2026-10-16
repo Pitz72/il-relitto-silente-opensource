@@ -321,6 +321,7 @@ export function PannelloOpzioni({ forma, opzioni, cambia, chiudi }: { forma: For
             {riga("Testo", "testoGrande", [[false, "normale"], [true, "grande"]])}
             {riga("Schermo intero", "schermoIntero", [[true, "sì"], [false, "no, in una finestra"]], "Si cambia anche con F11.")}
             {riga("Aggiornamenti", "cercaAggiornamenti", [[true, "cercali all'avvio"], [false, "no"]], "All'avvio il gioco chiede a GitHub se è uscita una versione nuova; non manda niente di tuo. Dal menu si può cercare a mano.")}
+            {riga("Comandi", "comandi", [["pulsanti", "con i pulsanti"], ["scritti", "scritti"]], "Con i pulsanti si sceglie toccando le cose. Scritti, il gioco è un' avventura testuale pura: si scrive ogni comando, con tutti i verbi, e i pulsanti spariscono.")}
             {riga("Nomi toccabili nel testo", "nomiToccabili", [[true, "sì"], [false, "no"]], "Toccare un nome nella descrizione apre il menu di quella cosa.")}
           </>
         )}
@@ -389,12 +390,49 @@ const TASTI: readonly { gruppo: string; righe: readonly { tasti: readonly string
   },
 ];
 
-export function PannelloTasti({ forma, chiudi }: { forma: Forma; chiudi: () => void }) {
+const TASTI_SCRITTI: typeof TASTI = [
+  {
+    gruppo: "La riga",
+    righe: [
+      { tasti: ["Invio"], fa: "dà il comando; a riga vuota completa il testo che sta comparendo" },
+      { tasti: ["↑", "↓"], fa: "i comandi già dati" },
+      { tasti: ["Esc"], fa: "svuota la riga; a riga vuota apre la pausa" },
+      { tasti: ["Spazio"], fa: "come ogni lettera: scrive (e completa il testo che compare)" },
+    ],
+  },
+  {
+    gruppo: "Il dialogo e le domande",
+    righe: [
+      { tasti: ["1–9"], fa: "il numero della risposta, o le sue parole, poi Invio" },
+      { tasti: ["sì", "no"], fa: "quando il gioco lo chiede" },
+    ],
+  },
+  {
+    gruppo: "Le parole dell'app",
+    righe: [
+      { tasti: ["SALVA", "CARICA"], fa: "i salvataggi (anche «salva 3»)" },
+      { tasti: ["DIARIO"], fa: "il diario, la trascrizione" },
+      { tasti: ["OPZIONI", "MENU", "TASTI"], fa: "le opzioni, la pausa, questa pagina" },
+      { tasti: ["RICOMINCIA"], fa: "da capo, con una conferma" },
+      { tasti: ["AIUTO"], fa: "i verbi del gioco e le parole dell'app" },
+    ],
+  },
+  {
+    gruppo: "La partita",
+    righe: [
+      { tasti: ["F5", "F9"], fa: "salva, carica" },
+      { tasti: ["F11"], fa: "schermo intero, o in una finestra" },
+    ],
+  },
+];
+
+export function PannelloTasti({ forma, chiudi, scritti = false }: { forma: Forma; chiudi: () => void; scritti?: boolean }) {
+  const tabella = scritti ? TASTI_SCRITTI : TASTI;
   return (
     <Pannello forma={forma} titolo="Tasti" classe="tasti">
-      <p className="sotto">Tutto si fa anche senza mouse, e si può passare dall’uno all’altra quando si vuole.</p>
+      <p className="sotto">{scritti ? "Si gioca scrivendo: le lettere, le cifre e lo spazio sono della riga." : "Tutto si fa anche senza mouse, e si può passare dall’uno all’altra quando si vuole."}</p>
       <div className="gruppi-tasti">
-        {TASTI.map((g) => (
+        {tabella.map((g) => (
           <section key={g.gruppo} className="gruppo-tasti" aria-label={g.gruppo}>
             <h3>{g.gruppo}</h3>
             <dl>

@@ -7,6 +7,8 @@
 //   node collaudo/tipografia.mjs                 tutti i percorsi con «# atteso:»
 //   node collaudo/tipografia.mjs collaudo/vivi.txt
 //   node collaudo/tipografia.mjs -v              con i blocchi di ogni turno
+//   node collaudo/tipografia.mjs --solo-testo    come la modalità a solo testo (documento 18): l'elenco, le risposte e le
+//                                                domande del motore restano nel testo, e si ricostruiscono come ogni altro
 //
 // Ogni percorso si gioca con i suoi comandi, come le trascrizioni. A ogni turno:
 //   - il testo non si riscrive: ogni evento si ricostruisce dai suoi blocchi,
@@ -43,11 +45,15 @@ const ORACOLI = {
   registro: /^Registro di bordo, /gm,
 };
 
+// la modalità a solo testo: nessun evento nascosto, tranne l'intestazione; i suggerimenti non sono pulsanti
+const SOLO_TESTO = process.argv.includes("--solo-testo");
+
 function controllaTurno(eventi, blocchi, modello, dove, problemi, totali) {
   const no = (cosa) => problemi.push(`${dove}: ${cosa}`);
   eventi.forEach((e, i) => {
-    if (nascosto(e)) {
+    if (nascosto(e, SOLO_TESTO)) {
       if (!["elenco", "intestazione", "opzione", "domanda", "sistema"].includes(e.tipo)) no(`evento «${e.tipo}» nascosto`);
+      if (SOLO_TESTO && e.tipo !== "intestazione") no(`a solo testo l'evento «${e.tipo}» non si legge`);
       return;
     }
     const r = ricostruisciEvento(blocchi, i);
@@ -67,7 +73,7 @@ function controllaTurno(eventi, blocchi, modello, dove, problemi, totali) {
   }
   // ogni suggerimento del modello è un pulsante nel testo
   const segnati = new Set(blocchi.flatMap(segmentiDi).filter((s) => s.tipo === "suggerimento").map((s) => s.suggerimento));
-  modello?.suggerimenti.forEach((s, i) => {
+  (SOLO_TESTO ? [] : (modello?.suggerimenti ?? [])).forEach((s, i) => {
     totali.suggerimenti++;
     if (!segnati.has(i)) no(`il suggerimento «${s.frase}» non è segnato nel testo`);
   });
@@ -93,7 +99,7 @@ async function gioca(ponte, percorso, verboso, totali) {
   let turno = await ponte.chiama("rel_avvia", 1);
   const nome = relative(RADICE, percorso).replaceAll("\\", "/");
   // l'apertura: il prologo è una registrazione
-  controllaTurno(turno.apertura, blocchiDelTurno(turno.apertura), null, `${nome} · apertura`, problemi, totali);
+  controllaTurno(turno.apertura, blocchiDelTurno(turno.apertura, { soloTesto: SOLO_TESTO }), null, `${nome} · apertura`, problemi, totali);
   let n = 0;
   for (const cmd of [null, ...dati.comandi]) {
     if (cmd !== null) {
@@ -103,7 +109,7 @@ async function gioca(ponte, percorso, verboso, totali) {
     }
     const modello = costruisciModello(turno);
     const verbi = new Set([...turno.pulsanti.verbi.map((v) => v.verbo), ...AZIONI_DI_SITUAZIONE.map((a) => a.comando.split(" ")[0])]);
-    const blocchi = blocchiDelTurno(turno.eventi, { suggerimenti: modello.suggerimenti, verbi });
+    const blocchi = blocchiDelTurno(turno.eventi, { suggerimenti: SOLO_TESTO ? [] : modello.suggerimenti, verbi, soloTesto: SOLO_TESTO });
     controllaTurno(turno.eventi, blocchi, modello, `${nome} · ${cmd === null ? "inizio" : `${n}. «${cmd}»`}`, problemi, totali);
     if (verboso && blocchi.length) {
       console.log(`  ${cmd === null ? "(inizio)" : `› ${cmd}`}`);
@@ -120,7 +126,7 @@ async function gioca(ponte, percorso, verboso, totali) {
 async function main() {
   const argomenti = process.argv.slice(2);
   const verboso = argomenti.includes("-v");
-  const scelti = argomenti.filter((a) => a !== "-v").map((a) => join(RADICE, a));
+  const scelti = argomenti.filter((a) => a !== "-v" && a !== "--solo-testo").map((a) => join(RADICE, a));
   const percorsi = scelti.length
     ? scelti
     : readdirSync(QUI)
@@ -167,7 +173,7 @@ async function main() {
     const problemi = [];
     for (const { file, riga, testo } of t) {
       const eventi = [{ tipo: "testo", testo }];
-      controllaTurno(eventi, blocchiDelTurno(eventi, { verbi }), null, `${file}:${riga}`, problemi, tot);
+      controllaTurno(eventi, blocchiDelTurno(eventi, { verbi, soloTesto: SOLO_TESTO }), null, `${file}:${riga}`, problemi, tot);
     }
     console.log(`\nIl testo intero del gioco (${t.length} stringhe dei .fav, i rami dei [se] separati): ${problemi.length ? `${problemi.length} PROBLEMI` : "nessun problema"}.`);
     for (const p of problemi.slice(0, 30)) console.log(`     ${p}`);

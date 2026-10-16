@@ -1,0 +1,39 @@
+/* La riga di comando della modalità a solo testo: il segno e il cursore, nella fascia del ramo.
+   Nell'acciaio è la riga di un terminale di bordo; nella membrana un filo che pulsa piano. */
+.riga-comando {
+  position: absolute;
+  left: 3.2cqw;
+  right: 3.2cqw;
+  bottom: 2.2cqw;
+  display: flex;
+  align-items: baseline;
+  gap: .9cqw;
+  padding: .55cqw 1.1cqw;
+  border-bottom: 1px solid var(--bordo);
+  background: color-mix(in srgb, var(--lamina-2) 55%, transparent);
+  z-index: 3;
+}
+.riga-comando .segno { color: var(--accento); font-size: max(18px, 1.6cqw); line-height: 1; }
+.riga-comando input {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: 0;
+  outline: 0;
+  color: var(--testo);
+  font: inherit;
+  font-size: max(16px, 1.45cqw);
+  caret-color: var(--accento);
+  padding: .2em 0;
+}
+.riga-comando:focus-within { border-bottom-color: var(--accento); }
+.gioco[data-forma="acciaio"] .riga-comando { font-family: var(--mono, "IBM Plex Mono", monospace); text-transform: none; letter-spacing: .03em; }
+.gioco[data-forma="acciaio"] .riga-comando input { font-family: var(--mono, "IBM Plex Mono", monospace); }
+.gioco[data-forma="membrana"] .riga-comando { border-radius: 999px; border: 1px solid var(--bordo); padding-inline: 1.6cqw; }
+.gioco[data-forma="membrana"] .riga-comando:focus-within { box-shadow: 0 0 0 1px var(--accento), 0 0 1.4cqw color-mix(in srgb, var(--accento) 35%, transparent); }
+@media (prefers-reduced-motion: no-preference) {
+  .gioco[data-forma="membrana"][data-movimento="pieno"] .riga-comando:focus-within { animation: riga-respiro 3.4s ease-in-out infinite; }
+}
+@keyframes riga-respiro { 50% { box-shadow: 0 0 0 1px var(--accento), 0 0 2.2cqw color-mix(in srgb, var(--accento) 45%, transparent); } }
+/* nel dialogo la riga sta sotto le battute, nel suo flusso */
+.riga-comando[data-in-dialogo] { position: static; margin-top: 1.2cqw; }
