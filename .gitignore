@@ -27,6 +27,8 @@ audio/sorgenti/
 audio/lyria/**/*.wav
 audio/lyria/**/*.m4a
 audio/lyria/**/*.flac
+# File che non vengono da Lyria (es. Suno): restano in locale finche' l'autore non decide
+audio/lyria/**/non-lyria/
 
 # Le consegne all'autore: installer e versioni portatili (si rifanno con tauri build)
 consegne/
