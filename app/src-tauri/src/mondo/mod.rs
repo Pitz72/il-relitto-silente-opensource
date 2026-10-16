@@ -23,6 +23,7 @@ pub mod interfaccia;
 pub mod musica;
 pub mod re;
 mod regia;
+pub mod sintonia;
 pub mod riverbero;
 pub mod stanze;
 pub mod stato;
@@ -46,6 +47,7 @@ use fondi::{Pompe, Ventilazione, Ventola};
 use musica::Musica;
 use re::Re;
 use riverbero::Riverbero;
+use sintonia::{Profilo, Spostatore};
 use stanze::{Specie, Stanza};
 use voce::Voce;
 
@@ -137,7 +139,7 @@ pub enum Comando {
     /// il volume generale, in dB
     Volume(f32),
     /// per le misure: suona solo uno strato («re», «ventilazione», «pompe», «ventola»,
-    /// «fiato», «brusio», «voci», «segnali», «fruscio», «stanza», «musica»); `None` li riaccende
+    /// «fiato», «brusio», «voci», «segnali», «fruscio», «stanza», «musica», «filo»); `None` li riaccende
     Solo(Option<String>),
     /// sfuma tutto e chiude
     Ferma,
@@ -158,6 +160,7 @@ const S_SEGNALI: u32 = 128;
 const S_FRUSCIO: u32 = 256;
 const S_STANZA: u32 = 512;
 const S_MUSICA: u32 = 1024;
+const S_FILO: u32 = 2048;
 
 fn maschera(solo: Option<&str>) -> u32 {
     match solo {
@@ -173,6 +176,7 @@ fn maschera(solo: Option<&str>) -> u32 {
         Some("fruscio") => S_FRUSCIO,
         Some("stanza") => S_STANZA,
         Some("musica") => S_MUSICA,
+        Some("filo") => S_FILO,
         Some(_) => 0,
     }
 }
@@ -249,6 +253,18 @@ impl Pioggia {
 
 const PIOGGE: usize = 6;
 
+/// L’anello del Piccolo (§5.3): la voce giovane che «gira su se stessa», identica a ogni giro.
+#[derive(Clone, Copy)]
+struct Anello {
+    voce: Profilo,
+    seme: u64,
+    /// i secondi al prossimo giro, e quelli che restano all’anello
+    prossimo: f32,
+    restano: f32,
+    /// finché si parla con l’eco, l’anello non si ferma
+    in_dialogo: bool,
+}
+
 #[derive(Clone, Copy, Debug)]
 enum Azione {
     /// il brusio verso un volume (lineare), in secondi
@@ -277,6 +293,8 @@ enum Azione {
     Risveglio,
     /// la musica di una chiusura
     Musica(Brano),
+    /// chi parla nel filo, da adesso (il Sintonizzatore, §5.3)
+    Voce(Profilo),
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -346,6 +364,11 @@ pub struct Mondo {
     brusio_via: Bus,
     filo: Voce,
     filo_g: Scorrevole,
+    /// lo spostamento di frequenza del filo (§5.3: +60–90 Hz), e di quanto sposta adesso
+    spostatore: Spostatore,
+    filo_shift: Scorrevole,
+    /// l’anello del Piccolo: quattro secondi che ricominciano uguali
+    anello: Option<Anello>,
     fondo: Fondo,
     fondo_mul: Scorrevole,
     ronzio: Ronzio,
@@ -473,6 +496,9 @@ impl Mondo {
             brusio_via: Bus::Em,
             filo: Voce::nuova(sr, seme ^ 0xF110, 95.0, 0.84, 0.85, 0.06),
             filo_g: Scorrevole::nuovo(0.0),
+            spostatore: Spostatore::nuovo(sr),
+            filo_shift: Scorrevole::nuovo(0.0),
+            anello: None,
             fondo: Fondo::nuovo(sr, seme ^ 0xF0),
             fondo_mul: Scorrevole::nuovo(1.0),
             ronzio: Ronzio::nuovo(sr, seme ^ 0x2A),
@@ -671,6 +697,7 @@ impl Mondo {
             }
             Azione::Risveglio => self.risveglio(),
             Azione::Musica(b) => self.musica.avvia(b),
+            Azione::Voce(p) => self.voce_del_filo(&p),
         }
     }
 
@@ -682,6 +709,7 @@ impl Mondo {
         self.t_aggancio += dt;
         self.passo_membrana(dt);
         self.musica.passo(dt);
+        self.passo_anello(dt);
         for i in 0..PIOGGE {
             if self.piogge[i].passo(dt, &mut self.caso) {
                 let p = self.piogge[i];
@@ -750,6 +778,7 @@ impl Mondo {
         let m = self.maschera;
         let on = |bit: u32| if m & bit != 0 { 1.0f32 } else { 0.0 };
         let s_musica = on(S_MUSICA);
+        let s_filo = on(S_FILO);
         let (s_re, s_vent, s_pompe, s_ventola, s_fiato, s_brusio, s_voci, s_segnali, s_fruscio, s_stanza) = (
             on(S_RE),
             on(S_VENTILAZIONE),
@@ -870,8 +899,12 @@ impl Mondo {
             }
             // la voce in primo piano, e il canale della radio
             let fg = self.filo_g.passo();
+            let shift = self.filo_shift.passo();
             if fg > 1e-5 {
-                let v = self.filo.campione() * fg * gv * s_brusio;
+                // il filo passa per lo spostamento di frequenza: il ritmo e l’intonazione restano,
+                // le parole no (§5.3)
+                let y = self.filo.campione();
+                let v = self.spostatore.elabora(y, shift) * fg * gv * s_filo;
                 em.0 += v * 0.9;
                 em.1 += v;
             }

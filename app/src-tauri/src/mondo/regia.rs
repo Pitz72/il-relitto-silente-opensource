@@ -20,9 +20,11 @@ use super::ambienti::FormaRonzio;
 use super::colpi::{self, Bus, Corpo, Tonfo, CLIC_ARMONIOSO};
 use super::dsp::{db, Biquad, Scorrevole};
 use super::stanze::{self, Luogo, Speciale, Specie, Superficie};
+use super::sintonia::{self, voce, Eco, Forma, Profilo, GIRO_DELL_ANELLO};
 use super::stato::{EventoGioco, StatiGioco, TurnoSuono};
+use super::voce::Voce;
 use super::{
-    Ambiente, Azione, Brano, Evento, Mondo, Nave, LIV_BRUSIO, LIV_FILO, LIV_GEMITO, LIV_PASSI, LIV_POMPE, LIV_RE,
+    Ambiente, Anello, Azione, Brano, Evento, Mondo, Nave, LIV_BRUSIO, LIV_FILO, LIV_GEMITO, LIV_PASSI, LIV_POMPE, LIV_RE,
     LIV_RE_OSSA, LIV_RE_RAMPA, LIV_VENTILAZIONE, LIV_VENTOLA,
 };
 
@@ -515,11 +517,22 @@ impl Mondo {
         // il canale della radio, finché si parla con Yusuf; la voce, finché parla l’eco
         let yusuf = StatiGioco::e(&g.dialogo, "yusuf") && !muto;
         self.canale.g.verso(if yusuf { db(-14.0) } else { 0.0 }, 0.3, sr);
+        // il Piccolo, mentre si parla con lui: il suo anello non si ferma (§5.3)
         if StatiGioco::e(&g.dialogo, "eco") && !muto {
-            self.filo.regola(150.0, 0.85, 0.9);
-            self.filo_g.verso(db(LIV_FILO), 1.0, sr);
+            match self.anello.as_mut() {
+                Some(a) => a.in_dialogo = true,
+                None => {
+                    let piccolo = sintonia::eco_della_cosa("culla").map(|e| e.primo[0].voce).unwrap_or(voce(255.0, 1.25));
+                    self.avvia_anello(piccolo);
+                    if let Some(a) = self.anello.as_mut() {
+                        a.prossimo = 0.0;
+                        a.in_dialogo = true;
+                    }
+                }
+            }
         } else if StatiGioco::e(&self.prima_dialogo, "eco") {
-            self.filo_g.verso(0.0, 1.5, sr);
+            // «Quando smette, resta il fruscio della registrazione»
+            self.ferma_anello();
         }
         self.prima_dialogo = self.gioco.dialogo.clone();
 
@@ -658,29 +671,109 @@ impl Mondo {
         }
     }
 
+    /// Chi parla nel filo, da adesso: l’altezza, il ritmo, il carattere, lo spostamento di
+    /// frequenza (§5.3).
+    pub(super) fn voce_del_filo(&mut self, p: &Profilo) {
+        self.filo.regola(p.f0, p.scala, p.ritmo);
+        self.filo.carattere(p.intonazione, p.tremito, p.soffio);
+        self.filo_shift.verso(p.shift, 0.15, self.sr);
+    }
+
     /// Una voce che si stacca dal coro (§5.3): il brusio si abbassa e un filo solo
-    /// resta in primo piano, per `durata` secondi.
-    fn filo_per(&mut self, f0: f32, ritmo: f32, durata: f32, ritardo: f32, livello: f32) {
-        self.filo.regola(f0, 0.84, ritmo);
-        self.dopo(ritardo, Azione::Filo(db(livello), 0.4));
+    /// resta in primo piano, per `durata` secondi. `livello` in dB (sommato a quello della voce).
+    fn filo_per(&mut self, p: Profilo, durata: f32, ritardo: f32, livello: f32) {
+        self.dopo(ritardo, Azione::Voce(p));
+        self.dopo(ritardo, Azione::Filo(db(livello + p.livello), 0.4));
         self.dopo(ritardo + durata, Azione::Filo(0.0, 0.8));
     }
 
-    /// Il Sintonizzatore trova un’eco (§5.3): la sintonia che scorre, il brusio che scende
-    /// di dieci decibel, un filo solo con il ritmo di una frase.
-    fn eco(&mut self) {
+    /// Il Sintonizzatore trova un’eco (§5.3): il brusio scende, un filo solo resta in primo
+    /// piano con il ritmo di una frase, e il flusso passa per lo spostamento di frequenza.
+    /// La ricerca (il fruscio di sintonia) l’ha già fatta l’attrezzo. Il secondo strato è lo
+    /// stesso filo, più grave e più nudo, senza il coro intorno: il brusio sparisce.
+    fn eco_trovata(&mut self, eco: &'static Eco, secondo: bool) {
         let sr = self.sr;
-        let c = colpi::sintonia(&mut self.caso, sr);
-        self.suona_in(super::Canale::Voci, c, Bus::Em, -24.0, 0.0, 0.0);
+        let fili = if secondo { eco.secondo } else { eco.primo };
+        let fine = sintonia::durata_dei_fili(fili) + 1.2;
         if self.brusio_base > 0.0 {
-            self.brusio.guadagno.verso(self.brusio_base * db(-10.0), 0.8, sr);
-            self.dopo(7.0, Azione::Brusio(self.brusio_base, 2.5));
+            let giu = if secondo { -20.0 } else { -10.0 };
+            self.brusio.guadagno.verso(self.brusio_base * db(giu), 0.8, sr);
+            self.dopo(fine + 1.0, Azione::Brusio(self.brusio_base, 2.5));
         }
-        let f0 = self.caso.tra(95.0, 170.0);
-        let ritmo = self.caso.tra(0.8, 1.1);
-        self.filo_per(f0, ritmo, 5.0, 1.2, LIV_FILO);
+        if secondo {
+            // «la frequenza scende sotto la soglia di prima»
+            let c = colpi::sintonia_giu(sr);
+            self.suona_in(super::Canale::Voci, c, Bus::Em, -26.0, 0.0, 0.0);
+        }
+        match (eco.forma, fili.first()) {
+            (Forma::Anello, Some(f)) => self.avvia_anello(f.voce),
+            _ => {
+                for f in fili {
+                    self.filo_per(f.voce, f.durata, 1.2 + f.dopo, LIV_FILO);
+                }
+            }
+        }
+        self.fiato.ascolto = true;
+        self.dopo(fine + 1.0, Azione::Ascolto(false));
+    }
+
+    /// La lastra incisa (§5.3): non una voce, «una punta contro la pietra, ostinata, che
+    /// incide, si ferma, riprende»: e si ferma sempre allo stesso punto.
+    fn graffio_della_lastra(&mut self) {
+        let sr = self.sr;
+        for k in 0..3 {
+            let c = colpi::graffio(1.0, &mut self.caso, sr);
+            self.suona_in(super::Canale::Voci, c, Bus::Em, -22.0, -0.15 + 0.15 * k as f32, 1.2 + k as f32 * 1.7);
+        }
         self.fiato.ascolto = true;
         self.dopo(7.0, Azione::Ascolto(false));
+    }
+
+    /// L’anello del Piccolo: la voce giovane che «gira su se stessa», quattro secondi che
+    /// ricominciano uguali, cinque giri o finché si parla con lei (§5.3).
+    fn avvia_anello(&mut self, voce: Profilo) {
+        self.anello = Some(Anello {
+            voce,
+            seme: 0x91C0,
+            prossimo: 1.2,
+            // cinque giri: il quinto finisce prima che ne cominci un sesto
+            restano: 1.2 + 5.0 * GIRO_DELL_ANELLO - 0.5,
+            in_dialogo: StatiGioco::e(&self.gioco.dialogo, "eco"),
+        });
+    }
+
+    /// Il tempo dell’anello: a ogni giro la voce ricomincia da capo, identica.
+    pub(super) fn passo_anello(&mut self, dt: f32) {
+        let Some(mut a) = self.anello else { return };
+        a.prossimo -= dt;
+        a.restano -= dt;
+        if a.prossimo > 0.0 {
+            self.anello = Some(a);
+            return;
+        }
+        if a.restano > 0.0 || a.in_dialogo {
+            let sr = self.sr;
+            let v = a.voce;
+            self.filo = Voce::nuova(sr, a.seme, v.f0, v.scala, v.ritmo, v.soffio);
+            self.filo.carattere(v.intonazione, v.tremito, v.soffio);
+            self.spostatore.azzera_fase();
+            self.filo_shift.verso(v.shift, 0.0, sr);
+            self.filo_g.verso(db(LIV_FILO + v.livello), 0.1, sr);
+            a.prossimo += GIRO_DELL_ANELLO;
+            self.anello = Some(a);
+        } else {
+            self.ferma_anello();
+        }
+    }
+
+    /// L’anello smette: «Resta il fruscio della registrazione».
+    fn ferma_anello(&mut self) {
+        if self.anello.take().is_some() {
+            let sr = self.sr;
+            self.filo_g.verso(0.0, 0.5, sr);
+            let c = colpi::fruscio_registrazione(sr);
+            self.suona_in(super::Canale::Voci, c, Bus::Em, -30.0, 0.0, 0.3);
+        }
     }
 
     // --------------------------------------------------------------------------------
@@ -830,9 +923,9 @@ impl Mondo {
                 }
                 match e.valore.map(|v| v as i32) {
                     // una voce si stacca: «chiede qualcosa, in fretta, a qualcuno»
-                    Some(1) => self.filo_per(175.0, 1.6, 2.2, 0.4, LIV_FILO),
+                    Some(1) => self.filo_per(Profilo { shift: 82.0, ..voce(175.0, 1.6) }, 2.2, 0.4, LIV_FILO),
                     // «tante e vicine», e una «sembra contare»
-                    Some(2) => self.filo_per(118.0, 1.0, 3.0, 0.4, LIV_FILO),
+                    Some(2) => self.filo_per(Profilo { shift: 70.0, ..voce(118.0, 1.0) }, 3.0, 0.4, LIV_FILO),
                     _ => {}
                 }
             }
@@ -842,7 +935,7 @@ impl Mondo {
                 // due volte, a vuoto
                 let c = colpi::sintonia(&mut self.caso, sr);
                 self.suona_in(super::Canale::Voci, c, Bus::Em, -24.0, 0.0, 0.0);
-                self.filo_per(82.0, 0.75, 8.5, 1.0, LIV_FILO + 2.0);
+                self.filo_per(Profilo { shift: 60.0, ..voce(82.0, 0.75) }, 8.5, 1.0, LIV_FILO + 2.0);
                 for k in 0..12 {
                     self.suona(colpi::tic(-400.0, sr), Bus::Casco, -32.0, 0.0, 1.2 + k as f32 * 0.65);
                 }
@@ -1015,11 +1108,11 @@ impl Mondo {
             "voce_dei_nomi" => {
                 // la voce bassa che torna; «Poi l’elenco finisce, e la voce, dopo una pausa,
                 // ne dice uno in più, più piano degli altri»
-                self.filo_per(78.0, 0.7, 8.0, 0.5, LIV_FILO + 2.0);
+                self.filo_per(Profilo { shift: 60.0, ..voce(78.0, 0.7) }, 8.0, 0.5, LIV_FILO + 2.0);
                 for k in 0..11 {
                     self.suona(colpi::tic(-400.0, sr), Bus::Casco, -32.0, 0.0, 0.8 + k as f32 * 0.68);
                 }
-                self.filo_per(76.0, 0.6, 1.2, 9.8, LIV_FILO - 6.0);
+                self.filo_per(Profilo { shift: 60.0, ..voce(76.0, 0.6) }, 1.2, 9.8, LIV_FILO - 6.0);
                 self.fiato.ascolto = true;
                 self.dopo(11.0, Azione::Ascolto(false));
             }
@@ -1062,7 +1155,28 @@ impl Mondo {
 
             // ---- i contatori, la matrice, le echi
             "chiave" => self.suona(colpi::vetro(CLIC_ARMONIOSO[1] * 2.0, sr), Bus::Esterno, -34.0, 0.0, 0.0),
-            "eco" | "risonanza" => self.eco(),
+            // le echi (§5.3): la ricerca la fa l’attrezzo; «eco» conta soltanto. Il filo arriva con
+            // la cosa che risuona; il secondo strato (e la lastra incisa, che non è una voce) con
+            // la risonanza, nella stanza dell’eco
+            "eco" => {}
+            "risuonata" => {
+                if let Some(eco) = e.cosa.as_deref().and_then(sintonia::eco_della_cosa) {
+                    self.eco_trovata(eco, false);
+                }
+            }
+            "risonanza" => {
+                let stanza = self.gioco.stanza.clone();
+                for eco in sintonia::echi_della_stanza(&stanza) {
+                    if eco.forma == Forma::Graffio {
+                        self.graffio_della_lastra();
+                        break;
+                    }
+                    if !eco.secondo.is_empty() && prima.risonate.iter().any(|r| r == eco.cosa) {
+                        self.eco_trovata(eco, true);
+                        break;
+                    }
+                }
+            }
             "matrice" => {}
             "traduzione_completa" => {
                 // nessun suono di vittoria: per tre secondi il brusio diventa un accordo di

@@ -1141,6 +1141,23 @@ pub fn sintonia(caso: &mut Caso, sr: f32) -> Corpo {
     Corpo::Fruscio(Fruscio::nuovo(caso.tra(1.2, 2.0), 0.5, (lo, lo * caso.tra(2.5, 3.5)), 9.0, Filtro::Banda, sr).andata_e_ritorno()).per(3.5)
 }
 
+/// La sintonia che scende sotto la soglia di prima (il secondo strato di un’eco, §5.3): un
+/// fruscio stretto che va dall’acuto al grave e non torna.
+pub fn sintonia_giu(sr: f32) -> Corpo {
+    Corpo::Fruscio(Fruscio::nuovo(1.5, 0.3, (1800.0, 420.0), 8.0, Filtro::Banda, sr)).per(3.5)
+}
+
+/// Una punta contro la pietra, ostinata: il graffio della lastra incisa (§5.3).
+pub fn graffio(durata: f32, caso: &mut Caso, sr: f32) -> Corpo {
+    let fc = caso.tra(2300.0, 3000.0);
+    Corpo::Fruscio(Fruscio::nuovo(durata, 0.45, (fc, fc * 1.25), 1.8, Filtro::Banda, sr).ruvido(0.9).con_am(caso.tra(20.0, 26.0), 0.85)).per(1.6)
+}
+
+/// Il fruscio della registrazione, che resta quando l’anello del Piccolo smette (§5.3).
+pub fn fruscio_registrazione(sr: f32) -> Corpo {
+    Corpo::Fruscio(Fruscio::nuovo(3.0, 0.15, (3600.0, 2400.0), 0.6, Filtro::Alto, sr)).per(1.0)
+}
+
 /// Lo squelch della radio: il canale che si apre o si chiude.
 pub fn squelch(sr: f32) -> Corpo {
     Corpo::Fruscio(Fruscio::nuovo(0.13, 0.05, (1500.0, 1800.0), 0.5, Filtro::Banda, sr).curva(2.0)).per(1.5)
@@ -1426,6 +1443,9 @@ mod prove {
             salita(207.0, 415.0, 1.5, 0.6, sr),
             gancio(&mut caso, sr),
             strofinato(4.0, &mut caso, sr),
+            sintonia_giu(sr),
+            graffio(1.0, &mut caso, sr),
+            fruscio_registrazione(sr),
         ];
         let mut corpi = corpi.to_vec();
         for superficie in [

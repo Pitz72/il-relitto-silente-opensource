@@ -10,6 +10,13 @@ documenti di `progettazione/`.
 
 ### Aggiunto
 
+- **Il filo del Sintonizzatore** (bibbia sonora, §5.3 e §11.6): il flusso che si stacca dal brusio passa per uno
+  spostamento di frequenza vero, a banda laterale unica (+60–90 Hz: il ritmo e l’intonazione restano, le
+  parole no). Ogni eco ha la sua voce (l’Ingegnere urgente, le pareti del corridoio a quattro fili, il Capitano
+  lento, l’Ufficiale medico piano, il Navarca tremante, il Custode grave…); il secondo strato è lo stesso filo,
+  più grave e nudo, senza il coro; il Piccolo è un anello di quattro secondi che ricomincia uguale, e resta il
+  fruscio quando smette; la lastra incisa non parla, graffia. Tredici prove in Rust; ascolto 15
+  (`cargo run --release --example rendi_echi`).
 - **La musica** (D14; `progettazione/21-la-musica.md`): scritta e generata nel motore audio, con i materiali del
   gioco (il re del reattore, il campo del sol♯ a un tritono, le voci tenute del brusio che cantano l’accordo del
   clic, il sonaglio, un tam-tam strofinato, il vetro del tema, il battito del seme). Suona il menu principale

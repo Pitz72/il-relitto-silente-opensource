@@ -1,6 +1,6 @@
 # Il Relitto Silente — la bibbia sonora
 
-Documento 10 della progettazione · prima versione, 14 ottobre 2026 · seconda, 15 ottobre 2026: il suono tutto sintetizzato (§10) · terza, 16 ottobre 2026: il gioco che suona (§11) · quarta, 16 ottobre 2026: i tocchi dell’interfaccia (§11.4) · quinta, 16 ottobre 2026: la musica (§11.5)
+Documento 10 della progettazione · prima versione, 14 ottobre 2026 · seconda, 15 ottobre 2026: il suono tutto sintetizzato (§10) · terza, 16 ottobre 2026: il gioco che suona (§11) · quarta, 16 ottobre 2026: i tocchi dell’interfaccia (§11.4) · quinta, 16 ottobre 2026: la musica (§11.5) · sesta, 16 ottobre 2026: il filo del Sintonizzatore (§11.6)
 
 Che cosa si sente in ogni stanza e in ogni evento del gioco, da quali registrazioni nasce e come si lavora. Vale insieme al §9 di `06-app-desktop.md` e al punto 3 del suo §17: suono credibile e realistico, registrazioni vere con licenza compatibile, la fisica giusta. Per l’intro vale il §5 di `09-intro-storyboard.md`. La musica (D14) è nel documento 21 (`21-la-musica.md`): qui compare solo dove tocca il resto del suono (§11.5).
 
@@ -613,7 +613,7 @@ Il fiato è il suono più presente del gioco: c’è in ogni stanza dalla vestiz
 
 ### 5.3 Il Sintonizzatore e le echi
 
-Le echi sono testo: nessuna voce recitata nella 1.0 (D18). Il suono racconta come il Sintonizzatore le trova.
+Le echi sono testo: nessuna voce recitata nella 1.0 (D18). Il suono racconta come il Sintonizzatore le trova. *(Fatto: §11.6.)*
 
 - **La ricerca:** un fruscio di sintonia, come su una radio a onde corte, che scorre e torna.
 - **La cosa trovata:** il brusio scende di 10 dB e un flusso solo resta in primo piano, con frammenti più lunghi (300–500 ms) messi in ordine, così ha il ritmo di una frase. Per non farne una lingua umana, il flusso passa per uno spostamento di frequenza di +60–90 Hz: il ritmo e l’intonazione restano, le parole no.
@@ -836,8 +836,8 @@ Tutti con licenza verificata sulla pagina di ciascuno, il 14 ottobre 2026.
 **Che cosa manca prima del gioco vero** (fase 4; aggiornato dal §10, che ha tolto i campioni: i letti in streaming e la memoria non servono più):
 
 - ~~i letti lunghi in streaming dal disco invece che in memoria (86 MB sono troppi per 23 stanze)~~;
-- i cinque cursori dei canali (oggi c’è solo il volume generale);
-- il «filo» del Sintonizzatore e lo spostamento di frequenza delle echi (§5.3);
+- ~~i cinque cursori dei canali~~ (ci sono tutti, la musica compresa);
+- ~~il «filo» del Sintonizzatore e lo spostamento di frequenza delle echi (§5.3)~~ (fatto: §11.6);
 - ~~più materiale per il fiato: quindici cicli si riconoscono, dopo qualche minuto~~ (sintetizzato, ogni respiro è diverso);
 - ~~i riverberi delle stanze grandi per convoluzione, offline~~ (ora un riverbero algoritmico in tempo reale, §10.2);
 - la prova sulla macchina Linux vera.
@@ -961,7 +961,7 @@ Il 16 ottobre 2026 l’autore ha ascoltato gli ascolti sintetizzati e ha detto c
 
 ### 11.3 Che cosa manca
 
-La musica dell’intro (D14: il re che entra nel vuoto, che si assottiglia, che si chiude sul titolo; si compone sul montaggio bloccato, 21, §7), il filo del Sintonizzatore con lo spostamento di frequenza (§5.3: oggi le echi sono una voce in primo piano), le luci del Navarca nella gola del ritorno, il montacarichi, la prova su Linux. L’orecchio dell’autore sulla partita intera c’è: il 16 ottobre 2026, ascoltato l’audio, ha detto che gli sembra ok; sul tocco dei pulsanti e sulla musica non ancora.
+La musica dell’intro (D14: il re che entra nel vuoto, che si assottiglia, che si chiude sul titolo; si compone sul montaggio bloccato, 21, §7), le luci del Navarca nella gola del ritorno, il montacarichi, la prova su Linux. L’orecchio dell’autore sulla partita intera c’è: il 16 ottobre 2026, ascoltato l’audio, ha detto che gli sembra ok; sul tocco dei pulsanti e sulla musica non ancora.
 
 ### 11.4 L’interfaccia: il tocco sui pulsanti
 
@@ -978,3 +978,16 @@ Il §5.8 è fatto, per il gioco e per il menu principale (che ha un mondo sonoro
 ### 11.5 La musica
 
 Il 16 ottobre 2026 l’autore ha chiesto di cominciare dalla musica (D14), con il tocco del menu principale. È tutta sintetizzata, con i materiali del gioco: il re del reattore, il campo del sol♯, le voci tenute del brusio che cantano l’accordo del clic, il sonaglio del Piccolo, il tam-tam strofinato, il vetro del tema, il battito del seme. Il progetto, i brani (il menu, le soglie degli atti, l’Anziano nodo per nodo, le chiusure di cinque finali), le misure e le prove sono nel documento 21 (`progettazione/21-la-musica.md`); il codice è in `app/src-tauri/src/mondo/musica.rs`. Il motore la accende da solo, dallo stato e dagli eventi del turno (`regia.rs`); il menu lo chiede la pagina (`Comando::Menu`). Ha la sua strada (la sua sala, il suo cursore «Musica», il volume dopo la sala: un silenzio vero porta via anche la coda), e il suo posto: non passa dal casco né dalle ossa. Gli ascolti: `ascolti/14-musica-menu.mp3`, `14-musica-atti.mp3`, `14-musica-chiusure.mp3`.
+
+### 11.6 Il filo del Sintonizzatore
+
+Fatto il 16 ottobre 2026 (§5.3). Il codice è in `app/src-tauri/src/mondo/sintonia.rs` e nella regia; gli ascolti in `ascolti/15-echi.mp3`.
+
+- **Lo spostamento di frequenza è vero.** Un `Spostatore` a banda laterale unica: due catene di passa-tutto (la trasformata di Hilbert di Olli Niemitalo, dodici poli; la prima va ritardata di un campione) fanno il segnale analitico, un oscillatore lo gira, e ogni componente si sposta della stessa quantità. La banda laterale sbagliata resta circa cinquanta decibel sotto. Una voce ha gli armonici a multipli della sua altezza: spostati di 60–90 Hz non lo sono più, e il suono è quello di un metallo che parla; la distanza fra gli armonici, cioè l’altezza che si sente, e il ritmo restano («il ritmo e l’intonazione restano, le parole no»). Il filo passa dallo spostatore in ogni suo uso: le echi, la voce che si stacca al taglio, la voce bassa della connessione e quella dei nomi.
+- **Ogni eco ha il suo filo** (la tabella del §5.3, `ECHI`): chi parla è un profilo (altezza, tratto vocale, ritmo, quanto intona, quanto trema, soffio, spostamento, livello). L’Ingegnere è urgente e poi più piano; le pareti del corridoio sono quattro fili in fila, il Capitano più lento; le gole due fili, uno urgente e uno basso che risponde; lo Xeno-botanico stanco; l’Ufficiale medico piano (l’intonazione quasi a zero); il Navarca vecchio e tremante; lo Scriba piano; l’Ufficiale di navigazione preciso; il Custode grave. Le voci hanno due manopole nuove (`Voce::carattere`): l’intonazione e il tremito. Il filo arriva con la cosa che risuona (`risuonata`), un secondo e mezzo dopo la ricerca (il fruscio di sintonia, che fa l’attrezzo).
+- **Il secondo strato** («la frequenza scende sotto la soglia di prima»): lo stesso filo, più grave e più nudo, senza il coro intorno (il brusio sparisce, −20 dB invece di −10), preceduto da una sintonia che scende. Il motore sa quale eco è, dalla stanza e da `risonate` (le cose già risuonate, nello stato del turno): una risonanza che non è il secondo strato di un’eco (la scatola nera, nella serra) non fa parlare nessuno. Quello dell’Ingegnere è «quasi un canto sottovoce»; quello del Custode «non trema più» (il tremito a zero); quello del Navarca parla «a se stesso, più vicino» (più forte, meno spostato).
+- **Il Piccolo** è un anello di quattro secondi che ricomincia uguale: a ogni giro la voce nasce di nuovo con lo stesso seme, e l’oscillatore dello spostamento riparte da zero. Gira cinque volte, e finché si parla con lui (il dialogo con l’eco); quando smette, resta il fruscio della registrazione.
+- **La lastra incisa** non è una voce: tre graffi uguali di una punta contro la pietra, con una pausa fra l’uno e l’altro, che si fermano sempre allo stesso punto.
+- **Le prove.** Tredici prove in Rust (48 in tutto): lo spostatore sposta ogni componente della stessa quantità (quattro frequenze) e non cambia il volume; una voce spostata ha il secondo e il terzo armonico dove devono stare; le tabelle sono coerenti con il §5.3 e con le cose da sintonizzare di `echi.fav` e `ingresso.fav` (nessuna in più, nessuna in meno); attraverso il mondo vero, un’eco ha il suo filo dopo la ricerca e lo finisce, il secondo strato c’è solo se la cosa ha già risuonato, la lastra graffia e si ferma, l’anello gira cinque volte, ricomincia identico, non si ferma durante il dialogo e smette alla sua fine. Resta fuori «Torna a zero» (la sintonia che scorre e si ferma sul niente): oggi un comando a vuoto fa soltanto la ricerca, come «Soltanto un residuo statico».
+- **Gli ascolti**: `cargo run --release --example rendi_echi -- <cartella>` (con `SOLO_FILO` impostata, soltanto il filo, per guardarne lo spettro) rende le quindici scene (ogni eco nella sua stanza, i secondi strati, l’anello e il dialogo con il Piccolo); `Solo("filo")` isola il filo nel mondo.
+

@@ -90,6 +90,10 @@ pub struct Voce {
     conto: u32,
     /// una nota tenuta, con il suo tempo: l’intonazione si ferma lì
     tenuta: (f32, f32),
+    /// quanto l’intonazione sale e scende lungo la frase (1 come sempre, 0 una voce piana)
+    intonazione: f32,
+    /// quanto la voce trema (1 come sempre, 0 una voce ferma, 2 una voce vecchia)
+    tremito: f32,
 }
 
 impl Voce {
@@ -130,6 +134,8 @@ impl Voce {
             fricativa: Svf::nuovo(3000.0, 1.0, sr),
             conto: 0,
             tenuta: (0.0, 0.0),
+            intonazione: 1.0,
+            tremito: 1.0,
             caso,
         };
         v.aggiorna_filtri();
@@ -141,6 +147,14 @@ impl Voce {
         self.f0_base = f0_base;
         self.scala = scala;
         self.ritmo = ritmo;
+    }
+
+    /// Il carattere di una voce: quanto intona, quanto trema, quanto soffio ha (le echi del
+    /// Sintonizzatore, bibbia §5.3: «una voce piana, quasi senza intonazione», «non trema più»).
+    pub fn carattere(&mut self, intonazione: f32, tremito: f32, soffio: f32) {
+        self.intonazione = intonazione;
+        self.tremito = tremito;
+        self.soffio_base = soffio;
     }
 
     /// Smette di dire sillabe e tiene una vocale aperta su un’altezza ferma, per
@@ -360,11 +374,12 @@ impl Voce {
                 curva += 0.7 * (x - 0.75);
             }
             let f0 = if self.tenuta.1 > 0.0 {
-                self.tenuta.0 * (1.0 + 0.005 * self.vibrato.sin())
+                self.tenuta.0 * (1.0 + 0.005 * self.vibrato.sin() * self.tremito)
             } else {
-                self.f0_base * curva * (1.0 + 0.22 * self.accento) * (1.0 + 0.006 * self.vibrato.sin())
+                let curva = 1.0 + (curva - 1.0) * self.intonazione;
+                self.f0_base * curva * (1.0 + 0.22 * self.accento * self.intonazione) * (1.0 + 0.006 * self.vibrato.sin() * self.tremito)
             };
-            self.f0 = f0 * (1.0 + 0.012 * self.caso.bianco());
+            self.f0 = f0 * (1.0 + 0.012 * self.tremito * self.caso.bianco());
             self.ampiezza = 1.0 + 0.08 * self.caso.bianco();
         }
         let oq = 0.6;

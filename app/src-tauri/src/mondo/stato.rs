@@ -40,6 +40,8 @@ pub struct StatiGioco {
     pub porta_interna: Option<String>,
     pub disco: Option<String>,
     pub cristallo: Option<String>,
+    /// le cose che il Sintonizzatore ha già fatto risuonare (il secondo strato di un’eco lo sa)
+    pub risonate: Vec<String>,
     pub esito: String,
 }
 
