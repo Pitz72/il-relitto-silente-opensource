@@ -1,3 +1,7 @@
-Qui vanno i file di M1 (il menu principale) scaricati da Flow Music:
-M1-01.wav, M1-02.wav… in ordine di giro; il preferito si ricopia come M1-scelto.wav.
-Questi file non entrano in git. Il prompt è nel §5.1 di progettazione/22-musica-con-lyria.md.
+M1, il menu principale: due brani di Lyria 3.5 (Google Flow Music), scelti dall'autore il 16 ottobre 2026.
+
+  M1-01-bare-resonance.mp3   «Bare Resonance», 2:55
+  M1-02-resonant-void.mp3    «Resonant Void», 2:40
+
+Sono copie di lavoro, con i tag scritti. Gli originali, intatti (con il manifesto C2PA di Google), stanno in originali/.
+Il prompt di ognuno e le misure sono nel registro: audio/lyria/REGISTRO.md. Il metodo: progettazione/22-musica-con-lyria.md.
