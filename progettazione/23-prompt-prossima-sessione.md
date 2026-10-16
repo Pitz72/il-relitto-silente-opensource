@@ -41,7 +41,7 @@ Si chiede all’autore, in una domanda, che cosa intende. Candidati, dal lavoro 
 
 **Da non dimenticare.** Linux è costruito ma non provato su una macchina vera. I tag del remake non riusano mai 1.2.6, 1.5.1, 1.5.3 (`VERSIONI.md`, §2.1).
 
-## Decisioni prese il 17 ottobre 2026 (sessione «rimettere ordine»)
+## Decisioni prese il 16 ottobre 2026 (seconda sessione) (sessione «rimettere ordine»)
 
 Per «ordine» l'autore ha scelto: i documenti e i registri, e la storia di git.
 
