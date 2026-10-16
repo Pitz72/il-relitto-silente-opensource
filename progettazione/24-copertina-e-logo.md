@@ -86,7 +86,7 @@ Cinematic wide shot, no text. A small weathered grey industrial cargo spaceship 
 
 ## 8. Le decisioni per l'autore
 
-- **D41 · Il segno.** A (il fuso e il seme), B (la spia) o C (il monogramma). **DECISA il 16 ottobre 2026: A, disegnato in codice** (`strumenti/logo/disegna_logo.py`, uscite in `grafica/logo/`; le icone dell'app sono rigenerate dal master con `tauri icon`). Nota di disegno: il primo tentativo, una lente larga con il punto al centro, **sembrava un occhio**; il fuso è stato allungato (lungo e stretto, come una lama) e messo in diagonale, come la Via Lattea dell'intro.
+- **D41 · Il segno.** A (il fuso e il seme), B (la spia) o C (il monogramma). **DECISA il 16 ottobre 2026: A, disegnato in codice, e approvato dall’autore dopo averlo visto** (`strumenti/logo/disegna_logo.py`, uscite in `grafica/logo/`; le icone dell'app sono rigenerate dal master con `tauri icon`). Nota di disegno: il primo tentativo, una lente larga con il punto al centro, **sembrava un occhio**; il fuso è stato allungato (lungo e stretto, come una lama) e messo in diagonale, come la Via Lattea dell'intro.
 - **D42 · La copertina.** A (il muro nero), B (la luce del corridoio) o C («La vedo pulsare»). Raccomandazione: **A**, in due pezzi (cielo dallo strumento, nave canonica e titolo miei).
 - **D43 · Lo strumento.** Quale usi, e se i suoi termini permettono l'uso nel gioco e nel repository con la licenza che ha (D17 del 06 resta aperta per il sequel, e vale anche qui).
 - **D44 · Il titolo in copertina.** Lo stencil dell'acciaio (la Santa Maria) o il corsivo del libro (Newsreader). Raccomandazione: **stencil** per «IL RELITTO SILENTE», corsivo per la riga del racconto.
