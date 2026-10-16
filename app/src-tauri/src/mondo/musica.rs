@@ -18,6 +18,7 @@ use serde::{Deserialize, Serialize};
 use super::ambienti::Battito;
 use super::colpi::{self, Bus, Colpo, Corpo, Eccitatore, Modale, CLIC_ARMONIOSO};
 use super::dsp::{campioni, db, pan, Caso, Lento, Scorrevole};
+use super::musica_file::{Dopo, Lettore, Pezzo, Richiesta};
 use super::re::{Re, RE};
 use super::voce::Voce;
 
@@ -172,6 +173,8 @@ enum Az {
     Master(f32, f32),
     /// la scena di un nodo dell’Anziano (l’indice nella tabella)
     Scena(usize),
+    /// il letto dell’Anziano da file: il pezzo entra incrociandosi con quello che c’era
+    Letto(Pezzo),
     /// il brano è finito: la musica si ferma
     Fine,
 }
@@ -429,6 +432,64 @@ const SCENE: [Scena; 14] = [
 //  La musica
 // -------------------------------------------------------------------------------------
 
+/// I quattro letti dell’Anziano (22, §5.3).
+const LETTI: [Pezzo; 4] = [Pezzo::A1, Pezzo::A2, Pezzo::A3, Pezzo::A4];
+
+/// Il letto di un nodo del colloquio (22, §5.3): la presenza, la tensione, il calore, lo scioglimento.
+fn letto_del_nodo(nodo: &str) -> Option<Pezzo> {
+    match nodo {
+        "benvenuto" | "memoria" | "tracce" => Some(Pezzo::A1),
+        "prezzo" | "altro" | "aiuto" => Some(Pezzo::A2),
+        "salto" | "piccolo" | "sangue" | "musica" => Some(Pezzo::A3),
+        "congedo" | "dissolvenza" | "ultima voce" => Some(Pezzo::A4),
+        _ => None,
+    }
+}
+
+/// Quali file suonano un brano (compresi quelli che si alternano).
+fn pezzi_del_brano(brano: Brano) -> Vec<Pezzo> {
+    match brano {
+        Brano::Menu => vec![Pezzo::M1a, Pezzo::M1b],
+        Brano::Atto2 => vec![Pezzo::S2],
+        Brano::Atto3 => vec![Pezzo::S3],
+        Brano::Atto4 => vec![Pezzo::S4],
+        Brano::Atto5 => vec![Pezzo::S5],
+        Brano::Anziano => LETTI.to_vec(),
+        Brano::Vivi => vec![Pezzo::C1],
+        Brano::PrimaNota => vec![Pezzo::C2],
+        Brano::StivaPiena => vec![Pezzo::C3],
+        Brano::DoppioFondo => vec![Pezzo::C4],
+        Brano::DueLettere => vec![Pezzo::C5],
+        Brano::Silenzio => vec![],
+    }
+}
+
+/// Che cosa suona un brano da file, e come (22, §5 e §7). `primo` sceglie quale dei due pezzi
+/// del menu comincia: il menu alterna i suoi due, sempre in un ordine che cambia.
+fn piano_file(brano: Brano, primo: bool) -> Option<Vec<Richiesta>> {
+    let livello = brano.livello();
+    let r = |p: Pezzo| Richiesta { livello, ..Richiesta::intero(p) };
+    Some(vec![match brano {
+        Brano::Menu => {
+            let (a, b) = if primo { (Pezzo::M1a, Pezzo::M1b) } else { (Pezzo::M1b, Pezzo::M1a) };
+            Richiesta { entra: 4.0, dopo: Dopo::Alterna(b), incrocio: 8.0, esce: 0.0, ..r(a) }
+        }
+        // le soglie sono brevi: si tengono i primi secondi, con la dissolvenza in uscita
+        Brano::Atto2 => Richiesta { a: Some(18.0), entra: 0.3, esce: 4.0, ..r(Pezzo::S2) },
+        Brano::Atto3 => Richiesta { a: Some(20.0), entra: 0.3, esce: 4.0, ..r(Pezzo::S3) },
+        Brano::Atto4 => Richiesta { entra: 0.3, esce: 5.0, ..r(Pezzo::S4) },
+        // la fuga finisce di colpo: il suono del file cade a 65,06 s, il lettore si ferma a 65,1
+        Brano::Atto5 => Richiesta { a: Some(65.1), entra: 0.3, esce: 0.0, ..r(Pezzo::S5) },
+        Brano::Vivi => r(Pezzo::C1),
+        Brano::PrimaNota => r(Pezzo::C2),
+        Brano::StivaPiena => r(Pezzo::C3),
+        Brano::DoppioFondo => r(Pezzo::C4),
+        // la parte che somiglia alla scheda è l’ultima metà: da 31 s (22, §5.7)
+        Brano::DueLettere => Richiesta { da: 31.0, entra: 1.5, ..r(Pezzo::C5) },
+        Brano::Anziano | Brano::Silenzio => return None,
+    }])
+}
+
 pub struct Musica {
     sr: f32,
     dt: f32,
@@ -452,6 +513,10 @@ pub struct Musica {
     visitati: u32,
     energia: f32,
     muta_da: f32,
+    /// i file di Lyria e di Suno (documento 22): se ci sono, sono la musica; il resto è il ripiego
+    file: Lettore,
+    /// il brano in corso suona dai file
+    in_file: bool,
 }
 
 impl Musica {
@@ -475,7 +540,20 @@ impl Musica {
             visitati: 0,
             energia: 0.0,
             muta_da: 1e9,
+            file: Lettore::nuovo(sr),
+            in_file: false,
         }
+    }
+
+    /// Dove stanno i file della musica. Senza, suona soltanto la musica sintetizzata.
+    pub fn con_cartella(&mut self, cartella: std::path::PathBuf) {
+        self.file.biblioteca = Some(super::musica_file::Biblioteca::nuova(cartella));
+    }
+
+    /// Per le prove: la biblioteca con pezzi già in memoria.
+    #[cfg(test)]
+    pub fn lettore(&mut self) -> &mut Lettore {
+        &mut self.file
     }
 
     pub fn brano(&self) -> Brano {
@@ -485,7 +563,7 @@ impl Musica {
     /// Serve ancora il suo calcolo? Finché un brano suona sì, e dopo che è finito finché
     /// ne resta la coda del riverbero.
     pub fn attiva(&self) -> bool {
-        self.brano != Brano::Silenzio || self.muta_da < 16.0
+        self.brano != Brano::Silenzio || self.muta_da < 16.0 || self.file.attivo()
     }
 
     // ---- il programma
@@ -514,11 +592,42 @@ impl Musica {
 
     // ---- i brani
 
-    /// Un brano nuovo: il vecchio sfuma sotto di lui.
+    /// Un brano nuovo: il vecchio sfuma sotto di lui. Se ci sono i file del brano suonano quelli;
+    /// se no (o se uno non si decodifica) suona il brano sintetizzato.
     pub fn avvia(&mut self, brano: Brano) {
         self.azzera_programma();
         self.brano = brano;
         self.visitati = 0;
+        if !matches!(brano, Brano::Silenzio | Brano::Anziano) && self.avvia_da_file(brano) {
+            return;
+        }
+        self.avvia_sintetico(brano);
+    }
+
+    fn avvia_da_file(&mut self, brano: Brano) -> bool {
+        let quale = self.caso.f() < 0.5;
+        let Some(piano) = piano_file(brano, quale) else { return false };
+        let pezzi = pezzi_del_brano(brano);
+        if !self.file.disponibile(&pezzi) {
+            return false;
+        }
+        // il brano vecchio, sintetizzato o da file, sfuma sotto il nuovo
+        self.esegui(Az::Tace(2.0));
+        self.file.tieni(&pezzi);
+        for r in piano {
+            self.file.avvia(r);
+        }
+        self.in_file = true;
+        self.t = 0.0;
+        true
+    }
+
+    fn avvia_sintetico(&mut self, brano: Brano) {
+        self.azzera_programma();
+        self.brano = brano;
+        self.visitati = 0;
+        self.in_file = false;
+        self.file.tace(1.5);
         match brano {
             Brano::Silenzio => {
                 self.esegui(Az::Tace(3.0));
@@ -743,6 +852,17 @@ impl Musica {
         self.brano = Brano::Anziano;
         self.visitati = 0;
         self.t = 0.0;
+        if self.file.disponibile(&LETTI) {
+            self.esegui(Az::Tace(2.0));
+            self.file.tieni(&LETTI);
+            for l in LETTI {
+                self.file.precarica(l);
+            }
+            self.in_file = true;
+            self.esegui(Az::Letto(letto_del_nodo(nodo).unwrap_or(Pezzo::A1)));
+            return;
+        }
+        self.in_file = false;
         self.esegui(Az::Master(LIVELLO_ANZIANO, 3.0));
         self.anziano_nodo(nodo);
     }
@@ -750,6 +870,10 @@ impl Musica {
     /// Un altro nodo: le note passano alla scena nuova.
     pub fn anziano_nodo(&mut self, nodo: &str) {
         if self.brano != Brano::Anziano {
+            return;
+        }
+        if self.in_file {
+            self.letto_del_nodo(nodo);
             return;
         }
         let Some(i) = SCENE.iter().position(|s| s.nodo == nodo) else { return };
@@ -765,6 +889,18 @@ impl Musica {
         } else {
             self.esegui(Az::Master(LIVELLO_ANZIANO, 1.0));
             self.esegui(Az::Scena(i));
+        }
+    }
+
+    /// L’Anziano da file: il nodo sceglie il letto (22, §5.3), e il letto entra incrociandosi con
+    /// quello di prima. «Silenzio» è silenzio vero per otto secondi, poi torna il primo letto.
+    fn letto_del_nodo(&mut self, nodo: &str) {
+        self.azzera_programma();
+        if nodo == "silenzio" {
+            self.esegui(Az::Tace(1.2));
+            self.p(8.0, Az::Letto(Pezzo::A1));
+        } else if let Some(p) = letto_del_nodo(nodo) {
+            self.esegui(Az::Letto(p));
         }
     }
 
@@ -853,11 +989,18 @@ impl Musica {
                 self.campo2.g.verso(0.0, s, sr);
                 self.coro.accordo(&[], 0.0, s);
                 self.battito.g.verso(0.0, s, sr);
+                self.file.tace(s);
+            }
+            Az::Letto(p) => {
+                let r = Richiesta { pezzo: p, da: 0.0, a: None, entra: 4.0, dopo: Dopo::Ripeti, incrocio: 6.0, esce: 0.0, livello: 0.0 };
+                self.file.letto(r, 4.0);
             }
             Az::Master(liv, s) => self.master.verso(lin(liv), s, sr),
             Az::Scena(i) => self.scena(i),
             Az::Fine => {
                 self.brano = Brano::Silenzio;
+                self.in_file = false;
+                self.file.tace(1.0);
                 self.azzera_programma();
             }
         }
@@ -871,6 +1014,17 @@ impl Musica {
 
     /// Fa andare il tempo della musica di `dt` secondi (a ogni blocco).
     pub fn passo(&mut self, dt: f32) {
+        self.file.passo(dt);
+        if self.file.prendi_fallita() && self.in_file && !matches!(self.brano, Brano::Anziano | Brano::Silenzio) {
+            // un file che serviva non c’è: suona il brano sintetizzato
+            let b = self.brano;
+            self.avvia_sintetico(b);
+        }
+        if self.in_file && !self.file.attivo() && !matches!(self.brano, Brano::Anziano | Brano::Silenzio) {
+            // i file del brano sono finiti
+            self.brano = Brano::Silenzio;
+            self.in_file = false;
+        }
         self.t += dt as f64;
         while self.prossimo < self.programma.len() && self.programma[self.prossimo].0 <= self.t {
             let (_, a) = self.programma[self.prossimo];
@@ -895,6 +1049,12 @@ impl Musica {
     #[inline]
     pub fn guadagno(&mut self) -> f32 {
         self.master.passo()
+    }
+
+    /// Un campione di musica da file: ha già il suo riverbero, quindi non passa dalla sala.
+    #[inline]
+    pub fn campione_file(&mut self) -> (f32, f32) {
+        self.file.campione()
     }
 
     /// Un campione di musica asciutta, stereo (senza il volume generale, che sta dopo la sala).
@@ -1322,5 +1482,278 @@ mod prove {
         for nodo in ["benvenuto", "silenzio", "salto", "memoria", "altro", "aiuto", "prezzo", "piccolo", "sangue", "tracce", "musica", "congedo", "dissolvenza", "ultima voce"] {
             assert!(nomi.contains(&nodo), "manca la scena di «{nodo}»");
         }
+    }
+}
+
+/// Le prove del lettore dei file (documento 22, §7). I file veri non servono: un seno lungo
+/// quanto il pezzo, a una frequenza diversa per ogni pezzo, basta a sentire chi suona e quando.
+#[cfg(test)]
+mod prove_file {
+    use super::*;
+    use crate::mondo::musica_file::{Biblioteca, Pcm, OBIETTIVO_DB};
+
+    const SR: f32 = 24000.0;
+
+    /// Un seno di `hz`, di ampiezza `a`, lungo `secondi`, campionato a 44,1 kHz come i file veri.
+    fn seno_a(hz: f32, a: f32, secondi: f32) -> Pcm {
+        let sr = 44100.0f32;
+        let n = (secondi * sr) as usize;
+        Pcm::da_frame(
+            sr,
+            (0..n).map(|i| {
+                let v = a * (std::f32::consts::TAU * hz * i as f32 / sr).sin();
+                (v, v)
+            }),
+        )
+    }
+
+    fn con_pezzi(pezzi: &[(Pezzo, f32, f32)]) -> Musica {
+        let mut m = Musica::nuova(SR, 11);
+        let mut b = Biblioteca::nuova(std::path::PathBuf::from("non-esiste"));
+        for &(p, hz, s) in pezzi {
+            b.inserisci(p, seno_a(hz, 0.3, s));
+        }
+        m.lettore().biblioteca = Some(b);
+        m
+    }
+
+    /// Fa suonare `secondi`, e restituisce il mono dei file (come li sente il mixer, prima del cursore).
+    fn rendi(m: &mut Musica, secondi: f32) -> Vec<f32> {
+        let blocco = 128usize;
+        let mut out = Vec::new();
+        for _ in 0..(secondi * SR / blocco as f32) as usize {
+            m.passo(blocco as f32 / SR);
+            for _ in 0..blocco {
+                let (l, r) = m.campione_file();
+                out.push((l + r) * 0.5);
+            }
+        }
+        out
+    }
+
+    fn rms_db(x: &[f32]) -> f32 {
+        let e: f64 = x.iter().map(|v| (*v as f64) * (*v as f64)).sum::<f64>() / x.len().max(1) as f64;
+        10.0 * (e + 1e-20).log10() as f32
+    }
+
+    /// Il livello efficace, in dB, del brano sintetizzato (con il suo cursore al massimo).
+    fn rms_sintetico(m: &mut Musica, secondi: f32) -> f32 {
+        let mut v = Vec::new();
+        for _ in 0..(secondi * SR / 64.0) as usize {
+            m.passo(64.0 / SR);
+            for _ in 0..64 {
+                let g = m.guadagno();
+                let (l, r) = m.campione();
+                v.push((l + r) * 0.5 * g);
+            }
+        }
+        rms_db(&v)
+    }
+
+    fn goertzel(x: &[f32], hz: f32) -> f32 {
+        let w = std::f32::consts::TAU * hz / SR;
+        let c = 2.0 * w.cos();
+        let (mut s1, mut s2) = (0.0f32, 0.0f32);
+        for &v in x {
+            let s = v + c * s1 - s2;
+            s2 = s1;
+            s1 = s;
+        }
+        (s1 * s1 + s2 * s2 - c * s1 * s2) / (x.len() as f32 * x.len() as f32)
+    }
+
+    fn sec(x: &[f32], da: f32, a: f32) -> &[f32] {
+        &x[(da * SR) as usize..(a * SR) as usize]
+    }
+
+    #[test]
+    fn il_pezzo_arriva_al_livello_base_qualunque_sia_il_suo() {
+        // un seno a 0,3 e uno a 0,03 (venti dB più piano) suonano allo stesso livello
+        let mut m = Musica::nuova(SR, 1);
+        let mut b = Biblioteca::nuova("x".into());
+        b.inserisci(Pezzo::C1, seno_a(220.0, 0.3, 8.0));
+        b.inserisci(Pezzo::C2, seno_a(220.0, 0.03, 8.0));
+        m.lettore().biblioteca = Some(b);
+        m.avvia(Brano::Vivi);
+        let a = rendi(&mut m, 4.0);
+        let db_a = rms_db(sec(&a, 1.5, 3.5));
+
+        // (tra un brano e l'altro la biblioteca lascia andare i pezzi che non servono: l'altro si rimette)
+        m.lettore().biblioteca.as_mut().unwrap().inserisci(Pezzo::C2, seno_a(220.0, 0.03, 8.0));
+        m.avvia(Brano::PrimaNota);
+        rendi(&mut m, 3.0);
+        let b = rendi(&mut m, 4.0);
+        let db_b = rms_db(sec(&b, 1.0, 3.0));
+        assert!((db_a - OBIETTIVO_DB).abs() < 1.5, "C1 a {db_a:.1} dB, voleva {OBIETTIVO_DB}");
+        assert!((db_a - db_b).abs() < 1.5, "due pezzi di livello diverso suonano a {db_a:.1} e {db_b:.1}");
+    }
+
+    #[test]
+    fn i_file_prendono_il_posto_del_brano_sintetizzato() {
+        let mut m = con_pezzi(&[(Pezzo::C1, 220.0, 70.0)]);
+        m.avvia(Brano::Vivi);
+        assert_eq!(m.brano(), Brano::Vivi);
+        let x = rendi(&mut m, 12.0);
+        assert!(goertzel(sec(&x, 4.0, 10.0), 220.0) > 1e-6, "il file non suona");
+        // il sintetizzatore tace
+        let mut forte = 0.0f32;
+        for _ in 0..4800 {
+            forte = forte.max(m.campione().0.abs());
+        }
+        assert!(forte < 0.05, "il brano sintetizzato suona sotto il file ({forte})");
+    }
+
+    #[test]
+    fn senza_i_file_suona_il_brano_sintetizzato() {
+        let mut m = Musica::nuova(SR, 3);
+        m.avvia(Brano::Vivi);
+        assert!(!m.lettore().attivo());
+        let livello = rms_sintetico(&mut m, 30.0);
+        assert!(livello > -60.0, "niente file e niente brano sintetizzato ({livello:.1} dB)");
+    }
+
+    #[test]
+    fn il_menu_alterna_i_suoi_due_pezzi_e_non_si_ferma() {
+        let mut m = con_pezzi(&[(Pezzo::M1a, 220.0, 30.0), (Pezzo::M1b, 330.0, 30.0)]);
+        m.avvia(Brano::Menu);
+        let x = rendi(&mut m, 100.0);
+        let p220 = goertzel(sec(&x, 8.0, 18.0), 220.0);
+        let p330 = goertzel(sec(&x, 8.0, 18.0), 330.0);
+        let (primo, secondo) = if p220 > p330 { (220.0, 330.0) } else { (330.0, 220.0) };
+        assert!(goertzel(sec(&x, 8.0, 18.0), primo) > 1e-6, "il primo pezzo non suona");
+        assert!(goertzel(sec(&x, 36.0, 46.0), secondo) > 1e-6, "dopo il primo pezzo non entra l'altro");
+        assert!(goertzel(sec(&x, 62.0, 72.0), primo) > 1e-6, "il primo non ritorna");
+        assert!(rms_db(sec(&x, 80.0, 99.0)) > -45.0, "il menu si è fermato");
+        assert_eq!(m.brano(), Brano::Menu);
+    }
+
+    #[test]
+    fn la_soglia_dell_atto_due_suona_i_primi_diciotto_secondi_e_sfuma() {
+        let mut m = con_pezzi(&[(Pezzo::S2, 220.0, 56.0)]);
+        m.avvia(Brano::Atto2);
+        let x = rendi(&mut m, 26.0);
+        assert!(rms_db(sec(&x, 5.0, 12.0)) > -35.0);
+        assert!(rms_db(sec(&x, 16.0, 17.5)) < rms_db(sec(&x, 5.0, 12.0)) - 3.0, "non sfuma");
+        assert!(rms_db(sec(&x, 19.5, 25.5)) < -80.0, "va oltre i diciotto secondi");
+        assert_eq!(m.brano(), Brano::Silenzio);
+    }
+
+    #[test]
+    fn la_fuga_finisce_di_colpo_a_sessantacinque_secondi() {
+        let mut m = con_pezzi(&[(Pezzo::S5, 220.0, 70.0)]);
+        m.avvia(Brano::Atto5);
+        let x = rendi(&mut m, 70.0);
+        assert!(rms_db(sec(&x, 62.0, 64.9)) > -35.0, "tace prima del taglio");
+        assert!(rms_db(sec(&x, 65.3, 70.0)) < -90.0, "non finisce di colpo");
+        assert_eq!(m.brano(), Brano::Silenzio);
+    }
+
+    #[test]
+    fn due_lettere_comincia_a_trentuno_secondi() {
+        let mut m = con_pezzi(&[(Pezzo::C5, 220.0, 53.0)]);
+        m.avvia(Brano::DueLettere);
+        rendi(&mut m, 3.0);
+        let p = m.lettore().posizione(Pezzo::C5).unwrap();
+        assert!((p - 34.0).abs() < 0.5, "C5 era a {p} s dopo tre secondi, voleva 34");
+        let x = rendi(&mut m, 30.0);
+        assert!(rms_db(sec(&x, 25.0, 29.0)) < -80.0, "suona oltre la fine del file");
+        assert_eq!(m.brano(), Brano::Silenzio);
+    }
+
+    #[test]
+    fn i_nodi_dell_anziano_scelgono_il_letto_e_il_silenzio_e_vero() {
+        let mut m = con_pezzi(&[(Pezzo::A1, 200.0, 60.0), (Pezzo::A2, 300.0, 60.0), (Pezzo::A3, 400.0, 60.0), (Pezzo::A4, 500.0, 60.0)]);
+        m.anziano_entra("benvenuto");
+        let x = rendi(&mut m, 12.0);
+        assert!(goertzel(sec(&x, 6.0, 11.0), 200.0) > 1e-6, "benvenuto non è il primo letto");
+        assert!(goertzel(sec(&x, 6.0, 11.0), 300.0) < 1e-8);
+        // un altro nodo, un altro letto: si incrociano, poi resta solo il nuovo
+        m.anziano_nodo("prezzo");
+        let y = rendi(&mut m, 14.0);
+        assert!(goertzel(sec(&y, 1.0, 3.0), 200.0) > 1e-8 && goertzel(sec(&y, 1.0, 3.0), 300.0) > 1e-8, "i due letti non si incrociano");
+        assert!(goertzel(sec(&y, 8.0, 13.0), 300.0) > 1e-6, "prezzo non è il secondo letto");
+        assert!(goertzel(sec(&y, 8.0, 13.0), 200.0) < 1e-8, "il primo letto non se n'è andato");
+        // lo stesso letto: niente cambia
+        m.anziano_nodo("aiuto");
+        let z = rendi(&mut m, 4.0);
+        assert!(rms_db(&z) > -35.0);
+        // silenzio: otto secondi di niente, poi il primo letto
+        m.anziano_nodo("silenzio");
+        let s = rendi(&mut m, 14.0);
+        assert!(rms_db(sec(&s, 2.5, 7.5)) < -90.0, "il silenzio non è vero ({:.1} dB)", rms_db(sec(&s, 2.5, 7.5)));
+        assert!(goertzel(sec(&s, 11.0, 14.0), 200.0) > 1e-7, "dopo il silenzio non torna il primo letto");
+        // il congedo: lo scioglimento; poi la musica se ne va
+        m.anziano_nodo("congedo");
+        let c = rendi(&mut m, 10.0);
+        assert!(goertzel(sec(&c, 6.0, 9.5), 500.0) > 1e-6, "congedo non è il quarto letto");
+        m.anziano_esce();
+        rendi(&mut m, 12.0);
+        assert!(!m.lettore().attivo());
+        assert_eq!(m.brano(), Brano::Silenzio);
+    }
+
+    #[test]
+    fn un_letto_si_ripete_senza_stacco() {
+        let mut m = con_pezzi(&[(Pezzo::A1, 200.0, 20.0), (Pezzo::A2, 300.0, 20.0), (Pezzo::A3, 400.0, 20.0), (Pezzo::A4, 500.0, 20.0)]);
+        m.anziano_entra("benvenuto");
+        let x = rendi(&mut m, 70.0);
+        // sessanta secondi con un file da venti: ha ripetuto più volte e il livello non cade mai
+        for k in 6..62 {
+            let finestra = rms_db(sec(&x, k as f32, k as f32 + 1.0));
+            assert!(finestra > -34.0, "buco alla ripetizione, al secondo {k} ({finestra:.1} dB)");
+        }
+    }
+
+    #[test]
+    fn un_file_che_non_si_decodifica_ripiega_sul_brano_sintetizzato() {
+        let dir = std::env::temp_dir().join(format!("relitto-musica-prova-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        std::fs::write(dir.join("C1-02-homecoming-drone-b.mp3"), b"questo non e un mp3").unwrap();
+        let mut m = Musica::nuova(SR, 5);
+        m.con_cartella(dir.clone());
+        m.avvia(Brano::Vivi);
+        assert!(m.in_file, "il file c'è: dovrebbe provare a suonarlo");
+        for _ in 0..4000 {
+            m.passo(128.0 / SR);
+            if !m.in_file {
+                break;
+            }
+            std::thread::sleep(std::time::Duration::from_millis(2));
+        }
+        let _ = std::fs::remove_dir_all(&dir);
+        assert!(!m.in_file, "il file rotto non ha fatto ripiegare sul brano sintetizzato");
+        assert_eq!(m.brano(), Brano::Vivi);
+        let livello = rms_sintetico(&mut m, 30.0);
+        assert!(livello > -60.0, "il brano sintetizzato non suona ({livello:.1} dB)");
+    }
+
+    /// Con i file veri del repository (`cargo test --lib file_veri -- --ignored --nocapture`).
+    #[test]
+    #[ignore]
+    fn file_veri_si_decodificano_e_si_portano_al_livello() {
+        let cartella = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../audio/musica-ia");
+        let mut m = Musica::nuova(SR, 9);
+        m.con_cartella(cartella);
+        for p in Pezzo::TUTTI {
+            assert!(m.lettore().disponibile(&[p]), "manca il file di {p:?}");
+            m.lettore().precarica(p);
+        }
+        let t0 = std::time::Instant::now();
+        loop {
+            m.lettore().passo(0.0);
+            let b = m.lettore().biblioteca.as_ref().unwrap();
+            if Pezzo::TUTTI.iter().all(|p| b.pronto(*p).is_some() || b.mancante(*p)) {
+                break;
+            }
+            assert!(t0.elapsed().as_secs() < 180, "i file non si decodificano");
+            std::thread::sleep(std::time::Duration::from_millis(50));
+        }
+        let b = m.lettore().biblioteca.as_ref().unwrap();
+        for p in Pezzo::TUTTI {
+            let pcm = b.pronto(p).unwrap_or_else(|| panic!("{p:?} non si decodifica"));
+            println!("{p:?}: {:.1} s", pcm.durata());
+            assert!(pcm.durata() > 30.0, "{p:?} dura {} s", pcm.durata());
+        }
+        println!("decodificati in {:.1} s", t0.elapsed().as_secs_f32());
     }
 }

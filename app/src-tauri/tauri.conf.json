@@ -52,7 +52,24 @@
       "icons/icon.ico"
     ],
     "resources": {
-      "risorse/audio/prova-ventilazione.ogg": "risorse/audio/prova-ventilazione.ogg"
+      "risorse/audio/prova-ventilazione.ogg": "risorse/audio/prova-ventilazione.ogg",
+      "../../audio/musica-ia/M1/M1-01-bare-resonance.mp3": "musica/M1-01-bare-resonance.mp3",
+      "../../audio/musica-ia/M1/M1-02-resonant-void.mp3": "musica/M1-02-resonant-void.mp3",
+      "../../audio/musica-ia/S2/S2-01-below-the-iron-keel.mp3": "musica/S2-01-below-the-iron-keel.mp3",
+      "../../audio/musica-ia/S3/S3-01-glass-horizon.mp3": "musica/S3-01-glass-horizon.mp3",
+      "../../audio/musica-ia/S4/S4-01-beneath-the-stone-weight.mp3": "musica/S4-01-beneath-the-stone-weight.mp3",
+      "../../audio/musica-ia/S5/S5-01-below-the-keel.mp3": "musica/S5-01-below-the-keel.mp3",
+      "../../audio/musica-ia/A1/A1-03-cold-iron-orbit.mp3": "musica/A1-03-cold-iron-orbit.mp3",
+      "../../audio/musica-ia/A2/A2-02-tritone-loop.mp3": "musica/A2-02-tritone-loop.mp3",
+      "../../audio/musica-ia/A3/A3-02-drones-of-the-deep.mp3": "musica/A3-02-drones-of-the-deep.mp3",
+      "../../audio/musica-ia/A4/A4-01-departure-and-forgiveness.mp3": "musica/A4-01-departure-and-forgiveness.mp3",
+      "../../audio/musica-ia/C1/C1-02-homecoming-drone-b.mp3": "musica/C1-02-homecoming-drone-b.mp3",
+      "../../audio/musica-ia/C2/C2-02-sustained-d-bis.mp3": "musica/C2-02-sustained-d-bis.mp3",
+      "../../audio/musica-ia/C3/C3-01-g-sharp-resonance.mp3": "musica/C3-01-g-sharp-resonance.mp3",
+      "../../audio/musica-ia/C4/C4-01-cold-resonance-1.mp3": "musica/C4-01-cold-resonance-1.mp3",
+      "../../audio/musica-ia/C5/C5-03-below-the-hull.mp3": "musica/C5-03-below-the-hull.mp3",
+      "../../audio/musica-ia/T/T-01-hull-of-the-ancient.mp3": "musica/T-01-hull-of-the-ancient.mp3",
+      "../../audio/musica-ia/T/T-02-held-by-the-dark.mp3": "musica/T-02-held-by-the-dark.mp3"
     },
     "linux": {
       "appimage": {

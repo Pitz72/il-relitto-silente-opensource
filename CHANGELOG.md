@@ -10,6 +10,12 @@ documenti di `progettazione/`.
 
 ### Aggiunto
 
+- **Il lettore dei file di musica** (16 ottobre 2026; `progettazione/22-musica-con-lyria.md`, §10): il motore audio suona
+  adesso i diciassette MP3 di `audio/musica-ia/`: il menu (due pezzi che si alternano), le soglie degli atti, i quattro
+  letti dell'Anziano (uno per gruppo di nodi, incrociati al cambio di nodo, silenzio vero a «silenzio»), le chiusure dei
+  finali. Ogni pezzo è portato allo stesso livello, passa dal cursore «Musica» e dalla pausa, non dalla sala (i file hanno il
+  loro riverbero). Se un file manca suona la musica sintetizzata di prima. I file sono nelle risorse dell'installazione.
+  Dieci prove in Rust più una sui file veri. **Da ascoltare nel gioco** prima di ogni integrazione sintetizzata.
 - **La scheda «Audio» nelle opzioni** (16 ottobre 2026, richiesta dell’autore): le opzioni hanno due schede, «Gioco» e «Audio». In «Audio» tre cursori da mixer (0–100, anche con le frecce) — **Effetti** (tutto il suono del mondo), **Musica** e **Parlato** — più il volume generale, mono, dinamica e suoni intensi. Il parlato ha già il suo canale nel mixer in Rust (`Mix.parlato`), pronto per le voci che l’autore registrerà con il TTS di Google; per ora non ci passa niente. I vecchi cursori «Ambienti» e «Voci» non ci sono più: li muove tutti l’unico «Effetti». Una prova in Rust.
 - **La licenza** (16 ottobre 2026, scelta dell’autore): **MIT per il codice** (`LICENSE`) e **CC BY-NC-SA 4.0 per
   la storia, i testi, le immagini e la musica**; la divisione precisa, le dipendenze di terzi, i loghi e la nota

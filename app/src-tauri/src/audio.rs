@@ -412,11 +412,14 @@ impl MotoreAudio {
         }
     }
 
-    /// Avvia il mondo sonoro, tutto sintetizzato. Se c’era, il vecchio sfuma.
-    pub fn mondo_avvia(&mut self) -> Result<(), String> {
+    /// Avvia il mondo sonoro: il suono sintetizzato, e la musica dai file se ci sono. Se c’era, il vecchio sfuma.
+    pub fn mondo_avvia(&mut self, musica: Option<std::path::PathBuf>) -> Result<(), String> {
         self.mondo_ferma();
         let seme = adesso_ns() ^ 0x5EED;
-        let (mondo, tx, stato) = Mondo::nuovo(self.info.frequenza.max(1) as f32, seme);
+        let (mut mondo, tx, stato) = Mondo::nuovo(self.info.frequenza.max(1) as f32, seme);
+        if let Some(cartella) = musica {
+            mondo.cartella_musica(cartella);
+        }
         let telemetria = self.telemetria.clone();
         let dati = DatiMondo { mondo, prima_del_blocco: Some(Box::new(move |n| telemetria.blocco(n))) };
         self.manager.play(dati).map_err(|e| format!("{e:?}"))?;

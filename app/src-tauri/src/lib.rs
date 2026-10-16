@@ -84,16 +84,27 @@ struct AvvioMondo {
     avvio_ms: f64,
 }
 
+/// Dove stanno i file della musica (documento 22): nella variabile `RELITTO_MUSICA` se c'è, nella
+/// cartella `musica/` delle risorse dell'installazione, o nell'albero di lavoro (`audio/musica-ia/`).
+/// Se non c'è niente, suona la musica sintetizzata.
+fn cartella_musica(app: &AppHandle) -> Option<std::path::PathBuf> {
+    let da_ambiente = std::env::var_os("RELITTO_MUSICA").map(std::path::PathBuf::from);
+    let installata = app.path().resource_dir().ok().map(|d| d.join("musica"));
+    let di_lavoro = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../audio/musica-ia");
+    [da_ambiente, installata, Some(di_lavoro)].into_iter().flatten().find(|d| d.is_dir())
+}
+
 /// Il prototipo dei tre ambienti (bibbia sonora, §8): avvia il mondo sonoro (e il
 /// motore audio, se serve). Niente da caricare: ogni suono nasce dal codice.
 #[tauri::command]
-fn audio_mondo_avvia(stato: State<'_, StatoAudio>) -> Result<AvvioMondo, String> {
+fn audio_mondo_avvia(app: AppHandle, stato: State<'_, StatoAudio>) -> Result<AvvioMondo, String> {
     let t0 = std::time::Instant::now();
+    let musica = cartella_musica(&app);
     let mut guardia = stato.0.lock().map_err(|_| "audio bloccato".to_string())?;
     if guardia.is_none() {
         *guardia = Some(MotoreAudio::nuovo()?);
     }
-    guardia.as_mut().unwrap().mondo_avvia()?;
+    guardia.as_mut().unwrap().mondo_avvia(musica)?;
     Ok(AvvioMondo { avvio_ms: t0.elapsed().as_secs_f64() * 1000.0 })
 }
 

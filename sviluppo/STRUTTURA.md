@@ -195,7 +195,7 @@ git -C ../../../GitHub/FAVELLA1 archive v1.5.0 | tar -x -C <cartella vuota>
   fiore, il visore, il dialogo, i salvataggi su disco, il diario, il menu principale e la schermata dei
   riconoscimenti. Resta la partita intera giocata a mano.
 - **Le decisioni dell’autore** dopo la seconda sessione: `progettazione/06-app-desktop.md`, §18.
-- **La musica generata** (`progettazione/22-musica-con-lyria.md`, `audio/musica-ia/`): i file ci sono, **non sono ancora collegati al motore audio**, che suona ancora la musica sintetizzata del 21.
+- **La musica generata** (`progettazione/22-musica-con-lyria.md`, `audio/musica-ia/`): i file sono collegati al motore audio (`mondo/musica_file.rs`, documento 22 §10), che li suona al posto della musica sintetizzata del 21 (tenuta come ripiego); da ascoltare nel gioco.
 - Versione: **0.2.0** (`versione.json`, `CHANGELOG.md`); il remake parte dalla 1.0.0 al rilascio (`sviluppo/VERSIONI.md`).
 
 Il progetto è sotto git, su GitHub (`Pitz72/il-relitto-silente-opensource`, ramo `main`).

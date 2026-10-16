@@ -351,3 +351,33 @@ Questo è lavoro mio, nel lettore (§7), dopo gli ascolti dell’autore.
 **Stato (16 ottobre 2026):** `M1` ha due versioni, **tutte e due «bellissime» per l’autore**: «Bare Resonance» (2:55) e «Resonant Void» (2:40), in `audio/musica-ia/M1/`. Misure: il re₂ sta a 73,2 e 73,6 Hz (a 4 e 5 centesimi da 73,42), quindi **la musica sta in casa**; sono molto più forti dei brani sintetizzati (−16,2 e −16,6 LUFS contro −24,9: il motore li abbasserà di circa 8 dB, senza toccare i file); cominciano piano e finiscono in silenzio; nessuna pulsazione ritmica. **Non c’è il sol♯ del relitto**: Bare Resonance sta sul re con il sol (una quarta) e Resonant Void sul re con il la (una quinta). Per il menu, la casa è giusta; il sol♯ e il tritono servono alle soglie e all’Anziano (`S`, `A`), che non sono ancora generati. Il prompt usato e il piano di Flow Music, da compilare nel registro, aspettano l’autore. Prossimo passo: l’autore sceglie la prossima scheda (raccomandata: `C1`, Vivi).
 
 **Aggiornamento (16 ottobre 2026, sera):** sono scelti e nel registro `S2`–`S5` (Lyria), `A1` «Cold Iron Orbit» (Lyria), `A2` «Tritone Loop», `A3` «Drones of the Deep» e `A4` «Departure and Forgiveness» (tutti e tre Suno); mancano `C1`–`C5` (le chiusure) e `T` (il tema). I letti dell’Anziano, tranne A1, stanno sul re e non hanno il sol♯ dei prompt (A2 non ha il tritono): bene per «casa», meno per «il relitto». Per averlo, una frase per il Producer: «Add a cold metallic G-sharp drone against the D, a tritone apart, beating slowly». Dopo i quattro letti si mappano ai quattordici nodi (§5.3) quando scrivo il lettore.
+
+---
+
+## 10. Il lettore dei file (16 ottobre 2026, seconda sessione)
+
+Scritto in `app/src-tauri/src/mondo/musica_file.rs` e collegato in `musica.rs`. **Non ancora ascoltato dentro il gioco**: le prove (dieci in Rust, più una sui file veri) controllano i tempi e i livelli, non l'effetto.
+
+**Come funziona.**
+
+- I diciassette MP3 (`Pezzo::TUTTI`) si decodificano **fuori dal thread audio**, a richiesta (0,05–0,23 s l'uno in release; tutti e diciassette in 0,4 s) e si tengono in memoria solo finché servono (circa 32 MB un pezzo da tre minuti, stereo a 16 bit). Il decodificatore salta da sé il tag ID3 (quelli di Flow Music portano la copertina e arrivano a 1,3 MB: senza, `M1-02` non si apriva); i file non si toccano.
+- Ogni pezzo è portato allo stesso livello, **−27 dBFS di valore efficace** (i file arrivano da −11 a −18 LUFS); il livello di ogni brano viene da lì. Confronto con la musica sintetizzata, rendendo le stesse scene con `cargo run --release --example rendi_musica` (e `SENZA_FILE=1` per la vecchia): il menu sta a −27 contro −26, le soglie e le chiusure fra −28 e −30, l'Anziano a −28.
+- **Niente sala**: i file hanno già il loro riverbero (§7). Passano dal cursore «Musica», dal volume generale e dalla pausa (−10 dB), come la musica sintetizzata.
+- **Se un file manca o non si decodifica**, suona il brano sintetizzato di prima (il codice resta come ripiego, §7 punto 4). Se manca uno dei due pezzi del menu, l'altro ricomincia da solo.
+
+**Che cosa suona dove.**
+
+| Brano | File | Come |
+|---|---|---|
+| Menu | `M1-01` e `M1-02` | si alternano senza fine, in un ordine che cambia a ogni avvio, con un incrocio di 8 s fra la fine di uno e l'inizio dell'altro (entrambi finiscono in silenzio) |
+| Atto II | `S2` | i primi 18 s, dissolvenza di 4 s |
+| Atto III | `S3` | i primi 20 s, dissolvenza di 4 s |
+| Atto IV | `S4` | intero (56 s), dissolvenza finale di 5 s |
+| Atto V, la fuga | `S5` | fino a 65,1 s e **di colpo** (il suono del file cade a 65,06 s), +3 dB come il brano sintetizzato |
+| Anziano | `A1`–`A4` | i quattro letti della mappa del §5.3, in ripetizione con incrocio di 6 s; al cambio di nodo il letto nuovo entra in 4 s mentre il vecchio sfuma; «silenzio» è silenzio vero (1,2 s di discesa, poi 8 s di niente), poi torna `A1` |
+| Finali | `C1`–`C5` | interi; `C5` («Due lettere») parte da **31 s**, la parte che somiglia alla scheda (§5.7) |
+| «Mani vuote» | nessuno | il reattore, e basta |
+
+**Che cosa non c'è ancora.** Il tema (`T-01`, `T-02`) non suona da nessuna parte: la scheda lo voleva come motivo di quattro note in codice, da sovrapporre (§7.1), e quelle non sono state scritte; i due file restano tenuti. Nemmeno le integrazioni sintetizzate del §7.1 (battito di `C1`, seconda onda di `C2`, vetri di `C4`, tritono di `A2`): **prima l'ascolto dell'autore**, nel gioco vero.
+
+**Dove stanno i file nell'app.** In sviluppo si leggono da `audio/musica-ia/<sigla>/`; nell'installazione sono risorse (`musica/` accanto all'eseguibile, vedi `tauri.conf.json`); la variabile `RELITTO_MUSICA` può indicare un'altra cartella.

@@ -21,6 +21,7 @@ pub mod fiato;
 pub mod fondi;
 pub mod interfaccia;
 pub mod musica;
+pub mod musica_file;
 pub mod re;
 mod regia;
 pub mod sintonia;
@@ -606,6 +607,11 @@ impl Mondo {
         }
     }
 
+    /// Dove stanno i file della musica (`audio/musica-ia/`, o la cartella `musica/` dell’installazione).
+    pub fn cartella_musica(&mut self, cartella: std::path::PathBuf) {
+        self.musica.con_cartella(cartella);
+    }
+
     fn mix(&mut self, m: Mix) {
         let sr = self.sr;
         let q = |v: f32| v.clamp(0.0, 1.0).powi(2);
@@ -1020,6 +1026,11 @@ impl Mondo {
                 let k = LIV_MUSICA * vp * gmus * s_musica * gm;
                 l += (dl * MUSICA_ASCIUTTA + wl) * k;
                 r += (dr * MUSICA_ASCIUTTA + wr) * k;
+                // i file hanno già il loro riverbero: non passano dalla sala
+                let (fl, fr) = self.musica.campione_file();
+                let kf = LIV_MUSICA * vp * gmus * s_musica;
+                l += fl * kf;
+                r += fr * kf;
             }
             // l’interfaccia: asciutta, fuori dalla pausa e dall’ingresso (si tocca anche lì)
             l += ui.0 * vg;

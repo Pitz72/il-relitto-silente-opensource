@@ -94,6 +94,10 @@ fn pezzi() -> Vec<Pezzo> {
 
 fn rendi(p: &Pezzo, uscita: &std::path::Path) -> Result<(), String> {
     let (mut mondo, tx, _) = Mondo::nuovo(SR, 23);
+    // la musica dai file di audio/musica-ia (documento 22); con SENZA_FILE suona quella sintetizzata
+    if std::env::var("SENZA_FILE").is_err() {
+        mondo.cartella_musica(std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../audio/musica-ia"));
+    }
     // con il mondo vero sotto, la musica non si sente da sola: quando serve (il secondo argomento
     // `solo`), si isola
     if std::env::var("SOLO_MUSICA").is_ok() {
@@ -109,6 +113,8 @@ fn rendi(p: &Pezzo, uscita: &std::path::Path) -> Result<(), String> {
         let t = i as f32 / SR;
         while c < p.comandi.len() && p.comandi[c].0 <= t {
             tx.send(p.comandi[c].1.clone()).map_err(|e| e.to_string())?;
+            // i file si decodificano in un altro thread, in tempo reale: il rendering è più veloce, e aspetta
+            std::thread::sleep(std::time::Duration::from_millis(200));
             note.push_str(&format!("{}  {}\n", orario(t), p.comandi[c].2));
             c += 1;
         }
@@ -122,7 +128,9 @@ fn rendi(p: &Pezzo, uscita: &std::path::Path) -> Result<(), String> {
     }
     scrivi_wav(&uscita.join(format!("{}.wav", p.nome)), &pcm).map_err(|e| e.to_string())?;
     std::fs::write(uscita.join(format!("{}.txt", p.nome)), note).map_err(|e| e.to_string())?;
-    println!("{}.wav: {:.0} s", p.nome, p.durata);
+    let picco = pcm.iter().map(|v| v.unsigned_abs()).max().unwrap_or(0) as f32 / 32768.0;
+    let e: f64 = pcm.iter().map(|v| (*v as f64 / 32768.0).powi(2)).sum::<f64>() / pcm.len().max(1) as f64;
+    println!("{}.wav: {:.0} s, valore efficace {:.1} dBFS, picco {:.1} dBFS", p.nome, p.durata, 10.0 * (e + 1e-20).log10(), 20.0 * (picco + 1e-9).log10());
     Ok(())
 }
 
