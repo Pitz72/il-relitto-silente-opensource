@@ -4,6 +4,8 @@ Documento 21 della progettazione · 16 ottobre 2026 · la musica, fatta con i ma
 
 Vale insieme al §18 di `06-app-desktop.md` (la decisione D14: la musica è fatta con i materiali del gioco, il re come radice, il sol♯ a un tritono) e alla bibbia sonora (`10-bibbia-sonora.md`, §1.3 e §11). Il 16 ottobre 2026 l’autore, ascoltato l’audio del gioco («mi sembra ok»), ha chiesto di cominciare dalla musica, con il tocco dei pulsanti del menu principale. Questo documento dice che cosa è stato fatto, come, e che cosa resta.
 
+**Aggiornamento del 16 ottobre 2026.** Ascoltata la musica, l’autore l’ha **scartata** (i suoni, invece, vanno bene): la musica si rifà con Lyria 3.5 in Google Flow Music, e i brani sintetizzati qui sotto restano come **mappa** (che cosa suona dove, con quali note) e come **traccia guida**, finché i file nuovi non li sostituiscono. Come si fa, con i prompt: `22-musica-con-lyria.md`.
+
 ## 0. In sintesi
 
 - **È tutta sintetizzata, nel motore audio in Rust**, con gli stessi strumenti del resto del suono: il re del reattore, un campo di parziali sul sol♯ delle macchine del relitto, le voci tenute del brusio che cantano l’accordo del «clic armonioso», il sonaglio del Piccolo, un tam-tam strofinato, il vetro del tema, il battito del seme. Nessun file, nessuna registrazione (06, §19).
