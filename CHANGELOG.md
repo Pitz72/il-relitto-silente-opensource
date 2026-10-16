@@ -8,6 +8,10 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+### Aggiunto
+
+- **Il logo e l'icona dell'eseguibile** (16 ottobre 2026; `progettazione/24-copertina-e-logo.md`): un fuso nero che mangia le stelle, con il seme verde al centro, disegnato in codice (`strumenti/logo/disegna_logo.py`; master e vettoriale in `grafica/logo/`). **Sostituisce l'icona di Tauri** (i due cerchi giallo e azzurro) nell'eseguibile, nell'installer e nel collegamento; le icone dell'app sono rigenerate dal master con `tauri icon`.
+
 ## [0.2.2] - 2026-10-16
 
 ### Aggiunto

@@ -23,3 +23,6 @@ Ogni immagine che entra nell’app ha una riga qui, prima di essere usata, come 
 | `app/public/viste/yusuf.webp` | Yusuf al comunicatore del Magazzino Quattro | il ritratto del sequel (`YUSUF_COM`, nella versione del gioco `com-yusuf.webp`) | Simone Pizzi | dell’autore |
 
 Tutto il resto che si vede (le stelle, la massa, le venature, la mappa, la cellula dell’aria, l’Anziano fatto di punti) è disegnato in codice dall’app.
+| `grafica/logo/relitto-1024.png` | il logo dell’eseguibile: il fuso nero che mangia le stelle, con il seme al centro (il master; da qui `tauri icon` ricava le icone dell’app in `app/src-tauri/icons/`) | disegnato in codice da `strumenti/logo/disegna_logo.py` (progettazione/24-copertina-e-logo.md, §3, strada A), su indicazione dell’autore | Simone Pizzi | dell’autore |
+| `grafica/logo/relitto.svg` | lo stesso logo, in vettoriale | lo stesso strumento | Simone Pizzi | dell’autore |
+

@@ -216,6 +216,20 @@
    "da_dove": "il ritratto del sequel (YUSUF_COM, nella versione del gioco com-yusuf.webp)",
    "autore": "Simone Pizzi",
    "licenza": "dell’autore"
+  },
+  {
+   "file": "relitto-1024.png",
+   "che_cosa": "il logo dell’eseguibile: il fuso nero che mangia le stelle, con il seme al centro (il master; da qui `tauri icon` ricava le icone dell’app in `app/src-tauri/icons/`)",
+   "da_dove": "disegnato in codice da strumenti/logo/disegna_logo.py (progettazione/24-copertina-e-logo.md, §3, strada A), su indicazione dell’autore",
+   "autore": "Simone Pizzi",
+   "licenza": "dell’autore"
+  },
+  {
+   "file": "relitto.svg",
+   "che_cosa": "lo stesso logo, in vettoriale",
+   "da_dove": "lo stesso strumento",
+   "autore": "Simone Pizzi",
+   "licenza": "dell’autore"
   }
  ],
  "caratteri": [
