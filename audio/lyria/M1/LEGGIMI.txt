@@ -1,0 +1,3 @@
+Qui vanno i file di M1 (il menu principale) scaricati da Flow Music:
+M1-01.wav, M1-02.wav… in ordine di giro; il preferito si ricopia come M1-scelto.wav.
+Questi file non entrano in git. Il prompt è nel §5.1 di progettazione/22-musica-con-lyria.md.

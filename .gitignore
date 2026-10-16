@@ -23,6 +23,13 @@ app/src-tauri/gen/
 # Suoni: le sorgenti grezze restano fuori da git (registro in audio/LICENZE.md)
 audio/sorgenti/
 
+# Musica di Lyria 3.5: i file scaricati da Flow Music restano fuori da git (il registro, audio/lyria/REGISTRO.md, no)
+audio/lyria/**/*.wav
+audio/lyria/**/*.mp3
+audio/lyria/**/*.m4a
+audio/lyria/**/*.flac
+audio/lyria/**/*.ogg
+
 # Le consegne all'autore: installer e versioni portatili (si rifanno con tauri build)
 consegne/
 
