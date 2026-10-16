@@ -42,10 +42,13 @@ const VERSIONE = {
   data: new Date().toISOString().slice(0, 10),
 };
 
-export default defineConfig({
+// La console di regia (src/console, Ctrl+Maiusc+M) è uno strumento di chi fa il gioco, non di chi
+// gioca: c'è nello sviluppo e nelle consegne di ascolto (RELITTO_REGIA=1), e non entra nelle
+// versioni da pubblicare. I livelli definitivi stanno in src/gioco/livelli.json.
+export default defineConfig(({ command }) => ({
   root: radice,
   base: "./",
-  define: { __VERSIONE__: JSON.stringify(VERSIONE) },
+  define: { __VERSIONE__: JSON.stringify(VERSIONE), __REGIA__: JSON.stringify(command === "serve" || process.env.RELITTO_REGIA === "1") },
   plugins: [react()],
   clearScreen: false,
   envPrefix: ["VITE_", "TAURI_ENV_"],
@@ -61,4 +64,4 @@ export default defineConfig({
     // il motore e il gioco viaggiano come testo: il blocco è grande per natura
     chunkSizeWarningLimit: 2500,
   },
-});
+}));

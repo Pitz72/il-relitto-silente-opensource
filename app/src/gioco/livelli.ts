@@ -37,6 +37,8 @@ const CHIAVE = "relitto.livelli";
 const IMPRONTA = JSON.stringify(base);
 
 export function leggiLivelli(): Livelli {
+  // nelle versioni da pubblicare valgono solo i livelli del file
+  if (!__REGIA__) return { ...base };
   try {
     const dati = JSON.parse(localStorage.getItem(CHIAVE) ?? "null");
     if (dati && dati.base === IMPRONTA && typeof dati.livelli === "object") return { ...base, ...dati.livelli };

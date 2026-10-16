@@ -18,7 +18,7 @@ documenti di `progettazione/`.
 - **Il mix d'autore e la console di regia** (16 ottobre 2026, dall'ascolto dell'autore; bibbia sonora, §12): i livelli
   relativi dei canali (fiato, ventola, re, macchine, stanza, corpo, bengala, colpi, brusio, echi, radio, pulsanti,
   musica) sono decisi dalla regia in `app/src/gioco/livelli.json`, un file solo per il motore e per la pagina, e si
-  regolano ascoltando con **Ctrl+Maiusc+M** (la console, in qualunque schermata). Di partenza il fiato scende di 10 dB, la
+  regolano ascoltando con **Ctrl+Maiusc+M** (la console, in qualunque schermata): uno strumento di sviluppo, presente solo nello sviluppo e nelle consegne di ascolto (`RELITTO_REGIA=1`), non nelle versioni da pubblicare. Di partenza il fiato scende di 10 dB, la
   ventola, le macchine e la stanza di 6, il re di 4. **L'interfaccia ha il suo cursore** («Interfaccia» nella scheda
   Audio) e non sta più sul canale degli effetti. Due prove in Rust.
 - **Il lettore dei file di musica** (16 ottobre 2026; `progettazione/22-musica-con-lyria.md`, §10): il motore audio suona
