@@ -36,3 +36,4 @@ consegne/
 
 # Le tracce sonore delle partite di collaudo (si rifanno con strumenti/audio/traccia.py --tutti)
 collaudo/tracce/
+grafica/nuovi/
