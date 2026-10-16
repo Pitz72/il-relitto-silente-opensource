@@ -8,6 +8,8 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+## [0.2.2] - 2026-10-16
+
 ### Aggiunto
 
 - **La modalità a solo testo** (16 ottobre 2026; `progettazione/18-modalita-solo-testo.md`, §8): nelle opzioni, «Comandi: con i pulsanti / scritti». Scritti, il gioco è un'avventura testuale pura: una riga di comando al posto del ramo (Invio, frecce su e giù per i comandi già dati, Esc), l'elenco, le risposte del dialogo e le domande del motore nel testo, e le parole dell'app (SALVA, CARICA, DIARIO, OPZIONI, MENU, TASTI, RICOMINCIA, AIUTO). Il ponte capisce i comandi scritti («x placca», «prendila», «staccalo») come quelli dei pulsanti, così il diario e il suono non perdono niente. Nuovo collaudo `collaudo/scritti.py` e `tipografia.mjs --solo-testo`; cinque prove in node.
