@@ -10,6 +10,13 @@ documenti di `progettazione/`.
 
 ### Aggiunto
 
+- **La licenza** (16 ottobre 2026, scelta dell’autore): **MIT per il codice** (`LICENSE`) e **CC BY-NC-SA 4.0 per
+  la storia, i testi, le immagini e la musica**; la divisione precisa, le dipendenze di terzi, i loghi e la nota
+  sull’intelligenza artificiale stanno in `LICENZE.md`. Vale anche per `old_version/`, dal commit che la introduce.
+- **La musica generata** (`progettazione/22-musica-con-lyria.md`, `audio/musica-ia/`): i brani del menu, le soglie
+  degli atti, i letti dell’Anziano, le chiusure dei finali e il tema, generati con Lyria 3.5 (Google Flow Music) e
+  con Suno, in MP3, con il registro file per file. Non sono ancora collegati al motore audio, che suona ancora la
+  musica sintetizzata del documento 21.
 - **Il filo del Sintonizzatore** (bibbia sonora, §5.3 e §11.6): il flusso che si stacca dal brusio passa per uno
   spostamento di frequenza vero, a banda laterale unica (+60–90 Hz: il ritmo e l’intonazione restano, le
   parole no). Ogni eco ha la sua voce (l’Ingegnere urgente, le pareti del corridoio a quattro fili, il Capitano
