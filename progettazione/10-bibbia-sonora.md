@@ -1,8 +1,8 @@
 # Il Relitto Silente — la bibbia sonora
 
-Documento 10 della progettazione · prima versione, 14 ottobre 2026 · seconda, 15 ottobre 2026: il suono tutto sintetizzato (§10) · terza, 16 ottobre 2026: il gioco che suona (§11) · quarta, 16 ottobre 2026: i tocchi dell’interfaccia (§11.4)
+Documento 10 della progettazione · prima versione, 14 ottobre 2026 · seconda, 15 ottobre 2026: il suono tutto sintetizzato (§10) · terza, 16 ottobre 2026: il gioco che suona (§11) · quarta, 16 ottobre 2026: i tocchi dell’interfaccia (§11.4) · quinta, 16 ottobre 2026: la musica (§11.5)
 
-Che cosa si sente in ogni stanza e in ogni evento del gioco, da quali registrazioni nasce e come si lavora. Vale insieme al §9 di `06-app-desktop.md` e al punto 3 del suo §17: suono credibile e realistico, registrazioni vere con licenza compatibile, la fisica giusta. Per l’intro vale il §5 di `09-intro-storyboard.md`. La musica (D14) non è ancora decisa: qui compare solo dove tocca il resto del suono.
+Che cosa si sente in ogni stanza e in ogni evento del gioco, da quali registrazioni nasce e come si lavora. Vale insieme al §9 di `06-app-desktop.md` e al punto 3 del suo §17: suono credibile e realistico, registrazioni vere con licenza compatibile, la fisica giusta. Per l’intro vale il §5 di `09-intro-storyboard.md`. La musica (D14) è nel documento 21 (`21-la-musica.md`): qui compare solo dove tocca il resto del suono (§11.5).
 
 ## 0. In sintesi
 
@@ -961,11 +961,11 @@ Il 16 ottobre 2026 l’autore ha ascoltato gli ascolti sintetizzati e ha detto c
 
 ### 11.3 Che cosa manca
 
-La musica (D14: l’Anziano, le chiusure, l’intro, e con lei il tocco dei pulsanti del menu principale, che ha il suo mondo da avviare), il filo del Sintonizzatore con lo spostamento di frequenza (§5.3: oggi le echi sono una voce in primo piano), le luci del Navarca nella gola del ritorno, il montacarichi, la prova su Linux. L’orecchio dell’autore sulla partita intera c’è: il 16 ottobre 2026, ascoltato l’audio, ha detto che gli sembra ok.
+La musica dell’intro (D14: il re che entra nel vuoto, che si assottiglia, che si chiude sul titolo; si compone sul montaggio bloccato, 21, §7), il filo del Sintonizzatore con lo spostamento di frequenza (§5.3: oggi le echi sono una voce in primo piano), le luci del Navarca nella gola del ritorno, il montacarichi, la prova su Linux. L’orecchio dell’autore sulla partita intera c’è: il 16 ottobre 2026, ascoltato l’audio, ha detto che gli sembra ok; sul tocco dei pulsanti e sulla musica non ancora.
 
 ### 11.4 L’interfaccia: il tocco sui pulsanti
 
-Il §5.8 è fatto, per il gioco (non ancora per il menu principale, che non ha un mondo sonoro finché non arriva la musica). Il codice è in `app/src-tauri/src/mondo/interfaccia.rs`.
+Il §5.8 è fatto, per il gioco e per il menu principale (che ha un mondo sonoro suo, con la musica: §11.5). Il codice è in `app/src-tauri/src/mondo/interfaccia.rs`.
 
 - **Chi decide.** La pagina dice soltanto il gesto (`Comando::Tocco`): `scegli`, `conferma`, `annulla`. Lo ricava dal pulsante che riceve il clic (`app/src/gioco/tocco.ts`): chiudere, tornare indietro, dire di no, uscire dal discorso annullano; un comando che parte, un sì, un posto di salvataggio confermano; tutto il resto (aprire un fiore, un menu, una pagina) sceglie. Solo il clic, quindi anche Invio e Spazio su un pulsante a fuoco; mai un passaggio del mouse né lo scorrimento. Le lettere dei comandi e i tasti S e N non fanno clic, e per ora non suonano. Il motore decide da sé la voce, dallo stato del turno.
 - **L’acciaio** (la Santa Maria): scegliere è un interruttore a levetta, un colpo secco e il suo rimbalzo; confermare è un relè che chiude, in due tempi (il secondo colpo a 50–60 ms); annullare è il relè che si apre, un colpo solo, più basso. Ogni tocco varia un poco di altezza.
@@ -974,3 +974,7 @@ Il §5.8 è fatto, per il gioco (non ancora per il menu principale, che non ha u
 - **Il livello.** Il picco di un tocco sta fra −24 e −28 dBFS, la somma degli strati riportata a quella dell’acciaio solo (§5.8: «sotto i −24 dB»); con la membrana piena e nella fuga arriva a −22 circa. Sui mondi dell’ascolto 13 il tocco sta da 9 a 14 dB sopra l’ambiente nelle bande dei medi e degli acuti.
 - **La strada.** Una strada nuova, `Bus::Interfaccia`: asciutta, fuori dalla stanza, dal casco e dalle ossa. Segue il volume generale e il cursore degli effetti; non segue la pausa né l’ingresso della partita, perché nei pannelli si tocca di continuo.
 - **Le prove.** Otto prove in Rust (22 in tutto con le altre): ogni strato sta intorno a 0 dB e finisce; la conferma ha due tempi e la scelta uno; le dosi seguono la membrana; un tocco suona sotto i −22 dBFS e sopra i −35 in ogni stato (prima del contatto, dopo, nella fuga); segue i cursori e non la pausa; la membrana cresce in cinque secondi e a casa ne resta il 30%; la fuga aggiunge lo strappo; il JSON dalla pagina è quello che il motore legge. In node, cinque prove sul classificatore dei gesti, che controllano anche che le classi e gli attributi che legge siano ancora nei componenti. L’ascolto: `cargo run --release --example rendi_interfaccia -- <cartella>`; il file per l’autore è `progettazione/ascolti/13-interfaccia.mp3`, con le note accanto (a che secondo cade ogni tocco: la Santa Maria, la membrana che cresce, il relitto, la fuga).
+
+### 11.5 La musica
+
+Il 16 ottobre 2026 l’autore ha chiesto di cominciare dalla musica (D14), con il tocco del menu principale. È tutta sintetizzata, con i materiali del gioco: il re del reattore, il campo del sol♯, le voci tenute del brusio che cantano l’accordo del clic, il sonaglio del Piccolo, il tam-tam strofinato, il vetro del tema, il battito del seme. Il progetto, i brani (il menu, le soglie degli atti, l’Anziano nodo per nodo, le chiusure di cinque finali), le misure e le prove sono nel documento 21 (`progettazione/21-la-musica.md`); il codice è in `app/src-tauri/src/mondo/musica.rs`. Il motore la accende da solo, dallo stato e dagli eventi del turno (`regia.rs`); il menu lo chiede la pagina (`Comando::Menu`). Ha la sua strada (la sua sala, il suo cursore «Musica», il volume dopo la sala: un silenzio vero porta via anche la coda), e il suo posto: non passa dal casco né dalle ossa. Gli ascolti: `ascolti/14-musica-menu.mp3`, `14-musica-atti.mp3`, `14-musica-chiusure.mp3`.

@@ -38,6 +38,10 @@ export const pausaSuono = (si: boolean) => manda({ tipo: "pausa", valore: si });
 /** Tornando al menu il mondo tace: una stanza vuota lo fa sfumare. */
 export const taciSuono = () => manda({ tipo: "turno", valore: { stati: { stanza: "", esito: "in_corso" }, eventi: [] } });
 
+/** Il menu principale (documento 21): il mondo tace, l'interfaccia è tutta membrana, e suona la
+ *  musica del menu; `false` la fa sfumare (si va all'intro o al gioco). */
+export const menuSuono = (si: boolean) => manda({ tipo: "menu", valore: si });
+
 /** Un tocco su un pulsante: il motore sceglie la voce (acciaio, membrana, strappo) dallo
  *  stato. Nello sviluppo i gesti si segnano in `window.__tocchi`, per vederli senza Tauri. */
 export function suonaTocco(g: Gesto): Promise<void> {
@@ -52,6 +56,7 @@ export function mixDa(o: Opzioni): MixMondo {
     ambienti: o.volumeAmbienti,
     effetti: o.volumeEffetti,
     voci: o.volumeVoci,
+    musica: o.volumeMusica,
     mono: o.mono,
     dinamica_ridotta: o.dinamicaRidotta,
     intensi_ridotti: o.suoniIntensiRidotti,

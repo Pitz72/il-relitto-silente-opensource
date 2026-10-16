@@ -585,6 +585,53 @@ impl Gong {
     }
 }
 
+/// Un tam-tam strofinato (la musica, documento 21): i modi bassi del tam-tam, tenuti
+/// vivi da un rumore morbido che sale e scende piano, come un archetto sul bordo. Non ha
+/// un colpo: cresce, fiorisce e si spegne da solo, un canto che nasce dal metallo.
+#[derive(Clone, Copy)]
+pub struct Strofinato {
+    modi: [Modo; 10],
+    t: f32,
+    durata: f32,
+    dt: f32,
+    arco: UnPolo,
+    conto: u32,
+}
+
+impl Strofinato {
+    /// `durata`: quanto dura l’archetto (poi il metallo si spegne da solo).
+    pub fn nuovo(durata: f32, caso: &mut Caso, sr: f32) -> Self {
+        let base = caso.tra(62.0, 74.0);
+        let modi = std::array::from_fn(|k| {
+            let f = base * (1.0 + k as f32).powf(1.42) * caso.tra(0.98, 1.02);
+            Modo::nuovo(f, caso.tra(5.0, 9.0) * (1.0 - 0.05 * k as f32), 1.0 / (1.0 + 0.2 * k as f32), sr)
+        });
+        Strofinato { modi, t: 0.0, durata: durata.max(1.0), dt: 1.0 / sr, arco: UnPolo::nuovo(420.0, sr), conto: 0 }
+    }
+
+    #[inline]
+    fn campione(&mut self, caso: &mut Caso) -> Option<f32> {
+        let x = self.t / self.durata;
+        // l’archetto sale per più di metà del tempo, poi si alza: il metallo canta da solo
+        let eccita = if x < 1.0 { self.arco.elabora(caso.bianco(), 0) * campana(x, 0.6) * 0.016 } else { 0.0 };
+        let mut y = 0.0;
+        for m in self.modi.iter_mut() {
+            y += m.elabora(eccita);
+        }
+        self.t += self.dt;
+        if x >= 1.0 {
+            self.conto = self.conto.wrapping_add(1);
+            if self.conto.is_multiple_of(512) {
+                let e: f32 = self.modi.iter().map(|m| m.energia()).sum();
+                if e < 3e-5 {
+                    return None;
+                }
+            }
+        }
+        Some(y * 0.2)
+    }
+}
+
 /// Il re₅ del sonaglio: l’ottavo armonico del reattore (§1.3).
 pub const RE5: f32 = 587.329_5;
 
@@ -678,6 +725,7 @@ pub enum Corpo {
     Gong(Gong),
     Sonaglio(Sonaglio),
     Glissato(Glissato),
+    Strofinato(Strofinato),
 }
 
 impl Corpo {
@@ -729,6 +777,12 @@ impl Corpo {
             Corpo::Glissato(mut g) => {
                 g.g *= k;
                 Corpo::Glissato(g)
+            }
+            Corpo::Strofinato(mut st) => {
+                for modo in st.modi.iter_mut() {
+                    modo.scala(k);
+                }
+                Corpo::Strofinato(st)
             }
         }
     }
@@ -783,6 +837,7 @@ impl Colpo {
             Corpo::Gong(g) => g.campione(caso),
             Corpo::Sonaglio(s) => s.campione(caso),
             Corpo::Glissato(g) => g.campione(),
+            Corpo::Strofinato(st) => st.campione(caso),
         }?;
         Some((y * self.gl, y * self.gr))
     }
@@ -1298,6 +1353,11 @@ pub fn sonaglio(caso: &mut Caso, sr: f32) -> Corpo {
     Corpo::Sonaglio(Sonaglio::nuovo(caso, sr))
 }
 
+/// Il tam-tam strofinato: un canto che cresce dal metallo (la musica).
+pub fn strofinato(durata: f32, caso: &mut Caso, sr: f32) -> Corpo {
+    Corpo::Strofinato(Strofinato::nuovo(durata, caso, sr))
+}
+
 /// La dissoluzione: lo stesso tam-tam smontato in granelli acuti.
 pub fn granelli_acuti(caso: &mut Caso, sr: f32) -> Corpo {
     let e = Eccitatore::impulso(0.2).con_crepitio(caso.tra(500.0, 800.0), caso.tra(1.6, 2.4), sr);
@@ -1365,6 +1425,7 @@ mod prove {
             granelli_acuti(&mut caso, sr),
             salita(207.0, 415.0, 1.5, 0.6, sr),
             gancio(&mut caso, sr),
+            strofinato(4.0, &mut caso, sr),
         ];
         let mut corpi = corpi.to_vec();
         for superficie in [

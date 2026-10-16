@@ -146,10 +146,16 @@ impl Voce {
     /// Smette di dire sillabe e tiene una vocale aperta su un’altezza ferma, per
     /// `durata` secondi: le voci tenute dell’accordo.
     pub fn tieni(&mut self, f0: f32, durata: f32) {
+        self.tieni_vocale(f0, durata, 3);
+    }
+
+    /// Come `tieni`, su una vocale scelta (0 i, 1 e, 2 ɛ, 3 a, 4 ɔ, 5 u, 6 ə): le voci
+    /// tenute della musica cantano vocali diverse, e il coro non suona come una sola.
+    pub fn tieni_vocale(&mut self, f0: f32, durata: f32, vocale: usize) {
         self.n = 0;
         self.seg = Segmento {
             durata,
-            f: VOCALI[3],
+            f: VOCALI[vocale.min(VOCALI.len() - 1)],
             bw: VOCALI_BW,
             voce: 1.0,
             soffio: self.soffio_base,

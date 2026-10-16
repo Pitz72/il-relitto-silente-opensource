@@ -65,7 +65,8 @@ export type ComandoMondo =
   | { tipo: "turno"; valore: { stati: Partial<StatiSuono>; eventi: EventoSuono[] } }
   | { tipo: "mix"; valore: MixMondo }
   | { tipo: "pausa"; valore: boolean }
-  | { tipo: "tocco"; valore: "scegli" | "conferma" | "annulla" };
+  | { tipo: "tocco"; valore: "scegli" | "conferma" | "annulla" }
+  | { tipo: "menu"; valore: boolean };
 
 /** I cursori e le opzioni del suono (mondo/mod.rs, `Mix`): i volumi da 0 a 1. */
 export interface MixMondo {
@@ -73,6 +74,7 @@ export interface MixMondo {
   ambienti: number;
   effetti: number;
   voci: number;
+  musica: number;
   mono: boolean;
   dinamica_ridotta: boolean;
   intensi_ridotti: boolean;

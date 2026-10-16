@@ -20,6 +20,7 @@ pub mod dsp;
 pub mod fiato;
 pub mod fondi;
 pub mod interfaccia;
+pub mod musica;
 pub mod re;
 mod regia;
 pub mod riverbero;
@@ -42,12 +43,14 @@ use colpi::{Bus, Canale, Colpo, Corpo, Lastra};
 use dsp::{db, morbido, Biquad, Caso, Inseguitore, Pettine, Scorrevole, UnPolo};
 use fiato::Fiato;
 use fondi::{Pompe, Ventilazione, Ventola};
+use musica::Musica;
 use re::Re;
 use riverbero::Riverbero;
 use stanze::{Specie, Stanza};
 use voce::Voce;
 
 pub use interfaccia::Gesto;
+pub use musica::Brano;
 pub use regia::EVENTI_NOTI;
 pub use stato::{EventoGioco, StatiGioco, TurnoSuono};
 
@@ -88,6 +91,8 @@ pub struct Mix {
     pub ambienti: f32,
     pub effetti: f32,
     pub voci: f32,
+    /// la musica (06, §9.2: il quinto cursore)
+    pub musica: f32,
     /// i due canali sommati, con le differenze di volume
     pub mono: bool,
     /// la dinamica ridotta: per chi gioca piano o di notte (3:1 sopra −30 dBFS)
@@ -99,7 +104,7 @@ pub struct Mix {
 
 impl Default for Mix {
     fn default() -> Self {
-        Mix { generale: 1.0, ambienti: 1.0, effetti: 1.0, voci: 1.0, mono: false, dinamica_ridotta: false, intensi_ridotti: false }
+        Mix { generale: 1.0, ambienti: 1.0, effetti: 1.0, voci: 1.0, musica: 1.0, mono: false, dinamica_ridotta: false, intensi_ridotti: false }
     }
 }
 
@@ -114,6 +119,11 @@ pub enum Comando {
     Pausa(bool),
     /// un tocco su un pulsante: il suono dell’interfaccia (bibbia sonora, §5.8)
     Tocco(Gesto),
+    /// il menu principale: il mondo tace, l’interfaccia è tutta membrana, e suona la musica
+    /// del menu (`true`); o se ne va (`false`)
+    Menu(bool),
+    /// un brano della musica, a comando (le prove e i rendering; di solito lo accende la regia)
+    Musica(Brano),
     // ---- il prototipo dei tre ambienti (la pagina di prova, i rendering)
     Ambiente(Ambiente),
     /// la cifra dell’aria, da 0 a 100
@@ -127,7 +137,7 @@ pub enum Comando {
     /// il volume generale, in dB
     Volume(f32),
     /// per le misure: suona solo uno strato («re», «ventilazione», «pompe», «ventola»,
-    /// «fiato», «brusio», «voci», «segnali», «fruscio», «stanza»); `None` li riaccende
+    /// «fiato», «brusio», «voci», «segnali», «fruscio», «stanza», «musica»); `None` li riaccende
     Solo(Option<String>),
     /// sfuma tutto e chiude
     Ferma,
@@ -147,6 +157,7 @@ const S_VOCI: u32 = 64;
 const S_SEGNALI: u32 = 128;
 const S_FRUSCIO: u32 = 256;
 const S_STANZA: u32 = 512;
+const S_MUSICA: u32 = 1024;
 
 fn maschera(solo: Option<&str>) -> u32 {
     match solo {
@@ -161,6 +172,7 @@ fn maschera(solo: Option<&str>) -> u32 {
         Some("segnali") => S_SEGNALI,
         Some("fruscio") => S_FRUSCIO,
         Some("stanza") => S_STANZA,
+        Some("musica") => S_MUSICA,
         Some(_) => 0,
     }
 }
@@ -263,6 +275,8 @@ enum Azione {
     Silenzio(f32),
     /// la plancia del risveglio, alla fine
     Risveglio,
+    /// la musica di una chiusura
+    Musica(Brano),
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -306,6 +320,10 @@ pub struct Mondo {
     /// quanta membrana c’è nell’interfaccia (0–1), e dove sta andando: i tocchi la seguono
     membrana: f32,
     membrana_meta: f32,
+    // --- la musica: i suoi strati, la sua sala, il suo cursore
+    musica: Musica,
+    riverbero_musica: Riverbero,
+    c_musica: Scorrevole,
     // --- gli strati
     re: Re,
     re_pavimento: Biquad,
@@ -431,6 +449,9 @@ impl Mondo {
             ventola_spenta: false,
             membrana: 0.0,
             membrana_meta: 0.0,
+            musica: Musica::nuova(sr, seme ^ 0x4D55),
+            riverbero_musica: Riverbero::nuovo(sr),
+            c_musica: Scorrevole::nuovo(1.0),
             re: Re::nuovo(sr, seme ^ 0x7E),
             re_pavimento: Biquad::passabasso(180.0, 0.7, sr),
             re_taglio: Scorrevole::nuovo(180.0),
@@ -525,6 +546,8 @@ impl Mondo {
             caso,
         };
         // il fuoco del bengala: il soffio della fiamma e i suoi crepitii
+        // la sala della musica: molto grande, con un’aria che si mangia gli acuti
+        m.riverbero_musica.stanza(8.0, 3.5, 1.0, 2.2, 0.0);
         m.fuoco.imposta((2500.0, 5000.0), 0.8);
         m.fuoco_crepitio.imposta(14.0, 0.7, [1200.0, 2500.0, 4100.0], 0.01, 1500.0, sr);
         (m, tx, stato)
@@ -559,6 +582,7 @@ impl Mondo {
         self.c_ambienti.verso(q(m.ambienti), 0.15, sr);
         self.c_effetti.verso(q(m.effetti), 0.15, sr);
         self.c_voci.verso(q(m.voci), 0.15, sr);
+        self.c_musica.verso(q(m.musica), 0.15, sr);
         self.c_ossa.verso(if m.intensi_ridotti { db(-12.0) } else { 1.0 }, 0.3, sr);
         // il cuore e il fischio dell’anticamera si tolgono con i suoni intensi
         self.applica(0.3);
@@ -571,6 +595,16 @@ impl Mondo {
             Comando::Mix(m) => self.mix(m),
             Comando::Pausa(si) => self.pausa.verso(if si { db(-10.0) } else { 1.0 }, 0.4, sr),
             Comando::Tocco(g) => self.tocco(g),
+            Comando::Menu(si) => {
+                if si {
+                    self.membrana = 1.0;
+                    self.membrana_meta = 1.0;
+                    self.musica.avvia(Brano::Menu);
+                } else {
+                    self.musica.avvia(Brano::Silenzio);
+                }
+            }
+            Comando::Musica(b) => self.musica.avvia(b),
             Comando::Ambiente(a) => self.prototipo(a),
             Comando::Aria(v) => self.aria_prototipo(v),
             Comando::Nave(n) => {
@@ -636,6 +670,7 @@ impl Mondo {
                 self.ingresso.verso(0.0, t, sr);
             }
             Azione::Risveglio => self.risveglio(),
+            Azione::Musica(b) => self.musica.avvia(b),
         }
     }
 
@@ -646,6 +681,7 @@ impl Mondo {
         self.t_stanza += dt;
         self.t_aggancio += dt;
         self.passo_membrana(dt);
+        self.musica.passo(dt);
         for i in 0..PIOGGE {
             if self.piogge[i].passo(dt, &mut self.caso) {
                 let p = self.piogge[i];
@@ -713,6 +749,7 @@ impl Mondo {
         self.passo_blocco(out.len() as f32 * dtf);
         let m = self.maschera;
         let on = |bit: u32| if m & bit != 0 { 1.0f32 } else { 0.0 };
+        let s_musica = on(S_MUSICA);
         let (s_re, s_vent, s_pompe, s_ventola, s_fiato, s_brusio, s_voci, s_segnali, s_fruscio, s_stanza) = (
             on(S_RE),
             on(S_VENTILAZIONE),
@@ -732,6 +769,7 @@ impl Mondo {
         let soglia_dinamica = db(-30.0);
         let soglia_picchi = db(if self.mix.intensi_ridotti { -14.0 } else { -2.0 });
         let sr = self.sr;
+        let musica_viva = self.musica.attiva();
         for frame in out.iter_mut() {
             let mut est = (0.0f32, 0.0f32);
             let mut em = (0.0f32, 0.0f32);
@@ -739,6 +777,7 @@ impl Mondo {
             let mut ossa = 0.0f32;
             let mut alt = 0.0f32;
             let mut ui = (0.0f32, 0.0f32);
+            let gmus = self.c_musica.passo();
             let ga = self.c_ambienti.passo();
             let ge = self.c_effetti.passo();
             let gv = self.c_voci.passo();
@@ -929,8 +968,19 @@ impl Mondo {
             let w = self.larghezza.passo();
             let (mid, side) = ((l + r) * 0.5, (l - r) * 0.5 * w);
             let vg = self.volume.passo() * self.c_generale.passo();
-            let v = vg * self.pausa.passo() * self.ingresso.passo();
+            let vp = vg * self.pausa.passo();
+            let v = vp * self.ingresso.passo();
             let (mut l, mut r) = ((mid + side) * v, (mid - side) * v);
+            // la musica: la sua sala, il suo cursore; si abbassa nella pausa, ma non è del mondo:
+            // quando il mondo si spegne (un finale) o comincia, lei ha il suo tempo
+            if musica_viva {
+                let gm = self.musica.guadagno();
+                let (dl, dr) = self.musica.campione();
+                let (wl, wr) = self.riverbero_musica.elabora(dl, dr);
+                let k = LIV_MUSICA * vp * gmus * s_musica * gm;
+                l += (dl * MUSICA_ASCIUTTA + wl) * k;
+                r += (dr * MUSICA_ASCIUTTA + wr) * k;
+            }
             // l’interfaccia: asciutta, fuori dalla pausa e dall’ingresso (si tocca anche lì)
             l += ui.0 * vg;
             r += ui.1 * vg;
@@ -992,6 +1042,11 @@ const LIV_FILO: f32 = -12.0;
 const LIV_CUORE: f32 = -10.0;
 const LIV_ACUFENE: f32 = -42.0;
 const LIV_PASSI: f32 = -24.0;
+/// La musica: quanto va moltiplicata (lineare) perché gli strati scritti in dB sotto lo
+/// zero di ogni strato stiano al livello giusto (le prove `calibra` e le misure di loudness),
+/// e quanto del suo asciutto resta sopra il riverbero.
+const LIV_MUSICA: f32 = 1.0;
+const MUSICA_ASCIUTTA: f32 = 0.6;
 
 // -------------------------------------------------------------------------------------
 //  Il mondo come suono di kira

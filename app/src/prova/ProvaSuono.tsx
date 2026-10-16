@@ -124,6 +124,22 @@ export default function ProvaSuono({ sistema, scrivi }: Props) {
         { nome: "vestibolo, brusio", secondi: 15, comandi: [{ tipo: "ambiente", valore: "vestibolo" }, { tipo: "aria", valore: 80 }, { tipo: "evento", valore: "primo_contatto" }] },
         { nome: "vestibolo, protezione vitale", secondi: 10, comandi: [{ tipo: "aria", valore: 28 }] },
         { nome: "vestibolo, ipossia", secondi: 10, comandi: [{ tipo: "aria", valore: 10 }] },
+        // la musica (documento 21): il menu e il coro dell'Anziano, i due brani che suonano più a lungo
+        { nome: "il menu e la sua musica", secondi: 25, comandi: [{ tipo: "menu", valore: true }] },
+        {
+          nome: "l'Anziano, la sua musica",
+          secondi: 25,
+          comandi: [
+            { tipo: "menu", valore: false },
+            {
+              tipo: "turno",
+              valore: {
+                stati: { stanza: "santuario centrale", atto: 4, tuta: true, aria: 60, dialogo: "anziano", nodo: "musica", esito: "in_corso" },
+                eventi: [{ evento: "caricamento" }],
+              },
+            },
+          ],
+        },
       ];
       const risultati = [];
       for (const p of passi) {
@@ -138,6 +154,7 @@ export default function ProvaSuono({ sistema, scrivi }: Props) {
         setMisure(m);
       }
       await manda({ tipo: "ambiente", valore: "silenzio" });
+      await manda({ tipo: "menu", valore: false });
       const dati = { data: new Date().toISOString(), versione: VERSIONE, sistema, caricamento: caricato, passi: risultati };
       const nome = `prova-suono-${sistema?.sistema ?? "browser"}-${Date.now()}.json`;
       const dove = await comando<string>("scrivi_rapporto", { nome, contenuto: JSON.stringify(dati, null, 2) });

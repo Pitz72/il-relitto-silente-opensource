@@ -7,6 +7,8 @@
 //!   cargo run --release --example rendi_partita -- <cartella>/vivi.json <cartella>/vivi.wav
 //!
 //! Con «--da N --a M» rende solo i turni da N a M (contati da 0): per ascoltare un pezzo.
+//! Con «--coda S» il tempo dopo l’ultimo turno è di S secondi invece di 28: per sentire una
+//! chiusura fino in fondo (la musica di un finale dura più di un minuto).
 
 mod comune;
 
@@ -24,6 +26,7 @@ fn main() -> Result<(), String> {
     let cerca = |nome: &str| argomenti.iter().position(|a| a == nome).and_then(|i| argomenti.get(i + 1)).and_then(|v| v.parse::<usize>().ok());
     let da = cerca("--da").unwrap_or(0);
     let t = leggi_traccia(&traccia)?;
+    let coda = cerca("--coda").unwrap_or(28) as f32;
     let a = cerca("--a").unwrap_or(t.turni.len().saturating_sub(1)).min(t.turni.len().saturating_sub(1));
 
     let (mut mondo, tx, _stato) = Mondo::nuovo(SR, 11);
@@ -41,7 +44,14 @@ fn main() -> Result<(), String> {
             suono.eventi = vec![relitto_lib::mondo::EventoGioco::nuovo("caricamento")];
         }
         let stanza = suono.stati.stanza.clone();
-        let eventi: Vec<&str> = turno.suono.eventi.iter().map(|e| e.evento.as_str()).filter(|e| *e != "aria").collect();
+        let mut eventi: Vec<String> = turno.suono.eventi.iter().filter(|e| e.evento != "aria").map(|e| match (e.evento.as_str(), e.nodo.as_deref()) {
+            // i nodi dell’Anziano (e degli altri dialoghi) si nominano: la musica li segue
+            ("nodo" | "dialogo", Some(nodo)) => format!("{} «{nodo}»", e.evento),
+            (nome, _) => nome.to_string(),
+        }).collect();
+        if k > da && turno.suono.stati.atto != t.turni[k - 1].suono.stati.atto {
+            eventi.insert(0, format!("ATTO {} (la soglia)", turno.suono.stati.atto));
+        }
         let _ = writeln!(
             note,
             "{}  {:<40} {:<26} {}",
@@ -54,7 +64,7 @@ fn main() -> Result<(), String> {
         let mut durata = durata_del_turno(turno.caratteri, k == da);
         if k == a {
             // dopo l’ultimo turno, il tempo della fine
-            durata += 28.0;
+            durata += coda;
         }
         let n = (durata * SR) as usize;
         let mut i = 0;

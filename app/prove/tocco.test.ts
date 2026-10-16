@@ -55,4 +55,9 @@ test("i segni che il tocco legge ci sono ancora nei componenti", () => {
   assert.match(dialogo, /data-comando=\{s\.comando\}/);
   assert.match(dialogo, /"esci"/);
   assert.match(leggi("diario/Diario.tsx"), /className="chiudi"/);
+  // il menu principale suona il suo tocco, e accende la sua musica
+  const relitto = readFileSync(new URL("../src/Relitto.tsx", import.meta.url), "utf8");
+  assert.match(relitto, /onClickCapture/);
+  assert.match(relitto, /menuSuono\(true\)/);
+  assert.match(relitto, /menuSuono\(false\)/);
 });

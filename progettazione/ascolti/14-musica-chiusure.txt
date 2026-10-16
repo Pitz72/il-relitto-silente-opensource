@@ -1,0 +1,56 @@
+Le chiusure dei sei finali, con la plancia del risveglio sotto (documento 21). Ogni pezzo parte sei turni prima del finale.
+
+
+0:00  === Vivi ===
+0:00  ovest                                    sala delle teche           stanza
+0:09  segui la parete                          sala delle teche           crollo, incrinature
+0:19  su                                       gola di mezzo              stanza, voce_dei_nomi
+0:28  su                                       vestibolo delle gole       stanza
+0:37  est                                      camera di compensazione    stanza
+0:45  su                                       scafo                      stanza, crollo
+0:55  dentro                                   stiva                      stanza, rientro, casco_tolto, finale
+
+2:33  === La prima nota ===
+2:33  giù                                      gola del ritorno           stanza
+2:42  ovest                                    sala delle teche           stanza, ambra, incrinature
+2:52  su                                       gola di mezzo              stanza, voce_dei_nomi
+3:02  su                                       vestibolo delle gole       stanza, crollo, incrinature
+3:12  est                                      camera di compensazione    stanza, incrinature
+3:21  su                                       scafo                      stanza, crollo, incrinature
+3:31  dentro                                   stiva                      stanza, rientro, casco_tolto, incrinature, finale
+
+5:10  === La stiva piena ===
+5:10  su                                       vestibolo delle gole       stanza
+5:19  stacca il risuonatore                    vestibolo delle gole       taglio, attrezzo
+5:26  stacca il risuonatore                    vestibolo delle gole       taglio, attrezzo
+5:31  stacca il risuonatore                    vestibolo delle gole       risuonatore_staccato, risuonatore_preso, ambra, attrezzo, crollo
+5:40  est                                      camera di compensazione    stanza
+5:48  su                                       scafo                      stanza, crollo
+5:58  dentro                                   stiva                      stanza, rientro, casco_tolto, crollo, finale
+
+7:41  === Doppio fondo ===
+7:41  su                                       vestibolo delle gole       stanza
+7:50  stacca il risuonatore                    vestibolo delle gole       taglio, attrezzo
+7:57  stacca il risuonatore                    vestibolo delle gole       taglio, attrezzo, crollo
+8:03  stacca il risuonatore                    vestibolo delle gole       risuonatore_staccato, risuonatore_preso, ambra, attrezzo
+8:11  est                                      camera di compensazione    stanza, crollo
+8:21  su                                       scafo                      stanza, crollo
+8:30  dentro                                   stiva                      stanza, rientro, casco_tolto, incrinature, finale
+
+10:04  === Mani vuote (nessuna musica: il reattore, e basta) ===
+10:04  ovest                                    sala delle teche           stanza
+10:13  segui la parete                          sala delle teche           
+10:20  su                                       gola di mezzo              stanza, voce_dei_nomi, crollo, incrinature
+10:30  su                                       vestibolo delle gole       stanza
+10:39  est                                      camera di compensazione    stanza
+10:47  su                                       scafo                      stanza
+10:55  dentro                                   stiva                      stanza, rientro, casco_tolto, crollo, finale
+
+12:08  === Due lettere ===
+12:08  aspetta                                  vestibolo delle gole       
+12:17  aspetta                                  vestibolo delle gole       
+12:20  aspetta                                  vestibolo delle gole       
+12:24  aspetta                                  vestibolo delle gole       
+12:27  aspetta                                  vestibolo delle gole       
+12:31  aspetta                                  vestibolo delle gole       assestamento, brusio_cala
+12:38  aspetta                                  vestibolo delle gole       finale

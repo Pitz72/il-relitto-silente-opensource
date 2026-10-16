@@ -10,6 +10,14 @@ documenti di `progettazione/`.
 
 ### Aggiunto
 
+- **La musica** (D14; `progettazione/21-la-musica.md`): scritta e generata nel motore audio, con i materiali del
+  gioco (il re del reattore, il campo del sol♯ a un tritono, le voci tenute del brusio che cantano l’accordo del
+  clic, il sonaglio, un tam-tam strofinato, il vetro del tema, il battito del seme). Suona il menu principale
+  (quattro episodi in ordine sempre diverso, si ricompone da sola), la soglia dei cartelli d’atto dal secondo,
+  l’Anziano nodo per nodo (dal sol♯ al re; per otto secondi, a «Resto ad ascoltare», niente) e la chiusura di cinque
+  finali su sei (a «Mani vuote» il reattore, e basta). Ha la sua sala, il suo cursore nelle opzioni («Musica») e si
+  abbassa nella pausa. Tredici prove in Rust; ascolti 14 (`cargo run --release --example rendi_musica`).
+- **Il tocco dei pulsanti anche nel menu principale**, che ha adesso un suo mondo sonoro (sempre di membrana).
 - **Il suono dei pulsanti** (bibbia sonora, §5.8 e §11.4): un tocco su ogni pulsante del gioco, diegetico e
   sotto i −24 dB. Sulla Santa Maria è acciaio (un interruttore che sceglie, un relè in due tempi che
   conferma, un relè che si apre e annulla); al primo contatto la membrana cresce in cinque secondi e il

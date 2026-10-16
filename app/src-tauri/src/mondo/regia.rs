@@ -22,7 +22,7 @@ use super::dsp::{db, Biquad, Scorrevole};
 use super::stanze::{self, Luogo, Speciale, Specie, Superficie};
 use super::stato::{EventoGioco, StatiGioco, TurnoSuono};
 use super::{
-    Ambiente, Azione, Evento, Mondo, Nave, LIV_BRUSIO, LIV_FILO, LIV_GEMITO, LIV_PASSI, LIV_POMPE, LIV_RE,
+    Ambiente, Azione, Brano, Evento, Mondo, Nave, LIV_BRUSIO, LIV_FILO, LIV_GEMITO, LIV_PASSI, LIV_POMPE, LIV_RE,
     LIV_RE_OSSA, LIV_RE_RAMPA, LIV_VENTILAZIONE, LIV_VENTOLA,
 };
 
@@ -141,6 +141,7 @@ impl Mondo {
         // la membrana dell’interfaccia (§5.8): cresce al primo contatto, e in una partita
         // che si riprende c’è già tutta
         self.aggiorna_membrana(carica);
+        self.musica_del_turno(&prima, carica);
 
         if carica {
             return;
@@ -148,6 +149,27 @@ impl Mondo {
         let taglio = ha("taglio");
         for e in &t.eventi {
             self.evento_gioco(e, &prima, taglio);
+        }
+    }
+
+    /// La musica che dipende dallo stato (documento 21): una partita che comincia o si
+    /// riprende la azzera (o, se si riprende nel mezzo del colloquio con l’Anziano, la
+    /// riaccende sul suo nodo); la soglia di un atto ha il suo brano.
+    fn musica_del_turno(&mut self, prima: &StatiGioco, carica: bool) {
+        if carica {
+            if StatiGioco::e(&self.gioco.dialogo, "anziano") {
+                let nodo = self.gioco.nodo.clone().unwrap_or_else(|| "benvenuto".to_string());
+                self.musica.anziano_entra(&nodo);
+            } else {
+                self.musica.avvia(Brano::Silenzio);
+            }
+            return;
+        }
+        if prima.atto > 0
+            && self.gioco.atto > prima.atto
+            && let Some(b) = Brano::dell_atto(self.gioco.atto)
+        {
+            self.musica.avvia(b);
         }
     }
 
@@ -1017,9 +1039,19 @@ impl Mondo {
                     let c = colpi::sintonia(&mut self.caso, sr);
                     self.suona_in(super::Canale::Voci, c, Bus::Em, -24.0, 0.0, 0.0);
                 }
+                // «L’Anziano»: la musica, sul nodo da cui parte
+                Some("anziano") => self.musica.anziano_entra(e.nodo.as_deref().unwrap_or("benvenuto")),
                 _ => {}
             },
+            "nodo" => {
+                if let (Some("anziano"), Some(nodo)) = (e.con.as_deref(), e.nodo.as_deref()) {
+                    self.musica.anziano_nodo(nodo);
+                }
+            }
             "dialogo_fine" => {
+                if e.con.as_deref() == Some("anziano") {
+                    self.musica.anziano_esce();
+                }
                 if e.con.as_deref() == Some("yusuf") {
                     // «La linea fa il suo schiocco»
                     self.suona(colpi::squelch(sr), Bus::Altoparlante, -12.0, 0.0, 0.0);
@@ -1142,6 +1174,13 @@ impl Mondo {
     /// I finali (§4.6): il suono del mondo si ferma dove si ferma il testo.
     fn finale(&mut self, quale: Option<&str>, in_fuga: bool) {
         let sr = self.sr;
+        // la musica della chiusura (06, §11): «Mani vuote» non ne ha, il reattore e basta.
+        // Entra dove il mondo si è fatto silenzio: a «Due lettere» quando il fiato si è
+        // fermato, agli altri sulla plancia del risveglio.
+        if let Some(b) = quale.and_then(Brano::del_finale) {
+            let quando = if quale == Some("due-lettere") { 10.0 } else { 14.0 };
+            self.dopo(quando, Azione::Musica(b));
+        }
         if quale == Some("due-lettere") {
             // «il visore non ha più niente da dirti»: la ventola rallenta e si ferma; il
             // fiato si fa lento, poi l’ultimo

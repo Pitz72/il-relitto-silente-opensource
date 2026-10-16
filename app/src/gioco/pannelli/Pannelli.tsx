@@ -266,6 +266,7 @@ export function PannelloOpzioni({ forma, opzioni, cambia, chiudi }: { forma: For
       {riga("Ambienti", "volumeAmbienti", [[0, "spenti"], [0.5, "50%"], [0.75, "75%"], [1, "100%"]], "Le stanze, le macchine, l’aria, il re.")}
       {riga("Effetti", "volumeEffetti", [[0, "spenti"], [0.5, "50%"], [0.75, "75%"], [1, "100%"]], "Il fiato, i passi, gli attrezzi, il visore, le cose che accadono.")}
       {riga("Voci", "volumeVoci", [[0, "spente"], [0.5, "50%"], [0.75, "75%"], [1, "100%"]], "Il brusio, le echi, la radio.")}
+      {riga("Musica", "volumeMusica", [[0, "spenta"], [0.5, "50%"], [0.75, "75%"], [1, "100%"]], "Il menu, la soglia degli atti, l’Anziano, la fine.")}
       {riga("Suono", "mono", [[false, "stereo"], [true, "mono"]], "Mono: i due canali insieme, per chi sente da un orecchio solo.")}
       {riga("Dinamica", "dinamicaRidotta", [[false, "piena"], [true, "ridotta"]], "Ridotta: i suoni piccoli più alti e i grandi più bassi, per giocare piano o di notte.")}
       {riga("Suoni intensi", "suoniIntensiRidotti", [[false, "come sono"], [true, "ridotti"]], "Ridotti: meno bassi profondi, niente picchi, niente battito né fischio nell’anticamera.")}

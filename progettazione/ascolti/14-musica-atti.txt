@@ -1,0 +1,47 @@
+Le soglie degli atti e l'Anziano, dentro il gioco vero (documento 21): la musica con le stanze e gli eventi sotto.
+
+
+0:00  === Atto II e Atto III: le soglie ===
+0:00  prendi la taglierina                     stiva                      
+0:09  prendi la batteria                       stiva                      
+0:12  prendi la cella di riserva               stiva                      
+0:16  fuori                                    scafo                      ATTO 2 (la soglia), stanza, boccaporto
+0:26  analizza lo scafo nero                   scafo                      giuntura_trovata, attrezzo
+0:34  usa la taglierina sulla giuntura         scafo                      giuntura_tagliata
+0:42  giù                                      camera di compensazione    stanza, discesa, varco_richiuso
+0:52  usa la batteria sul pannello             camera di compensazione    pannello
+0:57  apri la porta interna                    camera di compensazione    porta_interna
+1:04  ovest                                    vestibolo delle gole       stanza, primo_contatto
+1:14  giù                                      gola di mezzo              stanza, pareti_lampo
+1:24  abbassa il faro                          gola di mezzo              faro_basso
+1:28  giù                                      sala delle teche           ATTO 3 (la soglia), stanza
+1:38  segui la parete                          sala delle teche           
+1:45  ovest                                    vivaio                     stanza, assestamento
+1:55  prendi la tavoletta                      vivaio                     
+1:59  est                                      sala delle teche           stanza
+
+2:31  === Atto IV, l'Anziano nodo per nodo, Atto V ===
+2:31  usa il seme sulla grande porta           corridoio principale       seme_lasciato, chiave
+2:40  usa la stele sulla grande porta          corridoio principale       chiave
+2:44  usa il nucleo sulla grande porta         corridoio principale       grande_porta, chiave
+2:54  ovest                                    ponte di comando           ATTO 4 (la soglia), stanza
+3:04  usa la postazione                        ponte di comando           postazione, brusio_cala
+3:14  analizza la mappa stellare               ponte di comando           sistema, attrezzo
+3:24  tocca le punte                           ponte di comando           porta_tonda
+3:30  ovest                                    anticamera                 stanza
+3:38  ovest                                    santuario centrale         stanza
+3:48  parla con l'anziano                      santuario centrale         dialogo «benvenuto»
+3:57  Chi eravate?                             santuario centrale         nodo «salto»
+4:07  E io che c'entro?                        santuario centrale         nodo «sangue»
+4:17  Allora cosa devo fare?                   santuario centrale         nodo «congedo»
+4:27  [Chiudi gli occhi e lascia andare.]      santuario centrale         nodo «dissolvenza»
+4:35  [Resta.]                                 santuario centrale         nodo «ultima voce»
+4:44  [Apri gli occhi.]                        santuario centrale         ATTO 5 (la soglia), seme_spento, fuga, groviglio_desto, dialogo_fine
+4:48  prendi il seme                           santuario centrale         seme_preso
+4:57  giù                                      gola del ritorno           stanza
+5:04  ovest                                    sala delle teche           stanza
+5:13  segui la parete                          sala delle teche           crollo, incrinature
+5:23  su                                       gola di mezzo              stanza, voce_dei_nomi
+5:32  su                                       vestibolo delle gole       stanza
+5:42  est                                      camera di compensazione    stanza
+5:50  su                                       scafo                      stanza, crollo

@@ -25,6 +25,8 @@ import { tavolozza, variabiliCss } from "./stile/atmosfere";
 import { attributiSchermo, useMovimentoRidotto, useOpzioni } from "./stile/opzioni";
 import { comando, dentroTauri } from "./lib/tauri";
 import { schermoIntero } from "./lib/finestra";
+import { avviaSuono, menuSuono, mixSuono, suonaTocco } from "./gioco/suono";
+import { gestoDelClic } from "./gioco/tocco";
 import { archivio, type Posto } from "./gioco/salvataggi";
 import type { Inizio } from "./gioco/Gioco";
 import { Avviso, Conferma, PannelloOpzioni, Salvataggi, useAvviso, type Domanda } from "./gioco/pannelli/Pannelli";
@@ -142,6 +144,20 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
     setSchermata((s) => (s.tipo === "riconoscimenti" && s.primoAvvio ? { tipo: "dichiarazione" } : { tipo: "menu" }));
   }, [nomiAttuali, prova]);
 
+  // ---- il suono del menu (documento 21): un mondo sonoro suo, con la musica del menu e il
+  // tocco dei pulsanti; il menu e i riconoscimenti raggiunti da lui lo tengono, il resto no
+  // (l'intro e il gioco sfumano la musica: il gioco avvia un mondo suo)
+  const nelMenu = schermata.tipo === "menu" || (schermata.tipo === "riconoscimenti" && !schermata.primoAvvio);
+  useEffect(() => {
+    if (!nelMenu) return;
+    avviaSuono(prova !== undefined);
+    void menuSuono(true);
+    return () => void menuSuono(false);
+  }, [nelMenu, prova]);
+  useEffect(() => {
+    if (nelMenu && prova === undefined) void mixSuono(opzioni);
+  }, [nelMenu, opzioni, prova]);
+
   // lo schermo intero: come dice l'opzione (l'app ci parte); F11 lo cambia, e l'opzione lo ricorda
   useEffect(() => {
     void schermoIntero(opzioni.schermoIntero);
@@ -231,7 +247,17 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
 
   const caricamento = passo === "pronto" ? null : passo.replace(/…$/, "").toLowerCase() + "…";
   return (
-    <div className="schermo tema relitto-app" style={STILE} data-forma="membrana" {...attributiSchermo(opzioni, ridotto)}>
+    <div
+      className="schermo tema relitto-app"
+      style={STILE}
+      data-forma="membrana"
+      {...attributiSchermo(opzioni, ridotto)}
+      onClickCapture={(e) => {
+        // il tocco sul pulsante, anche nel menu (bibbia sonora, §5.8): tutto membrana
+        const g = gestoDelClic(e.target);
+        if (g) void suonaTocco(g);
+      }}
+    >
       <main className="palco-app">
         {schermata.tipo === "menu" && (
           <>

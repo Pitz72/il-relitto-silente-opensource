@@ -24,6 +24,8 @@ export interface Opzioni {
   volumeAmbienti: number;
   volumeEffetti: number;
   volumeVoci: number;
+  /** la musica (documento 21): il suo cursore, il quinto */
+  volumeMusica: number;
   mono: boolean;
   dinamicaRidotta: boolean;
   suoniIntensiRidotti: boolean;
@@ -40,6 +42,7 @@ export const OPZIONI_DI_BASE: Opzioni = {
   volumeAmbienti: 1,
   volumeEffetti: 1,
   volumeVoci: 1,
+  volumeMusica: 1,
   mono: false,
   dinamicaRidotta: false,
   suoniIntensiRidotti: false,
