@@ -20,6 +20,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { glifiDelTitolo } from "./glifi";
 import { Scala } from "./scala";
+import { introSuono } from "./suono";
 import {
   SCALETTA,
   SOTTOTITOLO,
@@ -529,6 +530,13 @@ export default function Intro({ revisione = false, onFine, ridotto }: { revision
       g.restore();
     }
   };
+
+  // ---- il suono: la colonna sonora la suona il motore audio, con i momenti di questa scaletta ----
+  useEffect(() => {
+    if (!pronta || revisione) return;
+    void introSuono(true);
+    return () => void introSuono(false);
+  }, [pronta, revisione]);
 
   // ---- il tempo ----------------------------------------------------------------------------
   useEffect(() => {

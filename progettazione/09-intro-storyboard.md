@@ -391,3 +391,19 @@ velocità piena. L’autore l’ha poi vista scorrere nel pannello, a fine sessi
 dal vivo dentro l’oblò; i glifi disegnati), poi la musica sul montaggio bloccato (D14, decisa nel §18
 del 06), poi la sincronia: l’orologio dell’intro passerà dalla pagina alla musica, come dice il §9.1
 del 06.
+
+## 11. Il suono dell'animatic (16 ottobre 2026)
+
+Dopo la prima consegna con il suono, l'autore ha notato che l'intro non aveva né musica né sound design. **Il sound design c'è** (`app/src-tauri/src/mondo/intro.rs`, `app/src/intro/suono.ts`): segue la colonna sonora del §5 scena per scena. Il motore audio riceve dalla pagina **i momenti dell'animatic** (gli stessi di `scaletta.ts`: se l'animatic cambia i suoi tempi, il suono li segue da sé), ne ricava una partitura e la suona con il suo orologio, fuori dal mondo (nessuna stanza, nessun casco).
+
+- **A**: il fruscio di un nastro rovinato da 0:00,8, con i **buchi** di un quarto di secondo fra una frase e l'altra (mai sulle parole: una prova controlla che nessun blocco di testo sia visibile in quel momento), il clic della spia a 0:02,2, il respiro di L.V. nel casco che si accorcia, i quattro doppi colpi del cuore (54 al minuto, che rallenta) e poi niente.
+- **B**: due secondi di vuoto vero, poi il re, bassissimo.
+- **C**: il re diventa il reattore (più armonici), la ventilazione, il tic del radar a ogni giro (3 s).
+- **D**: il relè del faro; per un secondo e mezzo il brusio dalla radio, in banda stretta, e di colpo niente.
+- **E**: il re si assottiglia fino a una nota sola, quasi silenzio alla fermata.
+- **F**: il fruscio torna due secondi prima della fine di E, il respiro più lento, due battiti, silenzio.
+- **G**: sedici clic granulari (i glifi) e sedici fruscii che salgono (le lettere); alla fine il re si chiude su una nota.
+- **H**: il re del reattore, la ventilazione, i relè e i tic della console che parte; l'intro sfuma e comincia la plancia del gioco.
+
+**La musica non c'è ancora**: B, E e G hanno una *guida* provvisoria, il re del motore con i suoi armonici. I tre pezzi veri si fanno con Lyria (`22-musica-con-lyria.md`, §5.8) e prendono il posto della guida. L'intro ha un canale suo nella console di regia (**Intro (suoni)**) e la guida sta sul canale **Musica**. `cargo run --release --example rendi_intro -- momenti.json uscita` rende l'intro su file e dice il livello di ogni scena; i momenti si ottengono con `node --experimental-strip-types strumenti/intro/momenti.mjs`.
+

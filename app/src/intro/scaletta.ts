@@ -299,3 +299,19 @@ export const formatoTempo = (t: number) => {
   const s = t - m * 60;
   return `${m}:${s.toFixed(1).padStart(4, "0").replace(".", ",")}`;
 };
+
+/** I buchi della traccia: il fruscio cade a zero per un quarto di secondo fra una frase e l'altra,
+ *  nelle scene A e F; mai sulle parole (storyboard, A). */
+export function buchiDellaTraccia(s: Scaletta): number[] {
+  const buchi: number[] = [];
+  for (const scena of ["A", "F"] as const) {
+    const blocchi = s.blocchi.filter((b) => b.scena === scena).sort((a, b) => a.entra - b.entra);
+    for (let i = 1; i < blocchi.length; i++) {
+      const fine = blocchi[i - 1].via;
+      const prossimo = blocchi[i].entra;
+      // solo se fra l'uno e l'altro c'è vuoto abbastanza: il buco sta in mezzo
+      if (prossimo - fine >= 0.4) buchi.push(Math.round((fine + (prossimo - fine - 0.25) / 2) * 100) / 100);
+    }
+  }
+  return buchi;
+}

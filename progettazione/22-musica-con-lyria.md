@@ -286,6 +286,44 @@ Instrumental. Deep-space science-fiction ambient, 20 seconds. Four pure sine-wav
 
 Per correggere un tema che suona ancora da giallo, la frase per il Producer: *«Remove all suspense. No detective feel, no staccato, no tinkling. Make every note long, pure and ringing, like a signal from deep space, awe and vastness, in a huge reverb.»* Se nemmeno così, **il tema si rifà in codice** (additivo, quattro parziali puri con coda lunga, nella tonalità esatta): è la strada sicura per un’opera di fantascienza.
 
+### 5.8 La musica dell'intro (16 ottobre 2026)
+
+Il sound design dell'intro è già nel motore (`09-intro-storyboard.md`, §11); la musica no: nell'animatic suona una **guida provvisoria** (il re del motore, con i suoi armonici). Lo storyboard (§5 e §6) vuole la musica in **tre punti**, tutti nel vuoto, e il re come nota base: **B** (il re entra, bassissimo, a 0:49,4), **E** (la camera arretra: dagli armonici a una sola nota, fino al quasi silenzio) e **G** (la musica si chiude sul re, sul titolo). In C e in H il re è il reattore della plancia: non è musica. Si chiedono quindi tre pezzi brevi, **a partitura** (§5.7) e **di fantascienza** (stupore e vastità, mai giallo). I tempi sono quelli dell'animatic di oggi (`app/src/intro/scaletta.ts`); se il montaggio cambia, il motore taglia e incrocia.
+
+**`I-B` · Il margine (circa 14 s, da 0:49,4 al radar)**
+
+```
+Instrumental. A single drone from silence, 14 seconds, one sound source only: one very deep analog sine-like bass tone on D1 (36.7 Hz) with its octave D2 (73.4 Hz) barely there, in a vast, cold, dark reverb. Free tempo, no beat, no rhythm, no melody, no chords, no other instruments, no vocals, no percussion.
+[00:00] Complete silence for the first second, then the D1 rises from nothing, very slowly.
+[00:04] The D2 octave appears, very quiet, with a slow gentle beating.
+[00:10] The tone is full and steady, like a huge machine breathing far away. It does not fade; it simply continues until the end, still sounding, as if the piece were cut out of a longer one.
+Awe, vastness, a derelict spaceship passing in the void. Never suspense, never mystery, never horror.
+```
+
+**`I-E` · La scala (circa 24 s, da 1:25 alla fermata della camera)**
+
+```
+Instrumental. A single drone with one sound source from beginning to end, 24 seconds: one analog synthesizer voice, a sawtooth oscillator tuned to D2 (73.4 Hz), through a low-pass filter that closes slowly and steadily, in a huge, dark, cold reverb. Free tempo, no beat, no melody, no chords, no other instruments, no vocals, no percussion. Nothing is added, only taken away.
+[00:00] The drone is bright and rich in harmonics: D2 and its overtones D3, A3, D4, F-sharp 4, A4, C5, D5, like a reed organ played in a cathedral.
+[00:06] The highest overtones fade out; the tone grows rounder.
+[00:12] Only D2, D3 and A3 remain.
+[00:18] Only a bare, low D2 remains, motionless.
+[00:22] The D2 fades almost to silence, and the last second is nearly empty.
+Awe and distance, the camera pulling away from an enormous ship. Not sad, not tense.
+```
+
+**`I-G` · Il titolo (circa 12 s, da 2:20 al raccordo)**
+
+```
+Instrumental. A 12-second science-fiction piece in a vast empty space, ending on a single note. From complete silence, a soft, hollow, pure chord of D, A and F-sharp slowly swells, like a crystal singing bowl or a spacecraft hull ringing, in a huge dark reverb. Slow, steady, no rhythm, no melody, no staccato, no piano, no music box, no strings, no percussion, no vocals.
+[00:00] Silence.
+[00:02] The chord begins to swell.
+[00:07] The A and the F-sharp fade away and the chord closes on a single clear low D, which rings for several seconds and decays slowly.
+A sense of arrival and quiet confirmation, never a question, never suspense.
+```
+
+**Integrazione.** Quando i file ci sono (`I-B`, `I-E`, `I-G`, in `audio/musica-ia/I/`), il lettore li suona al posto della guida del re, agli stessi momenti dell'animatic; per le correzioni vale la frase del §5.7 (*«Remove all suspense…»*). La guida sintetica resta come ripiego.
+
 ## 6. I file, dove stanno, come si chiamano
 
 - Cartella: `audio/musica-ia/<sigla>/` (es. `audio/musica-ia/M1/`), con i file nominati `M1-01.wav`, `M1-02.wav`… (in ordine di giro) e, per quelli che l’autore tiene, `M1-scelto.wav`.

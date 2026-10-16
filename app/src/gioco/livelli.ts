@@ -28,7 +28,8 @@ export const CANALI: readonly { chiave: Canale; nome: string; cosa: string }[] =
   { chiave: "radio", nome: "Radio di bordo", cosa: "i messaggi della radio" },
   { chiave: "colpi_voci", nome: "Colpi delle voci", cosa: "gli eventi di voce" },
   { chiave: "interfaccia", nome: "Pulsanti", cosa: "il tocco dei pulsanti" },
-  { chiave: "musica", nome: "Musica", cosa: "i file, sopra il livello comune" },
+  { chiave: "musica", nome: "Musica", cosa: "i file, sopra il livello comune; e la guida del re nell'intro" },
+  { chiave: "intro", nome: "Intro (suoni)", cosa: "il sound design dell'intro: la traccia, il respiro, i clic, la plancia" },
 ];
 
 const CHIAVE = "relitto.livelli";

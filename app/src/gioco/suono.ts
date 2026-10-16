@@ -72,4 +72,7 @@ export function mixDa(o: Opzioni): MixMondo {
 /** Il mix d'autore (la console di regia): i livelli dei canali in dB. */
 export const livelliSuono = (l: Record<string, number>) => manda({ tipo: "livelli", valore: l });
 
+/** L'intro (mondo/intro.rs): i momenti dell'animatic, per far partire la sua colonna sonora; `null` la ferma. */
+export const mandaIntro = (valore: unknown) => manda({ tipo: "intro", valore });
+
 export const mixSuono = (o: Opzioni) => manda({ tipo: "mix", valore: mixDa(o) });

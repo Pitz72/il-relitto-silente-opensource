@@ -65,6 +65,7 @@ export type ComandoMondo =
   | { tipo: "turno"; valore: { stati: Partial<StatiSuono>; eventi: EventoSuono[] } }
   | { tipo: "mix"; valore: MixMondo }
   | { tipo: "livelli"; valore: Record<string, number> }
+  | { tipo: "intro"; valore: unknown }
   | { tipo: "pausa"; valore: boolean }
   | { tipo: "tocco"; valore: "scegli" | "conferma" | "annulla" }
   | { tipo: "menu"; valore: boolean };

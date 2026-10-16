@@ -46,6 +46,8 @@ pub struct Livelli {
     pub interfaccia: f32,
     /// la musica, sopra il livello comune dei file
     pub musica: f32,
+    /// il sound design dell'intro (il fruscio della traccia, il respiro, i clic, la plancia)
+    pub intro: f32,
 }
 
 /// Il file dei livelli di partenza, letto per intero (ogni campo ci deve essere): `Livelli`, che
@@ -67,6 +69,7 @@ struct Pieno {
     colpi_voci: f32,
     interfaccia: f32,
     musica: f32,
+    intro: f32,
 }
 
 impl Default for Livelli {
@@ -88,6 +91,7 @@ impl Default for Livelli {
             colpi_voci: p.colpi_voci,
             interfaccia: p.interfaccia,
             musica: p.musica,
+            intro: p.intro,
         }
     }
 }
@@ -110,6 +114,7 @@ pub struct Lineari {
     pub colpi_voci: f32,
     pub interfaccia: f32,
     pub musica: f32,
+    pub intro: f32,
 }
 
 impl Livelli {
@@ -130,6 +135,7 @@ impl Livelli {
             colpi_voci: db(self.colpi_voci),
             interfaccia: db(self.interfaccia),
             musica: db(self.musica),
+            intro: db(self.intro),
         }
     }
 }
@@ -153,6 +159,7 @@ impl Lineari {
         v(&mut self.colpi_voci, meta.colpi_voci);
         v(&mut self.interfaccia, meta.interfaccia);
         v(&mut self.musica, meta.musica);
+        v(&mut self.intro, meta.intro);
     }
 }
 

@@ -20,6 +20,7 @@ pub mod dsp;
 pub mod fiato;
 pub mod fondi;
 pub mod interfaccia;
+pub mod intro;
 pub mod livelli;
 pub mod musica;
 pub mod musica_file;
@@ -46,6 +47,7 @@ use colpi::{Bus, Canale, Colpo, Corpo, Lastra};
 use dsp::{db, morbido, Biquad, Caso, Inseguitore, Pettine, Scorrevole, UnPolo};
 use fiato::Fiato;
 use fondi::{Pompe, Ventilazione, Ventola};
+use intro::Intro;
 use livelli::Lineari;
 use musica::Musica;
 use re::Re;
@@ -130,6 +132,8 @@ pub enum Comando {
     Pausa(bool),
     /// il mix d’autore: i livelli dei canali in dB (la console di regia)
     Livelli(Livelli),
+    /// l'intro comincia, con i momenti dell'animatic (`Some`), o si ferma (`None`)
+    Intro(Option<intro::DatiIntro>),
     /// un tocco su un pulsante: il suono dell’interfaccia (bibbia sonora, §5.8)
     Tocco(Gesto),
     /// il menu principale: il mondo tace, l’interfaccia è tutta membrana, e suona la musica
@@ -440,6 +444,8 @@ pub struct Mondo {
     /// il mix d’autore, in dB, e i suoi valori lineari (che seguono i dB un blocco alla volta)
     livelli: Livelli,
     lv: Lineari,
+    /// il suono dell'intro (intro.rs)
+    intro: Intro,
     c_generale: Scorrevole,
     c_ossa: Scorrevole,
     pausa: Scorrevole,
@@ -574,6 +580,7 @@ impl Mondo {
             c_interfaccia: Scorrevole::nuovo(1.0),
             livelli: Livelli::default(),
             lv: Livelli::default().lineari(),
+            intro: Intro::nuovo(sr, seme ^ 0x1A7),
             c_generale: Scorrevole::nuovo(1.0),
             c_ossa: Scorrevole::nuovo(1.0),
             pausa: Scorrevole::nuovo(1.0),
@@ -649,6 +656,12 @@ impl Mondo {
             Comando::Turno(t) => self.turno(t),
             Comando::Mix(m) => self.mix(m),
             Comando::Livelli(l) => self.livelli = l,
+            Comando::Intro(Some(d)) => {
+                // il mondo e la musica del menu tacciono: nell'intro si ascolta una registrazione
+                self.musica.avvia(Brano::Silenzio);
+                self.intro.avvia(&d);
+            }
+            Comando::Intro(None) => self.intro.ferma(0.8),
             Comando::Pausa(si) => self.pausa.verso(if si { db(-10.0) } else { 1.0 }, 0.4, sr),
             Comando::Tocco(g) => self.tocco(g),
             Comando::Menu(si) => {
@@ -739,6 +752,7 @@ impl Mondo {
         self.t_aggancio += dt;
         self.passo_membrana(dt);
         self.musica.passo(dt);
+        self.intro.passo(dt);
         self.passo_anello(dt);
         for i in 0..PIOGGE {
             if self.piogge[i].passo(dt, &mut self.caso) {
@@ -1059,6 +1073,14 @@ impl Mondo {
                 let kf = LIV_MUSICA * vp * gmus * s_musica * lv.musica;
                 l += fl * kf;
                 r += fr * kf;
+            }
+            // l'intro: il suo sound design sta sul cursore degli effetti, la guida del re su quello della musica
+            if self.intro.attiva() {
+                let ((fl, fr), (ml, mr)) = self.intro.campione();
+                let kfx = vg * ge * lv.intro;
+                let kmu = vg * gmus * s_musica * lv.musica;
+                l += fl * kfx + ml * kmu;
+                r += fr * kfx + mr * kmu;
             }
             // l’interfaccia: asciutta, fuori dalla pausa e dall’ingresso (si tocca anche lì)
             l += ui.0 * vg;

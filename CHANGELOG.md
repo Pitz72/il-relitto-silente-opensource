@@ -10,6 +10,11 @@ documenti di `progettazione/`.
 
 ### Aggiunto
 
+- **Il suono dell'intro** (16 ottobre 2026; storyboard, §11): l'intro ha adesso la sua colonna sonora, sintetizzata nel
+  motore e legata ai momenti dell'animatic (fruscio e buchi della traccia, clic della spia, respiro, cuore, re nel
+  vuoto, reattore, radar, relè del faro, brusio dalla radio, glifi e lettere del titolo, console che parte). La musica
+  vera (B, E, G) aspetta Lyria: i prompt sono nel documento 22, §5.8; intanto suona una guida del re. Quattro prove in
+  Rust, una in node; `rendi_intro` rende l'intro su file e dice il livello di ogni scena.
 - **Il mix d'autore e la console di regia** (16 ottobre 2026, dall'ascolto dell'autore; bibbia sonora, §12): i livelli
   relativi dei canali (fiato, ventola, re, macchine, stanza, corpo, bengala, colpi, brusio, echi, radio, pulsanti,
   musica) sono decisi dalla regia in `app/src/gioco/livelli.json`, un file solo per il motore e per la pagina, e si

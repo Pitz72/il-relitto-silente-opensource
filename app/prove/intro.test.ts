@@ -3,7 +3,7 @@
 //   node --test prove/intro.test.ts        (da app/)
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { SCALETTA, fermoPer, opacitaBlocco, scenaA } from "../src/intro/scaletta.ts";
+import { SCALETTA, buchiDellaTraccia, fermoPer, opacitaBlocco, scenaA } from "../src/intro/scaletta.ts";
 
 const blocco = (id: string) => SCALETTA.blocchi.find((b) => b.id === id)!;
 
@@ -53,4 +53,17 @@ test("i sottotitoli dei suoni stanno dentro l'intro e in ordine", () => {
 test("la scala dura 23,5 s e si ferma a 23", () => {
   assert.deepEqual(SCALETTA.momenti.scala, [85.4, 108.9]);
   assert.equal(SCALETTA.momenti.scalaFerma, 108.4);
+});
+
+test("i buchi della traccia: un quarto di secondo fra una frase e l'altra, mai su una parola", () => {
+  const buchi = buchiDellaTraccia(SCALETTA);
+  assert.ok(buchi.length >= 5, `pochi buchi: ${buchi.length}`);
+  for (const t of buchi) {
+    const scena = scenaA(t).id;
+    assert.ok(scena === "A" || scena === "F", `il buco a ${t} s è nella scena ${scena}`);
+    // nessun testo visibile (neanche un poco) nel quarto di secondo del buco
+    for (const b of SCALETTA.blocchi) {
+      for (const x of [t, t + 0.25]) assert.equal(opacitaBlocco(b, x), 0, `il buco a ${t} s cade sul blocco ${b.id}`);
+    }
+  }
 });
