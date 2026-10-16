@@ -242,7 +242,6 @@ export function Salvataggi({
 // ----------------------------------------------------------------------------
 type SchedaOpzioni = "gioco" | "audio";
 const SCHEDE_OPZIONI: readonly [SchedaOpzioni, string][] = [["gioco", "Gioco"], ["audio", "Audio"]];
-const VOLUMI: [number, string][] = [[0, "spento"], [0.25, "25%"], [0.5, "50%"], [0.75, "75%"], [1, "100%"]];
 
 export function PannelloOpzioni({ forma, opzioni, cambia, chiudi }: { forma: Forma; opzioni: Opzioni; cambia: (c: Partial<Opzioni>) => void; chiudi: () => void }) {
   const [scheda, setScheda] = useState<SchedaOpzioni>("gioco");
@@ -260,6 +259,30 @@ export function PannelloOpzioni({ forma, opzioni, cambia, chiudi }: { forma: For
       {spiega && <span className="spiega">{spiega}</span>}
     </div>
   );
+  // un volume: un cursore da 0 a 100, come un mixer; si muove anche con le frecce
+  const cursore = (nome: string, chiave: "volume" | "volumeEffetti" | "volumeMusica" | "volumeParlato", spiega?: string) => {
+    const valore = Math.round(opzioni[chiave] * 100);
+    return (
+      <div className="opzione" role="group" aria-label={nome}>
+        <span className="nome-opzione">{nome}</span>
+        <span className="cursore">
+          <input
+            type="range"
+            min={0}
+            max={100}
+            step={5}
+            value={valore}
+            aria-label={nome}
+            aria-valuetext={valore === 0 ? "spento" : `${valore}%`}
+            style={{ "--riempimento": `${valore}%` } as React.CSSProperties}
+            onChange={(e) => cambia({ [chiave]: Number(e.target.value) / 100 } as Partial<Opzioni>)}
+          />
+          <output>{valore === 0 ? "spento" : `${valore}%`}</output>
+        </span>
+        {spiega && <span className="spiega">{spiega}</span>}
+      </div>
+    );
+  };
   // le schede (ARIA tabs): le frecce passano da una all'altra, come nel diario
   const frecce = (e: React.KeyboardEvent) => {
     const i = SCHEDE_OPZIONI.findIndex(([id]) => id === scheda);
@@ -302,10 +325,10 @@ export function PannelloOpzioni({ forma, opzioni, cambia, chiudi }: { forma: For
         )}
         {scheda === "audio" && (
           <>
-            {riga("Volume generale", "volume", [[0, "muto"], [0.25, "25%"], [0.5, "50%"], [0.75, "75%"], [1, "100%"]], "Alza o abbassa tutto insieme.")}
-            {riga("Effetti", "volumeEffetti", VOLUMI, "Il suono del mondo: le stanze, le macchine, l’aria, il fiato, i passi, gli attrezzi, il Sintonizzatore, il brusio, i pulsanti.")}
-            {riga("Musica", "volumeMusica", VOLUMI, "Il menu, la soglia degli atti, l’Anziano, la fine.")}
-            {riga("Parlato", "volumeParlato", VOLUMI, "Le voci registrate. Per ora non ce ne sono: il cursore è pronto.")}
+            {cursore("Volume generale", "volume", "Alza o abbassa tutto insieme.")}
+            {cursore("Effetti", "volumeEffetti", "Il suono del mondo: le stanze, le macchine, l’aria, il fiato, i passi, gli attrezzi, il Sintonizzatore, il brusio, i pulsanti.")}
+            {cursore("Musica", "volumeMusica", "Il menu, la soglia degli atti, l’Anziano, la fine.")}
+            {cursore("Parlato", "volumeParlato", "Le voci registrate. Per ora non ce ne sono: il cursore è pronto.")}
             {riga("Suono", "mono", [[false, "stereo"], [true, "mono"]], "Mono: i due canali insieme, per chi sente da un orecchio solo.")}
             {riga("Dinamica", "dinamicaRidotta", [[false, "piena"], [true, "ridotta"]], "Ridotta: i suoni piccoli più alti e i grandi più bassi, per giocare piano o di notte.")}
             {riga("Suoni intensi", "suoniIntensiRidotti", [[false, "come sono"], [true, "ridotti"]], "Ridotti: meno bassi profondi, niente picchi, niente battito né fischio nell’anticamera.")}

@@ -81,6 +81,20 @@
 .pannello.opzioni .opzioni-schede button:hover { color: var(--testo); border-color: var(--bordo); }
 .pannello.opzioni .opzioni-schede button[aria-selected="true"] { color: var(--testo); border-color: var(--bordo); background: color-mix(in srgb, var(--lamina-2) 80%, transparent); }
 .pannello[data-forma="acciaio"].opzioni .opzioni-schede button { text-transform: uppercase; letter-spacing: .12em; font-size: max(12px, .78cqw); }
+.opzioni .cursore { display: flex; align-items: center; gap: 1.2cqw; }
+.opzioni .cursore output { min-width: 4.5em; font-variant-numeric: tabular-nums; color: var(--tenue); }
+.opzioni .cursore input[type="range"] {
+  -webkit-appearance: none; appearance: none; flex: 1; max-width: 26cqw; height: 36px; background: transparent; cursor: pointer; --riempimento: 100%;
+}
+.opzioni .cursore input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px; border-radius: 3px; border: 1px solid var(--bordo);
+  background: linear-gradient(to right, var(--testo) var(--riempimento), color-mix(in srgb, var(--lamina-2) 80%, transparent) var(--riempimento));
+}
+.opzioni .cursore input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; width: 14px; height: 26px; margin-top: -11px; border-radius: 2px;
+  background: var(--testo); border: 1px solid var(--fondo-2);
+}
+.opzioni .cursore input[type="range"]:focus-visible { outline: 2px solid var(--testo); outline-offset: 3px; }
 .opzioni .opzione { display: grid; grid-template-columns: minmax(180px, 16cqw) 1fr; gap: .4cqw 1.2cqw; align-items: center; padding: .7cqw 0; border-bottom: 1px solid color-mix(in srgb, var(--bordo) 60%, transparent); }
 .opzioni .nome-opzione { color: var(--testo); }
 .opzioni .valori { display: flex; flex-wrap: wrap; gap: .5cqw; }
