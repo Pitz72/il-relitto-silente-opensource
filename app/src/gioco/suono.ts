@@ -53,10 +53,12 @@ export function suonaTocco(g: Gesto): Promise<void> {
 export function mixDa(o: Opzioni): MixMondo {
   return {
     generale: o.volume,
-    ambienti: o.volumeAmbienti,
+    // gli effetti sono un cursore solo per chi gioca: il motore ne tiene tre bus
+    ambienti: o.volumeEffetti,
     effetti: o.volumeEffetti,
-    voci: o.volumeVoci,
+    voci: o.volumeEffetti,
     musica: o.volumeMusica,
+    parlato: o.volumeParlato,
     mono: o.mono,
     dinamica_ridotta: o.dinamicaRidotta,
     intensi_ridotti: o.suoniIntensiRidotti,

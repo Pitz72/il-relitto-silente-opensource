@@ -75,6 +75,7 @@ export interface MixMondo {
   effetti: number;
   voci: number;
   musica: number;
+  parlato: number;
   mono: boolean;
   dinamica_ridotta: boolean;
   intensi_ridotti: boolean;

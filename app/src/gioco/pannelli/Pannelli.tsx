@@ -240,7 +240,13 @@ export function Salvataggi({
 // ----------------------------------------------------------------------------
 //  Le opzioni
 // ----------------------------------------------------------------------------
+type SchedaOpzioni = "gioco" | "audio";
+const SCHEDE_OPZIONI: readonly [SchedaOpzioni, string][] = [["gioco", "Gioco"], ["audio", "Audio"]];
+const VOLUMI: [number, string][] = [[0, "spento"], [0.25, "25%"], [0.5, "50%"], [0.75, "75%"], [1, "100%"]];
+
 export function PannelloOpzioni({ forma, opzioni, cambia, chiudi }: { forma: Forma; opzioni: Opzioni; cambia: (c: Partial<Opzioni>) => void; chiudi: () => void }) {
+  const [scheda, setScheda] = useState<SchedaOpzioni>("gioco");
+  const schedeRef = useRef<HTMLDivElement>(null);
   const riga = <K extends keyof Opzioni>(nome: string, chiave: K, valori: [Opzioni[K], string][], spiega?: string) => (
     <div className="opzione" role="group" aria-label={nome}>
       <span className="nome-opzione">{nome}</span>
@@ -254,22 +260,58 @@ export function PannelloOpzioni({ forma, opzioni, cambia, chiudi }: { forma: For
       {spiega && <span className="spiega">{spiega}</span>}
     </div>
   );
+  // le schede (ARIA tabs): le frecce passano da una all'altra, come nel diario
+  const frecce = (e: React.KeyboardEvent) => {
+    const i = SCHEDE_OPZIONI.findIndex(([id]) => id === scheda);
+    const n = SCHEDE_OPZIONI.length;
+    const j = e.key === "ArrowRight" ? (i + 1) % n : e.key === "ArrowLeft" ? (i - 1 + n) % n : e.key === "Home" ? 0 : e.key === "End" ? n - 1 : -1;
+    if (j < 0) return;
+    e.preventDefault();
+    setScheda(SCHEDE_OPZIONI[j][0]);
+    requestAnimationFrame(() => schedeRef.current?.querySelector<HTMLElement>(`[data-scheda="${SCHEDE_OPZIONI[j][0]}"]`)?.focus());
+  };
   return (
     <Pannello forma={forma} titolo="Opzioni" classe="opzioni">
-      {riga("Movimento", "movimento", [["sistema", "come il sistema"], ["ridotto", "ridotto"], ["pieno", "pieno"]], "Ridotto: il tremito, il respiro dei bordi e le venature si fermano; restano i colori.")}
-      {riga("Rivelazione del testo", "rivelazione", [[true, "a righe"], [false, "tutto subito"]])}
-      {riga("Carattere", "carattere", [["newsreader", "Newsreader"], ["atkinson", "Atkinson Hyperlegible"]])}
-      {riga("Testo", "testoGrande", [[false, "normale"], [true, "grande"]])}
-      {riga("Schermo intero", "schermoIntero", [[true, "sì"], [false, "no, in una finestra"]], "Si cambia anche con F11.")}
-      {riga("Nomi toccabili nel testo", "nomiToccabili", [[true, "sì"], [false, "no"]], "Toccare un nome nella descrizione apre il menu di quella cosa.")}
-      {riga("Volume", "volume", [[0, "muto"], [0.25, "25%"], [0.5, "50%"], [0.75, "75%"], [1, "100%"]])}
-      {riga("Ambienti", "volumeAmbienti", [[0, "spenti"], [0.5, "50%"], [0.75, "75%"], [1, "100%"]], "Le stanze, le macchine, l’aria, il re.")}
-      {riga("Effetti", "volumeEffetti", [[0, "spenti"], [0.5, "50%"], [0.75, "75%"], [1, "100%"]], "Il fiato, i passi, gli attrezzi, il visore, le cose che accadono.")}
-      {riga("Voci", "volumeVoci", [[0, "spente"], [0.5, "50%"], [0.75, "75%"], [1, "100%"]], "Il brusio, le echi, la radio.")}
-      {riga("Musica", "volumeMusica", [[0, "spenta"], [0.5, "50%"], [0.75, "75%"], [1, "100%"]], "Il menu, la soglia degli atti, l’Anziano, la fine.")}
-      {riga("Suono", "mono", [[false, "stereo"], [true, "mono"]], "Mono: i due canali insieme, per chi sente da un orecchio solo.")}
-      {riga("Dinamica", "dinamicaRidotta", [[false, "piena"], [true, "ridotta"]], "Ridotta: i suoni piccoli più alti e i grandi più bassi, per giocare piano o di notte.")}
-      {riga("Suoni intensi", "suoniIntensiRidotti", [[false, "come sono"], [true, "ridotti"]], "Ridotti: meno bassi profondi, niente picchi, niente battito né fischio nell’anticamera.")}
+      <div className="opzioni-schede" role="tablist" aria-label="Pagine delle opzioni" ref={schedeRef} onKeyDown={frecce}>
+        {SCHEDE_OPZIONI.map(([id, titolo]) => (
+          <button
+            key={id}
+            type="button"
+            role="tab"
+            id={`opzioni-${id}`}
+            data-scheda={id}
+            aria-selected={id === scheda}
+            aria-controls="opzioni-foglio"
+            tabIndex={id === scheda ? 0 : -1}
+            onClick={() => setScheda(id)}
+          >
+            {titolo}
+          </button>
+        ))}
+      </div>
+      <div id="opzioni-foglio" role="tabpanel" aria-labelledby={`opzioni-${scheda}`}>
+        {scheda === "gioco" && (
+          <>
+            {riga("Movimento", "movimento", [["sistema", "come il sistema"], ["ridotto", "ridotto"], ["pieno", "pieno"]], "Ridotto: il tremito, il respiro dei bordi e le venature si fermano; restano i colori.")}
+            {riga("Rivelazione del testo", "rivelazione", [[true, "a righe"], [false, "tutto subito"]])}
+            {riga("Carattere", "carattere", [["newsreader", "Newsreader"], ["atkinson", "Atkinson Hyperlegible"]])}
+            {riga("Testo", "testoGrande", [[false, "normale"], [true, "grande"]])}
+            {riga("Schermo intero", "schermoIntero", [[true, "sì"], [false, "no, in una finestra"]], "Si cambia anche con F11.")}
+            {riga("Nomi toccabili nel testo", "nomiToccabili", [[true, "sì"], [false, "no"]], "Toccare un nome nella descrizione apre il menu di quella cosa.")}
+          </>
+        )}
+        {scheda === "audio" && (
+          <>
+            {riga("Volume generale", "volume", [[0, "muto"], [0.25, "25%"], [0.5, "50%"], [0.75, "75%"], [1, "100%"]], "Alza o abbassa tutto insieme.")}
+            {riga("Effetti", "volumeEffetti", VOLUMI, "Il suono del mondo: le stanze, le macchine, l’aria, il fiato, i passi, gli attrezzi, il Sintonizzatore, il brusio, i pulsanti.")}
+            {riga("Musica", "volumeMusica", VOLUMI, "Il menu, la soglia degli atti, l’Anziano, la fine.")}
+            {riga("Parlato", "volumeParlato", VOLUMI, "Le voci registrate. Per ora non ce ne sono: il cursore è pronto.")}
+            {riga("Suono", "mono", [[false, "stereo"], [true, "mono"]], "Mono: i due canali insieme, per chi sente da un orecchio solo.")}
+            {riga("Dinamica", "dinamicaRidotta", [[false, "piena"], [true, "ridotta"]], "Ridotta: i suoni piccoli più alti e i grandi più bassi, per giocare piano o di notte.")}
+            {riga("Suoni intensi", "suoniIntensiRidotti", [[false, "come sono"], [true, "ridotti"]], "Ridotti: meno bassi profondi, niente picchi, niente battito né fischio nell’anticamera.")}
+          </>
+        )}
+      </div>
       <button type="button" className="chiudi" onClick={chiudi}>
         chiudi <span className="tasto">Esc</span>
       </button>

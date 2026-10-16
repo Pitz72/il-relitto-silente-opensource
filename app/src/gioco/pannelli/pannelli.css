@@ -76,6 +76,11 @@
 .salvataggi .dove { margin: 1.2cqw 0 0; font-size: max(13px, .85cqw); color: var(--tenue); user-select: text; }
 
 /* le opzioni */
+.opzioni .opzioni-schede { display: flex; gap: .4cqw; padding-bottom: .6cqw; border-bottom: 1px solid color-mix(in srgb, var(--bordo) 70%, transparent); }
+.pannello.opzioni .opzioni-schede button { min-height: 34px; padding: .3em 1.05em; font-size: max(14px, .9cqw); color: var(--tenue); background: none; border-color: transparent; }
+.pannello.opzioni .opzioni-schede button:hover { color: var(--testo); border-color: var(--bordo); }
+.pannello.opzioni .opzioni-schede button[aria-selected="true"] { color: var(--testo); border-color: var(--bordo); background: color-mix(in srgb, var(--lamina-2) 80%, transparent); }
+.pannello[data-forma="acciaio"].opzioni .opzioni-schede button { text-transform: uppercase; letter-spacing: .12em; font-size: max(12px, .78cqw); }
 .opzioni .opzione { display: grid; grid-template-columns: minmax(180px, 16cqw) 1fr; gap: .4cqw 1.2cqw; align-items: center; padding: .7cqw 0; border-bottom: 1px solid color-mix(in srgb, var(--bordo) 60%, transparent); }
 .opzioni .nome-opzione { color: var(--testo); }
 .opzioni .valori { display: flex; flex-wrap: wrap; gap: .5cqw; }

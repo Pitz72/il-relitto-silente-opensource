@@ -461,7 +461,12 @@ nell’AppImage.
 | Musica | il menu, i cartelli d’atto, l’Anziano, gli outro; l’intro a parte | scritta e generata nel motore con i materiali del gioco (D14, documento 21); il re ne è la nota base. L’intro aspetta il montaggio bloccato |
 
 Il mix ha cinque canali (generale, ambienti, musica, effetti, voci) con i loro cursori nelle
-opzioni. L’ipossia è un filtro sul canale generale; la protezione vitale ammutolisce il brusio.
+opzioni. **Dal 16 ottobre 2026 le opzioni hanno una scheda «Audio» con tre volumi soltanto per chi
+gioca, oltre al generale: Effetti** (tutto il suono del mondo: ambienti, effetti e le voci del brusio,
+dell’eco e della radio; il motore ne tiene ancora tre bus e li muove insieme), **Musica** e **Parlato**
+(le voci registrate, narratore e personaggi: il canale c’è, `Mix.parlato`, ma non vi suona ancora
+niente; l’autore le registrerà con il TTS di Google). Restano nella scheda anche mono, dinamica e suoni
+intensi. L’ipossia è un filtro sul canale generale; la protezione vitale ammutolisce il brusio.
 
 ---
 

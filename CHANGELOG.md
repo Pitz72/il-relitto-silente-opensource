@@ -10,6 +10,7 @@ documenti di `progettazione/`.
 
 ### Aggiunto
 
+- **La scheda «Audio» nelle opzioni** (16 ottobre 2026, richiesta dell’autore): le opzioni hanno due schede, «Gioco» e «Audio». In «Audio» tre volumi — **Effetti** (tutto il suono del mondo), **Musica** e **Parlato** — più il volume generale, mono, dinamica e suoni intensi. Il parlato ha già il suo canale nel mixer in Rust (`Mix.parlato`), pronto per le voci che l’autore registrerà con il TTS di Google; per ora non ci passa niente. I vecchi cursori «Ambienti» e «Voci» non ci sono più: li muove tutti l’unico «Effetti». Una prova in Rust.
 - **La licenza** (16 ottobre 2026, scelta dell’autore): **MIT per il codice** (`LICENSE`) e **CC BY-NC-SA 4.0 per
   la storia, i testi, le immagini e la musica**; la divisione precisa, le dipendenze di terzi, i loghi e la nota
   sull’intelligenza artificiale stanno in `LICENZE.md`. Vale anche per `old_version/`, dal commit che la introduce.

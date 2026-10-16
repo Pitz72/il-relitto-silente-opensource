@@ -21,11 +21,13 @@ export interface Opzioni {
   /** il suono (bibbia sonora, §2.5): i volumi da 0 a 1, il mono, la dinamica ridotta,
    *  i suoni intensi ridotti (per chi soffre di acufeni, emicrania, ansia da suoni forti) */
   volume: number;
-  volumeAmbienti: number;
+  /** gli effetti: tutto il suono del mondo (le stanze, le macchine, il fiato, i passi, il
+   *  Sintonizzatore, il brusio, i pulsanti); è il solo cursore, il motore ne fa tre bus */
   volumeEffetti: number;
-  volumeVoci: number;
-  /** la musica (documento 21): il suo cursore, il quinto */
+  /** la musica (documenti 21 e 22) */
   volumeMusica: number;
+  /** il parlato: le voci registrate (narratore, personaggi). Il canale c'è, le registrazioni no */
+  volumeParlato: number;
   mono: boolean;
   dinamicaRidotta: boolean;
   suoniIntensiRidotti: boolean;
@@ -39,10 +41,9 @@ export const OPZIONI_DI_BASE: Opzioni = {
   nomiToccabili: true,
   schermoIntero: true,
   volume: 0.75,
-  volumeAmbienti: 1,
   volumeEffetti: 1,
-  volumeVoci: 1,
   volumeMusica: 1,
+  volumeParlato: 1,
   mono: false,
   dinamicaRidotta: false,
   suoniIntensiRidotti: false,

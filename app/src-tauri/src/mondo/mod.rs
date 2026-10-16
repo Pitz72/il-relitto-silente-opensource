@@ -95,6 +95,9 @@ pub struct Mix {
     pub voci: f32,
     /// la musica (06, §9.2: il quinto cursore)
     pub musica: f32,
+    /// il parlato (06, §9.2): le voci registrate, del narratore e dei personaggi. Il canale
+    /// c’è già; le registrazioni arriveranno dopo (l’autore le farà con il TTS di Google)
+    pub parlato: f32,
     /// i due canali sommati, con le differenze di volume
     pub mono: bool,
     /// la dinamica ridotta: per chi gioca piano o di notte (3:1 sopra −30 dBFS)
@@ -106,7 +109,7 @@ pub struct Mix {
 
 impl Default for Mix {
     fn default() -> Self {
-        Mix { generale: 1.0, ambienti: 1.0, effetti: 1.0, voci: 1.0, musica: 1.0, mono: false, dinamica_ridotta: false, intensi_ridotti: false }
+        Mix { generale: 1.0, ambienti: 1.0, effetti: 1.0, voci: 1.0, musica: 1.0, parlato: 1.0, mono: false, dinamica_ridotta: false, intensi_ridotti: false }
     }
 }
 
@@ -342,6 +345,8 @@ pub struct Mondo {
     musica: Musica,
     riverbero_musica: Riverbero,
     c_musica: Scorrevole,
+    /// il canale del parlato: segue il suo cursore, senza ancora niente che ci passi
+    c_parlato: Scorrevole,
     // --- gli strati
     re: Re,
     re_pavimento: Biquad,
@@ -475,6 +480,7 @@ impl Mondo {
             musica: Musica::nuova(sr, seme ^ 0x4D55),
             riverbero_musica: Riverbero::nuovo(sr),
             c_musica: Scorrevole::nuovo(1.0),
+            c_parlato: Scorrevole::nuovo(1.0),
             re: Re::nuovo(sr, seme ^ 0x7E),
             re_pavimento: Biquad::passabasso(180.0, 0.7, sr),
             re_taglio: Scorrevole::nuovo(180.0),
@@ -609,6 +615,7 @@ impl Mondo {
         self.c_effetti.verso(q(m.effetti), 0.15, sr);
         self.c_voci.verso(q(m.voci), 0.15, sr);
         self.c_musica.verso(q(m.musica), 0.15, sr);
+        self.c_parlato.verso(q(m.parlato), 0.15, sr);
         self.c_ossa.verso(if m.intensi_ridotti { db(-12.0) } else { 1.0 }, 0.3, sr);
         // il cuore e il fischio dell’anticamera si tolgono con i suoni intensi
         self.applica(0.3);
@@ -1113,5 +1120,25 @@ impl Sound for SuonoMondo {
 
     fn finished(&self) -> bool {
         self.mondo.finito()
+    }
+}
+
+#[cfg(test)]
+mod prove_mix {
+    use super::*;
+
+    #[test]
+    fn il_parlato_ha_il_suo_cursore() {
+        // una versione dell’app senza «parlato» manda un mix senza il campo: vale il pieno
+        let vecchio: Mix = serde_json::from_str(r#"{"generale":0.5,"musica":0.25}"#).unwrap();
+        assert_eq!(vecchio.parlato, 1.0);
+        assert_eq!(vecchio.generale, 0.5);
+        // il cursore arriva al canale, al quadrato come gli altri
+        let (mut m, tx, _) = Mondo::nuovo(48000.0, 7);
+        assert_eq!(m.c_parlato.meta(), 1.0);
+        tx.send(Comando::Mix(Mix { parlato: 0.5, ..Mix::default() })).unwrap();
+        m.rendi(&mut [kira::Frame::ZERO; 64], 1.0 / 48000.0);
+        assert!((m.c_parlato.meta() - 0.25).abs() < 1e-6, "il parlato a metà dovrebbe stare a un quarto");
+        assert_eq!(m.c_musica.meta(), 1.0, "il cursore del parlato non deve toccare la musica");
     }
 }
