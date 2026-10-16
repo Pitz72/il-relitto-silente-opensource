@@ -40,3 +40,19 @@ Si chiede all’autore, in una domanda, che cosa intende. Candidati, dal lavoro 
 5. **L’aggiornamento automatico** (Tauri: `tauri-plugin-updater`, chiave di firma nei Secrets di GitHub e chiave pubblica in `tauri.conf.json`, `latest.json` sulle Release, flusso di rilascio della fase 9) e **una consegna nuova** con suono e musica.
 
 **Da non dimenticare.** Linux è costruito ma non provato su una macchina vera. I tag del remake non riusano mai 1.2.6, 1.5.1, 1.5.3 (`VERSIONI.md`, §2.1).
+
+## Decisioni prese il 17 ottobre 2026 (sessione «rimettere ordine»)
+
+Per «ordine» l'autore ha scelto: i documenti e i registri, e la storia di git.
+
+- **Storia di git: non si riscrive** (niente force-push). Il repository pesa circa 81 MB compressi; il guadagno era piccolo e il rischio alto.
+- **Documento 18** (solo testo): sì, nella rifinitura (fase 8).
+- **Documento 19** (Santa Maria su FAVELLA): parcheggiata, nessuna fretta.
+- **Documento 20** (inglese): sì, con la **1.1**; da subito le stringhe nuove in tabella.
+- **Documento 16, §7–§8**: i `.fav` restano congelati.
+- **Documento 22, D36 e D37**: confermate (niente terza 7/6; quattro letti A1–A4 per i 14 nodi).
+- **Copertina e logo dell'eseguibile**: in fase 9, dopo i pacchetti; l'autore sceglie l'immagine, a Claude un breve con la direzione visiva.
+- **Musica dell'intro e scene di chiusura**: aspettano le scene definitive (fase 6); non c'è decisione da prendere.
+- **Ancora aperti**: D35 e D40 (il piano di Flow Music e quello di Suno, Pro o Premier: sono dati da dare per il registro, non scelte); la partita intera giocata a mano.
+- **Fatto**: STRUTTURA.md aggiornata, prompt 07/11/13/15 segnati superati, regola 3 di `audio/LICENZE.md` aggiornata con la licenza della musica.
+

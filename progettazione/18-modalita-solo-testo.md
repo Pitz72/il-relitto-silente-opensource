@@ -229,3 +229,9 @@ Due rimedi, in ordine di bontà:
 | D24 | Dove si sceglie | nelle opzioni («Comandi»), e si può cambiare in qualunque momento; in più, una domanda alla prima partita nuova? Proposta: solo le opzioni |
 | D25 | I messaggi del parser («Non capisco questo verbo.») | quelli della libreria, come nel terminale. Se l’autore li vuole nella voce del gioco, il ponte può ridefinirli sulla partita (come fa con il modo dei comandi) senza toccare i `.fav` |
 | D26 | L’aiuto | il testo del motore più una pagina dell’app con i verbi del gioco e i tasti |
+
+---
+
+## 7. La risposta dell'autore (16 ottobre 2026)
+
+**D21: sì, nella rifinitura** (fase 8), non prima. Le proposte D22–D26 restano quelle della tabella: due modi (pulsanti e scritti), niente Tab, la scelta nelle Opzioni («Comandi»), i messaggi del parser della libreria, l'aiuto con la pagina dei verbi e dei tasti. Ne parleremo di nuovo al momento di costruirla; per ora non si tocca niente.

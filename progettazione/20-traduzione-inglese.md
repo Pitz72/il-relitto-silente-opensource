@@ -247,3 +247,9 @@ il motore direbbe da sé quale testo ha detto e con quali rami. Per il Relitto n
 | D32 | Le etichette dei pulsanti | in italiano hanno l’articolo («la radio»); in inglese proporrei il nome nudo («radio»), come si usa nelle interfacce inglesi |
 | D33 | La tipografia | quella inglese (virgolette alte al posto dei caporali) |
 | D34 | Dove si sceglie la lingua | nelle opzioni, con quella del sistema alla prima apertura |
+
+---
+
+## 9. La risposta dell'autore (16 ottobre 2026)
+
+**D28: sì, l'inglese esce con la 1.1**, dopo l'italiano 1.0. Da subito vale la regola del §7: **ogni stringa nuova dell'app va in una tabella, non nel JSX**, così non si accumula lavoro da rifare. D29–D34 restano proposte, da decidere quando comincia la traduzione (guida di stile e glossario per primi). D27 era già deciso: in inglese solo pulsanti.

@@ -279,3 +279,9 @@ L’autore ha deciso il primo livello del §1: il motore si aggiorna, i `.fav` r
 
 Restano decisioni dell’autore, con le loro ragioni nei §7 e §8: le frasi nuove nei `.fav`, la frase dei
 fronti, la discesa di `fuga.fav`.
+
+---
+
+## 11. La risposta dell'autore (16 ottobre 2026)
+
+**§7 e §8: i `.fav` restano congelati.** Il motore 1.5.0 gira identico sul testo di oggi (14 percorsi su 14, salvataggi compatibili); le frasi nuove, la frase dei fronti e la scelta sulla discesa (`fuga.fav:34-35`) non si adottano. Se un giorno il testo si riapre, si riparte da questo documento.

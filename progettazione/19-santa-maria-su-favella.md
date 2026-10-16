@@ -243,3 +243,9 @@ Se invece la priorità dell’autore è la Santa Maria in uscita con le sue voci
 **La risposta dell’autore (15 ottobre 2026): per la Santa Maria non c’è fretta.** Cade quindi la
 ragione per A: la strada è C, quando l’autore deciderà di cominciarla, con la FAVELLA 1.6 per prima.
 La G1 servirebbe anche all’inglese del Relitto (documento 20, §7).
+
+---
+
+## 11. Stato al 16 ottobre 2026
+
+Rivista all'avvio della sessione del 16 ottobre: **parcheggiata**, come risposto il 15 ottobre. Nessuna fretta; la strada resta la C, quando l'autore deciderà di cominciarla, con la FAVELLA 1.6 per prima. Non entra nel cammino del Relitto.
