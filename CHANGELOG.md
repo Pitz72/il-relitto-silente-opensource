@@ -10,6 +10,13 @@ documenti di `progettazione/`.
 
 ### Aggiunto
 
+- **Il suono dei pulsanti** (bibbia sonora, §5.8 e §11.4): un tocco su ogni pulsante del gioco, diegetico e
+  sotto i −24 dB. Sulla Santa Maria è acciaio (un interruttore che sceglie, un relè in due tempi che
+  conferma, un relè che si apre e annulla); al primo contatto la membrana cresce in cinque secondi e il
+  tocco si fa morbido e umido, con un filo vetroso dentro l’accordo del sol diesis; nella fuga ogni tocco
+  strappa la membrana. La pagina dice solo il gesto (`app/src/gioco/tocco.ts`), il motore decide la voce
+  dallo stato (`app/src-tauri/src/mondo/interfaccia.rs`). Otto prove in Rust, cinque in node, e l’ascolto
+  `progettazione/ascolti/13-interfaccia.mp3` (`cargo run --release --example rendi_interfaccia`).
 - **Il gioco suona** (bibbia sonora, §11): a ogni turno la partita manda al motore audio gli stati e gli
   eventi del ponte, e la regia in Rust fa le ventitré stanze (ognuna con la sua aria, il suo fondo e i
   suoi passi), le scene del mix, gli ottantacinque eventi e i finali. Il mondo sonoro si abbassa nella

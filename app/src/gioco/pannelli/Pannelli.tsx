@@ -135,7 +135,7 @@ export function Pausa({ forma, voci }: { forma: Forma; voci: VociPausa }) {
   return (
     <Pannello forma={forma} titolo="In pausa" classe="pausa">
       <nav className="voci-pausa">
-        <button type="button" data-primo="" onClick={voci.riprendi}>
+        <button type="button" data-primo="" data-tocco="annulla" onClick={voci.riprendi}>
           Riprendi <span className="tasto">Esc</span>
         </button>
         <button type="button" onClick={voci.diario}>
@@ -209,7 +209,7 @@ export function Salvataggi({
               const disabilitato = modo === "carica" && (vuoto || !p.leggibile);
               const r = p.riassunto;
               return (
-                <button key={p.posto} type="button" className={`posto${vuoto ? " vuoto" : ""}${p.posto === "automatico" ? " automatico" : ""}`} disabled={disabilitato} data-primo={i === 0 ? "" : undefined} onClick={() => scegli(p)}>
+                <button key={p.posto} type="button" className={`posto${vuoto ? " vuoto" : ""}${p.posto === "automatico" ? " automatico" : ""}`} disabled={disabilitato} data-primo={i === 0 ? "" : undefined} data-tocco="conferma" onClick={() => scegli(p)}>
                   <span className="nome-posto">{p.posto === "automatico" ? "automatico" : `posto ${p.posto}`}</span>
                   {vuoto ? (
                     <span className="stanza-posto">vuoto</span>

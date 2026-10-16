@@ -18,7 +18,8 @@ import { climaDi, tavolozza, variabiliCss } from "../stile/atmosfere";
 import { attributiSchermo, useMovimentoRidotto, useOpzioni } from "../stile/opzioni";
 import { comando } from "../lib/tauri";
 import { schermoIntero as cambiaSchermo } from "../lib/finestra";
-import { avviaSuono, mixSuono, pausaSuono, suonaTurno, taciSuono } from "./suono";
+import { avviaSuono, mixSuono, pausaSuono, suonaTocco, suonaTurno, taciSuono } from "./suono";
+import { gestoDelClic } from "./tocco";
 import { blocchiDelTurno, segnaNomi, type Blocco } from "./lamina/grammatica";
 import Lamina, { type VoceDiario } from "./lamina/Lamina";
 import Ramo from "./ramo/Ramo";
@@ -634,6 +635,11 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
       data-ipossia={clima?.ipossia ? "" : undefined}
       data-in-mano={inMano ? "" : undefined}
       {...attributiSchermo(opzioni, ridotto)}
+      onClickCapture={(e) => {
+        // il tocco sul pulsante (bibbia sonora, §5.8): in cattura, prima che un pannello si chiuda
+        const g = gestoDelClic(e.target);
+        if (g) void suonaTocco(g);
+      }}
     >
       {clima && <Vene clima={clima} energia={turno?.stato.energia === "ripristinata"} ridotto={ridotto} crescita={crescita} />}
       <main className="palco" aria-label="Il Relitto Silente" ref={palcoRef} onClick={() => (selezione.tipo !== "nessuna" || altri) && chiudi()}>

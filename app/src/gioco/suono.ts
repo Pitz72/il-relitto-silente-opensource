@@ -8,6 +8,7 @@
 import { comando, dentroTauri, type ComandoMondo, type MixMondo } from "../lib/tauri";
 import type { Turno } from "../motore/tipi";
 import type { Opzioni } from "../stile/opzioni";
+import type { Gesto } from "./tocco";
 
 let avviato: Promise<unknown> | null = null;
 
@@ -36,6 +37,13 @@ export const pausaSuono = (si: boolean) => manda({ tipo: "pausa", valore: si });
 
 /** Tornando al menu il mondo tace: una stanza vuota lo fa sfumare. */
 export const taciSuono = () => manda({ tipo: "turno", valore: { stati: { stanza: "", esito: "in_corso" }, eventi: [] } });
+
+/** Un tocco su un pulsante: il motore sceglie la voce (acciaio, membrana, strappo) dallo
+ *  stato. Nello sviluppo i gesti si segnano in `window.__tocchi`, per vederli senza Tauri. */
+export function suonaTocco(g: Gesto): Promise<void> {
+  if (import.meta.env.DEV) ((window as unknown as { __tocchi?: string[] }).__tocchi ??= []).push(g);
+  return manda({ tipo: "tocco", valore: g });
+}
 
 /** I cursori e le opzioni del suono. */
 export function mixDa(o: Opzioni): MixMondo {

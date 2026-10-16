@@ -1,6 +1,6 @@
 # Il Relitto Silente — la bibbia sonora
 
-Documento 10 della progettazione · prima versione, 14 ottobre 2026 · seconda, 15 ottobre 2026: il suono tutto sintetizzato (§10) · terza, 16 ottobre 2026: il gioco che suona (§11)
+Documento 10 della progettazione · prima versione, 14 ottobre 2026 · seconda, 15 ottobre 2026: il suono tutto sintetizzato (§10) · terza, 16 ottobre 2026: il gioco che suona (§11) · quarta, 16 ottobre 2026: i tocchi dell’interfaccia (§11.4)
 
 Che cosa si sente in ogni stanza e in ogni evento del gioco, da quali registrazioni nasce e come si lavora. Vale insieme al §9 di `06-app-desktop.md` e al punto 3 del suo §17: suono credibile e realistico, registrazioni vere con licenza compatibile, la fisica giusta. Per l’intro vale il §5 di `09-intro-storyboard.md`. La musica (D14) non è ancora decisa: qui compare solo dove tocca il resto del suono.
 
@@ -676,7 +676,7 @@ Il gioco usa due volte le stesse parole: i simboli della teca della serra si acc
 
 ### 5.8 L’interfaccia
 
-I pulsanti hanno un suono discreto, diegetico, sotto i −24 dB: un tocco, mai un passaggio del mouse, mai lo scorrimento.
+I pulsanti hanno un suono discreto, diegetico, sotto i −24 dB: un tocco, mai un passaggio del mouse, mai lo scorrimento. *(Fatto, per il gioco: §11.4.)*
 
 - **Sulla Santa Maria (acciaio):** interruttori e relè veri, tre varianti per ogni gesto (scegli, conferma, annulla).
 - **Nel relitto (membrana):** man mano che le venature colonizzano l’interfaccia (lo stile C), il tocco cambia. Il clic d’acciaio si mescola con un tocco morbido e smorzato (un dito su una superficie umida) e con un parziale vetroso appena accennato. Il rapporto segue la crescita della membrana, da 0 a 1.
@@ -961,4 +961,16 @@ Il 16 ottobre 2026 l’autore ha ascoltato gli ascolti sintetizzati e ha detto c
 
 ### 11.3 Che cosa manca
 
-La musica (D14: l’Anziano, le chiusure, l’intro), il suono dell’interfaccia (§5.8), il filo del Sintonizzatore con lo spostamento di frequenza (§5.3: oggi le echi sono una voce in primo piano), le luci del Navarca nella gola del ritorno, il montacarichi, la prova su Linux; e l’orecchio dell’autore sulla partita intera.
+La musica (D14: l’Anziano, le chiusure, l’intro, e con lei il tocco dei pulsanti del menu principale, che ha il suo mondo da avviare), il filo del Sintonizzatore con lo spostamento di frequenza (§5.3: oggi le echi sono una voce in primo piano), le luci del Navarca nella gola del ritorno, il montacarichi, la prova su Linux. L’orecchio dell’autore sulla partita intera c’è: il 16 ottobre 2026, ascoltato l’audio, ha detto che gli sembra ok.
+
+### 11.4 L’interfaccia: il tocco sui pulsanti
+
+Il §5.8 è fatto, per il gioco (non ancora per il menu principale, che non ha un mondo sonoro finché non arriva la musica). Il codice è in `app/src-tauri/src/mondo/interfaccia.rs`.
+
+- **Chi decide.** La pagina dice soltanto il gesto (`Comando::Tocco`): `scegli`, `conferma`, `annulla`. Lo ricava dal pulsante che riceve il clic (`app/src/gioco/tocco.ts`): chiudere, tornare indietro, dire di no, uscire dal discorso annullano; un comando che parte, un sì, un posto di salvataggio confermano; tutto il resto (aprire un fiore, un menu, una pagina) sceglie. Solo il clic, quindi anche Invio e Spazio su un pulsante a fuoco; mai un passaggio del mouse né lo scorrimento. Le lettere dei comandi e i tasti S e N non fanno clic, e per ora non suonano. Il motore decide da sé la voce, dallo stato del turno.
+- **L’acciaio** (la Santa Maria): scegliere è un interruttore a levetta, un colpo secco e il suo rimbalzo; confermare è un relè che chiude, in due tempi (il secondo colpo a 50–60 ms); annullare è il relè che si apre, un colpo solo, più basso. Ogni tocco varia un poco di altezza.
+- **La membrana** cresce con il primo contatto, in 5,2 s come le venature (`membrana` nel mondo, da 0 a 1; una partita ripresa dopo il contatto la trova già tutta). L’acciaio scende da 0 a −9 dB e non sparisce; sale un tocco morbido (un tonfo che cade da 230 a 130 Hz, con un soffio, un dito su una superficie umida), una bollicina che si chiude sotto il dito (non nell’annullare, che si stacca asciutto) e un parziale vetroso appena accennato (−16 dB), preso dal clic armonioso due ottave sopra: la terza, la quinta e la tonica del sol diesis, così il tocco sta sempre nell’accordo del gioco.
+- **La fuga**: a ogni tocco un crepitio sottile, otto decibel sotto, la membrana che si strappa. **A casa** (la plancia del risveglio) resta il 30% della membrana: un tocco di membrana.
+- **Il livello.** Il picco di un tocco sta fra −24 e −28 dBFS, la somma degli strati riportata a quella dell’acciaio solo (§5.8: «sotto i −24 dB»); con la membrana piena e nella fuga arriva a −22 circa. Sui mondi dell’ascolto 13 il tocco sta da 9 a 14 dB sopra l’ambiente nelle bande dei medi e degli acuti.
+- **La strada.** Una strada nuova, `Bus::Interfaccia`: asciutta, fuori dalla stanza, dal casco e dalle ossa. Segue il volume generale e il cursore degli effetti; non segue la pausa né l’ingresso della partita, perché nei pannelli si tocca di continuo.
+- **Le prove.** Otto prove in Rust (22 in tutto con le altre): ogni strato sta intorno a 0 dB e finisce; la conferma ha due tempi e la scelta uno; le dosi seguono la membrana; un tocco suona sotto i −22 dBFS e sopra i −35 in ogni stato (prima del contatto, dopo, nella fuga); segue i cursori e non la pausa; la membrana cresce in cinque secondi e a casa ne resta il 30%; la fuga aggiunge lo strappo; il JSON dalla pagina è quello che il motore legge. In node, cinque prove sul classificatore dei gesti, che controllano anche che le classi e gli attributi che legge siano ancora nei componenti. L’ascolto: `cargo run --release --example rendi_interfaccia -- <cartella>`; il file per l’autore è `progettazione/ascolti/13-interfaccia.mp3`, con le note accanto (a che secondo cade ogni tocco: la Santa Maria, la membrana che cresce, il relitto, la fuga).

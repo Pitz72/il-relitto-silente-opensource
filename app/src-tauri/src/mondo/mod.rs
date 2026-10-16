@@ -19,6 +19,7 @@ pub mod colpi;
 pub mod dsp;
 pub mod fiato;
 pub mod fondi;
+pub mod interfaccia;
 pub mod re;
 mod regia;
 pub mod riverbero;
@@ -46,6 +47,7 @@ use riverbero::Riverbero;
 use stanze::{Specie, Stanza};
 use voce::Voce;
 
+pub use interfaccia::Gesto;
 pub use regia::EVENTI_NOTI;
 pub use stato::{EventoGioco, StatiGioco, TurnoSuono};
 
@@ -110,6 +112,8 @@ pub enum Comando {
     Mix(Mix),
     /// la pausa, il diario, i pannelli: il mondo si abbassa, non si ferma
     Pausa(bool),
+    /// un tocco su un pulsante: il suono dell’interfaccia (bibbia sonora, §5.8)
+    Tocco(Gesto),
     // ---- il prototipo dei tre ambienti (la pagina di prova, i rendering)
     Ambiente(Ambiente),
     /// la cifra dell’aria, da 0 a 100
@@ -299,6 +303,9 @@ pub struct Mondo {
     t_stanza: f32,
     t_aggancio: f32,
     ventola_spenta: bool,
+    /// quanta membrana c’è nell’interfaccia (0–1), e dove sta andando: i tocchi la seguono
+    membrana: f32,
+    membrana_meta: f32,
     // --- gli strati
     re: Re,
     re_pavimento: Biquad,
@@ -422,6 +429,8 @@ impl Mondo {
             t_stanza: 0.0,
             t_aggancio: 1e9,
             ventola_spenta: false,
+            membrana: 0.0,
+            membrana_meta: 0.0,
             re: Re::nuovo(sr, seme ^ 0x7E),
             re_pavimento: Biquad::passabasso(180.0, 0.7, sr),
             re_taglio: Scorrevole::nuovo(180.0),
@@ -561,6 +570,7 @@ impl Mondo {
             Comando::Turno(t) => self.turno(t),
             Comando::Mix(m) => self.mix(m),
             Comando::Pausa(si) => self.pausa.verso(if si { db(-10.0) } else { 1.0 }, 0.4, sr),
+            Comando::Tocco(g) => self.tocco(g),
             Comando::Ambiente(a) => self.prototipo(a),
             Comando::Aria(v) => self.aria_prototipo(v),
             Comando::Nave(n) => {
@@ -635,6 +645,7 @@ impl Mondo {
         let sr = self.sr;
         self.t_stanza += dt;
         self.t_aggancio += dt;
+        self.passo_membrana(dt);
         for i in 0..PIOGGE {
             if self.piogge[i].passo(dt, &mut self.caso) {
                 let p = self.piogge[i];
@@ -727,6 +738,7 @@ impl Mondo {
             let mut casco = (0.0f32, 0.0f32);
             let mut ossa = 0.0f32;
             let mut alt = 0.0f32;
+            let mut ui = (0.0f32, 0.0f32);
             let ga = self.c_ambienti.passo();
             let ge = self.c_effetti.passo();
             let gv = self.c_voci.passo();
@@ -855,6 +867,10 @@ impl Mondo {
                             }
                             Bus::Ossa => ossa += (l + r) * 0.5,
                             Bus::Altoparlante => alt += (l + r) * 0.5,
+                            Bus::Interfaccia => {
+                                ui.0 += l;
+                                ui.1 += r;
+                            }
                         }
                         k += 1;
                     }
@@ -912,8 +928,12 @@ impl Mondo {
             }
             let w = self.larghezza.passo();
             let (mid, side) = ((l + r) * 0.5, (l - r) * 0.5 * w);
-            let v = self.volume.passo() * self.c_generale.passo() * self.pausa.passo() * self.ingresso.passo();
+            let vg = self.volume.passo() * self.c_generale.passo();
+            let v = vg * self.pausa.passo() * self.ingresso.passo();
             let (mut l, mut r) = ((mid + side) * v, (mid - side) * v);
+            // l’interfaccia: asciutta, fuori dalla pausa e dall’ingresso (si tocca anche lì)
+            l += ui.0 * vg;
+            r += ui.1 * vg;
             // la dinamica ridotta: 3:1 sopra −30 dBFS, e i suoni piccoli più alti
             if self.mix.dinamica_ridotta {
                 let e = self.dinamica.segui(l.abs().max(r.abs()));

@@ -20,7 +20,8 @@ use super::dsp::{campana, campioni, db, pan, Caso, Lento, Modo, Rosa, Svf, UnPol
 use super::stanze::Superficie;
 
 /// La strada di un suono (bibbia sonora, §1.1). L’altoparlante è la radio di bordo;
-/// «Em» è la cuffia sola (il brusio, che non passa dall’aria).
+/// «Em» è la cuffia sola (il brusio, che non passa dall’aria); l’interfaccia è il tocco
+/// sui pulsanti, asciutto e vicino, fuori dalla stanza e dalla pausa (§5.8).
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum Bus {
     Esterno,
@@ -28,6 +29,7 @@ pub enum Bus {
     Casco,
     Ossa,
     Altoparlante,
+    Interfaccia,
 }
 
 const MODI: usize = 16;

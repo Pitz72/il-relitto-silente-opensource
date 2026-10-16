@@ -1,0 +1,49 @@
+Ascolto dei tocchi dell’interfaccia (bibbia sonora, §5.8)
+
+0:00  La Santa Maria: l’acciaio. Scegli, conferma, annulla, tre volte
+  0:06 (6.00 s)  Scegli
+  0:07 (7.30 s)  Conferma
+  0:08 (8.60 s)  Annulla
+  0:09 (9.90 s)  Scegli
+  0:11 (11.20 s)  Conferma
+  0:12 (12.50 s)  Annulla
+  0:13 (13.80 s)  Scegli
+  0:15 (15.10 s)  Conferma
+  0:16 (16.40 s)  Annulla
+
+0:18  Il primo contatto: la membrana cresce in cinque secondi, e i tocchi la seguono
+  0:18 (18.60 s)  Scegli
+  0:19 (19.22 s)  Conferma
+  0:19 (19.84 s)  Annulla
+  0:20 (20.46 s)  Scegli
+  0:21 (21.08 s)  Conferma
+  0:21 (21.70 s)  Annulla
+  0:22 (22.32 s)  Scegli
+  0:22 (22.94 s)  Conferma
+  0:23 (23.56 s)  Annulla
+  0:24 (24.18 s)  Scegli
+  0:24 (24.80 s)  Conferma
+  0:25 (25.42 s)  Annulla
+
+0:27  Nel relitto, la membrana tutta: il tocco morbido, l’umido, il vetro
+  0:30 (30.42 s)  Scegli
+  0:31 (31.72 s)  Conferma
+  0:33 (33.02 s)  Annulla
+  0:34 (34.32 s)  Scegli
+  0:35 (35.62 s)  Conferma
+  0:36 (36.92 s)  Annulla
+  0:38 (38.22 s)  Scegli
+  0:39 (39.52 s)  Conferma
+  0:40 (40.82 s)  Annulla
+
+0:42  La fuga: a ogni tocco la membrana si strappa
+  0:46 (46.82 s)  Scegli
+  0:47 (47.92 s)  Conferma
+  0:49 (49.02 s)  Annulla
+  0:50 (50.12 s)  Scegli
+  0:51 (51.22 s)  Conferma
+  0:52 (52.32 s)  Annulla
+  0:53 (53.42 s)  Scegli
+  0:54 (54.52 s)  Conferma
+  0:55 (55.62 s)  Annulla
+

@@ -138,6 +138,9 @@ impl Mondo {
             2.5
         };
         self.applica(passaggio);
+        // la membrana dell’interfaccia (§5.8): cresce al primo contatto, e in una partita
+        // che si riprende c’è già tutta
+        self.aggiorna_membrana(carica);
 
         if carica {
             return;
@@ -1176,6 +1179,7 @@ impl Mondo {
         self.protezione_eff = false;
         self.stiva_viva = risuonatore;
         self.applica(0.1);
+        self.aggiorna_membrana(false);
         self.ingresso.verso(db(-4.0), 6.0, sr);
     }
 
