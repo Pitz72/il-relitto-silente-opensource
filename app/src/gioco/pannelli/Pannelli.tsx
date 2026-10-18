@@ -126,7 +126,9 @@ export interface VociPausa {
   opzioni: () => void;
   tasti: () => void;
   ricomincia: () => void;
-  misure: () => void;
+  /** la pagina delle misure tecniche: solo nello sviluppo (ricarica la pagina, e la partita in
+   *  memoria si perde; nell'eseguibile la pagina si apre con RELITTO_PROVA) */
+  misure: (() => void) | null;
   /** il menu principale: la partita resta, e Continua la riprende */
   menu: (() => void) | null;
 }
@@ -167,9 +169,11 @@ export function Pausa({ forma, voci }: { forma: Forma; voci: VociPausa }) {
           </button>
         )}
       </nav>
-      <button type="button" className="misure" onClick={voci.misure}>
-        la pagina delle misure tecniche
-      </button>
+      {voci.misure && (
+        <button type="button" className="misure" onClick={voci.misure}>
+          la pagina delle misure tecniche
+        </button>
+      )}
     </Pannello>
   );
 }

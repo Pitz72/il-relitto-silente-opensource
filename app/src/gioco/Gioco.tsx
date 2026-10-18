@@ -821,7 +821,8 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
               tasti: () => setPannello("tasti"),
               ricomincia: () =>
                 setDomanda({ testo: "Ricominciare da capo?", sotto: "La partita in corso si perde, se non l’hai salvata.", si: "Ricomincia", no: "Torna al gioco", allora: ricomincia }),
-              misure: () => (location.search = "?prova"),
+              // solo nello sviluppo: ricaricare la pagina perderebbe la partita (revisione 25, G1)
+              misure: import.meta.env.DEV ? () => (location.search = "?prova") : null,
               menu: alMenu ? () => alMenu(turno?.esito ?? "in_corso") : null,
             }}
           />
