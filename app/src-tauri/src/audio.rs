@@ -416,7 +416,11 @@ impl MotoreAudio {
     pub fn mondo_avvia(&mut self, musica: Option<std::path::PathBuf>) -> Result<(), String> {
         self.mondo_ferma();
         let seme = adesso_ns() ^ 0x5EED;
-        let (mut mondo, tx, stato) = Mondo::nuovo(self.info.frequenza.max(1) as f32, seme);
+        // la frequenza del dispositivo di adesso (le cuffie possono essere cambiate dall'avvio); se
+        // non si sa, 48 kHz: se il dispositivo suona a un'altra, il mondo ricampiona (revisione 25, M4)
+        self.info.frequenza = self.frequenza();
+        let sr = if self.info.frequenza > 0 { self.info.frequenza } else { 48_000 };
+        let (mut mondo, tx, stato) = Mondo::nuovo(sr as f32, seme);
         if let Some(cartella) = musica {
             mondo.cartella_musica(cartella);
         }

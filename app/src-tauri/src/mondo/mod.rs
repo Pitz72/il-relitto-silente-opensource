@@ -1160,6 +1160,7 @@ pub struct DatiMondo {
 pub struct SuonoMondo {
     mondo: Mondo,
     prima_del_blocco: Option<Box<dyn FnMut(usize) + Send>>,
+    ricampiona: Ricampionatore,
 }
 
 impl SoundData for DatiMondo {
@@ -1167,7 +1168,7 @@ impl SoundData for DatiMondo {
     type Handle = ();
 
     fn into_sound(self) -> Result<(Box<dyn Sound>, Self::Handle), Self::Error> {
-        Ok((Box::new(SuonoMondo { mondo: self.mondo, prima_del_blocco: self.prima_del_blocco }), ()))
+        Ok((Box::new(SuonoMondo { mondo: self.mondo, prima_del_blocco: self.prima_del_blocco, ricampiona: Ricampionatore::nuovo() }), ()))
     }
 }
 
@@ -1176,12 +1177,85 @@ impl Sound for SuonoMondo {
         if let Some(f) = &mut self.prima_del_blocco {
             f(out.len());
         }
-        self.mondo.rendi(out, dt);
+        // Il dispositivo può cambiare frequenza a partita in corso: kira segue quello predefinito
+        // (le cuffie collegate) e cambia soltanto `dt`. Il mondo ha i filtri, i ritardi, la lettura
+        // dei file e la musica alla frequenza con cui è nato: resta lì, e la sua uscita si
+        // ricampiona (revisione 25, M4). Alla frequenza di sempre, nessun passaggio in più.
+        let (sr_dispositivo, sr_mondo) = (1.0 / dt, self.mondo.sr as f64);
+        if (sr_dispositivo - sr_mondo).abs() < 0.5 {
+            self.ricampiona.azzera();
+            self.mondo.rendi(out, dt);
+        } else {
+            self.ricampiona.rendi(&mut self.mondo, out, sr_mondo / sr_dispositivo);
+        }
     }
 
     fn finished(&self) -> bool {
         self.mondo.finito()
     }
+}
+
+/// L’uscita del mondo alla frequenza del dispositivo, quando non è la sua: il mondo rende alla
+/// propria frequenza, a pezzi di `PEZZO` frame, e qui si interpola (Hermite a quattro punti).
+/// Tutta la memoria è riservata all’inizio: niente allocazioni nel thread audio.
+struct Ricampionatore {
+    /// i frame del mondo ancora da leggere, con uno prima della posizione per l’interpolazione
+    fonte: Vec<Frame>,
+    /// dove si legge nella fonte, in frame del mondo (sempre almeno 1)
+    pos: f64,
+}
+
+const PEZZO: usize = 64;
+
+impl Ricampionatore {
+    fn nuovo() -> Self {
+        Ricampionatore { fonte: Vec::with_capacity(4096), pos: 1.0 }
+    }
+
+    /// Tornati alla frequenza del mondo: quello che restava non serve più.
+    fn azzera(&mut self) {
+        if !self.fonte.is_empty() {
+            self.fonte.clear();
+            self.pos = 1.0;
+        }
+    }
+
+    /// `passo`: quanti frame del mondo per ogni frame del dispositivo.
+    fn rendi(&mut self, mondo: &mut Mondo, out: &mut [Frame], passo: f64) {
+        let dt = 1.0 / mondo.sr as f64;
+        if self.fonte.is_empty() {
+            // il primo frame «prima» è silenzio: si comincia da lì
+            self.fonte.push(Frame::ZERO);
+            self.pos = 1.0;
+        }
+        for f in out.iter_mut() {
+            let i = self.pos as usize;
+            while i + 2 >= self.fonte.len() {
+                let da = self.fonte.len();
+                self.fonte.resize(da + PEZZO, Frame::ZERO);
+                mondo.rendi(&mut self.fonte[da..], dt);
+            }
+            let t = (self.pos - i as f64) as f32;
+            let (a, b, c, d) = (self.fonte[i - 1], self.fonte[i], self.fonte[i + 1], self.fonte[i + 2]);
+            *f = Frame { left: hermite(a.left, b.left, c.left, d.left, t), right: hermite(a.right, b.right, c.right, d.right, t) };
+            self.pos += passo;
+        }
+        // si tiene un frame prima della posizione, e quelli dopo
+        let via = (self.pos as usize).saturating_sub(1);
+        if via > 0 {
+            self.fonte.drain(..via);
+            self.pos -= via as f64;
+        }
+    }
+}
+
+/// L’interpolazione di Hermite (Catmull-Rom) fra `y1` e `y2`, a `t` fra 0 e 1.
+#[inline]
+fn hermite(y0: f32, y1: f32, y2: f32, y3: f32, t: f32) -> f32 {
+    let c1 = 0.5 * (y2 - y0);
+    let c2 = y0 - 2.5 * y1 + 2.0 * y2 - 0.5 * y3;
+    let c3 = 0.5 * (y3 - y0) + 1.5 * (y1 - y2);
+    ((c3 * t + c2) * t + c1) * t + y1
 }
 
 #[cfg(test)]
@@ -1201,5 +1275,81 @@ mod prove_mix {
         m.rendi(&mut [kira::Frame::ZERO; 64], 1.0 / 48000.0);
         assert!((m.c_parlato.meta() - 0.25).abs() < 1e-6, "il parlato a metà dovrebbe stare a un quarto");
         assert_eq!(m.c_musica.meta(), 1.0, "il cursore del parlato non deve toccare la musica");
+    }
+
+    /// Un mondo che suona la soglia dell’atto II da un «file» finto: un seno a 440 Hz.
+    fn mondo_con_un_la(sr: f32) -> Mondo {
+        use super::musica_file::{Biblioteca, Pcm, Pezzo};
+        let (mut m, tx, _) = Mondo::nuovo(sr, 7);
+        let sr_file = 48000.0f32;
+        let la = (0..(sr_file * 20.0) as usize).map(|i| {
+            let v = 0.3 * (std::f32::consts::TAU * 440.0 * i as f32 / sr_file).sin();
+            (v, v)
+        });
+        let mut b = Biblioteca::nuova(std::path::PathBuf::from("non-esiste"));
+        b.inserisci(Pezzo::S2, Pcm::da_frame(sr_file, la));
+        m.musica.lettore().biblioteca = Some(b);
+        tx.send(Comando::Solo(Some("musica".into()))).unwrap();
+        tx.send(Comando::Musica(Brano::Atto2)).unwrap();
+        m
+    }
+
+    /// L’ampiezza di `hz` in `x`, campionato a `sr`.
+    fn goertzel(x: &[f32], hz: f32, sr: f32) -> f32 {
+        let c = 2.0 * (std::f32::consts::TAU * hz / sr).cos();
+        let (mut s1, mut s2) = (0.0f32, 0.0f32);
+        for &v in x {
+            let s = v + c * s1 - s2;
+            s2 = s1;
+            s1 = s;
+        }
+        (s1 * s1 + s2 * s2 - c * s1 * s2).max(0.0).sqrt() / x.len() as f32
+    }
+
+    #[test]
+    fn al_cambio_di_frequenza_la_musica_resta_intonata() {
+        // revisione 25, M4: il mondo nasce a 48 kHz, poi il dispositivo passa a 44,1 kHz (le
+        // cuffie collegate). Senza ricampionare, il la del file uscirebbe a 404 Hz.
+        let (sr_mondo, sr_disp) = (48000.0f32, 44100.0f32);
+        let mut m = mondo_con_un_la(sr_mondo);
+        let mut r = Ricampionatore::nuovo();
+        let mut buf = vec![Frame::ZERO; 441];
+        let mut x = Vec::new();
+        for _ in 0..(6.0 * sr_disp / 441.0) as usize {
+            r.rendi(&mut m, &mut buf, (sr_mondo / sr_disp) as f64);
+            x.extend(buf.iter().map(|f| f.left));
+        }
+        let x = &x[(2.0 * sr_disp) as usize..];
+        let giusto = goertzel(x, 440.0, sr_disp);
+        let calante = goertzel(x, 440.0 * sr_disp / sr_mondo, sr_disp);
+        assert!(giusto > 1e-4, "la musica non suona: {giusto}");
+        assert!(giusto > calante * 20.0, "il la dovrebbe restare a 440 Hz: a 440 {giusto}, a 404 {calante}");
+
+        // e il livello è quello del mondo che suona alla sua frequenza
+        let mut diretto = mondo_con_un_la(sr_mondo);
+        let mut buf = vec![Frame::ZERO; 480];
+        let mut y = Vec::new();
+        for _ in 0..(6.0 * sr_mondo / 480.0) as usize {
+            diretto.rendi(&mut buf, 1.0 / sr_mondo as f64);
+            y.extend(buf.iter().map(|f| f.left));
+        }
+        let y = &y[(2.0 * sr_mondo) as usize..];
+        let rms = |v: &[f32]| (v.iter().map(|a| (a * a) as f64).sum::<f64>() / v.len() as f64).sqrt();
+        let scarto = 20.0 * (rms(x) / rms(y)).log10();
+        assert!(scarto.abs() < 0.5, "il ricampionamento cambia il livello di {scarto:.2} dB");
+        // il ricampionatore non cresce: la sua memoria resta quella riservata all’inizio
+        assert!(r.fonte.capacity() == 4096, "la fonte è cresciuta: {}", r.fonte.capacity());
+
+        // la prova che lo scenario è quello vero: il mondo reso al `dt` del dispositivo, come
+        // faceva prima, mette il la a 404 Hz
+        let mut vecchio = mondo_con_un_la(sr_mondo);
+        let mut buf = vec![Frame::ZERO; 441];
+        let mut z = Vec::new();
+        for _ in 0..(6.0 * sr_disp / 441.0) as usize {
+            vecchio.rendi(&mut buf, 1.0 / sr_disp as f64);
+            z.extend(buf.iter().map(|f| f.left));
+        }
+        let z = &z[(2.0 * sr_disp) as usize..];
+        assert!(goertzel(z, 440.0 * sr_disp / sr_mondo, sr_disp) > goertzel(z, 440.0, sr_disp) * 20.0, "senza ricampionare il la dovrebbe calare");
     }
 }
