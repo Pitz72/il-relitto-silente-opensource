@@ -2,11 +2,11 @@
 
 ![Un corridoio della nave aliena: l’oblò sul vuoto, un quadro di comando congelato, i glifi verdi sulla parete](grafica/cover-relitto.jpeg)
 
-**Avventura testuale di fantascienza, in italiano.** Sei a bordo della *Santa Maria*, una nave da carico, davanti a un relitto alieno che non dovrebbe essere lì, silenzioso. Ventitré stanze, novantatré oggetti, sei finali. Si gioca a pulsanti, con il mouse o con la tastiera: niente comandi da scrivere.
+**Avventura testuale di fantascienza, in italiano.** Sei a bordo della *Santa Maria*, una nave da carico, davanti a un relitto alieno che non dovrebbe essere lì, silenzioso. Ventitré stanze, novantatré oggetti, sei finali. Si gioca a pulsanti, con il mouse o con la tastiera; chi preferisce l’avventura testuale classica può scrivere i comandi (nelle opzioni, «Comandi: scritti»).
 
 Questo è il **remake desktop** del gioco: la storia è scritta in [FAVELLA 1](https://github.com/Pitz72/FAVELLA1), il linguaggio per avventure testuali dello stesso autore, e l’app è fatta con Tauri.
 
-> **Stato: in sviluppo, non ancora rilasciato.** La versione attuale è la 0.2.0; il primo rilascio pubblico sarà la **1.0.0**. Per ora si gioca compilando da sorgente (vedi sotto). Le release che trovi nella pagina «Releases» sono quelle della **versione originale** (vedi la prossima sezione).
+> **Stato: in sviluppo, non ancora rilasciato.** Le versioni di sviluppo sono le 0.x (il numero di oggi è in [`versione.json`](versione.json), le novità nel [registro delle modifiche](CHANGELOG.md)); il primo rilascio pubblico sarà la **1.0.0**. Per ora si gioca compilando da sorgente (vedi sotto). Le release che trovi nella pagina «Releases» sono quelle della **versione originale** (vedi la prossima sezione).
 
 ## Due giochi in un repository
 

@@ -231,3 +231,14 @@ Le debolezze stanno quasi tutte nei **punti di passaggio** (menu, riconoscimenti
 3. **Prima del primo tag**: G3, G4, G5, M6, M7, M8, M9, L7, L8, L15.
 4. **Le prestazioni**: M1 (prima il motore dopo i loghi, poi il Worker), M3 con E5 ed E10, la misura di M10.
 5. **L’estetica**: E2 (la schermata del finale) ed E3 (menu e riconoscimenti) sono i due interventi con più effetto per meno lavoro; E1 (le viste delle stanze) è il più grande e va pianificato con l’autore (quante immagini, quale strumento, quali scansioni in codice); poi E4, E6, E7.
+
+## 9. Le correzioni fatte
+
+**Lotto 1, 18 ottobre 2026** (scelto dall’autore: «correggi il lotto 1»), una voce per commit, tutte su GitHub:
+
+- **G1** (`9869d4f`): la voce `misure` della pausa è `null` fuori dallo sviluppo; nella build di produzione il codice compilato dice `misure:null`, e il pulsante non compare.
+- **M2 e L1** (`8900a99`): nelle Opzioni scorre solo il foglio, le schede e il piede restano fermi; una sfumatura e «continua ↓» quando c’è altro. Misurato: a 1920 × 1080 il «chiudi» sta a 912–957 px in un riquadro che finisce a 1004, a 1280 × 720 a 598–638 in uno che finisce a 670, in tutte e due le schede. Corretto il refuso «un’ avventura» e gli apostrofi dell’opzione Aggiornamenti.
+- **L2** (`6715cd5`): il ramo di lark in `strumenti/riconoscimenti.py` usa il filtro degli altri pacchetti; l’elenco rigenerato perde solo la riga della licenza MIT, i nomi non cambiano.
+- **L3 e L4**: il README non dice più un numero di versione fisso e nomina la modalità scritta; nel CHANGELOG la 0.2.2 ha una sezione «Aggiunto» sola, la 0.2.1 non si contraddice più, e il «Non rilasciato» elenca queste correzioni.
+
+Prove dopo il lotto: node 81 su 81, tipi puliti, `riconoscimenti.py --verifica` e `versione.mjs verifica` in regola. Nessuna consegna nuova: la PATCH si prepara con la prossima.

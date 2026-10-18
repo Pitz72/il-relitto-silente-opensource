@@ -11,6 +11,14 @@ documenti di `progettazione/`.
 ### Aggiunto
 
 - **Le copertine social** (16 ottobre 2026; `progettazione/24-copertina-e-logo.md`, §9): in cinque formati (16:9, 21:9, 9:16, poster 2:3, anteprima 2:1), composte in codice (`strumenti/copertina/componi.py`): il fuso nero che mangia le stelle, il seme verde, la Santa Maria canonica, il titolo con i caratteri del gioco. L'anteprima da 1280 × 640 è nel repository (`grafica/copertine/`), le altre si rigenerano.
+- **La revisione totale** (18 ottobre 2026; `progettazione/25-revisione-totale.md`): le criticità del codice per gravità (nessuna gravissima, 5 gravi, 10 medie, 15 lievi), i difetti trovati giocando a cinque misure di schermo, e dieci proposte per l’estetica.
+
+### Corretto
+
+- **La pausa non porta più alla pagina delle misure tecniche** (revisione 25, G1): il pulsante c’era in ogni build, ricaricava la pagina e la partita in memoria si perdeva. Ora c’è solo nello sviluppo.
+- **Il «chiudi» delle Opzioni è sempre in vista** (revisione 25, M2): il pannello era più alto dello schermo e il pulsante finiva sotto il bordo, senza barra per accorgersene. Le schede e il piede restano fermi e scorre solo il foglio, con una sfumatura e «continua ↓» quando c’è altro.
+- **I riconoscimenti di lark** (revisione 25, L2): sotto il copyright compariva una riga del testo della licenza MIT.
+- **Testi** (revisione 25, L1, L3, L4): il refuso «un’ avventura» nelle opzioni; il README diceva «versione 0.2.0» e «niente comandi da scrivere»; nel registro delle modifiche la 0.2.2 aveva due sezioni «Aggiunto» e la 0.2.1 diceva che la musica generata non era ancora collegata.
 
 ## [0.2.3] - 2026-10-16
 
@@ -23,9 +31,6 @@ documenti di `progettazione/`.
 ### Aggiunto
 
 - **La modalità a solo testo** (16 ottobre 2026; `progettazione/18-modalita-solo-testo.md`, §8): nelle opzioni, «Comandi: con i pulsanti / scritti». Scritti, il gioco è un'avventura testuale pura: una riga di comando al posto del ramo (Invio, frecce su e giù per i comandi già dati, Esc), l'elenco, le risposte del dialogo e le domande del motore nel testo, e le parole dell'app (SALVA, CARICA, DIARIO, OPZIONI, MENU, TASTI, RICOMINCIA, AIUTO). Il ponte capisce i comandi scritti («x placca», «prendila», «staccalo») come quelli dei pulsanti, così il diario e il suono non perdono niente. Nuovo collaudo `collaudo/scritti.py` e `tipografia.mjs --solo-testo`; cinque prove in node.
-
-### Aggiunto
-
 - **L'aggiornamento automatico** (16 ottobre 2026; `sviluppo/VERSIONI.md`, §7): il gioco cerca una versione nuova nelle release su GitHub (all'avvio se l'opzione «Aggiornamenti» lo vuole, di base sì; a mano dal menu, «Cerca aggiornamenti»), lo dice e chiede; installa solo pacchetti **firmati** con la chiave dell'autore (chiave pubblica in `tauri.conf.json`). Il flusso di rilascio (`.github/workflows/rilascio.yml`) costruisce Windows e Linux su un tag `v` + versione e prepara una bozza di release con il suo `latest.json`. Non provato su GitHub finché non c'è il primo tag.
 - **I riconoscimenti della musica** (16 ottobre 2026): la schermata «Riconoscimenti e licenze» ha una sezione «La musica» con i 17 brani generati (titolo, dove suona, Lyria 3.5 o Suno, licenza), ricavata da `audio/musica-ia/REGISTRO.md` da `strumenti/riconoscimenti.py`. Poiché aggiunge nomi, la schermata si rivede al primo avvio dopo l'aggiornamento. La **dichiarazione sull'IA** dice anche della musica (testo approvato dall'autore).
 
@@ -56,8 +61,7 @@ documenti di `progettazione/`.
   sull’intelligenza artificiale stanno in `LICENZE.md`. Vale anche per `old_version/`, dal commit che la introduce.
 - **La musica generata** (`progettazione/22-musica-con-lyria.md`, `audio/musica-ia/`): i brani del menu, le soglie
   degli atti, i letti dell’Anziano, le chiusure dei finali e il tema, generati con Lyria 3.5 (Google Flow Music) e
-  con Suno, in MP3, con il registro file per file. Non sono ancora collegati al motore audio, che suona ancora la
-  musica sintetizzata del documento 21.
+  con Suno, in MP3, con il registro file per file. Li suona il lettore dei file di musica, qui sopra.
 - **Il filo del Sintonizzatore** (bibbia sonora, §5.3 e §11.6): il flusso che si stacca dal brusio passa per uno
   spostamento di frequenza vero, a banda laterale unica (+60–90 Hz: il ritmo e l’intonazione restano, le
   parole no). Ogni eco ha la sua voce (l’Ingegnere urgente, le pareti del corridoio a quattro fili, il Capitano
