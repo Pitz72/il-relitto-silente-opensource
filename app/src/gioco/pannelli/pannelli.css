@@ -75,7 +75,27 @@
 .posto.automatico { border-style: dashed; }
 .salvataggi .dove { margin: 1.2cqw 0 0; font-size: max(13px, .85cqw); color: var(--tenue); user-select: text; }
 
-/* le opzioni */
+/* le opzioni: il foglio scorre da solo fra le schede e il piede, così «chiudi» resta sempre in
+   vista anche quando il foglio è più alto dello schermo (revisione 25, M2). Le barre restano
+   nascoste (§2): dicono che c'è altro una sfumatura e «continua ↓», come nella lamina. */
+.pannello.opzioni { display: flex; flex-direction: column; overflow: hidden; }
+.opzioni .opzioni-foglio { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.opzioni .opzioni-foglio.altro-sotto {
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 3.5em), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 3.5em), transparent);
+}
+.opzioni .opzioni-foglio.altro-sopra {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 2.5em);
+  mask-image: linear-gradient(to bottom, transparent, #000 2.5em);
+}
+.opzioni .opzioni-foglio.altro-sopra.altro-sotto {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 2.5em, #000 calc(100% - 3.5em), transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 2.5em, #000 calc(100% - 3.5em), transparent);
+}
+.opzioni .piede-opzioni { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 1cqw; margin-top: .6cqw; padding-top: 1cqw; border-top: 1px solid color-mix(in srgb, var(--bordo) 70%, transparent); }
+.pannello.opzioni .piede-opzioni .chiudi { margin-top: 0; }
+.pannello .continua-opzioni { border: 0; background: none; min-height: 0; padding: .3em 0; font-family: var(--mono); font-size: max(12px, .72cqw); letter-spacing: .14em; color: var(--tenue); }
+.pannello .continua-opzioni:hover { color: var(--testo); }
 .opzioni .opzioni-schede { display: flex; gap: .4cqw; padding-bottom: .6cqw; border-bottom: 1px solid color-mix(in srgb, var(--bordo) 70%, transparent); }
 .pannello.opzioni .opzioni-schede button { min-height: 34px; padding: .3em 1.05em; font-size: max(14px, .9cqw); color: var(--tenue); background: none; border-color: transparent; }
 .pannello.opzioni .opzioni-schede button:hover { color: var(--testo); border-color: var(--bordo); }

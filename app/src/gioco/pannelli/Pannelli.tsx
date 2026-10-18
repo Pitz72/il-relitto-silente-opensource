@@ -3,7 +3,7 @@
 //  pausa (Esc), i salvataggi (F5 salva, F9 carica: sei posti più l'automatico),
 //  le opzioni, i tasti, l'avviso breve. Hanno la forma del momento: acciaio o membrana.
 // ============================================================================
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import type { Forma } from "../../stile/atmosfere";
 import type { Opzioni } from "../../stile/opzioni";
 import { POSTI, quando, type IdPosto, type Posto } from "../salvataggi";
@@ -250,6 +250,28 @@ const SCHEDE_OPZIONI: readonly [SchedaOpzioni, string][] = [["gioco", "Gioco"], 
 export function PannelloOpzioni({ forma, opzioni, cambia, chiudi }: { forma: Forma; opzioni: Opzioni; cambia: (c: Partial<Opzioni>) => void; chiudi: () => void }) {
   const [scheda, setScheda] = useState<SchedaOpzioni>("gioco");
   const schedeRef = useRef<HTMLDivElement>(null);
+  // il foglio scorre da solo, sotto le schede e sopra il piede: «chiudi» resta sempre in vista
+  // (revisione 25, M2); la sfumatura e «continua ↓» dicono che c'è altro, come nella lamina
+  const foglioRef = useRef<HTMLDivElement>(null);
+  const [altro, setAltro] = useState({ sopra: false, sotto: false });
+  const misura = useCallback(() => {
+    const f = foglioRef.current;
+    if (!f) return;
+    const sopra = f.scrollTop > 4;
+    const sotto = f.scrollHeight - f.scrollTop - f.clientHeight > 4;
+    setAltro((a) => (a.sopra === sopra && a.sotto === sotto ? a : { sopra, sotto }));
+  }, []);
+  useLayoutEffect(() => {
+    const f = foglioRef.current;
+    if (!f) return;
+    f.scrollTop = 0;
+    misura();
+    const o = new ResizeObserver(misura);
+    o.observe(f);
+    return () => o.disconnect();
+  }, [scheda, misura]);
+  // un'opzione che cambia il testo (il carattere, il corpo) cambia anche quanto è lungo il foglio
+  useLayoutEffect(misura, [opzioni, misura]);
   const riga = <K extends keyof Opzioni>(nome: string, chiave: K, valori: [Opzioni[K], string][], spiega?: string) => (
     <div className="opzione" role="group" aria-label={nome}>
       <span className="nome-opzione">{nome}</span>
@@ -316,7 +338,14 @@ export function PannelloOpzioni({ forma, opzioni, cambia, chiudi }: { forma: For
           </button>
         ))}
       </div>
-      <div id="opzioni-foglio" role="tabpanel" aria-labelledby={`opzioni-${scheda}`}>
+      <div
+        id="opzioni-foglio"
+        className={`opzioni-foglio${altro.sopra ? " altro-sopra" : ""}${altro.sotto ? " altro-sotto" : ""}`}
+        role="tabpanel"
+        aria-labelledby={`opzioni-${scheda}`}
+        ref={foglioRef}
+        onScroll={misura}
+      >
         {scheda === "gioco" && (
           <>
             {riga("Movimento", "movimento", [["sistema", "come il sistema"], ["ridotto", "ridotto"], ["pieno", "pieno"]], "Ridotto: il tremito, il respiro dei bordi e le venature si fermano; restano i colori.")}
@@ -324,8 +353,8 @@ export function PannelloOpzioni({ forma, opzioni, cambia, chiudi }: { forma: For
             {riga("Carattere", "carattere", [["newsreader", "Newsreader"], ["atkinson", "Atkinson Hyperlegible"]])}
             {riga("Testo", "testoGrande", [[false, "normale"], [true, "grande"]])}
             {riga("Schermo intero", "schermoIntero", [[true, "sì"], [false, "no, in una finestra"]], "Si cambia anche con F11.")}
-            {riga("Aggiornamenti", "cercaAggiornamenti", [[true, "cercali all'avvio"], [false, "no"]], "All'avvio il gioco chiede a GitHub se è uscita una versione nuova; non manda niente di tuo. Dal menu si può cercare a mano.")}
-            {riga("Comandi", "comandi", [["pulsanti", "con i pulsanti"], ["scritti", "scritti"]], "Con i pulsanti si sceglie toccando le cose. Scritti, il gioco è un' avventura testuale pura: si scrive ogni comando, con tutti i verbi, e i pulsanti spariscono.")}
+            {riga("Aggiornamenti", "cercaAggiornamenti", [[true, "cercali all’avvio"], [false, "no"]], "All’avvio il gioco chiede a GitHub se è uscita una versione nuova; non manda niente di tuo. Dal menu si può cercare a mano.")}
+            {riga("Comandi", "comandi", [["pulsanti", "con i pulsanti"], ["scritti", "scritti"]], "Con i pulsanti si sceglie toccando le cose. Scritti, il gioco è un’avventura testuale pura: si scrive ogni comando, con tutti i verbi, e i pulsanti spariscono.")}
             {riga("Nomi toccabili nel testo", "nomiToccabili", [[true, "sì"], [false, "no"]], "Toccare un nome nella descrizione apre il menu di quella cosa.")}
           </>
         )}
@@ -342,9 +371,16 @@ export function PannelloOpzioni({ forma, opzioni, cambia, chiudi }: { forma: For
           </>
         )}
       </div>
-      <button type="button" className="chiudi" onClick={chiudi}>
-        chiudi <span className="tasto">Esc</span>
-      </button>
+      <div className="piede-opzioni">
+        <button type="button" className="chiudi" onClick={chiudi}>
+          chiudi <span className="tasto">Esc</span>
+        </button>
+        {altro.sotto && (
+          <button type="button" className="continua-opzioni" tabIndex={-1} aria-hidden="true" onClick={() => foglioRef.current?.scrollBy({ top: foglioRef.current.clientHeight * 0.8, behavior: "smooth" })}>
+            continua ↓
+          </button>
+        )}
+      </div>
     </Pannello>
   );
 }
