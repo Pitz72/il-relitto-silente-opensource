@@ -25,7 +25,7 @@ import { tavolozza, variabiliCss } from "./stile/atmosfere";
 import { attributiSchermo, useMovimentoRidotto, useOpzioni } from "./stile/opzioni";
 import { comando, dentroTauri } from "./lib/tauri";
 import { schermoIntero } from "./lib/finestra";
-import { cercaAggiornamento } from "./aggiornamenti";
+import { cercaAggiornamento, FIRMA } from "./aggiornamenti";
 import { avviaSuono, menuSuono, mixSuono, suonaTocco } from "./gioco/suono";
 import { gestoDelClic } from "./gioco/tocco";
 import { archivio, type Posto } from "./gioco/salvataggi";
@@ -205,11 +205,27 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
           no: "Più tardi",
           allora: () => {
             mostraAvviso("Scarico l'aggiornamento…");
-            void e.installa().catch(() => mostraAvviso("L'aggiornamento non è andato a buon fine.", true));
+            void e
+              .installa()
+              .catch((err) =>
+                mostraAvviso(
+                  FIRMA.test(String(err instanceof Error ? err.message : err))
+                    ? "L’aggiornamento non porta la firma dell’autore: non lo installo."
+                    : "L’aggiornamento non è andato a buon fine.",
+                  true,
+                ),
+              );
           },
         });
       } else if (aMano) {
-        mostraAvviso(e.tipo === "aggiornato" ? "Il gioco è aggiornato." : "Non riesco a controllare: serve la rete.", e.tipo === "errore");
+        mostraAvviso(
+          e.tipo === "aggiornato"
+            ? "Il gioco è aggiornato."
+            : e.tipo === "nessuna"
+              ? "Non c’è ancora una versione da scaricare."
+              : "Non riesco a controllare: serve la rete.",
+          e.tipo === "errore",
+        );
       }
     },
     [mostraAvviso],

@@ -1,0 +1,7 @@
+{
+  "plugins": {
+    "updater": {
+      "endpoints": ["https://github.com/Pitz72/il-relitto-silente-opensource/releases/download/aggiornamenti-prova/latest.json"]
+    }
+  }
+}

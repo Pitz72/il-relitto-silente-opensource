@@ -4,7 +4,8 @@
 # `versione.json` deve dire lo stesso numero, e il CHANGELOG deve avere la sua sezione datata. Costruisce
 # Windows (installer NSIS) e Linux (.deb, AppImage), firma i pacchetti dell'aggiornamento automatico con
 # la chiave privata dei Secrets e prepara una release in BOZZA con il suo `latest.json`: l'autore la guarda
-# e la pubblica a mano (finché è bozza, GitHub non la segna «Latest» e nessun gioco installato la vede).
+# e la pubblica a mano: allora canale.yml copia il latest.json nel canale degli aggiornamenti, che i giochi
+# installati leggono (finché è bozza nessuno la vede). Vedi sviluppo/VERSIONI.md, §7.
 #
 # Prima volta: nei Secrets del repository (Settings → Secrets and variables → Actions) va il contenuto del
 # file della chiave privata come `TAURI_SIGNING_PRIVATE_KEY` (e, se ne ha una, la password come
@@ -68,4 +69,5 @@ jobs:
           releaseBody: "Il remake de «Il Relitto Silente», un programma a sé. Le note di questa versione sono nel CHANGELOG."
           releaseDraft: true
           prerelease: ${{ contains(github.ref_name, '-') }}
-          args: --config src-tauri/tauri.rilascio.conf.json ${{ matrix.args }}
+          # una pre-release (v…-beta.1) legge il canale di prova: tauri.prova.conf.json (canale.yml)
+          args: --config src-tauri/tauri.rilascio.conf.json ${{ contains(github.ref_name, '-') && '--config src-tauri/tauri.prova.conf.json' || '' }} ${{ matrix.args }}

@@ -201,18 +201,27 @@ lo bloccherebbe.
 - **Il flusso.** Si prepara la versione (`node strumenti/versione.mjs prepara …`), si fa il commit «chore(versioni)», si spinge
   il tag `v` + versione: `.github/workflows/rilascio.yml` costruisce Windows e Linux, firma i pacchetti e prepara una release **in
   bozza** con il suo `latest.json`; l'autore la pubblica a mano. Finché è bozza nessun gioco installato la vede.
-- **Il gioco** controlla `https://github.com/Pitz72/il-relitto-silente-opensource/releases/latest/download/latest.json`
-  (`app/src/aggiornamenti.ts`): all'avvio, se l'opzione «Aggiornamenti» lo vuole (di base sì), e a mano dal menu («Cerca aggiornamenti»).
+- **Il gioco** controlla un indirizzo fisso, `https://github.com/Pitz72/il-relitto-silente-opensource/releases/download/aggiornamenti/latest.json`
+  (`app/src-tauri/tauri.conf.json`, `app/src/aggiornamenti.ts`): all'avvio, se l'opzione «Aggiornamenti» lo vuole (di base sì), e a mano dal menu («Cerca aggiornamenti»).
   Se c'è una versione più alta lo dice e chiede; l'installazione la decide chi gioca. Il pacchetto deve essere **firmato** con la chiave
   privata dell'autore: la chiave pubblica sta in `tauri.conf.json`, e un pacchetto senza la firma giusta non si installa.
 - **La chiave privata** non sta nel repository: è in `C:/Users/Utente/.tauri/relitto-aggiornamenti.key` (senza password) e, per il rilascio,
   va nei Secrets di GitHub come `TAURI_SIGNING_PRIVATE_KEY`. **Va copiata in un posto sicuro**: se si perde, i giochi già installati non
   potranno più aggiornarsi (bisognerebbe farli reinstallare con una chiave nuova).
-- **«Latest» di GitHub.** L'endpoint usa l'ultima release *pubblicata*: il vecchio gioco ha le sue (`v1.2.6`, `v1.5.1`, `v1.5.3`) e il flusso
-  del §2.1 le tiene distinte; se la «Latest» fosse una release del vecchio gioco, `latest.json` non si troverebbe e l'aggiornamento tacerebbe,
-  senza errori per chi gioca. Per questo il titolo delle release del remake dice «(remake)» e la bozza si pubblica come ultima.
+- **I canali, non «Latest»** (19 ottobre 2026, revisione 25, G3). Prima il gioco chiedeva la release «Latest» di GitHub, che in questo
+  repository è la `v1.5.3` del gioco originale: l'indirizzo dava 404, e le release del remake, con numeri più bassi, rischiavano di non
+  diventare mai «Latest»; le pre-release non lo diventano mai. Ora ci sono due release fisse, segnate come pre-release perché non diventino
+  mai «Latest»: **`aggiornamenti`**, che leggono le versioni normali, e **`aggiornamenti-prova`**, che leggono le build di una pre-release
+  (il flusso di rilascio aggiunge `app/src-tauri/tauri.prova.conf.json` quando il tag ha un trattino, `v0.9.0-beta.1`). Quando l'autore
+  pubblica la bozza, `.github/workflows/canale.yml` copia il suo `latest.json` nel canale: una versione normale in tutti e due, una
+  pre-release solo in quello di prova; la prima volta crea le release dei canali. Pubblicare è quindi il gesto che fa arrivare
+  l'aggiornamento: finché la release è bozza, il canale resta com'era.
+- **I messaggi** («Cerca aggiornamenti» dal menu): «Il gioco è aggiornato.»; «Non c'è ancora una versione da scaricare.» se il canale
+  non ha un `latest.json` (prima della prima release pubblicata); «Non riesco a controllare: serve la rete.» per gli altri errori; e, se il
+  pacchetto non porta la firma dell'autore, «L'aggiornamento non porta la firma dell'autore: non lo installo.»
 - **Le build locali** (le consegne di ascolto) non sono firmate per l'aggiornamento: `createUpdaterArtifacts` sta solo in
   `app/src-tauri/tauri.rilascio.conf.json`, che usa il flusso di rilascio.
-- **Prova.** Il client e il flusso non si possono provare del tutto prima del primo tag: la prima release (una pre-release, per esempio
-  `v0.9.0-beta.1`) serve anche a questo.
+- **Prova.** Il client e i flussi non si possono provare del tutto prima del primo tag. La strada: si pubblica una pre-release (per esempio
+  `v0.9.0-beta.1`) e la si installa; poi una seconda (`v0.9.0-beta.2`): la prima, che legge il canale di prova, deve trovarla, scaricarla e
+  installarla. Solo dopo, la prima versione normale.
 

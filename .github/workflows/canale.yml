@@ -1,0 +1,56 @@
+# Il canale degli aggiornamenti (revisione 25, G3; sviluppo/VERSIONI.md, §7).
+#
+# Il gioco installato non chiede a GitHub la release «Latest»: in questo repository è la v1.5.3
+# del gioco originale, e lo resterebbe anche dopo le prime release del remake, che hanno numeri
+# più bassi. Chiede un indirizzo fisso, il `latest.json` della release `aggiornamenti`; le build di
+# prova (le pre-release, `app/src-tauri/tauri.prova.conf.json`) quello di `aggiornamenti-prova`.
+#
+# Questo flusso parte quando l'autore pubblica una release del remake (la bozza preparata da
+# rilascio.yml diventa pubblica) e copia il suo `latest.json` nel canale: una versione normale in
+# tutti e due i canali, una pre-release solo in quello di prova. Le release dei canali sono segnate
+# come pre-release, così non diventano mai «Latest»; la prima volta il flusso le crea. Una release
+# pubblicata dal flusso stesso non lo fa ripartire (GitHub non avvia flussi per il GITHUB_TOKEN).
+name: Canale degli aggiornamenti
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  canale:
+    if: startsWith(github.event.release.tag_name, 'v')
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      TAG: ${{ github.event.release.tag_name }}
+      PRERELEASE: ${{ github.event.release.prerelease }}
+    steps:
+      - name: Il latest.json della versione pubblicata
+        run: |
+          mkdir canale
+          if ! gh release download "$TAG" -R "$REPO" -p latest.json -D canale; then
+            echo "La release $TAG non ha un latest.json: il gioco installato non la vedrà. È stata costruita da rilascio.yml, con la chiave di firma?"
+            exit 1
+          fi
+          V=$(jq -r .version canale/latest.json)
+          if [ "v${V#v}" != "$TAG" ]; then
+            echo "Il latest.json dice $V, il tag è $TAG: il canale non cambia."
+            exit 1
+          fi
+
+      - name: Nei canali
+        run: |
+          if [ "$PRERELEASE" = "true" ]; then canali="aggiornamenti-prova"; else canali="aggiornamenti aggiornamenti-prova"; fi
+          for c in $canali; do
+            if ! gh release view "$c" -R "$REPO" >/dev/null 2>&1; then
+              gh release create "$c" -R "$REPO" --prerelease --latest=false --target "$GITHUB_SHA" \
+                --title "Il canale degli aggiornamenti ($c)" \
+                --notes "Non è una versione del gioco. Qui sta soltanto il latest.json che il gioco installato legge per sapere se ne è uscita una nuova (sviluppo/VERSIONI.md, §7). Il gioco si scarica dalle release v…"
+            fi
+            gh release upload "$c" canale/latest.json -R "$REPO" --clobber
+            echo "$c: $TAG"
+          done

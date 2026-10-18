@@ -40,7 +40,7 @@
   "plugins": {
     "updater": {
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEY5OEQ1RjQ3QzZBMTcyMjcKUldRbmNxSEdSMStOK2R4ZmdzTVNuUDQvdGRIK2pOQ1NkWGwzaVlody8zOGFXd2ROT3VETE9JVGYK",
-      "endpoints": ["https://github.com/Pitz72/il-relitto-silente-opensource/releases/latest/download/latest.json"],
+      "endpoints": ["https://github.com/Pitz72/il-relitto-silente-opensource/releases/download/aggiornamenti/latest.json"],
       "windows": { "installMode": "passive" }
     }
   },
