@@ -9,8 +9,9 @@
 # installati leggono (finché è bozza nessuno la vede). Vedi sviluppo/VERSIONI.md, §7.
 #
 # Prima volta: nei Secrets del repository (Settings → Secrets and variables → Actions) va il contenuto del
-# file della chiave privata come `TAURI_SIGNING_PRIVATE_KEY` (e, se ne ha una, la password come
-# `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`). La chiave pubblica sta già in app/src-tauri/tauri.conf.json.
+# file della chiave privata come `TAURI_SIGNING_PRIVATE_KEY` e la sua password come
+# `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`; la chiave pubblica va in app/src-tauri/tauri.conf.json. Come si
+# fa la chiave, con la password: sviluppo/VERSIONI.md, §7 (revisione 25, G4).
 # Non provato su GitHub finché non c'è il primo tag: sviluppo/VERSIONI.md, §7.
 name: Rilascio
 
