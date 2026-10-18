@@ -206,22 +206,20 @@ lo bloccherebbe.
   Se c'è una versione più alta lo dice e chiede; l'installazione la decide chi gioca. Il pacchetto deve essere **firmato** con la chiave
   privata dell'autore: la chiave pubblica sta in `tauri.conf.json`, e un pacchetto senza la firma giusta non si installa.
 - **La chiave privata** non sta nel repository. Chi ce l'ha può firmare un «aggiornamento» che ogni gioco installato accetta; chi la
-  perde non può più aggiornare i giochi già installati (andrebbero reinstallati a mano). Per questo ha una password, sta in due posti
-  (il computer dell'autore e una copia fuori linea) e, per il rilascio, nei Secrets di GitHub. La prima chiave, del 16 ottobre 2026
-  (`C:/Users/Utente/.tauri/relitto-aggiornamenti.key`), era **senza password** e in una copia sola (revisione 25, G4): va sostituita
-  prima del primo tag, quando nessun gioco pubblico dipende ancora da lei. Le consegne di prova 0.2.2 e 0.2.3 la portano: dopo il cambio
-  non si aggiorneranno da sole, e non importa.
-- **Come si fa la chiave nuova** (lo fa l'autore: la password non passa da nessun altro).
-  1. Nel terminale, dalla radice del progetto: `npx --prefix app tauri signer generate -w "$HOME/.tauri/relitto-aggiornamenti-2.key"`.
-     Chiede la password due volte: una lunga, che si scrive nel gestore delle password. Scrive la chiave privata (cifrata con la
-     password) e, accanto, la pubblica (`relitto-aggiornamenti-2.key.pub`).
-  2. Una copia di `relitto-aggiornamenti-2.key` fuori linea (una chiavetta, il disco del backup), **non** nella cartella del progetto
-     né in una cartella sincronizzata con un cloud. Il file senza la password non basta a firmare.
-  3. I due Secrets del repository: `gh secret set TAURI_SIGNING_PRIVATE_KEY -R Pitz72/il-relitto-silente-opensource < "$HOME/.tauri/relitto-aggiornamenti-2.key"`
-     e `gh secret set TAURI_SIGNING_PRIVATE_KEY_PASSWORD -R Pitz72/il-relitto-silente-opensource`, che chiede la password senza
-     mostrarla. In alternativa dal sito: Settings → Secrets and variables → Actions → New repository secret.
-  4. Poi la chiave pubblica (il contenuto del file `.pub`, una riga) va in `app/src-tauri/tauri.conf.json`, `plugins.updater.pubkey`;
-     e la chiave vecchia, senza password, si cancella.
+  perde non può più aggiornare i giochi già installati (andrebbero reinstallati a mano). La chiave di oggi è del **19 ottobre 2026**
+  (revisione 25, G4; identificativo `26304917F4709F8A`), cifrata con una password a caso di 40 caratteri, come per PixelDebh:
+  - `C:\Users\Utente\.relitto-signing\`: la chiave privata, la pubblica, un `LEGGIMI.txt` e `carica-i-segreti.ps1`; **non** la password;
+  - `F:\Backup\Relitto-chiavi-firma-2026-10-19\`: la copia della chiave e la **password**, che esiste solo lì (così chi copia la
+    cartella dal PC non porta via anche la password);
+  - i Secrets del repository `TAURI_SIGNING_PRIVATE_KEY` (il contenuto della chiave) e `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`, che
+    mette lo script, con F: collegato: `& "C:\Users\Utente\.relitto-signing\carica-i-segreti.ps1"`;
+  - la chiave pubblica in `app/src-tauri/tauri.conf.json`, `plugins.updater.pubkey`.
+  La prima chiave, del 16 ottobre, era senza password e in una copia sola: è nel Cestino. Le consegne di prova 0.2.2 e 0.2.3 la
+  portano e non si aggiorneranno da sole; non importa, sono copie di prova.
+- **Per rifare la chiave** (se andasse persa o rubata, prima di qualunque release pubblica): `node app/node_modules/@tauri-apps/cli/tauri.js
+  signer generate -w <file> -p <password> --ci` (o senza `-p`, e la password la chiede a tastiera), poi le copie e i Secrets come sopra, e
+  la chiave pubblica nuova in `tauri.conf.json`. Il 19 ottobre l'ha fatto uno script che non ha mai stampato la password e ha provato la
+  firma due volte: con la password giusta riesce, con una sbagliata è rifiutata.
 - **I canali, non «Latest»** (19 ottobre 2026, revisione 25, G3). Prima il gioco chiedeva la release «Latest» di GitHub, che in questo
   repository è la `v1.5.3` del gioco originale: l'indirizzo dava 404, e le release del remake, con numeri più bassi, rischiavano di non
   diventare mai «Latest»; le pre-release non lo diventano mai. Ora ci sono due release fisse, segnate come pre-release perché non diventino
