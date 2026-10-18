@@ -363,7 +363,10 @@ def principali(js, rust):
     with zipfile.ZipFile(ruota) as z:
         meta = z.read(next(n for n in z.namelist() if n.endswith("METADATA"))).decode("utf-8")
         lic = next(n for n in z.namelist() if "licenses/" in n or n.upper().endswith("LICENSE"))
-        righe = [" ".join(r.split()) for r in z.read(lic).decode("utf-8").splitlines() if _RIGA.match(r)]
+        # lo stesso filtro dei pacchetti: una riga del testo MIT che comincia con «COPYRIGHT
+        # HOLDERS BE LIABLE…» non è un copyright (revisione 25, L2)
+        righe = [" ".join(r.split()) for r in z.read(lic).decode("utf-8").splitlines()
+                 if _RIGA.match(" ".join(r.split())) and not _MODELLO.search(r)]
     out.append({"nome": "lark", "versione": re.search(r"^Version: (\S+)", meta, re.M).group(1), "licenza": "MIT",
                 "usata": ["MIT"], "copyright": righe[:2], "ruolo": "la grammatica di FAVELLA",
                 "sorgente": "https://github.com/lark-parser/lark"})
