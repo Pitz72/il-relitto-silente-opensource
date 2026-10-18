@@ -35,7 +35,7 @@ const ACCORDO: [f32; 4] = [103.826, 155.563, 207.652, 311.127];
 /// Tutti gli eventi che il ponte può mandare (collaudo/eventi.py, la tabella), più il
 /// caricamento: la regia li conosce tutti, quelli che suonano e quelli che per il suono
 /// sono solo stato. La prova delle partite controlla che non ne arrivi uno sconosciuto.
-pub const EVENTI_NOTI: [&str; 85] = [
+pub const EVENTI_NOTI: [&str; 86] = [
     "accostamento", "altare", "ambra", "archivio_forzato", "archivio_saluta", "aria", "arpioni", "assestamento",
     "attrezzo", "bengala_acceso", "bengala_spento", "boccaporto", "brusio_cala", "caricamento", "casco_tolto",
     "cassetta", "cella", "chiave", "connessione", "crollo", "dialogo", "dialogo_fine", "discesa", "disco_liberato",
@@ -44,7 +44,7 @@ pub const EVENTI_NOTI: [&str; 85] = [
     "inizio", "ipossia", "kit", "matrice", "nodo", "nota_reattore", "nota_riconosciuta", "pannello", "pareti_lampo",
     "porta_interna", "porta_tonda", "postazione", "primo_contatto", "protezione", "protezione_fine",
     "protezione_fuga", "radio", "reattore_ascoltato", "reattore_toccato", "registro", "ricarica", "rientro",
-    "risonanza", "risuonata", "risuonatore_lasciato", "risuonatore_preso", "risuonatore_staccato",
+    "ripresa", "risonanza", "risuonata", "risuonatore_lasciato", "risuonatore_preso", "risuonatore_staccato",
     "risuonatore_toccato", "scansione_lunga", "scatola_nera", "seme_lasciato", "seme_preso", "seme_spento",
     "sistema", "sonaglio", "stanza", "tacche", "taglio", "teca_serra", "terminale", "traccia",
     "traduzione_completa", "varco_richiuso", "venature_spente", "venature_verdi", "vestizione", "voce_dei_nomi",
@@ -63,7 +63,9 @@ impl Mondo {
         self.modo_gioco = true;
         let ha = |nome: &str| t.eventi.iter().any(|e| e.evento == nome);
         let inizio = ha("inizio");
-        let carica = primo || inizio || ha("caricamento");
+        // «ripresa»: un ANNULLA che riporta la partita a uno stato di prima, anche dopo un
+        // finale (revisione 25, G2). Per il suono vale come un caricamento.
+        let carica = primo || inizio || ha("caricamento") || ha("ripresa");
         if carica {
             // una partita che comincia o si riprende: niente di quello che restava della fine
             self.casa = false;
@@ -71,6 +73,16 @@ impl Mondo {
             self.stiva_viva = false;
             self.ventola_spenta = false;
             self.ventola.giri = Scorrevole::nuovo(1.0);
+            self.fiato.riprendi();
+            // e niente di quello che le automazioni svuotate qui sotto avrebbero rimesso a posto:
+            // la radio della plancia, i fondi abbassati, il re toccato, il fiato in ascolto, il filo
+            self.radio_accesa = false;
+            self.fondi_mul.verso(1.0, 0.5, sr);
+            self.fondo_mul.verso(1.0, 0.5, sr);
+            self.re_tocco.verso(1.0, 0.5, sr);
+            self.fiato.ascolto = false;
+            self.anello = None;
+            self.filo_g.verso(0.0, 0.3, sr);
             self.automazioni.clear();
             self.ingresso = Scorrevole::nuovo(0.0);
             self.ingresso.verso(1.0, if inizio { 3.0 } else { 1.5 }, sr);
@@ -1568,5 +1580,72 @@ mod prove {
         tx.send(turno(r#"{"stati": {"stanza": "vestibolo delle gole", "tuta": true, "aria": 69, "esito": "in_corso"},
                          "eventi": [{"evento": "qualcosa_di_nuovo", "valore": 3}]}"#)).unwrap();
         suona(&mut m, 1.0);
+    }
+
+    /// Il livello efficace (dB) di `secondi` di mondo.
+    fn livello(m: &mut Mondo, secondi: f32) -> f32 {
+        let mut buf = vec![kira::Frame::ZERO; 256];
+        let (mut somma, mut n) = (0.0f64, 0usize);
+        for _ in 0..(secondi * 48000.0 / 256.0) as usize {
+            m.rendi(&mut buf, 1.0 / 48000.0);
+            for f in &buf {
+                somma += (f.left * f.left + f.right * f.right) as f64 * 0.5;
+                n += 1;
+            }
+        }
+        10.0 * ((somma / n.max(1) as f64) + 1e-12).log10() as f32
+    }
+
+    /// Il vestibolo, a metà dell’aria: lo stato da cui si muore e a cui «annulla» riporta.
+    const VESTIBOLO: &str = r#""stanza": "vestibolo delle gole", "tuta": true, "aria": 40, "fuga": "lontana",
+        "porta_interna": "aperta", "risuonatore": "incastrato", "contatto": "avvenuto", "atto": 2"#;
+
+    fn morte_nel_vestibolo(seme: u64) -> (Mondo, std::sync::mpsc::Sender<Comando>, f32) {
+        let (mut m, tx, _) = Mondo::nuovo(48000.0, seme);
+        tx.send(turno(&format!(r#"{{"stati": {{{VESTIBOLO}, "esito": "in_corso"}}, "eventi": [{{"evento": "caricamento"}}]}}"#))).unwrap();
+        livello(&mut m, 4.0);
+        let vivo = livello(&mut m, 6.0);
+        tx.send(turno(&format!(
+            r#"{{"stati": {{{VESTIBOLO}, "esito": "persa"}}, "eventi": [{{"evento": "finale", "finale": "due-lettere", "esito": "persa"}}]}}"#
+        )))
+        .unwrap();
+        // la musica della chiusura entra dieci secondi dopo il finale
+        livello(&mut m, 12.0);
+        (m, tx, vivo)
+    }
+
+    #[test]
+    fn annullare_un_finale_riporta_il_mondo_di_prima() {
+        // revisione 25, G2. Senza «annulla», «Due lettere» fa quello che deve: la musica della
+        // chiusura sopra il mondo, poi il silenzio (la prova che lo scenario è quello vero)
+        let (mut m, _tx, _) = morte_nel_vestibolo(5);
+        assert_eq!(m.musica.brano(), Brano::DueLettere, "senza annulla dovrebbe suonare la chiusura");
+        // il mondo tace a 30 s dal finale, la chiusura sfuma fino a 66 s: dopo, niente
+        livello(&mut m, 60.0);
+        let fine = livello(&mut m, 10.0);
+        assert!(fine < -80.0, "senza annulla il mondo dovrebbe spegnersi: {fine:.1} dB");
+
+        // con «annulla» dieci secondi dopo il finale: il ponte manda una ripresa, e il mondo
+        // torna quello di prima, senza la musica della chiusura e senza il silenzio
+        let (mut m, tx, vivo) = morte_nel_vestibolo(5);
+        tx.send(turno(&format!(r#"{{"stati": {{{VESTIBOLO}, "esito": "in_corso"}}, "eventi": [{{"evento": "ripresa"}}]}}"#))).unwrap();
+        livello(&mut m, 4.0);
+        assert_eq!(m.musica.brano(), Brano::Silenzio, "dopo annulla la chiusura dovrebbe tacere");
+        let dove_suonava_la_chiusura = livello(&mut m, 20.0);
+        livello(&mut m, 26.0);
+        let dove_era_il_silenzio = livello(&mut m, 12.0);
+        assert!(
+            (dove_suonava_la_chiusura - vivo).abs() < 4.0,
+            "dopo annulla il mondo dovrebbe essere quello di prima: {dove_suonava_la_chiusura:.1} contro {vivo:.1} dB"
+        );
+        assert!(
+            (dove_era_il_silenzio - vivo).abs() < 4.0,
+            "dopo annulla il mondo non dovrebbe spegnersi: {dove_era_il_silenzio:.1} contro {vivo:.1} dB"
+        );
+        // e il fiato, fermato dagli ultimi respiri, è tornato
+        assert!(m.fiato.acceso, "dopo annulla il fiato dovrebbe essere acceso");
+        tx.send(Comando::Solo(Some("fiato".to_string()))).unwrap();
+        let fiato = livello(&mut m, 12.0);
+        assert!(fiato > -70.0, "dopo annulla il fiato dovrebbe sentirsi: {fiato:.1} dB");
     }
 }

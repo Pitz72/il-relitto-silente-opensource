@@ -13,7 +13,8 @@
 #   3. in «Vivi» gli eventi principali arrivano nell'ordine della storia;
 #   4. ogni evento della tabella del ponte scatta almeno una volta: sui percorsi,
 #      o sui rami scritti qui per quelli che nessun percorso tocca (il bengala
-#      acceso, il reattore toccato, la radio, l'archivio forzato…);
+#      acceso, il reattore toccato, la radio, l'archivio forzato, la ripresa
+#      dopo un ANNULLA alla fine…);
 #   5. i segni a sorte che si riconoscono dal testo sono ancora nel gioco;
 #   6. il ponte non cambia la partita: lo stesso percorso giocato dal ponte e
 #      giocato dal motore da solo arriva alla stessa impronta.
@@ -49,7 +50,7 @@ ORDINE_VIVI = ("scansione_lunga", "accostamento", "arpioni", "vestizione", "kit"
 DERIVATI = ("inizio", "stanza", "boccaporto", "rientro", "discesa", "groviglio_prende", "casco_tolto",
             "dialogo", "dialogo_fine", "nodo", "chiave", "eco", "risonanza", "traccia", "taglio",
             "risuonata", "matrice", "traduzione_completa", "aria", "ambra", "ipossia", "protezione",
-            "protezione_fine", "protezione_fuga", "attrezzo", "finale")
+            "protezione_fine", "protezione_fuga", "attrezzo", "finale", "ripresa")
 
 # I rami: (nome, il percorso da cui partire, fin dove giocarlo, i comandi, gli eventi attesi).
 RAMI = (
@@ -65,6 +66,8 @@ RAMI = (
     ("l'archivio forzato", "tutto.txt",
      lambda m: m.posizione_giocatore == "corridoio principale" and m.variabili.get("energia") == "assente",
      ["nord", "ovest", "nord", "usa la taglierina sul terminale"], ["archivio_forzato"]),
+    # ANNULLA dopo la morte: per il suono la partita riprende, come da un caricamento (revisione 25, G2)
+    ("annullare un finale", "due-lettere.txt", lambda m: m.stato_partita != "in_corso", ["annulla"], ["ripresa"]),
 )
 
 
@@ -114,7 +117,9 @@ def ramo(nome, percorso, fino, comandi, attesi, conta):
             break
         ponte.rel_comando(cmd)
     else:
-        return f"{nome}: il percorso {percorso} non arriva mai al punto di partenza"
+        # il punto di partenza può essere la fine stessa del percorso (un finale)
+        if not fino(ponte._mondo):
+            return f"{nome}: il percorso {percorso} non arriva mai al punto di partenza"
     visti = []
     for cmd in comandi:
         turno = json.loads(ponte.rel_comando(cmd))

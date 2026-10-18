@@ -190,6 +190,15 @@ impl Fiato {
         self.morente = 5;
     }
 
+    /// La partita riprende dopo gli ultimi respiri (un caricamento, un «annulla» dopo la fine):
+    /// il fiato torna come sempre. Senza, il fiato fermato da `ultimi` non ripartiva più.
+    pub fn riprendi(&mut self) {
+        self.morente = 0;
+        if self.fase == Fase::Fermo && self.t < 0.0 {
+            self.t = 0.0;
+        }
+    }
+
     /// Respiri al minuto, quelli che il motore sta seguendo.
     pub fn al_minuto(&self) -> f32 {
         let r = &self.resp;

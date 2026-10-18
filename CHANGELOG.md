@@ -17,6 +17,7 @@ documenti di `progettazione/`.
 
 - **La pausa non porta più alla pagina delle misure tecniche** (revisione 25, G1): il pulsante c’era in ogni build, ricaricava la pagina e la partita in memoria si perdeva. Ora c’è solo nello sviluppo.
 - **Il «chiudi» delle Opzioni è sempre in vista** (revisione 25, M2): il pannello era più alto dello schermo e il pulsante finiva sotto il bordo, senza barra per accorgersene. Le schede e il piede restano fermi e scorre solo il foglio, con una sfumatura e «continua ↓» quando c’è altro.
+- **Annullare la mossa di un finale non spegne più il mondo** (revisione 25, G2): dopo la morte, «Annulla l’ultima mossa» lasciava suonare la musica della chiusura sopra la partita e poi il mondo taceva del tutto, con il fiato fermo. Il ponte manda adesso l’evento `ripresa` quando un ANNULLA accorcia la sequenza dei comandi, e la regia lo tratta come un caricamento; un caricamento rimette a posto anche il fiato dopo gli ultimi respiri, la radio della plancia, i fondi, il re toccato e il filo. Una prova in Rust, un ramo nuovo in `collaudo/eventi.py`.
 - **I riconoscimenti di lark** (revisione 25, L2): sotto il copyright compariva una riga del testo della licenza MIT.
 - **Testi** (revisione 25, L1, L3, L4): il refuso «un’ avventura» nelle opzioni; il README diceva «versione 0.2.0» e «niente comandi da scrivere»; nel registro delle modifiche la 0.2.2 aveva due sezioni «Aggiunto» e la 0.2.1 diceva che la musica generata non era ancora collegata.
 

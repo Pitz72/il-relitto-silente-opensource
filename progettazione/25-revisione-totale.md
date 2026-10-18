@@ -242,3 +242,7 @@ Le debolezze stanno quasi tutte nei **punti di passaggio** (menu, riconoscimenti
 - **L3 e L4**: il README non dice più un numero di versione fisso e nomina la modalità scritta; nel CHANGELOG la 0.2.2 ha una sezione «Aggiunto» sola, la 0.2.1 non si contraddice più, e il «Non rilasciato» elenca queste correzioni.
 
 Prove dopo il lotto: node 81 su 81, tipi puliti, `riconoscimenti.py --verifica` e `versione.mjs verifica` in regola. Nessuna consegna nuova: la PATCH si prepara con la prossima.
+
+**Lotto del suono, 18 ottobre 2026** (scelto dall’autore: G2, poi M4 e M5):
+
+- **G2**: `rel_comando` confronta la lunghezza di `_registro_comandi` prima e dopo il comando; se si è accorciata (un ANNULLA) mette in testa agli eventi del suono `ripresa`. La regia la tratta come `caricamento` (`regia.rs`, `let carica = …`), e il caricamento rimette a posto in più il fiato dopo gli ultimi respiri (`Fiato::riprendi`, che mancava anche per un caricamento dopo la morte), la radio della plancia, i fondi, il re toccato, il fiato in ascolto e il filo. La prova `annullare_un_finale_riporta_il_mondo_di_prima` controlla le due strade: senza «annulla» la chiusura suona e il mondo si spegne (−80 dB); con «annulla» la chiusura tace, il livello resta entro 4 dB di quello di prima e il fiato si sente. Fallisce se si toglie la correzione. In `collaudo/eventi.py` il ramo «annullare un finale». La traccia del §3 rifatta: dopo l’«annulla» il mondo resta fra −38 e −42 dB fino a 1:55, come il controllo.
