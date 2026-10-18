@@ -9,6 +9,8 @@ import { caricaMotore, type Motore, type TempiAvvio } from "./runtime";
 
 let caricamento: Promise<{ motore: Motore; tempi: TempiAvvio }> | null = null;
 let passo = "Avvio…";
+/** Il passo di un motore che non è partito (revisione 25, M7): il menu lo dice, invece di aspettare. */
+export const MOTORE_FALLITO = "fallito";
 let pronto: Motore | null = null;
 const ascoltatori = new Set<(p: string) => void>();
 
@@ -17,12 +19,19 @@ export function avviaMotore(): Promise<{ motore: Motore; tempi: TempiAvvio }> {
   caricamento ??= caricaMotore((p) => {
     passo = p;
     for (const a of ascoltatori) a(p);
-  }).then((r) => {
-    pronto = r.motore;
-    passo = "pronto";
-    for (const a of ascoltatori) a(passo);
-    return r;
-  });
+  })
+    .then((r) => {
+      pronto = r.motore;
+      passo = "pronto";
+      for (const a of ascoltatori) a(passo);
+      return r;
+    })
+    .catch((e: unknown) => {
+      console.error("[motore] non è partito:", e);
+      passo = MOTORE_FALLITO;
+      for (const a of ascoltatori) a(passo);
+      throw e;
+    });
   return caricamento;
 }
 

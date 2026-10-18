@@ -147,7 +147,12 @@ export default function Intro({ revisione = false, onFine, ridotto }: { revision
         calibra.current = { t0, k: (t1 - t0) / (S.scene[2].inizio - M.naveB), meta: cerca(0.56) };
         if (vivo) setPronta(true);
       } catch (e) {
-        if (vivo) setErrore(String(e instanceof Error ? e.message : e));
+        if (!vivo) return;
+        setErrore(String(e instanceof Error ? e.message : e));
+        // senza WebGL2 (o con le immagini che non si caricano) l'intro non si può vedere: si va
+        // al gioco invece di restare sul messaggio (revisione 25, M7). Nella revisione resta.
+        console.warn("[intro] si salta:", e);
+        if (!revisione) onFine?.();
       }
     })();
     return () => {

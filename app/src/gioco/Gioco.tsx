@@ -34,6 +34,7 @@ import type { IdPagina } from "./diario/pagine";
 import Vene from "./vene/Vene";
 import { Avviso, Conferma, PannelloOpzioni, PannelloTasti, Pausa, Salvataggi, useAvviso, type Domanda } from "./pannelli/Pannelli";
 import { archivio, type IdPosto, type Posto } from "./salvataggi";
+import { salvaUscendo } from "./uscita";
 import { rigaDelRegistro } from "../menu/registro";
 import "../stile/base.css";
 import "./gioco.css";
@@ -92,6 +93,37 @@ type Pannello = null | "pausa" | "diario" | "salva" | "carica" | "opzioni" | "ta
  *  sei comandi, il salvataggio nel posto 6 attraverso il processo Tauri,
  *  l'elenco, la rilettura, il caricamento; poi un rapporto, e si esce. */
 const PROVA_SALVATAGGI = ["analizza la nave aliena", "accosta", "spara gli arpioni", "ovest", "prendi la tuta", "indossa la tuta"];
+
+/** Il gioco che non può andare avanti (revisione 25, M7): una frase, il rimedio, e il dettaglio
+ *  tecnico ripiegato, da copiare per chi deve correggere. Prima c'era la pila delle chiamate. */
+function Inceppo({ dettaglio, alMenu }: { dettaglio: string; alMenu?: Props["alMenu"] }) {
+  const [copiato, setCopiato] = useState(false);
+  return (
+    <div className="avvio inceppo" role="alert">
+      <div className="inceppo-riquadro">
+        <p className="inceppo-titolo">Il gioco si è inceppato.</p>
+        <p>Non dipende da quello che hai fatto. Riavvialo: con «Continua» riprendi dall’ultimo salvataggio.</p>
+        <div className="inceppo-scelte">
+          <button type="button" autoFocus onClick={() => void salvaUscendo().then(() => location.reload())}>
+            Riavvia il gioco
+          </button>
+          {alMenu && (
+            <button type="button" onClick={() => alMenu("invariata")}>
+              Torna al menu
+            </button>
+          )}
+        </div>
+        <details>
+          <summary>Il dettaglio tecnico</summary>
+          <pre>{dettaglio}</pre>
+          <button type="button" onClick={() => void navigator.clipboard?.writeText(dettaglio).then(() => setCopiato(true))}>
+            {copiato ? "Copiato" : "Copia il dettaglio"}
+          </button>
+        </details>
+      </div>
+    </div>
+  );
+}
 
 export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFinale }: Props = {}) {
   const [opzioni, cambiaOpzioni] = useOpzioni();
@@ -866,7 +898,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
         {(domanda ?? domandaDelMotore) && <Conferma domanda={(domanda ?? domandaDelMotore)!} forma={forma} chiudi={() => setDomanda(null)} />}
         {avviso && <Avviso testo={avviso.testo} grave={avviso.grave} />}
         {!turno && !errore && <div className="avvio">{passo}</div>}
-        {errore && <pre className="avvio errore">{errore}</pre>}
+        {errore && <Inceppo dettaglio={errore} alMenu={alMenu} />}
       </main>
     </div>
   );

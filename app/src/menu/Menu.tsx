@@ -24,11 +24,13 @@ interface Props {
   identita: string;
   /** il motore si sta ancora caricando: lo si dice, piano */
   caricamento: string | null;
+  /** il motore non è partito (revisione 25, M7): lo si dice, e si offre di riavviare */
+  problema?: string | null;
   /** il pannello aperto sopra il menu (il menu non prende i tasti) */
   coperto: boolean;
 }
 
-export default function Menu({ voci, ridotto, identita, caricamento, coperto }: Props) {
+export default function Menu({ voci, ridotto, identita, caricamento, problema = null, coperto }: Props) {
   const navRef = useRef<HTMLElement>(null);
 
   // il fuoco sulla prima voce: all'arrivo, quando si chiude un pannello, e
@@ -76,6 +78,14 @@ export default function Menu({ voci, ridotto, identita, caricamento, coperto }: 
         {caricamento && (
           <span className="menu-caricamento" role="status">
             {caricamento}
+          </span>
+        )}
+        {problema && (
+          <span className="menu-problema" role="alert">
+            {problema}{" "}
+            <button type="button" onClick={() => location.reload()}>
+              Riavvia il gioco
+            </button>
           </span>
         )}
       </footer>

@@ -20,7 +20,7 @@
 //  rapporto, e nell'eseguibile si esce.
 // ============================================================================
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-import { avviaMotore, usaPassoMotore } from "./motore/condiviso";
+import { avviaMotore, MOTORE_FALLITO, usaPassoMotore } from "./motore/condiviso";
 import { tavolozza, variabiliCss } from "./stile/atmosfere";
 import { attributiSchermo, useMovimentoRidotto, useOpzioni } from "./stile/opzioni";
 import { comando, dentroTauri } from "./lib/tauri";
@@ -313,7 +313,7 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
       </Suspense>
     );
 
-  const caricamento = passo === "pronto" ? null : passo.replace(/…$/, "").toLowerCase() + "…";
+  const caricamento = passo === "pronto" || passo === MOTORE_FALLITO ? null : passo.replace(/…$/, "").toLowerCase() + "…";
   return (
     <div
       className="schermo tema relitto-app"
@@ -334,6 +334,7 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
               ridotto={ridotto}
               identita={`${VERSIONE.gioco} · ${VERSIONE.commit} · FAVELLA ${VERSIONE.motore}`}
               caricamento={caricamento}
+              problema={passo === MOTORE_FALLITO ? "Il motore del gioco non è partito." : null}
               coperto={!!pannello || !!domanda}
             />
             {pannello === "carica" && (

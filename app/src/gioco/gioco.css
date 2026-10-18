@@ -79,7 +79,33 @@
   text-transform: uppercase;
   color: var(--tenue);
 }
-.avvio.errore { color: var(--rosso); white-space: pre-wrap; text-transform: none; letter-spacing: 0; padding: 24px; user-select: text; }
+/* il gioco che si inceppa (revisione 25, M7): un riquadro come i pannelli, con il rimedio in vista */
+.avvio.inceppo { z-index: 50; padding: 24px; text-transform: none; letter-spacing: 0; background: color-mix(in srgb, var(--fondo-2) 80%, transparent); }
+.inceppo-riquadro {
+  max-width: min(720px, 86cqw);
+  padding: 2.2cqw 2.6cqw;
+  font-family: var(--serif);
+  font-size: var(--corpo);
+  line-height: 1.5;
+  color: var(--testo);
+  background: var(--lamina-2);
+  border: 1px solid var(--bordo);
+  border-radius: 1.2cqw;
+}
+.inceppo-titolo { margin: 0 0 .6em; font-size: 1.35em; color: var(--rosso); }
+.inceppo-scelte { display: flex; flex-wrap: wrap; gap: .8em; margin: 1.2em 0; }
+.inceppo button {
+  min-height: 40px;
+  padding: .5em 1.3em;
+  color: var(--testo);
+  border: 1px solid var(--bordo);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--lamina-1) 70%, transparent);
+}
+.inceppo button:hover { border-color: var(--accento-2); }
+.inceppo details { font-family: var(--mono); font-size: max(13px, .8cqw); color: var(--tenue); }
+.inceppo summary { cursor: pointer; }
+.inceppo pre { max-height: 30vh; overflow: auto; white-space: pre-wrap; user-select: text; color: var(--tenue); }
 
 /* con un attrezzo in mano il cursore diventa un mirino */
 .gioco[data-in-mano] .palco {
