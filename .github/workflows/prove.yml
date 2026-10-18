@@ -58,6 +58,10 @@ jobs:
         working-directory: app/src-tauri
         run: cargo test --lib --release
       - name: Le 14 partite nel motore audio
+        env:
+          # in locale si chiede di stare 5 volte dentro il tempo reale; qui la macchina è condivisa e
+          # compilata senza LTO, e ci arriva a fatica: basta che il suono resti dentro il tempo reale
+          RELITTO_VELOCITA_MINIMA: "1.5"
         run: |
           python strumenti/audio/traccia.py --tutti
           cd app/src-tauri

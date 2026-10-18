@@ -5,7 +5,8 @@
 //!   2. ogni stanza che arriva è una delle ventitré;
 //!   3. il suono resta un numero vero, sotto −1 dB (bibbia, §1.7), e non tace mai quando
 //!      la partita è in corso (il vuoto dello scafo e l’anticamera hanno sempre il fiato);
-//!   4. il motore sta largamente dentro il tempo reale.
+//!   4. il motore sta largamente dentro il tempo reale: almeno 5 volte, o quanto dice
+//!      RELITTO_VELOCITA_MINIMA (su GitHub 1,5: le macchine condivise sono lente e variano).
 //!
 //!   python strumenti/audio/traccia.py --tutti --cartella <cartella>
 //!   cargo run --release --example prova_partite -- <cartella>
@@ -22,6 +23,7 @@ use relitto_lib::mondo::stanze::stanza;
 use relitto_lib::mondo::{Comando, Mondo, EVENTI_NOTI};
 
 fn main() {
+    let minima: f64 = std::env::var("RELITTO_VELOCITA_MINIMA").ok().and_then(|v| v.parse().ok()).unwrap_or(5.0);
     let cartella = PathBuf::from(std::env::args().nth(1).unwrap_or_else(|| "collaudo/tracce".to_string()));
     let mut file: Vec<PathBuf> = match std::fs::read_dir(&cartella) {
         Ok(d) => d.filter_map(|e| e.ok().map(|e| e.path())).filter(|p| p.extension().is_some_and(|x| x == "json")).collect(),
@@ -93,7 +95,7 @@ fn main() {
             problemi.push(format!("il picco passa −1 dB ({:.1} dB) al {dove}", 20.0 * picco.log10()));
         }
         let volte = secondi / t0.elapsed().as_secs_f64();
-        if volte < 5.0 {
+        if volte < minima {
             problemi.push(format!("troppo lento: {volte:.1} volte il tempo reale"));
         }
         let riga = format!("{} ({} turni, {}; picco {:.2}, {:.0} volte il tempo reale)", t.percorso, t.turni.len(), t.esito, picco, volte);
