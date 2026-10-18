@@ -114,6 +114,38 @@ def annulla():
     return problemi
 
 
+def comando_che_cade():
+    """Un comando che cade a metà (qui, il ponte, dopo che il motore l'ha giocato) non lascia
+    la partita a metà: tutto torna com'era, e il comando dopo va (revisione 25, M8)."""
+    problemi = []
+    ponte.rel_avvia(1)
+    comandi = comandi_di(os.path.join(QUI, "tutto.txt"))
+    for cmd in comandi[:20]:
+        ponte.rel_comando(cmd)
+    prima = (ponte._mondo.impronta_stato(), len(ponte._cronaca), list(ponte._mondo._registro_comandi),
+             ponte._mondo.turno_corrente)
+    vero = ponte._rileva
+
+    def rotto(*_a, **_k):
+        raise RuntimeError("caduta di prova")
+
+    ponte._rileva = rotto
+    try:
+        r = json.loads(ponte.rel_comando(comandi[20]))
+    finally:
+        ponte._rileva = vero
+    dopo = (ponte._mondo.impronta_stato(), len(ponte._cronaca), list(ponte._mondo._registro_comandi),
+            ponte._mondo.turno_corrente)
+    if r.get("ok") is not False or not r.get("ripristinata"):
+        problemi.append(f"il comando caduto risponde {r}")
+    if dopo != prima:
+        problemi.append("dopo la caduta la partita, il diario o la sequenza non sono più quelli di prima")
+    t = json.loads(ponte.rel_comando(comandi[20]))
+    if not t.get("ok") or t["cronaca"]["lunghezza"] != prima[1] + (1 if t["cronaca"]["nuova"] else 0):
+        problemi.append("dopo la caduta lo stesso comando non si gioca più come prima")
+    return problemi
+
+
 def placca():
     """Le iniziali di L.V. si leggono esaminando la placca, nella serra."""
     ponte.rel_avvia(1)
@@ -186,6 +218,7 @@ def main():
         if a.v:
             print(f"     {segni(voci)}")
     for nome, prova in (("ANNULLA toglie il turno disfatto", annulla),
+                        ("un comando che cade non lascia la partita a metà", comando_che_cade),
                         ("le iniziali di L.V. sulla placca", placca),
                         ("la protezione vitale non è una lettura", protezione)):
         problemi = prova()

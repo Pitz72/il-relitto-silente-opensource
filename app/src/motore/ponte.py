@@ -37,8 +37,8 @@ import time
 
 from compilatore import compila_mondo
 from favella_utils import radice_proprieta, raccogli_uscita
-from gioco import (carica_da_dati, dati_salvataggio, elabora_comando, mostra_situazione,
-                   nuova_partita, prova, pulsanti, risolvi_in_silenzio)
+from gioco import (_ripristina_ramo, _salva_ramo, carica_da_dati, dati_salvataggio, elabora_comando,
+                   mostra_situazione, nuova_partita, prova, pulsanti, risolvi_in_silenzio)
 from libreria_azioni import LIBRERIA_AZIONI
 from strutture import SEME_CASUALE_DEFAULT, VERSIONE_MOTORE, ConseguenzaProprieta, Mondo
 
@@ -189,23 +189,31 @@ def _elabora_analizzando(m, comando, analisi):
 def rel_comando(comando):
     global _ultimi
     t0 = time.perf_counter()
-    prima = _suono_stati()
-    prima_diario = _diario_stati(_mondo)
-    analisi = _analizza(comando)
-    n0 = len(_mondo._registro_comandi)
+    # La partita com'è prima del comando. Il motore rende già atomico il comando (una regola che
+    # cade a metà non lascia il mondo a metà); se cade qualcos'altro (un demone, il turno, il
+    # ponte stesso: gli eventi, il diario) si rimette tutto com'era e il comando non è mai stato
+    # dato (revisione 25, M8). Costa una copia della partita a turno: circa 3 ms in CPython.
+    ramo, ultimi, cronaca = _salva_ramo(_mondo), _ultimi, list(_cronaca)
     try:
+        prima = _suono_stati()
+        prima_diario = _diario_stati(_mondo)
+        analisi = _analizza(comando)
+        n0 = len(_mondo._registro_comandi)
         with raccogli_uscita(_mondo) as uscita:
             _elabora_analizzando(_mondo, comando, analisi)
+        t1 = time.perf_counter()
+        # la sequenza del motore si è accorciata: un ANNULLA. Per il suono la partita riprende da
+        # uno stato di prima, come dopo un caricamento (revisione 25, G2: annullare la mossa di un
+        # finale lasciava suonare la sua chiusura e poi spegneva il mondo)
+        ripresa = len(_mondo._registro_comandi) < n0
+        nuova = _aggiorna_cronaca(_mondo, comando, analisi, prima_diario, uscita.eventi)
+        return _turno(uscita.eventi, t0, t1, prima=prima, comando=analisi, ripresa=ripresa,
+                      extra={"cronaca": {"lunghezza": len(_cronaca), "nuova": nuova}})
     except Exception as e:                                  # noqa: BLE001
-        return _json({"ok": False, "errore": f"{type(e).__name__}: {e}"})
-    t1 = time.perf_counter()
-    # la sequenza del motore si è accorciata: un ANNULLA. Per il suono la partita riprende da
-    # uno stato di prima, come dopo un caricamento (revisione 25, G2: annullare la mossa di un
-    # finale lasciava suonare la sua chiusura e poi spegneva il mondo)
-    ripresa = len(_mondo._registro_comandi) < n0
-    nuova = _aggiorna_cronaca(_mondo, comando, analisi, prima_diario, uscita.eventi)
-    return _turno(uscita.eventi, t0, t1, prima=prima, comando=analisi, ripresa=ripresa,
-                  extra={"cronaca": {"lunghezza": len(_cronaca), "nuova": nuova}})
+        _ripristina_ramo(_mondo, ramo)
+        _ultimi = ultimi
+        _cronaca[:] = cronaca
+        return _json({"ok": False, "errore": f"{type(e).__name__}: {e}", "ripristinata": True})
 
 
 def _turno(eventi, t0, t1, prima, comando, extra=None, ripresa=False):

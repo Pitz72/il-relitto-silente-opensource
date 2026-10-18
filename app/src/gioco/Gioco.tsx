@@ -321,7 +321,15 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
       const m = motoreRef.current;
       if (!m) return;
       const prima = stanzaRef.current;
-      const t = m.comando(comando);
+      let t: Turno;
+      try {
+        t = m.comando(comando);
+      } catch (e) {
+        // il ponte ha rimesso la partita com'era (revisione 25, M8): si dice, e si resta qui
+        console.error("[gioco] il comando è caduto:", comando, e);
+        mostraAvviso("Questo comando non è andato a buon fine: la partita è rimasta com’era.", true);
+        return;
+      }
       passi.current += 1;
       stanzaRef.current = t.stato.stanza;
       // il primo contatto: la membrana entra dai bordi (§3)
@@ -350,7 +358,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
         alFinale?.(finale.finale, rigaDelRegistro(t.eventi));
       }
     },
-    [opzioni.nomiToccabili, scritti, salvaNel, alFinale],
+    [opzioni.nomiToccabili, scritti, salvaNel, alFinale, mostraAvviso],
   );
 
   // cambiando modo a metà partita lo stato è lo stesso: il turno di adesso si ricompone
