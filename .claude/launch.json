@@ -4,14 +4,42 @@
     {
       "name": "app-vite",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["--prefix", "app", "run", "dev"],
+      "runtimeArgs": [
+        "--prefix",
+        "app",
+        "run",
+        "dev"
+      ],
       "port": 5274
     },
     {
       "name": "app-vite-5275",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["--prefix", "app", "run", "dev", "--", "--port", "5275"],
+      "runtimeArgs": [
+        "--prefix",
+        "app",
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "5275"
+      ],
       "port": 5275
+    },
+    {
+      "name": "app-anteprima",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "app",
+        "run",
+        "anteprima",
+        "--",
+        "--port",
+        "5276",
+        "--strictPort"
+      ],
+      "port": 5276
     }
   ]
 }

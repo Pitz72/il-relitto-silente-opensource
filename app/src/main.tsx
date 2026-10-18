@@ -7,7 +7,19 @@ addEventListener("contextmenu", (e) => e.preventDefault());
 addEventListener("wheel", (e) => e.ctrlKey && e.preventDefault(), { passive: false });
 addEventListener("keydown", (e) => {
   if (e.ctrlKey && ["+", "-", "=", "0"].includes(e.key)) e.preventDefault();
+  if (!import.meta.env.DEV && tastoDelBrowser(e)) e.preventDefault();
 });
+
+/** I tasti del browser che in un gioco non hanno senso (revisione 25, M6): ricaricare la pagina
+ *  (F5, Ctrl+R) perderebbe la partita in memoria; la stampa, la ricerca, il sorgente, la
+ *  navigazione indietro e avanti. F5 nel gioco salva: lo prende Gioco.tsx, qui si toglie solo al
+ *  browser. Nello sviluppo restano, per ricaricare. */
+function tastoDelBrowser(e: KeyboardEvent): boolean {
+  const ctrl = e.ctrlKey || e.metaKey;
+  if (["F3", "F5", "F7", "BrowserBack", "BrowserForward", "BrowserRefresh"].includes(e.key)) return true;
+  if (ctrl && ["r", "p", "f", "g", "u", "o", "s"].includes(e.key.toLowerCase())) return true;
+  return e.altKey && (e.key === "ArrowLeft" || e.key === "ArrowRight");
+}
 
 // Le pagine, ognuna con i suoi stili (si caricano solo quando servono):
 //   (niente)          l'app: i riconoscimenti al primo avvio, il menu principale,

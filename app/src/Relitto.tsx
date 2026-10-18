@@ -25,6 +25,7 @@ import { tavolozza, variabiliCss } from "./stile/atmosfere";
 import { attributiSchermo, useMovimentoRidotto, useOpzioni } from "./stile/opzioni";
 import { comando, dentroTauri } from "./lib/tauri";
 import { schermoIntero } from "./lib/finestra";
+import { salvaUscendo } from "./gioco/uscita";
 import { cercaAggiornamento, FIRMA } from "./aggiornamenti";
 import { avviaSuono, menuSuono, mixSuono, suonaTocco } from "./gioco/suono";
 import { gestoDelClic } from "./gioco/tocco";
@@ -192,6 +193,25 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
     })();
   }, [prova]);
 
+  // ---- uscire senza perdere niente (revisione 25, M6): chiudendo la finestra (la X, Alt+F4) la
+  // partita in corso va nel posto automatico, e Continua la riprende. Le prove non salvano.
+  useEffect(() => {
+    if (!dentroTauri() || prova !== undefined) return;
+    let via: (() => void) | null = null;
+    let vivo = true;
+    void import("@tauri-apps/api/window").then(({ getCurrentWindow }) =>
+      getCurrentWindow()
+        .onCloseRequested(async () => {
+          await salvaUscendo();
+        })
+        .then((u) => (vivo ? (via = u) : u())),
+    );
+    return () => {
+      vivo = false;
+      via?.();
+    };
+  }, [prova]);
+
   // ---- l'aggiornamento: all'avvio in silenzio (se l'opzione lo vuole), dal menu a mano ----
   const cercaNuova = useCallback(
     async (aMano: boolean) => {
@@ -257,7 +277,8 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   voci.push({ id: "registro", etichetta: "Registro dei finali", azione: () => setPannello("registro") });
   voci.push({ id: "riconoscimenti", etichetta: "Riconoscimenti", azione: () => setSchermata({ tipo: "riconoscimenti", primoAvvio: false }) });
   if (dentroTauri()) voci.push({ id: "aggiorna", etichetta: "Cerca aggiornamenti", azione: () => void cercaNuova(true) });
-  if (dentroTauri()) voci.push({ id: "esci", etichetta: "Esci", azione: () => void comando("esci", { codice: 0 }) });
+  // uscendo, la partita in corso va nel posto automatico (M6): niente da confermare, Continua la riprende
+  if (dentroTauri()) voci.push({ id: "esci", etichetta: "Esci", azione: () => void salvaUscendo().then(() => comando("esci", { codice: 0 })) });
 
   // Esc chiude il pannello aperto sopra il menu
   useEffect(() => {
