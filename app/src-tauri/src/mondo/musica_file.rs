@@ -8,7 +8,10 @@
 //! come ripiego (`musica.rs`): se un file manca o non si decodifica, suona il vecchio brano.
 //!
 //! I file si decodificano **fuori dal thread audio**, a richiesta, e si tengono in memoria solo
-//! finché servono (un MP3 di tre minuti, stereo a 16 bit, pesa circa 32 MB).
+//! finché servono (un MP3 di tre minuti, stereo a 16 bit, pesa circa 32 MB). Fuori dal thread
+//! audio stanno anche la ricerca dei file sul disco (una volta sola, quando nasce la biblioteca) e
+//! la liberazione dei pezzi che non servono più: un solo thread di lavoro decodifica e butta
+//! (revisione 25, M5). Il thread audio manda soltanto messaggi.
 
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
@@ -176,24 +179,56 @@ enum Casella {
     Mancante,
 }
 
+/// Quello che il thread audio chiede al thread di lavoro.
+enum Lavoro {
+    /// decodifica il file del pezzo
+    Decodifica(Pezzo),
+    /// un pezzo che non serve più: si libera là (decine di megabyte), non nel thread audio
+    Butta(Arc<Pcm>),
+}
+
 pub struct Biblioteca {
-    cartella: PathBuf,
+    /// il file di ogni pezzo che c’è, cercato sul disco una volta sola, quando la biblioteca nasce
+    percorsi: HashMap<Pezzo, PathBuf>,
+    /// riservata per tutti i pezzi: inserire non alloca nel thread audio
     caselle: HashMap<Pezzo, Casella>,
-    tx: Sender<(Pezzo, Option<Pcm>)>,
-    rx: Receiver<(Pezzo, Option<Pcm>)>,
+    lavori: Sender<Lavoro>,
+    rx: Receiver<(Pezzo, Option<Arc<Pcm>>)>,
 }
 
 impl Biblioteca {
+    /// Va creata fuori dal thread audio: cerca i file e fa partire il thread di lavoro, che vive
+    /// quanto la biblioteca.
     pub fn nuova(cartella: PathBuf) -> Self {
+        let percorsi: HashMap<Pezzo, PathBuf> = Pezzo::TUTTI
+            .iter()
+            .filter_map(|&p| {
+                // nella cartella piatta (l’installazione) o nella sua sottocartella (l’albero di lavoro)
+                let (sotto, nome) = p.file();
+                [cartella.join(nome), cartella.join(sotto).join(nome)].into_iter().find(|f| f.is_file()).map(|f| (p, f))
+            })
+            .collect();
+        let (lavori, coda) = channel::<Lavoro>();
         let (tx, rx) = channel();
-        Biblioteca { cartella, caselle: HashMap::new(), tx, rx }
-    }
-
-    /// Il file di un pezzo: nella cartella piatta (l’installazione) o nella sua sottocartella
-    /// (l’albero di lavoro).
-    fn percorso(&self, p: Pezzo) -> Option<PathBuf> {
-        let (cartella, nome) = p.file();
-        [self.cartella.join(nome), self.cartella.join(cartella).join(nome)].into_iter().find(|f| f.is_file())
+        let dove = percorsi.clone();
+        std::thread::Builder::new()
+            .name("relitto-musica".into())
+            .spawn(move || {
+                // finisce quando la biblioteca se ne va e la coda si chiude
+                for lavoro in coda {
+                    match lavoro {
+                        Lavoro::Decodifica(p) => {
+                            let pcm = dove.get(&p).and_then(|f| decodifica(f)).map(Arc::new);
+                            if tx.send((p, pcm)).is_err() {
+                                break;
+                            }
+                        }
+                        Lavoro::Butta(pcm) => drop(pcm),
+                    }
+                }
+            })
+            .expect("il thread della musica non parte");
+        Biblioteca { percorsi, caselle: HashMap::with_capacity(Pezzo::TUTTI.len()), lavori, rx }
     }
 
     /// C’è il file, o è già in memoria?
@@ -201,24 +236,26 @@ impl Biblioteca {
         match self.caselle.get(&p) {
             Some(Casella::Mancante) => false,
             Some(_) => true,
-            None => self.percorso(p).is_some(),
+            None => self.percorsi.contains_key(&p),
         }
     }
 
-    /// Chiede un pezzo: se non c’è già, parte la decodifica in un altro thread.
+    /// Chiede un pezzo: se non c’è già, il thread di lavoro lo decodifica.
     pub fn chiedi(&mut self, p: Pezzo) {
         if self.caselle.contains_key(&p) {
             return;
         }
-        let Some(percorso) = self.percorso(p) else {
+        if !self.percorsi.contains_key(&p) || self.lavori.send(Lavoro::Decodifica(p)).is_err() {
             self.caselle.insert(p, Casella::Mancante);
             return;
-        };
+        }
         self.caselle.insert(p, Casella::InCorso);
-        let tx = self.tx.clone();
-        std::thread::spawn(move || {
-            let _ = tx.send((p, decodifica(&percorso)));
-        });
+    }
+
+    /// Un pezzo che non serve più: lo libera il thread di lavoro.
+    pub fn butta(&self, pcm: Arc<Pcm>) {
+        // se il thread non c’è più, il pezzo torna indietro nell’errore e si libera qui
+        let _ = self.lavori.send(Lavoro::Butta(pcm));
     }
 
     /// Mette un pezzo già decodificato (per le prove, che non hanno i file).
@@ -226,14 +263,17 @@ impl Biblioteca {
         self.caselle.insert(p, Casella::Pronto(Arc::new(pcm)));
     }
 
-    /// Raccoglie i pezzi che i thread hanno finito.
+    /// Raccoglie i pezzi che il thread di lavoro ha finito.
     pub fn aggiorna(&mut self) {
         while let Ok((p, pcm)) = self.rx.try_recv() {
             // un pezzo già lasciato andare nel frattempo non torna in memoria
             if !matches!(self.caselle.get(&p), Some(Casella::InCorso)) {
+                if let Some(pcm) = pcm {
+                    self.butta(pcm);
+                }
                 continue;
             }
-            self.caselle.insert(p, pcm.map(|x| Casella::Pronto(Arc::new(x))).unwrap_or(Casella::Mancante));
+            self.caselle.insert(p, pcm.map(Casella::Pronto).unwrap_or(Casella::Mancante));
         }
     }
 
@@ -248,9 +288,19 @@ impl Biblioteca {
         matches!(self.caselle.get(&p), Some(Casella::Mancante))
     }
 
-    /// Lascia andare dalla memoria i pezzi che non servono più (il loro file resta dov’è).
+    /// Lascia andare dalla memoria i pezzi che non servono più (il loro file resta dov’è): li
+    /// libera il thread di lavoro.
     pub fn tieni(&mut self, servono: &[Pezzo]) {
-        self.caselle.retain(|p, c| !matches!(c, Casella::Pronto(_)) || servono.contains(p));
+        let lavori = &self.lavori;
+        self.caselle.retain(|p, c| {
+            if !matches!(c, Casella::Pronto(_)) || servono.contains(p) {
+                return true;
+            }
+            if let Casella::Pronto(pcm) = std::mem::replace(c, Casella::Mancante) {
+                let _ = lavori.send(Lavoro::Butta(pcm));
+            }
+            false
+        });
     }
 }
 
@@ -334,6 +384,8 @@ pub struct Lettore {
     pub biblioteca: Option<Biblioteca>,
     voci: Vec<Voce>,
     attese: Vec<(Richiesta, f32)>,
+    /// le voci che nascono in un passo (ripetizioni, alternanze): riservate, per non allocare
+    nuove: Vec<(Richiesta, Arc<Pcm>)>,
     fallita: bool,
 }
 
@@ -343,7 +395,14 @@ const ATTESA_MASSIMA: f32 = 20.0;
 
 impl Lettore {
     pub fn nuovo(sr: f32) -> Self {
-        Lettore { sr, biblioteca: None, voci: Vec::with_capacity(MAX_VOCI), attese: Vec::new(), fallita: false }
+        Lettore {
+            sr,
+            biblioteca: None,
+            voci: Vec::with_capacity(MAX_VOCI),
+            attese: Vec::with_capacity(MAX_VOCI),
+            nuove: Vec::with_capacity(MAX_VOCI),
+            fallita: false,
+        }
     }
 
     /// Ci sono i file, o almeno la cartella?
@@ -443,7 +502,7 @@ impl Lettore {
             }
         }
         // chi arriva in fondo
-        let mut nuove: Vec<(Richiesta, Arc<Pcm>)> = Vec::new();
+        let mut nuove = std::mem::take(&mut self.nuove);
         for v in &mut self.voci {
             if v.ceduta || v.morente {
                 continue;
@@ -476,12 +535,28 @@ impl Lettore {
                 _ => {}
             }
         }
-        for (r, pcm) in nuove {
+        for (r, pcm) in nuove.drain(..) {
             if self.voci.len() < MAX_VOCI {
                 self.voci.push(Voce::nuova(r, pcm, sr));
+            } else if let Some(b) = self.biblioteca.as_ref() {
+                b.butta(pcm);
             }
         }
-        self.voci.retain(|v| !v.finita());
+        self.nuove = nuove;
+        // le voci finite se ne vanno; il loro pezzo, se sono le ultime a tenerlo, lo libera il thread
+        // di lavoro (in ordine: la voce più recente di un pezzo resta l’ultima)
+        let mut i = 0;
+        while i < self.voci.len() {
+            if self.voci[i].finita() {
+                let v = self.voci.remove(i);
+                match self.biblioteca.as_ref() {
+                    Some(b) => b.butta(v.pcm),
+                    None => drop(v),
+                }
+            } else {
+                i += 1;
+            }
+        }
     }
 
     /// Un campione di musica da file, stereo, senza il cursore e senza la pausa (stanno nel mixer).
@@ -514,4 +589,82 @@ pub fn prova_decodifica(percorso: &Path) -> Result<String, String> {
     let t0 = std::time::Instant::now();
     let p = decodifica(percorso).ok_or("non si decodifica")?;
     Ok(format!("{} frame a {} Hz, {:.1} s, norma {:+.1} dB, in {:.2} s", p.frame(), p.sr, p.durata(), 20.0 * p.norma.log10(), t0.elapsed().as_secs_f32()))
+}
+
+#[cfg(test)]
+mod prove {
+    use super::*;
+
+    fn silenzio(secondi: f32) -> Pcm {
+        Pcm::da_frame(48000.0, (0..(secondi * 48000.0) as usize).map(|_| (0.0, 0.0)))
+    }
+
+    #[test]
+    fn i_file_si_cercano_una_volta_sola() {
+        // revisione 25, M5: niente accessi al disco dal thread audio. La biblioteca cerca i file
+        // quando nasce; dopo, che il file sparisca o no, non lo guarda più.
+        let cartella = std::env::temp_dir().join(format!("relitto-biblioteca-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&cartella);
+        std::fs::create_dir_all(&cartella).unwrap();
+        let (_, nome) = Pezzo::S2.file();
+        std::fs::write(cartella.join(nome), b"non un mp3").unwrap();
+        let b = Biblioteca::nuova(cartella.clone());
+        assert!(b.esiste(Pezzo::S2), "il file nella cartella piatta dovrebbe esserci");
+        assert!(!b.esiste(Pezzo::S3), "un file che non c'è non dovrebbe esserci");
+        std::fs::remove_dir_all(&cartella).unwrap();
+        assert!(b.esiste(Pezzo::S2), "dopo la nascita la biblioteca non guarda più il disco");
+    }
+
+    #[test]
+    fn un_file_che_non_si_decodifica_diventa_mancante() {
+        let cartella = std::env::temp_dir().join(format!("relitto-biblioteca-rotto-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&cartella);
+        std::fs::create_dir_all(&cartella).unwrap();
+        let (_, nome) = Pezzo::S4.file();
+        std::fs::write(cartella.join(nome), b"non un mp3").unwrap();
+        let mut b = Biblioteca::nuova(cartella.clone());
+        b.chiedi(Pezzo::S4);
+        let t0 = std::time::Instant::now();
+        while !b.mancante(Pezzo::S4) && t0.elapsed().as_secs_f32() < 5.0 {
+            std::thread::sleep(std::time::Duration::from_millis(5));
+            b.aggiorna();
+        }
+        assert!(b.mancante(Pezzo::S4), "il thread di lavoro dovrebbe dire che il file non si decodifica");
+        let _ = std::fs::remove_dir_all(&cartella);
+    }
+
+    #[test]
+    fn i_pezzi_lasciati_andare_li_libera_il_thread_di_lavoro() {
+        let mut b = Biblioteca::nuova(PathBuf::from("non-esiste"));
+        b.inserisci(Pezzo::A1, silenzio(1.0));
+        b.inserisci(Pezzo::A2, silenzio(1.0));
+        let a1 = Arc::downgrade(&b.pronto(Pezzo::A1).unwrap());
+        let a2 = Arc::downgrade(&b.pronto(Pezzo::A2).unwrap());
+        b.tieni(&[Pezzo::A2]);
+        assert!(b.pronto(Pezzo::A1).is_none() && b.pronto(Pezzo::A2).is_some());
+        let t0 = std::time::Instant::now();
+        while a1.upgrade().is_some() && t0.elapsed().as_secs_f32() < 5.0 {
+            std::thread::sleep(std::time::Duration::from_millis(5));
+        }
+        assert!(a1.upgrade().is_none(), "il pezzo lasciato andare dovrebbe essere liberato");
+        assert!(a2.upgrade().is_some(), "il pezzo che serve resta");
+
+        // e una voce del lettore che finisce: il suo pezzo, lasciato dalla biblioteca, se ne va
+        let mut l = Lettore::nuovo(48000.0);
+        l.biblioteca = Some(b);
+        l.avvia(Richiesta { a: Some(0.2), esce: 0.0, ..Richiesta::intero(Pezzo::A2) });
+        l.passo(0.01);
+        assert!(l.suona(Pezzo::A2));
+        l.biblioteca.as_mut().unwrap().tieni(&[]);
+        for _ in 0..(0.3 * 48000.0) as usize {
+            l.campione();
+        }
+        l.passo(0.01);
+        assert!(!l.attivo(), "la voce dovrebbe essere finita");
+        let t0 = std::time::Instant::now();
+        while a2.upgrade().is_some() && t0.elapsed().as_secs_f32() < 5.0 {
+            std::thread::sleep(std::time::Duration::from_millis(5));
+        }
+        assert!(a2.upgrade().is_none(), "il pezzo della voce finita dovrebbe essere liberato");
+    }
 }
