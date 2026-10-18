@@ -1,8 +1,9 @@
 # Il rilascio del remake (documento 06, fase 9; sviluppo/VERSIONI.md, §2.1 e §7).
 #
 # Parte quando si spinge un tag `v` + versione (per esempio v0.9.0 o v1.0.0-rc.1). Il tag è la versione:
-# `versione.json` deve dire lo stesso numero, e il CHANGELOG deve avere la sua sezione datata. Costruisce
-# Windows (installer NSIS) e Linux (.deb, AppImage), firma i pacchetti dell'aggiornamento automatico con
+# `versione.json` deve dire lo stesso numero, e il CHANGELOG deve avere la sua sezione datata. Lancia le
+# prove (prove.yml); se passano costruisce Windows (installer NSIS) e, quando l'autore l'ha provato e ha
+# acceso la variabile LINUX_PROVATO, Linux (.deb, AppImage); firma i pacchetti dell'aggiornamento automatico con
 # la chiave privata dei Secrets e prepara una release in BOZZA con il suo `latest.json`: l'autore la guarda
 # e la pubblica a mano: allora canale.yml copia il latest.json nel canale degli aggiornamenti, che i giochi
 # installati leggono (finché è bozza nessuno la vede). Vedi sviluppo/VERSIONI.md, §7.
@@ -33,14 +34,19 @@ jobs:
           V=$(node -p "require('./versione.json').gioco")
           test "v$V" = "${GITHUB_REF_NAME}" || { echo "Il tag ${GITHUB_REF_NAME} non è la versione v$V di versione.json"; exit 1; }
 
+  # le stesse prove di ogni push (prove.yml): un tag su un commit rotto non diventa un installer
+  prove:
+    uses: ./.github/workflows/prove.yml
+
   costruisci:
-    needs: controllo
+    needs: [controllo, prove]
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - { sistema: windows-latest, args: "" }
-          - { sistema: ubuntu-22.04, args: "" }
+        # Linux solo quando l'autore l'ha provato su una macchina vera (revisione 25, G5): allora
+        # imposta la variabile del repository LINUX_PROVATO a true (Settings → Secrets and
+        # variables → Actions → Variables). Fino ad allora il rilascio è solo per Windows.
+        sistema: ${{ fromJSON(vars.LINUX_PROVATO == 'true' && '["windows-latest", "ubuntu-22.04"]' || '["windows-latest"]') }}
     runs-on: ${{ matrix.sistema }}
     steps:
       - uses: actions/checkout@v4
@@ -70,4 +76,4 @@ jobs:
           releaseDraft: true
           prerelease: ${{ contains(github.ref_name, '-') }}
           # una pre-release (v…-beta.1) legge il canale di prova: tauri.prova.conf.json (canale.yml)
-          args: --config src-tauri/tauri.rilascio.conf.json ${{ contains(github.ref_name, '-') && '--config src-tauri/tauri.prova.conf.json' || '' }} ${{ matrix.args }}
+          args: --config src-tauri/tauri.rilascio.conf.json ${{ contains(github.ref_name, '-') && '--config src-tauri/tauri.prova.conf.json' || '' }}

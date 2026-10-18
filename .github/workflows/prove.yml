@@ -1,0 +1,103 @@
+# Le prove del remake, su GitHub (revisione 25, G5; sviluppo/STRUTTURA.md per i comandi).
+#
+# Partono a ogni push su main e a ogni pull request che tocca il gioco o l'app (non per i soli
+# documenti), a mano dalla scheda Actions, e prima di ogni rilascio (rilascio.yml le chiama: un tag
+# su un commit rotto non diventa un installer). Sono le stesse che si lanciano in locale:
+#
+#   il motore audio e l'app   cargo test, le 14 partite rese dal motore audio, i riconoscimenti,
+#                             le versioni (su Windows, la piattaforma provata)
+#   il gioco                  le prove in node e i collaudi in Python e in node: regressioni,
+#                             pulsanti, menu, eventi, diario, scritti, salvataggi, tipografia
+#
+# Restano fuori le prove dentro l'eseguibile (strumenti/prova_eseguibile.py: finali, salvataggi,
+# mondo), che aprono una finestra e il dispositivo audio: si fanno in locale, prima di ogni consegna.
+name: Prove
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ["**/*.md", "progettazione/**", "grafica/**", "old_version/**", "consegne/**"]
+  pull_request:
+    paths-ignore: ["**/*.md", "progettazione/**", "grafica/**", "old_version/**", "consegne/**"]
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: prove-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name != 'workflow_call' }}
+
+jobs:
+  motore-audio:
+    name: Il motore audio e l'app (Windows)
+    runs-on: windows-latest
+    env:
+      # le prove girano nel profilo di rilascio (il suono è lento senza ottimizzazioni), ma senza
+      # LTO e con più unità di compilazione: si costruisce in pochi minuti invece che in mezz'ora
+      CARGO_PROFILE_RELEASE_LTO: "false"
+      CARGO_PROFILE_RELEASE_CODEGEN_UNITS: "16"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: app/package-lock.json }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: lark, dalla ruota del repository (la stessa che usa l'app)
+        run: python -m pip install app/vendor/lark-1.3.1-py3-none-any.whl
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: swatinem/rust-cache@v2
+        with: { workspaces: "app/src-tauri -> target" }
+      - name: L'app (la pagina serve anche a cargo, che la incorpora)
+        working-directory: app
+        run: |
+          npm ci
+          npm run build
+      - name: cargo test
+        working-directory: app/src-tauri
+        run: cargo test --lib --release
+      - name: Le 14 partite nel motore audio
+        run: |
+          python strumenti/audio/traccia.py --tutti
+          cd app/src-tauri
+          cargo run --release --example prova_partite -- ../../collaudo/tracce
+      - name: I riconoscimenti e le versioni
+        run: |
+          python strumenti/riconoscimenti.py --verifica
+          node strumenti/versione.mjs verifica
+
+  gioco:
+    name: Il gioco (prove e collaudi)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: app/package-lock.json }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: lark, dalla ruota del repository
+        run: python -m pip install app/vendor/lark-1.3.1-py3-none-any.whl
+      - name: Le prove in node
+        working-directory: app
+        run: |
+          npm ci
+          npm run prove
+      - name: Le regressioni (i 14 percorsi, con le riprese)
+        run: python collaudo/regressioni.py --riprese
+      - name: I pulsanti
+        run: python collaudo/pulsanti.py
+      - name: I menu del modello d'azione
+        run: node collaudo/menu.mjs
+      - name: Gli eventi del suono
+        run: python collaudo/eventi.py
+      - name: Il diario
+        run: python collaudo/diario.py
+      - name: I comandi scritti
+        run: python collaudo/scritti.py
+      - name: I salvataggi
+        run: python collaudo/salvataggi.py
+      - name: La tipografia
+        run: |
+          node collaudo/tipografia.mjs
+          node collaudo/tipografia.mjs --solo-testo
