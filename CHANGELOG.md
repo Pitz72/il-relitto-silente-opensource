@@ -8,6 +8,8 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+## [0.2.5-beta.1] - 2026-10-19
+
 ### Aggiunto
 
 - **I titoli di coda** (decisione dell’autore, 19 ottobre 2026; `app/src/riconoscimenti/Titoli.tsx`). I riconoscimenti non sono più una schermata da sito all’avvio: scorrono alla fine, come al cinema, con la loro canzone, **«Voice in the Deep»** (Lyria 3.5, 2:58; generata dall’autore con lo stile e il testo in inglese del documento 22, §5.9: la solitudine, l’estinzione, il lasciare una traccia). Il nastro va con l’orologio della canzone: l’ultimo cartello arriva quando la voce canta da sola l’ultima riga, «A voice in the deep», a 2:40,5, resta fermo tre secondi, e poi tutto va lentamente nel nero (sette secondi) mentre la canzone sfuma con lui (`Brano::Titoli` e `Comando::Sfuma` nel motore audio). Partono dopo un finale, con il pulsante «Titoli di coda» accanto ad «Annulla l’ultima mossa», «Ricomincia» e «Carica», e dalla voce «Riconoscimenti» del menu; alla fine si torna al menu. Il titolo e l’autore; le fondamenta, la musica, i suoni, le immagini e i caratteri, con il ruolo a sinistra e il nome a destra; le librerie, soli nomi, in un blocco fitto; i marchi. L’ultimo cartello è il titolo e, in bianco, i marchi di Runtime Multimedia e di FAVELLA 1 (`app/src/loghi/Marchi.tsx`, le forme dei loghi d’apertura). «salta», Esc o Invio li chiudono (nel nero in poco più di un secondo); la rotella del mouse li porta avanti e indietro; con il movimento ridotto si mostrano a pagine, che durano quanto serve per arrivare all’ultima riga con la voce. La prova dei finali nell’eseguibile, dopo l’ultimo finale, li fa partire e li salta.

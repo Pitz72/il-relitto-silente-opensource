@@ -1,6 +1,6 @@
 [package]
 name = "il-relitto-silente"
-version = "0.2.4"
+version = "0.2.5-beta.1"
 description = "Il Relitto Silente — avventura testuale, app desktop"
 authors = ["Simone Pizzi"]
 license = "MIT"
