@@ -88,10 +88,9 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   const [aggiornamento, setAggiornamento] = useState<{ versione: string; avanzamento: Avanzamento; errore: string | null } | null>(null);
   const partite = useRef(0);
 
-  // all'avvio: il nero, poi i loghi; il motore comincia a caricarsi, e il registro dei finali si legge
+  // all'avvio: il nero, poi i loghi; il registro dei finali si legge
   useEffect(() => {
     const t = setTimeout(() => setSchermata((s) => (s.tipo === "nero" ? { tipo: "loghi" } : s)), NERO);
-    void avviaMotore().catch(() => undefined);
     void leggiRegistro().then((r) => {
       registroRef.current = r;
       setRegistro(r);
@@ -137,6 +136,17 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
 
   // dopo i loghi, la dichiarazione
   const dopoILoghi = useCallback(() => setSchermata({ tipo: "dichiarazione" }), []);
+
+  // il motore comincia a caricarsi finiti i loghi (revisione 25, M1): l'importazione del ponte e la
+  // compilazione sono chiamate sincrone di Pyodide, e durante i loghi li fermavano per quasi un
+  // secondo. La dichiarazione è un testo fermo: regge l'attesa. Un attimo dopo, perché la sua
+  // dissolvenza d'entrata cominci prima
+  const versoIlMotore = schermata.tipo !== "nero" && schermata.tipo !== "loghi";
+  useEffect(() => {
+    if (!versoIlMotore) return;
+    const t = setTimeout(() => void avviaMotore().catch(() => undefined), 300);
+    return () => clearTimeout(t);
+  }, [versoIlMotore]);
 
   // i titoli di coda: dopo un finale la partita è finita, e Continua non la riprende
   const aiTitoli = useCallback(() => {

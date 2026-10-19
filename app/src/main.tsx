@@ -22,7 +22,7 @@ function tastoDelBrowser(e: KeyboardEvent): boolean {
 }
 
 // Le pagine, ognuna con i suoi stili (si caricano solo quando servono):
-//   (niente)          l'app: i riconoscimenti al primo avvio, il menu principale,
+//   (niente)          l'app: i loghi, la dichiarazione, il menu principale,
 //                     l'intro, il gioco (Relitto.tsx)
 //   ?gioco            il gioco, subito (lo sviluppo: window.__gioco)
 //   ?prova=finali     la prova dei sei finali attraverso l'interfaccia (come

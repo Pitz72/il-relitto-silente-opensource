@@ -1,7 +1,8 @@
 // ============================================================================
-//  Il motore, uno per l'app. Comincia a caricarsi all'avvio (riconoscimenti,
-//  menu e intro lo lasciano lavorare dietro: 06-app-desktop.md, §10) e lo
-//  usano tutte le schermate. Anche quando React (StrictMode) monta due volte,
+//  Il motore, uno per l'app. Comincia a caricarsi finiti i loghi, durante la
+//  dichiarazione (revisione 25, M1: durante i loghi le chiamate sincrone di
+//  Pyodide li fermavano); menu e intro lo lasciano lavorare dietro
+//  (06-app-desktop.md, §10), e lo usano tutte le schermate. Anche quando React (StrictMode) monta due volte,
 //  Pyodide si carica una volta sola.
 // ============================================================================
 import { useEffect, useState } from "react";
