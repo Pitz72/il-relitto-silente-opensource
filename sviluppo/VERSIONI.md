@@ -242,5 +242,6 @@ lo bloccherebbe.
   gioco gli ha chiesto di aggiornare alla beta.2, l’ha scaricata, ha avviato l’installatore, e si è riaperto alla beta.2 (controllato
   sull’eseguibile installato). Il canale `aggiornamenti`, quello delle versioni normali, è ancora vuoto (404): il gioco lo dice con
   «Non c’è ancora una versione da scaricare.» L’unica cosa che mancava era un segno che lo scaricamento andava avanti: la barra
-  (revisione 25, L15) c’è dalla versione dopo la beta.2.
+  (revisione 25, L15) c’è dalla beta.3: la beta.2 installata si è aggiornata alla beta.3 come prima, e la beta.3 alla beta.4
+  mostrando la barra con i megabyte e poi «Installo» (l’autore l’ha vista; controllato sull’eseguibile installato, 0.2.5-beta.4).
 
