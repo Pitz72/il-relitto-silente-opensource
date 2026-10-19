@@ -8,6 +8,8 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+## [0.2.4] - 2026-10-19
+
 ### Aggiunto
 
 - **Le copertine social** (16 ottobre 2026; `progettazione/24-copertina-e-logo.md`, §9): in cinque formati (16:9, 21:9, 9:16, poster 2:3, anteprima 2:1), composte in codice (`strumenti/copertina/componi.py`): il fuso nero che mangia le stelle, il seme verde, la Santa Maria canonica, il titolo con i caratteri del gioco. L'anteprima da 1280 × 640 è nel repository (`grafica/copertine/`), le altre si rigenerano.

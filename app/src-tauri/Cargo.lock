@@ -1652,7 +1652,7 @@ dependencies = [
 
 [[package]]
 name = "il-relitto-silente"
-version = "0.2.3"
+version = "0.2.4"
 dependencies = [
  "cpal",
  "kira",
