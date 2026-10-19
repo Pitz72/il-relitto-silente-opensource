@@ -10,6 +10,7 @@
 // ============================================================================
 import { useEffect, useMemo, useRef, useState } from "react";
 import { cicloA, FOTOGRAMMI } from "../ritmo";
+import { romano } from "../../lib/italiano";
 import type { Turno } from "../../motore/tipi";
 import { statoAria, type Clima } from "../../stile/atmosfere";
 import { generatore, glifo } from "../../intro/glifi";
@@ -26,7 +27,6 @@ interface Props {
   battito: number;
 }
 
-const ROMANI = ["I", "II", "III", "IV", "V"];
 const DI_BORDO = new Set(["plancia", "cuccetta", "sala macchine", "stiva", "scafo"]);
 const TELECAMERE: Record<string, string> = { plancia: "cam 01", cuccetta: "cam 02", stiva: "cam 03", "sala macchine": "cam 04", scafo: "cam esterna" };
 const IMMAGINI: Record<string, string> = { plancia: "./intro/plancia.webp" };
@@ -382,7 +382,7 @@ export function CartelloAtto({ atto, titolo, acciaio, chiudi }: { atto: number; 
   }, [chiudi]);
   return (
     <div className={`cartello-atto${acciaio ? " acciaio" : ""}`} role="status" onClick={chiudi}>
-      <span className="numero">Atto {ROMANI[atto - 1]}</span>
+      <span className="numero">Atto {romano(atto)}</span>
       <span className="titolo">{titolo}</span>
     </div>
   );

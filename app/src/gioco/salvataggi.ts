@@ -6,6 +6,7 @@
 //  stanno nel localStorage, con lo stesso formato: la pagina non cambia.
 // ============================================================================
 import { comando, dentroTauri } from "../lib/tauri";
+import { MESI } from "../lib/italiano";
 import type { Salvataggio } from "../motore/tipi";
 
 export type IdPosto = "1" | "2" | "3" | "4" | "5" | "6" | "automatico";
@@ -77,7 +78,6 @@ export function quando(iso: string | null): string {
   if (!iso) return "";
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "";
-  const mesi = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"];
   const ore = `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
-  return `${d.getDate()} ${mesi[d.getMonth()]}, ${ore}`;
+  return `${d.getDate()} ${MESI[d.getMonth()]}, ${ore}`;
 }

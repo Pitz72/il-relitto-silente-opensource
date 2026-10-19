@@ -7,6 +7,8 @@
 //  opzioni. Il motore lo carica l'app all'avvio (motore/condiviso.ts); la
 //  partita comincia come la sceglie il menu principale: nuova, da un
 //  salvataggio, o ripresa (tornando dal menu).
+//  La tastiera sta in tastiera.ts, le sonde delle prove in sonde.ts
+//  (revisione 25, L13).
 // ============================================================================
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import type { Motore } from "../motore/runtime";
@@ -16,7 +18,6 @@ import { costruisciModello, type ModelloAzione, type SceltaModello } from "../az
 import { AZIONI_DI_SITUAZIONE } from "../azione/situazione";
 import { climaDi, tavolozza, variabiliCss } from "../stile/atmosfere";
 import { attributiSchermo, useMovimentoRidotto, useOpzioni } from "../stile/opzioni";
-import { comando } from "../lib/tauri";
 import { schermoIntero as cambiaSchermo } from "../lib/finestra";
 import { avviaSuono, mixSuono, pausaSuono, suonaTocco, suonaTurno, taciSuono } from "./suono";
 import { gestoDelClic } from "./tocco";
@@ -35,6 +36,8 @@ import Vene from "./vene/Vene";
 import { Avviso, Conferma, PannelloOpzioni, PannelloTasti, Pausa, Salvataggi, useAvviso, type Domanda } from "./pannelli/Pannelli";
 import { archivio, type IdPosto, type Posto } from "./salvataggi";
 import { salvaUscendo } from "./uscita";
+import { useTastiera, type Pannello } from "./tastiera";
+import { useSonde } from "./sonde";
 import { rigaDelRegistro } from "../menu/registro";
 import "../stile/base.css";
 import "./gioco.css";
@@ -88,13 +91,6 @@ const semeNuovo = () => 1 + Math.floor(Math.random() * 2147483646);
 
 /** Il congedo dell'Anziano: il punto di non ritorno che chiede una conferma (D16). */
 const CONGEDO = /^\[Chiudi gli occhi/;
-
-type Pannello = null | "pausa" | "diario" | "salva" | "carica" | "opzioni" | "tasti";
-
-/** La prova dei salvataggi nell'eseguibile vero (RELITTO_PROVA=salvataggi):
- *  sei comandi, il salvataggio nel posto 6 attraverso il processo Tauri,
- *  l'elenco, la rilettura, il caricamento; poi un rapporto, e si esce. */
-const PROVA_SALVATAGGI = ["analizza la nave aliena", "accosta", "spara gli arpioni", "ovest", "prendi la tuta", "indossa la tuta"];
 
 /** Il gioco che non può andare avanti (revisione 25, M7): una frase, il rimedio, e il dettaglio
  *  tecnico ripiegato, da copiare per chi deve correggere. Prima c'era la pila delle chiamate. */
@@ -578,168 +574,12 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
     cambiaOpzioni({ schermoIntero: await cambiaSchermo() });
   }, [cambiaOpzioni]);
 
-  // ---- la tastiera (§6.2) ----------------------------------------------------
-  useEffect(() => {
-    const giu = (e: KeyboardEvent) => {
-      if (e.ctrlKey || e.altKey || e.metaKey) return;
-      // F5 e F9 non ricaricano la pagina: salvano e caricano
-      if (e.key === "F5" || e.key === "F9") {
-        e.preventDefault();
-        if (!domanda && turno) void apriSalvataggi(e.key === "F5" ? "salva" : "carica");
-        return;
-      }
-      if (e.key === "F11") {
-        e.preventDefault();
-        void schermoIntero();
-        return;
-      }
-      if (domanda) return; // la conferma ha i suoi tasti
-      // a solo testo le lettere sono della riga: il diario si apre scrivendo DIARIO
-      const d = !scritti && (e.key === "d" || e.key === "D");
-      if (pannello) {
-        if (pannello === "diario" && (e.key === "Escape" || d)) {
-          e.preventDefault();
-          setPannello(null);
-        } else if (pannello === "pausa" && d) {
-          e.preventDefault();
-          setPannello("diario");
-        } else if (e.key === "Escape") {
-          e.preventDefault();
-          setPannello(pannello === "pausa" ? null : "pausa");
-        }
-        return;
-      }
-      if (d && turno) {
-        e.preventDefault();
-        setPannello("diario");
-        return;
-      }
-      if (scritti) {
-        // Esc: la riga lo prende se ha del testo da svuotare; a riga vuota arriva qui, e apre la pausa
-        if (e.key === "Escape") {
-          e.preventDefault();
-          if (turno) setPannello("pausa");
-        }
-        return;
-      }
-      const suPulsante = e.target instanceof HTMLButtonElement;
-      if (e.key === "Escape") {
-        e.preventDefault();
-        if (selezione.tipo !== "nessuna" || altri) {
-          // il fuoco torna sulla cosa da cui il fiore o «Usa con…» era partito, o sull'attrezzo
-          // (che è della tuta, o una cosa che porti, come la taglierina)
-          const chiavi =
-            selezione.tipo === "fiore" || selezione.tipo === "usaCon"
-              ? [`cosa:${selezione.cosa}`]
-              : selezione.tipo === "inMano"
-                ? [`attrezzo:${selezione.attrezzo}`, `cosa:${selezione.attrezzo}`]
-                : [];
-          chiudi();
-          if (chiavi.length)
-            setTimeout(() => {
-              for (const k of chiavi) {
-                const b = document.querySelector<HTMLButtonElement>(`.baccello[data-chiave="${CSS.escape(k)}"]`);
-                if (b) return b.focus();
-              }
-            }, 0);
-        } else if (turno) setPannello("pausa");
-        return;
-      }
-      // Spazio completa il testo; su un pulsante lo preme, tranne su una cosa mentre il testo sta comparendo
-      const suCosa = e.target instanceof HTMLButtonElement && e.target.classList.contains("baccello") && !!document.querySelector(".turno.attuale.in-rivelazione");
-      if (e.key === " " && (!suPulsante || suCosa)) {
-        e.preventDefault();
-        setCompleta((n) => n + 1);
-        return;
-      }
-      if (!modello || selezione.tipo !== "nessuna" || altri) return;
-      // le uscite e le scelte hanno il loro tasto
-      const tasto = e.code.startsWith("Numpad") ? e.code : e.key;
-      const uscita = modello.fase === "gioco" ? modello.uscite.find((u) => u.tasto === tasto) : undefined;
-      if (uscita) {
-        e.preventDefault();
-        gioca(uscita.comando);
-        return;
-      }
-      const scelta = modello.scelte.find((s) => s.tasto && s.tasto === e.key.toLowerCase());
-      if (scelta) {
-        e.preventDefault();
-        scegli(scelta);
-      }
-    };
-    addEventListener("keydown", giu);
-    return () => removeEventListener("keydown", giu);
-  }, [modello, selezione, altri, gioca, chiudi, scegli, pannello, domanda, turno, apriSalvataggi, schermoIntero, scritti]);
+  // ---- la tastiera (§6.2): gioco/tastiera.ts ---------------------------------
+  const avanzaCompleta = useCallback(() => setCompleta((n) => n + 1), []);
+  useTastiera({ modello, selezione, altri, pannello, domanda, turno, scritti, apriSalvataggi, schermoIntero, setPannello, chiudi, completa: avanzaCompleta, gioca, scegli });
 
-  // la sonda della prova dei finali: il turno come lo vede il modello, i passi, il finale
-  useEffect(() => {
-    if (prova !== "finali") return;
-    const w = window as unknown as Record<string, unknown>;
-    w.__sondaGioco = {
-      esito: turno?.esito ?? "in_corso",
-      modello,
-      passi: passi.current,
-      finale: finaleRef.current,
-      impronta: () => motoreRef.current?.impronta() ?? "",
-    };
-    return () => {
-      delete w.__sondaGioco;
-    };
-  }, [prova, turno, modello]);
-
-  // la prova dei salvataggi nell'eseguibile (RELITTO_PROVA=salvataggi)
-  const provaFatta = useRef(false);
-  useEffect(() => {
-    if (prova !== "salvataggi" || !turno || provaFatta.current) return;
-    provaFatta.current = true;
-    (async () => {
-      const m = motoreRef.current!;
-      const esito: Record<string, unknown> = { data: new Date().toISOString(), versione: VERSIONE, ok: false };
-      try {
-        for (const c of PROVA_SALVATAGGI) gioca(c);
-        await new Promise((r) => setTimeout(r, 400)); // il salvataggio automatico del cambio di stanza
-        const impronta = m.impronta();
-        const testo = m.salva(`${VERSIONE.gioco} · ${VERSIONE.commit} · prova`, new Date().toISOString());
-        const a = archivio();
-        await a.scrivi("6", testo);
-        const elenco = await a.elenco();
-        const letto = await a.leggi("6");
-        const r = m.carica(letto);
-        esito.cartella = await a.dove();
-        esito.posto6 = elenco.find((p) => p.posto === "6");
-        esito.automatico = elenco.find((p) => p.posto === "automatico");
-        esito.letto_uguale = letto === testo;
-        esito.caricamento = r.ok ? { esito: r.esito, ms: r.ms } : { rifiuto: r.motivo, messaggio: r.messaggio };
-        esito.impronta_uguale = r.ok && m.impronta() === impronta;
-        esito.ok = esito.letto_uguale === true && r.ok && r.esito === "identica" && esito.impronta_uguale === true && !!(esito.automatico as Posto | undefined)?.presente;
-      } catch (e) {
-        esito.errore = String(e instanceof Error ? e.message : e);
-      }
-      await comando("scrivi_rapporto", { nome: `prova-salvataggi-${Date.now()}.json`, contenuto: JSON.stringify(esito, null, 2) });
-      await comando("esci", { codice: esito.ok ? 0 : 1 });
-    })();
-  }, [prova, turno, gioca]);
-
-  // Solo nello sviluppo: un percorso di collaudo giocato fino a un passo, per
-  // guardare lo schermo in un punto preciso della partita (le prove della fase 3).
-  useEffect(() => {
-    if (!import.meta.env.DEV) return;
-    (window as unknown as Record<string, unknown>).__gioco = {
-      gioca,
-      percorso: (nome: string, fino = Infinity) => {
-        const m = motoreRef.current;
-        if (!m) return "il motore non è pronto";
-        const lista = m.percorso(nome).comandi.slice(0, fino);
-        comincia(m.avvia(1));
-        // i primi in fretta, gli ultimi tre come se li si giocasse adesso (il diario, il turno)
-        const veloci = Math.max(0, lista.length - 3);
-        for (const c of lista.slice(0, veloci)) m.comando(c);
-        setCronaca(m.diario().cronaca);
-        for (const c of lista.slice(veloci)) gioca(c);
-        return `${nome}: ${lista.length} comandi`;
-      },
-    };
-  }, [gioca, comincia]);
+  // le sonde delle prove (gioco/sonde.ts): non fanno niente se nessuna prova le chiede
+  useSonde({ prova, turno, modello, motoreRef, passi, finaleRef, gioca, comincia, setCronaca });
 
   const [cartello, chiudiCartello] = useCartelloAtto(turno?.stato.atto);
   const clima = turno ? climaDi(turno.stato) : null;

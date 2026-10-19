@@ -121,6 +121,15 @@ def prova(nome, verboso):
                 print(f"    {a}  →  {b}")
     if len(scritto) != len(base):
         problemi.append(f"{nome}: {len(scritto)} passi scritti, {len(base)} a pulsanti")
+    # un comando scritto a mano risolve la stessa cosa del suo pulsante: lo fa la spia del ponte, che guarda che
+    # cosa il motore ha risolto davvero (revisione 25, L13). Se la spia diventa cieca, «indossala» e «usa taglierina
+    # sulla giuntura» restano senza cosa. Fa eccezione «parla con»: il motore registra chi si ascolta altrove, e per
+    # il suono e il diario basta il verbo
+    for n, (a, b, c, o) in enumerate(zip(base, scritto, tutte, comandi), 1):
+        if c != o and a[2] != b[2] and not o.startswith("parla "):
+            problemi.append(f"{nome}, passo {n} ({c}, a pulsanti: {o}): la cosa risolta è diversa: {a[2]} / {b[2]}"
+                            " (la spia di _elabora_analizzando)")
+            break
     for n, (a, b) in enumerate(zip(base, scritto), 1):
         if a[3] != b[3]:
             problemi.append(f"{nome}, passo {n} ({tutte[n - 1]}): la partita scritta arriva a un punto diverso")

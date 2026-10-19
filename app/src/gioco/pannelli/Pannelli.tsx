@@ -6,6 +6,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import type { Forma } from "../../stile/atmosfere";
 import type { Opzioni } from "../../stile/opzioni";
+import { romano } from "../../lib/italiano";
 import { POSTI, quando, type IdPosto, type Posto } from "../salvataggi";
 import RigheNovita from "../../menu/RigheNovita";
 import "./pannelli.css";
@@ -189,7 +190,6 @@ export function Pausa({ forma, voci }: { forma: Forma; voci: VociPausa }) {
 // ----------------------------------------------------------------------------
 //  I salvataggi
 // ----------------------------------------------------------------------------
-const ROMANI = ["I", "II", "III", "IV", "V"];
 
 export function Salvataggi({
   modo,
@@ -231,7 +231,7 @@ export function Salvataggi({
                     <>
                       <span className="stanza-posto">{(r?.nome_stanza ?? r?.stanza ?? "").replace(/'/g, "’").replace(/^./, (x) => x.toUpperCase())}</span>
                       <span className="dettagli-posto">
-                        {r ? `Atto ${ROMANI[r.atto - 1] ?? r.atto} · turno ${r.turno}${r.aria !== null ? ` · aria ${r.aria}` : ""}` : ""}
+                        {r ? `Atto ${romano(r.atto)} · turno ${r.turno}${r.aria !== null ? ` · aria ${r.aria}` : ""}` : ""}
                       </span>
                       <span className="data-posto">{quando(p.creato)}</span>
                     </>

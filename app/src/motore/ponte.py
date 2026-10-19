@@ -37,7 +37,7 @@ import time
 
 from compilatore import compila_mondo
 from favella_utils import radice_proprieta, raccogli_uscita
-from gioco import (_ripristina_ramo, _salva_ramo, carica_da_dati, dati_salvataggio, elabora_comando,
+from gioco import (_esegui_comando, _ripristina_ramo, _salva_ramo, carica_da_dati, dati_salvataggio, elabora_comando,
                    mostra_situazione, nuova_partita, prova, pulsanti, risolvi_in_silenzio)
 from libreria_azioni import LIBRERIA_AZIONI
 from strutture import SEME_CASUALE_DEFAULT, VERSIONE_MOTORE, ConseguenzaProprieta, Mondo
@@ -153,6 +153,13 @@ def _verbo_scritto(m, parola):
     return _verbo_del_pulsante(m, parola)
 
 
+# Il codice della funzione del motore che esegue un comando: la spia di `_elabora_analizzando`
+# riconosce da lì le cose che il comando ha nominato. Prima la riconosceva dal nome scritto in una
+# stringa, e se il motore l'avesse rinominata la spia sarebbe diventata cieca in silenzio; ora
+# l'import qui sopra fallirebbe subito (revisione 25, L13). collaudo/scritti.py controlla che veda.
+_CODICE_DEL_COMANDO = _esegui_comando.__code__
+
+
 def _elabora_analizzando(m, comando, analisi):
     """Gioca un comando. Quello nato da un pulsante è già scomposto (verbo e cose). Uno **scritto**
     (la modalità a solo testo, documento 18) si scompone da ciò che il motore ha fatto davvero: le
@@ -167,7 +174,7 @@ def _elabora_analizzando(m, comando, analisi):
 
     def spia(self, id_oggetto):
         # solo le cose che il comando ha nominato: non quelle che il motore elenca descrivendo la stanza
-        if sys._getframe(1).f_code.co_name == "_esegui_comando":
+        if sys._getframe(1).f_code is _CODICE_DEL_COMANDO:
             registrati.append(id_oggetto)
         return originale(self, id_oggetto)
 

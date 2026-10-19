@@ -8,14 +8,13 @@
 // ============================================================================
 import { useLayoutEffect, useMemo, useRef, type KeyboardEvent } from "react";
 import type { Forma } from "../../stile/atmosfere";
+import { romano } from "../../lib/italiano";
 import type { Evento, VoceCronaca } from "../../motore/tipi";
 import { blocchiDelTurno, type Blocco } from "../lamina/grammatica";
 import { TestoInerte, Turno } from "../lamina/Lamina";
 import { Pannello } from "../pannelli/Pannelli";
 import { allaMatrice, nomeDiLuogo, pagine, pagineAperte, titoloPagina, type IdPagina } from "./pagine";
 import "./diario.css";
-
-const ROMANI = ["I", "II", "III", "IV", "V"];
 
 /** I blocchi di una voce si calcolano una volta sola: la cronaca non cambia. */
 const memoria = new WeakMap<object, Blocco[]>();
@@ -143,7 +142,7 @@ function Trascrizione({ apertura, cronaca, verbi, forma }: { apertura: readonly 
         <section key={v.chiave} className="diario-turno">
           {v.atto !== (cronaca[i - 1]?.atto ?? 1) && (
             <div className="diario-atto">
-              Atto {ROMANI[v.atto - 1]} · {v.titolo_atto.toLowerCase()}
+              Atto {romano(v.atto)} · {v.titolo_atto.toLowerCase()}
             </div>
           )}
           <Turno voce={{ chiave: v.chiave, comando: v.comando, differenza: v.differenza, blocchi: blocchiDi(v, v.eventi, verbi) }} forma={forma} />

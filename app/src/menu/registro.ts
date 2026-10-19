@@ -9,6 +9,7 @@
 //  Puro: la lettura e la scrittura su disco stanno in registroSuDisco.ts.
 // ============================================================================
 import type { Evento } from "../motore/tipi";
+import { MESI } from "../lib/italiano.ts";
 
 /** I sei finali (ponte.py, FINALI), con i loro nomi. */
 export const FINALI: readonly { id: string; titolo: string }[] = [
@@ -63,6 +64,5 @@ export function pulisci(dati: unknown): VoceRegistro[] {
 export function giorno(iso: string): string {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "";
-  const mesi = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"];
-  return `${d.getDate()} ${mesi[d.getMonth()]} ${d.getFullYear()}`;
+  return `${d.getDate()} ${MESI[d.getMonth()]} ${d.getFullYear()}`;
 }

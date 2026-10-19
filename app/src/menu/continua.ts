@@ -5,6 +5,7 @@
 //  finita, automatico compreso.
 // ============================================================================
 import type { Posto } from "../gioco/salvataggi";
+import { romano } from "../lib/italiano.ts";
 
 export function daContinuare(posti: readonly Posto[] | null): Posto | null {
   let meglio: Posto | null = null;
@@ -16,12 +17,10 @@ export function daContinuare(posti: readonly Posto[] | null): Posto | null {
   return meglio;
 }
 
-const ROMANI = ["I", "II", "III", "IV", "V"];
-
 /** «La stiva · atto I · turno 6»: dove si riprende, sotto «Continua». */
 export function dettaglioDi(p: Posto): string {
   const r = p.riassunto;
   if (!r) return p.posto === "automatico" ? "l’ultima stanza" : `posto ${p.posto}`;
   const stanza = (r.nome_stanza ?? r.stanza ?? "").replace(/'/g, "’").replace(/^./, (x) => x.toUpperCase());
-  return `${stanza} · atto ${ROMANI[r.atto - 1] ?? r.atto} · turno ${r.turno}`;
+  return `${stanza} · atto ${romano(r.atto)} · turno ${r.turno}`;
 }

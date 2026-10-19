@@ -32,11 +32,13 @@ function tastoDelBrowser(e: KeyboardEvent): boolean {
 //                     RELITTO_PROVA=salvataggi prova invece i salvataggi nel gioco)
 //   ?intro            l'intro (con &revisione, la barra per rivedere l'animatic)
 //   ?campionario      il campionario del sistema visivo: caratteri, atmosfere, contrasti
+//                     (solo nello sviluppo: non entra nelle versioni da pubblicare;
+//                     la pagina di prova sì, perché le prove girano nell'eseguibile)
 const Relitto = lazy(() => import("./Relitto"));
 const Gioco = lazy(() => import("./gioco/Gioco"));
 const Intro = lazy(() => import("./intro/Intro"));
 const Prova = lazy(() => import("./prova/Prova"));
-const Campionario = lazy(() => import("./campionario/Campionario"));
+const Campionario = import.meta.env.DEV ? lazy(() => import("./campionario/Campionario")) : null;
 // la console di regia (Ctrl+Maiusc+M): i livelli dei canali del suono, in qualunque schermata
 const ConsoleMix = __REGIA__ ? lazy(() => import("./console/ConsoleMix")) : null;
 
@@ -44,7 +46,7 @@ const parametri = new URLSearchParams(location.search);
 
 async function pagina() {
   if (parametri.has("intro")) return <Intro revisione={parametri.has("revisione")} />;
-  if (parametri.has("campionario")) return <Campionario />;
+  if (Campionario && parametri.has("campionario")) return <Campionario />;
   if (parametri.get("prova") === "finali") return <Relitto prova="finali" />;
   if (parametri.has("prova")) return <Prova />;
   if (parametri.has("gioco")) return <Gioco />;
