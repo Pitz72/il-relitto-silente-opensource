@@ -160,6 +160,21 @@ export default function Intro({ revisione = false, onFine, ridotto }: { revision
     };
   }, []);
 
+  // il contesto WebGL perso a metà (un driver aggiornato, il ritorno dalla sospensione: revisione
+  // 25, L10): l'intro non si può più vedere, e si va al gioco, come senza WebGL2. Nella revisione resta
+  useEffect(() => {
+    const c = spazio.current;
+    if (!c || revisione) return;
+    const perso = () => {
+      if (finita.current) return;
+      finita.current = true;
+      console.warn("[intro] contesto WebGL perso: si salta");
+      onFine?.();
+    };
+    c.addEventListener("webglcontextlost", perso);
+    return () => c.removeEventListener("webglcontextlost", perso);
+  }, [revisione, onFine]);
+
   // ---- un fotogramma ------------------------------------------------------------------
   const fotogramma = useCallback(
     (t: number) => {

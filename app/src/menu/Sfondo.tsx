@@ -4,11 +4,13 @@
 //  stelle, viva e lentissima. La disegna lo stesso motore WebGL dell'intro
 //  (intro/scala.ts), a metà risoluzione e a venti fotogrammi al secondo al
 //  più: si muove di pochi metri al minuto. Con il movimento ridotto è un quadro
-//  fermo. Senza WebGL2 resta il colore del fondo.
+//  fermo. Senza WebGL2 resta il colore del fondo. Se il contesto WebGL si perde
+//  (un driver aggiornato, il ritorno dalla sospensione: revisione 25, L10), la
+//  scena si rifà da capo quando il sistema lo restituisce.
 //  Nello sviluppo, window.__sfondo(t, luce) disegna un fotogramma a mano (il
 //  pannello del browser nascosto non fa girare requestAnimationFrame).
 // ============================================================================
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Scala } from "../intro/scala";
 
 /** Il tempo della scena della scala (09, scena E): la camera fra 12 e 18 km dalla poppa. */
@@ -30,6 +32,28 @@ export default function Sfondo({ ridotto }: { ridotto: boolean }) {
   // morta. Si spegne solo quando il componente se ne va davvero.
   const pronta = useRef<Promise<Scala> | null>(null);
   const addio = useRef<number | null>(null);
+  // il contesto perso e poi restituito: la scena rinasce (un numero che cresce), e la vecchia non si
+  // spegne, perché spegnerla ucciderebbe il contesto appena tornato (lo stesso, sulla stessa tela)
+  const [rinascite, setRinascite] = useState(0);
+  const rinata = useRef(false);
+
+  useEffect(() => {
+    const c = tela.current;
+    if (!c) return;
+    // senza preventDefault il sistema non restituisce il contesto
+    const perso = (e: Event) => e.preventDefault();
+    const reso = () => {
+      rinata.current = true;
+      pronta.current = null;
+      setRinascite((n) => n + 1);
+    };
+    c.addEventListener("webglcontextlost", perso);
+    c.addEventListener("webglcontextrestored", reso);
+    return () => {
+      c.removeEventListener("webglcontextlost", perso);
+      c.removeEventListener("webglcontextrestored", reso);
+    };
+  }, []);
 
   useEffect(() => {
     const c = tela.current;
@@ -78,13 +102,17 @@ export default function Sfondo({ ridotto }: { ridotto: boolean }) {
     return () => {
       vivo = false;
       cancelAnimationFrame(raf);
+      if (rinata.current) {
+        rinata.current = false;
+        return;
+      }
       addio.current = window.setTimeout(() => {
         void scala.then((s) => s.distruggi()).catch(() => undefined);
         pronta.current = null;
         addio.current = null;
       }, 0);
     };
-  }, [ridotto]);
+  }, [ridotto, rinascite]);
 
   return <canvas ref={tela} className="sfondo-menu" aria-hidden="true" />;
 }
