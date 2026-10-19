@@ -1,4 +1,4 @@
-//! Il lettore dei file di musica (documento 22, §7): suona i diciassette MP3 di
+//! Il lettore dei file di musica (documento 22, §7): suona i diciotto MP3 di
 //! `audio/musica-ia/` che il gioco usa, generati con Lyria 3.5 e con Suno e scelti dall’autore.
 //! Il file è la base e non si ritocca (22, §7.1): qui si decide soltanto *quando* entra, *quanto*
 //! suona, come si incrocia con il successivo e come se ne va.
@@ -52,10 +52,12 @@ pub enum Pezzo {
     /// il tema: «Hull of the Ancient» e «Held by the Dark»
     T1,
     T2,
+    /// i titoli di coda: la canzone «Voice in the Deep» (22, §5.9)
+    CT,
 }
 
 impl Pezzo {
-    pub const TUTTI: [Pezzo; 17] = [
+    pub const TUTTI: [Pezzo; 18] = [
         Pezzo::M1a,
         Pezzo::M1b,
         Pezzo::S2,
@@ -73,6 +75,7 @@ impl Pezzo {
         Pezzo::C5,
         Pezzo::T1,
         Pezzo::T2,
+        Pezzo::CT,
     ];
 
     /// (la cartella della scheda, il nome del file) come stanno in `audio/musica-ia/`.
@@ -95,6 +98,7 @@ impl Pezzo {
             Pezzo::C5 => ("C5", "C5-03-below-the-hull.mp3"),
             Pezzo::T1 => ("T", "T-01-hull-of-the-ancient.mp3"),
             Pezzo::T2 => ("T", "T-02-held-by-the-dark.mp3"),
+            Pezzo::CT => ("CT", "CT-01-voice-in-the-deep.mp3"),
         }
     }
 }

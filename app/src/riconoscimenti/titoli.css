@@ -15,11 +15,22 @@
   font-size: var(--corpo);
   line-height: 1.5;
   animation: tit-entra 1.2s ease-out both;
-  transition: opacity 1.2s ease-in;
 }
 @keyframes tit-entra { from { opacity: 0; } to { opacity: 1; } }
-.titoli.chiusura { opacity: 0; }
-[data-movimento="ridotto"] .titoli { animation-duration: .3s; transition-duration: .3s; }
+[data-movimento="ridotto"] .titoli { animation-duration: .3s; }
+/* la chiusura: un velo nero sale sopra tutto, lento alla fine (7 s, con la canzone che sfuma),
+   svelto se si salta; la durata la dà la pagina (--chiusura) */
+.titoli::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--chiusura, 1.2s) ease-in-out;
+}
+.titoli.chiusura::after { opacity: 1; }
 
 /* la finestra: il nastro sfuma ai due bordi, come entrasse e uscisse dal buio */
 .titoli-finestra {

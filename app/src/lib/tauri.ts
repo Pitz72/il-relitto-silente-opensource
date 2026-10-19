@@ -69,7 +69,8 @@ export type ComandoMondo =
   | { tipo: "pausa"; valore: boolean }
   | { tipo: "tocco"; valore: "scegli" | "conferma" | "annulla" }
   | { tipo: "menu"; valore: boolean }
-  | { tipo: "musica"; valore: "titoli" | "silenzio" };
+  | { tipo: "musica"; valore: "titoli" | "silenzio" }
+  | { tipo: "sfuma"; valore: number };
 
 /** I cursori e le opzioni del suono (mondo/mod.rs, `Mix`): i volumi da 0 a 1. */
 export interface MixMondo {

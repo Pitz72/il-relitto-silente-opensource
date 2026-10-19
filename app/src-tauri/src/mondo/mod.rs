@@ -139,8 +139,11 @@ pub enum Comando {
     /// il menu principale: il mondo tace, l’interfaccia è tutta membrana, e suona la musica
     /// del menu (`true`); o se ne va (`false`)
     Menu(bool),
-    /// un brano della musica, a comando (le prove e i rendering; di solito lo accende la regia)
+    /// un brano della musica, a comando (le prove e i rendering; di solito lo accende la regia;
+    /// i titoli di coda lo chiedono dalla pagina)
     Musica(Brano),
+    /// tutta la musica sfuma in tanti secondi (la fine dei titoli di coda, nel nero)
+    Sfuma(f32),
     // ---- il prototipo dei tre ambienti (la pagina di prova, i rendering)
     Ambiente(Ambiente),
     /// la cifra dell’aria, da 0 a 100
@@ -674,6 +677,7 @@ impl Mondo {
                 }
             }
             Comando::Musica(b) => self.musica.avvia(b),
+            Comando::Sfuma(s) => self.musica.sfuma(s),
             Comando::Ambiente(a) => self.prototipo(a),
             Comando::Aria(v) => self.aria_prototipo(v),
             Comando::Nave(n) => {

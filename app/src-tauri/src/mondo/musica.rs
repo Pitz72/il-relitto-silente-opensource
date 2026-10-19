@@ -83,8 +83,8 @@ pub enum Brano {
     StivaPiena,
     DoppioFondo,
     DueLettere,
-    /// i titoli di coda (decisione dell’autore, 19 ottobre 2026): per ora il tema, i due pezzi
-    /// di `T` che si alternano finché scorrono; poi il brano scritto apposta (22, §5.9)
+    /// i titoli di coda (decisione dell’autore, 19 ottobre 2026): la canzone «Voice in the
+    /// Deep» (22, §5.9), intera; la pagina la fa sfumare quando i titoli finiscono
     Titoli,
 }
 
@@ -463,7 +463,7 @@ fn pezzi_del_brano(brano: Brano) -> Vec<Pezzo> {
         Brano::StivaPiena => vec![Pezzo::C3],
         Brano::DoppioFondo => vec![Pezzo::C4],
         Brano::DueLettere => vec![Pezzo::C5],
-        Brano::Titoli => vec![Pezzo::T1, Pezzo::T2],
+        Brano::Titoli => vec![Pezzo::CT],
         Brano::Silenzio => vec![],
     }
 }
@@ -490,8 +490,9 @@ fn piano_file(brano: Brano, primo: bool) -> Option<Vec<Richiesta>> {
         Brano::DoppioFondo => r(Pezzo::C4),
         // la parte che somiglia alla scheda è l’ultima metà: da 31 s (22, §5.7)
         Brano::DueLettere => Richiesta { da: 31.0, entra: 1.5, ..r(Pezzo::C5) },
-        // i titoli: il tema, poi l’altro pezzo, e di nuovo, finché la pagina non li ferma
-        Brano::Titoli => Richiesta { entra: 3.0, dopo: Dopo::Alterna(Pezzo::T2), incrocio: 6.0, esce: 0.0, ..r(Pezzo::T1) },
+        // i titoli: la canzone, dall’inizio, com’è (ha il suo attacco e la sua coda); i titoli
+        // sono tarati su di lei (Titoli.tsx), e quando finiscono la fanno sfumare (`sfuma`)
+        Brano::Titoli => Richiesta { entra: 0.2, esce: 0.0, ..r(Pezzo::CT) },
         Brano::Anziano | Brano::Silenzio => return None,
     }])
 }
@@ -589,6 +590,15 @@ impl Musica {
                 self.programma[self.prossimo..].sort_by(|a, b| a.0.total_cmp(&b.0));
             }
         }
+    }
+
+    /// Tutta la musica sfuma in `s` secondi, quella dei file e quella sintetizzata, e poi tace:
+    /// la fine lenta dei titoli di coda, che va nel nero insieme alla canzone.
+    pub fn sfuma(&mut self, s: f32) {
+        self.azzera_programma();
+        self.brano = Brano::Silenzio;
+        self.file.tace(s);
+        self.esegui(Az::Tace(s));
     }
 
     fn azzera_programma(&mut self) {
@@ -1656,15 +1666,23 @@ mod prove_file {
     }
 
     #[test]
-    fn i_titoli_alternano_i_due_pezzi_del_tema_e_non_si_fermano() {
-        let mut m = con_pezzi(&[(Pezzo::T1, 220.0, 30.0), (Pezzo::T2, 330.0, 30.0)]);
+    fn i_titoli_suonano_la_canzone_e_sfumano_quando_finiscono() {
+        let mut m = con_pezzi(&[(Pezzo::CT, 220.0, 60.0)]);
         m.avvia(Brano::Titoli);
-        let x = rendi(&mut m, 100.0);
-        assert!(goertzel(sec(&x, 8.0, 18.0), 220.0) > 1e-6, "il tema non comincia");
-        assert!(goertzel(sec(&x, 36.0, 46.0), 330.0) > 1e-6, "dopo il tema non entra l'altro pezzo");
-        assert!(goertzel(sec(&x, 62.0, 72.0), 220.0) > 1e-6, "il tema non ritorna");
-        assert!(rms_db(sec(&x, 80.0, 99.0)) > -45.0, "i titoli si sono fermati");
-        assert_eq!(m.brano(), Brano::Titoli);
+        let x = rendi(&mut m, 12.0);
+        assert!(goertzel(sec(&x, 2.0, 10.0), 220.0) > 1e-6, "la canzone non comincia");
+        let p = m.lettore().posizione(Pezzo::CT).unwrap();
+        assert!((p - 12.0).abs() < 0.5, "la canzone era a {p} s dopo dodici secondi");
+        // la fine lenta dei titoli: in sette secondi il 98 % del cammino (la curva è esponenziale),
+        // poi la coda si spegne del tutto
+        m.sfuma(7.0);
+        let y = rendi(&mut m, 24.0);
+        let prima = rms_db(sec(&y, 0.0, 0.5));
+        assert!(prima > -40.0, "sfuma troppo in fretta ({prima:.1} dB)");
+        assert!(rms_db(sec(&y, 3.0, 4.0)) < prima - 6.0, "non sfuma");
+        assert!(rms_db(sec(&y, 6.5, 7.5)) < prima - 28.0, "dopo sette secondi si sente ancora ({:.1} dB)", rms_db(sec(&y, 6.5, 7.5)));
+        assert!(rms_db(sec(&y, 22.0, 24.0)) < -80.0, "non si spegne mai");
+        assert_eq!(m.brano(), Brano::Silenzio);
     }
 
     #[test]

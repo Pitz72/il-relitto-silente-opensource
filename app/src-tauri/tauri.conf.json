@@ -77,7 +77,8 @@
       "../../audio/musica-ia/C4/C4-01-cold-resonance-1.mp3": "musica/C4-01-cold-resonance-1.mp3",
       "../../audio/musica-ia/C5/C5-03-below-the-hull.mp3": "musica/C5-03-below-the-hull.mp3",
       "../../audio/musica-ia/T/T-01-hull-of-the-ancient.mp3": "musica/T-01-hull-of-the-ancient.mp3",
-      "../../audio/musica-ia/T/T-02-held-by-the-dark.mp3": "musica/T-02-held-by-the-dark.mp3"
+      "../../audio/musica-ia/T/T-02-held-by-the-dark.mp3": "musica/T-02-held-by-the-dark.mp3",
+      "../../audio/musica-ia/CT/CT-01-voice-in-the-deep.mp3": "musica/CT-01-voice-in-the-deep.mp3"
     },
     "linux": {
       "appimage": {

@@ -193,7 +193,7 @@ USO_MUSICA = {
     "A1": "l'Anziano: il primo letto", "A2": "l'Anziano: il secondo letto", "A3": "l'Anziano: il terzo letto",
     "A4": "l'Anziano: il quarto letto", "C1": "il finale «Vivi»", "C2": "il finale «La prima nota»",
     "C3": "il finale «La stiva piena»", "C4": "il finale «Doppio fondo»", "C5": "il finale «Due lettere»",
-    "T": "il tema, nei titoli di coda",
+    "T": "il tema", "CT": "i titoli di coda",
 }
 
 

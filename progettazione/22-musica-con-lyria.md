@@ -326,9 +326,11 @@ A sense of arrival and quiet confirmation, never a question, never suspense.
 
 ### 5.9 I titoli di coda (`CT`, 19 ottobre 2026)
 
-Decisione dell’autore: i riconoscimenti non stanno più prima del gioco, ma scorrono **alla fine**, come titoli di coda, con un brano loro (`app/src/riconoscimenti/Titoli.tsx`). Partono dopo un finale («Titoli di coda») e dalla voce «Riconoscimenti» del menu; scorrono da 1 minuto e 45 a 2 minuti, secondo lo schermo, e si fermano sull’ultimo cartello (il titolo e i due marchi) per sei secondi. **Finché il brano non c’è suona il tema**: `T-01` e `T-02` che si alternano, come i due pezzi del menu (`Brano::Titoli`, §10). Il brano è **di fantascienza** (§5.7): il ritorno a casa dopo aver incontrato qualcosa di enorme e antico, con dentro il re del reattore e le quattro note del tema, come segnali di cristallo.
+Decisione dell’autore: i riconoscimenti non stanno più prima del gioco, ma scorrono **alla fine**, come titoli di coda, con un brano loro (`app/src/riconoscimenti/Titoli.tsx`). Partono dopo un finale («Titoli di coda») e dalla voce «Riconoscimenti» del menu, e finiscono sull’ultimo cartello (il titolo e i due marchi). Per qualche ora, il 19 ottobre, ha suonato il tema (`T-01` e `T-02` alternati); poi è arrivata la canzone (qui sotto, **«Voice in the Deep»**). Il brano è **di fantascienza** (§5.7): il ritorno a casa dopo aver incontrato qualcosa di enorme e antico, con dentro il re del reattore e le quattro note del tema, come segnali di cristallo.
 
 **L’idea dell’autore (19 ottobre 2026): una canzone.** Non un brano strumentale, ma una **canzone con un testo in inglese** aderente ai temi del gioco (la solitudine, l’estinzione, il lasciare una traccia), sempre **musica da cinema di fantascienza**. È la strada principale; la partitura strumentale qui sotto resta come riserva. Il testo viene dalle parole dell’Anziano (`ponte.fav`): una lingua che era un canto; il Grande Salto, «non per conquistare, ma per comporre»; il bambino nato durante il viaggio, che disegnava il sole verso cui andavano; le tre tacche incise in una parete che nessuno avrebbe letto, «perché essere passati conta, anche quando non guarda nessuno»; il congedo, «che la musica fosse suonata, con forza, fino all’ultima nota. Vivi.» **Il testo è una bozza**: l’autore lo tiene, lo cambia o lo riscrive, e nei titoli comparirà chi l’ha scritto come lui deciderà.
+
+**Scelta dell’autore (19 ottobre 2026): «Voice in the Deep»**, Lyria 3.5, 2:58, generata con lo stile e il testo qui sotto, senza cambiare una parola (`audio/musica-ia/CT/CT-01-voice-in-the-deep.mp3`; le misure nel registro). È piena fino a 159 s, la voce canta da sola l’ultima riga, «A voice in the deep», a 160,5 s, poi resta un bordone che sfuma fino a 177 s.
 
 **`CT` · La canzone dei titoli di coda (circa 3 minuti)**
 
@@ -388,7 +390,7 @@ A voice in the deep.
 
 Deve sentirsi: **una voce sola, vicina**, mai pop; il re del reattore sotto tutto; le quattro note del tema all’inizio e alla fine; il re maggiore dell’ultimo ritornello come luce; **niente giallo, niente orrore**. Le correzioni per il Producer: se viene pop, *«Remove the drums and the pop production. Make it a slow, spacious film score with one intimate voice, drones and long strings.»*; se viene cupo da thriller, la frase del §5.7 (*«Remove all suspense…»*). In Suno la voce si chiede anche con il genere nello stile (*«female alto vocal»*); se il testo è troppo lungo per la durata, si toglie la terza strofa.
 
-**Il nastro e la canzone.** Con la canzone, i titoli si regolano sulla sua durata: il nastro arriva all’ultimo cartello (il titolo e i marchi) quando la voce dice l’ultima riga, e resta fermo mentre il re sfuma.
+**Il nastro e la canzone** (scelta dell’autore, fra «un pizzico più lenti» e «fermi sul titolo e sui loghi, poi nel nero con la canzone»: tutte e due). La canzone è lunga quasi il doppio dei titoli di prima (2:58 contro 1:36), quindi il nastro va con l’orologio della canzone: l’ultimo cartello arriva al centro a **160,5 s**, sull’ultima riga cantata, a qualunque altezza di schermo (circa 17 secondi per schermo a 1105 × 610, 21 a 1600 × 900); resta fermo **3 s**; poi un velo nero sale in **7 s** e la canzone sfuma con lui (`Comando::Sfuma`), e si torna al menu. «salta» fa la stessa cosa in 1,2 s. Con il movimento ridotto le pagine durano tutte uguali, così l’ultima arriva con l’ultima riga.
 
 **La riserva: la versione strumentale.**
 
@@ -509,8 +511,8 @@ Scritto in `app/src-tauri/src/mondo/musica_file.rs` e collegato in `musica.rs`. 
 | Anziano | `A1`–`A4` | i quattro letti della mappa del §5.3, in ripetizione con incrocio di 6 s; al cambio di nodo il letto nuovo entra in 4 s mentre il vecchio sfuma; «silenzio» è silenzio vero (1,2 s di discesa, poi 8 s di niente), poi torna `A1` |
 | Finali | `C1`–`C5` | interi; `C5` («Due lettere») parte da **31 s**, la parte che somiglia alla scheda (§5.7) |
 | «Mani vuote» | nessuno | il reattore, e basta |
-| Titoli di coda | `T-01` e `T-02` (finché non c’è `CT`, §5.9) | si alternano finché i titoli scorrono, con un incrocio di 6 s; tornando al menu sfumano |
+| Titoli di coda | `CT-01` («Voice in the Deep», §5.9) | intera, dall’inizio; quando i titoli finiscono sfuma in 7 s insieme al nero (1,2 s se si saltano) |
 
-**Che cosa non c’è ancora.** Il tema (`T-01`, `T-02`) suona soltanto nei titoli di coda, dal 19 ottobre 2026, finché non c'è il loro brano (§5.9); il motivo di quattro note in codice da sovrapporre (§7.1) non è stato scritto. Nemmeno le integrazioni sintetizzate del §7.1 (battito di `C1`, seconda onda di `C2`, vetri di `C4`, tritono di `A2`): **prima l'ascolto dell'autore**, nel gioco vero.
+**Che cosa non c’è ancora.** Il tema (`T-01`, `T-02`) non suona da nessuna parte (nei titoli di coda c’è la canzone, §5.9); il motivo di quattro note in codice da sovrapporre (§7.1) non è stato scritto. Nemmeno le integrazioni sintetizzate del §7.1 (battito di `C1`, seconda onda di `C2`, vetri di `C4`, tritono di `A2`): **prima l'ascolto dell'autore**, nel gioco vero.
 
 **Dove stanno i file nell'app.** In sviluppo si leggono da `audio/musica-ia/<sigla>/`; nell'installazione sono risorse (`musica/` accanto all'eseguibile, vedi `tauri.conf.json`); la variabile `RELITTO_MUSICA` può indicare un'altra cartella.

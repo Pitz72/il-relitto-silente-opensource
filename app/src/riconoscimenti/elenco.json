@@ -148,7 +148,7 @@
    "fonte": "Google Flow Music",
    "autore": "Simone Pizzi",
    "licenza": "CC BY-NC-SA 4.0",
-   "uso": "il tema, nei titoli di coda"
+   "uso": "il tema"
   },
   {
    "sigla": "T",
@@ -157,7 +157,16 @@
    "fonte": "Google Flow Music",
    "autore": "Simone Pizzi",
    "licenza": "CC BY-NC-SA 4.0",
-   "uso": "il tema, nei titoli di coda"
+   "uso": "il tema"
+  },
+  {
+   "sigla": "CT",
+   "titolo": "Voice in the Deep",
+   "modello": "Lyria 3.5",
+   "fonte": "Google Flow Music",
+   "autore": "Simone Pizzi",
+   "licenza": "CC BY-NC-SA 4.0",
+   "uso": "i titoli di coda"
   }
  ],
  "immagini": [

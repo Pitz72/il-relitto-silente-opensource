@@ -1,8 +1,10 @@
 // ============================================================================
 //  I titoli di coda (decisione dell'autore, 19 ottobre 2026): i riconoscimenti
 //  non stanno più prima del gioco, in una schermata da sito; scorrono alla fine,
-//  come al cinema, con la loro musica (per ora il tema, mondo/musica.rs,
-//  `Brano::Titoli`). Partono dopo un finale («Titoli di coda», accanto ad
+//  come al cinema, con la loro canzone, «Voice in the Deep» (mondo/musica.rs,
+//  `Brano::Titoli`), e sono tarati su di lei: l'ultimo cartello arriva con
+//  l'ultima riga cantata, resta fermo tre secondi, e tutto sfuma lentamente nel
+//  nero insieme alla canzone. Partono dopo un finale («Titoli di coda», accanto ad
 //  «Annulla l'ultima mossa», «Ricomincia», «Carica») e dalla voce
 //  «Riconoscimenti» del menu; alla fine si torna al menu.
 //  Scorrono i nomi: l'elenco lo genera strumenti/riconoscimenti.py (elenco.json),
@@ -16,7 +18,7 @@
 import { useEffect, useRef, useState } from "react";
 import elencoJson from "./elenco.json";
 import { nomiDelleLibrerie, type Elenco } from "./elenco";
-import { titoliSuono } from "../gioco/suono";
+import { sfumaSuono, titoliSuono } from "../gioco/suono";
 import { MarchioFavella, MarchioRuntime } from "../loghi/Marchi";
 import "./titoli.css";
 
@@ -25,15 +27,19 @@ const E = elencoJson as unknown as Elenco;
 /** Il file accanto al gioco con le note intere (strumenti/riconoscimenti.py, tauri.conf.json). */
 export const FILE_LICENZE = "Riconoscimenti e licenze.txt";
 
-/** Quanto ci mette un'altezza di schermo a passare: lento, da leggere. */
-const SECONDI_PER_SCHERMO = 13;
-/** Con il movimento ridotto: quanto resta ogni pagina, e quanto dura la dissolvenza. */
-const PAGINA_MS = 9000;
+/** La canzone dei titoli, «Voice in the Deep» (documento 22, §5.9; audio/musica-ia/REGISTRO.md):
+ *  dura 2:58, e la voce canta da sola l'ultima riga, «A voice in the deep», a 160,5 secondi. Il
+ *  nastro è tarato su di lei (scelta dell'autore, 19 ottobre 2026): l'ultimo cartello arriva al
+ *  centro in quell'istante, a qualunque altezza di schermo. */
+const ARRIVO_S = 160.5;
+/** Con il movimento ridotto: quanto dura la dissolvenza fra una pagina e l'altra. */
 const DISSOLVENZA_MS = 700;
 /** Quanto resta fermo l'ultimo cartello, il titolo e i marchi, prima di sfumare. */
-const TENUTA_MS = 6000;
-/** La chiusura: i titoli sfumano, poi il menu. */
-const CHIUSURA_MS = 1200;
+const TENUTA_MS = 3000;
+/** La fine: i titoli vanno lentamente nel nero, e la canzone sfuma con loro; poi il menu. */
+const SFUMATURA_MS = 7000;
+/** «salta», Esc o Invio: la stessa cosa, svelta. */
+const SALTO_MS = 1200;
 
 const maiuscola = (s: string) => s.replace(/^./, (x) => x.toUpperCase());
 /** Gli apostrofi dell'elenco sono dritti: nei titoli, quelli tipografici. */
@@ -50,21 +56,25 @@ export default function Titoli({ ridotto, onFine }: Props) {
   const nastro = useRef<HTMLDivElement>(null);
   const salta = useRef<HTMLButtonElement>(null);
   const congedo = useRef<HTMLElement>(null);
-  const [chiusura, setChiusura] = useState(false);
+  /** la chiusura in corso, e quanto dura (ms) */
+  const [chiusura, setChiusura] = useState<number | null>(null);
   const fatto = useRef(false);
   const fine = useRef(onFine);
   fine.current = onFine;
 
-  const chiudi = () => {
+  /** Chiude i titoli: lenta alla fine, svelta se si salta. Il nero e la musica sfumano insieme. */
+  const chiudi = (lenta = false) => {
     if (fatto.current) return;
     fatto.current = true;
-    setChiusura(true);
-    setTimeout(() => fine.current(), ridotto ? 300 : CHIUSURA_MS);
+    const ms = lenta ? SFUMATURA_MS : ridotto ? 300 : SALTO_MS;
+    setChiusura(ms);
+    void sfumaSuono(ms / 1000);
+    setTimeout(() => fine.current(), ms);
   };
   const chiudiRef = useRef(chiudi);
   chiudiRef.current = chiudi;
 
-  // la musica dei titoli; il menu, dopo, rifà il suo mondo
+  // la canzone dei titoli; il menu, dopo, rifà il suo mondo
   useEffect(() => {
     void titoliSuono();
     // il fuoco su «salta» (Invio lo prende), senza contorno: nessuno l'ha scelto
@@ -79,35 +89,36 @@ export default function Titoli({ ridotto, onFine }: Props) {
     return () => removeEventListener("keydown", tasto);
   }, []);
 
-  // lo scorrimento: il nastro entra dal basso e sale finché l'ultimo cartello (il titolo e i
-  // marchi) non è al centro; lì si ferma, resta qualche secondo, e i titoli sfumano. La rotella
-  // lo sposta avanti e indietro
+  // lo scorrimento: il nastro entra dal basso e sale con l'orologio della canzone, finché l'ultimo
+  // cartello (il titolo e i marchi) non è al centro, a ARRIVO_S; lì resta fermo TENUTA_MS, poi
+  // tutto sfuma nel nero. Il tempo si legge dall'orologio, non si somma fotogramma per
+  // fotogramma: anche se la finestra si ferma un attimo, le parole restano a tempo con la voce.
+  // La rotella sposta il nastro avanti e indietro
   useEffect(() => {
     const f = finestra.current;
     const n = nastro.current;
     const c = congedo.current;
     if (!f || !n || !c) return;
-    let pos = 0; // quanto è salito il nastro, in pixel, dal bordo basso della finestra
+    const inizio = performance.now();
+    const secondi = () => (performance.now() - inizio) / 1000;
     let quadro = 0;
-    let prima = performance.now();
     let timer = 0;
     let fermo = false;
     /** dove si ferma: il centro dell'ultimo cartello al centro della finestra */
     const fermata = () => f.clientHeight / 2 + c.offsetTop + c.offsetHeight / 2;
-    const metti = () => (n.style.transform = `translate3d(0, ${f.clientHeight - pos}px, 0)`);
+    const metti = (pos: number) => (n.style.transform = `translate3d(0, ${f.clientHeight - pos}px, 0)`);
     const tieni = () => {
       if (fermo) return;
       fermo = true;
-      timer = window.setTimeout(() => chiudiRef.current(), TENUTA_MS);
+      timer = window.setTimeout(() => chiudiRef.current(true), TENUTA_MS);
     };
 
     if (ridotto) {
       // a pagine: ogni pagina è l'80 % della finestra, perché una riga tagliata si rilegga nella
-      // successiva; l'ultima è l'ultimo cartello, al centro
-      const passo = () => f.clientHeight * 0.8;
+      // successiva; l'ultima è l'ultimo cartello, al centro, e arriva a ARRIVO_S
       const pagine = () => {
         const out: number[] = [];
-        for (let p = f.clientHeight; p < fermata(); p += passo()) out.push(p);
+        for (let p = f.clientHeight; p < fermata(); p += f.clientHeight * 0.8) out.push(p);
         out.push(fermata());
         return out;
       };
@@ -115,23 +126,26 @@ export default function Titoli({ ridotto, onFine }: Props) {
       const mostra = () => {
         const tutte = pagine();
         pagina = Math.min(pagina, tutte.length - 1);
-        pos = tutte[pagina];
-        metti();
+        metti(tutte[pagina]);
         n.style.opacity = "1";
+        if (pagina === tutte.length - 1) tieni();
       };
-      mostra();
+      // ogni pagina resta lo stesso tempo, così l'ultima arriva con l'ultima riga
+      const intervallo = () => (ARRIVO_S * 1000) / Math.max(1, pagine().length - 1);
       const avanti = () => {
-        if (pagina >= pagine().length - 1) return chiudiRef.current();
+        if (fermo) return;
         n.style.opacity = "0";
         timer = window.setTimeout(() => {
           pagina += 1;
           mostra();
-          timer = window.setTimeout(avanti, pagina >= pagine().length - 1 ? TENUTA_MS : PAGINA_MS);
+          if (!fermo) timer = window.setTimeout(avanti, intervallo() - DISSOLVENZA_MS);
         }, DISSOLVENZA_MS);
       };
-      timer = window.setTimeout(avanti, PAGINA_MS);
+      mostra();
+      timer = window.setTimeout(avanti, intervallo() - DISSOLVENZA_MS);
       const rotella = (e: WheelEvent) => {
         e.preventDefault();
+        if (fermo) return;
         pagina = Math.max(0, pagina + Math.sign(e.deltaY));
         mostra();
       };
@@ -142,20 +156,18 @@ export default function Titoli({ ridotto, onFine }: Props) {
       };
     }
 
-    const giro = (ora: number) => {
-      const dt = Math.min(0.1, (ora - prima) / 1000);
-      prima = ora;
-      pos = Math.min(fermata(), pos + (f.clientHeight / SECONDI_PER_SCHERMO) * dt);
-      metti();
+    let spinta = 0; // quanto ha spostato la rotella, in pixel
+    const giro = () => {
+      const pos = Math.min(fermata(), Math.max(0, (secondi() / ARRIVO_S) * fermata() + spinta));
+      metti(pos);
       if (pos >= fermata()) tieni();
       quadro = requestAnimationFrame(giro);
     };
-    metti();
+    metti(0);
     quadro = requestAnimationFrame(giro);
     const rotella = (e: WheelEvent) => {
       e.preventDefault();
-      pos = Math.min(fermata(), Math.max(0, pos + e.deltaY));
-      metti();
+      if (!fermo) spinta += e.deltaY;
     };
     f.addEventListener("wheel", rotella, { passive: false });
     return () => {
@@ -168,7 +180,12 @@ export default function Titoli({ ridotto, onFine }: Props) {
   const librerie = nomiDelleLibrerie(E);
 
   return (
-    <div className={`titoli${chiusura ? " chiusura" : ""}${ridotto ? " a-pagine" : ""}`} role="region" aria-label="Titoli di coda">
+    <div
+      className={`titoli${chiusura !== null ? " chiusura" : ""}${ridotto ? " a-pagine" : ""}`}
+      style={chiusura !== null ? ({ "--chiusura": `${chiusura}ms` } as React.CSSProperties) : undefined}
+      role="region"
+      aria-label="Titoli di coda"
+    >
       <div className="titoli-finestra" ref={finestra}>
         <div className="titoli-nastro" ref={nastro}>
           <section className="tit-apertura">
@@ -260,7 +277,7 @@ export default function Titoli({ ridotto, onFine }: Props) {
           </section>
         </div>
       </div>
-      <button type="button" className="titoli-salta" ref={salta} onClick={chiudi}>
+      <button type="button" className="titoli-salta" ref={salta} onClick={() => chiudi()}>
         salta <span className="tasto">Esc</span>
       </button>
     </div>
