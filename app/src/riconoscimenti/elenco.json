@@ -227,6 +227,34 @@
    "licenza": "dell’autore"
   },
   {
+   "file": "cuccetta.webp",
+   "che_cosa": "la cuccetta, nella telecamera di bordo",
+   "da_dove": "s_03 del sequel (la cabina, con la branda di sopra), ridotta a 1280 px",
+   "autore": "Simone Pizzi",
+   "licenza": "dell’autore"
+  },
+  {
+   "file": "stiva.webp",
+   "che_cosa": "la stiva verso poppa: il boccaporto esterno e le tute",
+   "da_dove": "s_10 del sequel, ridotta a 1280 px (non s_04, che ha pallet e casse: la stiva del Relitto è vuota da sei settimane, 06 §17)",
+   "autore": "Simone Pizzi",
+   "licenza": "dell’autore"
+  },
+  {
+   "file": "sala-macchine.webp",
+   "che_cosa": "la sala macchine, nella telecamera di bordo",
+   "da_dove": "s_05 del sequel, ridotta a 1280 px",
+   "autore": "Simone Pizzi",
+   "licenza": "dell’autore"
+  },
+  {
+   "file": "scafo.webp",
+   "che_cosa": "la telecamera esterna: la Santa Maria davanti alla massa nera, legata dalle funi degli arpioni",
+   "da_dove": "composta in codice da strumenti/viste/scafo.py con il cielo e la massa di strumenti/copertina/componi.py e app/public/intro/prua.webp; **nessuna immagine generata da strumenti di IA**",
+   "autore": "Simone Pizzi",
+   "licenza": "dell’autore"
+  },
+  {
    "file": "relitto-1024.png",
    "che_cosa": "il logo dell’eseguibile: il fuso nero che mangia le stelle, con il seme al centro (il master; da qui `tauri icon` ricava le icone dell’app in `app/src-tauri/icons/`)",
    "da_dove": "disegnato in codice da strumenti/logo/disegna_logo.py (progettazione/24-copertina-e-logo.md, §3, strada A), su indicazione dell’autore",

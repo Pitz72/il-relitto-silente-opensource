@@ -120,6 +120,14 @@ La plancia nella lente del visore
   Simone Pizzi · dell’autore · s_01_b del sequel, dalla tavola dell’intro
 Yusuf al comunicatore del Magazzino Quattro
   Simone Pizzi · dell’autore · il ritratto del sequel (YUSUF_COM, nella versione del gioco com-yusuf.webp)
+La cuccetta, nella telecamera di bordo
+  Simone Pizzi · dell’autore · s_03 del sequel (la cabina, con la branda di sopra), ridotta a 1280 px
+La stiva verso poppa: il boccaporto esterno e le tute
+  Simone Pizzi · dell’autore · s_10 del sequel, ridotta a 1280 px (non s_04, che ha pallet e casse: la stiva del Relitto è vuota da sei settimane, 06 §17)
+La sala macchine, nella telecamera di bordo
+  Simone Pizzi · dell’autore · s_05 del sequel, ridotta a 1280 px
+La telecamera esterna: la Santa Maria davanti alla massa nera, legata dalle funi degli arpioni
+  Simone Pizzi · dell’autore · composta in codice da strumenti/viste/scafo.py con il cielo e la massa di strumenti/copertina/componi.py e app/public/intro/prua.webp; **nessuna immagine generata da strumenti di IA**
 Il logo dell’eseguibile: il fuso nero che mangia le stelle, con il seme al centro (il master; da qui `tauri icon` ricava le icone dell’app in `app/src-tauri/icons/`)
   Simone Pizzi · dell’autore · disegnato in codice da strumenti/logo/disegna_logo.py (progettazione/24-copertina-e-logo.md, §3, strada A), su indicazione dell’autore
 Lo stesso logo, in vettoriale

@@ -34,11 +34,14 @@ function tastoDelBrowser(e: KeyboardEvent): boolean {
 //   ?campionario      il campionario del sistema visivo: caratteri, atmosfere, contrasti
 //                     (solo nello sviluppo: non entra nelle versioni da pubblicare;
 //                     la pagina di prova sì, perché le prove girano nell'eseguibile)
+//   ?scansioni        le scansioni delle stanze del relitto, con le varianti (solo
+//                     nello sviluppo; ?scansioni=teche ne mostra una)
 const Relitto = lazy(() => import("./Relitto"));
 const Gioco = lazy(() => import("./gioco/Gioco"));
 const Intro = lazy(() => import("./intro/Intro"));
 const Prova = lazy(() => import("./prova/Prova"));
 const Campionario = import.meta.env.DEV ? lazy(() => import("./campionario/Campionario")) : null;
+const Galleria = import.meta.env.DEV ? lazy(() => import("./gioco/visore/scansioni/Galleria")) : null;
 // la console di regia (Ctrl+Maiusc+M): i livelli dei canali del suono, in qualunque schermata
 const ConsoleMix = __REGIA__ ? lazy(() => import("./console/ConsoleMix")) : null;
 
@@ -47,6 +50,7 @@ const parametri = new URLSearchParams(location.search);
 async function pagina() {
   if (parametri.has("intro")) return <Intro revisione={parametri.has("revisione")} />;
   if (Campionario && parametri.has("campionario")) return <Campionario />;
+  if (Galleria && parametri.has("scansioni")) return <Galleria />;
   if (parametri.get("prova") === "finali") return <Relitto prova="finali" />;
   if (parametri.has("prova")) return <Prova />;
   if (parametri.has("gioco")) return <Gioco />;

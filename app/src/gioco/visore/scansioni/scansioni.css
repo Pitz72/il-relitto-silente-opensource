@@ -1,0 +1,48 @@
+/* ==========================================================================
+   Le scansioni del relitto nella lente del visore (Scansione.tsx; revisione 25,
+   E1). Il multiscanner legge la stanza una volta, entrando: la scansione si
+   scopre da sinistra a destra dietro l'onda; poi resta ferma e non costa niente.
+   ========================================================================== */
+.scansione { position: absolute; inset: 0; overflow: hidden; }
+.scansione-corpo, .scansione svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+.scansione svg { animation: scansione-legge 1.8s cubic-bezier(.35, .6, .3, 1) both; }
+@keyframes scansione-legge {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+.scansione-onda {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 12%;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--vena-2, #8bf0a2) 22%, transparent) 70%, color-mix(in srgb, var(--vena-2, #8bf0a2) 75%, transparent) 97%, transparent);
+  animation: scansione-onda 1.8s cubic-bezier(.35, .6, .3, 1) both;
+}
+@keyframes scansione-onda {
+  from { transform: translateX(-100%); opacity: 1; }
+  88% { opacity: 1; }
+  to { transform: translateX(833%); opacity: 0; }
+}
+/* le marche sugli oggetti schedati arrivano per ultime, quando l'onda è passata */
+.scansione .scansione-marca { animation: scansione-marca 2.4s ease-out both; }
+@keyframes scansione-marca {
+  0%, 70% { opacity: 0; }
+  100% { opacity: .85; }
+}
+
+/* la fuga: la lettura trema; la protezione vitale: i canali secondari chiusi; l'ipossia: si appanna */
+.scansione[data-instabile] .scansione-corpo { animation: scansione-trema .6s steps(3) infinite; }
+@keyframes scansione-trema {
+  0% { transform: translate(0, 0); }
+  33% { transform: translate(-1.5px, .8px); }
+  66% { transform: translate(1.2px, -.6px); }
+}
+.scansione[data-protezione] .scansione-corpo { opacity: .5; }
+.scansione[data-ipossia] .scansione-corpo { filter: blur(.7px) brightness(.7); }
+
+.scansione[data-ridotto] svg,
+.scansione[data-ridotto] .scansione-marca,
+.scansione[data-ridotto] .scansione-corpo { animation: none; }

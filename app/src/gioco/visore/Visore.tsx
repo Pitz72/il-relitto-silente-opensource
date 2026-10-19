@@ -5,8 +5,10 @@
 //  nella membrana), i satelliti (la matrice, le voci, le chiavi), la mappa.
 //  I contatori compaiono quando il ponte dice `mostra`: nessuno spiega niente
 //  prima del tempo. Le forme si muovono, le cifre no; ogni stato è anche scritto.
-//  Le viste vere delle stanze sono della fase 5: qui la lente ha la plancia e
-//  una ricostruzione generica, diversa per ogni stanza.
+//  Le viste delle stanze (revisione 25, E1): sulla Santa Maria la telecamera di
+//  bordo, con le scene canoniche del sequel (lo scafo, la telecamera esterna,
+//  composto in codice: strumenti/viste/scafo.py); nel relitto le scansioni del
+//  multiscanner, disegnate in codice stanza per stanza (scansioni/).
 // ============================================================================
 import { useEffect, useMemo, useRef, useState } from "react";
 import { cicloA, FOTOGRAMMI } from "../ritmo";
@@ -15,6 +17,8 @@ import type { Turno } from "../../motore/tipi";
 import { statoAria, type Clima } from "../../stile/atmosfere";
 import { generatore, glifo } from "../../intro/glifi";
 import { costellazione } from "./mappa";
+import Scansione, { haScansione } from "./scansioni/Scansione";
+import type { StatiSuono } from "../../motore/tipi";
 import "./visore.css";
 
 interface Props {
@@ -29,7 +33,15 @@ interface Props {
 
 const DI_BORDO = new Set(["plancia", "cuccetta", "sala macchine", "stiva", "scafo"]);
 const TELECAMERE: Record<string, string> = { plancia: "cam 01", cuccetta: "cam 02", stiva: "cam 03", "sala macchine": "cam 04", scafo: "cam esterna" };
-const IMMAGINI: Record<string, string> = { plancia: "./intro/plancia.webp" };
+// le scene della Santa Maria (grafica/LICENZE.md): la stiva è la sua poppa, con il boccaporto e le tute (s_10 del
+// sequel), perché la stiva del sequel ha pallet e casse e quella del Relitto è vuota da sei settimane (06, §17)
+const IMMAGINI: Record<string, string> = {
+  plancia: "./intro/plancia.webp",
+  cuccetta: "./viste/cuccetta.webp",
+  stiva: "./viste/stiva.webp",
+  "sala macchine": "./viste/sala-macchine.webp",
+  scafo: "./viste/scafo.webp",
+};
 
 export default function Visore({ turno, clima, ridotto, differenza, battito }: Props) {
   const s = turno.stato;
@@ -37,7 +49,7 @@ export default function Visore({ turno, clima, ridotto, differenza, battito }: P
   const aria = s.mostra.aria ? s.aria : null;
   return (
     <aside className="visore" data-forma={clima.forma} aria-label="Il visore">
-      <Lente stanza={s.stanza} nome={s.nome_stanza ?? s.stanza} clima={clima} ridotto={ridotto} />
+      <Lente stanza={s.stanza} nome={s.nome_stanza ?? s.stanza} stati={turno.suono.stati} clima={clima} ridotto={ridotto} />
       <div className="strumenti">
         {aria !== null ? (
           <Cellula aria={aria} acciaio={acciaio} protezione={clima.protezione} fuga={s.fuga === "iniziata"} ridotto={ridotto} differenza={differenza} battito={battito} />
@@ -58,7 +70,7 @@ export default function Visore({ turno, clima, ridotto, differenza, battito }: P
 // ----------------------------------------------------------------------------
 //  La lente: la telecamera di bordo, o la ricostruzione del multiscanner
 // ----------------------------------------------------------------------------
-function Lente({ stanza, nome, clima, ridotto }: { stanza: string; nome: string; clima: Clima; ridotto: boolean }) {
+function Lente({ stanza, nome, stati, clima, ridotto }: { stanza: string; nome: string; stati: StatiSuono; clima: Clima; ridotto: boolean }) {
   const diBordo = DI_BORDO.has(stanza);
   const immagine = diBordo ? IMMAGINI[stanza] : undefined;
   const didascalia = diBordo
@@ -73,7 +85,13 @@ function Lente({ stanza, nome, clima, ridotto }: { stanza: string; nome: string;
   return (
     <figure className="lente">
       <div className="lente-vetro">
-        {immagine ? <img src={immagine} alt={`La telecamera di bordo: ${nome}`} draggable={false} /> : <Ricostruzione stanza={stanza} diBordo={diBordo} clima={clima} ridotto={ridotto} />}
+        {immagine ? (
+          <img src={immagine} alt={`La telecamera di bordo: ${nome}`} draggable={false} />
+        ) : !diBordo && haScansione(stanza) ? (
+          <Scansione stanza={stanza} stati={stati} clima={clima} ridotto={ridotto} />
+        ) : (
+          <Ricostruzione stanza={stanza} diBordo={diBordo} clima={clima} ridotto={ridotto} />
+        )}
       </div>
       <figcaption>{didascalia}</figcaption>
     </figure>
