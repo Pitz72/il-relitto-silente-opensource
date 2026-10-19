@@ -231,6 +231,10 @@ lo bloccherebbe.
 - **I messaggi** («Cerca aggiornamenti» dal menu): «Il gioco è aggiornato.»; «Non c'è ancora una versione da scaricare.» se il canale
   non ha un `latest.json` (prima della prima release pubblicata); «Non riesco a controllare: serve la rete.» per gli altri errori; e, se il
   pacchetto non porta la firma dell'autore, «L'aggiornamento non porta la firma dell'autore: non lo installo.»
+- **Da fare (nota dell’autore, 19 ottobre 2026): le novità dopo l’aggiornamento.** Quando il gioco si riapre dopo un aggiornamento,
+  al primo arrivo al menu principale compare una finestra con il changelog **per il pubblico** (che cosa c’è di nuovo per chi
+  gioca, non le note tecniche). Le stesse righe vanno nel corpo della release, perché la domanda «È uscita la versione…» le mostri
+  prima di aggiornare (revisione 25, L15). La proposta è nel prompt 27.
 - **Le build locali** (le consegne di ascolto) non sono firmate per l'aggiornamento: `createUpdaterArtifacts` sta solo in
   `app/src-tauri/tauri.rilascio.conf.json`, che usa il flusso di rilascio.
 - **Prova.** Il client e i flussi non si possono provare del tutto prima del primo tag. La strada: si pubblica una pre-release (per esempio

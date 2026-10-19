@@ -1,5 +1,7 @@
 # Prompt per la prossima sessione (26)
 
+> **Superato dal 27** (`progettazione/27-prompt-prossima-sessione.md`, 19 ottobre 2026, mattina).
+
 Sostituisce il 23. Scritto il 19 ottobre 2026, a fine sessione, su richiesta dell’autore: «memorizza dove siamo arrivati e prepara la prossima sessione al completamento di questo programma», cioè della revisione totale (documento 25).
 
 ## Il prompt
