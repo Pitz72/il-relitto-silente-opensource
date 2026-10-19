@@ -18,7 +18,7 @@ documenti di `progettazione/`.
 - **Dopo la sospensione del computer** lo sfondo del menu torna com’era, invece di restare nero.
 - **In una finestra, senza lampi**: con l’opzione «Schermo intero: no, in una finestra» il gioco si apre direttamente in finestra, invece di passare un attimo dallo schermo intero.
 - **Se l’audio si rompe, il gioco va avanti**: senza suono, invece di chiudersi.
-- **Il sottotitolo nuovo**: «Una storia tratta da *Il Registro della Santa Maria*», nel menu, nell’intro e nei titoli di coda.
+- **Il sottotitolo nuovo**: «Una storia tratta da Il Registro della Santa Maria», nel menu, nell’intro e nei titoli di coda.
 
 ### Aggiunto
 
