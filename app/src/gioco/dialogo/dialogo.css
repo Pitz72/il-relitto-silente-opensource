@@ -56,7 +56,7 @@
   top: calc(100% + .8cqw);
   text-align: center;
   font-family: var(--mono);
-  font-size: max(11px, .7cqw);
+  font-size: max(12px, .7cqw);
   letter-spacing: .24em;
   text-transform: uppercase;
   color: var(--tenue);

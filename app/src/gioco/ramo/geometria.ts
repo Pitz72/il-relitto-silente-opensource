@@ -25,7 +25,8 @@ export const MISURE = {
   /** lo spazio fra due pezzi dello stesso gruppo, e fra due gruppi */
   spazio: 0.8,
   spazioGruppo: 2.4,
-  /** quanto si possono stringere i pezzi prima di nasconderne qualcuno */
+  /** quanto si possono stringere i pezzi prima di nasconderne qualcuno, al più; ma mai sotto i
+   *  12 px (scalaMinimaPer) */
   scalaMinima: 0.8,
   /** gli anelli del fiore, sopra il filo alto */
   anello1: 3.7,
@@ -91,20 +92,31 @@ function larghezzaFilo(gruppi: Gruppo[], mostrati: number[], scala: number, u: n
   return tot + Math.max(0, gruppiVisti - 1) * MISURE.spazioGruppo * u;
 }
 
+/** Il corpo più piccolo che si legge e si tocca (revisione 25, M3). */
+export const CORPO_MINIMO = 12;
+
+/** Quanto si può stringere il ramo: fino alla scala minima, ma non oltre il punto in cui il pezzo
+ *  più piccolo (gli attrezzi e il «+N», `corpoPiccolo` px alla scala piena) scenderebbe sotto i
+ *  12 px. A 1280 × 720 è 0,91; sugli schermi grandi resta 0,8. Se non basta, un pezzo in più va
+ *  nel «+N»: meglio che un baccello illeggibile. */
+export function scalaMinimaPer(corpoPiccolo: number): number {
+  return Math.min(1, Math.max(MISURE.scalaMinima, CORPO_MINIMO / Math.max(1, corpoPiccolo)));
+}
+
 /** Quanti pezzi del gruppo `indice` stanno sul filo, con gli altri gruppi
  *  interi e alla scala minima, senza «+N». Le cose in più del filo alto
  *  scendono su quello basso, prima di ciò che porti. */
-export function quantiStanno(gruppi: Gruppo[], indice: number, W: number): number {
+export function quantiStanno(gruppi: Gruppo[], indice: number, W: number, scalaMinima: number = MISURE.scalaMinima): number {
   const u = W / 100;
   const utile = W - 2 * MISURE.margine * u;
   const mostrati = gruppi.map((g) => g.larghezze.length);
-  while (mostrati[indice] > 0 && larghezzaFilo(gruppi, mostrati, MISURE.scalaMinima, u, 0) > utile) mostrati[indice]--;
+  while (mostrati[indice] > 0 && larghezzaFilo(gruppi, mostrati, scalaMinima, u, 0) > utile) mostrati[indice]--;
   // se il gruppo non ci sta tutto, si tiene un pezzo di margine: la scala non resta al minimo
   return mostrati[indice] < gruppi[indice].larghezze.length ? Math.max(1, mostrati[indice] - 1) : mostrati[indice];
 }
 
 /** Dispone i gruppi lungo un filo. `larghezzaPiu`: quanto è largo il «+N». */
-export function disponiFilo(gruppi: Gruppo[], W: number, filo: Filo, forma: Forma, larghezzaPiu: number): Disposizione {
+export function disponiFilo(gruppi: Gruppo[], W: number, filo: Filo, forma: Forma, larghezzaPiu: number, scalaMinima: number = MISURE.scalaMinima): Disposizione {
   const u = W / 100;
   const utile = W - 2 * MISURE.margine * u;
   const presenti = gruppi.map((g) => g.larghezze.length);
@@ -112,8 +124,8 @@ export function disponiFilo(gruppi: Gruppo[], W: number, filo: Filo, forma: Form
   // prima si stringe, fino alla scala minima
   let scala = Math.min(1, utile / Math.max(1, largo(presenti, 1)));
   const mostrati = [...presenti];
-  if (scala < MISURE.scalaMinima) {
-    scala = MISURE.scalaMinima;
+  if (scala < scalaMinima) {
+    scala = scalaMinima;
     // poi si raccolgono in un «+N» i pezzi in coda del gruppo riducibile più lungo
     while (largo(mostrati, scala) > utile) {
       let scelto = -1;

@@ -13,7 +13,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEve
 import type { Forma } from "../../stile/atmosfere";
 import type { Cosa } from "../../motore/tipi";
 import type { ModelloAzione } from "../../azione/modello";
-import { disponiFilo, disponiFiore, gambo, percorsoDelFilo, quantiStanno, type Disposizione, type Filo, type PostoPetalo } from "./geometria";
+import { disponiFilo, disponiFiore, gambo, percorsoDelFilo, quantiStanno, scalaMinimaPer, type Disposizione, type Filo, type PostoPetalo } from "./geometria";
 import { baccelliDi, bersagli, CANALI_SECONDARI, GLIFO_TASTO, MOTIVO_CANALI, petaliDi, type Azione, type Baccello, type Fili, type Selezione, type VocePetalo } from "./azioni";
 import "./ramo.css";
 
@@ -62,13 +62,16 @@ export default function Ramo({ modello, cose, forma, selezione, accesi, costi, p
       const el = misure.current.get(chiave);
       return el ? el.offsetWidth / Number(el.dataset.scala ?? 1) : 80;
     };
-    const piu = misure.current.get("misura:+")?.offsetWidth ?? 50;
+    const campione = misure.current.get("misura:+");
+    const piu = campione?.offsetWidth ?? 50;
+    // il «+N» ha il corpo più piccolo del ramo (come gli attrezzi): dice quanto si può stringere
+    const minima = scalaMinimaPer(campione ? parseFloat(getComputedStyle(campione).fontSize) : 13.2);
     const gruppi = (gs: Fili["alto"]) => gs.map((g) => ({ nome: g.nome, larghezze: g.baccelli.map((b) => largo(b.chiave)), riducibile: g.riducibile }));
     let alto = fili.alto;
     let basso = fili.basso;
     const iQui = alto.findIndex((g) => g.nome === "qui");
     if (iQui >= 0) {
-      const k = quantiStanno(gruppi(alto), iQui, W);
+      const k = quantiStanno(gruppi(alto), iQui, W, minima);
       if (k < alto[iQui].baccelli.length) {
         const coda = alto[iQui].baccelli.slice(k);
         alto = alto.map((g, i) => (i === iQui ? { ...g, baccelli: g.baccelli.slice(0, k) } : g));
@@ -77,7 +80,7 @@ export default function Ramo({ modello, cose, forma, selezione, accesi, costi, p
     }
     setStato({
       fili: { alto, basso },
-      d: { alto: disponiFilo(gruppi(alto), W, "alto", forma, piu), basso: disponiFilo(gruppi(basso), W, "basso", forma, piu) },
+      d: { alto: disponiFilo(gruppi(alto), W, "alto", forma, piu, minima), basso: disponiFilo(gruppi(basso), W, "basso", forma, piu, minima) },
     });
   }, [fili, W, forma]);
   const disposizione = stato?.d ?? null;

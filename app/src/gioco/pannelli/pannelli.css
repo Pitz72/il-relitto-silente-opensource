@@ -28,7 +28,7 @@
 .pannello[data-forma="acciaio"] { border-radius: .3cqw; box-shadow: 0 30px 90px rgba(0, 0, 0, .6); }
 .pannello h2 { margin: 0 0 1.4cqw; font-weight: 300; font-style: italic; font-size: max(24px, 2cqw); color: color-mix(in srgb, var(--testo) 78%, var(--vena-2)); }
 .pannello[data-forma="acciaio"] h2 { font-style: normal; font-weight: 700; font-family: var(--stencil); font-size: max(16px, 1.15cqw); letter-spacing: .28em; text-transform: uppercase; color: var(--targa); }
-.pannello .tasto { font-family: var(--mono); font-size: .72em; color: var(--tenue); margin-left: .6em; letter-spacing: .04em; }
+.pannello .tasto { font-family: var(--mono); font-size: max(12px, .72em); color: var(--tenue); margin-left: .6em; letter-spacing: .04em; }
 .pannello button {
   min-height: 40px;
   color: var(--testo);
@@ -52,7 +52,7 @@
 /* la pausa */
 .voci-pausa { display: flex; flex-direction: column; gap: .7cqw; align-items: stretch; min-width: min(360px, 40cqw); }
 .voci-pausa button { text-align: left; font-size: max(17px, 1.2cqw); display: flex; justify-content: space-between; align-items: baseline; }
-.pausa .misure { margin-top: 1.6cqw; border: 0; background: none; padding: .3em 0; font-family: var(--mono); font-size: max(11px, .66cqw); letter-spacing: .14em; color: var(--tenue); min-height: 0; }
+.pausa .misure { margin-top: 1.6cqw; border: 0; background: none; padding: .3em 0; font-family: var(--mono); font-size: max(12px, .66cqw); letter-spacing: .14em; color: var(--tenue); min-height: 0; }
 .pausa .misure:hover { color: var(--testo); }
 
 /* i salvataggi: sei posti, e l'automatico */
@@ -68,10 +68,10 @@
   min-height: 7.6cqw;
 }
 .pannello[data-forma="acciaio"] .posto { border-radius: .2em; }
-.posto .nome-posto { font-family: var(--mono); font-size: max(11px, .66cqw); letter-spacing: .2em; text-transform: uppercase; color: var(--accento); }
+.posto .nome-posto { font-family: var(--mono); font-size: max(12px, .66cqw); letter-spacing: .2em; text-transform: uppercase; color: var(--accento); }
 .posto .stanza-posto { font-size: max(17px, 1.2cqw); color: var(--testo); font-family: var(--serif); }
 .posto.vuoto .stanza-posto { color: var(--tenue); font-style: italic; }
-.posto .dettagli-posto, .posto .data-posto { font-family: var(--mono); font-size: max(11.5px, .72cqw); color: var(--tenue); }
+.posto .dettagli-posto, .posto .data-posto { font-family: var(--mono); font-size: max(12px, .72cqw); color: var(--tenue); }
 .posto.automatico { border-style: dashed; }
 .salvataggi .dove { margin: 1.2cqw 0 0; font-size: max(13px, .85cqw); color: var(--tenue); user-select: text; }
 
@@ -126,7 +126,7 @@
 .pannello.tasti { width: min(960px, 86cqw); max-width: none; }
 .tasti .sotto { margin: -.4cqw 0 1.6cqw; color: var(--tenue); font-size: max(14px, .9cqw); }
 .gruppi-tasti { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.8cqw 3.2cqw; }
-.gruppo-tasti h3 { margin: 0 0 .7cqw; font-family: var(--mono); font-weight: 400; font-size: max(11px, .7cqw); letter-spacing: .2em; text-transform: uppercase; color: var(--accento); }
+.gruppo-tasti h3 { margin: 0 0 .7cqw; font-family: var(--mono); font-weight: 400; font-size: max(12px, .7cqw); letter-spacing: .2em; text-transform: uppercase; color: var(--accento); }
 .gruppo-tasti dl { margin: 0; display: grid; gap: .6cqw; }
 .riga-tasti { display: grid; grid-template-columns: minmax(9.5em, auto) 1fr; gap: 1.2cqw; align-items: baseline; }
 .riga-tasti dt { display: flex; flex-wrap: wrap; gap: .3em; }

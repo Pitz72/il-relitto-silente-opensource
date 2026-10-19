@@ -82,7 +82,7 @@
 .diario-atto {
   margin: .5em 0 1.1em;
   font-family: var(--mono);
-  font-size: max(11.5px, .64em);
+  font-size: max(12px, .64em);
   letter-spacing: .22em;
   text-transform: uppercase;
   color: var(--accento);
@@ -108,7 +108,7 @@
 .diario-dove {
   display: block;
   font-family: var(--mono);
-  font-size: max(11.5px, .62em);
+  font-size: max(12px, .62em);
   letter-spacing: .14em;
   color: var(--tenue);
 }

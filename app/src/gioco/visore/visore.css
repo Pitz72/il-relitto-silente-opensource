@@ -41,7 +41,7 @@
   margin-top: .55cqw;
   text-align: center;
   font-family: var(--mono);
-  font-size: max(10.5px, .66cqw);
+  font-size: max(12px, .66cqw);
   letter-spacing: .2em;
   text-transform: uppercase;
   color: var(--tenue);
@@ -68,8 +68,7 @@
   text-shadow: 0 0 1.2cqw color-mix(in srgb, var(--aria) 45%, transparent);
   font-variant-numeric: tabular-nums;
 }
-.cellula .cifra i { display: block; font-size: max(12px, .9cqw); color: var(--tenue); margin-top: .45cqw; }
-.visore[data-forma="acciaio"] .cellula .cifra i { font-style: normal; font-family: var(--mono); letter-spacing: .22em; font-size: max(10.5px, .66cqw); }
+.cellula .cifra i { display: block; margin-top: .45cqw; }
 .cellula.stato-ipossia .cifra b { color: var(--aria); }
 [data-movimento="pieno"] .cellula.stato-ipossia .cifra b { animation: intermittente 1.6s steps(2, jump-none) infinite; }
 @keyframes intermittente { 50% { opacity: .45; } }
@@ -90,7 +89,17 @@
 
 /* sulla Santa Maria, prima della tuta: la console di bordo */
 .di-bordo { flex: 1 1 auto; margin: 0; display: grid; grid-template-columns: auto 1fr; gap: .55cqw 1cqw; align-content: center; }
-.di-bordo dt { font-family: var(--mono); font-size: max(10.5px, .62cqw); letter-spacing: .2em; text-transform: uppercase; color: var(--tenue); padding-top: .12em; }
+.di-bordo dt { padding-top: .12em; }
+/* le scritte di servizio del visore, in una forma sola, nella membrana come nell'acciaio (revisione 25,
+   E10): maiuscoletto mono con la spaziatura delle targhe, mai sotto i 12 px */
+.cellula .cifra i, .satellite .etichetta, .mappa figcaption, .di-bordo dt {
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: max(12px, .64cqw);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--tenue);
+}
 .di-bordo dd { margin: 0; font-family: var(--mono); font-size: max(12px, .78cqw); color: var(--testo); }
 .di-bordo dd.rosso { color: var(--rosso); }
 .di-bordo + .satelliti:empty { display: none; }
@@ -98,8 +107,7 @@
 /* i satelliti */
 .satelliti { flex: 1; display: flex; flex-direction: column; gap: 1.1cqw; min-width: 0; }
 .satellite { display: flex; flex-wrap: wrap; align-items: center; gap: .3cqw .6cqw; }
-.satellite .etichetta { flex-basis: 100%; font-style: italic; font-size: max(12px, .9cqw); color: var(--tenue); }
-.visore[data-forma="acciaio"] .satellite .etichetta { font-style: normal; font-family: var(--mono); font-size: max(10.5px, .64cqw); letter-spacing: .2em; text-transform: uppercase; }
+.satellite .etichetta { flex-basis: 100%; }
 .satellite .numero { font-family: var(--mono); font-size: max(12px, .86cqw); color: var(--testo); font-variant-numeric: tabular-nums; }
 .satellite.spento { opacity: .55; }
 .matrice .glifi { display: inline-flex; gap: .22cqw; }
@@ -109,7 +117,7 @@
 .voci .spore { display: inline-flex; align-items: center; gap: .5cqw; min-height: 1.2cqw; flex-wrap: wrap; }
 .voci .eco { width: .62cqw; height: .62cqw; border-radius: 50%; background: var(--vena); box-shadow: 0 0 .7cqw var(--vena); }
 .voci .risonanza { width: .8cqw; height: .8cqw; transform: rotate(45deg); background: var(--vena-2); box-shadow: 0 0 .9cqw var(--vena-2); }
-.voci .nessuna { font-family: var(--mono); font-size: max(11px, .7cqw); color: var(--tenue); }
+.voci .nessuna { font-family: var(--mono); font-size: max(12px, .7cqw); color: var(--tenue); }
 .chiavi .incavi { display: inline-flex; gap: .6cqw; }
 .chiavi svg { width: 1.6cqw; height: 1.6cqw; overflow: visible; }
 .chiavi path { fill: none; stroke: var(--tenue); stroke-width: 1.6; }
@@ -129,8 +137,7 @@
 .visore[data-forma="acciaio"] .mappa .moncone { stroke: var(--bordo); stroke-opacity: 1; }
 .visore[data-forma="acciaio"] .mappa .stanza { fill: color-mix(in srgb, var(--lamina-1) 85%, #000); stroke: var(--targa); stroke-width: 1; filter: none; }
 .visore[data-forma="acciaio"] .mappa .stanza.qui { fill: var(--accento-2); stroke: var(--accento-2); }
-.mappa figcaption { margin-top: .35cqw; text-align: right; font-style: italic; font-size: max(11.5px, .82cqw); color: var(--tenue); }
-.visore[data-forma="acciaio"] .mappa figcaption { font-style: normal; font-family: var(--mono); font-size: max(10.5px, .62cqw); letter-spacing: .2em; text-transform: uppercase; }
+.mappa figcaption { margin-top: .35cqw; text-align: right; }
 
 /* il cartello d'atto (§4.5): due secondi, sopra il gioco, saltabile */
 .cartello-atto {
@@ -163,7 +170,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--mono);
-  font-size: max(11px, .72cqw);
+  font-size: max(12px, .72cqw);
   letter-spacing: .34em;
   text-transform: uppercase;
   color: var(--rosso);

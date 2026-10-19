@@ -102,7 +102,7 @@
 [data-movimento="ridotto"] .menu-voci button::before { transition: none; }
 .menu-dettaglio {
   font-family: var(--mono);
-  font-size: max(11.5px, .5em);
+  font-size: max(12px, .5em);
   letter-spacing: .1em;
   color: var(--tenue);
 }
@@ -116,7 +116,7 @@
   justify-content: space-between;
   gap: 2em;
   font-family: var(--mono);
-  font-size: max(11.5px, .66cqw);
+  font-size: max(12px, .66cqw);
   letter-spacing: .12em;
   color: var(--tenue);
 }
@@ -140,7 +140,7 @@
   margin: -.6cqw 0 1.4cqw;
   font-family: var(--stencil);
   font-weight: 700;
-  font-size: max(11px, .78cqw);
+  font-size: max(12px, .78cqw);
   letter-spacing: .3em;
   text-transform: uppercase;
   color: var(--targa);
@@ -156,7 +156,7 @@
   border-bottom: 1px solid color-mix(in srgb, var(--bordo) 90%, var(--tenue));
 }
 .registro-righe li.vuota { border-bottom-style: dashed; border-bottom-color: color-mix(in srgb, var(--bordo) 80%, transparent); }
-.registro-data { font-family: var(--mono); font-size: max(11.5px, .72cqw); letter-spacing: .06em; color: var(--tenue); }
+.registro-data { font-family: var(--mono); font-size: max(12px, .72cqw); letter-spacing: .06em; color: var(--tenue); }
 .registro-titolo { font-family: var(--serif); font-style: italic; font-size: max(18px, 1.3cqw); color: var(--testo); }
 .registro-riga {
   grid-column: 2;

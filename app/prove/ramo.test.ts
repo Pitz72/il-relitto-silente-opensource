@@ -2,7 +2,7 @@
 //   node --test prove/ramo.test.ts        (da app/)
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { disponiFilo, disponiFiore, MISURE, quotaDelFilo, type Gruppo } from "../src/gioco/ramo/geometria.ts";
+import { disponiFilo, disponiFiore, MISURE, quotaDelFilo, scalaMinimaPer, type Gruppo } from "../src/gioco/ramo/geometria.ts";
 
 const W = 1280;
 const u = W / 100;
@@ -145,4 +145,18 @@ test("i bersagli: in «Usa con…» le seconde cose; un attrezzo in mano solo do
 
 test("i suggerimenti accendono la cosa e il suo petalo", () => {
   assert.deepEqual([...accesiDa(modelloFinto)].sort(), ["comando:analizza la nicchia", "cosa:nicchia"]);
+});
+
+test("il ramo non si stringe mai sotto i 12 px (revisione 25, M3)", () => {
+  // a 1280 × 720 il corpo più piccolo (attrezzi, «+N») è 15 × 0,88 = 13,2 px: si stringe al più fino a 0,91
+  assert.ok(Math.abs(scalaMinimaPer(13.2) - 12 / 13.2) < 1e-9);
+  assert.ok(13.2 * scalaMinimaPer(13.2) >= 12 - 1e-9);
+  // sugli schermi grandi resta la scala minima di sempre
+  assert.equal(scalaMinimaPer(17.3 * 0.88), MISURE.scalaMinima);
+  // e se nemmeno a scala piena si arriva ai 12 px, non si stringe affatto
+  assert.equal(scalaMinimaPer(10), 1);
+  // la disposizione rispetta la scala minima che le si dà
+  const gruppi = [gruppo("uscite", 6, 86, false), gruppo("qui", 9, 150), gruppo("azioni", 3, 96)];
+  const d = disponiFilo(gruppi, W, "alto", "membrana", 60, 0.91);
+  assert.ok(d.scala >= 0.91);
 });

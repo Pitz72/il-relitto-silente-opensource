@@ -4,7 +4,9 @@
    qui la forma, i colori e il movimento. Le cifre e i testi non si muovono:
    si muovono le forme (§3), e con il movimento ridotto restano solo i colori.
    ========================================================================== */
-.ramo { position: absolute; inset: 0; pointer-events: none; z-index: 4; --corpo-ramo: max(13.5px, .9cqw); }
+/* il corpo del ramo: 15 px al minimo, e i baccelli si stringono al più al 91 % (geometria.ts):
+   nessun testo che si tocca scende sotto i 12 px, nemmeno a 1280 × 720 (revisione 25, M3) */
+.ramo { position: absolute; inset: 0; pointer-events: none; z-index: 4; --corpo-ramo: max(15px, .9cqw); }
 .ramo > * { pointer-events: none; }
 
 /* i fili */
@@ -16,23 +18,19 @@
 .ramo[data-forma="acciaio"] .filo.alto { stroke-width: 1.5; }
 .ramo[data-forma="acciaio"] .filo.basso { stroke-width: 1; stroke-dasharray: 2 5; }
 
-/* le etichette dei gruppi, sopra il primo baccello */
+/* le etichette dei gruppi, sopra il primo baccello, sui due fili (revisione 25, E5): nello stile
+   delle scritte di servizio, maiuscoletto mono con la spaziatura delle targhe, mai sotto i 12 px;
+   sotto il filo basso uscivano dallo schermo */
 .etichetta-ramo {
   position: absolute;
-  transform: translate(.3em, -2.35em);
-  font-style: italic;
-  font-size: max(12px, .78cqw);
+  transform: translate(.3em, -3.4em);
+  font-family: var(--mono);
+  font-size: max(12px, .62cqw);
+  letter-spacing: .2em;
+  text-transform: uppercase;
   color: var(--tenue);
   white-space: nowrap;
   transition: opacity .3s;
-}
-.etichetta-ramo.basso { transform: translate(.3em, 1.25em); }
-.ramo[data-forma="acciaio"] .etichetta-ramo {
-  font-style: normal;
-  font-family: var(--mono);
-  font-size: max(10.5px, .6cqw);
-  letter-spacing: .22em;
-  text-transform: uppercase;
 }
 .ramo:has(.fiore.aperto) .etichetta-ramo, .ramo[data-scegliendo] .etichetta-ramo { opacity: 0; }
 
@@ -60,7 +58,7 @@
 }
 .baccello:hover, .baccello.aperto { border-color: var(--vena-2); box-shadow: 0 0 2.2cqw color-mix(in srgb, var(--vena-2) 32%, transparent); }
 [data-movimento="pieno"] .baccello:hover, [data-movimento="pieno"] .baccello.aperto { transform: translate(-50%, -58%); }
-.baccello .tasto { font-family: var(--mono); font-size: .68em; color: var(--tenue); letter-spacing: .04em; }
+.baccello .tasto { font-family: var(--mono); font-size: max(12px, .68em); color: var(--tenue); letter-spacing: .04em; }
 
 /* le uscite: bocche, con il loro segno scuro */
 .baccello.bocca { font-style: italic; color: var(--accento); }
@@ -84,9 +82,9 @@
   border: 1.5px solid var(--accento);
   box-shadow: inset 0 0 0 2px var(--lamina-2), inset 0 0 0 4px color-mix(in srgb, var(--accento) 70%, transparent);
 }
-.baccello.attrezzo { font-family: var(--mono); font-size: calc(var(--corpo-ramo) * .82 * var(--scala, 1)); letter-spacing: .06em; }
+.baccello.attrezzo { font-family: var(--mono); font-size: calc(var(--corpo-ramo) * .88 * var(--scala, 1)); letter-spacing: .06em; }
 .baccello.in-mano { border-color: var(--accento-2); color: var(--accento-2); border-style: solid; }
-.baccello.piu { font-family: var(--mono); font-size: calc(var(--corpo-ramo) * .82 * var(--scala, 1)); color: var(--tenue); }
+.baccello.piu { font-family: var(--mono); font-size: calc(var(--corpo-ramo) * .88 * var(--scala, 1)); color: var(--tenue); }
 .baccello.piu.misura { visibility: hidden; left: -9999px; top: 0; }
 .baccello.scelta { font-size: calc(var(--corpo-ramo) * 1.05); padding: .6em 1.3em; }
 
@@ -108,7 +106,7 @@
 .ramo[data-forma="acciaio"] .baccello {
   border-radius: .2em;
   font-family: var(--mono);
-  font-size: calc(var(--corpo-ramo) * .84 * var(--scala, 1));
+  font-size: calc(var(--corpo-ramo) * .88 * var(--scala, 1));
   letter-spacing: .02em;
   background: linear-gradient(var(--lamina-1), var(--lamina-2));
   box-shadow: none;
@@ -138,7 +136,7 @@
   white-space: nowrap;
 }
 .ramo[data-forma="acciaio"] .scelta-in-corso { border-radius: .2em; font-style: normal; font-family: var(--mono); font-size: max(12px, .75cqw); }
-.scelta-in-corso .annulla { font-family: var(--mono); font-size: .8em; font-style: normal; color: var(--tenue); padding: .3em .8em; border-radius: 999px; border: 1px solid var(--bordo); min-height: 28px; }
+.scelta-in-corso .annulla { font-family: var(--mono); font-size: max(12px, .8em); font-style: normal; color: var(--tenue); padding: .3em .8em; border-radius: 999px; border: 1px solid var(--bordo); min-height: 28px; }
 .scelta-in-corso .annulla:hover { color: var(--testo); border-color: var(--accento); }
 
 /* il fiore */
@@ -170,7 +168,7 @@
 .fiore.aperto .petalo { transform: translate(-50%, -50%) scale(1); opacity: 1; }
 [data-movimento="ridotto"] .petalo { transform: translate(-50%, -50%); transition: opacity .2s; }
 .petalo:hover { border-color: var(--vena); }
-.petalo small { font-family: var(--mono); font-size: .7em; color: var(--tenue); letter-spacing: .04em; }
+.petalo small { font-family: var(--mono); font-size: max(12px, .7em); color: var(--tenue); letter-spacing: .04em; }
 .petalo.anello-2 { font-size: max(13px, .88cqw); }
 .ramo[data-forma="acciaio"] .petalo { border-radius: .2em; font-family: var(--mono); font-size: max(12.5px, .82cqw); background: var(--lamina-1); box-shadow: none; }
 

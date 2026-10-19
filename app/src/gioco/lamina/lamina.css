@@ -37,7 +37,7 @@
   top: 1.25cqw;
   font-family: var(--stencil);
   font-weight: 700;
-  font-size: max(11px, .78cqw);
+  font-size: max(12px, .78cqw);
   letter-spacing: .3em;
   text-transform: uppercase;
   color: var(--targa);
@@ -135,7 +135,7 @@
   display: block;
   font-family: var(--mono);
   font-style: normal;
-  font-size: max(11.5px, .6em);
+  font-size: max(12px, .6em);
   letter-spacing: .2em;
   color: var(--accento);
   margin-bottom: .15em;
@@ -172,10 +172,10 @@
 }
 .b-registrazione > span { display: block; }
 .traccia-voce { font-style: italic; font-weight: 340; }
-.traccia-apparecchio { font-family: var(--mono); font-size: max(11.5px, .62em); letter-spacing: .18em; text-transform: uppercase; color: var(--tenue); }
+.traccia-apparecchio { font-family: var(--mono); font-size: max(12px, .62em); letter-spacing: .18em; text-transform: uppercase; color: var(--tenue); }
 .b-registrazione .stacco { margin-top: .55em; }
 .b-registrazione > .traccia-buco { display: flex; align-items: center; gap: .8em; margin: .35em 0; color: var(--tenue); }
-.traccia-buco .buco-testo { font-family: var(--mono); font-size: max(11.5px, .62em); letter-spacing: .14em; white-space: nowrap; }
+.traccia-buco .buco-testo { font-family: var(--mono); font-size: max(12px, .62em); letter-spacing: .14em; white-space: nowrap; }
 .traccia-buco .buco-segno {
   flex: 0 1 3.2em;
   height: 1px;
@@ -251,7 +251,7 @@
 .b-lettura .s-etichetta { font-size: 1em; }
 .s-matrice { font-family: var(--mono); font-size: .76em; letter-spacing: .04em; color: var(--tenue); white-space: nowrap; }
 .s-intraducibile { font-family: var(--mono); font-style: normal; font-size: .78em; color: var(--tenue); }
-.s-stampo { font-family: var(--stencil); font-weight: 700; letter-spacing: .12em; font-size: .98em; }
+.s-stampo { font-family: var(--stencil); font-weight: 700; letter-spacing: .12em; font-size: max(12px, .98em); }
 .s-graffio { letter-spacing: .16em; font-size: .9em; font-weight: 500; }
 .s-nome {
   cursor: pointer;
@@ -274,7 +274,7 @@
   bottom: .8cqw;
   min-height: 28px;
   font-family: var(--mono);
-  font-size: max(11.5px, .62em);
+  font-size: max(12px, .62em);
   letter-spacing: .16em;
   color: var(--tenue);
   padding: .25em .8em;
