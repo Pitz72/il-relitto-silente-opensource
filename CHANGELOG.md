@@ -8,6 +8,8 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+## [0.2.5-beta.3] - 2026-10-19
+
 ### Aggiunto
 
 - **Si vede l’aggiornamento che scarica** (nota dell’autore dopo la prima prova riuscita dell’aggiornamento automatico, 19 ottobre 2026; revisione 25, L15). Prima, dopo «Aggiorna», un avviso spariva in tre secondi e si restava ad aspettare senza sapere niente. Ora un pannello sopra il menu dice la versione che arriva, riempie una barra con i megabyte scaricati («Scarico l’aggiornamento: 21,3 di 43,9 MB (48 %).») e poi dice «Scaricato. Installo: il gioco si chiude e si riapre da solo.»; se qualcosa va storto lo dice, e il gioco resta com’era. Prima di scaricare, la partita in corso va da sola nel posto automatico, e la domanda lo dice.
