@@ -73,7 +73,7 @@ def main():
         with open(file[0], encoding="utf-8") as f:
             r = json.load(f)
     v = r.get("versione", {})
-    print(f"Eseguibile {v.get('gioco')} · {v.get('commit')} · FAVELLA {v.get('motore')}; {secondi:.0f} s")
+    print(f"Eseguibile {v.get('gioco')} · {v.get('commit')} · Favella1 {v.get('motore')}; {secondi:.0f} s")
     if a.prova == "finali":
         for x in r.get("finali", []):
             modi = ", ".join(f"{n} {k}" for k, n in sorted(x.get("modi", {}).items(), key=lambda kv: -kv[1]))

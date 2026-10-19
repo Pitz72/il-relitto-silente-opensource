@@ -3,7 +3,7 @@
 //  appunti dell'autore del 15 ottobre 2026).
 //    all'avvio      lo schermo intero, nero; il motore comincia a caricarsi,
 //                   dietro. Dopo un attimo i loghi di Runtime Multimedia e di
-//                   FAVELLA 1 (loghi/, pari pari dal Viaggiatore; Esc li salta).
+//                   Favella1 (loghi/, pari pari dal Viaggiatore; Esc li salta).
 //                   Poi la dichiarazione su come è nato il gioco. I
 //                   riconoscimenti non ci sono più (decisione dell'autore,
 //                   19 ottobre 2026): sono i titoli di coda
@@ -381,7 +381,7 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
             <Menu
               voci={voci}
               ridotto={ridotto}
-              identita={`${VERSIONE.gioco} · ${VERSIONE.commit} · FAVELLA ${VERSIONE.motore}`}
+              identita={`${VERSIONE.gioco} · ${VERSIONE.commit} · Favella1 ${VERSIONE.motore}`}
               caricamento={caricamento}
               problema={passo === MOTORE_FALLITO ? "Il motore del gioco non è partito." : null}
               coperto={!!pannello || !!domanda || !!aggiornamento}

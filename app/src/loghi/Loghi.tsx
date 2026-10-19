@@ -1,5 +1,5 @@
 // ====================================================================
-//  I loghi all'avvio: Runtime Multimedia, poi FAVELLA 1, poi l'avviso.
+//  I loghi all'avvio: Runtime Multimedia, poi Favella1, poi l'avviso.
 // --------------------------------------------------------------------
 //  Due loghi che si creano davanti a chi guarda (src/loghi/): lo schermo di
 //  Runtime che si accende, scrive il marchio e si spegne come un tubo

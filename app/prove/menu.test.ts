@@ -80,7 +80,7 @@ test("l'elenco dei riconoscimenti ha un testo per ogni licenza che usa", () => {
   // i quattro del gioco, e Sora e Inter dei loghi d'apertura
   assert.deepEqual(e.caratteri.map((c) => c.famiglia).sort(), ["Atkinson Hyperlegible Next", "Big Shoulders Stencil", "IBM Plex Mono", "Inter", "Newsreader", "Sora"]);
   // l'autore si firma Simone Pizzi
-  assert.ok(e.principali.find((p) => p.nome === "FAVELLA 1")?.copyright.some((c) => c.includes("Simone Pizzi")));
+  assert.ok(e.principali.find((p) => p.nome === "Favella1")?.copyright.some((c) => c.includes("Simone Pizzi")));
 });
 
 test("l'aggiornamento in corso dice quanto ha scaricato, e poi che installa", () => {

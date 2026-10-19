@@ -4,7 +4,7 @@
 
 **Avventura testuale di fantascienza, in italiano.** Sei a bordo della *Santa Maria*, una nave da carico, davanti a un relitto alieno che non dovrebbe essere lì, silenzioso. Ventitré stanze, novantatré oggetti, sei finali. Si gioca a pulsanti, con il mouse o con la tastiera; chi preferisce l’avventura testuale classica può scrivere i comandi (nelle opzioni, «Comandi: scritti»).
 
-Questo è il **remake desktop** del gioco: la storia è scritta in [FAVELLA 1](https://github.com/Pitz72/FAVELLA1), il linguaggio per avventure testuali dello stesso autore, e l’app è fatta con Tauri.
+Questo è il **remake desktop** del gioco: la storia è scritta in [Favella1](https://github.com/Pitz72/FAVELLA1), il linguaggio per avventure testuali dello stesso autore, e l’app è fatta con Tauri.
 
 > **Stato: in sviluppo, non ancora rilasciato.** Le versioni di sviluppo sono le 0.x (il numero di oggi è in [`versione.json`](versione.json), le novità nel [registro delle modifiche](CHANGELOG.md)); il primo rilascio pubblico sarà la **1.0.0**. Per ora si gioca compilando da sorgente (vedi sotto). Le release che trovi nella pagina «Releases» sono quelle della **versione originale** (vedi la prossima sezione).
 
@@ -12,14 +12,14 @@ Questo è il **remake desktop** del gioco: la storia è scritta in [FAVELLA 1](h
 
 | | Che cos’è | Dove sta | Numeri di versione |
 |---|---|---|---|
-| **Il remake** | Il gioco di oggi: FAVELLA 1 dentro un’app Tauri, con musica e suoni nuovi | questa cartella | 0.x in sviluppo, poi 1.0.0 |
+| **Il remake** | Il gioco di oggi: Favella1 dentro un’app Tauri, con musica e suoni nuovi | questa cartella | 0.x in sviluppo, poi 1.0.0 |
 | **La versione originale** | Il primo Relitto Silente (Electron e React), tutto com’era | [`old_version/`](old_version/), con la sua storia e i suoi tag | 1.x (`v1.2.6`, `v1.5.1`, `v1.5.3`) |
 
 Sono due programmi diversi, con due sviluppi diversi: **la numerazione del remake comincia da capo**. Il vecchio gioco si recupera sempre: `git checkout v1.5.3`, oppure il tag `old-version-final`.
 
 ## Che cosa c’è dentro
 
-- **Il gioco**: `relitto-silente/`, quattordici file `.fav`, uno per atto più i trasversali. Il motore che lo fa girare è FAVELLA 1 (`motore/`), che gira nell’app dentro Pyodide.
+- **Il gioco**: `relitto-silente/`, quattordici file `.fav`, uno per atto più i trasversali. Il motore che lo fa girare è Favella1 (`motore/`), che gira nell’app dentro Pyodide.
 - **L’app**: `app/`, Tauri 2 con React e TypeScript, e un motore audio in Rust. Un’interfaccia fatta apposta: la lamina del testo, il ramo e il fiore delle azioni, il diario, i salvataggi su disco.
 - **Il suono** è tutto sintetizzato dal codice (stanze, eventi, voci del brusio, il Sintonizzatore). **La musica** è generata con intelligenza artificiale (vedi sotto).
 - **Le prove**: `collaudo/` gioca ogni finale e controlla che il gioco resti vincibile; `app/prove/` prova l’interfaccia.

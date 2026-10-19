@@ -1,5 +1,5 @@
 // ====================================================================
-//  Il logo di FAVELLA 1, che si crea da sé.
+//  Il logo di Favella1, che si crea da sé.
 // --------------------------------------------------------------------
 //  Una scintilla accende la gemma; il libro si apre dal centro; le sei
 //  pagine salgono dal dorso e si aprono a ventaglio, e la luce verde le
@@ -212,7 +212,7 @@ const LogoFavella = forwardRef<Animabile>(function LogoFavella(_, ref) {
         background: "radial-gradient(62% 70% at 50% 50%, #08121f 0%, #050a13 48%, #000 100%)",
       }} />
       <svg ref={tutto} viewBox={`${VISTA.x} ${VISTA.y} ${VISTA.w} ${VISTA.h}`} role="img"
-        aria-label="FAVELLA 1 — programmare storie interattive in linguaggio naturale italiano"
+        aria-label="Favella1 — programmare storie interattive in linguaggio naturale italiano"
         style={{ position: "absolute", left: "50%", top: "50%", width: larghezza(), height: "auto", aspectRatio: `${VISTA.w} / ${VISTA.h}`,
           transform: "translate(-50%, -50%)", opacity: 0, overflow: "visible", willChange: "transform, opacity" }}>
         <defs>

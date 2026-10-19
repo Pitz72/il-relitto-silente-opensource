@@ -1,5 +1,5 @@
 # ============================================================================
-#  ponte.py — il ponte fra l'interfaccia e il motore FAVELLA 1.5.0
+#  ponte.py — il ponte fra l'interfaccia e il motore Favella1 1.5.0
 # ----------------------------------------------------------------------------
 #  Gira dentro Pyodide (l'app lo scrive nel filesystem di Pyodide e lo importa)
 #  e, identico, in CPython (i collaudi). Ogni funzione rel_* restituisce una

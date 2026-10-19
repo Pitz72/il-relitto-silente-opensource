@@ -4,7 +4,7 @@
 //  RUNTIME MULTIMEDIA: i tracciati del marchio ufficiale (versione a colori,
 //  «RuntimeMultimedia_ColoreOriginale.svg»), divisi per lettera. Il marchio è
 //  di Runtime e resta fuori dalle licenze del gioco (vedi LICENSE-CONTENUTI.md).
-//  FAVELLA 1: il simbolo del marchio ufficiale (branding/marchi del repository
+//  Favella1: il simbolo del marchio ufficiale (branding/marchi del repository
 //  del motore) ridisegnato in vettoriale per poterne animare le parti: graffe,
 //  libro, sei foglie (tre, specchiate), gemma. Coordinate del ritaglio 995×510
 //  dell'icona ufficiale; la metà destra è la sinistra specchiata su x = 499,5.
@@ -32,7 +32,7 @@ export const PIXEL: { x: number; y: number; l: number; colore: string }[] = [
 ];
 export const RUNTIME_COLORI = { scritta: "#005057", multimedia: "#FE5200", triangolo: "#FE5200", interno: "#FF9914" };
 
-/** Il simbolo di FAVELLA 1 nel riquadro del banner ufficiale (2172×724): translate + scala. */
+/** Il simbolo di Favella1 nel riquadro del banner ufficiale (2172×724): translate + scala. */
 export const EMBLEMA_POSA = { x: 102.9, y: 174.2, scala: 0.703 };
 /** Le tre foglie di sinistra, dalla più esterna (1) alla più interna (3); a destra si specchiano. */
 export const FOGLIE: string[] = ["M186.0,165.0 C186.0,177.6 196.7,218.6 201.0,232.0 C269.0,232.0 338.3,248.9 396.0,285.8 C412.6,296.4 428.6,308.4 443.0,322.0 C450.0,328.7 455.1,339.9 463.0,343.0 L457.0,317.0 C454.0,314.6 450.3,312.7 447.6,309.9 C440.2,302.5 435.2,292.1 428.4,284.0 C416.4,269.5 403.5,255.8 389.0,243.7 C362.9,221.9 333.1,202.4 301.0,190.8 C289.1,186.5 276.7,183.6 265.0,179.0 C255.3,177.6 244.3,176.1 235.0,173.2 C230.2,171.7 235.8,170.1 233.8,169.8 C218.0,167.1 201.7,167.8 186.0,165.0 Z", "M250.0,81.0 C258.8,101.4 268.9,135.0 272.0,157.0 C273.4,158.2 274.3,159.2 276.1,159.9 C280.8,161.8 286.2,162.5 291.0,164.0 C304.0,168.0 316.7,173.4 329.0,179.2 C368.7,198.0 405.5,228.4 431.2,264.0 C437.9,273.3 456.4,300.7 458.7,311.0 C459.3,313.7 458.2,314.8 457.0,317.0 L463.0,343.0 L456.0,268.0 C454.5,265.8 452.1,264.1 450.6,261.9 C445.2,253.8 441.6,240.2 436.8,231.0 C421.9,202.8 403.6,176.6 381.0,154.0 C373.8,146.8 348.4,128.5 345.4,124.7 C344.1,123.0 344.7,122.7 345.0,121.0 C306.9,99.2 292.0,93.0 250.0,81.0 Z", "M344.0,28.0 C354.5,46.4 362.0,88.6 362.0,110.0 C370.9,117.9 380.3,125.1 389.0,133.2 C415.1,157.8 433.9,190.2 447.6,223.0 C450.8,230.8 459.3,254.3 459.3,262.0 C459.3,264.9 457.8,266.2 456.0,268.0 L463.0,343.0 C466.5,334.2 471.2,326.0 474.2,317.0 C475.3,313.8 474.9,310.3 476.1,307.2 C479.1,299.2 480.6,295.7 481.6,287.0 C482.0,282.9 484.4,279.2 484.6,275.0 C484.6,273.1 473.0,223.5 471.6,217.0 C458.0,155.8 435.2,89.5 383.0,50.3 C370.8,41.2 357.5,34.8 344.0,28.0 Z"];

@@ -322,7 +322,7 @@ def caratteri_dei_loghi():
     p = os.path.join(APP, "src", "loghi", "caratteri", "LICENZA.txt")
     if not os.path.isfile(p):
         return []
-    ruoli = {"Sora": "la scritta del logo di FAVELLA 1", "Inter": "il motto del logo di FAVELLA 1"}
+    ruoli = {"Sora": "la scritta del logo di Favella1", "Inter": "il motto del logo di Favella1"}
     out = []
     with open(p, encoding="utf-8") as f:
         for riga in f:
@@ -342,9 +342,11 @@ def principali(js, rust):
     with open(os.path.join(RADICE, "motore", "strutture.py"), encoding="utf-8") as f:
         versione = re.search(r'^VERSIONE_MOTORE = "([^"]+)"', f.read(), re.M).group(1)
     # l'autore si firma Simone Pizzi (i suoi appunti, 15 ottobre 2026): la licenza del motore
-    # dice «Simone (Pitz72)», ed è la stessa persona
-    favella = [r.replace("Simone (Pitz72)", "Simone Pizzi") for r in copyright_in(os.path.join(RADICE, "motore"))]
-    out.append({"nome": "FAVELLA 1", "versione": versione, "licenza": "MIT", "usata": ["MIT"],
+    # dice «Simone (Pitz72)», ed è la stessa persona; e il motore si chiama Favella1 (l'autore,
+    # 19 ottobre 2026), dove la licenza dice «FAVELLA 1»
+    favella = [r.replace("Simone (Pitz72)", "Simone Pizzi").replace("FAVELLA 1", "Favella1")
+               for r in copyright_in(os.path.join(RADICE, "motore"))]
+    out.append({"nome": "Favella1", "versione": versione, "licenza": "MIT", "usata": ["MIT"],
                 "copyright": favella, "ruolo": "il motore del gioco",
                 "sorgente": "https://github.com/Pitz72/FAVELLA1"})
     # Python nella pagina
@@ -374,7 +376,7 @@ def principali(js, rust):
         righe = [" ".join(r.split()) for r in z.read(lic).decode("utf-8").splitlines()
                  if _RIGA.match(" ".join(r.split())) and not _MODELLO.search(r)]
     out.append({"nome": "lark", "versione": re.search(r"^Version: (\S+)", meta, re.M).group(1), "licenza": "MIT",
-                "usata": ["MIT"], "copyright": righe[:2], "ruolo": "la grammatica di FAVELLA",
+                "usata": ["MIT"], "copyright": righe[:2], "ruolo": "la grammatica di Favella1",
                 "sorgente": "https://github.com/lark-parser/lark"})
     for nome, ruolo, elenco in (("tauri", "la finestra e il processo dell’app", rust), ("kira", "il motore audio", rust),
                                 ("react", "l’interfaccia", js)):
@@ -467,7 +469,7 @@ def file_di_testo(d):
     a("chi ha fatto che cosa, con quale licenza il gioco lo usa, le righe di copyright e, in fondo,")
     a("i testi delle licenze. Lo scrive strumenti/riconoscimenti.py dagli elenchi veri: non si corregge a mano.")
     a("I loghi d’apertura vengono da Il Viaggiatore, dello stesso autore. I marchi di Runtime Multimedia")
-    a("e di FAVELLA 1 sono dei loro titolari, e non rientrano nelle licenze del gioco.")
+    a("e di Favella1 sono dei loro titolari, e non rientrano nelle licenze del gioco.")
 
     titolo("Le fondamenta")
     for p in d["principali"]:

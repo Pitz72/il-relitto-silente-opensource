@@ -451,7 +451,7 @@ export default function Prova() {
     <div className="prova">
       <canvas ref={canvasRef} className="vene" aria-hidden="true" />
       <header>
-        <b>Il Relitto Silente</b> · prova tecnica, fase 1 · gioco {VERSIONE.gioco} · motore FAVELLA {VERSIONE.motore} · {VERSIONE.commit}
+        <b>Il Relitto Silente</b> · prova tecnica, fase 1 · gioco {VERSIONE.gioco} · motore Favella1 {VERSIONE.motore} · {VERSIONE.commit}
         {sistema && (
           <span className="tenue">
             {" "}

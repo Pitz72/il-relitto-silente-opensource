@@ -87,7 +87,7 @@ export async function caricaMotore(avanzamento: (passo: string) => void): Promis
   }
   segna("file");
 
-  avanzamento("Importazione del motore FAVELLA…");
+  avanzamento("Importazione del motore Favella1…");
   pyodide.runPython(`
 import sys
 sys.path[:0] = ["/relitto/app", "/relitto/motore"]

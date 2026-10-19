@@ -1,6 +1,6 @@
 // ====================================================================
 //  I due marchi fermi, in bianco, per la fine dei titoli di coda
-//  (richiesta dell'autore, 19 ottobre 2026): Runtime Multimedia e FAVELLA 1
+//  (richiesta dell'autore, 19 ottobre 2026): Runtime Multimedia e Favella1
 //  (il simbolo di FAVELLA e di Favella Studio). Le forme sono quelle dei
 //  loghi d'apertura (forme.ts), senza animazione e senza colori: tutto
 //  bianco sul fondo scuro; dove due forme si sovrappongono, un filo del
@@ -44,7 +44,7 @@ export function MarchioFavella({ className }: { className?: string }) {
   const V = F_VISTA;
   const foglie = FOGLIE.map((d, i) => <path key={i} d={d} fill={BIANCO} style={TAGLIO} strokeWidth={6} paintOrder="stroke" strokeLinejoin="round" />);
   return (
-    <svg className={className} viewBox={`${V.x} ${V.y} ${V.w} ${V.h}`} role="img" aria-label="FAVELLA 1 — programmare storie interattive in linguaggio naturale italiano">
+    <svg className={className} viewBox={`${V.x} ${V.y} ${V.w} ${V.h}`} role="img" aria-label="Favella1 — programmare storie interattive in linguaggio naturale italiano">
       <g transform={`translate(${P.x} ${P.y}) scale(${P.scala})`}>
         <g fill="none" stroke={BIANCO} strokeWidth={6} strokeLinejoin="round" strokeLinecap="round">
           <path d={GRAFFA} />

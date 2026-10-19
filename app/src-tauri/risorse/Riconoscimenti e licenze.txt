@@ -8,15 +8,15 @@ Questo file accompagna il gioco. I nomi scorrono nei titoli di coda; qui ci sono
 chi ha fatto che cosa, con quale licenza il gioco lo usa, le righe di copyright e, in fondo,
 i testi delle licenze. Lo scrive strumenti/riconoscimenti.py dagli elenchi veri: non si corregge a mano.
 I loghi d’apertura vengono da Il Viaggiatore, dello stesso autore. I marchi di Runtime Multimedia
-e di FAVELLA 1 sono dei loro titolari, e non rientrano nelle licenze del gioco.
+e di Favella1 sono dei loro titolari, e non rientrano nelle licenze del gioco.
 
 
 LE FONDAMENTA
 -------------
 
-FAVELLA 1 1.5.0 — il motore del gioco
+Favella1 1.5.0 — il motore del gioco
   Licenza: MIT
-  Copyright (c) 2026 Simone Pizzi — FAVELLA 1
+  Copyright (c) 2026 Simone Pizzi — Favella1
   https://github.com/Pitz72/FAVELLA1
 
 Pyodide 0.27.8 — Python dentro l’app
@@ -29,7 +29,7 @@ CPython 3.12.7 — l’interprete, dentro Pyodide
   Copyright (c) 2001-2023 Python Software Foundation; All Rights Reserved
   https://github.com/python/cpython
 
-lark 1.3.1 — la grammatica di FAVELLA
+lark 1.3.1 — la grammatica di Favella1
   Licenza: MIT
   Copyright © 2017 Erez Shinan
   https://github.com/lark-parser/lark
@@ -153,12 +153,12 @@ IBM Plex Mono 5.3.0 — gli strumenti, le letture dello scanner
   Copyright 2017 IBM Corp. All rights reserved.
   https://github.com/fontsource/font-files
 
-Inter  — il motto del logo di FAVELLA 1
+Inter  — il motto del logo di Favella1
   Licenza: SIL Open Font License 1.1
   Copyright 2020 The Inter Project Authors (https://github.com/rsms/inter)
   https://github.com/rsms/inter
 
-Sora  — la scritta del logo di FAVELLA 1
+Sora  — la scritta del logo di Favella1
   Licenza: SIL Open Font License 1.1
   Copyright 2019 The Sora Project Authors (https://github.com/sora-xor/sora-font)
   https://github.com/sora-xor/sora-font

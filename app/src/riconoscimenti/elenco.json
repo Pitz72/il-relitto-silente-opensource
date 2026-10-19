@@ -323,7 +323,7 @@
    "copyright": [
     "Copyright 2020 The Inter Project Authors (https://github.com/rsms/inter)"
    ],
-   "ruolo": "il motto del logo di FAVELLA 1",
+   "ruolo": "il motto del logo di Favella1",
    "sorgente": "https://github.com/rsms/inter"
   },
   {
@@ -337,20 +337,20 @@
    "copyright": [
     "Copyright 2019 The Sora Project Authors (https://github.com/sora-xor/sora-font)"
    ],
-   "ruolo": "la scritta del logo di FAVELLA 1",
+   "ruolo": "la scritta del logo di Favella1",
    "sorgente": "https://github.com/sora-xor/sora-font"
   }
  ],
  "principali": [
   {
-   "nome": "FAVELLA 1",
+   "nome": "Favella1",
    "versione": "1.5.0",
    "licenza": "MIT",
    "usata": [
     "MIT"
    ],
    "copyright": [
-    "Copyright (c) 2026 Simone Pizzi — FAVELLA 1"
+    "Copyright (c) 2026 Simone Pizzi — Favella1"
    ],
    "ruolo": "il motore del gioco",
    "sorgente": "https://github.com/Pitz72/FAVELLA1"
@@ -392,7 +392,7 @@
    "copyright": [
     "Copyright © 2017 Erez Shinan"
    ],
-   "ruolo": "la grammatica di FAVELLA",
+   "ruolo": "la grammatica di Favella1",
    "sorgente": "https://github.com/lark-parser/lark"
   },
   {

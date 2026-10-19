@@ -242,7 +242,7 @@ function partituraRuntime(b: Banco, s: number) {
   tono(b, at(R.spentaA + 0.02), { f: 5200, f1: 2400, dur: 0.22, g: 0.016, att: 0.004, riv: 0.4 });
 }
 
-// ── FAVELLA 1 ─────────────────────────────────────────────────────────
+// ── Favella1 ─────────────────────────────────────────────────────────
 function partituraFavella(b: Banco, s: number) {
   const at = (x: number) => s + x;
   const fine = at(F.esceA + 0.15);

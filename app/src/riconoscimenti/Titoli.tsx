@@ -10,7 +10,7 @@
 //  Scorrono i nomi: l'elenco lo genera strumenti/riconoscimenti.py (elenco.json),
 //  che scrive anche, accanto al gioco, il file con le righe di copyright e i
 //  testi interi delle licenze. Finiscono fermi sull'ultimo cartello: il titolo e,
-//  in bianco, i marchi di Runtime Multimedia e di FAVELLA 1 (loghi/Marchi.tsx).
+//  in bianco, i marchi di Runtime Multimedia e di Favella1 (loghi/Marchi.tsx).
 //  «salta», Esc o Invio li chiudono; la rotella del mouse li porta avanti e
 //  indietro. Con il movimento ridotto non scorrono: si mostrano a pagine, in
 //  dissolvenza.
@@ -260,7 +260,7 @@ export default function Titoli({ ridotto, onFine }: Props) {
 
           <section className="tit-chiusa">
             <p className="tit-nota">
-              I loghi d’apertura vengono da Il Viaggiatore, dello stesso autore. I marchi di Runtime Multimedia e di FAVELLA 1 sono dei loro
+              I loghi d’apertura vengono da Il Viaggiatore, dello stesso autore. I marchi di Runtime Multimedia e di Favella1 sono dei loro
               titolari, e non rientrano nelle licenze del gioco.
             </p>
             <p className="tit-nota">
