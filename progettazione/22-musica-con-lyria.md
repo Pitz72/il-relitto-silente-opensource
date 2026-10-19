@@ -324,6 +324,100 @@ A sense of arrival and quiet confirmation, never a question, never suspense.
 
 **Integrazione.** Quando i file ci sono (`I-B`, `I-E`, `I-G`, in `audio/musica-ia/I/`), il lettore li suona al posto della guida del re, agli stessi momenti dell'animatic; per le correzioni vale la frase del §5.7 (*«Remove all suspense…»*). La guida sintetica resta come ripiego.
 
+### 5.9 I titoli di coda (`CT`, 19 ottobre 2026)
+
+Decisione dell’autore: i riconoscimenti non stanno più prima del gioco, ma scorrono **alla fine**, come titoli di coda, con un brano loro (`app/src/riconoscimenti/Titoli.tsx`). Partono dopo un finale («Titoli di coda») e dalla voce «Riconoscimenti» del menu; scorrono da 1 minuto e 45 a 2 minuti, secondo lo schermo, e si fermano sull’ultimo cartello (il titolo e i due marchi) per sei secondi. **Finché il brano non c’è suona il tema**: `T-01` e `T-02` che si alternano, come i due pezzi del menu (`Brano::Titoli`, §10). Il brano è **di fantascienza** (§5.7): il ritorno a casa dopo aver incontrato qualcosa di enorme e antico, con dentro il re del reattore e le quattro note del tema, come segnali di cristallo.
+
+**L’idea dell’autore (19 ottobre 2026): una canzone.** Non un brano strumentale, ma una **canzone con un testo in inglese** aderente ai temi del gioco (la solitudine, l’estinzione, il lasciare una traccia), sempre **musica da cinema di fantascienza**. È la strada principale; la partitura strumentale qui sotto resta come riserva. Il testo viene dalle parole dell’Anziano (`ponte.fav`): una lingua che era un canto; il Grande Salto, «non per conquistare, ma per comporre»; il bambino nato durante il viaggio, che disegnava il sole verso cui andavano; le tre tacche incise in una parete che nessuno avrebbe letto, «perché essere passati conta, anche quando non guarda nessuno»; il congedo, «che la musica fosse suonata, con forza, fino all’ultima nota. Vivi.» **Il testo è una bozza**: l’autore lo tiene, lo cambia o lo riscrive, e nei titoli comparirà chi l’ha scritto come lui deciderà.
+
+**`CT` · La canzone dei titoli di coda (circa 3 minuti)**
+
+Lo stile (il campo del prompt, in Flow Music; in Suno, «Style of Music»):
+
+```
+A cinematic science-fiction end-credits song, about 3 minutes, slow (around 66 BPM), in D minor, opening into D major only in the last chorus. A solitary, intimate female alto voice, close and breathy, like a transmission heard across empty space, singing English lyrics; a distant wordless choir on "ah" answers the choruses. Orchestration, all sustained and soft-edged: a deep analog drone on D2, the hum of a spaceship reactor, from the first second to the last; a slow, wide analog pad; low strings (cellos and basses, long bows, no pizzicato) entering in the second verse; long crystalline glass tones, like a struck crystal singing bowl, playing a four-note signal, G-sharp, B, D-sharp and then D, in the intro and in the outro; one bowed tam-tam swell before the last chorus. No drum kit, no beat, no pop production, no guitar, no piano chords, no autotune. Mood: awe, vastness, cosmic loneliness, an extinct people facing the end with dignity, the wish to leave a trace; warm at the end. Never suspense, never mystery, never a detective feel, never horror. Huge, dark, long reverb. The song ends with the voice alone on the last line, then the D drone fades into complete silence.
+```
+
+Il testo (il campo «Lyrics»; le indicazioni fra parentesi quadre sono per il generatore, non si cantano):
+
+```
+[Intro: reactor drone on D, four glass tones: G-sharp, B, D-sharp, D]
+
+[Verse 1]
+Out where the light forgets its way
+a hull lies still, a ship of grey.
+Our fire burned down to a dying glow:
+we were the last sparks of a sky you'll never know.
+
+[Verse 2]
+Someone came here before you came,
+cut three marks in the wall beside his name.
+No eyes were left to read the stone;
+he cut them still, so he wasn't alone.
+
+[Chorus]
+Play it on, to the very last note,
+into the dark where the cold stars float.
+We were here, though no one sees:
+a mark in the dust, a voice in the deep.
+
+[Verse 3: low strings enter]
+There was a child born on the way,
+who drew our sun on the walls each day.
+When the engines stopped, he asked us why,
+and all we had was a lullaby.
+
+[Bridge: wordless choir rises]
+Not to conquer, but to compose:
+we wove our notes where the young worlds grow.
+Words were the smallest part of us;
+what's left is music, when words are dust.
+
+[Instrumental: bowed tam-tam swell]
+
+[Final Chorus: D major, warm]
+Live, and play it to the final note,
+out in the dark where the cold stars float.
+We were here, though no one sees:
+a mark in the dust, a voice in the deep.
+
+[Outro: voice alone]
+A voice in the deep.
+[four glass tones: G-sharp, B, D-sharp, D; the D drone fades to silence]
+```
+
+Deve sentirsi: **una voce sola, vicina**, mai pop; il re del reattore sotto tutto; le quattro note del tema all’inizio e alla fine; il re maggiore dell’ultimo ritornello come luce; **niente giallo, niente orrore**. Le correzioni per il Producer: se viene pop, *«Remove the drums and the pop production. Make it a slow, spacious film score with one intimate voice, drones and long strings.»*; se viene cupo da thriller, la frase del §5.7 (*«Remove all suspense…»*). In Suno la voce si chiede anche con il genere nello stile (*«female alto vocal»*); se il testo è troppo lungo per la durata, si toglie la terza strofa.
+
+**Il nastro e la canzone.** Con la canzone, i titoli si regolano sulla sua durata: il nastro arriva all’ultimo cartello (il titolo e i marchi) quando la voce dice l’ultima riga, e resta fermo mentre il re sfuma.
+
+**La riserva: la versione strumentale.**
+
+**`CT` · I titoli di coda, strumentale (partitura, 2 minuti)**
+
+```
+Instrumental, with a wordless choir. End-credits music for a science-fiction game, 2 minutes (120 seconds), slow and beatless, in D: the long way home after something enormous and ancient has been met in deep space. Awe, vastness, quiet gratitude, cosmic loneliness slowly turning into warmth. Never suspense, never mystery, never a detective feel, never horror, nothing playful. Free tempo, no drum kit, no beat, no piano, no music box, no celesta, no pizzicato, no staccato, no lead melody. The orchestration, all sustained and soft-edged:
+- a deep analog drone on D2 (73.4 Hz) with its octave D3, the home note of a spaceship's reactor, present from the first second to the last;
+- a wide, slow analog pad of open fifths on D and A, like a horizon;
+- a wordless choir on "ah" and "oo", far away, entering late;
+- long crystalline glass tones, like a struck crystal singing bowl or a resonating spacecraft hull, no click at the attack, for a four-note signal: G-sharp, B, D-sharp, and then D, one semitone below the last;
+- one low bowed tam-tam swell, near the end.
+Everything drowned in a vast, dark, long reverb.
+[00:00] The D drone rises from silence, very slowly.
+[00:12] The open-fifth pad on D and A opens wide underneath.
+[00:28] The four glass signals sound, about four seconds apart, each still ringing when the next arrives: G-sharp, B, D-sharp, and then D, which answers them and resolves.
+[00:45] The wordless choir enters from far away and sings four slow chords: D, A, D, and F-sharp major, the last one bright, like light through a porthole.
+[01:10] Everything swells to its fullest, wide and warm, never loud.
+[01:25] The four glass signals return, slower and softer, under the choir.
+[01:40] One bowed tam-tam swell; the choir and the pad fall away.
+[01:50] Only the low D drone remains, steady, and fades into complete silence at 02:00. Do not restart, do not repeat.
+```
+
+Deve sentirsi: **il re dall’inizio alla fine**; le quattro note del tema, lunghe e pure, e il re che risponde; la luce del fa♯; **niente giallo**. Se Lyria sbaglia le note del segnale, si tengono il resto e il re, e il segnale si sovrappone in codice (il motore ha già il vetro).
+
+Variante breve, per Suno: *«Instrumental, wordless choir. Slow, beatless science-fiction end-credits ambient in D, 2 minutes: a deep reactor drone on D, a wide open-fifth pad, four long crystalline glass tones (G-sharp, B, D-sharp, then D), a far-away choir singing D, A, D, F-sharp major, one bowed tam-tam near the end, fading to silence on the low D. Awe and vastness, warm, never suspense, no drums, no piano, huge reverb.»*
+
+**Integrazione.** Il file va in `audio/musica-ia/CT/` (`CT-01-<titolo>.mp3`), nel registro e in `tauri.conf.json`; nel lettore `Brano::Titoli` passa dai due pezzi del tema al brano nuovo, intero, con una dissolvenza finale. Se i titoli durano più del brano (uno schermo molto alto), il brano ricomincia con un incrocio; se durano meno, la musica sfuma tornando al menu.
+
 ## 6. I file, dove stanno, come si chiamano
 
 - Cartella: `audio/musica-ia/<sigla>/` (es. `audio/musica-ia/M1/`), con i file nominati `M1-01.wav`, `M1-02.wav`… (in ordine di giro) e, per quelli che l’autore tiene, `M1-scelto.wav`.
@@ -415,7 +509,8 @@ Scritto in `app/src-tauri/src/mondo/musica_file.rs` e collegato in `musica.rs`. 
 | Anziano | `A1`–`A4` | i quattro letti della mappa del §5.3, in ripetizione con incrocio di 6 s; al cambio di nodo il letto nuovo entra in 4 s mentre il vecchio sfuma; «silenzio» è silenzio vero (1,2 s di discesa, poi 8 s di niente), poi torna `A1` |
 | Finali | `C1`–`C5` | interi; `C5` («Due lettere») parte da **31 s**, la parte che somiglia alla scheda (§5.7) |
 | «Mani vuote» | nessuno | il reattore, e basta |
+| Titoli di coda | `T-01` e `T-02` (finché non c’è `CT`, §5.9) | si alternano finché i titoli scorrono, con un incrocio di 6 s; tornando al menu sfumano |
 
-**Che cosa non c'è ancora.** Il tema (`T-01`, `T-02`) non suona da nessuna parte: la scheda lo voleva come motivo di quattro note in codice, da sovrapporre (§7.1), e quelle non sono state scritte; i due file restano tenuti. Nemmeno le integrazioni sintetizzate del §7.1 (battito di `C1`, seconda onda di `C2`, vetri di `C4`, tritono di `A2`): **prima l'ascolto dell'autore**, nel gioco vero.
+**Che cosa non c’è ancora.** Il tema (`T-01`, `T-02`) suona soltanto nei titoli di coda, dal 19 ottobre 2026, finché non c'è il loro brano (§5.9); il motivo di quattro note in codice da sovrapporre (§7.1) non è stato scritto. Nemmeno le integrazioni sintetizzate del §7.1 (battito di `C1`, seconda onda di `C2`, vetri di `C4`, tritono di `A2`): **prima l'ascolto dell'autore**, nel gioco vero.
 
 **Dove stanno i file nell'app.** In sviluppo si leggono da `audio/musica-ia/<sigla>/`; nell'installazione sono risorse (`musica/` accanto all'eseguibile, vedi `tauri.conf.json`); la variabile `RELITTO_MUSICA` può indicare un'altra cartella.
