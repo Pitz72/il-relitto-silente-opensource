@@ -6,6 +6,7 @@ import { readFileSync } from "node:fs";
 import { conFinale, FINALI, giorno, pulisci, rigaDelRegistro } from "../src/menu/registro.ts";
 import { daContinuare, dettaglioDi } from "../src/menu/continua.ts";
 import { nomiDelleLibrerie, type Elenco } from "../src/riconoscimenti/elenco.ts";
+import { frazione, testoAvanzamento } from "../src/menu/avanzamento.ts";
 import type { Posto } from "../src/gioco/salvataggi.ts";
 
 test("i sei finali, con i nomi dell'autore", () => {
@@ -78,4 +79,15 @@ test("l'elenco dei riconoscimenti ha un testo per ogni licenza che usa", () => {
   assert.deepEqual(e.caratteri.map((c) => c.famiglia).sort(), ["Atkinson Hyperlegible Next", "Big Shoulders Stencil", "IBM Plex Mono", "Inter", "Newsreader", "Sora"]);
   // l'autore si firma Simone Pizzi
   assert.ok(e.principali.find((p) => p.nome === "FAVELLA 1")?.copyright.some((c) => c.includes("Simone Pizzi")));
+});
+
+test("l'aggiornamento in corso dice quanto ha scaricato, e poi che installa", () => {
+  const MB = 1024 * 1024;
+  assert.equal(testoAvanzamento({ fase: "prepara" }), "Comincio a scaricare…");
+  assert.equal(testoAvanzamento({ fase: "scarica", scaricati: 21.3 * MB, totale: 43.9 * MB }), "Scarico l’aggiornamento: 21,3 di 43,9 MB (48 %).");
+  assert.equal(testoAvanzamento({ fase: "scarica", scaricati: 5 * MB, totale: null }), "Scarico l’aggiornamento: 5,0 MB.");
+  assert.equal(frazione({ fase: "scarica", scaricati: 5, totale: null }), null);
+  assert.equal(frazione({ fase: "scarica", scaricati: 50, totale: 40 }), 1);
+  assert.equal(frazione({ fase: "installa" }), 1);
+  assert.match(testoAvanzamento({ fase: "installa" }), /si chiude e si riapre da solo/);
 });

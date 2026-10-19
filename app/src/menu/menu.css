@@ -167,3 +167,28 @@
   letter-spacing: .02em;
   color: color-mix(in srgb, var(--testo) 88%, var(--tenue));
 }
+
+/* l'aggiornamento in corso (Aggiornamento.tsx): una barra che si riempie con i megabyte scaricati;
+   senza misura, un tratto che corre; mentre installa, la barra piena che respira */
+.pannello.aggiornamento { width: min(36em, 86vw); }
+.barra-aggiornamento {
+  position: relative;
+  height: 8px;
+  margin: 1.5em 0 .3em;
+  border-radius: 4px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--bordo) 55%, transparent);
+}
+.barra-aggiornamento > span {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--vena-2);
+  box-shadow: 0 0 .8em color-mix(in srgb, var(--vena-2) 70%, transparent);
+  transition: width .25s linear;
+}
+.barra-aggiornamento.senza-misura > span { width: 35%; animation: agg-corre 1.4s ease-in-out infinite; }
+.barra-aggiornamento.installa > span { width: 100%; animation: agg-respira 1.1s ease-in-out infinite alternate; }
+@keyframes agg-corre { from { transform: translateX(-100%); } to { transform: translateX(290%); } }
+@keyframes agg-respira { from { opacity: .45; } to { opacity: 1; } }
+[data-movimento="ridotto"] .barra-aggiornamento > span { animation: none; transition: none; }

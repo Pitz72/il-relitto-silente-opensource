@@ -268,3 +268,10 @@ Prove dopo il lotto: node 81 su 81, tipi puliti, `riconoscimenti.py --verifica` 
 Prove dopo il lotto M6–M9: Rust 72 su 72, node 81 su 81, i collaudi del ponte (eventi, scritti, menu, pulsanti, salvataggi, diario) verdi, le due prove nell’eseguibile riuscite.
 
 Prove dopo il lotto del suono: Rust 70 su 70, i file veri, le 14 partite di `prova_partite` (con le tracce rifatte), `collaudo/eventi.py` e `collaudo/diario.py`, node 81 su 81. Non ancora fatto: l’ascolto nell’eseguibile (cuffie collegate a metà partita, la morte e «annulla») e la misura di CPU con `prova_eseguibile.py mondo`; vanno nella prossima consegna.
+
+**Le note dell’autore sulla 0.2.4, e la prima prova dell’aggiornamento, 19 ottobre 2026:**
+
+- **Il cerchio sulla prima voce del menu** (`2c7ced0`): il fuoco d’arrivo si mette con `focusVisible: false`; il contorno torna alla prima freccia. Lo stesso, poi, su «continua» della dichiarazione e su «salta» dei titoli.
+- **I riconoscimenti** (`90a52d9`, poi `7b9448f` e `a9895d2`): prima impaginati per lo schermo largo, poi, per decisione dell’autore, tolti dall’avvio e diventati **titoli di coda** con la canzone «Voice in the Deep»; le note intere nel file «Riconoscimenti e licenze.txt» accanto al gioco. La dichiarazione è una lastra orizzontale.
+- **G3, G4 e G5 alla prova** (`v0.2.5-beta.1`, `v0.2.5-beta.2`): il flusso di rilascio ha fatto le prove, costruito, firmato e preparato le bozze; pubblicate, `canale.yml` le ha messe nel canale di prova; la beta.1 installata ha trovato, scaricato, verificato e installato la beta.2 (`sviluppo/VERSIONI.md`, §7).
+- **L15, metà**: l’avanzamento. Un pannello sopra il menu con la versione, una barra che si riempie con i megabyte (l’evento di `downloadAndInstall`, al più dieci volte al secondo) e poi «Installo: il gioco si chiude e si riapre da solo»; se va storto lo dice e si chiude. Prima di scaricare, la partita in corso va nel posto automatico (`salvaUscendo`, come M6), e la domanda lo dice. Resta l’altra metà: le note della versione nella domanda.

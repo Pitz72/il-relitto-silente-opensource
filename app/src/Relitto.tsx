@@ -27,7 +27,9 @@ import { attributiSchermo, useMovimentoRidotto, useOpzioni } from "./stile/opzio
 import { comando, dentroTauri } from "./lib/tauri";
 import { schermoIntero } from "./lib/finestra";
 import { salvaUscendo } from "./gioco/uscita";
-import { cercaAggiornamento, FIRMA } from "./aggiornamenti";
+import { cercaAggiornamento, FINTO, FIRMA } from "./aggiornamenti";
+import Aggiornamento from "./menu/Aggiornamento";
+import type { Avanzamento } from "./menu/avanzamento";
 import { avviaSuono, menuSuono, mixSuono, suonaTocco } from "./gioco/suono";
 import { gestoDelClic } from "./gioco/tocco";
 import { archivio, type Posto } from "./gioco/salvataggi";
@@ -82,6 +84,8 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   const [pannello, setPannello] = useState<PannelloMenu>(null);
   const [domanda, setDomanda] = useState<Domanda | null>(null);
   const [avviso, mostraAvviso] = useAvviso();
+  /** l'aggiornamento in corso: il pannello con la barra (menu/Aggiornamento.tsx) */
+  const [aggiornamento, setAggiornamento] = useState<{ versione: string; avanzamento: Avanzamento; errore: string | null } | null>(null);
   const partite = useRef(0);
 
   // all'avvio: il nero, poi i loghi; il motore comincia a caricarsi, e il registro dei finali si legge
@@ -214,20 +218,24 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
       if (e.tipo === "nuova") {
         setDomanda({
           testo: `È uscita la versione ${e.versione}.`,
-          sotto: "Si scarica, si installa e il gioco si riapre. Una partita in corso va salvata prima: il gioco la ricorderà solo se l'hai salvata.",
+          sotto: "Si scarica, si installa e il gioco si riapre. Una partita in corso si salva da sola nel posto automatico, e «Continua» la riprende.",
           si: "Aggiorna",
           no: "Più tardi",
           allora: () => {
-            mostraAvviso("Scarico l'aggiornamento…");
-            void e
-              .installa()
+            // il pannello con la barra, fino a quando il gioco si chiude per installare
+            const v = e.versione;
+            setAggiornamento({ versione: v, avanzamento: { fase: "prepara" }, errore: null });
+            const avanza = (a: Avanzamento) => setAggiornamento((s) => (s && !s.errore ? { ...s, avanzamento: a } : s));
+            void salvaUscendo()
+              .then(() => e.installa(avanza))
               .catch((err) =>
-                mostraAvviso(
-                  FIRMA.test(String(err instanceof Error ? err.message : err))
+                setAggiornamento((s) => ({
+                  versione: v,
+                  avanzamento: s?.avanzamento ?? { fase: "prepara" },
+                  errore: FIRMA.test(String(err instanceof Error ? err.message : err))
                     ? "L’aggiornamento non porta la firma dell’autore: non lo installo."
-                    : "L’aggiornamento non è andato a buon fine.",
-                  true,
-                ),
+                    : "L’aggiornamento non è andato a buon fine. Il gioco resta com’era.",
+                })),
               );
           },
         });
@@ -246,7 +254,7 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   );
   const cercatoAvvio = useRef(false);
   useEffect(() => {
-    if (schermata.tipo !== "menu" || cercatoAvvio.current || !opzioni.cercaAggiornamenti || !dentroTauri() || prova !== undefined) return;
+    if (schermata.tipo !== "menu" || cercatoAvvio.current || !opzioni.cercaAggiornamenti || !(dentroTauri() || FINTO) || prova !== undefined) return;
     cercatoAvvio.current = true;
     void cercaNuova(false);
   }, [schermata.tipo, opzioni.cercaAggiornamenti, prova, cercaNuova]);
@@ -329,7 +337,7 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
               identita={`${VERSIONE.gioco} · ${VERSIONE.commit} · FAVELLA ${VERSIONE.motore}`}
               caricamento={caricamento}
               problema={passo === MOTORE_FALLITO ? "Il motore del gioco non è partito." : null}
-              coperto={!!pannello || !!domanda}
+              coperto={!!pannello || !!domanda || !!aggiornamento}
             />
             {pannello === "carica" && (
               <Salvataggi
@@ -348,6 +356,14 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
             {pannello === "opzioni" && <PannelloOpzioni forma="membrana" opzioni={opzioni} cambia={cambiaOpzioni} chiudi={() => setPannello(null)} />}
             {pannello === "registro" && <RegistroFinali registro={registro} chiudi={() => setPannello(null)} />}
             {domanda && <Conferma domanda={domanda} forma="membrana" chiudi={() => setDomanda(null)} />}
+            {aggiornamento && (
+              <Aggiornamento
+                versione={aggiornamento.versione}
+                avanzamento={aggiornamento.avanzamento}
+                errore={aggiornamento.errore}
+                chiudi={() => setAggiornamento(null)}
+              />
+            )}
           </>
         )}
         {schermata.tipo === "titoli" && (

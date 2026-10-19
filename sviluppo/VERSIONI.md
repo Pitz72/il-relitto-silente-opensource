@@ -236,4 +236,11 @@ lo bloccherebbe.
 - **Prova.** Il client e i flussi non si possono provare del tutto prima del primo tag. La strada: si pubblica una pre-release (per esempio
   `v0.9.0-beta.1`) e la si installa; poi una seconda (`v0.9.0-beta.2`): la prima, che legge il canale di prova, deve trovarla, scaricarla e
   installarla. Solo dopo, la prima versione normale.
+  **Fatta il 19 ottobre 2026, ed è riuscita.** `v0.2.5-beta.1` e `v0.2.5-beta.2` costruite e firmate da `rilascio.yml` (la firma
+  porta la chiave `26304917F4709F8A`, la stessa di `tauri.conf.json`), pubblicate a mano come pre-release; `canale.yml` ha creato la
+  release `aggiornamenti-prova` e ci ha messo il `latest.json` di ognuna. L’autore ha installato la beta.1 presa da GitHub: al menu il
+  gioco gli ha chiesto di aggiornare alla beta.2, l’ha scaricata, ha avviato l’installatore, e si è riaperto alla beta.2 (controllato
+  sull’eseguibile installato). Il canale `aggiornamenti`, quello delle versioni normali, è ancora vuoto (404): il gioco lo dice con
+  «Non c’è ancora una versione da scaricare.» L’unica cosa che mancava era un segno che lo scaricamento andava avanti: la barra
+  (revisione 25, L15) c’è dalla versione dopo la beta.2.
 
