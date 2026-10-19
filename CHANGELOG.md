@@ -8,6 +8,12 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+### Corretto
+
+- **I loghi d’apertura non si inceppano più** (revisione 25, M1): il motore del gioco si carica finiti i loghi, durante la dichiarazione. Prima le sue chiamate sincrone fermavano l’immagine dei loghi per quasi un secondo; ora durante i loghi resta un solo blocco di 79 ms, quando si montano.
+- **Nessun testo sotto i 12 px** (revisione 25, M3, E5 ed E10): a 1280 × 720 (uno schermo 1920 × 1080 al 150 %) i tasti delle uscite scendevano a 8,5 px, gli attrezzi a 10,4, le didascalie del visore a 10,5. Ora ogni testo che si legge o si tocca sta a 12 px almeno: il ramo è un po’ più grande e si stringe solo fin dove resta leggibile (se non basta, una voce in più va nel «+N»); le etichette dei gruppi del ramo sono nel maiuscoletto delle targhe, sempre sopra il filo (sotto il filo basso uscivano dallo schermo); le scritte di servizio del visore hanno una forma sola, nella membrana come nell’acciaio. Controllato giocando i sei finali a tre misure di finestra.
+- **Il gioco fermo non fa più lavorare la scheda video come un videogioco d’azione** (revisione 25, M10). Misurato nell’eseguibile: nel relitto, a gioco fermo, la pagina usava il 46–50 % di un core e la scheda video il 42–53 %. Le vene, la lente, la cellula e l’oscilloscopio ora disegnano a 30 fotogrammi al secondo, il respiro della lamina va a scatti lenti, l’impulso della mappa ha uno strato suo: la pagina scende al 16–28 % di un core e la scheda video al 16–22 %, come nel menu.
+
 ## [0.2.5-beta.4] - 2026-10-19
 
 ### Cambiato
