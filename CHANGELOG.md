@@ -8,6 +8,12 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+## [0.2.5-beta.4] - 2026-10-19
+
+### Cambiato
+
+- **Nessuna modifica al gioco.** Questa pre-release serve a vedere dal vero la barra dell’aggiornamento: una 0.2.5-beta.3 installata la scarica mostrando i megabyte, e poi si installa.
+
 ## [0.2.5-beta.3] - 2026-10-19
 
 ### Aggiunto
