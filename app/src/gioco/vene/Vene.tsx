@@ -10,6 +10,7 @@
 import { useEffect, useRef } from "react";
 import type { Clima } from "../../stile/atmosfere";
 import { Venature, type Atmosfera, type Zona } from "./venature";
+import { cicloA, FOTOGRAMMI } from "../ritmo";
 
 interface Props {
   clima: Clima;
@@ -51,7 +52,6 @@ export default function Vene({ clima, energia, ridotto, crescita }: Props) {
     const g = cv.getContext("2d")!;
     const schermo = cv.parentElement!;
     let fermo = false;
-    let id = 0;
     let misure = "";
 
     /** Le vene si rigenerano quando cambia la finestra (le zone sono le misure vere). */
@@ -78,10 +78,13 @@ export default function Vene({ clima, energia, ridotto, crescita }: Props) {
       return dpr;
     };
 
-    const tinta = () => {
+    // i colori del clima, letti una volta (il ciclo si rifà quando il clima cambia): prima si
+    // chiedevano a ogni fotogramma (revisione 25, M10)
+    const colori = (() => {
       const st = getComputedStyle(schermo);
       return { colori: [st.getPropertyValue("--vena").trim() || "#5fd4dc", st.getPropertyValue("--vena-2").trim() || "#8bf0a2"] as [string, string], luce: energia ? 1 : 0.6 };
-    };
+    })();
+    const tinta = () => colori;
 
     const atm = atmosferaDelleVene(clima);
     const disegna = (t: number) => {
@@ -114,15 +117,12 @@ export default function Vene({ clima, energia, ridotto, crescita }: Props) {
       addEventListener("resize", ridisegna);
       return () => removeEventListener("resize", ridisegna);
     }
-    const ciclo = (t: number) => {
-      if (fermo) return;
-      disegna(t);
-      id = requestAnimationFrame(ciclo);
-    };
-    id = requestAnimationFrame(ciclo);
+    const ferma = cicloA(FOTOGRAMMI, (t) => {
+      if (!fermo) disegna(t);
+    });
     return () => {
       fermo = true;
-      cancelAnimationFrame(id);
+      ferma();
     };
   }, [membrana, clima.atmosfera, clima.protezione, clima.ipossia, clima.stanza, energia, ridotto]); // eslint-disable-line react-hooks/exhaustive-deps
 

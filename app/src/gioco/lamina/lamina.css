@@ -19,7 +19,10 @@
   cursor: default;
 }
 /* la membrana respira, solo ai bordi, in diciotto secondi (§3) */
-[data-movimento="pieno"] .lamina[data-forma="membrana"] { animation: lamina-respira 18s ease-in-out 3.2s infinite alternate; }
+/* il respiro del bordo: gli angoli non si animano sulla scheda video, e cambiarli ridipinge la
+   lamina intera, testo compreso; a scatti, tre al secondo, è lo stesso movimento lento e costa un
+   ventesimo (revisione 25, M10) */
+[data-movimento="pieno"] .lamina[data-forma="membrana"] { animation: lamina-respira 18s steps(54) 3.2s infinite alternate; }
 @keyframes lamina-respira {
   0% { border-radius: 3.6cqw 5.6cqw 3.2cqw 6.4cqw / 4.8cqw 3.4cqw 5.8cqw 4cqw; }
   50% { border-radius: 5.2cqw 4cqw 4.6cqw 5cqw / 3.6cqw 5cqw 4.2cqw 5.4cqw; }

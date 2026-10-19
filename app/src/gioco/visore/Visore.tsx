@@ -9,6 +9,7 @@
 //  una ricostruzione generica, diversa per ogni stanza.
 // ============================================================================
 import { useEffect, useMemo, useRef, useState } from "react";
+import { cicloA, FOTOGRAMMI } from "../ritmo";
 import type { Turno } from "../../motore/tipi";
 import { statoAria, type Clima } from "../../stile/atmosfere";
 import { generatore, glifo } from "../../intro/glifi";
@@ -107,7 +108,10 @@ function Ricostruzione({ stanza, diBordo, clima, ridotto }: { stanza: string; di
     const cv = ref.current;
     if (!cv) return;
     const g = cv.getContext("2d")!;
-    let fermo = false;
+    // i colori del clima, letti una volta (il ciclo si rifà quando il clima cambia; revisione 25, M10)
+    const st = getComputedStyle(cv);
+    const c1 = st.getPropertyValue("--vena").trim() || "#5fd4dc";
+    const c2 = st.getPropertyValue("--vena-2").trim() || "#8bf0a2";
     const disegna = (t: number) => {
       const w = cv.clientWidth;
       const h = cv.clientHeight;
@@ -119,9 +123,6 @@ function Ricostruzione({ stanza, diBordo, clima, ridotto }: { stanza: string; di
       g.setTransform(s, 0, 0, s, 0, 0);
       g.fillStyle = "#020505";
       g.fillRect(0, 0, w, h);
-      const st = getComputedStyle(cv);
-      const c1 = st.getPropertyValue("--vena").trim() || "#5fd4dc";
-      const c2 = st.getPropertyValue("--vena-2").trim() || "#8bf0a2";
       if (diBordo) {
         // una telecamera senza immagine (fase 5): la grana del sensore, ferma
         const r = generatore(Math.floor(t / 120) + 1);
@@ -152,18 +153,8 @@ function Ricostruzione({ stanza, diBordo, clima, ridotto }: { stanza: string; di
       disegna(0);
       return;
     }
-    let id = 0;
-    const ciclo = (t: number) => {
-      if (fermo) return;
-      disegna(t);
-      id = requestAnimationFrame(ciclo);
-    };
-    id = requestAnimationFrame(ciclo);
     disegna(performance.now());
-    return () => {
-      fermo = true;
-      cancelAnimationFrame(id);
-    };
+    return cicloA(FOTOGRAMMI, disegna);
   }, [punti, diBordo, clima.atmosfera, clima.protezione, clima.ipossia, ridotto]);
   return <canvas ref={ref} aria-label={diBordo ? "Telecamera di bordo: nessuna immagine" : "Ricostruzione del multiscanner"} role="img" />;
 }
@@ -195,8 +186,6 @@ function Cellula({ aria, acciaio, protezione, fuga, ridotto, differenza, battito
   const amp = aria <= 15 ? 0.09 : aria < 30 ? 0.07 : 0.045;
   useEffect(() => {
     if (acciaio) return;
-    let fermo = false;
-    let id = 0;
     const disegna = (t: number) => {
       const irregolare = aria <= 15 ? Math.sin(t / 700) * 0.4 + Math.sin(t / 233) * 0.2 : 0;
       const respiro = ridotto ? 1 : 1 + 0.045 * Math.sin((t / periodo) * Math.PI * 2 + irregolare);
@@ -212,16 +201,7 @@ function Cellula({ aria, acciaio, protezione, fuga, ridotto, differenza, battito
     };
     disegna(0);
     if (ridotto) return;
-    const ciclo = (t: number) => {
-      if (fermo) return;
-      disegna(t);
-      id = requestAnimationFrame(ciclo);
-    };
-    id = requestAnimationFrame(ciclo);
-    return () => {
-      fermo = true;
-      cancelAnimationFrame(id);
-    };
+    return cicloA(FOTOGRAMMI, disegna);
   }, [acciaio, aria, periodo, contrazione, amp, ridotto]);
 
   const C = 2 * Math.PI * 56;
@@ -371,11 +351,22 @@ function Mappa({ turno, acciaio }: { turno: Turno; acciaio: boolean }) {
           ) : (
             <g key={s.id}>
               <circle cx={s.x} cy={s.y} r={s.qui ? 4.2 : 2.6} className={`stanza${s.qui ? " qui" : ""}`} />
-              {s.qui && <circle cx={s.x} cy={s.y} r="8" className="impulso" />}
             </g>
           ),
         )}
       </svg>
+      {/* l'impulso sulla stanza dove sei, in uno strato suo sopra la mappa: animato dentro la
+          mappa la faceva ridipingere intera, con i bagliori delle stanze, a ogni fotogramma
+          (revisione 25, M10) */}
+      {!acciaio && (
+        <svg viewBox="0 0 310 100" className="mappa-impulso" aria-hidden="true">
+          {c.stanze
+            .filter((s) => s.qui)
+            .map((s) => (
+              <circle key={s.id} cx={s.x} cy={s.y} r="8" className="impulso" />
+            ))}
+        </svg>
+      )}
       <figcaption>{acciaio ? `mappa · ${n} ${n === 1 ? "stanza" : "stanze"}` : `${n} ${n === 1 ? "stanza vista" : "stanze viste"}`}</figcaption>
     </figure>
   );

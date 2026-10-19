@@ -8,6 +8,7 @@
 //  sono della fase 5.
 // ============================================================================
 import { useEffect, useRef, type ReactNode } from "react";
+import { cicloA, FOTOGRAMMI } from "../ritmo";
 import type { Forma } from "../../stile/atmosfere";
 import type { SceltaModello } from "../../azione/modello";
 import type { Blocco, Segmento } from "../lamina/grammatica";
@@ -124,8 +125,10 @@ function Vista({ personaggio, ridotto }: { personaggio: string; ridotto: boolean
     const cv = ref.current;
     if (!cv) return;
     const g = cv.getContext("2d")!;
-    let fermo = false;
-    let id = 0;
+    // i colori, letti una volta (revisione 25, M10)
+    const st = getComputedStyle(cv);
+    const c1 = st.getPropertyValue("--vena").trim() || "#5fd4dc";
+    const c2 = st.getPropertyValue("--accento-2").trim() || "#8bf0a2";
     const disegna = (t: number) => {
       const w = cv.clientWidth;
       const h = cv.clientHeight;
@@ -136,25 +139,13 @@ function Vista({ personaggio, ridotto }: { personaggio: string; ridotto: boolean
       }
       g.setTransform(s, 0, 0, s, 0, 0);
       g.clearRect(0, 0, w, h);
-      const st = getComputedStyle(cv);
-      const c1 = st.getPropertyValue("--vena").trim() || "#5fd4dc";
-      const c2 = st.getPropertyValue("--accento-2").trim() || "#8bf0a2";
       if (personaggio === "anziano") anziano(g, w, h, t);
       else if (personaggio === "eco") eco(g, w, h, t, c1, c2);
       else comunicatore(g, w, h, t, c2);
     };
     disegna(ridotto ? 0 : performance.now());
     if (ridotto) return;
-    const ciclo = (t: number) => {
-      if (fermo) return;
-      disegna(t);
-      id = requestAnimationFrame(ciclo);
-    };
-    id = requestAnimationFrame(ciclo);
-    return () => {
-      fermo = true;
-      cancelAnimationFrame(id);
-    };
+    return cicloA(FOTOGRAMMI, disegna);
   }, [personaggio, ridotto]);
   const etichetta = personaggio === "anziano" ? "La figura dell’Anziano, fatta di punti di luce" : personaggio === "eco" ? "L’onda della registrazione, che gira su se stessa" : "Il comunicatore: Yusuf, dal Magazzino Quattro";
   return (

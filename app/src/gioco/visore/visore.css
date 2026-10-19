@@ -132,6 +132,9 @@
 .mappa .stanza.qui { fill: var(--vena-2); }
 .mappa .impulso { fill: none; stroke: var(--vena-2); stroke-opacity: .6; transform-box: fill-box; transform-origin: center; }
 [data-movimento="pieno"] .mappa .impulso { animation: impulso 2.6s ease-out infinite; }
+/* l'impulso sta in uno strato suo, sopra la mappa: ridipinge un cerchio, non le stanze con i loro
+   bagliori (revisione 25, M10) */
+.mappa .mappa-impulso { position: absolute; left: 0; top: 0; pointer-events: none; will-change: transform; }
 @keyframes impulso { 0% { transform: scale(.55); stroke-opacity: .7; } 100% { transform: scale(1.6); stroke-opacity: 0; } }
 .visore[data-forma="acciaio"] .mappa .passaggio { stroke: var(--bordo); stroke-opacity: 1; }
 .visore[data-forma="acciaio"] .mappa .moncone { stroke: var(--bordo); stroke-opacity: 1; }
@@ -188,7 +191,7 @@
   box-shadow: inset 0 0 2.2cqw color-mix(in srgb, var(--aria) 16%, transparent), inset 0 0 0 1px color-mix(in srgb, var(--aria) 10%, transparent);
   opacity: .8;
 }
-[data-movimento="pieno"] .vetro { animation: respiro-vetro var(--respiro, 4.4s) ease-in-out infinite; }
+[data-movimento="pieno"] .vetro { animation: respiro-vetro var(--respiro, 4.4s) ease-in-out infinite; will-change: opacity; }
 @keyframes respiro-vetro { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
 
 /* l'ipossia: la vignettatura e una leggera aberrazione ai bordi; la spaziatura vacilla */
