@@ -7,6 +7,8 @@ import { conFinale, FINALI, giorno, pulisci, rigaDelRegistro } from "../src/menu
 import { daContinuare, dettaglioDi } from "../src/menu/continua.ts";
 import { nomiDelleLibrerie, type Elenco } from "../src/riconoscimenti/elenco.ts";
 import { frazione, testoAvanzamento } from "../src/menu/avanzamento.ts";
+import { confronta, daMostrare, pezzi, righeDalleNote, type Novita } from "../src/menu/novita.ts";
+import * as changelog from "../../strumenti/changelog.mjs";
 import type { Posto } from "../src/gioco/salvataggi.ts";
 
 test("i sei finali, con i nomi dell'autore", () => {
@@ -90,4 +92,71 @@ test("l'aggiornamento in corso dice quanto ha scaricato, e poi che installa", ()
   assert.equal(frazione({ fase: "scarica", scaricati: 50, totale: 40 }), 1);
   assert.equal(frazione({ fase: "installa" }), 1);
   assert.match(testoAvanzamento({ fase: "installa" }), /si chiude e si riapre da solo/);
+});
+
+// ---- le novità dopo un aggiornamento (src/menu/novita.ts, strumenti/changelog.mjs) ----
+const N = (versione: string, ...righe: string[]): Novita => ({ versione, data: "2026-10-19", righe });
+const ELENCO = [N("0.3.0", "c"), N("0.2.6", "b"), N("0.2.5", "a"), N("0.2.5-beta.5", "beta"), N("0.2.5-beta.4")];
+
+test("le versioni in ordine SemVer, come nello strumento delle versioni", () => {
+  const v = ["0.2.4", "0.2.5-beta.1", "0.2.5-beta.2", "0.2.5-beta.10", "0.2.5-rc.1", "0.2.5", "0.2.6", "0.10.0", "1.0.0-alpha", "1.0.0"];
+  for (let i = 0; i < v.length; i++)
+    for (let j = 0; j < v.length; j++) {
+      const a = Math.sign(confronta(v[i], v[j])!), b = Math.sign(changelog.confronta(v[i], v[j]));
+      assert.equal(a, b, `${v[i]} ~ ${v[j]}`);
+      assert.equal(a, Math.sign(i - j), `${v[i]} ~ ${v[j]}`);
+    }
+  assert.equal(confronta("non è una versione", "0.2.5"), null);
+});
+
+test("le novità: dopo un aggiornamento quelle arrivate da allora, la più recente prima; le stesse, niente", () => {
+  assert.deepEqual(daMostrare(ELENCO, "0.2.5", "0.3.0", true), { mostra: [ELENCO[0], ELENCO[1]], ricorda: true });
+  // le pre-release le mostrano anche loro (decisione dell'autore); senza righe non c'è niente da dire
+  assert.deepEqual(daMostrare(ELENCO, "0.2.5-beta.4", "0.2.5-beta.5", true).mostra.map((n) => n.versione), ["0.2.5-beta.5"]);
+  assert.deepEqual(daMostrare(ELENCO, "0.2.5-beta.3", "0.2.5-beta.4", true), { mostra: [], ricorda: true });
+  assert.deepEqual(daMostrare(ELENCO, "0.2.6", "0.2.6", true), { mostra: [], ricorda: false });
+});
+
+test("le novità: chi installa da zero non vede niente; chi aveva già giocato, quelle di questa versione", () => {
+  assert.deepEqual(daMostrare(ELENCO, null, "0.2.6", false), { mostra: [], ricorda: true });
+  assert.deepEqual(daMostrare(ELENCO, null, "0.2.6", true).mostra.map((n) => n.versione), ["0.2.6"]);
+  // una versione ricordata che non si legge vale come nessuna
+  assert.deepEqual(daMostrare(ELENCO, "???", "0.2.6", true).mostra.map((n) => n.versione), ["0.2.6"]);
+});
+
+test("le novità: tornando a una versione più vecchia niente, e si ricorda la più nuova", () => {
+  assert.deepEqual(daMostrare(ELENCO, "0.3.0", "0.2.6", true), { mostra: [], ricorda: false });
+});
+
+test("le righe «Per chi gioca» del CHANGELOG: le voci, senza collegamenti né codice, con il grassetto", () => {
+  const corpo = [
+    "### Per chi gioca",
+    "",
+    "- **Una cosa nuova**, detta [semplice](http://x) e senza `codice`;",
+    "  su due righe.",
+    "- Un’altra.",
+    "",
+    "### Aggiunto",
+    "",
+    "- Una nota tecnica.",
+  ].join("\n");
+  const righe = changelog.perChiGioca(corpo);
+  assert.deepEqual(righe, ["**Una cosa nuova**, detta semplice e senza codice; su due righe.", "Un’altra."]);
+  assert.deepEqual(changelog.perChiGioca("### Aggiunto\n\n- Solo tecnica."), []);
+  // il corpo della release le porta, e il gioco le rilegge per la domanda «È uscita la versione…»
+  assert.deepEqual(righeDalleNote(changelog.corpoRelease("0.2.6", righe)), righe);
+  assert.deepEqual(righeDalleNote("Il remake de «Il Relitto Silente». Le note sono nel CHANGELOG."), []);
+  assert.deepEqual(pezzi(righe[0]), [
+    { testo: "Una cosa nuova", forte: true },
+    { testo: ", detta semplice e senza codice; su due righe.", forte: false },
+  ]);
+});
+
+// (che una versione da rilasciare abbia le sue righe lo controlla `versione.mjs verifica --rilascio`)
+test("il CHANGELOG vero: le versioni si leggono, in ordine, la più recente prima", () => {
+  const testo = readFileSync(new URL("../../CHANGELOG.md", import.meta.url), "utf8");
+  assert.ok(changelog.sezione(testo, changelog.titoloNonRilasciato()), "manca «Non rilasciato»");
+  const v = changelog.novita(testo).map((n) => n.versione);
+  assert.ok(v.length > 5);
+  for (let i = 1; i < v.length; i++) assert.ok(changelog.confronta(v[i - 1], v[i]) > 0, `${v[i - 1]} prima di ${v[i]}`);
 });

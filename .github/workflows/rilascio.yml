@@ -64,6 +64,18 @@ jobs:
             libayatana-appindicator3-dev librsvg2-dev libasound2-dev libdbus-1-dev patchelf
       - run: npm ci
         working-directory: app
+      # il corpo della release: le righe «Per chi gioca» del CHANGELOG. tauri-action lo scrive anche
+      # nel latest.json («notes»), e il gioco installato le mostra nella domanda «È uscita la
+      # versione…» (nota dell'autore del 19 ottobre 2026; revisione 25, L15)
+      - name: Le note per chi gioca
+        id: note
+        shell: bash
+        run: |
+          {
+            echo "corpo<<FINE_DELLE_NOTE"
+            node strumenti/versione.mjs corpo
+            echo "FINE_DELLE_NOTE"
+          } >> "$GITHUB_OUTPUT"
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -73,7 +85,7 @@ jobs:
           projectPath: app
           tagName: ${{ github.ref_name }}
           releaseName: "Il Relitto Silente (remake) ${{ github.ref_name }}"
-          releaseBody: "Il remake de «Il Relitto Silente», un programma a sé. Le note di questa versione sono nel CHANGELOG."
+          releaseBody: ${{ steps.note.outputs.corpo }}
           releaseDraft: true
           prerelease: ${{ contains(github.ref_name, '-') }}
           # una pre-release (v…-beta.1) legge il canale di prova: tauri.prova.conf.json (canale.yml)

@@ -23,12 +23,14 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { avviaMotore, MOTORE_FALLITO, usaPassoMotore } from "./motore/condiviso";
 import { tavolozza, variabiliCss } from "./stile/atmosfere";
-import { attributiSchermo, useMovimentoRidotto, useOpzioni } from "./stile/opzioni";
+import { attributiSchermo, opzioniRicordate, useMovimentoRidotto, useOpzioni } from "./stile/opzioni";
 import { comando, dentroTauri } from "./lib/tauri";
 import { schermoIntero } from "./lib/finestra";
 import { salvaUscendo } from "./gioco/uscita";
 import { cercaAggiornamento, FINTO, FIRMA } from "./aggiornamenti";
 import Aggiornamento from "./menu/Aggiornamento";
+import FinestraNovita from "./menu/FinestraNovita";
+import { daMostrare, leggiVista, ricordaVista, righeDalleNote, type Novita as NovitaVersione } from "./menu/novita";
 import type { Avanzamento } from "./menu/avanzamento";
 import { avviaSuono, menuSuono, mixSuono, suonaTocco } from "./gioco/suono";
 import { gestoDelClic } from "./gioco/tocco";
@@ -55,6 +57,9 @@ const Dichiarazione = lazy(() => import("./riconoscimenti/Dichiarazione"));
 const NERO = 400;
 
 const VERSIONE = __VERSIONE__;
+const NOVITA = __NOVITA__;
+/** Lo sviluppo, con ?novita: la finestra delle novità con le righe della prossima versione. */
+const PROVA_NOVITA = import.meta.env.DEV && new URLSearchParams(location.search).has("novita");
 
 type Schermata =
   | { tipo: "nero" }
@@ -65,7 +70,7 @@ type Schermata =
   | { tipo: "intro" }
   | { tipo: "gioco"; inizio: Inizio; chiave: number };
 
-type PannelloMenu = null | "carica" | "opzioni" | "registro";
+type PannelloMenu = null | "carica" | "opzioni" | "registro" | "novita";
 
 /** Il clima del menu, della dichiarazione e dei titoli: il relitto, nella membrana. */
 const STILE = variabiliCss(tavolozza({ atmosfera: "relitto", forma: "membrana", stanza: null, protezione: false, ipossia: false }), null) as CSSProperties;
@@ -86,6 +91,9 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   const [avviso, mostraAvviso] = useAvviso();
   /** l'aggiornamento in corso: il pannello con la barra (menu/Aggiornamento.tsx) */
   const [aggiornamento, setAggiornamento] = useState<{ versione: string; avanzamento: Avanzamento; errore: string | null } | null>(null);
+  /** le novità da mostrare (menu/FinestraNovita.tsx), e se si è già deciso, in questo avvio */
+  const [novita, setNovita] = useState<NovitaVersione[]>([]);
+  const [novitaDecise, setNovitaDecise] = useState(false);
   const partite = useRef(0);
 
   // all'avvio: il nero, poi i loghi; il registro dei finali si legge
@@ -111,6 +119,28 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   useEffect(() => {
     if (schermata.tipo === "menu") void leggiPosti();
   }, [schermata.tipo, leggiPosti]);
+
+  // ---- le novità dopo un aggiornamento (nota dell'autore del 19 ottobre 2026; menu/novita.ts): al
+  // primo arrivo al menu con una versione diversa dall'ultima vista. Si decide quando i salvataggi
+  // sono letti: con il registro dei finali e le opzioni dicono se qui si era già giocato. Le prove
+  // non le vedono e non le ricordano
+  useEffect(() => {
+    if (schermata.tipo !== "menu" || novitaDecise || posti === null) return;
+    setNovitaDecise(true);
+    if (prova !== undefined) return;
+    if (PROVA_NOVITA) {
+      setNovita([{ versione: "non ancora rilasciata", data: "", righe: NOVITA.prossima }]);
+      setPannello("novita");
+      return;
+    }
+    const tracce = registroRef.current.length > 0 || posti.some((p) => p.presente) || opzioniRicordate();
+    const { mostra, ricorda } = daMostrare(NOVITA.elenco, leggiVista(), VERSIONE.gioco, tracce);
+    if (ricorda) ricordaVista(VERSIONE.gioco);
+    if (mostra.length) {
+      setNovita(mostra);
+      setPannello("novita");
+    }
+  }, [schermata.tipo, novitaDecise, posti, prova]);
 
   const gioca = useCallback((inizio: Inizio) => {
     setPannello(null);
@@ -228,6 +258,9 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
       if (e.tipo === "nuova") {
         setDomanda({
           testo: `È uscita la versione ${e.versione}.`,
+          // le sue novità, dal corpo della release (le righe «Per chi gioca»; revisione 25, L15)
+          righe: righeDalleNote(e.note),
+          daSolo: !aMano,
           sotto: "Si scarica, si installa e il gioco si riapre. Una partita in corso si salva da sola nel posto automatico, e «Continua» la riprende.",
           si: "Aggiorna",
           no: "Più tardi",
@@ -262,12 +295,14 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
     },
     [mostraAvviso],
   );
+  // (dopo le novità: prima si legge che cosa è arrivato, poi si sente se c'è altro)
   const cercatoAvvio = useRef(false);
   useEffect(() => {
     if (schermata.tipo !== "menu" || cercatoAvvio.current || !opzioni.cercaAggiornamenti || !(dentroTauri() || FINTO) || prova !== undefined) return;
+    if (!novitaDecise || pannello === "novita") return;
     cercatoAvvio.current = true;
     void cercaNuova(false);
-  }, [schermata.tipo, opzioni.cercaAggiornamenti, prova, cercaNuova]);
+  }, [schermata.tipo, opzioni.cercaAggiornamenti, prova, cercaNuova, novitaDecise, pannello]);
 
   // ---- le voci del menu ---------------------------------------------------------
   const salvato = daContinuare(posti);
@@ -365,6 +400,7 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
             )}
             {pannello === "opzioni" && <PannelloOpzioni forma="membrana" opzioni={opzioni} cambia={cambiaOpzioni} chiudi={() => setPannello(null)} />}
             {pannello === "registro" && <RegistroFinali registro={registro} chiudi={() => setPannello(null)} />}
+            {pannello === "novita" && <FinestraNovita versioni={novita} chiudi={() => setPannello(null)} />}
             {domanda && <Conferma domanda={domanda} forma="membrana" chiudi={() => setDomanda(null)} />}
             {aggiornamento && (
               <Aggiornamento

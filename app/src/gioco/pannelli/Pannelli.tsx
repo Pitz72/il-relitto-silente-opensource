@@ -7,15 +7,18 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNo
 import type { Forma } from "../../stile/atmosfere";
 import type { Opzioni } from "../../stile/opzioni";
 import { POSTI, quando, type IdPosto, type Posto } from "../salvataggi";
+import RigheNovita from "../../menu/RigheNovita";
 import "./pannelli.css";
 
-/** Il fuoco entra nel pannello all'apertura, e ci resta (Tab gira dentro). */
-function useTrappola(ref: React.RefObject<HTMLElement | null>) {
+/** Il fuoco entra nel pannello all'apertura, e ci resta (Tab gira dentro). Un pannello che si apre
+ *  da solo, senza un gesto di chi gioca (le novità, la domanda dell'aggiornamento all'avvio), non
+ *  cerchia il primo pulsante: nessuno l'ha scelto (come il menu; il contorno torna con Tab). */
+function useTrappola(ref: React.RefObject<HTMLElement | null>, daSolo = false) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const prima = document.activeElement as HTMLElement | null;
-    el.querySelector<HTMLElement>("[data-primo], button:not(:disabled):not([tabindex='-1'])")?.focus({ preventScroll: true });
+    el.querySelector<HTMLElement>("[data-primo], button:not(:disabled):not([tabindex='-1'])")?.focus({ preventScroll: true, focusVisible: daSolo ? false : undefined });
     const tab = (e: KeyboardEvent) => {
       if (e.key !== "Tab") return;
       // le schede non scelte (tabindex −1) si raggiungono con le frecce, non con Tab
@@ -31,12 +34,12 @@ function useTrappola(ref: React.RefObject<HTMLElement | null>) {
       el.removeEventListener("keydown", tab);
       prima?.focus?.({ preventScroll: true });
     };
-  }, [ref]);
+  }, [ref, daSolo]);
 }
 
-export function Pannello({ forma, titolo, children, classe = "", etichetta }: { forma: Forma; titolo?: string; children: ReactNode; classe?: string; etichetta?: string }) {
+export function Pannello({ forma, titolo, children, classe = "", etichetta, daSolo = false }: { forma: Forma; titolo?: string; children: ReactNode; classe?: string; etichetta?: string; daSolo?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
-  useTrappola(ref);
+  useTrappola(ref, daSolo);
   return (
     <div className="velo-pannello">
       <div ref={ref} className={`pannello ${classe}`} data-forma={forma} role="dialog" aria-modal="true" aria-label={etichetta ?? titolo}>
@@ -52,12 +55,16 @@ export function Pannello({ forma, titolo, children, classe = "", etichetta }: { 
 // ----------------------------------------------------------------------------
 export interface Domanda {
   testo: string;
+  /** un elenco fra la domanda e la riga sotto: le novità di una versione che si può scaricare */
+  righe?: readonly string[];
   sotto?: string;
   si: string;
   no: string;
   allora: () => void;
   /** se No deve fare qualcosa oltre a chiudere */
   altrimenti?: () => void;
+  /** la domanda arriva da sola, senza un gesto di chi gioca: il fuoco senza contorno */
+  daSolo?: boolean;
   /** i comandi del motore che Sì e No mandano, quando la domanda è sua */
   comandoSi?: string;
   comandoNo?: string;
@@ -82,8 +89,9 @@ export function Conferma({ domanda, forma, chiudi }: { domanda: Domanda; forma: 
     return () => removeEventListener("keydown", tasto, true);
   }, [domanda, chiudi]);
   return (
-    <Pannello forma={forma} classe="conferma" etichetta={domanda.testo}>
+    <Pannello forma={forma} classe="conferma" etichetta={domanda.testo} daSolo={domanda.daSolo}>
       <p className="domanda">{domanda.testo}</p>
+      {domanda.righe && domanda.righe.length > 0 && <RigheNovita righe={domanda.righe} />}
       {domanda.sotto && <p className="sotto">{domanda.sotto}</p>}
       <div className="scelte-conferma">
         <button

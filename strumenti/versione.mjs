@@ -11,16 +11,21 @@
 //    node strumenti/versione.mjs verifica [--rilascio]
 //    node strumenti/versione.mjs prepara <major|minor|patch|pre|X.Y.Z> [--pre alpha|beta|rc]
 //    node strumenti/versione.mjs note [X.Y.Z]
+//    node strumenti/versione.mjs corpo [X.Y.Z]
 //
 //  verifica            coerenza fra i file
-//  verifica --rilascio in più: il CHANGELOG ha la sezione datata della versione
+//  verifica --rilascio in più: il CHANGELOG ha la sezione datata della versione,
+//                      con le righe «Per chi gioca»
 //  prepara             calcola la nuova versione, aggiorna tutti i file e chiude
 //                      nel CHANGELOG la sezione «Non rilasciato» con la data
-//  note                stampa le note di una versione (il corpo della release)
+//  note                stampa le note intere di una versione
+//  corpo               stampa il corpo della release: le righe «Per chi gioca»
+//                      (il gioco le mostra prima di aggiornare) e il rimando al CHANGELOG
 // ============================================================================
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { analizza, confronta, corpoRelease, INTESTAZIONE_NR, perChiGioca, PER_CHI_GIOCA, SEMVER, sezione, titoloNonRilasciato, titoloVersione } from "./changelog.mjs";
 
 const radice = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const P = (...p) => path.join(radice, ...p);
@@ -28,33 +33,7 @@ const leggi = (f) => fs.readFileSync(P(f), "utf8");
 const leggiJson = (f) => JSON.parse(leggi(f));
 const scriviJson = (f, d) => fs.writeFileSync(P(f), JSON.stringify(d, null, 2) + "\n");
 
-// SemVer 2.0.0, espressione ufficiale (semver.org), senza metadati di build:
-// quelli (il commit) li aggiunge la build, non si scrivono nei file.
-const SEMVER = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?$/;
 const PRE = ["alpha", "beta", "rc"];
-
-function analizza(v) {
-  const m = SEMVER.exec(v);
-  if (!m) throw new Error(`«${v}» non è una versione SemVer valida (MAJOR.MINOR.PATCH[-pre]).`);
-  return { major: +m[1], minor: +m[2], patch: +m[3], pre: m[4] ? m[4].split(".") : [] };
-}
-
-// Precedenza SemVer (§11): numeri, poi pre-release < release, poi identificatori.
-function confronta(a, b) {
-  const x = analizza(a), y = analizza(b);
-  for (const k of ["major", "minor", "patch"]) if (x[k] !== y[k]) return x[k] - y[k];
-  if (!x.pre.length || !y.pre.length) return (x.pre.length ? -1 : 0) - (y.pre.length ? -1 : 0);
-  for (let i = 0; i < Math.max(x.pre.length, y.pre.length); i++) {
-    const p = x.pre[i], q = y.pre[i];
-    if (p === undefined) return -1;
-    if (q === undefined) return 1;
-    const np = /^\d+$/.test(p), nq = /^\d+$/.test(q);
-    if (np && nq && +p !== +q) return +p - +q;
-    if (np !== nq) return np ? -1 : 1;
-    if (p !== q) return p < q ? -1 : 1;
-  }
-  return 0;
-}
 
 // Regole di npm version: se l'attuale è già una pre-release della versione di
 // destinazione, «minor» (o major/patch) punta alla STESSA destinazione:
@@ -123,21 +102,9 @@ function scriviVersione(v) {
 
 const versioneMotore = () => /VERSIONE_MOTORE\s*=\s*"([^"]+)"/.exec(leggi("motore/strutture.py"))?.[1];
 
-// --- CHANGELOG (formato Keep a Changelog, in italiano) -------------------------
+// --- CHANGELOG (formato Keep a Changelog, in italiano; le sezioni: changelog.mjs) --
 const CL = "CHANGELOG.md";
-const INTESTAZIONE_NR = "## [Non rilasciato]";
 const leggiCL = () => leggi(CL).replace(/\r\n/g, "\n");
-
-function sezione(testo, titoloRegex) {
-  const righe = testo.split("\n");
-  const i = righe.findIndex((r) => titoloRegex.test(r));
-  if (i < 0) return null;
-  let j = i + 1;
-  while (j < righe.length && !/^## \[/.test(righe[j])) j++;
-  return { inizio: i, fine: j, corpo: righe.slice(i + 1, j).join("\n").trim() };
-}
-const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-const titoloVersione = (v) => new RegExp(`^## \\[${escape(v)}\\] - \\d{4}-\\d{2}-\\d{2}$`);
 
 // --- comandi -------------------------------------------------------------------
 const [comando, ...argomenti] = process.argv.slice(2);
@@ -173,6 +140,7 @@ try {
       const s = sezione(cl, titoloVersione(gioco));
       if (!s) errori.push(`${CL}: manca la sezione «## [${gioco}] - AAAA-MM-GG» (esegui «prepara»).`);
       else if (!s.corpo) errori.push(`${CL}: la sezione ${gioco} è vuota.`);
+      else if (!perChiGioca(s.corpo).length) errori.push(`${CL}: la sezione ${gioco} non ha le righe «${PER_CHI_GIOCA.slice(4)}» (il gioco le mostra dopo l’aggiornamento).`);
     }
     if (!versioneMotore()) errori.push("motore/strutture.py: VERSIONE_MOTORE non trovata.");
     if (errori.length) {
@@ -187,7 +155,7 @@ try {
     const passo = argomenti[0];
     if (!passo) throw new Error("Indica il passo: major, minor, patch o X.Y.Z.");
     const cl = leggiCL();
-    const nr = sezione(cl, new RegExp(`^${escape(INTESTAZIONE_NR)}$`));
+    const nr = sezione(cl, titoloNonRilasciato());
     if (!nr) throw new Error(`${CL}: manca la sezione «${INTESTAZIONE_NR}».`);
     if (!nr.corpo) throw new Error(`${CL}: «${INTESTAZIONE_NR}» è vuota: non c’è niente da rilasciare.`);
     // la prima versione può essere quella attuale, mai rilasciata
@@ -214,7 +182,17 @@ try {
     process.exit(0);
   }
 
-  throw new Error(`Comando sconosciuto «${comando}». Usa: mostra, verifica, prepara, note.`);
+  if (comando === "corpo") {
+    const v = argomenti[0] ?? gioco;
+    const s = sezione(leggiCL(), titoloVersione(v));
+    if (!s) throw new Error(`${CL}: nessuna sezione per ${v}.`);
+    const righe = perChiGioca(s.corpo);
+    if (!righe.length) throw new Error(`${CL}: la sezione ${v} non ha le righe «${PER_CHI_GIOCA.slice(4)}».`);
+    console.log(corpoRelease(v, righe));
+    process.exit(0);
+  }
+
+  throw new Error(`Comando sconosciuto «${comando}». Usa: mostra, verifica, prepara, note, corpo.`);
 } catch (e) {
   console.error(e.message);
   process.exit(1);

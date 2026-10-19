@@ -10,3 +10,10 @@ declare const __VERSIONE__: {
   commit: string;
   data: string;
 };
+
+/** Le righe «Per chi gioca» del CHANGELOG (vite.config.ts; src/menu/novita.ts): le versioni fino a
+ *  questa, la più recente prima; «prossima», solo nello sviluppo, quelle di «Non rilasciato». */
+declare const __NOVITA__: {
+  elenco: { versione: string; data: string; righe: string[] }[];
+  prossima: string[];
+};

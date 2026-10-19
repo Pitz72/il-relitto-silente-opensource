@@ -8,6 +8,17 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+### Per chi gioca
+
+- **Le novità, dopo ogni aggiornamento.** Quando il gioco si riapre con una versione nuova, il menu dice in poche righe che cosa è cambiato; e prima di scaricarla, la domanda «È uscita la versione…» dice che cosa porta.
+- **I loghi d’apertura scorrono lisci**, senza fermarsi a metà.
+- **Le scritte piccole sono cresciute**: nessuna sotto i 12 pixel, anche sugli schermi piccoli.
+- **A gioco fermo il computer si riposa**: la scheda video lavora meno della metà di prima.
+
+### Aggiunto
+
+- **Le novità dopo un aggiornamento** (nota dell’autore del 19 ottobre 2026; revisione 25, L15, la seconda metà). Ogni versione del CHANGELOG ha ora una sezione **«Per chi gioca»**, la prima: poche righe semplici, per chi gioca e non per chi programma, che scrivo io (decisione dell’autore). La build le mette nel gioco (`strumenti/changelog.mjs`, `app/vite.config.ts`); al primo arrivo al menu con una versione diversa dall’ultima vista, una finestra le mostra (`app/src/menu/FinestraNovita.tsx`): quelle di tutte le versioni arrivate da allora, la più recente prima, con «chiudi» sempre in vista. Le mostrano anche le pre-release; chi installa da zero non vede niente (per lui non c’è niente di nuovo), e nemmeno chi torna a una versione più vecchia. La versione vista si ricorda nel browser dell’app (`relitto.versione-vista`). Le stesse righe vanno nel corpo della release (`node strumenti/versione.mjs corpo`, in `rilascio.yml`), e quindi nel `latest.json`: la domanda «È uscita la versione…» le mostra prima di scaricare. `verifica --rilascio` non lascia rilasciare una versione senza le sue righe. La finestra e la domanda, quando si aprono da sole, non cerchiano il primo pulsante (come il menu), e il gioco cerca un altro aggiornamento solo dopo che le novità sono state chiuse. Nello sviluppo, `?novita` mostra la finestra con le righe di «Non rilasciato», e `?aggiornamento-finto` la domanda con le stesse righe.
+
 ### Corretto
 
 - **I loghi d’apertura non si inceppano più** (revisione 25, M1): il motore del gioco si carica finiti i loghi, durante la dichiarazione. Prima le sue chiamate sincrone fermavano l’immagine dei loghi per quasi un secondo; ora durante i loghi resta un solo blocco di 79 ms, quando si montano.

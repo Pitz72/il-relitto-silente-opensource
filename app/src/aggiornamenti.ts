@@ -72,12 +72,13 @@ export async function cercaAggiornamento(): Promise<Esito> {
   }
 }
 
-/** Solo nello sviluppo: 44 MB in otto secondi, poi «Installo», e basta. */
+/** Solo nello sviluppo: le novità della prossima versione, 44 MB in otto secondi, poi «Installo», e basta. */
 function finto(): Esito {
   return {
     tipo: "nuova",
     versione: "9.9.9-finta",
-    note: "",
+    // le righe della prossima versione, come le porterebbe il corpo della release
+    note: ["Per chi gioca:", "", ...__NOVITA__.prossima.map((r) => `- ${r}`)].join("\n"),
     installa: async (avanza) => {
       const totale = 44 * 1024 * 1024;
       avanza?.({ fase: "scarica", scaricati: 0, totale });

@@ -69,6 +69,15 @@ function leggi(): Opzioni {
   }
 }
 
+/** Se qualcuno ha già scelto le sue opzioni, qui: una traccia di chi aveva già giocato (menu/novita.ts). */
+export function opzioniRicordate(): boolean {
+  try {
+    return localStorage.getItem(CHIAVE) !== null;
+  } catch {
+    return false;
+  }
+}
+
 function scrivi(o: Opzioni) {
   try {
     localStorage.setItem(CHIAVE, JSON.stringify(o));

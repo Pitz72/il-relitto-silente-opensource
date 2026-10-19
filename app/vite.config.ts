@@ -4,6 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { execSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { confronta, novita, perChiGioca, sezione, titoloNonRilasciato } from "../strumenti/changelog.mjs";
 
 // ============================================================================
 //  «Il Relitto Silente» — l'app.
@@ -42,13 +43,26 @@ const VERSIONE = {
   data: new Date().toISOString().slice(0, 10),
 };
 
+// Le novità per chi gioca (nota dell'autore del 19 ottobre 2026; src/menu/novita.ts): le righe
+// «Per chi gioca» del CHANGELOG, delle versioni fino a questa. Nello sviluppo anche quelle della
+// prossima, «Non rilasciato», per vedere la finestra con ?novita e la domanda con ?aggiornamento-finto.
+const changelog = fs.readFileSync(path.join(progetto, "CHANGELOG.md"), "utf8");
+const NOVITA = {
+  elenco: novita(changelog).filter((n) => n.righe.length > 0 && confronta(n.versione, VERSIONE.gioco) <= 0),
+  prossima: perChiGioca(sezione(changelog, titoloNonRilasciato())?.corpo ?? ""),
+};
+
 // La console di regia (src/console, Ctrl+Maiusc+M) è uno strumento di chi fa il gioco, non di chi
 // gioca: c'è nello sviluppo e nelle consegne di ascolto (RELITTO_REGIA=1), e non entra nelle
 // versioni da pubblicare. I livelli definitivi stanno in src/gioco/livelli.json.
 export default defineConfig(({ command }) => ({
   root: radice,
   base: "./",
-  define: { __VERSIONE__: JSON.stringify(VERSIONE), __REGIA__: JSON.stringify(command === "serve" || process.env.RELITTO_REGIA === "1") },
+  define: {
+    __VERSIONE__: JSON.stringify(VERSIONE),
+    __NOVITA__: JSON.stringify({ ...NOVITA, prossima: command === "serve" ? NOVITA.prossima : [] }),
+    __REGIA__: JSON.stringify(command === "serve" || process.env.RELITTO_REGIA === "1"),
+  },
   plugins: [react()],
   clearScreen: false,
   envPrefix: ["VITE_", "TAURI_ENV_"],

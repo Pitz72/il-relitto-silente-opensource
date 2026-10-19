@@ -151,9 +151,17 @@ Il tipo suggerisce il livello (`feat` → MINOR, `fix` → PATCH, `!` → MAJOR)
 
 `CHANGELOG.md` segue *Keep a Changelog*. In cima c’è sempre `## [Non rilasciato]`, dove si annota
 ogni modifica mentre la si fa, con le sezioni **Aggiunto**, **Cambiato**, **Corretto**, **Rimosso**,
-**Sicurezza**. Al rilascio lo strumento chiude la sezione con numero e data; le sue righe diventano le
-note della release. Per i rilasci pubblici le note vanno anche in inglese, come chiede lo standard di
-distribuzione Runtime (§2 e §8).
+**Sicurezza**. Al rilascio lo strumento chiude la sezione con numero e data. Per i rilasci pubblici le
+note vanno anche in inglese, come chiede lo standard di distribuzione Runtime (§2 e §8).
+
+**Per chi gioca** (nota dell’autore del 19 ottobre 2026). Ogni versione ha, per prima, la sezione
+`### Per chi gioca`: un elenco di poche righe semplici, che dicono a chi gioca che cosa c’è di nuovo
+(non come è fatto), con l’inizio in grassetto. Le scrivo io, senza la sua approvazione (decisione
+dell’autore). Sono le righe che il gioco mostra dopo un aggiornamento, nella finestra delle novità, e
+che la release porta nel suo corpo (§7 dell’aggiornamento automatico, più sotto). Lo strumento le legge
+con `strumenti/changelog.mjs`; `verifica --rilascio` non lascia rilasciare una versione che non le ha, e
+`corpo` stampa il corpo della release. Una versione senza niente per chi gioca non si rilascia (la
+regola dell’autore: niente release solo tecniche).
 
 ## 8. Come si chiude una versione
 
@@ -188,7 +196,8 @@ node strumenti/versione.mjs verifica --rilascio
 ```
 
 Poi il commit `chore(versioni): 0.2.0`. Gli altri comandi: `mostra` (le tre versioni), `verifica`
-(la coerenza dei file), `note X.Y.Z` (le note di una versione).
+(la coerenza dei file), `note X.Y.Z` (le note di una versione), `corpo X.Y.Z` (il corpo della release:
+le righe «Per chi gioca» e il rimando al CHANGELOG).
 
 **Tag e rilasci.** Dal 16 ottobre 2026 il repository è su GitHub (`Pitz72/il-relitto-silente-opensource`), ma
 **non si crea nessun tag del remake a mano** (vedi §2.1). Il tag `v` + versione e la
@@ -231,10 +240,16 @@ lo bloccherebbe.
 - **I messaggi** («Cerca aggiornamenti» dal menu): «Il gioco è aggiornato.»; «Non c'è ancora una versione da scaricare.» se il canale
   non ha un `latest.json` (prima della prima release pubblicata); «Non riesco a controllare: serve la rete.» per gli altri errori; e, se il
   pacchetto non porta la firma dell'autore, «L'aggiornamento non porta la firma dell'autore: non lo installo.»
-- **Da fare (nota dell’autore, 19 ottobre 2026): le novità dopo l’aggiornamento.** Quando il gioco si riapre dopo un aggiornamento,
-  al primo arrivo al menu principale compare una finestra con il changelog **per il pubblico** (che cosa c’è di nuovo per chi
-  gioca, non le note tecniche). Le stesse righe vanno nel corpo della release, perché la domanda «È uscita la versione…» le mostri
-  prima di aggiornare (revisione 25, L15). La proposta è nel prompt 27.
+- **Le novità dopo l’aggiornamento** (nota dell’autore, 19 ottobre 2026; revisione 25, L15). La build mette nel gioco le righe «Per
+  chi gioca» del CHANGELOG (§7 del CHANGELOG, sopra) di tutte le versioni fino alla sua (`app/vite.config.ts`). Al primo arrivo al
+  menu con una versione diversa dall’ultima vista, una finestra (`app/src/menu/FinestraNovita.tsx`) mostra quelle delle versioni
+  arrivate da allora, la più recente prima; la versione vista si ricorda nel browser dell’app (`relitto.versione-vista`). Le decisioni
+  dell’autore: **anche le pre-release** la mostrano; **chi installa da zero** non vede niente (ma chi aveva già giocato con una
+  versione di prima, che non ricordava niente, vede le novità di questa: lo dicono i salvataggi, il registro dei finali o le
+  opzioni); chi torna a una versione più vecchia nemmeno, e si ricorda la più nuova. Prima, il flusso di rilascio scrive le stesse
+  righe nel **corpo della release** (`node strumenti/versione.mjs corpo`), che tauri-action copia nel `latest.json` («notes»): la
+  domanda «È uscita la versione…» le mostra prima di scaricare. La domanda e la finestra, quando si aprono da sole, non cerchiano il
+  primo pulsante. Nello sviluppo: `?novita` (la finestra con le righe di «Non rilasciato») e `?aggiornamento-finto` (la domanda).
 - **Le build locali** (le consegne di ascolto) non sono firmate per l'aggiornamento: `createUpdaterArtifacts` sta solo in
   `app/src-tauri/tauri.rilascio.conf.json`, che usa il flusso di rilascio.
 - **Prova.** Il client e i flussi non si possono provare del tutto prima del primo tag. La strada: si pubblica una pre-release (per esempio
