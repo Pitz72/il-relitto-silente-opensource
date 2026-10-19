@@ -1,6 +1,6 @@
 # Prompt per la prossima sessione (23)
 
-Sostituisce il 17. Scritto il 16 ottobre 2026, a fine sessione, su richiesta dell’autore: «nella prossima sessione cerchiamo di rimettere ordine».
+**Superato dal 26** (19 ottobre 2026): resta come storia. Sostituiva il 17. Scritto il 16 ottobre 2026, a fine sessione, su richiesta dell’autore: «nella prossima sessione cerchiamo di rimettere ordine».
 
 ## Il prompt
 
