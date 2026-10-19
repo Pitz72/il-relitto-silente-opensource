@@ -64,7 +64,7 @@ export default function Menu({ voci, ridotto, identita, caricamento, problema = 
         <h1>Il Relitto Silente</h1>
         <div className="menu-vena" aria-hidden="true" />
         <p>
-          <i>dal racconto «Il Relitto», in</i> Dal registro della Santa Maria
+          Una storia tratta da <i>Il Registro della Santa Maria</i>
         </p>
       </header>
       <nav className="menu-voci" aria-label="Menu principale" ref={navRef} onKeyDown={frecce}>

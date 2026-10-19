@@ -527,24 +527,25 @@ export default function Intro({ revisione = false, onFine, ridotto }: { revision
           g.letterSpacing = `${0.06 * fs}px`;
         }
       }
-      // il sottotitolo, con il titolo: in corsivo, e il titolo del libro in tondo
+      // il sottotitolo, con il titolo: in tondo, e il titolo del libro in corsivo (l'uso italiano;
+      // il testo è dell'autore, 19 ottobre 2026)
       if (titolo > 0) {
         const fs2 = 0.0165 * W;
         const corsivo = `italic 300 ${fs2}px Newsreader, Georgia, "Times New Roman", serif`;
         const tondo = `300 ${fs2}px Newsreader, Georgia, "Times New Roman", serif`;
-        const libro = "Dal registro della Santa Maria";
+        const libro = "Il Registro della Santa Maria";
         const prima = SOTTOTITOLO.slice(0, SOTTOTITOLO.indexOf(libro));
         g.letterSpacing = "0px";
         g.textAlign = "left";
-        g.font = corsivo;
-        const w1 = g.measureText(prima).width;
         g.font = tondo;
+        const w1 = g.measureText(prima).width;
+        g.font = corsivo;
         const w2 = g.measureText(libro).width;
         const x0 = (W - w1 - w2) / 2;
         g.fillStyle = `rgba(184, 194, 191, ${titolo})`;
-        g.font = corsivo;
-        g.fillText(prima, x0, 0.59 * H);
         g.font = tondo;
+        g.fillText(prima, x0, 0.59 * H);
+        g.font = corsivo;
         g.fillText(libro, x0 + w1, 0.59 * H);
       }
       g.restore();

@@ -28,7 +28,7 @@ NAVE = os.path.join(RADICE, "app", "public", "intro", "prua.webp")
 FONT = os.path.join(RADICE, "app", "node_modules", "@fontsource-variable")
 
 TITOLO = "IL RELITTO SILENTE"
-RIGA = "dal racconto «Il Relitto», in Dal registro della Santa Maria"
+RIGA = "Una storia tratta da Il Registro della Santa Maria"
 CREDITO = "un gioco di Simone Pizzi"
 # il marchio ufficiale di Runtime Multimedia (il kit dei loghi dell'autore): «colore» con i suoi colori (di base), «bianco» in monocromo (LOGO_RUNTIME=bianco)
 LOGO_RUNTIME = os.path.join(RADICE, "grafica", "logo", "runtime-multimedia-" + os.environ.get("LOGO_RUNTIME", "colore") + ".png")

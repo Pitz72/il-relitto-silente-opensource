@@ -18,11 +18,13 @@ def segna(scena, durata, cosa):
     righe.append((scena, round(T, 2), round(T + durata, 2), cosa))
     T += durata
 
-def testo(nome, frase, pausa_dopo=0.0, accanto=None):
+def testo(nome, frase, pausa_dopo=0.0, accanto=None, fermo_fisso=None):
     """Un blocco: entra, sta fermo, esce. Con «accanto» si aggiunge sotto al blocco
     precedente, che resta (attenuato) finché escono insieme."""
     global T
     h, n = fermo(frase)
+    if fermo_fisso is not None:
+        h = fermo_fisso
     entra = T
     pieno = T + ENTRA
     fine_fermo = pieno + h
@@ -80,7 +82,9 @@ segna("F", 1.0, "la spia si spegne con il fruscio: silenzio")
 # --- G. IL TITOLO -------------------------------------------------------------------------------
 segna("G", 1.8, "nel nero del fuso compaiono i glifi, uno alla volta")
 segna("G", 3.0, "la matrice li traduce: IL RELITTO SILENTE")
-testo("T", "IL RELITTO SILENTE dal racconto «Il Relitto», in Dal registro della Santa Maria")
+# il cartello del titolo resta fermo quanto nello storyboard: il sottotitolo è cambiato (l'autore,
+# 19 ottobre 2026), i tempi dell'intro no
+testo("T", "IL RELITTO SILENTE Una storia tratta da Il Registro della Santa Maria", fermo_fisso=6.55)
 T += ESCE
 # --- H. LA PLANCIA ---------------------------------------------------------------------------------
 segna("H", 1.2, "il fuso nell'oblò della plancia (raccordo)")

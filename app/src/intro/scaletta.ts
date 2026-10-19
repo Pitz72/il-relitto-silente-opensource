@@ -58,6 +58,10 @@ export function fermoPer(testo: string): { fermo: number; parole: number } {
 
 const arrotonda = (x: number) => Math.round(x * 100) / 100;
 
+/** Il cartello del titolo resta fermo quanto nello storyboard (6,55 s, la lettura del sottotitolo di
+ *  allora): il sottotitolo è cambiato (l'autore, 19 ottobre 2026), l'intro e la sua musica no. */
+const FERMO_TITOLO = 6.55;
+
 // I testi, parola per parola quelli del prologo (relitto.fav). L'unica
 // trasformazione è quella permessa dal §7 del 06: gli apostrofi tipografici.
 export const PROLOGO = {
@@ -75,7 +79,7 @@ export const PROLOGO = {
 } as const;
 
 export const TITOLO = "IL RELITTO SILENTE";
-export const SOTTOTITOLO = "dal racconto «Il Relitto», in Dal registro della Santa Maria";
+export const SOTTOTITOLO = "Una storia tratta da Il Registro della Santa Maria";
 
 export interface Scaletta {
   durata: number;
@@ -123,7 +127,7 @@ export function costruisciScaletta(): Scaletta {
   };
   const testo = (id: keyof typeof PROLOGO | "T", voce: Voce, scena: IdScena, sottoA?: string) => {
     const frase = id === "T" ? `${TITOLO} ${SOTTOTITOLO}` : PROLOGO[id];
-    const { fermo, parole } = fermoPer(frase);
+    const { fermo, parole } = id === "T" ? { ...fermoPer(frase), fermo: FERMO_TITOLO } : fermoPer(frase);
     const b: Blocco = {
       id,
       testo: id === "T" ? TITOLO : frase,

@@ -192,7 +192,7 @@ export default function Titoli({ ridotto, onFine }: Props) {
             <p className="tit-titolo">{E.gioco.titolo}</p>
             <p className="tit-autore">di {E.gioco.autore}</p>
             <p className="tit-racconto">
-              <i>dal racconto «Il Relitto», in</i> Dal registro della Santa Maria
+              Una storia tratta da <i>Il Registro della Santa Maria</i>
             </p>
           </section>
 
