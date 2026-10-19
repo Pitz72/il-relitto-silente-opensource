@@ -8,6 +8,10 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+### Cambiato
+
+- **I riconoscimenti e la dichiarazione impaginati per lo schermo largo** (nota dell’autore sulla 0.2.4: è un gioco da scrivania, niente impaginazioni da telefono). I riconoscimenti erano una colonna di 40 em al centro, alta venti schermate: ora a sinistra c’è l’indice delle sezioni (il gioco, le fondamenta, la musica, i suoni, le immagini, i caratteri, le librerie, i testi delle licenze), e a destra la sezione scelta, su più colonne; quasi tutte stanno in uno schermo, anche a 1280 × 720. I testi delle licenze hanno i nomi a sinistra e il testo accanto; nelle librerie del programma «Copyright (c)» si scrive «©». La dichiarazione non è più una pila stretta al centro: è una lastra orizzontale, con la vena a sinistra, il testo allineato a sinistra, e «Buon divertimento» e «continua» sulla stessa riga. Come nel menu, il pulsante «continua» non ha più il contorno all’arrivo; «Esc» nel piede dei riconoscimenti torna a 12 px.
+
 ### Corretto
 
 - **Il menu non cerchia più la prima voce all’avvio** (nota dell’autore sulla 0.2.4): arrivando al menu senza aver cliccato un pulsante (dalla seconda volta in poi, quando i riconoscimenti non compaiono più) «Continua» aveva già il contorno, e a chi gioca col mouse sembrava già scelta. Il fuoco resta sulla prima voce, così Invio la prende, ma il contorno compare solo alla prima freccia.

@@ -26,6 +26,7 @@ export default function Dichiarazione({ onFine }: { onFine: () => void }) {
   const fatto = useRef(false);
   const fine = useRef(onFine);
   fine.current = onFine;
+  const pulsante = useRef<HTMLButtonElement>(null);
   const prosegui = () => {
     if (!fatto.current) {
       fatto.current = true;
@@ -34,6 +35,8 @@ export default function Dichiarazione({ onFine }: { onFine: () => void }) {
   };
 
   useEffect(() => {
+    // il fuoco su «continua» (Invio lo prende), senza contorno: nessuno l'ha scelto
+    pulsante.current?.focus({ preventScroll: true, focusVisible: false });
     const comparsa = window.setTimeout(() => setVisibile(true), 120);
     const scadenza = window.setTimeout(prosegui, ATTESA_MASSIMA);
     const tasto = (e: KeyboardEvent) => {
@@ -52,22 +55,26 @@ export default function Dichiarazione({ onFine }: { onFine: () => void }) {
 
   return (
     <div className="riconoscimenti dichiarazione" role="alertdialog" aria-modal="true" aria-label="Come è nato il gioco" aria-describedby="dichiarazione-testo" onClick={prosegui}>
-      <div className={`dic-colonna${visibile ? " visibile" : ""}`}>
+      <div className={`dic-lastra${visibile ? " visibile" : ""}`}>
         <div className="dic-vena" aria-hidden="true" />
-        <p id="dichiarazione-testo" className="dic-testo">
-          {TESTO_DICHIARAZIONE}
-        </p>
-        <p className="dic-saluto">{SALUTO}</p>
-        <button
-          type="button"
-          autoFocus
-          onClick={(e) => {
-            e.stopPropagation();
-            prosegui();
-          }}
-        >
-          continua <span className="tasto">Invio</span>
-        </button>
+        <div>
+          <p id="dichiarazione-testo" className="dic-testo">
+            {TESTO_DICHIARAZIONE}
+          </p>
+          <div className="dic-piede">
+            <p className="dic-saluto">{SALUTO}</p>
+            <button
+              type="button"
+              ref={pulsante}
+              onClick={(e) => {
+                e.stopPropagation();
+                prosegui();
+              }}
+            >
+              continua <span className="tasto">Invio</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
