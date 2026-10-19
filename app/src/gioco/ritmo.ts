@@ -16,13 +16,15 @@ export function cicloA(fps: number, disegna: (t: number) => void): () => void {
   let id = 0;
   const ciclo = (t: number) => {
     if (fermo) return;
+    // il fotogramma dopo si chiede prima di disegnare: un errore in un disegno non ferma il ciclo
+    // per sempre (una finestra ridotta a icona che misura zero lo fermava)
+    id = requestAnimationFrame(ciclo);
     // un fotogramma quando ne è passato uno intero (meno un millisecondo: lo schermo a 60 Hz
     // non batte esattamente ogni 16,67 ms, e a 30 si perderebbe un fotogramma su tanti)
     if (t - ultimo >= passo - 1) {
       ultimo = t;
       disegna(t);
     }
-    id = requestAnimationFrame(ciclo);
   };
   id = requestAnimationFrame(ciclo);
   return () => {

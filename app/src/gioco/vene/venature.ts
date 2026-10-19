@@ -201,6 +201,9 @@ export class Venature {
   disegnaConCache(g: CanvasRenderingContext2D, t: number, atm: Atmosfera, dpr: number, tinta: Tinta = {}) {
     const [c1, c2] = tinta.colori ?? COLORI[atm];
     const luce = tinta.luce ?? 1;
+    // una finestra ridotta a icona può misurare zero: niente da disegnare, e drawImage con una tela
+    // vuota lancerebbe un errore che ferma il ciclo delle vene per sempre
+    if (this.W < 1 || this.H < 1) return;
     const chiave = `${atm}|${this.W}|${this.H}|${dpr}|${this.vene.length}|${c1}|${luce}`;
     if (!this.cache || this.cacheChiave !== chiave) {
       const c = document.createElement("canvas");
