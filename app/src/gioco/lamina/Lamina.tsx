@@ -49,15 +49,27 @@ export default function Lamina({ diario, forma, rivelazione, passati = 2, suNome
   const ultimo = diario[diario.length - 1];
   const prima = diario.slice(Math.max(0, diario.length - 1 - passati), -1);
 
+  // dove sta la risposta: tutta in vista, in fondo; se non ci sta, si legge dall'alto. Si rifà
+  // quando cambia la misura della finestra o del testo (revisione 25, L9: prima solo al turno nuovo,
+  // e la risposta poteva restare tagliata), finché chi gioca non fa scorrere a mano: allora resta
+  // dove l'ha messa lui, fino al turno dopo. `ancorata` è dove l'ha messa la lamina, o null
+  const ancorata = useRef<number | null>(null);
+  const ancora = useCallback(() => {
+    const el = attualeRef.current;
+    const scorre = scorreRef.current;
+    if (!el || !scorre) return;
+    const inizio = el.offsetTop - 12;
+    const fondo = scorre.scrollHeight - scorre.clientHeight;
+    scorre.scrollTop = el.offsetHeight > scorre.clientHeight - 24 ? inizio : fondo;
+    ancorata.current = scorre.scrollTop;
+  }, []);
+
   // un turno nuovo: le righe di ogni blocco, i ritardi, poi il testo intero
   useLayoutEffect(() => {
     const el = attualeRef.current;
     const scorre = scorreRef.current;
     if (!el || !scorre || !ultimo) return;
-    // la risposta comincia in vista: se non ci sta, si legge dall'alto
-    const inizio = el.offsetTop - 12;
-    const fondo = scorre.scrollHeight - scorre.clientHeight;
-    scorre.scrollTop = el.offsetHeight > scorre.clientHeight - 24 ? inizio : fondo;
+    ancora();
     if (!rivelazione) {
       setRivelata(true);
       return;
@@ -90,6 +102,28 @@ export default function Lamina({ diario, forma, rivelazione, passati = 2, suNome
   }, []);
   useLayoutEffect(misura, [ultimo?.chiave, misura]);
 
+  // la finestra o il testo cambiano misura: di nuovo l'ancora (se chi gioca non ha fatto scorrere) e
+  // la freccia
+  useEffect(() => {
+    const scorre = scorreRef.current;
+    const colonna = scorre?.firstElementChild;
+    if (!scorre || !colonna) return;
+    const o = new ResizeObserver(() => {
+      if (ancorata.current !== null) ancora();
+      misura();
+    });
+    o.observe(scorre);
+    o.observe(colonna);
+    return () => o.disconnect();
+  }, [ancora, misura]);
+
+  // uno scorrimento che non è dell'ancora è di chi gioca: la lamina smette di riancorare
+  const scorso = () => {
+    const s = scorreRef.current;
+    if (s && ancorata.current !== null && Math.abs(s.scrollTop - ancorata.current) > 2) ancorata.current = null;
+    misura();
+  };
+
   const clic = (e: React.MouseEvent) => {
     const t = e.target as HTMLElement;
     const nome = t.closest<HTMLElement>("[data-cosa]");
@@ -109,7 +143,7 @@ export default function Lamina({ diario, forma, rivelazione, passati = 2, suNome
           TSC-1972 · registro di bordo
         </div>
       )}
-      <div className="lamina-scorre" ref={scorreRef} onScroll={misura}>
+      <div className="lamina-scorre" ref={scorreRef} onScroll={scorso}>
         <div className="lamina-colonna">
           {prima.map((v, i) => (
             <div key={v.chiave} className="turno passato" style={{ opacity: 0.42 - (prima.length - 1 - i) * 0.14 }} aria-hidden="true">
