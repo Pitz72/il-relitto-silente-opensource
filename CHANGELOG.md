@@ -8,6 +8,10 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+### Corretto
+
+- **Il menu non cerchia più la prima voce all’avvio** (nota dell’autore sulla 0.2.4): arrivando al menu senza aver cliccato un pulsante (dalla seconda volta in poi, quando i riconoscimenti non compaiono più) «Continua» aveva già il contorno, e a chi gioca col mouse sembrava già scelta. Il fuoco resta sulla prima voce, così Invio la prende, ma il contorno compare solo alla prima freccia.
+
 ## [0.2.4] - 2026-10-19
 
 ### Aggiunto

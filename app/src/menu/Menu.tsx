@@ -34,10 +34,12 @@ export default function Menu({ voci, ridotto, identita, caricamento, problema = 
   const navRef = useRef<HTMLElement>(null);
 
   // il fuoco sulla prima voce: all'arrivo, quando si chiude un pannello, e
-  // quando compare «Continua» (i salvataggi si leggono dopo)
+  // quando compare «Continua» (i salvataggi si leggono dopo). Senza il contorno:
+  // nessuno l'ha scelta, e a chi gioca col mouse sembrava già cliccata; Invio la
+  // prende lo stesso, e il contorno torna alla prima freccia
   const prima = voci[0]?.id;
   useEffect(() => {
-    if (!coperto) navRef.current?.querySelector<HTMLButtonElement>("button")?.focus({ preventScroll: true });
+    if (!coperto) navRef.current?.querySelector<HTMLButtonElement>("button")?.focus({ preventScroll: true, focusVisible: false });
   }, [coperto, prima]);
 
   const frecce = (e: KeyboardEvent) => {
