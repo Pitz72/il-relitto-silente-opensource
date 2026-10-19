@@ -8,6 +8,12 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+## [0.2.5-beta.2] - 2026-10-19
+
+### Cambiato
+
+- **Nessuna modifica al gioco.** Questa pre-release serve a provare l’aggiornamento automatico (`sviluppo/VERSIONI.md`, §7): una 0.2.5-beta.1 installata da GitHub deve trovarla nel canale di prova, scaricarla, controllarne la firma e installarla.
+
 ## [0.2.5-beta.1] - 2026-10-19
 
 ### Aggiunto
