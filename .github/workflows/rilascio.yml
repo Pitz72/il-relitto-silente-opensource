@@ -26,8 +26,8 @@ jobs:
   controllo:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with: { node-version: 22 }
       - name: Il tag è la versione
         run: |
@@ -50,11 +50,13 @@ jobs:
         sistema: ${{ fromJSON(vars.LINUX_PROVATO == 'true' && '["windows-latest", "ubuntu-22.04"]' || '["windows-latest"]') }}
     runs-on: ${{ matrix.sistema }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with: { node-version: 22, cache: npm, cache-dependency-path: app/package-lock.json }
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: swatinem/rust-cache@v2
+      # fissata all'impronta (revisione 25, L14): con l'impronta il canale va detto a parte
+      - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+        with: { toolchain: stable }
+      - uses: swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
         with: { workspaces: "app/src-tauri -> target" }
       - name: Le librerie di Linux
         if: matrix.sistema == 'ubuntu-22.04'
@@ -76,7 +78,7 @@ jobs:
             node strumenti/versione.mjs corpo
             echo "FINE_DELLE_NOTE"
           } >> "$GITHUB_OUTPUT"
-      - uses: tauri-apps/tauri-action@v0
+      - uses: tauri-apps/tauri-action@84b9d35b5fc46c1e45415bdb6144030364f7ebc5 # v0.6.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}

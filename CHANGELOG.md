@@ -29,6 +29,10 @@ documenti di `progettazione/`.
 - **La risposta resta in vista quando cambia la finestra** (revisione 25, L9): la lamina sceglieva dove scorrere solo al turno nuovo, e allargando o stringendo la finestra la risposta poteva restare tagliata. Ora l’ancora si rifà quando la lamina o il suo testo cambiano misura (`ResizeObserver`), finché chi gioca non fa scorrere a mano: allora il testo resta dove l’ha messo, fino al turno dopo. Provato nel browser dello sviluppo da 1280 × 720 a 1000 × 460.
 - **Lo sfondo del menu sopravvive alla perdita del contesto WebGL** (revisione 25, L10): quando il sistema toglie la scheda video alla pagina (un driver aggiornato, il ritorno dalla sospensione) lo sfondo restava nero o fermo. Ora il menu chiede il contesto indietro e, quando torna, rifà la scena da capo (`menu/Sfondo.tsx`); l’intro, se lo perde a metà, si salta e si va al gioco, come senza WebGL2. Provato nel browser dello sviluppo con `WEBGL_lose_context`: perso e restituito, lo sfondo torna a disegnare le stelle.
 
+### Sicurezza
+
+- **Le dipendenze e le azioni fissate** (revisione 25, L14): `@tauri-apps/plugin-process` e `@tauri-apps/plugin-updater` avevano il `^`, unici fra le dipendenze dell’app: ora sono fissate alla versione del lockfile (2.4.0 e 2.14.0). Le azioni dei flussi di GitHub erano fissate al numero maggiore (`@v4`), che chi le pubblica può spostare: ora all’impronta del commit, con la versione in un commento (`actions/checkout` v4.4.0, `actions/setup-node` v4.4.0, `actions/setup-python` v5.6.0, `swatinem/rust-cache` v2.9.2, `tauri-apps/tauri-action` v0.6.2, `dtolnay/rust-toolchain` sul canale `stable`). Le dipendenze di Rust le fissa già `Cargo.lock`, nel repository.
+
 ## [0.2.5-beta.4] - 2026-10-19
 
 ### Cambiato
