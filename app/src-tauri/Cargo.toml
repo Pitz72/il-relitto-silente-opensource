@@ -34,5 +34,9 @@ cpal = { version = "0.18", features = ["pulseaudio"] }
 codegen-units = 1
 lto = true
 opt-level = "s"
-panic = "abort"
+# «unwind», non «abort» (decisione dell'autore, 19 ottobre 2026; revisione 25, M4): se il thread
+# dell'audio cade, cade solo lui e il gioco continua muto, invece di chiudersi (provato con una
+# caduta finta: con «abort» il gioco si chiudeva, con «unwind» ha finito i sei finali). Misurato:
+# l'eseguibile da 12,7 a 16,7 MB; compresso, come si scarica, da 9,0 a 9,7 MB.
+panic = "unwind"
 strip = true
