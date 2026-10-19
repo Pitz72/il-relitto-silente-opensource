@@ -8,13 +8,19 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+### Aggiunto
+
+- **I titoli di coda** (decisione dell’autore, 19 ottobre 2026; `app/src/riconoscimenti/Titoli.tsx`). I riconoscimenti non sono più una schermata da sito all’avvio: scorrono alla fine, come al cinema, lenti (un’altezza di schermo ogni 13 secondi, da 1 minuto e 45 a 2 minuti), con la loro musica: per ora il tema, `T-01` e `T-02` che si alternano (`Brano::Titoli` nel motore audio), poi la canzone che l’autore genererà (documento 22, §5.9: il prompt e il testo in inglese). Partono dopo un finale, con il pulsante «Titoli di coda» accanto ad «Annulla l’ultima mossa», «Ricomincia» e «Carica», e dalla voce «Riconoscimenti» del menu; alla fine si torna al menu. Il titolo e l’autore; le fondamenta, la musica, i suoni, le immagini e i caratteri, con il ruolo a sinistra e il nome a destra; le librerie, soli nomi, in un blocco fitto; i marchi. Si fermano sull’ultimo cartello per sei secondi: il titolo e, in bianco, i marchi di Runtime Multimedia e di FAVELLA 1 (`app/src/loghi/Marchi.tsx`, le forme dei loghi d’apertura). «salta», Esc o Invio li chiudono; la rotella del mouse li porta avanti e indietro; con il movimento ridotto si mostrano a pagine. La prova dei finali nell’eseguibile, dopo l’ultimo finale, li fa partire e li salta.
+- **Il file «Riconoscimenti e licenze.txt» accanto al gioco**: le righe di copyright e i testi interi delle licenze, che prima stavano nella schermata, in un file di testo da leggere con il Blocco note, nell’installazione e nella versione portatile. Lo scrive `strumenti/riconoscimenti.py` insieme all’elenco, e `--verifica` controlla anche lui.
+
 ### Cambiato
 
-- **I riconoscimenti e la dichiarazione impaginati per lo schermo largo** (nota dell’autore sulla 0.2.4: è un gioco da scrivania, niente impaginazioni da telefono). I riconoscimenti erano una colonna di 40 em al centro, alta venti schermate: ora a sinistra c’è l’indice delle sezioni (il gioco, le fondamenta, la musica, i suoni, le immagini, i caratteri, le librerie, i testi delle licenze), e a destra la sezione scelta, su più colonne; quasi tutte stanno in uno schermo, anche a 1280 × 720. I testi delle licenze hanno i nomi a sinistra e il testo accanto; nelle librerie del programma «Copyright (c)» si scrive «©». La dichiarazione non è più una pila stretta al centro: è una lastra orizzontale, con la vena a sinistra, il testo allineato a sinistra, e «Buon divertimento» e «continua» sulla stessa riga. Come nel menu, il pulsante «continua» non ha più il contorno all’arrivo; «Esc» nel piede dei riconoscimenti torna a 12 px.
+- **All’avvio, i loghi e la dichiarazione**: i riconoscimenti non compaiono più prima del gioco (e il gioco non ricorda più quali nomi sono stati visti).
+- **La dichiarazione impaginata per lo schermo largo** (nota dell’autore sulla 0.2.4: è un gioco da scrivania, niente impaginazioni da telefono): non è più una pila stretta al centro, ma una lastra orizzontale, con la vena a sinistra, il testo allineato a sinistra, e «Buon divertimento» e «continua» sulla stessa riga. Come nel menu, «continua» non ha più il contorno all’arrivo.
 
 ### Corretto
 
-- **Il menu non cerchia più la prima voce all’avvio** (nota dell’autore sulla 0.2.4): arrivando al menu senza aver cliccato un pulsante (dalla seconda volta in poi, quando i riconoscimenti non compaiono più) «Continua» aveva già il contorno, e a chi gioca col mouse sembrava già scelta. Il fuoco resta sulla prima voce, così Invio la prende, ma il contorno compare solo alla prima freccia.
+- **Il menu non cerchia più la prima voce all’avvio** (nota dell’autore sulla 0.2.4): arrivando al menu senza aver cliccato un pulsante (per esempio quando la dichiarazione passa da sola) «Continua» aveva già il contorno, e a chi gioca col mouse sembrava già scelta. Il fuoco resta sulla prima voce, così Invio la prende, ma il contorno compare solo alla prima freccia.
 
 ## [0.2.4] - 2026-10-19
 

@@ -15,3 +15,6 @@
 *.wasm binary
 *.mp3  binary
 *.flac binary
+
+# Il file delle licenze accanto al gioco si legge con il Blocco note: a capo di Windows.
+"app/src-tauri/risorse/Riconoscimenti e licenze.txt" text eol=crlf

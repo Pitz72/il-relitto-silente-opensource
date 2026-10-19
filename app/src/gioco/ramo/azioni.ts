@@ -89,6 +89,16 @@ export interface Fili {
   basso: GruppoDiBaccelli[];
 }
 
+/** Il comando dell'app che fa partire i titoli di coda, dopo un finale. */
+export const COMANDO_TITOLI = "titoli di coda";
+const TITOLI: Baccello = {
+  chiave: "scelta:titoli",
+  etichetta: "Titoli di coda",
+  azione: { tipo: "comando", comando: COMANDO_TITOLI, comeSiLegge: "Titoli di coda" },
+  tipo: "scelta",
+  tasto: null,
+};
+
 /** I baccelli dei due fili. */
 export function baccelliDi(m: ModelloAzione, cose: readonly Cosa[]): Fili {
   const nome = (id: string) => {
@@ -101,13 +111,18 @@ export function baccelliDi(m: ModelloAzione, cose: readonly Cosa[]): Fili {
         {
           nome: m.fase === "conferma" ? "conferma" : m.fase === "fine" ? "fine" : "risposte",
           riducibile: false,
-          baccelli: m.scelte.map((s) => ({
-            chiave: `scelta:${s.comando}`,
-            etichetta: s.etichetta.replace(/'/g, "’"),
-            azione: { tipo: "comando", comando: s.comando, comeSiLegge: s.etichetta },
-            tipo: "scelta",
-            tasto: s.tasto,
-          })),
+          baccelli: [
+            ...m.scelte.map((s): Baccello => ({
+              chiave: `scelta:${s.comando}`,
+              etichetta: s.etichetta.replace(/'/g, "’"),
+              azione: { tipo: "comando", comando: s.comando, comeSiLegge: s.etichetta },
+              tipo: "scelta",
+              tasto: s.tasto,
+            })),
+            // alla fine della partita, i titoli di coda: un'azione dell'app, non del motore
+            // (decisione dell'autore, 19 ottobre 2026); Gioco.tsx la prende prima del motore
+            ...(m.fase === "fine" ? [TITOLI] : []),
+          ],
         },
       ],
       basso: [],

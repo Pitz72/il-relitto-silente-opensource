@@ -45,6 +45,10 @@ export const taciSuono = () => manda({ tipo: "turno", valore: { stati: { stanza:
  *  musica del menu; `false` la fa sfumare (si va all'intro o al gioco). */
 export const menuSuono = (si: boolean) => manda({ tipo: "menu", valore: si });
 
+/** I titoli di coda: la loro musica (per ora il tema, mondo/musica.rs, `Brano::Titoli`). Il
+ *  menu, dopo, rifà il suo mondo e la sua musica. */
+export const titoliSuono = () => manda({ tipo: "musica", valore: "titoli" });
+
 /** Un tocco su un pulsante: il motore sceglie la voce (acciaio, membrana, strappo) dallo
  *  stato. Nello sviluppo i gesti si segnano in `window.__tocchi`, per vederli senza Tauri. */
 export function suonaTocco(g: Gesto): Promise<void> {

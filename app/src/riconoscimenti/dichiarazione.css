@@ -1,0 +1,53 @@
+/* ==========================================================================
+   La dichiarazione (Dichiarazione.tsx), dopo i loghi, sul fondo del relitto.
+   Impaginata per lo schermo largo (nota dell'autore sulla 0.2.4: un gioco da
+   scrivania, niente colonne da telefono): una lastra orizzontale.
+   I colori vengono dalle variabili delle atmosfere (sopra 4,5:1).
+   ========================================================================== */
+/* la dichiarazione: una lastra orizzontale, la vena a sinistra, il testo in
+   Newsreader allineato a sinistra; il saluto e «continua» sulla stessa riga */
+.dichiarazione {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: radial-gradient(ellipse at 50% 30%, var(--fondo-1), var(--fondo-2));
+  color: var(--testo);
+  font-size: var(--corpo);
+  line-height: 1.55;
+}
+.dic-lastra {
+  display: grid;
+  grid-template-columns: 2px minmax(0, 48em);
+  column-gap: 2.8em;
+  max-width: calc(100% - 10cqw);
+  opacity: 0;
+  transition: opacity 1.1s ease;
+}
+.dic-lastra.visibile { opacity: 1; }
+[data-movimento="ridotto"] .dic-lastra { transition-duration: .4s; }
+.dic-vena {
+  border-radius: 2px;
+  background: linear-gradient(180deg, transparent, var(--vena-2) 25%, var(--vena-2) 75%, transparent);
+  opacity: .6;
+}
+.dic-testo { margin: 0; font-size: 1.32em; font-weight: 340; line-height: 1.65; text-wrap: pretty; color: var(--testo); }
+.dic-piede { display: flex; align-items: center; justify-content: space-between; gap: 2em; margin-top: 1.5em; }
+.dic-saluto { margin: 0; font-size: 1.32em; font-style: italic; font-weight: 300; color: var(--tenue); }
+.dichiarazione button {
+  flex: none;
+  min-height: 40px;
+  padding: .45em 1.4em;
+  font-family: var(--mono);
+  font-size: max(12px, .66cqw);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--tenue);
+  border: 1px solid var(--bordo);
+  border-radius: 999px;
+}
+.dichiarazione button:hover { color: var(--testo); border-color: var(--accento-2); }
+.dichiarazione .tasto { margin-left: .8em; letter-spacing: .08em; opacity: .8; }

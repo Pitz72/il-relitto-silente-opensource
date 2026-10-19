@@ -60,6 +60,7 @@
     ],
     "resources": {
       "risorse/audio/prova-ventilazione.ogg": "risorse/audio/prova-ventilazione.ogg",
+      "risorse/Riconoscimenti e licenze.txt": "Riconoscimenti e licenze.txt",
       "../../audio/musica-ia/M1/M1-01-bare-resonance.mp3": "musica/M1-01-bare-resonance.mp3",
       "../../audio/musica-ia/M1/M1-02-resonant-void.mp3": "musica/M1-02-resonant-void.mp3",
       "../../audio/musica-ia/S2/S2-01-below-the-iron-keel.mp3": "musica/S2-01-below-the-iron-keel.mp3",

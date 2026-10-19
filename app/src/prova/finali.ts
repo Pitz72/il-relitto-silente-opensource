@@ -48,6 +48,8 @@ export interface Rapporto {
   ok: boolean;
   finali: EsitoFinale[];
   registro: string[];
+  /** dopo l'ultimo finale, «Titoli di coda»: partono, hanno il titolo e le librerie, «salta» torna al menu */
+  titoli?: boolean;
   ms: number;
   errore?: string;
 }
@@ -161,13 +163,13 @@ async function gioca(c: string): Promise<string> {
   return modo;
 }
 
-/** Dalla schermata in cui si è al menu principale: i loghi (Esc), i riconoscimenti
- *  («Continua» dopo tre secondi), la dichiarazione («continua»), il gioco (la pausa). */
+/** Dalla schermata in cui si è al menu principale: i loghi (Esc), la dichiarazione
+ *  («continua»), i titoli di coda (Esc), il gioco (la pausa). */
 async function alMenu() {
   for (let giri = 0; giri < 8; giri++) {
     if (pulsante(".menu-voci button[data-voce='nuova']")) return;
     await finche(
-      () => document.querySelector(".menu-voci button, .riconoscimenti, .gioco, [aria-label='Loghi di apertura']"),
+      () => document.querySelector(".menu-voci button, .dichiarazione, .titoli, .gioco, [aria-label='Loghi di apertura']"),
       "una schermata",
     );
     if (document.querySelector("[aria-label='Loghi di apertura']")) {
@@ -175,10 +177,9 @@ async function alMenu() {
       await finche(() => !document.querySelector("[aria-label='Loghi di apertura']"), "la fine dei loghi", 5000);
     } else if (document.querySelector(".dichiarazione")) {
       await tocca(await finche(() => pulsante(".dichiarazione button"), "«continua» della dichiarazione", 5000), "continua");
-    } else if (document.querySelector(".riconoscimenti")) {
-      const avanti = await finche(() => pulsante(".ric-piede button:not(:disabled)"), "«Continua» dopo i riconoscimenti", 10000);
-      await tocca(avanti, "Continua");
-      await finche(() => !document.querySelector(".ric-piede"), "la fine dei riconoscimenti", 5000);
+    } else if (document.querySelector(".titoli")) {
+      esc();
+      await finche(() => !document.querySelector(".titoli"), "la fine dei titoli di coda", 5000);
     } else if (document.querySelector(".gioco")) {
       if (!document.querySelector(".voci-pausa")) esc();
       const menu = await finche(() => [...document.querySelectorAll<HTMLElement>(".voci-pausa button")].find((b) => etichetta(b).startsWith("Menu principale") && visibile(b)), "«Menu principale» nella pausa");
@@ -231,6 +232,21 @@ export async function provaDeiFinali(): Promise<Rapporto> {
     rapporto.finali.push(e);
     console.info(`[prova dei finali] ${id}: ${e.errore ?? "ok"} (${e.passi} passi, ${(e.ms / 1000).toFixed(1)} s)`, e.modi);
     if (e.errore) break;
+  }
+  // i titoli di coda, dall'ultimo finale, come chi gioca: il pulsante accanto ai tre del finale
+  if (!rapporto.finali.some((f) => f.errore)) {
+    try {
+      await tocca(await finche(() => pulsante(".baccello[data-chiave='scelta:titoli']"), "«Titoli di coda» dopo il finale", 5000), "Titoli di coda");
+      const nastro = await finche(() => document.querySelector(".titoli-nastro"), "i titoli di coda", 5000);
+      await aspetta(1500);
+      const testo = nastro.textContent ?? "";
+      rapporto.titoli = testo.includes("Il Relitto Silente") && testo.includes("kira") && testo.includes("Riconoscimenti e licenze.txt");
+      await tocca(await finche(() => pulsante(".titoli-salta"), "«salta» nei titoli", 3000), "salta");
+      await finche(() => pulsante(".menu-voci button[data-voce='nuova']"), "il menu dopo i titoli", 10000);
+      if (!rapporto.titoli) rapporto.errore = "i titoli di coda non hanno il titolo, le librerie o il file delle licenze";
+    } catch (e) {
+      rapporto.errore = `i titoli di coda: ${e instanceof Error ? e.message : String(e)}`;
+    }
   }
   try {
     await alMenu();

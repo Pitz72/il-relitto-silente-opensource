@@ -66,8 +66,8 @@ fn lin(x: f32) -> f32 {
 //  I brani
 // -------------------------------------------------------------------------------------
 
-/// Che cosa suona: il menu principale (lo chiede la pagina), la soglia degli atti, i
-/// finali, e l’Anziano (che la regia segue nodo per nodo).
+/// Che cosa suona: il menu principale e i titoli di coda (li chiede la pagina), la soglia
+/// degli atti, i finali, e l’Anziano (che la regia segue nodo per nodo).
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Brano {
@@ -83,6 +83,9 @@ pub enum Brano {
     StivaPiena,
     DoppioFondo,
     DueLettere,
+    /// i titoli di coda (decisione dell’autore, 19 ottobre 2026): per ora il tema, i due pezzi
+    /// di `T` che si alternano finché scorrono; poi il brano scritto apposta (22, §5.9)
+    Titoli,
 }
 
 impl Brano {
@@ -460,6 +463,7 @@ fn pezzi_del_brano(brano: Brano) -> Vec<Pezzo> {
         Brano::StivaPiena => vec![Pezzo::C3],
         Brano::DoppioFondo => vec![Pezzo::C4],
         Brano::DueLettere => vec![Pezzo::C5],
+        Brano::Titoli => vec![Pezzo::T1, Pezzo::T2],
         Brano::Silenzio => vec![],
     }
 }
@@ -486,6 +490,8 @@ fn piano_file(brano: Brano, primo: bool) -> Option<Vec<Richiesta>> {
         Brano::DoppioFondo => r(Pezzo::C4),
         // la parte che somiglia alla scheda è l’ultima metà: da 31 s (22, §5.7)
         Brano::DueLettere => Richiesta { da: 31.0, entra: 1.5, ..r(Pezzo::C5) },
+        // i titoli: il tema, poi l’altro pezzo, e di nuovo, finché la pagina non li ferma
+        Brano::Titoli => Richiesta { entra: 3.0, dopo: Dopo::Alterna(Pezzo::T2), incrocio: 6.0, esce: 0.0, ..r(Pezzo::T1) },
         Brano::Anziano | Brano::Silenzio => return None,
     }])
 }
@@ -654,6 +660,7 @@ impl Musica {
             Brano::StivaPiena => self.stiva_piena(),
             Brano::DoppioFondo => self.doppio_fondo(),
             Brano::DueLettere => self.due_lettere(),
+            Brano::Titoli => self.titoli(),
             Brano::Anziano | Brano::Silenzio => {}
         }
     }
@@ -784,6 +791,16 @@ impl Musica {
         self.p(48.0, Az::Coro(Accordo::Nessuno, SPENTO, 10.0));
         self.p(52.0, Az::Master(SPENTO, 12.0));
         self.p(66.0, Az::Fine);
+    }
+
+    /// I titoli di coda, se mancano i file: il re di casa, il coro sul re, e il tema che torna
+    /// lontano ogni minuto. Non finisce da sé: lo ferma la pagina, tornando al menu.
+    fn titoli(&mut self) {
+        self.p(0.0, Az::Re(-12.0, 0.3, 0.12, 6.0));
+        self.p(8.0, Az::Coro(Accordo::Re, -16.0, 9.0));
+        for k in 0..6 {
+            self.tema_dopo(20.0 + 60.0 * k as f32, -22.0);
+        }
     }
 
     fn tema_dopo(&mut self, tra: f32, livello: f32) {
@@ -1276,6 +1293,17 @@ mod prove {
     }
 
     #[test]
+    fn i_titoli_senza_file_suonano_finche_non_li_si_ferma() {
+        let mut m = Musica::nuova(SR, 11);
+        m.avvia(Brano::Titoli);
+        let x = rendi(&mut m, 150.0);
+        assert!(picco(&x) < 0.9, "picco {}", picco(&x));
+        let coda = &x[x.len() - (SR * 20.0) as usize..];
+        assert!(rms_db(coda) > -60.0, "i titoli tacciono dopo due minuti ({:.1} dB)", rms_db(coda));
+        assert_eq!(m.brano(), Brano::Titoli);
+    }
+
+    #[test]
     fn prima_nota_i_due_re_si_allineano_senza_cancellarsi() {
         let mut m = Musica::nuova(SR, 13);
         m.avvia(Brano::PrimaNota);
@@ -1625,6 +1653,18 @@ mod prove_file {
         assert!(goertzel(sec(&x, 62.0, 72.0), primo) > 1e-6, "il primo non ritorna");
         assert!(rms_db(sec(&x, 80.0, 99.0)) > -45.0, "il menu si è fermato");
         assert_eq!(m.brano(), Brano::Menu);
+    }
+
+    #[test]
+    fn i_titoli_alternano_i_due_pezzi_del_tema_e_non_si_fermano() {
+        let mut m = con_pezzi(&[(Pezzo::T1, 220.0, 30.0), (Pezzo::T2, 330.0, 30.0)]);
+        m.avvia(Brano::Titoli);
+        let x = rendi(&mut m, 100.0);
+        assert!(goertzel(sec(&x, 8.0, 18.0), 220.0) > 1e-6, "il tema non comincia");
+        assert!(goertzel(sec(&x, 36.0, 46.0), 330.0) > 1e-6, "dopo il tema non entra l'altro pezzo");
+        assert!(goertzel(sec(&x, 62.0, 72.0), 220.0) > 1e-6, "il tema non ritorna");
+        assert!(rms_db(sec(&x, 80.0, 99.0)) > -45.0, "i titoli si sono fermati");
+        assert_eq!(m.brano(), Brano::Titoli);
     }
 
     #[test]

@@ -1,11 +1,11 @@
-// Le prove del menu principale (src/menu/) e dei riconoscimenti (src/riconoscimenti/visti.ts).
+// Le prove del menu principale (src/menu/) e dell'elenco dei titoli di coda (src/riconoscimenti/).
 //   node --test prove/menu.test.ts        (da app/)
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { conFinale, FINALI, giorno, pulisci, rigaDelRegistro } from "../src/menu/registro.ts";
 import { daContinuare, dettaglioDi } from "../src/menu/continua.ts";
-import { ciSonoNomiNuovi, nomi, type Elenco } from "../src/riconoscimenti/visti.ts";
+import { nomiDelleLibrerie, type Elenco } from "../src/riconoscimenti/elenco.ts";
 import type { Posto } from "../src/gioco/salvataggi.ts";
 
 test("i sei finali, con i nomi dell'autore", () => {
@@ -57,18 +57,13 @@ test("Continua riprende dal salvataggio più recente che si legge e non è finit
   assert.equal(dettaglioDi(scelto!), "La stiva · atto I · turno 9");
 });
 
-test("i riconoscimenti si rivedono solo quando arriva un nome nuovo", () => {
+test("nei titoli di coda le librerie sono nomi, una volta sola e in ordine", () => {
   const elenco = JSON.parse(readFileSync(new URL("../src/riconoscimenti/elenco.json", import.meta.url), "utf8")) as Elenco;
-  const n = nomi(elenco);
-  assert.ok(n.length > 200, "l'elenco ha i suoni, i caratteri, le librerie");
-  assert.equal(new Set(n).size, n.length, "un nome una volta sola");
-  assert.ok(ciSonoNomiNuovi(n, []), "al primo avvio");
-  assert.ok(!ciSonoNomiNuovi(n, n), "già visti");
-  assert.ok(ciSonoNomiNuovi([...n, "suono:Un suono nuovo|qualcuno"], n), "un suono in più");
-  // una versione nuova della stessa libreria non è un nome nuovo
-  const rust = Object.values(elenco.rust)[0];
-  const aggiornato = { ...elenco, rust: { x: rust.map((p) => ({ ...p, versione: "99.0.0" })) } } as Elenco;
-  assert.ok(!ciSonoNomiNuovi(nomi(aggiornato), n));
+  const n = nomiDelleLibrerie(elenco);
+  assert.ok(n.length > 200, "le librerie della pagina e del programma");
+  assert.equal(new Set(n).size, n.length, "un nome una volta sola, anche con più versioni");
+  assert.deepEqual(n, [...n].sort((a, b) => a.localeCompare(b, "it")));
+  for (const x of ["react", "kira", "tauri"]) assert.ok(n.includes(x), x);
 });
 
 test("l'elenco dei riconoscimenti ha un testo per ogni licenza che usa", () => {

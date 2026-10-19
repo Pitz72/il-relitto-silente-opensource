@@ -1,0 +1,128 @@
+/* ==========================================================================
+   I titoli di coda (Titoli.tsx): un nastro che sale lento sul fondo del
+   relitto, come al cinema. Testo centrato, i ruoli a sinistra e i nomi a
+   destra di un asse; le librerie in un blocco fitto di soli nomi. Le note
+   intere stanno nel file accanto al gioco, non qui.
+   I colori vengono dalle variabili delle atmosfere (sopra 4,5:1).
+   ========================================================================== */
+.titoli {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 40%, var(--fondo-1), var(--fondo-2));
+  color: var(--testo);
+  font-size: var(--corpo);
+  line-height: 1.5;
+  animation: tit-entra 1.2s ease-out both;
+  transition: opacity 1.2s ease-in;
+}
+@keyframes tit-entra { from { opacity: 0; } to { opacity: 1; } }
+.titoli.chiusura { opacity: 0; }
+[data-movimento="ridotto"] .titoli { animation-duration: .3s; transition-duration: .3s; }
+
+/* la finestra: il nastro sfuma ai due bordi, come entrasse e uscisse dal buio */
+.titoli-finestra {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent);
+  mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent);
+}
+.titoli-nastro {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26vh;
+  padding: 0 6cqw 8vh;
+  text-align: center;
+  will-change: transform;
+}
+.titoli.a-pagine .titoli-nastro { will-change: auto; transition: opacity .7s ease; }
+
+.titoli section { display: flex; flex-direction: column; align-items: center; width: 100%; }
+.titoli h2 {
+  margin: 0 0 1.8em;
+  font-family: var(--mono);
+  font-weight: 400;
+  font-size: max(13px, .72em);
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--accento);
+}
+
+/* l'apertura e il congedo: il titolo del gioco */
+.tit-titolo {
+  margin: 0;
+  font-weight: 300;
+  font-size: 3.6em;
+  line-height: 1.05;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--testo) 88%, var(--vena-2));
+}
+.tit-autore { margin: .9em 0 0; font-size: 1.45em; }
+.tit-racconto { margin: .5em 0 0; font-size: 1.1em; color: var(--tenue); }
+/* il congedo: il titolo e, sotto, i due marchi in bianco, uno accanto all'altro */
+.tit-congedo .tit-titolo { font-size: 2.6em; }
+.tit-marchi {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7cqw;
+  margin-top: 3.2em;
+  width: min(100%, 76em);
+}
+.tit-marchio { display: block; height: auto; flex: none; }
+/* le altezze ottiche: i due marchi hanno proporzioni molto diverse */
+.tit-runtime { width: min(30cqw, 26em); }
+.tit-favella { width: min(38cqw, 34em); }
+
+/* le coppie: il ruolo a sinistra dell'asse, il nome a destra */
+.tit-coppie { margin: 0; display: grid; gap: .75em; width: min(100%, 60em); }
+.tit-coppia { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 2.4em; align-items: baseline; }
+.tit-coppia dt { text-align: right; font-style: italic; color: var(--tenue); }
+.tit-coppia dd { margin: 0; text-align: left; font-size: 1.12em; }
+.tit-sotto { display: block; font-size: .78em; color: var(--tenue); }
+
+.tit-nota { margin: 0 0 1.6em; max-width: 46em; font-size: 1.02em; color: var(--tenue); text-wrap: balance; }
+.tit-chiusa .tit-nota:last-child { margin-bottom: 0; }
+
+/* le librerie: soli nomi, fitti, in colonne */
+.tit-nomi {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12.5em, 1fr));
+  gap: .2em 2em;
+  width: min(100%, 82em);
+  font-family: var(--mono);
+  font-size: max(13px, .78em);
+  color: color-mix(in srgb, var(--tenue) 85%, var(--testo));
+}
+.tit-nomi li { overflow-wrap: anywhere; }
+
+/* «salta»: piccolo, in basso a destra, fermo mentre il nastro scorre */
+.titoli-salta {
+  position: absolute;
+  right: 3cqw;
+  bottom: 2.6cqw;
+  min-height: 40px;
+  padding: .45em 1.4em;
+  font-family: var(--mono);
+  font-size: max(12px, .66cqw);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--tenue);
+  border: 1px solid color-mix(in srgb, var(--bordo) 70%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--fondo-2) 60%, transparent);
+  opacity: .75;
+  transition: opacity .25s, color .25s, border-color .25s;
+}
+.titoli-salta:hover { opacity: 1; color: var(--testo); border-color: var(--accento-2); }
+.titoli-salta .tasto { margin-left: .8em; letter-spacing: .08em; opacity: .8; }

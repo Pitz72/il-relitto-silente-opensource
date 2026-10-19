@@ -1,11 +1,15 @@
-# riconoscimenti.py — l'elenco della schermata «Riconoscimenti e licenze»
+# riconoscimenti.py — l'elenco dei riconoscimenti e delle licenze
 # (progettazione/06-app-desktop.md, §18.3), generato dagli elenchi così che non
-# resti mai indietro.
+# resti mai indietro. Dal 19 ottobre 2026 (decisione dell'autore) i nomi scorrono
+# nei titoli di coda (app/src/riconoscimenti/Titoli.tsx), e le note intere (le
+# righe di copyright, i testi delle licenze) stanno in un file di testo che va
+# accanto al gioco, nell'installazione e nella versione portatile.
 #
 # Uso (dalla radice del progetto):
 #   python strumenti/riconoscimenti.py              scrive app/src/riconoscimenti/elenco.json
-#   python strumenti/riconoscimenti.py --verifica   controlla che il file sia aggiornato
-#                                                   (esce con 1 se non lo è)
+#                                                   e app/src-tauri/risorse/Riconoscimenti e licenze.txt
+#   python strumenti/riconoscimenti.py --verifica   controlla che i due file siano aggiornati
+#                                                   (esce con 1 se non lo sono)
 #
 # Le fonti:
 #   relitto-silente/relitto.fav   il titolo e l'autore del gioco
@@ -36,6 +40,8 @@ QUI = os.path.dirname(os.path.abspath(__file__))
 RADICE = os.path.dirname(QUI)
 APP = os.path.join(RADICE, "app")
 USCITA = os.path.join(APP, "src", "riconoscimenti", "elenco.json")
+# il nome lo dicono anche i titoli di coda (Titoli.tsx, FILE_LICENZE) e tauri.conf.json
+FILE_TESTO = os.path.join(APP, "src-tauri", "risorse", "Riconoscimenti e licenze.txt")
 LICENZE = os.path.join(QUI, "licenze")
 
 # Quando un pacchetto si può usare con più licenze («MIT OR Apache-2.0»), il
@@ -187,7 +193,7 @@ USO_MUSICA = {
     "A1": "l'Anziano: il primo letto", "A2": "l'Anziano: il secondo letto", "A3": "l'Anziano: il terzo letto",
     "A4": "l'Anziano: il quarto letto", "C1": "il finale «Vivi»", "C2": "il finale «La prima nota»",
     "C3": "il finale «La stiva piena»", "C4": "il finale «Doppio fondo»", "C5": "il finale «Due lettere»",
-    "T": "il tema",
+    "T": "il tema, nei titoli di coda",
 }
 
 
@@ -419,6 +425,113 @@ def testo_di(dati):
     return json.dumps(dati, ensure_ascii=False, indent=1) + "\n"
 
 
+PIATTAFORME = {"x86_64-pc-windows-msvc": "Windows", "x86_64-unknown-linux-gnu": "Linux", "aarch64-apple-darwin": "macOS"}
+NOMI_LICENZE = {"MIT": "MIT", "Apache-2.0": "Apache 2.0", "MPL-2.0": "Mozilla Public License 2.0", "OFL-1.1": "SIL Open Font License 1.1",
+                "PSF-2.0": "Python Software Foundation License", "Unicode-3.0": "Unicode License v3", "BSD-3-Clause": "BSD a tre clausole",
+                "Zlib": "zlib", "Unlicense": "Unlicense", "0BSD": "BSD a zero clausole", "CC0-1.0": "CC0 1.0"}
+
+
+def file_di_testo(d):
+    """Le note intere, per il file accanto al gioco: chi, che cosa, con quale licenza, le
+    righe di copyright e, in fondo, i testi delle licenze. Testo semplice, da leggere con
+    il Blocco note."""
+    righe = []
+    a = righe.append
+
+    def titolo(t):
+        a("")
+        a("")
+        a(t.upper())
+        a("-" * len(t))
+        a("")
+
+    def pacchetto(p, ruolo=None):
+        nome = p.get("famiglia", p["nome"])
+        a(f"{nome} {p['versione']}" + (f" — {ruolo}" if ruolo else ""))
+        a("  Licenza: " + " e ".join(NOMI_LICENZE.get(x, x) for x in p["usata"])
+          + (f" (dichiarata: {p['licenza']})" if p["licenza"] and " " in p["licenza"] else ""))
+        for c in p["copyright"] or [f"© {x}" for x in p.get("autori") or []]:
+            a(f"  {c}")
+        if p.get("sorgente"):
+            a(f"  {p['sorgente']}")
+        a("")
+
+    g = d["gioco"]
+    a(g["titolo"].upper())
+    a(f"di {g['autore']}")
+    a(g["racconto"])
+    a("")
+    a("Riconoscimenti e licenze")
+    a("")
+    a("Questo file accompagna il gioco. I nomi scorrono nei titoli di coda; qui ci sono le note intere:")
+    a("chi ha fatto che cosa, con quale licenza il gioco lo usa, le righe di copyright e, in fondo,")
+    a("i testi delle licenze. Lo scrive strumenti/riconoscimenti.py dagli elenchi veri: non si corregge a mano.")
+    a("I loghi d’apertura vengono da Il Viaggiatore, dello stesso autore. I marchi di Runtime Multimedia")
+    a("e di FAVELLA 1 sono dei loro titolari, e non rientrano nelle licenze del gioco.")
+
+    titolo("Le fondamenta")
+    for p in d["principali"]:
+        pacchetto(p, p["ruolo"])
+
+    titolo("La musica")
+    a("Generata con l’intelligenza artificiale (Lyria 3.5 di Google, in Flow Music, e Suno),")
+    a(f"scelta e diretta da {g['autore']}. I brani di Lyria portano la filigrana SynthID.")
+    a("")
+    for m in d["musica"]:
+        a(f"«{m['titolo']}» — {m['uso']}")
+        a(f"  di {m['autore']}, con {m['modello']} ({m['fonte']}) · {m['licenza']}")
+
+    titolo("I suoni")
+    if not d["suoni"]:
+        a("Ogni suono del gioco è sintetizzato nel suo motore audio, senza registrazioni.")
+    for x in d["suoni"]:
+        a(f"«{x['titolo']}» — {x['uso']}")
+        a(f"  di {x['autore']}, da {x['fonte']} · {x['licenza']}" + (f" · {x['url']}" if x["url"] else ""))
+
+    titolo("Le immagini")
+    for i in d["immagini"]:
+        a(i["che_cosa"][:1].upper() + i["che_cosa"][1:])
+        a(f"  {i['autore']} · {i['licenza']} · {i['da_dove']}")
+
+    titolo("I caratteri")
+    for c in d["caratteri"]:
+        pacchetto(c, c["ruolo"])
+
+    titolo("Le librerie della pagina")
+    for p in d["javascript"]:
+        pacchetto(p)
+
+    for piattaforma, crate in d["rust"].items():
+        titolo(f"Le librerie del programma · {PIATTAFORME.get(piattaforma, piattaforma)} ({len(crate)})")
+        for p in crate:
+            pacchetto(p)
+
+    titolo("I testi delle licenze")
+    a("Dove un pacchetto si può usare con più licenze, il gioco lo usa con quella scritta accanto al suo nome.")
+    for spdx, testo in d["testi"].items():
+        a("")
+        a("=" * 72)
+        a(NOMI_LICENZE.get(spdx, spdx) + f" ({spdx})")
+        a("=" * 72)
+        a("")
+        righe.extend(testo.rstrip("\n").split("\n"))
+    return "\n".join(righe).rstrip("\n") + "\n"
+
+
+def leggi_testo(percorso):
+    if not os.path.isfile(percorso):
+        return None
+    with open(percorso, encoding="utf-8-sig", newline="") as f:
+        return f.read().replace("\r\n", "\n")
+
+
+def scrivi_testo(percorso, testo):
+    """Con il BOM e gli a capo di Windows: il Blocco note lo apre bene anche se è vecchio."""
+    os.makedirs(os.path.dirname(percorso), exist_ok=True)
+    with open(percorso, "w", encoding="utf-8-sig", newline="\r\n") as f:
+        f.write(testo)
+
+
 def main():
     ap = argparse.ArgumentParser(description="L'elenco dei riconoscimenti e delle licenze.")
     ap.add_argument("--verifica", action="store_true", help="controlla soltanto che il file sia aggiornato")
@@ -433,15 +546,19 @@ def main():
         if vecchio is None or testo_di(vecchio) != testo_di(nuovo):
             print("L'elenco dei riconoscimenti non è aggiornato: python strumenti/riconoscimenti.py")
             return 1
-        print("L'elenco dei riconoscimenti è aggiornato.")
+        if leggi_testo(FILE_TESTO) != file_di_testo(nuovo):
+            print(f"Il file «{os.path.basename(FILE_TESTO)}» non è aggiornato: python strumenti/riconoscimenti.py")
+            return 1
+        print("L'elenco dei riconoscimenti e il file delle licenze sono aggiornati.")
         return 0
     os.makedirs(os.path.dirname(USCITA), exist_ok=True)
     with open(USCITA, "w", encoding="utf-8", newline="\n") as f:
         f.write(testo_di(nuovo))
+    scrivi_testo(FILE_TESTO, file_di_testo(nuovo))
     n_rust = {k: len(v) for k, v in nuovo["rust"].items()}
     print(f"Scritto {os.path.relpath(USCITA, RADICE)}: {len(nuovo['suoni'])} suoni, {len(nuovo['immagini'])} immagini, "
           f"{len(nuovo['caratteri'])} caratteri, {len(nuovo['javascript'])} pacchetti JavaScript, crate Rust {n_rust}, "
-          f"{len(nuovo['testi'])} testi di licenza.")
+          f"{len(nuovo['testi'])} testi di licenza; e {os.path.relpath(FILE_TESTO, RADICE)}.")
     return 0
 
 

@@ -9,6 +9,7 @@
 //  Il testo è dell'autore: si cambia solo qui.
 // ============================================================================
 import { useEffect, useRef, useState } from "react";
+import "./dichiarazione.css";
 
 export const TESTO_DICHIARAZIONE =
   "Il Relitto Silente è nato come demo di Favella1, il linguaggio di programmazione e motore di narrativa " +
@@ -54,7 +55,7 @@ export default function Dichiarazione({ onFine }: { onFine: () => void }) {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="riconoscimenti dichiarazione" role="alertdialog" aria-modal="true" aria-label="Come è nato il gioco" aria-describedby="dichiarazione-testo" onClick={prosegui}>
+    <div className="dichiarazione" role="alertdialog" aria-modal="true" aria-label="Come è nato il gioco" aria-describedby="dichiarazione-testo" onClick={prosegui}>
       <div className={`dic-lastra${visibile ? " visibile" : ""}`}>
         <div className="dic-vena" aria-hidden="true" />
         <div>

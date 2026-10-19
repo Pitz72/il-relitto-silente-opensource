@@ -23,7 +23,7 @@ import { gestoDelClic } from "./tocco";
 import { blocchiDelTurno, segnaNomi, type Blocco } from "./lamina/grammatica";
 import Lamina, { type VoceDiario } from "./lamina/Lamina";
 import Ramo from "./ramo/Ramo";
-import { accesiDa, attrezzoDelVerbo, bersagli, NESSUNA, type Azione, type Selezione } from "./ramo/azioni";
+import { accesiDa, attrezzoDelVerbo, bersagli, COMANDO_TITOLI, NESSUNA, type Azione, type Selezione } from "./ramo/azioni";
 import type { Filo } from "./ramo/geometria";
 import Visore, { CartelloAtto, useCartelloAtto } from "./visore/Visore";
 import Dialogo from "./dialogo/Dialogo";
@@ -59,6 +59,8 @@ interface Props {
   alMenu?: (esito: string, avviso?: string) => void;
   /** un finale raggiunto, con la riga del registro di bordo se il finale la scrive */
   alFinale?: (finale: string, riga: string | null) => void;
+  /** dopo un finale, «Titoli di coda»: li fa partire l'app, e poi si torna al menu */
+  aiTitoli?: () => void;
 }
 
 const ARTICOLO = /^(?:il|lo|la|i|gli|le|l['’]|un|uno|una|dei|degli|delle)\s*/i;
@@ -125,7 +127,7 @@ function Inceppo({ dettaglio, alMenu }: { dettaglio: string; alMenu?: Props["alM
   );
 }
 
-export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFinale }: Props = {}) {
+export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFinale, aiTitoli }: Props = {}) {
   const [opzioni, cambiaOpzioni] = useOpzioni();
   const ridotto = useMovimentoRidotto(opzioni.movimento);
   const motoreRef = useRef<Motore | null>(null);
@@ -401,6 +403,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
         // alla fine della partita, ricominciare e caricare sono dell'app
         if (modello?.fase === "fine" && a.comando === "ricomincia") return ricomincia();
         if (modello?.fase === "fine" && a.comando === "carica") return void apriSalvataggi("carica");
+        if (modello?.fase === "fine" && a.comando === COMANDO_TITOLI) return aiTitoli?.();
         // il fuoco tornerà sulla cosa da cui il comando è partito: con la tastiera non si riparte da capo
         const qui = document.activeElement;
         ritornoRef.current =
@@ -424,7 +427,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
         setSelezione({ tipo: "inMano", attrezzo: a.attrezzo, verbo: a.verbo, etichetta: verbo ? `${attrezzo!.etichetta} (${verbo.etichetta.toLowerCase()})` : (attrezzo?.etichetta ?? a.attrezzo) });
       }
     },
-    [gioca, chiudi, modello, selezione, ricomincia, apriSalvataggi],
+    [gioca, chiudi, modello, selezione, ricomincia, apriSalvataggi, aiTitoli],
   );
 
   // dopo il turno, il fuoco torna sul baccello, se c'è ancora e nessun altro l'ha preso;

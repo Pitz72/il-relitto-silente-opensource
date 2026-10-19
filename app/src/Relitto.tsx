@@ -4,22 +4,23 @@
 //    all'avvio      lo schermo intero, nero; il motore comincia a caricarsi,
 //                   dietro. Dopo un attimo i loghi di Runtime Multimedia e di
 //                   FAVELLA 1 (loghi/, pari pari dal Viaggiatore; Esc li salta).
-//                   Al primo avvio, e dopo un aggiornamento che aggiunge nomi,
-//                   i riconoscimenti e le licenze (si va avanti dopo tre
-//                   secondi); poi, a ogni avvio, la dichiarazione su come è
-//                   nato il gioco, sullo stesso fondo
+//                   Poi la dichiarazione su come è nato il gioco. I
+//                   riconoscimenti non ci sono più (decisione dell'autore,
+//                   19 ottobre 2026): sono i titoli di coda
 //    il menu        Continua, Nuova partita, Carica, Opzioni, Registro dei
 //                   finali, Riconoscimenti, Esci, sopra la scena finale
 //                   dell'intro
 //    Nuova partita  l'intro (Esc la salta), poi la plancia
 //    il gioco       dalla pausa si torna al menu: la partita resta nel motore,
 //                   e Continua la riprende
+//    i titoli       dopo un finale («Titoli di coda») o da «Riconoscimenti»
+//                   nel menu: scorrono con la loro musica, poi il menu
 //  I finali raggiunti si scrivono nel registro dei finali, su disco.
 //  RELITTO_PROVA=finali (o ?prova=finali nel browser): la prova dei sei finali
 //  attraverso l'interfaccia (prova/finali.ts), con il seme 1; alla fine il
 //  rapporto, e nell'eseguibile si esce.
 // ============================================================================
-import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { avviaMotore, MOTORE_FALLITO, usaPassoMotore } from "./motore/condiviso";
 import { tavolozza, variabiliCss } from "./stile/atmosfere";
 import { attributiSchermo, useMovimentoRidotto, useOpzioni } from "./stile/opzioni";
@@ -37,16 +38,13 @@ import RegistroFinali from "./menu/RegistroFinali";
 import { daContinuare, dettaglioDi } from "./menu/continua";
 import { conFinale, type VoceRegistro } from "./menu/registro";
 import { leggiRegistro, scriviRegistro } from "./menu/registroSuDisco";
-import { ciSonoNomiNuovi, nomi, nomiVisti, segnaVisti, type Elenco } from "./riconoscimenti/visti";
-import elencoJson from "./riconoscimenti/elenco.json";
 import "./stile/base.css";
 import "./menu/menu.css";
 import "./loghi/caratteri.css";
-import "./riconoscimenti/riconoscimenti.css";
 
 const Gioco = lazy(() => import("./gioco/Gioco"));
 const Intro = lazy(() => import("./intro/Intro"));
-const Riconoscimenti = lazy(() => import("./riconoscimenti/Riconoscimenti"));
+const Titoli = lazy(() => import("./riconoscimenti/Titoli"));
 const Loghi = lazy(() => import("./loghi/Loghi"));
 const Dichiarazione = lazy(() => import("./riconoscimenti/Dichiarazione"));
 
@@ -54,13 +52,12 @@ const Dichiarazione = lazy(() => import("./riconoscimenti/Dichiarazione"));
  *  (la luce del primo logo arriva 0,6 secondi dopo che i loghi partono). */
 const NERO = 400;
 
-const ELENCO = elencoJson as unknown as Elenco;
 const VERSIONE = __VERSIONE__;
 
 type Schermata =
   | { tipo: "nero" }
   | { tipo: "loghi" }
-  | { tipo: "riconoscimenti"; primoAvvio: boolean }
+  | { tipo: "titoli" }
   | { tipo: "dichiarazione" }
   | { tipo: "menu" }
   | { tipo: "intro" }
@@ -68,14 +65,13 @@ type Schermata =
 
 type PannelloMenu = null | "carica" | "opzioni" | "registro";
 
-/** Il clima del menu e dei riconoscimenti: il relitto, nella membrana. */
+/** Il clima del menu, della dichiarazione e dei titoli: il relitto, nella membrana. */
 const STILE = variabiliCss(tavolozza({ atmosfera: "relitto", forma: "membrana", stanza: null, protezione: false, ipossia: false }), null) as CSSProperties;
 
 export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   const [opzioni, cambiaOpzioni] = useOpzioni();
   const ridotto = useMovimentoRidotto(opzioni.movimento);
   const passo = usaPassoMotore();
-  const nomiAttuali = useMemo(() => nomi(ELENCO), []);
   const [schermata, setSchermata] = useState<Schermata>({ tipo: "nero" });
   /** c'è una partita nel motore, non finita: Continua la riprende */
   const [inCorso, setInCorso] = useState(false);
@@ -135,21 +131,19 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
     void scriviRegistro(nuovo).catch(() => undefined);
   }, []);
 
-  // dopo i loghi: i riconoscimenti, se ci sono nomi nuovi; poi la dichiarazione
-  const dopoILoghi = useCallback(() => {
-    setSchermata(ciSonoNomiNuovi(nomiAttuali, nomiVisti()) ? { tipo: "riconoscimenti", primoAvvio: true } : { tipo: "dichiarazione" });
-  }, [nomiAttuali]);
+  // dopo i loghi, la dichiarazione
+  const dopoILoghi = useCallback(() => setSchermata({ tipo: "dichiarazione" }), []);
 
-  const dopoIRiconoscimenti = useCallback(() => {
-    // la prova non segna niente come visto: chi gioca li vedrà lo stesso
-    if (!prova) segnaVisti(nomiAttuali);
-    setSchermata((s) => (s.tipo === "riconoscimenti" && s.primoAvvio ? { tipo: "dichiarazione" } : { tipo: "menu" }));
-  }, [nomiAttuali, prova]);
+  // i titoli di coda: dopo un finale la partita è finita, e Continua non la riprende
+  const aiTitoli = useCallback(() => {
+    setInCorso(false);
+    setSchermata({ tipo: "titoli" });
+  }, []);
 
   // ---- il suono del menu (documento 21): un mondo sonoro suo, con la musica del menu e il
-  // tocco dei pulsanti; il menu e i riconoscimenti raggiunti da lui lo tengono, il resto no
-  // (l'intro e il gioco sfumano la musica: il gioco avvia un mondo suo)
-  const nelMenu = schermata.tipo === "menu" || (schermata.tipo === "riconoscimenti" && !schermata.primoAvvio);
+  // tocco dei pulsanti (l'intro e il gioco sfumano la musica: il gioco avvia un mondo suo;
+  // i titoli suonano la loro nel mondo che trovano)
+  const nelMenu = schermata.tipo === "menu";
   useEffect(() => {
     if (!nelMenu) return;
     avviaSuono(prova !== undefined);
@@ -275,7 +269,7 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   if (posti?.some((p) => p.presente)) voci.push({ id: "carica", etichetta: "Carica", azione: () => setPannello("carica") });
   voci.push({ id: "opzioni", etichetta: "Opzioni", azione: () => setPannello("opzioni") });
   voci.push({ id: "registro", etichetta: "Registro dei finali", azione: () => setPannello("registro") });
-  voci.push({ id: "riconoscimenti", etichetta: "Riconoscimenti", azione: () => setSchermata({ tipo: "riconoscimenti", primoAvvio: false }) });
+  voci.push({ id: "riconoscimenti", etichetta: "Riconoscimenti", azione: () => setSchermata({ tipo: "titoli" }) });
   if (dentroTauri()) voci.push({ id: "aggiorna", etichetta: "Cerca aggiornamenti", azione: () => void cercaNuova(true) });
   // uscendo, la partita in corso va nel posto automatico (M6): niente da confermare, Continua la riprende
   if (dentroTauri()) voci.push({ id: "esci", etichetta: "Esci", azione: () => void salvaUscendo().then(() => comando("esci", { codice: 0 })) });
@@ -303,7 +297,7 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   if (schermata.tipo === "gioco")
     return (
       <Suspense fallback={null}>
-        <Gioco key={schermata.chiave} prova={prova} inizio={schermata.inizio} alMenu={alMenu} alFinale={alFinale} />
+        <Gioco key={schermata.chiave} prova={prova} inizio={schermata.inizio} alMenu={alMenu} alFinale={alFinale} aiTitoli={aiTitoli} />
       </Suspense>
     );
   if (schermata.tipo === "intro")
@@ -356,9 +350,9 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
             {domanda && <Conferma domanda={domanda} forma="membrana" chiudi={() => setDomanda(null)} />}
           </>
         )}
-        {schermata.tipo === "riconoscimenti" && (
+        {schermata.tipo === "titoli" && (
           <Suspense fallback={null}>
-            <Riconoscimenti elenco={ELENCO} primoAvvio={schermata.primoAvvio} avanti={dopoIRiconoscimenti} />
+            <Titoli ridotto={ridotto} onFine={() => setSchermata({ tipo: "menu" })} />
           </Suspense>
         )}
         {schermata.tipo === "dichiarazione" && (

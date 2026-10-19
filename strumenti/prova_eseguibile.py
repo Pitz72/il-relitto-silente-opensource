@@ -14,7 +14,8 @@
 #                l'intro saltata, poi ogni passo dei sei finali cliccato nel DOM;
 #                l'impronta finale deve essere quella di collaudo/finali-menu.json
 #                (scritto da collaudo/menu.mjs con il motore in CPython), e i sei
-#                finali devono finire nel registro.
+#                finali devono finire nel registro; dopo l'ultimo, «Titoli di coda»
+#                deve farli partire, e «salta» riportare al menu.
 #   salvataggi   app/src/gioco/Gioco.tsx: sei comandi, il posto 6 scritto, riletto
 #                e caricato «identica».
 #   mondo        app/src/prova/ProvaSuono.tsx: i tre ambienti del prototipo nei loro
@@ -79,6 +80,8 @@ def main():
             stato = "OK" if not x.get("errore") else "NO"
             print(f"[{stato}] {x['finale']}: {x['passi']} passi in {x['ms'] / 1000:.1f} s ({modi})"
                   + (f"\n     {x['errore']}" if x.get("errore") else ""))
+        if "titoli" in r:
+            print(f"[{'OK' if r['titoli'] else 'NO'}] i titoli di coda, dall'ultimo finale: partono, hanno il titolo, le librerie e il file delle licenze, «salta» torna al menu")
         print(f"Il registro dei finali: {', '.join(r.get('registro', [])) or 'vuoto'}")
         if r.get("errore"):
             print(f"     {r['errore']}")
