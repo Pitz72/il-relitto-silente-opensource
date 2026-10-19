@@ -25,7 +25,7 @@ import { avviaMotore, MOTORE_FALLITO, usaPassoMotore } from "./motore/condiviso"
 import { tavolozza, variabiliCss } from "./stile/atmosfere";
 import { attributiSchermo, opzioniRicordate, useMovimentoRidotto, useOpzioni } from "./stile/opzioni";
 import { comando, dentroTauri } from "./lib/tauri";
-import { schermoIntero } from "./lib/finestra";
+import { ricordaSchermoIntero, schermoIntero } from "./lib/finestra";
 import { salvaUscendo } from "./gioco/uscita";
 import { cercaAggiornamento, FINTO, FIRMA } from "./aggiornamenti";
 import Aggiornamento from "./menu/Aggiornamento";
@@ -198,9 +198,11 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
     if (nelMenu && prova === undefined) void mixSuono(opzioni);
   }, [nelMenu, opzioni, prova]);
 
-  // lo schermo intero: come dice l'opzione (l'app ci parte); F11 lo cambia, e l'opzione lo ricorda
+  // lo schermo intero: come dice l'opzione (l'app ci parte); F11 lo cambia, e l'opzione lo ricorda,
+  // anche al processo Tauri, perché la finestra nasca così al prossimo avvio (revisione 25, L8)
   useEffect(() => {
     void schermoIntero(opzioni.schermoIntero);
+    void ricordaSchermoIntero(opzioni.schermoIntero);
   }, [opzioni.schermoIntero]);
   useEffect(() => {
     if (schermata.tipo === "gioco") return; // nel gioco F11 lo tiene Gioco.tsx

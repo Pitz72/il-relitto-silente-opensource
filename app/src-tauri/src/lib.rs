@@ -31,8 +31,13 @@ struct AvvioAudio {
     campione_ms: f64,
 }
 
-#[tauri::command]
-fn audio_avvia(app: AppHandle, stato: State<StatoAudio>) -> Result<AvvioAudio, String> {
+// I comandi che aprono il dispositivo audio o toccano il disco non girano nel thread principale
+// (revisione 25, L12): `audio_avvia`, `audio_mondo_avvia`, `scrivi_rapporto`, e i salvataggi
+// (salvataggi.rs). Gli altri restano sincroni apposta: sono brevi (un messaggio nel canale del
+// mondo), e così arrivano nell'ordine in cui la pagina li manda; il gioco aspetta la fine di
+// `audio_mondo_avvia` prima di mandarne (gioco/suono.ts).
+#[tauri::command(async)]
+fn audio_avvia(app: AppHandle, stato: State<'_, StatoAudio>) -> Result<AvvioAudio, String> {
     let mut guardia = stato.0.lock().map_err(|_| "audio bloccato".to_string())?;
     if guardia.is_none() {
         *guardia = Some(MotoreAudio::nuovo()?);
@@ -85,18 +90,24 @@ struct AvvioMondo {
 }
 
 /// Dove stanno i file della musica (documento 22): nella variabile `RELITTO_MUSICA` se c'è, nella
-/// cartella `musica/` delle risorse dell'installazione, o nell'albero di lavoro (`audio/musica-ia/`).
-/// Se non c'è niente, suona la musica sintetizzata.
+/// cartella `musica/` delle risorse dell'installazione (anche `target/release/musica`, dove la
+/// build le copia), o, solo nello sviluppo, nell'albero di lavoro (`audio/musica-ia/`). Se non c'è
+/// niente, suona la musica sintetizzata.
 fn cartella_musica(app: &AppHandle) -> Option<std::path::PathBuf> {
     let da_ambiente = std::env::var_os("RELITTO_MUSICA").map(std::path::PathBuf::from);
     let installata = app.path().resource_dir().ok().map(|d| d.join("musica"));
-    let di_lavoro = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../audio/musica-ia");
-    [da_ambiente, installata, Some(di_lavoro)].into_iter().flatten().find(|d| d.is_dir())
+    // nell'eseguibile da distribuire il percorso della cartella di lavoro non entra nemmeno
+    // (revisione 25, L7): chi lo installa non ha quella cartella, e il gioco non deve cercarla
+    #[cfg(debug_assertions)]
+    let di_lavoro = Some(std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../audio/musica-ia"));
+    #[cfg(not(debug_assertions))]
+    let di_lavoro: Option<std::path::PathBuf> = None;
+    [da_ambiente, installata, di_lavoro].into_iter().flatten().find(|d| d.is_dir())
 }
 
 /// Il prototipo dei tre ambienti (bibbia sonora, §8): avvia il mondo sonoro (e il
 /// motore audio, se serve). Niente da caricare: ogni suono nasce dal codice.
-#[tauri::command]
+#[tauri::command(async)]
 fn audio_mondo_avvia(app: AppHandle, stato: State<'_, StatoAudio>) -> Result<AvvioMondo, String> {
     let t0 = std::time::Instant::now();
     let musica = cartella_musica(&app);
@@ -146,11 +157,21 @@ fn info_sistema(app: AppHandle) -> InfoSistema {
     }
 }
 
+/// Il nome di un rapporto (revisione 25, L11): `prova-` e poi solo lettere, cifre, punti e
+/// trattini. Niente separatori né `..`, e niente `:` (su Windows `C:nome` e i flussi alternativi
+/// `nome:flusso`); il prefisso esclude anche i nomi riservati di Windows (CON, NUL, COM1…).
+fn nome_di_rapporto_valido(nome: &str) -> bool {
+    nome.len() <= 120
+        && nome.strip_prefix("prova-").is_some_and(|resto| !resto.is_empty())
+        && nome.chars().all(|c| c.is_ascii_alphanumeric() || matches!(c, '.' | '-' | '_'))
+        && !nome.contains("..")
+}
+
 /// Scrive il rapporto della prova: nella cartella di RELITTO_RAPPORTI se c'è,
 /// altrimenti nella cartella dei dati dell'app.
-#[tauri::command]
+#[tauri::command(async)]
 fn scrivi_rapporto(app: AppHandle, nome: String, contenuto: String) -> Result<String, String> {
-    if nome.contains(['/', '\\']) || nome.contains("..") {
+    if !nome_di_rapporto_valido(&nome) {
         return Err("nome non valido".into());
     }
     let cartella = match std::env::var("RELITTO_RAPPORTI") {
@@ -161,6 +182,39 @@ fn scrivi_rapporto(app: AppHandle, nome: String, contenuto: String) -> Result<St
     let percorso = cartella.join(nome);
     std::fs::write(&percorso, contenuto).map_err(|e| e.to_string())?;
     Ok(percorso.to_string_lossy().into_owned())
+}
+
+/// Lo schermo intero all'avvio (revisione 25, L8). La finestra nasce come la vuole l'opzione
+/// «Schermo intero»: la pagina la ricorda anche qui, in `finestra.json` nella cartella della
+/// configurazione, perché con «no, in una finestra» l'app non parta a schermo intero per uscirne
+/// subito dopo (un lampo a ogni avvio). Senza il file, a schermo intero: «è un videogioco e deve
+/// partire a tutto schermo» (l'autore, 15 ottobre 2026).
+#[derive(Serialize, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct Finestra {
+    schermo_intero: bool,
+}
+
+fn file_della_finestra(app: &AppHandle) -> Option<std::path::PathBuf> {
+    app.path().app_config_dir().ok().map(|d| d.join("finestra.json"))
+}
+
+fn finestra_ricordata(app: &AppHandle) -> Option<Finestra> {
+    let testo = std::fs::read_to_string(file_della_finestra(app)?).ok()?;
+    serde_json::from_str(&testo).ok()
+}
+
+#[tauri::command(async)]
+fn finestra_ricorda(app: AppHandle, schermo_intero: bool) -> Result<(), String> {
+    if finestra_ricordata(&app).is_some_and(|f| f.schermo_intero == schermo_intero) {
+        return Ok(());
+    }
+    let file = file_della_finestra(&app).ok_or("nessuna cartella per la configurazione")?;
+    if let Some(cartella) = file.parent() {
+        std::fs::create_dir_all(cartella).map_err(|e| e.to_string())?;
+    }
+    let testo = serde_json::to_string(&Finestra { schermo_intero }).map_err(|e| e.to_string())?;
+    std::fs::write(&file, testo).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -194,6 +248,26 @@ pub fn run() {
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_process::init())
         .manage(StatoAudio::default())
+        .setup(|app| {
+            // la finestra principale ha "create": false in tauri.conf.json: nasce qui, già nella
+            // forma che l'opzione vuole (L8), e nascosta finché non l'ha presa: prima, a schermo
+            // intero, si vedeva per 60 ms la finestra normale
+            let schermo_intero = finestra_ricordata(app.handle()).map_or(true, |f| f.schermo_intero);
+            let conf = app
+                .config()
+                .app
+                .windows
+                .iter()
+                .find(|w| w.label == "main")
+                .cloned()
+                .ok_or("manca la finestra «main» in tauri.conf.json")?;
+            let finestra = tauri::WebviewWindowBuilder::from_config(app.handle(), &conf)?
+                .visible(false)
+                .fullscreen(schermo_intero)
+                .build()?;
+            finestra.show()?;
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             audio_avvia,
             audio_re,
@@ -207,6 +281,7 @@ pub fn run() {
             tempo_avvio,
             info_sistema,
             scrivi_rapporto,
+            finestra_ricorda,
             esci,
             salvataggi::salvataggi_elenco,
             salvataggi::salvataggio_scrivi,
@@ -217,4 +292,32 @@ pub fn run() {
         ])
         .run(tauri::generate_context!())
         .expect("errore all'avvio dell'applicazione");
+}
+
+#[cfg(test)]
+mod prove {
+    use super::nome_di_rapporto_valido;
+
+    #[test]
+    fn i_nomi_dei_rapporti() {
+        for buono in ["prova-finali-1792396659888.json", "prova-fase1-audio-windows-1.json", "prova-salvataggi-1.json"] {
+            assert!(nome_di_rapporto_valido(buono), "{buono}");
+        }
+        for cattivo in [
+            "",
+            "prova-",
+            "rapporto.json",
+            "prova-../../x.json",
+            "prova-a/b.json",
+            "prova-a\\b.json",
+            "prova-x.json:flusso",
+            "C:prova-x.json",
+            "prova-è.json",
+            "prova- spazio.json",
+            "CON.json",
+            "NUL",
+        ] {
+            assert!(!nome_di_rapporto_valido(cattivo), "{cattivo}");
+        }
+    }
 }
