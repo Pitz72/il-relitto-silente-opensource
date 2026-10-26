@@ -29,6 +29,8 @@ Versione **0.2.5-beta.4** (quella installata sul suo computer, arrivata con l’
 - **E1, le viste delle stanze** (`1eaf309`): diciotto scansioni del multiscanner disegnate in codice dalla storia (`app/src/gioco/visore/scansioni/`, la galleria `?scansioni` nello sviluppo), con diciassette varianti di stato e una frase per il lettore di schermo; la Santa Maria con le scene del sequel (`s_03`, `s_05`, e `s_10` per la stiva) e lo scafo composto in codice (`strumenti/viste/scafo.py`). Gli ho mandato `consegne/Le viste delle stanze.html`, con tutte le scansioni. Viste nel gioco dello sviluppo: vestibolo, stiva, scafo; la prova dei finali nell’eseguibile passa per quasi tutte le stanze ed è verde.
 - **Trovato strada facendo**: con la finestra ridotta a icona il ciclo delle venature moriva per sempre (`c3a7bba`).
 
+**Aggiunto il 26 ottobre 2026: Favella1 1.6.0.** Su richiesta dell’autore il motore è passato alla 1.6.0 (documento 29): `motore/` rifatta dal tag, `.fav` intatti, il gioco identico, tutti i collaudi verdi anche nell’eseguibile. Restano due decisioni sue, nel §7 del documento 29: la correzione della compilazione più lenta (+0,3 s all’avvio) nel repository Favella1, e l’aria che non scende sotto lo zero (una riga nei `.fav`, oppure solo nel visore, oppure niente). La colonna sonora resta il primo lavoro.
+
 ## Il lavoro, in ordine
 
 ### 1. La colonna sonora ufficiale (l’idea dell’autore, 19 ottobre 2026)

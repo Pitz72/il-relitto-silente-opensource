@@ -1,4 +1,19 @@
-# FAVELLA 1 — Specifica formale della grammatica (v1.5.0)
+# FAVELLA 1 — Specifica formale della grammatica (v1.6.0-dev)
+
+> **Novità v1.6.0 (in sviluppo) — le frontiere nuove.** Tutte additive: le frasi
+> valide in 1.5 restano valide e col medesimo significato; il testo che il motore
+> scrive per le storie che non usano le frasi nuove è identico (verificato sulle
+> dieci storie ufficiali, Il Relitto Silente compreso). Costrutti nuovi (vedi §29):
+> **`def_invariante`** (`La sete resta sempre fra 0 e 100.`), l'invariante di clamp
+> dichiarata che il motore applica dopo ogni scrittura del contatore; `senza ritorno`
+> (connessione a senso unico); le **relazioni di prima classe** (B3); le **procedure
+> nominate** (C1); e gli **oggetti contabili** (B1) con la concordanza dichiarata
+> (`La pozione, plurale «pozioni», è contabile.`), la prima frontiera che tocca il
+> loop di gioco (quantità, prendi/lascia/consuma N, elenchi concordati).
+> Le sezioni §29 e §30 sono il riferimento preciso delle aggiunte 1.6.0; il resto del
+> documento resta la base 1.5.0.
+
+
 
 > Documento **tecnico** versionato. Fissa lo *scheletro statico* della grammatica
 > di FAVELLA 1 e il modello dei *terminali chiusi generati per-file*. **Non** è il
@@ -1948,3 +1963,371 @@ Il Viaggiatore.
   `otherwise`); una frase su più verbi è una regola sola; il serializzatore riscrive le
   frasi nuove e conserva la tipografia; l'outline segnala le uscite con una condizione e
   riporta tutti gli alias di una frase.
+
+---
+
+## §29 — v1.6.0: le frontiere nuove
+
+Questa sezione raccoglie le aggiunte della 1.6.0. Ogni regola è additiva: non
+cambia né la forma né il significato delle frasi 1.5. I blocchi ```ebnf qui sotto
+sono normativi quanto quelli delle sezioni precedenti (l'anti-drift li verifica).
+
+### §29.1 — Invariante di clamp dichiarata (`def_invariante`) [Q1]
+
+Fino alla 1.5 l'unico modo di tenere un contatore dentro un intervallo era la
+**conseguenza** `X resta fra A e B` (`cons_limita`), da richiamare a mano dopo
+ogni modifica: dimenticarla lasciava il contatore uscire dall'intervallo. La 1.6
+aggiunge una **dichiarazione-invariante** che il motore applica da solo dopo
+*ogni* scrittura del contatore.
+
+```ebnf
+def_invariante: VARIABILE "resta" "sempre" "fra" operando_confronto "e" operando_confronto "."
+```
+
+Esempi:
+
+```favella
+La sete resta sempre fra 0 e 100.
+Il vigore resta sempre fra 0 e [soglia].
+```
+
+**Semantica.**
+
+- Si dichiara una volta sola per un **contatore** (un `VARIABILE` il cui valore è
+  intero). Gli estremi sono `operando_confronto`: un numero letterale oppure il
+  valore corrente di un altro contatore `[soglia]`. Non è ammessa l'estrazione
+  casuale `un numero fra A e B`: un limite ri-pescato a ogni scrittura non avrebbe
+  senso per un'invariante.
+- Dopo **ogni** scrittura del contatore (`aumenta`, `diminuisci`, `diventa`,
+  `moltiplica`, `dividi`, `riduci … modulo`, copia `X diventa [Y]`/`X diventa Y`,
+  `cons_limita`), e sul **valore iniziale** (`parte da N`), il motore riporta il
+  contatore dentro `[min, max]`. Se l'autore inverte gli estremi li riordina.
+  Gli estremi dinamici `[soglia]` sono risolti al momento della scrittura.
+- Lo stato dell'invariante vive nel mondo (`mondo.invarianti_clamp`): è catturato
+  dalle istantanee, quindi **ANNULLA** riavvolge anche i clamp.
+- Errori d'autore gentili (bloccanti): l'invariante su uno **stato** simbolico
+  (non un contatore); un estremo `[x]` che cita un nome che non è un contatore.
+
+**Disambiguazione LALR(1).** `def_invariante` comincia con `VARIABILE`, come
+`def_stato*`/`def_contatore*`; dopo `VARIABILE` il lookahead `"resta"` è disgiunto
+da copula/`"parte"`/`"partono"`. La parola `"sempre"` distingue la dichiarazione
+(top-level) dalla conseguenza `cons_limita` (`VARIABILE "resta" "fra" …`, solo
+dopo `:`): i due `"resta"` vivono in stati LALR distinti, quindi non confliggono.
+Keyword riservata aggiunta: `sempre`.
+
+**Round-trip Studio.** `analizza_variabili` riporta su ogni contatore il campo
+`clamp` (`{min, max, span}`, con `min`/`max` nella forma-operando JSON: un intero
+o `{kind:"var", name}`); `serializza_frase` ha l'op `clamp_decl {name, min, max}`
+→ `X resta sempre fra A e B.`.
+
+### §29.2 — Connessione a senso unico (`senza ritorno`) [Q2]
+
+`A collega D a B` è sempre **bidirezionale**: il motore aggiunge l'uscita di
+ritorno `B → A` nella direzione opposta (garantendo che si possa sempre tornare
+indietro). La 1.6 aggiunge un suffisso opzionale che la sopprime.
+
+```ebnf
+def_connessione: ENTITA "collega" DIREZIONE "a" ENTITA uscita_condizionata? senza_ritorno? "."
+senza_ritorno: "senza" "ritorno"
+```
+
+Esempi:
+
+```favella
+La botola collega giù a il pozzo senza ritorno.
+La soglia collega nord a l'abisso se il sigillo è rotto senza ritorno.
+```
+
+**Semantica.**
+
+- Senza il suffisso: comportamento 1.5 invariato (auto-ritorno nella direzione
+  opposta, se la direzione ne ha una; le direzioni custom `Su e giù sono direzioni
+  opposte.` continuano a funzionare).
+- Con `senza ritorno`: viene creata **solo** l'uscita `A → B`. Se la direzione ha
+  un'opposta, l'uscita di ritorno **non** viene aggiunta. Una eventuale uscita
+  condizionata vale allora nella sola direzione A → B.
+- Il suffisso sta in **ultima** posizione, dopo l'eventuale `se …[; altrimenti
+  "…"]`. Lo scanner di Passata 1 lo toglie dal nome della stanza di destinazione
+  (`… a la gola senza ritorno` dichiara la stanza `gola`, non `gola senza ritorno`).
+- Le **conseguenze** `collega`/`non collega più` restano come in 1.5 (il `collega`
+  in conseguenza mantiene l'auto-ritorno): `senza ritorno` è solo della
+  dichiarazione.
+
+**Disambiguazione LALR(1).** Dopo la seconda `ENTITA` (o dopo il testo
+dell'`altrimenti`, o dopo la `condizione`) il lookahead `"senza"` è disgiunto da
+`"se"`/`";"`/`","`/`"altrimenti"`/`"."`. `"senza"` è già riservata (`comando senza
+oggetto`); `"ritorno"` è la keyword nuova (riservata).
+
+**Round-trip Studio.** `analizza_outline` marca ogni uscita esplicita con `oneWay`
+(vero quando la direzione ha un'opposta ma la destinazione non torna indietro di
+lì); `favella_server.rpc_world_graph` riporta `oneWay` sugli archi; `serializza_frase`
+accetta `{op:"connection", …, oneWay:true}` → `… senza ritorno.`.
+
+### §29.3 — Relazioni di prima classe (B3) [relations]
+
+Ispirate alle *relations* di Inform 7, mai avute in FAVELLA. Una relazione binaria
+**nominata** collega due parti (entità o il giocatore) con una locuzione d'uso
+('si fida di', 'apre'). In questa prima versione è **d'autore e interrogabile**,
+non azionabile dal giocatore.
+
+```ebnf
+def_relazione: TESTO_QUOTATO "è" "una" "relazione" arieta reciprocita? "."
+arieta: "uno" "a" "uno"     -> arieta_uno_uno
+      | "uno" "a" "molti"   -> arieta_uno_molti
+      | "molti" "a" "molti" -> arieta_molti_molti
+reciprocita: "ed" "è" ( "reciproca" | "reciproco" )
+
+def_relazione_fatto: "il" "giocatore" RELAZIONE _rel_prep? rel_ogg "." -> fatto_rel_gioc
+                   | ENTITA RELAZIONE _rel_prep? rel_ogg "."            -> fatto_rel_ent
+
+rel_ogg: "il" "giocatore" -> rel_giocatore
+       | "giocatore"       -> rel_giocatore
+       | ENTITA            -> rel_entita
+       | "qualcuno"         -> rel_qualcuno
+       | "qualcosa"         -> rel_qualcosa
+
+cond_relazione: "il" "giocatore" RELAZIONE _rel_prep? rel_ogg -> cond_rel_gioc
+              | ENTITA RELAZIONE _rel_prep? rel_ogg            -> cond_rel_ent
+              | "qualcuno" RELAZIONE _rel_prep? rel_ogg         -> cond_rel_qualcuno
+              | "qualcosa" RELAZIONE _rel_prep? rel_ogg         -> cond_rel_qualcosa
+cond_relazione_neg: "il" "giocatore" "non" RELAZIONE "più"? _rel_prep? rel_ogg -> cond_rel_gioc_neg
+                  | ENTITA "non" RELAZIONE "più"? _rel_prep? rel_ogg            -> cond_rel_ent_neg
+                  | "qualcuno" "non" RELAZIONE "più"? _rel_prep? rel_ogg         -> cond_rel_qualcuno_neg
+                  | "qualcosa" "non" RELAZIONE "più"? _rel_prep? rel_ogg         -> cond_rel_qualcosa_neg
+
+cons_relazione_aggiungi: "il" "giocatore" RELAZIONE _rel_prep? rel_ogg              -> cons_rel_gioc_agg
+                       | ENTITA RELAZIONE _rel_prep? rel_ogg                        -> cons_rel_ent_agg
+cons_relazione_togli: "il" "giocatore" "non" RELAZIONE "più"? _rel_prep? rel_ogg    -> cons_rel_gioc_tog
+                    | ENTITA "non" RELAZIONE "più"? _rel_prep? rel_ogg              -> cons_rel_ent_tog
+```
+
+(Le due conseguenze vivono fra le alternative di `?conseguenza`; qui hanno un nome
+di comodo per l'anti-drift.)
+
+**Meccanica dei terminali.** La locuzione dichiarata è spezzata dallo scanner di
+Passata 1 in **base** (ciò che il terminale CHIUSO `RELAZIONE` incassa, come
+`VERBO_MULTI`) e **preposizione finale** (`di`/`a`/…): 'si fida di' → base
+'si fida' + prep 'di'; 'apre' → base 'apre', nessuna prep. In uso la preposizione
+si legge a parte (`_rel_prep`, filtrata) e si articola con l'articolo
+dell'oggetto: 'di' + 'il giocatore' → 'del giocatore'; 'di' + 'la cella' →
+'della cella' (ma anche la forma piana 'di la cella' è accettata).
+
+**Operandi.** Il giocatore (`il giocatore`, o `giocatore` nudo dopo una prep.
+articolata), un'ENTITA, e — **solo nelle interrogazioni** — i quantificatori
+esistenziali `qualcuno`/`qualcosa` (nelle asserzioni/conseguenze il transformer li
+rifiuta con un errore gentile). I soggetti sono **inlinati** (non un nonterminale
+riducibile) proprio perché condividano il prefisso con le altre regole su `il
+giocatore`/ENTITA e divergano sul token dopo il soggetto (o dopo `non`): RELAZIONE
+vs copula/`ha`/`collega`/… → LALR(1) 0-ambiguo.
+
+**Semantica.**
+
+- **Dichiarazione** (una volta): nome-locuzione + arietà (`uno a uno`, `uno a
+  molti`, `molti a molti`) + `ed è reciproca` opzionale. La reciprocità asserisce
+  anche la coppia inversa; l'arietà sfratta le coppie in conflitto quando se ne
+  aggiunge una (uno-a-uno: una per lato; uno-a-molti: un solo soggetto per ogni
+  oggetto). È raccolta in Passata 1 e pre-popolata nel mondo (come le direzioni),
+  quindi un fatto può precederla.
+- **Asserzione d'autore** (top-level) e **conseguenza** (`e adesso …`): aggiunge
+  (`il giocatore si fida di Saverio`) o toglie (`… non si fida più di Saverio`)
+  una coppia.
+- **Interrogazione** (`se …`): coppia precisa, oppure esistenziale con
+  `qualcuno`/`qualcosa` su un lato, anche negata (`non si fida di`).
+- Lo stato (le coppie) vive nel mondo → catturato dalle istantanee: **ANNULLA**
+  riavvolge le relazioni.
+
+**Interpolazione a corredo.** Il segnaposto `[chi <locuzione> <membro>]` nei testi
+rende l'elenco (concordato, con la «e» finale) dei soggetti in relazione con quel
+membro: `"Si fidano di te: [chi si fida del giocatore]."` → «Saverio e Vito».
+Vuoto → «nessuno». Il compilatore lo risolve riusando il parser delle condizioni su
+`qualcuno <resto>` e lo conserva in `mondo.liste_relazione` (chiave normalizzata →
+(relazione, membro)); `favella_utils.rendi_testo` ricalcola l'elenco a ogni resa
+dalle coppie correnti. Un `[chi …]` che non è una relazione interrogabile (p.es. il
+letterario «[chi va là]») resta un segnaposto normale, non è un errore.
+
+**Round-trip Studio.** `analizza_regole` espone le relazioni dichiarate in
+`menu.relations` e le condizioni/conseguenze di relazione come JSON `{op:
+"relation", a, b, aName, bName, rel, base, prep, remove?}`; il serializzatore le
+riscrive (`_serializza_condizione`/`_serializza_conseguenza`), e `serializza_frase`
+ha le op `relation_decl` e `relation_fact`.
+
+**Cosa resta aperto (estensioni, non in questa versione).** Il quantificatore
+`ogni` nelle asserzioni (`Il passe-partout apre ogni porta`) e le relazioni
+azionabili dal giocatore. Il modello (`Relazione` con `soggetti_di`/`oggetti_di`,
+arietà, reciprocità) è già pronto per reggerle.
+
+### §29.4 — Procedure nominate (C1)
+
+Una sequenza NOMINATA di conseguenze, dichiarata una volta e richiamabile come
+conseguenza. Senza parametri in questa prima versione.
+
+```ebnf
+def_procedura: "Definisci" TESTO_QUOTATO "come" ":" conseguenza ( "e" "adesso"? conseguenza )* "."
+cons_procedura: "esegui" PROCEDURA
+```
+
+(`cons_procedura` è un'alternativa di `?conseguenza`; qui ha un nome di comodo per
+l'anti-drift.)
+
+Esempi:
+
+```favella
+Definisci "far passare la notte" come: aumenta la sete di 10 e adesso aumenta la stanchezza di 5 e adesso la lampada è spenta.
+Invece di dormi: dire "Ti addormenti." e adesso esegui far passare la notte.
+```
+
+**Semantica.**
+
+- La dichiarazione nomina (fra virgolette, come un verbo) una lista di
+  **conseguenze**; non contiene `dire` (una procedura cambia lo stato, il testo lo
+  dice la regola che la richiama). Lo scanner di Passata 1 raccoglie i nomi →
+  terminale CHIUSO `PROCEDURA` (come `VERBO_MULTI`).
+- L'invocazione `esegui <nome>` usa il nome **bare** (il terminale chiuso lo
+  riconosce senza ambiguità) ed esegue in ordine le conseguenze del corpo; il corpo
+  e le sue conseguenze sono statici (catturati fuori dall'istantanea; lo stato che
+  cambiano è ANNULLA-safe come sempre).
+- Una procedura può richiamarne un'altra (o se stessa): una guardia di profondità
+  (50) evita i cicli infiniti, ignorando silenziosamente l'invocazione oltre il
+  limite.
+- Parole riservate nuove: `definisci`, `esegui` (`come` era già riservata).
+
+**Disambiguazione LALR(1).** `def_procedura` parte dalla riservata `Definisci`
+(nessun'altra dichiarazione) e `cons_procedura` dalla riservata `esegui` (nessun'altra
+conseguenza) → 0-ambiguo.
+
+**Round-trip Studio.** `analizza_regole.menu.procedures` elenca i nomi; una
+conseguenza-invocazione è il JSON `{op:"callProc", name}` (riscritta in `esegui
+<nome>`); `serializza_frase` ha l'op `procedure_def {name, consequences[]}`.
+
+### §29.5 — Cosa resta aperto per una prossima versione
+
+Queste frontiere sono state VALUTATE ma lasciate fuori dalla 1.6.0 per scelta di
+scope (additività e rischio):
+
+- **B3 estensioni**: il quantificatore `ogni` nelle asserzioni (`apre ogni porta`)
+  e le relazioni **azionabili dal giocatore** (oggi solo d'autore e interrogabili).
+  Il modello `Relazione` è già pronto a reggerle.
+
+**B1 — oggetti contabili** è stato REALIZZATO: vedi §30.
+
+## §30 — v1.6.0: oggetti contabili (B1)
+
+Una cosa tenuta in **più copie**, con la concordanza **dichiarata** (non indovinata):
+l'autore dà il plurale una volta, il motore non pluralizza mai da sé (è la scelta che
+tiene fuori il NO-GO dei plurali automatici, Temi 5a/5b). È la prima frontiera che
+tocca il **loop di gioco**: perché sia osservabile in partita servono le quantità
+(inventario, stanze, contenitori), il prendere/lasciare/consumare N copie, la
+concordanza negli elenchi e nelle condizioni.
+
+### §30.1 — Dichiarazione
+
+```ebnf
+def_contabile: ENTITA "," "plurale" TESTO_QUOTATO "," _copula "contabile" "."
+```
+
+Esempi:
+
+```favella
+La pozione, plurale "pozioni", è contabile.
+La freccia, plurale "frecce", è contabile.
+```
+
+**Semantica.** L'oggetto (il singolare, es. `pozione`) diventa **contabile** e
+registra la sua forma **plurale** dichiarata (`pozioni`), usata negli elenchi
+concordati. Un contabile è una **cosa semplice**: non può essere anche contenitore,
+supporto, personaggio o fonte di luce (errore d'autore gentile). Lo scanner di
+Passata 1 raccoglie singolare e plurale; la forma plurale entra fra le **ENTITA** e
+`mondo.plurali` la riconduce all'id canonico (`trova_oggetto`/`canonizza`), così ogni
+riferimento al plurale — nelle frasi d'autore e nell'input del giocatore (un alias) —
+trova lo stesso oggetto. Parole riservate nuove: `plurale`, `contabile`.
+
+**Disambiguazione LALR(1).** `def_contabile` comincia con `ENTITA`, come molte
+dichiarazioni; dopo l'entità il lookahead `","` è **nuovo** e disgiunto da ogni altro
+continuatore top-level (`è`/`sono`, `collega`, `ha`, `dà`, `illumina`, RELAZIONE) →
+LALR(1) 0-ambiguo, confermato dalla guardia Earley.
+
+### §30.2 — Quantità iniziali
+
+```ebnf
+def_giocatore_scorta: "Il" "giocatore" "ha" _numero ENTITA "."
+def_scorta_luogo: "Ci" ( "sono" | "è" ) _numero ENTITA PREP_LUOGO ENTITA "."
+```
+
+Esempi:
+
+```favella
+Il giocatore ha 3 pozioni.
+Ci sono 5 frecce in la faretra.
+Ci sono 2 pozioni in la gola.
+```
+
+**Semantica.** Le quantità vivono su `Oggetto.quantita` (mappa *luogo → copie*, con
+luogo = `"inventario"`, un id di stanza, o un id di contenitore/supporto): è la fonte
+di verità del contabile. I marker di presenza standard (`inventario`, `stanza.oggetti`,
+`contenuto`) restano **sincronizzati**, così la visibilità e la raggiungibilità
+esistenti valgono senza modifiche. Una collocazione **standard** di un contabile (`La
+pozione è in cella.`, `Il giocatore ha la pozione.`) vale **1 copia**; le frasi di
+quantità FISSANO il numero in un luogo. Le quantità sono catturate dalle istantanee →
+**ANNULLA** le riavvolge. Errori gentili: quantità su un oggetto non contabile; luogo
+che non è una stanza né un contenitore/supporto. `def_giocatore_scorta` condivide il
+prefisso `Il giocatore ha` con `def_giocatore_inventario` (dopo `ha`, il lookahead
+`_numero` è disgiunto da `ENTITA`); `def_scorta_luogo` parte dalla keyword nuova `Ci`.
+Riservata nuova: `Ci`.
+
+### §30.3 — Nel loop di gioco: prendere, lasciare, consumare
+
+Non è sintassi d'autore (sono comandi del **giocatore**), ma è la parte osservabile:
+
+- `prendi 2 pozioni`, `prendi una pozione` (default **1**), `prendi tutte le pozioni`
+  (tutte le copie raggiungibili), `lascia 2 pozioni`, `consuma una pozione`. Il numero
+  (cifre, numero in lettere, `una`/`un`/`uno` = 1, `tutte`/`tutti`/`tutto` = tutte) si
+  stacca in testa all'argomento per i verbi prendi/lascia/consuma; il nome ripulito
+  prosegue nel flusso normale (le regole d'autore su quel verbo scattano comunque).
+- La capienza conta un contabile come **un posto** (il suo id), a prescindere dalle
+  copie. Prendere divide lo stack fra luogo e inventario; lasciare posa nella stanza
+  corrente; consumare fa sparire le copie dall'inventario.
+- **`consuma`** è un verbo di libreria nuovo (cede a un `"consuma" è un comando.`
+  d'autore). Scelta deliberata: non collide con alcuna keyword della grammatica né
+  con un verbo di libreria esistente (nelle storie «consuma» compariva solo nei
+  commenti). I cambi di quantità da *regola d'autore* (una conseguenza che decrementa
+  una scorta) non sono in questa prima versione: restano un'estensione.
+
+**Concordanza negli elenchi** (`favella_utils.conteggio`): la stanza, l'inventario e
+il contenuto dei contenitori mostrano le copie col numero e la forma dichiarata —
+`Puoi vedere qui: 3 pozioni.`, `1 pozione` (solo `n == 1` usa il singolare).
+
+### §30.4 — Condizioni e interpolazione
+
+```ebnf
+cond_pq_eq: "il" "giocatore" "ha" _numero ENTITA
+cond_pq_gte: "il" "giocatore" "ha" "almeno" _numero ENTITA
+cond_pq_gt: "il" "giocatore" "ha" "più" "di" _numero ENTITA
+cond_pq_lt: "il" "giocatore" "ha" "meno" "di" _numero ENTITA
+cond_scorta_finita: "non" "restano" "più"? ENTITA
+```
+
+Esempi:
+
+```favella
+Invece di bevi se il giocatore ha almeno 2 pozioni: dire "Ne hai [quante pozioni]."
+Invece di bevi se non restano pozioni: dire "Niente pozioni."
+```
+
+**Semantica.** Le `cond_pq_*` confrontano le copie **in inventario** con una soglia
+(`==`, `>=`, `>`, `<`); `cond_scorta_finita` è il caso «scorta esaurita» (copie
+possedute `== 0`). Condividono il prefisso `il giocatore ha` con `cond_possesso`: dopo
+`ha`, i lookahead `_numero`/`almeno`/`più`/`meno`/`ENTITA` sono disgiunti → LALR(1)
+0-ambiguo. **Scelta di forma documentata:** la condizione «scorta esaurita» NON si
+scrive `le pozioni sono finite` perché un aggettivo nudo dopo la copula collide con
+`cond_proprieta` (`ENTITA _copula PROPRIETA`) — due letture complete della stessa
+frase, ambigue per la guardia Earley anche se LALR le risolve per priorità. La forma
+`non restano … ENTITA` parte dalla keyword `non` (come `cond_non_gruppo`, che però
+prosegue con `(`), quindi è 0-ambigua in entrambi i parser. L'interpolazione `[quante
+pozioni]` (anche `[quanti …]`) rende il numero di copie possedute. Le condizioni di
+scorta valgono solo per un oggetto contabile (errore gentile altrimenti).
+
+**Round-trip Studio.** `analizza_regole` espone i contabili in `menu.objects[]`
+(`countable`, `plural`) e le condizioni di scorta come JSON `{op:"stock", id, name,
+cmp, value}` (`name` = forma plurale); `_serializza_condizione` le riscrive; e
+`serializza_frase` ha le op `countable_decl {name, plural}`, `stock_player {name, n}`,
+`stock_place {name, n, prep?, place}`.

@@ -8,7 +8,7 @@ fatto che qui l’app è ancora in costruzione. Lo strumento che le applica è `
 | Che cosa | Dove | Forma | Chi la decide |
 |---|---|---|---|
 | **Il gioco** | `versione.json` → `gioco` | SemVer 2.0.0: `MAJOR.MINOR.PATCH[-pre]` | questo documento |
-| **Il motore FAVELLA** | `motore/strutture.py` → `VERSIONE_MOTORE` | SemVer del motore: 1.5.0 (dal 15 ottobre 2026; prima 1.4.4) | il repository del motore; l’aggiornamento della copia, l’autore |
+| **Il motore FAVELLA** | `motore/strutture.py` → `VERSIONE_MOTORE` | SemVer del motore: 1.6.0 (dal 26 ottobre 2026; prima 1.5.0, dal 15 ottobre, e 1.4.4) | il repository del motore; l’aggiornamento della copia, l’autore |
 | **Il formato dei salvataggi** | `versione.json` → `formatoSalvataggi` | intero: 1, 2, 3… | cresce solo se i file cambiano in modo incompatibile |
 
 `versione.json` è l’**unica fonte di verità**. Devono dire la stessa versione:
@@ -83,7 +83,7 @@ una versione e l’altra: **i suoi salvataggi** e **la storia che ha cominciato*
 - contenuti nuovi: una stanza, una voce, un finale in più; la scatola nera di L.V. recitata (D18);
 - funzioni nuove dell’app: un’opzione, una lingua, un livello di qualità;
 - un nuovo motore FAVELLA *minor* (la copia in `motore/` si rifà dal tag e non si cambia mai a mano;
-  la 1.5.0 è entrata prima della 1.0, con la fase 3);
+  la 1.5.0 e la 1.6.0 sono entrate prima della 1.0, con la fase 3);
 - ribilanciamenti che cambiano **l’esito** di sequenze già giocate: i salvataggi si rigiocano (§4),
   quindi un salvataggio vecchio si carica ma può arrivare in uno stato diverso. Il gioco lo dice.
 

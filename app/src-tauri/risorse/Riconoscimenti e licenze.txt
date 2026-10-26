@@ -14,7 +14,7 @@ e di Favella1 sono dei loro titolari, e non rientrano nelle licenze del gioco.
 LE FONDAMENTA
 -------------
 
-Favella1 1.5.0 — il motore del gioco
+Favella1 1.6.0 — il motore del gioco
   Licenza: MIT
   Copyright (c) 2026 Simone Pizzi — Favella1
   https://github.com/Pitz72/FAVELLA1
