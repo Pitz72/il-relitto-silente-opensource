@@ -1,6 +1,6 @@
 # Favella1 1.6.0: che cosa cambia per il Relitto
 
-Versione 1.0, 26 ottobre 2026. Segue il documento 16, che ha fatto la stessa strada con la 1.5.0, e risponde
+Versione 1.1, 27 ottobre 2026 (la prima è del 26; il §8 racconta la 1.6.1). Segue il documento 16, che ha fatto la stessa strada con la 1.5.0, e risponde
 alla richiesta dell’autore: «Ora Favella è arrivato a 1.6.0. Vedi di integrare il nuovo engine e cosa e come
 questo può portare vantaggi al gioco».
 
@@ -18,9 +18,11 @@ questo può portare vantaggi al gioco».
   fatti con il motore 1.5.0, si caricano «identica», senza avviso (§4).
 - **Chi gioca non vede niente di diverso**, ed è il risultato voluto: stesse risposte, stessi pulsanti,
   stessi suoni. Cambia solo la scritta in fondo al menu, «Favella1 1.6.0».
-- **C’è un prezzo, piccolo**: all’avvio la compilazione della storia, dentro Pyodide, passa da 0,61 a 0,90
-  secondi, mentre si legge la dichiarazione. Lo causa una sola espressione regolare del motore, quella che
-  cerca gli oggetti contabili; la correzione va fatta in Favella1, non nella copia (§5).
+- **C’è un prezzo, piccolo**: all’avvio la compilazione della storia, dentro Pyodide, passava da 0,61 a 0,90
+  secondi, mentre si legge la dichiarazione. Quasi metà era un difetto del motore, un’espressione regolare
+  che cercava gli oggetti contabili a ogni carattere: l’autore ha chiesto di correggerlo in Favella1, ed è la
+  **1.6.1** (27 ottobre), con la copia rifatta. Il resto è il parser della grammatica 1.6, più grande:
+  0,80 secondi contro 0,62 della 1.5.0 (§5 e §8).
 - **I vantaggi veri stanno nelle frasi nuove**, che toccano i `.fav` (§6). Per il Relitto ne conta una:
   `L'aria resta sempre fra 0 e 100.`. Toglie una piccola incoerenza (quando si muore il visore segna −5 e il
   testo dice che la cifra è a zero), sostituisce cinque `resta fra` scritti a mano, e sui percorsi di
@@ -156,7 +158,7 @@ che riconosce `La pozione, plurale "pozioni", è contabile.` (`_RE_DEF_CONTABILE
 che il motore prova a ogni posizione del testo. Sui 221 mila caratteri del Relitto costa 126 ms, e non trova
 niente. Ancorata all’inizio della frase (`(?<![^.\n])` davanti) trova le stesse dichiarazioni in 6 ms. La
 copia in `motore/` non si corregge mai a mano: la correzione va nel repository Favella1 (una 1.6.1), con le
-sue prove, e poi la copia si rifà dal tag nuovo.
+sue prove, e poi la copia si rifà dal tag nuovo. È stato fatto il 27 ottobre: §8.
 
 ---
 
@@ -220,8 +222,40 @@ da raccogliere), che oggi non è previsto.
 
 ## 7. Che cosa resta da decidere
 
-1. **La lentezza della compilazione** (§5): correggerla nel repository Favella1, in una 1.6.1, e rifare la
-   copia. Non tocca il gioco né i salvataggi (cambia solo la versione del motore, che il ponte riconosce).
+1. ~~**La lentezza della compilazione** (§5): correggerla nel repository Favella1, in una 1.6.1, e rifare la
+   copia.~~ Fatto il 27 ottobre, su sua richiesta (§8).
 2. **L’aria fra 0 e 100** (§6.1): una riga nei `.fav`, oppure il visore che non scende sotto lo zero, oppure
    niente.
-3. Il resto del §6 resta dov’è, finché il testo non si riapre.
+3. **Pubblicare la 1.6.1** come le versioni di prima (la Release con gli installer, PyPI, il sito): oggi è nel
+   repository e nel tag, non altrove. Per il Relitto non serve: la copia si rifà dal tag.
+4. Il resto del §6 resta dov’è, finché il testo non si riapre.
+
+---
+
+## 8. La 1.6.1 (27 ottobre 2026)
+
+L’autore ha chiesto di correggere la lentezza nel repository Favella1 e poi di aggiornare la copia.
+
+- **La correzione**, in `compilatore.py` (commit `a520134` di Favella1, tag `v1.6.1`): il nome di un oggetto
+  contabile si prova solo dove può cominciare un tratto di frase (`(?<![^,.\n])` davanti all’espressione),
+  che è proprio la posizione da cui la ricerca trovava già ogni dichiarazione. Le dichiarazioni trovate sono
+  le stesse, nello stesso punto e con lo stesso nome: confrontate su 114 file `.fav` (le storie ufficiali,
+  la galleria, Il Viaggiatore, il Relitto) e su 20 mila testi costruiti a caso con 54 mila dichiarazioni.
+  Le intestazioni dei moduli, ferme alla 1.5.0, dicono 1.6.1; le copie del motore nel sito di Favella1 sono
+  risincronizzate. La suite: `test_linguaggio.py` 1.510 su 1.510 (un test nuovo), collaudo 50, pytest 489.
+- **I tempi**, alla prima compilazione, quella che l’app paga a ogni avvio:
+
+  | Misura | 1.5.0 | 1.6.0 | 1.6.1 |
+  |---|---|---|---|
+  | dentro Pyodide, compilazione del Relitto | 0,62 s | 0,93 s | 0,80 s |
+  | CPython con il profilatore: la prima passata (la tabella dei simboli) | 15 ms | 101 ms | 22 ms |
+  | CPython con il profilatore: la costruzione del parser | 543 ms | 781 ms | 781 ms |
+  | CPython, dalla seconda compilazione in poi (il parser è già pronto) | 93 ms | 178 ms | 101 ms |
+
+  Il difetto è chiuso. Quello che resta, circa 0,18 secondi nell’app, è la costruzione del parser LALR della
+  grammatica 1.6, più grande: si fa da capo a ogni avvio, perché Pyodide non conserva niente fra un avvio e
+  l’altro. Si potrebbe togliere solo con una cache del parser salvata su disco, un lavoro a sé nel motore e
+  nell’app; durante la dichiarazione, che è un testo fermo, non si vede.
+- **La copia** è rifatta dal tag `v1.6.1` con lo stesso elenco di file; viene con lei anche il manuale
+  rigenerato per la 1.6. I collaudi del §4 sono di nuovo tutti verdi, con gli stessi numeri; i sei salvataggi
+  veri dell’autore si caricano «identica».

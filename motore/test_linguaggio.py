@@ -7060,6 +7060,10 @@ def test_elenchi_dei_moduli_del_motore_allineati():
     attesi = list(esportazione._ENGINE_FILES)
     fonti = {
         "favella1.spec": (os.path.join(radice, "favella1.spec"), r'\("(\w+\.py)", "\."\)'),
+        # [1.6.0 / Studio] La spec del sidecar di Favella Studio impacchetta gli
+        # STESSI cinque moduli come SORGENTE (li rilegge per l'export Pyodide): se
+        # un modulo nuovo entra nel motore e non qui, l'export dello Studio si rompe.
+        "studio-sidecar.spec": (os.path.join(radice, "favella_engine.spec"), r'\("(\w+\.py)", "\."\)'),
         "sito": (os.path.join(radice, "landingpage", "src", "lib", "favellaRuntime.ts"), None),
         "esperimento": (os.path.join(radice, "landingpage", "esperimento", "src", "lib", "favellaRuntime.ts"), None),
         "checkpoint": (os.path.join(radice, "landingpage", "scripts", "valida_checkpoint.py"),
@@ -8068,7 +8072,7 @@ def test_studio_123_il_sidecar_e_le_frasi_nuove():
     archi = {(e["from"], e["direction"]): e.get("conditional") for e in grafo["edges"]}
     _check(archi.get(("sala", "est")) is True and archi.get(("gola", "ovest")) is True
            and archi.get(("sala", "ovest")) is False, f"la mappa sa quali uscite hanno una condizione ({archi})")
-    _check(favella_server.rpc_engine_version({}).get("sidecar") == "0.12.0", "sidecar 0.12.0")
+    _check(favella_server.rpc_engine_version({}).get("sidecar") == "0.15.0", "sidecar 0.15.0")
 
 
 _CORPUS_GUARDIA_150 = (
@@ -8677,6 +8681,14 @@ def test_studio_160_procedure_round_trip():
         os.unlink(path)
     _check(d.get("ok"), "analizza_regole regge")
     _check("riposa" in d["menu"]["procedures"], "il menu elenca la procedura")
+    # [slice C1] L'editor riceve anche le DEFINIZIONI (corpo + span), per listarle/riscriverle.
+    procs = {p["name"]: p for p in d.get("procedures", [])}
+    _check("riposa" in procs and procs["riposa"].get("span") is not None,
+           f"la definizione della procedura è esposta con lo span ({list(procs)})")
+    _check(procs["riposa"]["consequences"] == [
+        {"op": "count", "name": "sete", "mode": "diminuisci", "value": 3},
+        {"op": "count", "name": "vigore", "mode": "aumenta", "value": 1}],
+        f"il corpo della procedura è nel modello ({procs['riposa']['consequences']})")
     r = d["rules"][0]
     _check(r["consequences"] == [{"op": "callProc", "name": "riposa"}],
            f"la conseguenza-invocazione è nel modello ({r['consequences']})")
@@ -8737,6 +8749,55 @@ def test_studio_160_b1_round_trip():
     # 3. Il menu segnala l'oggetto come contabile col plurale.
     poz = next(o for o in d["menu"]["objects"] if o["id"] == "pozione")
     _check(poz.get("countable") and poz.get("plural") == "pozioni", f"il menu marca il contabile ({poz})")
+    # 4. L'outline espone contabile/plurale/countableSpan e le quantità con span, per
+    # l'editor Oggetti (slice B1 di Studio). La frase 'def_contabile' è anche lo span
+    # di definizione (defSpan), così «cambia tipo» la riscrive invece di appenderne una.
+    from strumenti_ide import analizza_outline
+    src_out = (
+        "La cella è una stanza.\nLa gola è una stanza.\nIl giocatore comincia nella cella.\n"
+        "La pozione, plurale \"pozioni\", è contabile.\nLa pozione è prendibile.\n"
+        "Il giocatore ha 3 pozioni.\n"
+        "Ci sono 2 pozioni in la gola.\n")
+    with tempfile.NamedTemporaryFile(mode="w+", encoding="utf-8", delete=False, suffix=".fav") as tmp:
+        tmp.write(src_out); path = tmp.name
+    try:
+        out = analizza_outline(path, sorgente=src_out)
+    finally:
+        os.unlink(path)
+    _check(out.get("ok"), "analizza_outline regge una storia con contabili")
+    oggp = next(o for o in out["objects"] if o["id"] == "pozione")
+    _check(oggp.get("countable") and oggp.get("plural") == "pozioni", f"l'outline marca il contabile ({oggp.get('plural')})")
+    _check(oggp.get("countableSpan") is not None and oggp.get("defSpan") == oggp["countableSpan"],
+           "defSpan di un contabile puro è la frase 'è contabile' (non None)")
+    qta = {q["placeId"]: q["n"] for q in oggp.get("quantity", [])}
+    _check(qta == {"inventario": 3, "gola": 2}, f"le quantità iniziali sono esposte con il luogo ({qta})")
+    _check(all(q.get("span") for q in oggp["quantity"]), "ogni quantità porta lo span della sua frase")
+
+
+def test_studio_160_calcolati_round_trip():
+    print("[1.6.0 / C2: Studio espone gli stati calcolati (sola lettura)]")
+    from strumenti_ide import analizza_variabili
+    src = (
+        "La cella è una stanza.\nIl giocatore comincia nella cella.\n"
+        "La torcia è una cosa.\nLa torcia è nella cella.\n"
+        "La protezione è attiva quando il giocatore ha la torcia.\n"
+        "La protezione è debole quando il giocatore è nella cella.\n")
+    with tempfile.NamedTemporaryFile(mode="w+", encoding="utf-8", delete=False, suffix=".fav") as tmp:
+        tmp.write(src); path = tmp.name
+    try:
+        modello = analizza_variabili(path, sorgente=src)
+    finally:
+        os.unlink(path)
+    _check(modello.get("ok"), "analizza_variabili regge gli stati calcolati")
+    calc = {c["name"]: c for c in modello.get("computed", [])}
+    _check("protezione" in calc, f"lo stato calcolato è esposto ({list(calc)})")
+    _check(set(calc["protezione"]["values"]) == {"attiva", "debole"},
+           f"i valori possibili sono raccolti ({calc['protezione']['values']})")
+    _check(len(calc["protezione"]["spans"]) == 2 and all(calc["protezione"]["spans"]),
+           "ogni clausola «… quando …» porta il suo span")
+    # Lo stato calcolato NON compare fra gli stati normali (non è assegnabile).
+    _check("protezione" not in {s["name"] for s in modello.get("states", [])},
+           "uno stato calcolato non è fra gli stati normali")
 
 
 def test_160_guardia_lalr_frasi_nuove():
@@ -8892,6 +8953,327 @@ def test_160_b1_errori_dautore():
                        "Invece di x se il giocatore ha almeno 2 mela: dire \"no\".\n")
     _check(m3 is None and "contabile" in log3, "condizione di scorta su un non contabile: errore")
 
+
+def test_161_b1_ricerca_ancorata():
+    print("[1.6.1 / B1: la ricerca delle dichiarazioni di contabili parte solo dove comincia una frase]")
+    import time
+    import compilatore as _c
+    # Il modello della 1.6.0, come riferimento: il nome pigro si provava a ogni carattere.
+    riferimento = re.compile(
+        r'(?P<nome>[^,.\n]+?)\s*,\s*plurale\s+"(?P<plur>[^"]+)"\s*,\s*(?:è|sono)\s+contabile\s*\.',
+        re.IGNORECASE)
+    casi = [
+        'La pozione, plurale "pozioni", è contabile.',
+        'X è una stanza. La pozione, plurale "pozioni", è contabile.',
+        'X è una stanza.La pozione,plurale "pozioni",è contabile.',
+        '\n\n   La freccia , plurale "frecce" , è contabile .',
+        'Ah, la pozione, plurale "pozioni", è contabile.',
+        'Le gemme, plurale "gemme", sono contabile.',
+        'Il dado, plurale "dadi", è contabile. Il sasso, plurale "sassi", è contabile.',
+        'Il testo "a, b. c" è "x". Il dado, plurale "dadi", è contabile.',
+        ', plurale "niente", è contabile.',
+        'Il dado, plurale "dadi", è contabil.',
+    ]
+    for s in casi:
+        a = [(m.span(), m.group("nome"), m.group("plur")) for m in riferimento.finditer(s)]
+        b = [(m.span(), m.group("nome"), m.group("plur")) for m in _c._RE_DEF_CONTABILE.finditer(s)]
+        _check(a == b, f"le stesse dichiarazioni della 1.6.0 in {s.strip()[:44]!r}")
+    simboli = costruisci_symbol_table('X è una stanza. La pozione, plurale "pozioni", è contabile.\n'
+                                      '   Il dado, plurale "dadi", è contabile.\n')
+    _check(simboli.plurali == {"pozioni": "pozione", "dadi": "dado"},
+           f"dopo un punto e dopo un a capo: le due dichiarazioni ({simboli.plurali})")
+    # Un sorgente lungo senza contabili: prima ogni carattere faceva ripartire la ricerca
+    # fino al separatore seguente (sul Relitto Silente 126 ms a compilazione), ora no.
+    testo = ('La descrizione è "' + "parole senza separatori " * 3 + '".\n') * 1500
+    t0 = time.perf_counter()
+    list(riferimento.finditer(testo))
+    prima = time.perf_counter() - t0
+    t0 = time.perf_counter()
+    list(_c._RE_DEF_CONTABILE.finditer(testo))
+    adesso = time.perf_counter() - t0
+    _check(adesso * 4 < prima,
+           f"su {len(testo)} caratteri senza contabili costa molto meno ({1000 * adesso:.1f} ms contro {1000 * prima:.1f})")
+
+
+# =============================================================================
+# [1.6.0 / Studio] IL ROUND-TRIP DEGLI STRUMENTI VISUALI SU UNA STORIA COMPLETA
+# -----------------------------------------------------------------------------
+# Gli strumenti dell'IDE (analizza_*, riordino, rinomina) ricostruiscono un parser
+# proprio per ricavare lo span di ogni frase. Le frasi 1.6.0 di B3 (relazioni) e C1
+# (procedure) usano terminali generati PER-FILE: se quel parser non riceve
+# `relazioni`/`procedure` come il compilatore vero, ogni storia che le usa fa
+# fallire riordino/rinomina/parole e perdere gli span delle regole. Questi test lo
+# sorvegliano sull'intero corpus 1.6.0 (il «percorso di Studio»).
+# =============================================================================
+
+def test_studio_160_percorso_completo_con_relazioni():
+    print("[1.6.0 / Studio: gli strumenti IDE reggono relazioni, procedure e contabili]")
+    from strumenti_ide import (analizza_outline, analizza_parole, riordina_sorgente,
+                               rinomina_entita, riferimenti_entita)
+    src = _CORPUS_GUARDIA_160
+    with tempfile.NamedTemporaryFile(mode="w+", encoding="utf-8",
+                                     delete=False, suffix=".fav") as tmp:
+        tmp.write(src); path = tmp.name
+    try:
+        out = analizza_outline(path, sorgente=src)
+        reg = analizza_regole(path, sorgente=src)
+        var = analizza_variabili(path, sorgente=src)
+        par = analizza_parole(path, sorgente=src)
+        rio = riordina_sorgente(path, sorgente=src)
+        rin = rinomina_entita(path, src, "Saverio", "Nestore")
+        rif = riferimenti_entita(path, src, "Saverio")
+    finally:
+        os.unlink(path)
+    _check(out.get("ok"), "analizza_outline regge la storia 1.6.0")
+    contabili = {o["name"]: o.get("plural") for o in out.get("objects", []) if o.get("countable")}
+    _check(contabili == {"La pozione": "pozioni", "La freccia": "frecce", "Il dardo": "dardi"},
+           f"l'outline marca i contabili col plurale dichiarato ({contabili})")
+    _check(reg.get("ok") and len(reg["menu"]["relations"]) == 3
+           and len(reg["menu"]["procedures"]) == 1, "le regole: 3 relazioni + 1 procedura nel menu")
+    accusa = next((r for r in reg["rules"] if r.get("verbs") == ["accusa"]), None)
+    _check(accusa is not None and bool(accusa.get("span")),
+           "una regola che tocca una relazione ha il suo span (editing chirurgico)")
+    _check(var.get("ok") and {c["name"] for c in var["counters"] if c.get("clamp")} == {"sete", "vigore"},
+           "le variabili: le invarianti di clamp con lo span")
+    _check(par.get("ok"), "analizza_parole regge (prima falliva appena c'era una relazione)")
+    _check(rio.get("ok"), "riordina_sorgente regge (prima falliva appena c'era una relazione)")
+    _check(rin.get("ok"), "rinomina_entita regge (prima falliva appena c'era una relazione)")
+    _check(rif.get("ok") and len(rif.get("items", [])) >= 1, "riferimenti_entita regge")
+
+
+def test_studio_160_relazioni_pannello_round_trip():
+    print("[1.6.0 / Studio: il pannello Relazioni legge e riscrive in modo fedele]")
+    from strumenti_ide import analizza_relazioni, serializza_frase
+    src = (
+        "La cella è una stanza.\n"                                    # 1
+        "Il giocatore comincia nella cella.\n"                        # 2
+        "Saverio è un personaggio.\nSaverio è nella cella.\n"         # 3-4
+        "Vito è un personaggio.\nVito è nella cella.\n"               # 5-6
+        '"si fida di" è una relazione molti a molti ed è reciproca.\n'  # 7
+        '"serve" è una relazione uno a molti.\n'                      # 8
+        "Il giocatore si fida di Saverio.\n"                          # 9
+        "Saverio serve Vito.\n"                                       # 10
+        "Vito serve il giocatore.\n"                                  # 11
+    )
+    righe = src.split("\n")
+    r = analizza_relazioni("storia.fav", src)
+    _check(r.get("ok") and not r.get("errors"), "analizza_relazioni compila la storia con relazioni")
+
+    per_nome = {x["name"]: x for x in r["relations"]}
+    _check(set(per_nome) == {"si fida di", "serve"}, f"le due relazioni dichiarate ({sorted(per_nome)})")
+    fida = per_nome.get("si fida di", {})
+    serve = per_nome.get("serve", {})
+    _check(fida.get("arity") == "molti-a-molti" and fida.get("reciprocal") is True
+           and fida.get("prep") == "di" and fida.get("base") == "si fida",
+           f"«si fida di»: arietà/reciprocità/preposizione/base ({fida.get('arity')}, {fida.get('reciprocal')}, {fida.get('prep')})")
+    _check(serve.get("arity") == "uno-a-molti" and serve.get("reciprocal") is False
+           and serve.get("prep") is None, "«serve»: uno-a-molti, non reciproca, senza preposizione")
+
+    # Le dichiarazioni portano lo span della frase giusta.
+    _check(fida.get("declSpan", {}).get("line") == 7 and serve.get("declSpan", {}).get("line") == 8,
+           f"lo span della dichiarazione punta alla frase giusta ({fida.get('declSpan')}, {serve.get('declSpan')})")
+
+    # Le coppie: SOLO le frasi scritte d'autore (niente rovescio della reciprocità).
+    coppie_fida = [(p["a"], p["b"]) for p in fida.get("pairs", [])]
+    coppie_serve = [(p["a"], p["b"]) for p in serve.get("pairs", [])]
+    _check(coppie_fida == [("giocatore", "saverio")],
+           f"«si fida di»: una sola coppia asserita, senza il rovescio derivato ({coppie_fida})")
+    _check(coppie_serve == [("saverio", "vito"), ("vito", "giocatore")],
+           f"«serve»: le due coppie asserite nell'ordine del testo ({coppie_serve})")
+
+    # Round-trip in LETTURA: ogni coppia ri-serializzata via relation_fact riproduce
+    # ESATTAMENTE la frase sorgente (impronta identica); idem per le dichiarazioni.
+    for rel in r["relations"]:
+        for p in rel["pairs"]:
+            fatto = serializza_frase({"op": "relation_fact", "aName": p["aName"],
+                                      "base": p["base"], "prep": p["prep"], "bName": p["bName"]})
+            orig = righe[p["span"]["line"] - 1]
+            _check(fatto.get("ok") and fatto.get("text") == orig,
+                   f"coppia ri-serializzata identica alla sorgente ({fatto.get('text')!r})")
+        d = serializza_frase({"op": "relation_decl", "locution": rel["locution"],
+                              "arity": rel["arity"], "reciprocal": rel["reciprocal"]})
+        orig = righe[rel["declSpan"]["line"] - 1]
+        _check(d.get("ok") and d.get("text") == orig,
+               f"dichiarazione ri-serializzata identica alla sorgente ({d.get('text')!r})")
+
+    # TOGLI una coppia: si elimina la frase al suo span → la storia resta valida e la
+    # coppia sparisce (le altre restano). Emula lo splice del pannello sullo span.
+    span = serve["pairs"][0]["span"]  # "Saverio serve Vito." alla riga 10
+    nuove = [l for i, l in enumerate(righe, start=1) if i != span["line"]]
+    src2 = "\n".join(nuove)
+    _check(compila(src2)[0] is not None, "la storia resta valida dopo aver tolto una coppia")
+    r2 = analizza_relazioni("storia.fav", src2)
+    coppie_serve2 = [(p["a"], p["b"]) for p in next(x for x in r2["relations"] if x["name"] == "serve")["pairs"]]
+    _check(coppie_serve2 == [("vito", "giocatore")],
+           f"tolta la coppia giusta, le altre restano ({coppie_serve2})")
+
+    # AGGIUNGI una relazione e una coppia: si serializzano e si appendono → compila e
+    # il modello le riporta (round-trip in SCRITTURA).
+    decl = serializza_frase({"op": "relation_decl", "locution": "teme",
+                             "arity": "molti-a-molti", "reciprocal": False})
+    fatto = serializza_frase({"op": "relation_fact", "aName": "Vito", "base": "teme",
+                              "prep": None, "bName": "Saverio"})
+    src3 = src + decl["text"] + "\n" + fatto["text"] + "\n"
+    _check(compila(src3)[0] is not None, "la storia resta valida dopo aver aggiunto relazione e coppia")
+    r3 = analizza_relazioni("storia.fav", src3)
+    teme = next((x for x in r3["relations"] if x["name"] == "teme"), None)
+    _check(teme is not None and [(p["a"], p["b"]) for p in teme["pairs"]] == [("vito", "saverio")],
+           "la relazione e la coppia aggiunte compaiono nel modello")
+
+    # I membri per il form «aggiungi coppia»: il giocatore in testa + le entità.
+    ids = {m["id"] for m in r["members"]}
+    _check("giocatore" in ids and {"saverio", "vito"} <= ids and r["members"][0]["id"] == "giocatore",
+           f"i membri offrono il giocatore (in testa) e le entità ({sorted(ids)})")
+
+
+def test_studio_160_riordino_round_trip_integrale():
+    print("[1.6.0 / Studio: il riordino di una storia 1.6.0 non perde e non altera nulla]")
+    from strumenti_ide import riordina_sorgente
+    src = _CORPUS_GUARDIA_160
+    with tempfile.NamedTemporaryFile(mode="w+", encoding="utf-8",
+                                     delete=False, suffix=".fav") as tmp:
+        tmp.write(src); path = tmp.name
+    try:
+        rio = riordina_sorgente(path, sorgente=src)
+    finally:
+        os.unlink(path)
+    _check(rio.get("ok"), f"il riordino riesce ({rio.get('reason')})")
+    testo = rio.get("text", "")
+    m0, _ = _partita(src, seme=777)
+    m1, _ = _partita(testo, seme=777)
+    _check(m0 is not None and m1 is not None and m0.impronta_stato() == m1.impronta_stato(),
+           "la storia riordinata ha la stessa impronta di partita (è lo stesso gioco)")
+    marcatori = (
+        "La sete resta sempre fra 0 e 100.", "Il vigore resta sempre fra 0 e [soglia].",
+        "senza ritorno", '"si fida di" è una relazione molti a molti.', "ed è reciproca",
+        "Il giocatore si fida di Saverio.", "non si fida più di Saverio",
+        "[chi si fida del giocatore]", 'Definisci "riposa un poco" come:',
+        "esegui riposa un poco", 'La pozione, plurale "pozioni", è contabile.',
+        "Il giocatore ha 3 pozioni.", "Ci sono 5 frecce in la bisaccia.",
+        "se non restano pozioni", "[quante pozioni]",
+    )
+    mancanti = [m for m in marcatori if m not in testo]
+    _check(not mancanti, f"nessun costrutto 1.6.0 è andato perso nel riordino ({mancanti})")
+    with tempfile.NamedTemporaryFile(mode="w+", encoding="utf-8",
+                                     delete=False, suffix=".fav") as tmp:
+        tmp.write(testo); path = tmp.name
+    try:
+        rio2 = riordina_sorgente(path, sorgente=testo)
+    finally:
+        os.unlink(path)
+    _check(rio2.get("ok") and rio2.get("text") == testo, "il riordino è idempotente")
+
+
+def test_studio_160_rinomina_preserva_i_costrutti():
+    print("[1.6.0 / Studio: rinominare un'entità non intacca relazioni né contabili]")
+    from strumenti_ide import rinomina_entita
+    rel = (
+        "La cella è una stanza.\nIl giocatore comincia nella cella.\n"
+        "Saverio è un personaggio.\nSaverio è nella cella.\n"
+        '"si fida di" è una relazione molti a molti.\n'
+        "Il giocatore si fida di Saverio.\n"
+    )
+    with tempfile.NamedTemporaryFile(mode="w+", encoding="utf-8",
+                                     delete=False, suffix=".fav") as tmp:
+        tmp.write(rel); path = tmp.name
+    try:
+        r1 = rinomina_entita(path, rel, "Saverio", "Nestore")
+    finally:
+        os.unlink(path)
+    _check(r1.get("ok") and any("si fida di Nestore" in fx["text"] for fx in r1["files"]),
+           "la relazione segue il rinomina (Saverio → Nestore)")
+    _check(r1.get("ok") and compila(r1["files"][0]["text"])[0] is not None,
+           "la storia con la relazione rinominata ricompila")
+    con = (
+        "La cella è una stanza.\nIl giocatore comincia nella cella.\n"
+        'La pozione, plurale "pozioni", è contabile.\nLa pozione è prendibile.\n'
+        "Il giocatore ha 3 pozioni.\n"
+    )
+    with tempfile.NamedTemporaryFile(mode="w+", encoding="utf-8",
+                                     delete=False, suffix=".fav") as tmp:
+        tmp.write(con); path = tmp.name
+    try:
+        r2 = rinomina_entita(path, con, "La pozione", "La fiala")
+    finally:
+        os.unlink(path)
+    _check(r2.get("ok") and 'La fiala, plurale "pozioni", è contabile.' in r2["files"][0]["text"],
+           f"il contabile resta contabile dopo il rinomina ({r2.get('reason')})")
+    _check(r2.get("ok") and compila(r2["files"][0]["text"])[0] is not None,
+           "la storia col contabile rinominato ricompila")
+
+
+def test_studio_160_sidecar_regge_i_costrutti():
+    print("[1.6.0 / Studio: il sidecar gioca e serve i modelli di una storia 1.6.0]")
+    import favella_server
+    src = _CORPUS_GUARDIA_160
+    with tempfile.TemporaryDirectory() as cartella:
+        percorso = os.path.join(cartella, "prova.fav")
+        with open(percorso, "w", encoding="utf-8") as f:
+            f.write(src)
+        avvio = favella_server.rpc_session_start({"path": percorso})
+        conta = favella_server.rpc_session_send({"command": "conta"})
+        grafo = favella_server.rpc_world_graph({"path": percorso})
+        regole = favella_server.rpc_world_rules({"path": percorso})
+        variabili = favella_server.rpc_world_variables({"path": percorso})
+        relazioni = favella_server.rpc_world_relations({"path": percorso})
+        esportata = favella_server.rpc_game_export_html({"path": percorso})
+    _check(avvio.get("ok"), "session.start compila e avvia la storia 1.6.0")
+    _check("Scorte: 3" in conta.get("output", ""),
+           f"un comando che legge una scorta contabile risponde ({conta.get('output', '')!r})")
+    one_way = [e for e in grafo.get("edges", []) if e.get("oneWay")]
+    _check(grafo.get("ok") and len(one_way) == 4,
+           f"la mappa segna le 4 uscite 'senza ritorno' ({len(one_way)})")
+    _check(regole.get("ok") and len(regole["menu"]["relations"]) == 3
+           and len(regole["menu"]["procedures"]) == 1, "world.rules espone relazioni e procedure")
+    clamp = {c["name"] for c in variabili.get("counters", []) if c.get("clamp")}
+    _check(variabili.get("ok") and clamp == {"sete", "vigore"},
+           "world.variables espone le invarianti di clamp")
+    _check(relazioni.get("ok") and len(relazioni.get("relations", [])) == 3
+           and any(p for r in relazioni["relations"] for p in r["pairs"]),
+           "world.relations espone le relazioni dichiarate e le coppie asserite")
+    _check(esportata.get("ok") and "<html" in esportata.get("html", "").lower(),
+           "game.exportHtml produce la pagina Pyodide (col motore 1.6.0)")
+    ver = favella_server.rpc_engine_version({})
+    from strutture import VERSIONE_MOTORE
+    _check(ver.get("engine") == VERSIONE_MOTORE,
+           f"il sidecar riporta il motore {VERSIONE_MOTORE} ({ver.get('engine')})")
+    _check(ver.get("sidecar") == "0.15.0", f"il sidecar passa alla 0.15.0 ({ver.get('sidecar')})")
+
+
+def test_studio_160_vincibilita_sidecar():
+    print("[1.6.0 / Studio: world.winnability — grafo di vincibilità]")
+    import favella_server
+    src = (
+        "L'atrio è una stanza.\nLa sala è una stanza.\nIl ripostiglio è una stanza.\n"
+        "Il giocatore comincia nell'atrio.\n"
+        "L'atrio collega nord a la sala.\n"                 # la sala è raggiungibile
+        # il ripostiglio non è collegato a niente → irraggiungibile
+        "La gemma è una cosa.\nLa gemma è nella sala.\nLa gemma è prendibile.\n"
+        "La reliquia è una cosa.\n"                          # mai collocata → orfana
+        "\"deponi\" è un comando senza oggetto.\n"
+        "Invece di deponi se il giocatore ha la gemma: vinci \"Trionfo.\".\n"
+    )
+    with tempfile.TemporaryDirectory() as cartella:
+        percorso = os.path.join(cartella, "prova.fav")
+        with open(percorso, "w", encoding="utf-8") as f:
+            f.write(src)
+        w = favella_server.rpc_world_winnability({"path": percorso})
+    _check(w.get("ok"), "world.winnability compila e analizza")
+    _check(w["start"] == "atrio", f"la partenza è l'atrio ({w.get('start')})")
+    _check(w["unreachableRooms"] == ["ripostiglio"], f"segnala la stanza irraggiungibile ({w['unreachableRooms']})")
+    _check("reliquia" in w["orphanObjects"], f"segnala l'oggetto orfano ({w['orphanObjects']})")
+    _check(set(w["reachableRooms"]) == {"atrio", "sala"}, f"le stanze raggiungibili ({w['reachableRooms']})")
+    rep = w["report"]
+    _check(rep and rep["vittoria"]["n_sorgenti"] == 1, "c'è una sorgente di vittoria")
+    _check(rep["vittoria"]["esito"] in ("vincibile-staticamente", "ostruzione-possibile"),
+           f"l'esito è calcolato ({rep['vittoria']['esito']})")
+    # Compilazione fallita → ok=False con diagnostiche (non solleva).
+    with tempfile.TemporaryDirectory() as cartella:
+        percorso = os.path.join(cartella, "rotta.fav")
+        with open(percorso, "w", encoding="utf-8") as f:
+            f.write("La stanza è una stanza.\nIl giocatore comincia nel vuoto.\n")
+        w2 = favella_server.rpc_world_winnability({"path": percorso})
+    _check(not w2.get("ok") and w2.get("errors"), "su una storia che non compila: ok=False + errors")
 
 
 def main():
@@ -9441,10 +9823,18 @@ def main():
         test_160_b1_condizioni,
         test_160_b1_annulla,
         test_160_b1_errori_dautore,
+        test_161_b1_ricerca_ancorata,
         test_studio_160_b1_round_trip,
+        test_studio_160_calcolati_round_trip,
+        test_studio_160_percorso_completo_con_relazioni,
+        test_studio_160_relazioni_pannello_round_trip,
+        test_studio_160_riordino_round_trip_integrale,
+        test_studio_160_rinomina_preserva_i_costrutti,
+        test_studio_160_sidecar_regge_i_costrutti,
+        test_studio_160_vincibilita_sidecar,
     ]
     print("=" * 60)
-    print("FAVELLA 1 — Suite di test del linguaggio (v1.5.0)")
+    print("FAVELLA 1 — Suite di test del linguaggio (v1.6.1)")
     print("=" * 60)
     for t in tests:
         t()

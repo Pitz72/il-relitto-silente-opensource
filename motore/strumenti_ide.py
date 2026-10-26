@@ -1,5 +1,5 @@
 # strumenti_ide.py
-# Strumenti d'autore di FAVELLA 1 (v1.5.0), costruiti sopra il nucleo del
+# Strumenti d'autore di FAVELLA 1 (v1.6.1), costruiti sopra il nucleo del
 # compilatore: ciò che serve agli editor visuali di Favella Studio e al riordino
 # del sorgente.
 #
@@ -34,7 +34,7 @@ from favella_utils import normalizza_nome, _scomponi_articolo, QUADRA_APERTA, QU
 from compilatore import (
     VERBI_VALIDI, costruisci_symbol_table, costruisci_parser, valida_direzioni_dichiarate,
     espandi_inclusioni, _espandi_inclusioni_seedable, analizza_file_strutturato,
-    compila_mondo,
+    compila_mondo, normalizza_apostrofi,
 )
 
 
@@ -111,7 +111,8 @@ def analizza_outline(percorso_file, sorgente=None):
             simboli.coppie_direzioni, simboli)
         parser = costruisci_parser(simboli.tutti, simboli.variabili, nomi_dir,
                                    propagate_positions=True,
-                                   verbi_multi=simboli.verbi_multi)
+                                   verbi_multi=simboli.verbi_multi,
+                                   relazioni=simboli.relazioni, procedure=simboli.procedure)
         tree = parser.parse(testo)
     except Exception:
         # Il Mondo c'è ma le posizioni no: outline senza span (editing degradato).
@@ -240,6 +241,41 @@ def analizza_outline(percorso_file, sorgente=None):
         "supporto": "def_supporto", "personaggio": "def_personaggio",
     }
 
+    # [1.6.0 / B1] Quantità iniziali dei contabili: 'Il giocatore ha N …' (inventario)
+    # e 'Ci sono N … in <luogo>' (stanza/contenitore). L'ENTITA è la forma PLURALE,
+    # che risolviamo al canonico via mondo.plurali; il valore lo dà il modello
+    # (quantita_in, che regge anche i numeri in lettere), lo span viene dalla frase.
+    plurali = getattr(mondo, "plurali", {})
+    def _canonico(tok_ent):
+        nid = _norm_token(tok_ent)
+        return plurali.get(nid, nid)
+    stock_per_oid = {}
+    for f in frasi:
+        if f["data"] == "def_giocatore_scorta":
+            ents = f["tok"].get("ENTITA", [])
+            if not ents:
+                continue
+            oc = _canonico(ents[0])
+            stock_per_oid.setdefault(oc, []).append({
+                "placeId": "inventario", "placeName": "Inventario", "prep": None,
+                "n": mondo.quantita_in(oc, "inventario") if hasattr(mondo, "quantita_in") else 0,
+                "span": f["span"]})
+        elif f["data"] == "def_scorta_luogo":
+            ents = f["tok"].get("ENTITA", [])
+            if len(ents) < 2:
+                continue
+            oc = _canonico(ents[0])
+            place = _norm_token(ents[1])
+            pname = (mondo.stanze[place].nome_visualizzato if place in mondo.stanze
+                     else mondo.oggetti[place].nome_visualizzato if place in mondo.oggetti
+                     else place)
+            preps = f["tok"].get("PREP_LUOGO", [])
+            stock_per_oid.setdefault(oc, []).append({
+                "placeId": place, "placeName": pname,
+                "prep": str(preps[0]) if preps else None,
+                "n": mondo.quantita_in(oc, place) if hasattr(mondo, "quantita_in") else 0,
+                "span": f["span"]})
+
     objects = []
     for oid, o in mondo.oggetti.items():
         kind = _kind(o)
@@ -291,6 +327,14 @@ def analizza_outline(percorso_file, sorgente=None):
             if ents and _norm_token(ents[0]) == oid:
                 carry_bonus_span = f["span"]
                 break
+        # [1.6.0 / B1] Un contabile si dichiara con 'def_contabile' (non 'def_oggetto'):
+        # se non c'è una definizione «è una cosa» separata, lo span di definizione è
+        # quello della frase contabile (così «cambia tipo» la riscrive invece di
+        # appenderne una doppia — la Fase 1 lasciava defSpan a None).
+        countable_span = _prima("def_contabile", oid)
+        def_span = _prima(_DEF_PER_KIND[kind], oid)
+        if def_span is None and countable_span is not None:
+            def_span = countable_span
         objects.append({
             "id": oid,
             "name": o.nome_visualizzato,
@@ -298,7 +342,7 @@ def analizza_outline(percorso_file, sorgente=None):
             "prendibile": getattr(o, "prendibile", False),
             "carryBonus": getattr(o, "bonus_capacita", 0),
             "carryBonusSpan": carry_bonus_span,
-            "defSpan": _prima(_DEF_PER_KIND[kind], oid),
+            "defSpan": def_span,
             "descSpan": _prima("def_descrizione", oid),
             "descConditional": _ha_descr_condizionale(frasi, oid),
             "description": descrizione_display(o.descrizione),
@@ -308,6 +352,14 @@ def analizza_outline(percorso_file, sorgente=None):
             "location": location,
             "properties": properties,
             "aliases": aliases,
+            # [1.6.0 / B1] Contabile + plurale dichiarato (None se non contabile):
+            # informazione in sola lettura, così il modello dell'outline è completo
+            # come il menu di analizza_regole. La frase 'def_contabile' che lo
+            # dichiara resta intatta nel buffer (l'editor oggetti non la riscrive).
+            "countable": bool(getattr(o, "contabile", False)),
+            "plural": getattr(o, "plurale", None),
+            "countableSpan": countable_span,
+            "quantity": stock_per_oid.get(oid, []),
         })
 
     # Direzioni canoniche VALIDE in questo mondo (base nord/sud/est/ovest + quelle
@@ -707,7 +759,8 @@ def analizza_regole(percorso_file, sorgente=None):
         _cp, nomi_dir, _de = valida_direzioni_dichiarate(simboli.coppie_direzioni, simboli)
         parser = costruisci_parser(simboli.tutti, simboli.variabili, nomi_dir,
                                    propagate_positions=True,
-                                   verbi_multi=simboli.verbi_multi)
+                                   verbi_multi=simboli.verbi_multi,
+                                   relazioni=simboli.relazioni, procedure=simboli.procedure)
         tree = parser.parse(testo)
     except Exception:
         tree, mappa_righe = None, []
@@ -729,6 +782,7 @@ def analizza_regole(percorso_file, sorgente=None):
     frasi_regola = []   # {span, verbo, risposta}
     frasi_evento = []   # {span, tipo, n, risposta}
     frasi_demone = []   # {span, mode, risposta}
+    span_procedura = {}  # [1.6.0 / C1] nome procedura normalizzato -> span (ultima vince)
     if tree is not None:
         for nodo in tree.children:
             if not isinstance(nodo, Tree):
@@ -738,6 +792,14 @@ def analizza_regole(percorso_file, sorgente=None):
             end = getattr(meta, "end_line", line) if meta else None
             span = _span(line, end)
             tok = _tokens_per_tipo(nodo)
+            if nodo.data == "def_procedura":
+                # Nome normalizzato come nel compilatore (apostrofi, minuscole, spazi).
+                quotati = tok.get("TESTO_QUOTATO", [])
+                if quotati:
+                    nome_p = " ".join(normalizza_apostrofi(_spoglia_quotato(str(quotati[0]))).lower().split())
+                    if nome_p:
+                        span_procedura[nome_p] = span
+                continue
             if nodo.data == "def_regola":
                 verbi = tok.get("VERBO", [])
                 quotati = tok.get("TESTO_QUOTATO", [])
@@ -928,7 +990,190 @@ def analizza_regole(percorso_file, sorgente=None):
         "procedures": sorted(getattr(mondo, "procedure", {}).keys()),
     }
 
-    return {"ok": True, "rules": rules, "events": events, "demons": demons, "menu": menu, "errors": []}
+    # [1.6.0 / C1] Le DEFINIZIONI delle procedure, col corpo (catena di conseguenze) e
+    # lo span della frase «Definisci "…" come: …», per l'editor che le crea/riscrive.
+    procedures = []
+    for nome, corpo in getattr(mondo, "procedure", {}).items():
+        procedures.append({
+            "name": nome,
+            "span": span_procedura.get(nome),
+            "consequences": [_conseq_to_json(c, mondo) for c in corpo],
+        })
+    procedures.sort(key=lambda p: p["name"])
+
+    return {"ok": True, "rules": rules, "events": events, "demons": demons,
+            "menu": menu, "procedures": procedures, "errors": []}
+
+
+def analizza_relazioni(percorso_file, sorgente=None):
+    """[Favella Studio / B3] Modello editabile delle RELAZIONI di prima classe, per
+    il pannello «Relazioni». Combina la VERITÀ SEMANTICA (compila_mondo: le relazioni
+    dichiarate, con arietà/reciprocità/preposizione) con le POSIZIONI di un secondo
+    parse: lo span della frase di dichiarazione e, per ciascuna relazione, le COPPIE
+    «soggetto → oggetto» ASSERITE d'autore (le frasi top-level 'Il giocatore si fida
+    di Saverio.'), ognuna con il proprio span.
+
+    La griglia riflette le FRASI SCRITTE (scatola di vetro), non la chiusura
+    semantica: le coppie derivate (il rovescio di una relazione reciproca, le
+    cancellazioni dell'arietà) NON compaiono come righe, perché non hanno una frase
+    propria da editare. Le asserzioni con un quantificatore ('qualcuno'/'qualcosa',
+    che il motore rifiuta come asserzione) restano fuori dalla griglia: il testo le
+    conserva verbatim e il pannello Problemi le segnala.
+
+    Ritorna un dict serializzabile in JSON:
+      {ok, relations[], members[], errors[]}
+      relation = {name, locution, arity, reciprocal, prep, base, declSpan,
+                  pairs[{op:'relation', a, b, aName, bName, rel, base, prep, span}]}
+      member   = {id, name, kind}  (il giocatore + ogni entità: per «aggiungi coppia»)
+    'span'/'declSpan' = {file, line, endLine} nel sorgente ORIGINALE (rimappato dagli
+    Includi), null se la frase non si trova (parse degradato). Difensiva: su errore di
+    compilazione ritorna ok=False + errors; non solleva mai verso il protocollo."""
+    diag = analizza_file_strutturato(percorso_file, sorgente=sorgente)
+    if not diag.get("ok"):
+        return {"ok": False, "relations": [], "members": [],
+                "errors": diag.get("errors", [])}
+    mondo = compila_mondo(percorso_file, sorgente)
+    if mondo is None:
+        return {"ok": False, "relations": [], "members": [],
+                "errors": diag.get("errors", [])}
+
+    # Posizioni: secondo parse posizionato (come analizza_regole/analizza_outline).
+    try:
+        if sorgente is not None:
+            testo, mappa_righe, _err = _espandi_inclusioni_seedable(percorso_file, sorgente)
+        else:
+            testo, mappa_righe, _err = espandi_inclusioni(percorso_file)
+        simboli = costruisci_symbol_table(testo)
+        _cp, nomi_dir, _de = valida_direzioni_dichiarate(simboli.coppie_direzioni, simboli)
+        parser = costruisci_parser(simboli.tutti, simboli.variabili, nomi_dir,
+                                   propagate_positions=True,
+                                   verbi_multi=simboli.verbi_multi,
+                                   relazioni=simboli.relazioni, procedure=simboli.procedure)
+        tree = parser.parse(testo)
+    except Exception:
+        tree, mappa_righe = None, []
+
+    def _riga_orig(linea_espansa):
+        if (mappa_righe and isinstance(linea_espansa, int)
+                and 1 <= linea_espansa <= len(mappa_righe)):
+            return mappa_righe[linea_espansa - 1]
+        return percorso_file, linea_espansa
+
+    def _span(line_exp, end_exp):
+        if line_exp is None:
+            return None
+        f_o, r_o = _riga_orig(line_exp)
+        _f2, r_end = _riga_orig(end_exp) if end_exp is not None else (f_o, r_o)
+        return {"file": f_o, "line": r_o, "endLine": r_end}
+
+    # Verità semantica: le relazioni dichiarate (nome-locuzione -> info base/prep).
+    relazioni_mondo = getattr(mondo, "relazioni", {})
+    info_rel = {nome: _rel_info_json(mondo, nome) for nome in relazioni_mondo}
+    # base-normalizzata -> nome-relazione, come fa il compilatore (l'ultima
+    # dichiarazione con quella base vince): i fatti si risolvono allo stesso modo.
+    base_a_nome = {}
+    for nome, info in info_rel.items():
+        base_a_nome[" ".join(str(info["base"]).lower().split())] = nome
+
+    def _membro_oggetto(sub):
+        """L'id-membro OGGETTO dal sottoalbero rel_ogg (rel_giocatore/rel_entita/…)."""
+        if not isinstance(sub, Tree):
+            return None
+        if sub.data == "rel_giocatore":
+            return REL_GIOCATORE
+        if sub.data == "rel_qualcuno":
+            return REL_QUALCUNO
+        if sub.data == "rel_qualcosa":
+            return REL_QUALCOSA
+        if sub.data == "rel_entita":
+            for ch in sub.children:
+                if isinstance(ch, Token):
+                    return normalizza_nome(str(ch))
+        return None
+
+    # Scansione del parse: span delle dichiarazioni + coppie asserite d'autore.
+    decl_span = {}         # nome-relazione -> span della frase di dichiarazione
+    coppie_per_rel = {}    # nome-relazione -> lista di coppie (nell'ordine del testo)
+    if tree is not None:
+        for nodo in tree.children:
+            if not isinstance(nodo, Tree):
+                continue
+            meta = getattr(nodo, "meta", None)
+            line = getattr(meta, "line", None) if meta else None
+            end = getattr(meta, "end_line", line) if meta else None
+            if nodo.data == "def_relazione":
+                quotati = [c for c in nodo.children
+                           if isinstance(c, Token) and c.type == "TESTO_QUOTATO"]
+                if quotati:
+                    nome = _spoglia_quotato(str(quotati[0]))
+                    if nome in relazioni_mondo and nome not in decl_span:
+                        decl_span[nome] = _span(line, end)
+            elif nodo.data in ("fatto_rel_gioc", "fatto_rel_ent"):
+                figli = list(nodo.children)
+                if nodo.data == "fatto_rel_gioc":
+                    a, resto = REL_GIOCATORE, figli
+                else:
+                    a, resto = None, []
+                    for ch in figli:
+                        if a is None and isinstance(ch, Token) and ch.type == "ENTITA":
+                            a = normalizza_nome(str(ch))
+                        else:
+                            resto.append(ch)
+                    if a is None:
+                        continue
+                rel_tok = next((c for c in resto
+                                if isinstance(c, Token) and c.type == "RELAZIONE"), None)
+                sub = next((c for c in resto if isinstance(c, Tree)), None)
+                if rel_tok is None or sub is None:
+                    continue
+                nome = base_a_nome.get(" ".join(str(rel_tok).lower().split()))
+                if nome is None:
+                    continue
+                b = _membro_oggetto(sub)
+                # I quantificatori non sono asserzioni valide: fuori dalla griglia (il
+                # testo li conserva verbatim; i Problemi segnalano l'errore d'autore).
+                if b is None or a in (REL_QUALCUNO, REL_QUALCOSA) or b in (REL_QUALCUNO, REL_QUALCOSA):
+                    continue
+                voce = {"op": "relation", "a": a, "b": b,
+                        "aName": _rel_membro_surface(mondo, a),
+                        "bName": _rel_membro_surface(mondo, b),
+                        "span": _span(line, end)}
+                voce.update(info_rel.get(nome, {"rel": nome, "base": nome, "prep": None}))
+                coppie_per_rel.setdefault(nome, []).append(voce)
+
+    relations = []
+    for nome in sorted(relazioni_mondo):
+        rel = relazioni_mondo[nome]
+        info = info_rel.get(nome, {"base": nome, "prep": None})
+        relations.append({
+            "name": nome,
+            "locution": rel.locuzione,
+            "arity": rel.arieta,
+            "reciprocal": bool(rel.reciproca),
+            "prep": getattr(rel, "prep", None),
+            "base": info.get("base"),
+            "declSpan": decl_span.get(nome),
+            "pairs": coppie_per_rel.get(nome, []),
+        })
+
+    # Membri possibili per il form «aggiungi coppia»: il giocatore + ogni entità, col
+    # nome a metà frase (già pronto per aName/bName del serializzatore relation_fact).
+    # La grammatica accetta come membro il giocatore, un oggetto/personaggio o una
+    # stanza (una relazione può legare una cosa a un luogo, es. «la chiave apre la cella»).
+    members = [{"id": REL_GIOCATORE, "name": "il giocatore", "kind": "giocatore"}]
+    for oid, o in mondo.oggetti.items():
+        members.append({
+            "id": oid,
+            "name": _rel_membro_surface(mondo, oid),
+            "kind": ("personaggio" if getattr(o, "is_personaggio", False)
+                     else "contenitore" if getattr(o, "is_contenitore", False)
+                     else "supporto" if getattr(o, "is_supporto", False)
+                     else "oggetto"),
+        })
+    for rid in mondo.stanze:
+        members.append({"id": rid, "name": _rel_membro_surface(mondo, rid), "kind": "stanza"})
+
+    return {"ok": True, "relations": relations, "members": members, "errors": []}
 
 
 def analizza_variabili(percorso_file, sorgente=None):
@@ -960,7 +1205,8 @@ def analizza_variabili(percorso_file, sorgente=None):
         _cp, nomi_dir, _de = valida_direzioni_dichiarate(simboli.coppie_direzioni, simboli)
         parser = costruisci_parser(simboli.tutti, simboli.variabili, nomi_dir,
                                    propagate_positions=True,
-                                   verbi_multi=simboli.verbi_multi)
+                                   verbi_multi=simboli.verbi_multi,
+                                   relazioni=simboli.relazioni, procedure=simboli.procedure)
         tree = parser.parse(testo)
     except Exception:
         tree, mappa_righe, testo = None, [], ""
@@ -980,6 +1226,8 @@ def analizza_variabili(percorso_file, sorgente=None):
 
     # Indicizza le frasi di dichiarazione/valore-iniziale con il loro span.
     decl_stato, decl_cont, init_stato, init_cont, span_invariante = {}, {}, {}, {}, {}
+    # [1.6.0 / C2] Gli span di ogni 'X è V quando C' (più d'uno per stato calcolato).
+    span_calcolato = {}
     if tree is not None:
         for nodo in tree.children:
             if not isinstance(nodo, Tree):
@@ -1009,6 +1257,11 @@ def analizza_variabili(percorso_file, sorgente=None):
                 # [1.6.0 / Q1] 'La sete resta sempre fra 0 e 100.' — span della frase
                 # (l'ultima vince, come il motore).
                 span_invariante[nome] = span
+            elif nodo.data == "def_stato_calcolato":
+                # [1.6.0 / C2] 'La protezione è attiva quando …' — una o più frasi per
+                # lo stesso stato calcolato; le raccolgo tutte (sola lettura).
+                if span is not None:
+                    span_calcolato.setdefault(nome, []).append(span)
 
     # Commenti '# valori di X: …' → mappa id-stato -> (valori, span). Ultima vince.
     commenti = {}
@@ -1051,9 +1304,19 @@ def analizza_variabili(percorso_file, sorgente=None):
             "valuesComment": ({"span": cspan, "values": cval} if cval is not None else None),
         })
 
+    # [1.6.0 / C2] Stati calcolati ('X è V quando C'): valori possibili + span, in
+    # sola lettura (l'editor li mostra ma non li riscrive: si cambiano nel testo).
+    computed = []
+    for nome, clausole in getattr(mondo, "stati_calcolati", {}).items():
+        valori = sorted({v for (v, _c) in clausole if v})
+        computed.append({"name": nome, "values": valori,
+                         "spans": list(span_calcolato.get(nome, []))})
+    computed.sort(key=lambda c: c["name"])
+
     states.sort(key=lambda s: s["name"])
     counters.sort(key=lambda c: c["name"])
-    return {"ok": True, "states": states, "counters": counters, "errors": []}
+    return {"ok": True, "states": states, "counters": counters,
+            "computed": computed, "errors": []}
 
 
 def analizza_parole(percorso_file, sorgente=None):
@@ -1078,7 +1341,8 @@ def analizza_parole(percorso_file, sorgente=None):
         _cp, nomi_dir, _de = valida_direzioni_dichiarate(simboli.coppie_direzioni, simboli)
         parser = costruisci_parser(simboli.tutti, simboli.variabili, nomi_dir,
                                    propagate_positions=True,
-                                   verbi_multi=simboli.verbi_multi)
+                                   verbi_multi=simboli.verbi_multi,
+                                   relazioni=simboli.relazioni, procedure=simboli.procedure)
         tree = parser.parse(testo)
     except Exception:
         return {"ok": False, "mode": "entrambi", "modeSpan": None, "verbs": [],
@@ -1179,7 +1443,8 @@ def analizza_dialoghi(percorso_file, sorgente=None):
         _cp, nomi_dir, _de = valida_direzioni_dichiarate(simboli.coppie_direzioni, simboli)
         parser = costruisci_parser(simboli.tutti, simboli.variabili, nomi_dir,
                                    propagate_positions=True,
-                                   verbi_multi=simboli.verbi_multi)
+                                   verbi_multi=simboli.verbi_multi,
+                                   relazioni=simboli.relazioni, procedure=simboli.procedure)
         tree = parser.parse(testo)
     except Exception:
         tree, mappa_righe, testo = None, [], ""
@@ -1511,7 +1776,8 @@ def riordina_sorgente(percorso_file, sorgente=None):
         simboli = costruisci_symbol_table(sorgente)
         _cp, nomi_dir, _de = valida_direzioni_dichiarate(simboli.coppie_direzioni, simboli)
         parser = costruisci_parser(simboli.tutti, simboli.variabili, nomi_dir,
-                                   propagate_positions=True, verbi_multi=simboli.verbi_multi)
+                                   propagate_positions=True, verbi_multi=simboli.verbi_multi,
+                                   relazioni=simboli.relazioni, procedure=simboli.procedure)
         tree = parser.parse(sorgente)
     except Exception as e:  # pragma: no cover - difensivo
         return {"ok": False, "reason": f"Riordino non riuscito: {e}"}
@@ -2233,7 +2499,8 @@ def _analizza_storia(percorso_radice, sorgente=None):
         simboli = costruisci_symbol_table(testo)
         _cp, nomi_dir, _de = valida_direzioni_dichiarate(simboli.coppie_direzioni, simboli)
         parser = costruisci_parser(simboli.tutti, simboli.variabili, nomi_dir,
-                                   propagate_positions=True, verbi_multi=simboli.verbi_multi)
+                                   propagate_positions=True, verbi_multi=simboli.verbi_multi,
+                                   relazioni=simboli.relazioni, procedure=simboli.procedure)
         albero = parser.parse(testo)
     except Exception:
         return None
