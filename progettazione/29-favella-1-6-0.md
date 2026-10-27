@@ -226,8 +226,10 @@ da raccogliere), che oggi non è previsto.
    copia.~~ Fatto il 27 ottobre, su sua richiesta (§8).
 2. **L’aria fra 0 e 100** (§6.1): una riga nei `.fav`, oppure il visore che non scende sotto lo zero, oppure
    niente.
-3. **Pubblicare la 1.6.1** come le versioni di prima (la Release con gli installer, PyPI, il sito): oggi è nel
-   repository e nel tag, non altrove. Per il Relitto non serve: la copia si rifà dal tag.
+3. ~~**Pubblicare la 1.6.1** come le versioni di prima.~~ Fatto il 27 ottobre, su sua richiesta: la Release
+   «FAVELLA 1.6.1» con i tre installer e le note del CHANGELOG (l’ultima versione su GitHub), `favella1` 1.6.1
+   su PyPI (provato installandolo da zero), il manuale PDF che dice v1.6.1, e favella.eu alla 2.12.1, con il
+   motore 1.6.1 nel browser, i download, la notizia e il changelog.
 4. Il resto del §6 resta dov’è, finché il testo non si riapre.
 
 ---
