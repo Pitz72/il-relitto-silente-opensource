@@ -6,7 +6,9 @@
 .scansione { position: absolute; inset: 0; overflow: hidden; }
 .scansione-corpo, .scansione svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 
-.scansione svg { animation: scansione-legge 1.8s cubic-bezier(.35, .6, .3, 1) both; }
+/* «backwards»: finite, le animazioni della lettura lasciano il posto allo stile, e la scansione ferma non
+   costa niente (con «both» restavano vive fino alla stanza dopo; documento 30, §8) */
+.scansione svg { animation: scansione-legge 1.8s cubic-bezier(.35, .6, .3, 1) backwards; }
 @keyframes scansione-legge {
   from { clip-path: inset(0 100% 0 0); }
   to { clip-path: inset(0 0 0 0); }
@@ -18,8 +20,9 @@
   left: 0;
   width: 12%;
   pointer-events: none;
+  opacity: 0;
   background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--vena-2, #8bf0a2) 22%, transparent) 70%, color-mix(in srgb, var(--vena-2, #8bf0a2) 75%, transparent) 97%, transparent);
-  animation: scansione-onda 1.8s cubic-bezier(.35, .6, .3, 1) both;
+  animation: scansione-onda 1.8s cubic-bezier(.35, .6, .3, 1) backwards;
 }
 @keyframes scansione-onda {
   from { transform: translateX(-100%); opacity: 1; }
@@ -27,7 +30,7 @@
   to { transform: translateX(833%); opacity: 0; }
 }
 /* le marche sugli oggetti schedati arrivano per ultime, quando l'onda è passata */
-.scansione .scansione-marca { animation: scansione-marca 2.4s ease-out both; }
+.scansione .scansione-marca { animation: scansione-marca 2.4s ease-out backwards; }
 @keyframes scansione-marca {
   0%, 70% { opacity: 0; }
   100% { opacity: .85; }

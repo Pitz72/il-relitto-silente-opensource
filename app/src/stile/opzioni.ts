@@ -37,6 +37,36 @@ export interface Opzioni {
   mono: boolean;
   dinamicaRidotta: boolean;
   suoniIntensiRidotti: boolean;
+  /** la grafica (documento 30, §8): gli effetti dello schermo di gioco, uno per uno. Di base tutti
+   *  accesi; la qualità «leggera» ed «essenziale» li alleggerisce per le macchine più deboli */
+  grana: "mossa" | "ferma" | "no";
+  /** i riflessi sul vetro del casco, e il fiato che lo appanna */
+  riflessi: boolean;
+  /** la luce della stanza che respira dietro il testo */
+  luceStanza: boolean;
+  /** il segnale che corre sui fili del ramo */
+  segnaleFili: boolean;
+  /** le vene della membrana che crescono e si accendono (no: ferme, come con il movimento ridotto) */
+  veneVive: boolean;
+  /** il gioco sfocato dietro i pannelli */
+  sfocatura: boolean;
+}
+
+export type Qualita = "piena" | "leggera" | "essenziale";
+type Effetti = Pick<Opzioni, "grana" | "riflessi" | "luceStanza" | "segnaleFili" | "veneVive" | "sfocatura">;
+
+/** I tre livelli della grafica: ognuno è una scelta di effetti, che poi si cambiano uno per uno. */
+export const QUALITA: Readonly<Record<Qualita, Effetti>> = {
+  piena: { grana: "mossa", riflessi: true, luceStanza: true, segnaleFili: true, veneVive: true, sfocatura: true },
+  leggera: { grana: "ferma", riflessi: true, luceStanza: false, segnaleFili: true, veneVive: true, sfocatura: false },
+  essenziale: { grana: "no", riflessi: false, luceStanza: false, segnaleFili: false, veneVive: false, sfocatura: false },
+};
+
+/** Il livello che corrisponde agli effetti scelti, o null se sono stati scelti uno per uno. */
+export function qualitaDi(o: Opzioni): Qualita | null {
+  for (const [q, e] of Object.entries(QUALITA) as [Qualita, Effetti][])
+    if ((Object.keys(e) as (keyof Effetti)[]).every((k) => o[k] === e[k])) return q;
+  return null;
 }
 
 export const OPZIONI_DI_BASE: Opzioni = {
@@ -56,6 +86,7 @@ export const OPZIONI_DI_BASE: Opzioni = {
   mono: false,
   dinamicaRidotta: false,
   suoniIntensiRidotti: false,
+  ...QUALITA.piena,
 };
 
 const CHIAVE = "relitto.opzioni";
@@ -125,5 +156,11 @@ export function attributiSchermo(o: Opzioni, ridotto: boolean): Record<string, s
     "data-movimento": ridotto ? "ridotto" : "pieno",
     "data-carattere": o.carattere,
     "data-testo": o.testoGrande ? "grande" : "normale",
+    // la grafica (documento 30, §8): il CSS accende e ferma gli effetti da qui
+    "data-grana": o.grana,
+    "data-riflessi": o.riflessi ? "si" : "no",
+    "data-luce": o.luceStanza ? "si" : "no",
+    "data-segnale": o.segnaleFili ? "si" : "no",
+    "data-sfocatura": o.sfocatura ? "si" : "no",
   };
 }

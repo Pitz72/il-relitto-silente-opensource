@@ -9,6 +9,9 @@
 //  le tele, i filtri), «foto» (una fotografia del salvataggio 3).
 //    node strumenti/misure/consumo.mjs <eseguibile> "<cartella dei salvataggi>" menu,3,4,5
 //  Windows in italiano scrive i decimali con la virgola: si leggono con `numero`.
+//  Per spegnere una cosa si scrive sugli elementi (CSSOM): un <style> aggiunto alla pagina, nell'eseguibile,
+//  lo blocca la politica di sicurezza dei contenuti e non spegne niente (trovato il 27 ottobre 2026: le
+//  scene «animazioni» e «varianti» del 19 ottobre usavano quello, e non toglievano niente).
 // ============================================================================
 // Uso: node m10.mjs <exe> <cartella dei salvataggi da copiare> [scene: menu,3,4,5]
 import fs from "node:fs";
@@ -125,23 +128,23 @@ for (const q of quali.split(",")) {
   else if (q === "animazioni") {
     await carica(3);
     await misura("posto 3, tutto");
-    await valuta("document.head.insertAdjacentHTML('beforeend', '<style>.lamina{animation:none!important}</style>')");
+    await valuta(`document.querySelectorAll(${JSON.stringify(".lamina")}).forEach((e) => e.style.setProperty("animation", "none", "important")); 'ok'`);
     await misura("posto 3, senza il respiro della lamina");
-    await valuta("document.head.insertAdjacentHTML('beforeend', '<style>.mappa .impulso{animation:none!important}</style>')");
+    await valuta(`document.querySelectorAll(${JSON.stringify(".mappa .impulso")}).forEach((e) => e.style.setProperty("animation", "none", "important")); 'ok'`);
     await misura("posto 3, e senza l'impulso della mappa");
-    await valuta("document.head.insertAdjacentHTML('beforeend', '<style>.vetro{animation:none!important}</style>')");
+    await valuta(`document.querySelectorAll(${JSON.stringify(".vetro")}).forEach((e) => e.style.setProperty("animation", "none", "important")); 'ok'`);
     await misura("posto 3, e senza il respiro del vetro");
-    await valuta("document.head.insertAdjacentHTML('beforeend', '<style>canvas.vene, .lente-vetro canvas, .cellula{display:none!important}</style>')");
+    await valuta(`document.querySelectorAll(${JSON.stringify("canvas.vene, .lente-vetro canvas, .cellula")}).forEach((e) => e.style.setProperty("display", "none", "important")); 'ok'`);
     await misura("posto 3, e senza vene, lente e cellula");
   }
   else if (q === "varianti") {
     await carica(3);
     await misura("posto 3, tutto");
-    await valuta("document.head.insertAdjacentHTML('beforeend', '<style id=v1>canvas.vene{display:none!important}</style>')");
+    await valuta(`document.querySelectorAll(${JSON.stringify("canvas.vene")}).forEach((e) => e.style.setProperty("display", "none", "important")); 'ok'`);
     await misura("posto 3, senza le vene");
-    await valuta("document.head.insertAdjacentHTML('beforeend', '<style id=v2>.lente-vetro canvas{display:none!important}</style>')");
+    await valuta(`document.querySelectorAll(${JSON.stringify(".lente-vetro canvas")}).forEach((e) => e.style.setProperty("display", "none", "important")); 'ok'`);
     await misura("posto 3, senza vene e lente");
-    await valuta("document.head.insertAdjacentHTML('beforeend', '<style id=v3>.cellula, .visore svg{display:none!important}</style>')");
+    await valuta(`document.querySelectorAll(${JSON.stringify(".cellula, .visore svg")}).forEach((e) => e.style.setProperty("display", "none", "important")); 'ok'`);
     await misura("posto 3, senza vene, lente e cellula");
   }
   else if (q === "sonda") {
@@ -153,6 +156,55 @@ for (const q of quali.split(",")) {
       filtri: [...document.querySelectorAll(".gioco *")].filter((e) => { const st = getComputedStyle(e); return st.backdropFilter !== "none" || (st.filter !== "none" && st.filter !== "") ; }).map((e) => [(e.className?.baseVal ?? e.className).toString().slice(0, 30), getComputedStyle(e).filter, getComputedStyle(e).backdropFilter]).slice(0, 20),
       video: document.querySelectorAll("video").length,
     })`));
+  }
+  else if (q === "qualita") {
+    // i tre livelli della grafica (documento 30, §8), messi sulla radice dello schermo come fa l'opzione
+    // (le vene restano vive: le ferma lo stato del gioco, non un attributo)
+    await carica(3);
+    await misura("posto 3, grafica piena");
+    const metti = (a) => valuta(`(() => { const s = document.querySelector('.schermo.gioco'); Object.assign(s.dataset, ${JSON.stringify(a)}); return 'ok'; })()`);
+    await metti({ grana: "ferma", riflessi: "si", luce: "no", segnale: "si", sfocatura: "no" });
+    await misura("posto 3, grafica leggera");
+    await metti({ grana: "no", riflessi: "no", luce: "no", segnale: "no", sfocatura: "no" });
+    await misura("posto 3, grafica essenziale (con le vene vive)");
+  }
+  else if (q === "resto") {
+    // con i cicli fermi e gli effetti nuovi tolti: che cosa costa ancora, animazione per animazione
+    await carica(3);
+    await valuta("window.__raf = window.requestAnimationFrame; window.requestAnimationFrame = () => 0; document.querySelectorAll('.grana-strato, .luce-stanza, .ramo-segnale, .riflesso, .appannato').forEach((e) => e.style.setProperty('display', 'none', 'important')); 'ok'");
+    await attendi(1000);
+    await misura("resto: senza cicli e senza gli effetti nuovi");
+    await valuta("document.getAnimations().filter((a) => a.playState === 'finished').forEach((a) => a.cancel()); 'ok'");
+    await misura("resto: e senza le animazioni finite");
+    for (const nome of ["impulso", "respiro-vetro", "lamina-respira"]) {
+      await valuta(`document.getAnimations().filter((a) => a.animationName === ${JSON.stringify(nome)}).forEach((a) => a.pause()); 'ok'`);
+      await misura(`resto: e senza ${nome}`);
+    }
+    console.log(await valuta("JSON.stringify(document.getAnimations().filter((a) => a.playState === 'running').map((a) => [a.constructor.name, a.animationName ?? a.transitionProperty, (a.effect?.target?.className?.baseVal ?? a.effect?.target?.className ?? '').toString().slice(0, 40)]))"));
+    await valuta("window.requestAnimationFrame = window.__raf; 'ok'");
+  }
+  else if (q === "lotto30") {
+    // il documento 30: gli effetti nuovi tolti uno alla volta, prima con tutto acceso, poi con i cicli
+    // JavaScript fermi. Si tolgono sugli elementi (CSSOM): un <style> aggiunto alla pagina, nell'eseguibile,
+    // lo blocca la politica di sicurezza dei contenuti, e non toglie niente
+    const togli = (sel, prop = "display", val = "none") =>
+      valuta(`document.querySelectorAll(${JSON.stringify(sel)}).forEach((e) => e.style.setProperty(${JSON.stringify(prop)}, ${JSON.stringify(val)}, "important")); 'ok'`);
+    for (const cicli of [true, false]) {
+      await carica(3);
+      const come = cicli ? "" : ", senza cicli";
+      if (!cicli) await valuta("window.__raf = window.requestAnimationFrame; window.requestAnimationFrame = () => 0; 'ok'");
+      await misura(`posto 3${come}, tutto`);
+      await togli(".grana-strato");
+      await misura(`posto 3${come}, senza la grana`);
+      await togli(".luce-stanza");
+      await misura(`posto 3${come}, e senza la luce della stanza`);
+      await togli(".ramo-segnale");
+      await misura(`posto 3${come}, e senza il segnale`);
+      await togli(".riflesso, .appannato");
+      await misura(`posto 3${come}, e senza il riflesso`);
+      if (!cicli) await valuta("window.requestAnimationFrame = window.__raf; 'ok'");
+      await alMenu();
+    }
   }
   else { await carica(q); await misura(`posto ${q}`); }
 }

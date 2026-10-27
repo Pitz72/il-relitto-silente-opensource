@@ -109,6 +109,45 @@ export default function Ramo({ modello, cose, forma, selezione, accesi, costi, p
       });
     }
 
+  // ---- le cose che si spostano e quelle che arrivano (documento 30, 2.3) ------
+  // Una cosa presa scivola da «qui» a «con te», e le altre si rimettono in fila: si ricorda dove stava
+  // ogni baccello e, disposto il ramo, lo si fa partire da lì (FLIP, con una trasformazione sola). Le
+  // cose nuove germogliano da sinistra a destra lungo il filo; nell'acciaio si accendono come spie.
+  const postiPrima = useRef<Map<string, { x: number; y: number }> | null>(null);
+  const postiOra = useRef(posti);
+  postiOra.current = posti;
+  useLayoutEffect(() => {
+    if (!disposizione) return;
+    const prima = postiPrima.current;
+    const ora = postiOra.current;
+    postiPrima.current = new Map([...ora].map(([k, p]) => [k, { x: p.x, y: p.y }]));
+    const uno = misure.current.values().next().value;
+    if (!prima || !uno?.animate || uno.closest("[data-movimento]")?.getAttribute("data-movimento") === "ridotto") return;
+    const nuovi: [HTMLElement, number][] = [];
+    for (const [k, p] of ora) {
+      const el = misure.current.get(k);
+      if (!el) continue;
+      const q = prima.get(k);
+      if (!q) nuovi.push([el, p.x]);
+      else if (Math.abs(q.x - p.x) + Math.abs(q.y - p.y) > 2)
+        el.animate([{ transform: `translate(calc(-50% + ${q.x - p.x}px), calc(-50% + ${q.y - p.y}px))` }, { transform: "translate(-50%, -50%)" }], {
+          duration: 620,
+          easing: "cubic-bezier(.3, .7, .2, 1)",
+        });
+    }
+    const acciaio = forma === "acciaio";
+    nuovi
+      .sort((a, b) => a[1] - b[1])
+      .forEach(([el], i) =>
+        el.animate(
+          acciaio
+            ? [{ opacity: 0 }, { opacity: 0.85, offset: 0.3 }, { opacity: 0.2, offset: 0.45 }, { opacity: 1 }]
+            : [{ opacity: 0, transform: "translate(-50%, -50%) scale(.78)" }, { opacity: 1, transform: "translate(-50%, -50%) scale(1)" }],
+          { duration: acciaio ? 420 : 560, delay: Math.min(i * 34, 560), easing: "cubic-bezier(.2, .8, .3, 1.12)", fill: "backwards" },
+        ),
+      );
+  }, [stato]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // ---- il fiore ------------------------------------------------------------
   const aperta = selezione.tipo === "fiore" ? selezione.cosa : null;
   const menu = aperta ? [...modello.qui, ...modello.conTe].find((m) => m.id === aperta) : undefined;
@@ -202,6 +241,15 @@ export default function Ramo({ modello, cose, forma, selezione, accesi, costi, p
         {disposti.alto.length > 0 && <path className="filo alto" d={percorsoDelFilo("alto", forma)} vectorEffect="non-scaling-stroke" />}
         {disposti.basso.length > 0 && <path className="filo basso" d={percorsoDelFilo("basso", forma, 0.02, 0.98)} vectorEffect="non-scaling-stroke" />}
       </svg>
+      {/* il segnale sul filo alto (documento 30, 1.5): ogni sette secondi una luce lo percorre, nella
+          membrana la linfa, nell'acciaio un impulso sul cavo; in uno strato suo, che ridipinge solo il
+          tratto che corre */}
+      {disposti.alto.length > 0 && (
+        <svg className="ramo-segnale" viewBox="0 0 1000 562.5" preserveAspectRatio="none" aria-hidden="true">
+          <path className="segnale alone" d={percorsoDelFilo("alto", forma)} pathLength={1000} />
+          <path className="segnale" d={percorsoDelFilo("alto", forma)} pathLength={1000} />
+        </svg>
+      )}
 
       {/* le etichette dei gruppi */}
       {disposizione &&

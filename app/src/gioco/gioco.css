@@ -111,3 +111,28 @@
 .gioco[data-in-mano] .palco {
   cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><circle cx='16' cy='16' r='9' fill='none' stroke='%23060708' stroke-width='4'/><circle cx='16' cy='16' r='9' fill='none' stroke='%238bf0a2' stroke-width='2'/><circle cx='16' cy='16' r='2' fill='%238bf0a2'/></svg>") 16 16, crosshair;
 }
+
+/* la luce della stanza, dietro la lamina (documento 30, 1.4): un respiro di quattordici secondi, solo
+   opacità. Nel relitto è l'alone della membrana (rosso nella protezione e nella fuga, niente
+   nell'ipossia); sulla Santa Maria il riverbero caldo del reattore, che sale dal pavimento */
+.luce-stanza {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(ellipse 46% 50% at 31% 44%, var(--alone), transparent 72%);
+  opacity: .8;
+}
+.gioco[data-atmosfera="santamaria"] .luce-stanza, .gioco[data-atmosfera="visore"] .luce-stanza {
+  background: radial-gradient(ellipse 62% 36% at 34% 108%, color-mix(in srgb, var(--accento-2) 11%, transparent), transparent 74%);
+}
+[data-luce="no"] .luce-stanza { display: none; }
+/* a piccoli passi, dieci al secondo: a quella lentezza l'occhio non li vede, e la scheda video non deve
+   ricomporre lo schermo sessanta volte al secondo (documento 30, §8) */
+[data-movimento="pieno"] .luce-stanza { animation: luce-stanza 14s steps(70) infinite; will-change: opacity; }
+@keyframes luce-stanza { 0%, 100% { opacity: .4; } 50% { opacity: 1; } }
+
+/* con un pannello aperto i movimenti dietro si fermano (documento 30, 2.4): il gioco sfocato non si
+   ridipinge, e la sfocatura non si rifà a ogni fotogramma (le vene si fermano in Vene.tsx) */
+.gioco[data-pannello] :is(.grana, .luce-stanza, .segnale, .vetro, .appannato, .lamina, .s-suggerimento, .impulso, .rec) { animation-play-state: paused; }
+.gioco[data-pannello] .monitor::after { animation-play-state: paused; }

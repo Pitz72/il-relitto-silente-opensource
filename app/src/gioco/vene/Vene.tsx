@@ -8,7 +8,7 @@
 //  Con il movimento ridotto sono ferme e compaiono in dissolvenza.
 // ============================================================================
 import { useEffect, useRef } from "react";
-import type { Clima } from "../../stile/atmosfere";
+import { mescola, tavolozza, type Clima } from "../../stile/atmosfere";
 import { Venature, type Atmosfera, type Zona } from "./venature";
 import { cicloA, FOTOGRAMMI } from "../ritmo";
 
@@ -19,10 +19,25 @@ interface Props {
   ridotto: boolean;
   /** cambia quando la membrana deve crescere adesso (il primo contatto) */
   crescita: number;
+  /** un pannello è aperto: il gioco dietro è sfocato, e le vene si fermano (documento 30, 2.4) */
+  inPausa?: boolean;
 }
 
 /** Quanto dura la crescita (la tavola: 5,2 s). */
 const DURATA = 5200;
+
+/** Il passaggio fra due climi: lo stesso del resto dello schermo (base.css, --passaggio). */
+const PASSAGGIO = 1600;
+
+type Coppia = [string, string];
+
+/** I colori delle vene a un istante del passaggio. */
+function coloriA(p: { da: Coppia; a: Coppia; inizio: number }, t: number): Coppia {
+  const q = Math.min(1, Math.max(0, (t - p.inizio) / PASSAGGIO));
+  if (q >= 1) return p.a;
+  const k = q * q * (3 - 2 * q);
+  return [mescola(p.da[0], p.a[0], k), mescola(p.da[1], p.a[1], k)];
+}
 
 /** Le parti dello schermo che le vene girano intorno, con un margine. */
 const ZONE = [".palco .lamina", ".visore .lente", ".visore .strumenti", ".visore .mappa", ".palco .atto"];
@@ -34,12 +49,16 @@ function atmosferaDelleVene(c: Clima): Atmosfera {
   return "relitto";
 }
 
-export default function Vene({ clima, energia, ridotto, crescita }: Props) {
+export default function Vene({ clima, energia, ridotto, crescita, inPausa = false }: Props) {
   const ref = useRef<HTMLCanvasElement>(null);
   const vene = useRef(new Venature());
   const inizio = useRef<number | null>(null);
   const primo = useRef(crescita);
   const membrana = clima.forma === "membrana";
+  // i colori del clima, dalla sua tavolozza: letti dal CSS a metà del passaggio fra due climi (il
+  // CSS li cambia in un secondo e mezzo) restavano quelli di prima, fino al clima dopo
+  const meta = tavolozza(clima);
+  const passaggio = useRef<{ da: Coppia; a: Coppia; inizio: number } | null>(null);
 
   // la crescita parte quando cambia il segnale, non al caricamento
   useEffect(() => {
@@ -78,13 +97,15 @@ export default function Vene({ clima, energia, ridotto, crescita }: Props) {
       return dpr;
     };
 
-    // i colori del clima, letti una volta (il ciclo si rifà quando il clima cambia): prima si
-    // chiedevano a ogni fotogramma (revisione 25, M10)
-    const colori = (() => {
-      const st = getComputedStyle(schermo);
-      return { colori: [st.getPropertyValue("--vena").trim() || "#5fd4dc", st.getPropertyValue("--vena-2").trim() || "#8bf0a2"] as [string, string], luce: energia ? 1 : 0.6 };
-    })();
-    const tinta = () => colori;
+    // i colori: dal clima di prima a questo, nel tempo del passaggio (revisione 25, M10: niente
+    // letture del CSS a ogni fotogramma)
+    const ora = performance.now();
+    const a: Coppia = [meta.vena, meta.vena2];
+    const da = passaggio.current ? coloriA(passaggio.current, ora) : a;
+    const p = (passaggio.current = { da, a, inizio: ridotto ? ora - PASSAGGIO : ora });
+    const luce = energia ? 1 : 0.6;
+    const tinta = (t = performance.now()) => ({ colori: coloriA(p, t), luce });
+    const inPassaggio = (t: number) => t - p.inizio < PASSAGGIO;
 
     const atm = atmosferaDelleVene(clima);
     const disegna = (t: number) => {
@@ -92,8 +113,8 @@ export default function Vene({ clima, energia, ridotto, crescita }: Props) {
       const quanta = inizio.current === null ? 1 : Math.min(1, (t - inizio.current) / DURATA);
       const k = quanta * quanta * (3 - 2 * quanta);
       if (quanta >= 1) inizio.current = null;
-      if (k < 1 || atm === "fuga" || atm === "ipossia") vene.current.disegna(g, t, k, atm, dpr, tinta());
-      else vene.current.disegnaConCache(g, t, atm, dpr, tinta());
+      if (k < 1 || atm === "fuga" || atm === "ipossia" || inPassaggio(t)) vene.current.disegna(g, t, k, atm, dpr, tinta(t));
+      else vene.current.disegnaConCache(g, t, atm, dpr, tinta(t));
     };
 
     if (!membrana) {
@@ -109,7 +130,7 @@ export default function Vene({ clima, energia, ridotto, crescita }: Props) {
         vene.current.disegna(g, performance.now(), k, atm, prepara(), tinta());
         return `${vene.current.numero} vene, ${vene.current.punti} punti`;
       };
-    if (ridotto) {
+    if (ridotto || inPausa) {
       const dpr = prepara();
       vene.current.ferme(g, atm, dpr, tinta());
       inizio.current = null;
@@ -124,7 +145,7 @@ export default function Vene({ clima, energia, ridotto, crescita }: Props) {
       fermo = true;
       ferma();
     };
-  }, [membrana, clima.atmosfera, clima.protezione, clima.ipossia, clima.stanza, energia, ridotto]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [membrana, clima.atmosfera, clima.protezione, clima.ipossia, clima.stanza, energia, ridotto, inPausa]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return <canvas ref={ref} className={`vene${membrana ? " accese" : ""}`} aria-hidden="true" />;
 }

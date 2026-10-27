@@ -86,14 +86,24 @@ function Lente({ stanza, nome, stati, clima, ridotto }: { stanza: string; nome: 
     <figure className="lente">
       <div className="lente-vetro">
         {immagine ? (
-          <img src={immagine} alt={`La telecamera di bordo: ${nome}`} draggable={false} />
+          <>
+            {/* entrando in una stanza la telecamera cambia canale: un lampo di disturbo, la riga che
+                rotola (documento 30, 2.1); poi la riga lenta del monitor */}
+            <img key={stanza} src={immagine} alt={`La telecamera di bordo: ${nome}`} draggable={false} />
+            {!ridotto && <div key={`canale:${stanza}`} className="cambio-canale" aria-hidden="true" />}
+            <div className="monitor" aria-hidden="true" />
+          </>
         ) : !diBordo && haScansione(stanza) ? (
           <Scansione stanza={stanza} stati={stati} clima={clima} ridotto={ridotto} />
         ) : (
           <Ricostruzione stanza={stanza} diBordo={diBordo} clima={clima} ridotto={ridotto} />
         )}
       </div>
-      <figcaption>{didascalia}</figcaption>
+      <figcaption>
+        {/* la spia della registrazione, sulla telecamera di bordo (documento 30, 2.5) */}
+        {diBordo && <span className="rec" aria-hidden="true" />}
+        {didascalia}
+      </figcaption>
     </figure>
   );
 }
@@ -195,6 +205,7 @@ function formaCellula(R: number, amp: number, t: number, respiro: number) {
 function Cellula({ aria, acciaio, protezione, fuga, ridotto, differenza, battito }: { aria: number; acciaio: boolean; protezione: boolean; fuga: boolean; ridotto: boolean; differenza: number | null; battito: number }) {
   const stato = statoAria(aria);
   const scritta = protezione || fuga ? SCRITTA[stato] : stato === "rosso" ? "aria" : SCRITTA[stato];
+  const corpo = useRef<SVGSVGElement>(null);
   const esterno = useRef<SVGPathElement>(null);
   const interno = useRef<SVGPathElement>(null);
   const spore = useRef<SVGGElement>(null);
@@ -222,10 +233,25 @@ function Cellula({ aria, acciaio, protezione, fuga, ridotto, differenza, battito
     return cicloA(FOTOGRAMMI, disegna);
   }, [acciaio, aria, periodo, contrazione, amp, ridotto]);
 
+  // a ogni consumo la cellula (o l'anello) si contrae, come un sorso; con una ricarica si allarga
+  // (documento 30, 2.2): una forma che si muove, mai la cifra
+  useEffect(() => {
+    const el = corpo.current;
+    if (ridotto || !differenza || !el?.animate) return;
+    const sorso = differenza < 0;
+    const forte = Math.min(1, Math.abs(differenza) / 8);
+    el.animate(
+      sorso
+        ? [{ transform: "scale(1)" }, { transform: `scale(${(0.965 - 0.035 * forte).toFixed(3)})`, offset: 0.22 }, { transform: "scale(1)" }]
+        : [{ transform: "scale(1)" }, { transform: "scale(1.07)", offset: 0.3 }, { transform: "scale(1)" }],
+      { duration: sorso ? 760 : 1200, easing: "cubic-bezier(.3, .7, .3, 1)" },
+    );
+  }, [battito]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const C = 2 * Math.PI * 56;
   return (
     <div className={`cellula stato-${stato}`} role="img" aria-label={`Aria ${aria}${scritta && scritta !== "aria" ? `, ${scritta}` : ""}`}>
-      <svg viewBox="-80 -80 160 160" aria-hidden="true">
+      <svg ref={corpo} viewBox="-80 -80 160 160" aria-hidden="true">
         {acciaio ? (
           <>
             <circle r="56" className="anello-fondo" />
@@ -257,6 +283,7 @@ function Cellula({ aria, acciaio, protezione, fuga, ridotto, differenza, battito
         <b>{aria}</b>
         <i>{acciaio ? "ARIA" : scritta}</i>
       </div>
+      {differenza && differenza > 0 && !ridotto ? <span key={`onda:${battito}`} className="onda-ricarica" aria-hidden="true" /> : null}
       {differenza ? (
         <span key={battito} className="differenza" aria-hidden="true">
           {differenza > 0 ? `+${differenza}` : `−${Math.abs(differenza)}`}

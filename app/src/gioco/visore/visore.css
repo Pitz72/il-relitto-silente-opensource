@@ -37,6 +37,67 @@
 .visore[data-forma="acciaio"] .lente-vetro::after { border-radius: .3cqw; box-shadow: inset 0 0 1cqw rgba(0, 0, 0, .6); }
 .lente-vetro canvas, .lente-vetro img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 .lente-vetro img { filter: sepia(.55) saturate(1.2) hue-rotate(-8deg) brightness(.8); }
+/* la telecamera di bordo (documento 30, 2.1): entrando in una stanza cambia canale, un lampo di disturbo
+   e l'immagine che rotola e si ferma; poi il monitor, con le sue righe e una riga più chiara che scende
+   lenta, ogni sette secondi */
+[data-movimento="pieno"] .lente-vetro img { animation: canale-immagine .6s steps(6) both; }
+@keyframes canale-immagine {
+  0% { opacity: 0; transform: translateY(-9%); }
+  35% { opacity: .55; transform: translateY(5%); }
+  65% { opacity: .85; transform: translateY(-1.5%); }
+  100% { opacity: 1; transform: none; }
+}
+.cambio-canale {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(transparent 44%, rgba(240, 232, 214, .5) 48%, rgba(240, 232, 214, .5) 50%, transparent 54%),
+    repeating-linear-gradient(0deg, rgba(240, 232, 214, .14) 0 1px, transparent 1px 3px),
+    rgba(150, 140, 122, .3);
+  background-size: 100% 200%, 100% 100%, 100% 100%;
+  animation: cambio-canale .65s ease-out both;
+}
+@keyframes cambio-canale {
+  0% { opacity: 1; background-position: 0 100%, 0 0, 0 0; }
+  55% { opacity: .55; background-position: 0 -40%, 0 4px, 0 0; }
+  100% { opacity: 0; background-position: 0 -100%, 0 8px, 0 0; }
+}
+.monitor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, .22) 0 1px, transparent 1px 3px);
+}
+.monitor::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 18%;
+  background: linear-gradient(transparent, rgba(240, 225, 200, .07), transparent);
+  transform: translateY(-100%);
+}
+[data-movimento="pieno"] .monitor::after { animation: monitor-riga 7s linear infinite; will-change: transform; }
+@keyframes monitor-riga {
+  0% { transform: translateY(-100%); }
+  45%, 100% { transform: translateY(560%); }
+}
+/* la spia della registrazione accanto alla didascalia (documento 30, 2.5) */
+.lente figcaption .rec {
+  display: inline-block;
+  width: .62em;
+  height: .62em;
+  margin-right: .7em;
+  vertical-align: .02em;
+  border-radius: 50%;
+  background: var(--rosso);
+  box-shadow: 0 0 .5em color-mix(in srgb, var(--rosso) 70%, transparent);
+}
+[data-movimento="pieno"] .lente figcaption .rec { animation: rec 2.2s steps(1) infinite; }
+@keyframes rec { 55% { opacity: .18; } }
 .lente figcaption {
   margin-top: .55cqw;
   text-align: center;
@@ -87,6 +148,18 @@
 [data-movimento="pieno"] .cellula .differenza { animation-name: differenza-sale; }
 @keyframes differenza-sale { 0% { opacity: 0; transform: translateY(.4cqw); } 12% { opacity: 1; transform: none; } 70% { opacity: 1; } 100% { opacity: 0; transform: translateY(-.8cqw); } }
 
+/* la ricarica (documento 30, 2.2): un anello di luce si apre intorno alla cellula, una volta */
+.cellula .onda-ricarica {
+  position: absolute;
+  inset: 4%;
+  border-radius: 50%;
+  border: 2px solid var(--aria);
+  box-shadow: 0 0 1.2cqw color-mix(in srgb, var(--aria) 60%, transparent), inset 0 0 1cqw color-mix(in srgb, var(--aria) 40%, transparent);
+  pointer-events: none;
+  animation: onda-ricarica 1.4s cubic-bezier(.2, .7, .3, 1) both;
+}
+@keyframes onda-ricarica { 0% { opacity: .9; transform: scale(.8); } 100% { opacity: 0; transform: scale(1.45); } }
+
 /* sulla Santa Maria, prima della tuta: la console di bordo */
 .di-bordo { flex: 1 1 auto; margin: 0; display: grid; grid-template-columns: auto 1fr; gap: .55cqw 1cqw; align-content: center; }
 .di-bordo dt { padding-top: .12em; }
@@ -131,7 +204,7 @@
 .mappa .stanza { fill: var(--vena); filter: drop-shadow(0 0 3px color-mix(in srgb, var(--vena) 80%, transparent)); transition: fill .6s; }
 .mappa .stanza.qui { fill: var(--vena-2); }
 .mappa .impulso { fill: none; stroke: var(--vena-2); stroke-opacity: .6; transform-box: fill-box; transform-origin: center; }
-[data-movimento="pieno"] .mappa .impulso { animation: impulso 2.6s ease-out infinite; }
+[data-movimento="pieno"] .mappa .impulso { animation: impulso 2.6s steps(44) infinite; }
 /* l'impulso sta in uno strato suo, sopra la mappa: ridipinge un cerchio, non le stanze con i loro
    bagliori (revisione 25, M10) */
 .mappa .mappa-impulso { position: absolute; left: 0; top: 0; pointer-events: none; will-change: transform; }
@@ -191,12 +264,42 @@
   box-shadow: inset 0 0 2.2cqw color-mix(in srgb, var(--aria) 16%, transparent), inset 0 0 0 1px color-mix(in srgb, var(--aria) 10%, transparent);
   opacity: .8;
 }
-[data-movimento="pieno"] .vetro { animation: respiro-vetro var(--respiro, 4.4s) ease-in-out infinite; will-change: opacity; }
+/* a piccoli passi, trenta per ogni mezzo respiro (da 9 a 27 al secondo): la scheda video non ricompone
+   lo schermo a ogni fotogramma (documento 30, §8) */
+[data-movimento="pieno"] .vetro { animation: respiro-vetro var(--respiro, 4.4s) steps(30) infinite; will-change: opacity; }
 @keyframes respiro-vetro { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+
+/* il riflesso del vetro del casco (documento 30, 1.3): una luce larga e morbida nell'angolo in alto, una
+   più debole in basso a destra; ferma, e senza linee che passino sul testo */
+.riflesso {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+  border-radius: 2.2cqw;
+  background:
+    radial-gradient(ellipse 34% 30% at 0% 0%, rgba(235, 245, 245, .055), rgba(235, 245, 245, .018) 55%, transparent 75%),
+    radial-gradient(ellipse 26% 20% at 100% 100%, rgba(235, 245, 245, .03), transparent 70%);
+}
+/* sotto il 30 % il fiato appanna il fondo del vetro, al ritmo del respiro */
+.appannato {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 32%;
+  z-index: 7;
+  pointer-events: none;
+  background: radial-gradient(ellipse 72% 100% at 50% 118%, rgba(226, 236, 236, .11), rgba(226, 236, 236, .035) 48%, transparent 72%);
+  opacity: .6;
+}
+[data-riflessi="no"] :is(.riflesso, .appannato) { display: none; }
+[data-movimento="pieno"] .appannato { animation: appanna var(--respiro, 2.2s) steps(24) infinite; will-change: opacity; }
+@keyframes appanna { 0%, 100% { opacity: .2; } 38% { opacity: 1; } }
 
 /* l'ipossia: la vignettatura e una leggera aberrazione ai bordi; la spaziatura vacilla */
 .ipossia-velo { position: absolute; inset: 0; z-index: 8; pointer-events: none; background: radial-gradient(ellipse at 40% 45%, transparent 42%, rgba(0, 0, 0, .72)); box-shadow: inset 2px 0 0 rgba(255, 70, 70, .08), inset -2px 0 0 rgba(70, 200, 255, .08); }
-[data-movimento="pieno"] .ipossia-velo { animation: vigna 3.6s ease-in-out infinite; }
+[data-movimento="pieno"] .ipossia-velo { animation: vigna 3.6s steps(27) infinite; }
 @keyframes vigna { 0%, 100% { opacity: .7; } 50% { opacity: 1; } }
 [data-movimento="pieno"][data-ipossia] .turno.attuale .b-paragrafo { animation: vacilla 4.4s ease-in-out infinite; }
 @keyframes vacilla { 0%, 100% { letter-spacing: 0; } 50% { letter-spacing: .03em; } }

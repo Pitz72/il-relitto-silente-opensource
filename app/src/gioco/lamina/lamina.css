@@ -107,6 +107,20 @@
 }
 .lamina[data-forma="acciaio"] .vena-titolo { height: 1px; background: linear-gradient(90deg, var(--accento-2), transparent 70%); opacity: .6; }
 .turno.passato .b-stanza h2 { font-size: 1.35em; }
+/* l'arrivo in una stanza (documento 30, 2.1): il nome entra stringendo la spaziatura, e la sua riga di luce
+   si allunga da sinistra; una volta sola, con il turno, al passo della rivelazione */
+/* «backwards»: finita, l'animazione lascia il posto allo stile (tenuta con «both» restava viva, e costava,
+   fino al turno dopo; documento 30, §8) */
+[data-movimento="pieno"] .turno.attuale .b-stanza h2 { animation: stanza-nome 1.15s cubic-bezier(.2, .7, .2, 1) var(--ritardo, 0ms) backwards; }
+@keyframes stanza-nome {
+  from { opacity: 0; letter-spacing: .07em; }
+  to { opacity: 1; }
+}
+[data-movimento="pieno"] .turno.attuale .vena-titolo { transform-origin: left center; animation: vena-titolo 1.6s cubic-bezier(.3, .6, .15, 1) calc(var(--ritardo, 0ms) + 120ms) backwards; }
+@keyframes vena-titolo {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
 .turno.passato .vena-titolo { margin: .2em 0 .4em; }
 
 /* la prosa */
@@ -225,7 +239,7 @@
   border-radius: 0;
   cursor: pointer;
 }
-[data-movimento="pieno"] .lamina[data-forma="membrana"] .turno.attuale .s-suggerimento { animation: luce-propria 2.6s ease-in-out infinite; }
+[data-movimento="pieno"] .lamina[data-forma="membrana"] .turno.attuale .s-suggerimento { animation: luce-propria 2.6s steps(20) infinite; }
 @keyframes luce-propria {
   0%, 100% { text-shadow: 0 0 .35em color-mix(in srgb, var(--accento-2) 60%, transparent); }
   50% { text-shadow: 0 0 1.1em var(--accento-2), 0 0 .25em color-mix(in srgb, var(--accento-2) 80%, transparent); }

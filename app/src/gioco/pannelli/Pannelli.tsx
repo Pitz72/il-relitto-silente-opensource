@@ -5,7 +5,7 @@
 // ============================================================================
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import type { Forma } from "../../stile/atmosfere";
-import type { Opzioni } from "../../stile/opzioni";
+import { QUALITA, qualitaDi, type Opzioni, type Qualita } from "../../stile/opzioni";
 import { romano } from "../../lib/italiano";
 import { POSTI, quando, type IdPosto, type Posto } from "../salvataggi";
 import RigheNovita from "../../menu/RigheNovita";
@@ -252,8 +252,15 @@ export function Salvataggi({
 // ----------------------------------------------------------------------------
 //  Le opzioni
 // ----------------------------------------------------------------------------
-type SchedaOpzioni = "gioco" | "audio";
-const SCHEDE_OPZIONI: readonly [SchedaOpzioni, string][] = [["gioco", "Gioco"], ["audio", "Audio"]];
+type SchedaOpzioni = "gioco" | "grafica" | "audio";
+const SCHEDE_OPZIONI: readonly [SchedaOpzioni, string][] = [["gioco", "Gioco"], ["grafica", "Grafica"], ["audio", "Audio"]];
+
+/** Che cosa fa ogni livello della grafica, in una riga. */
+const SPIEGA_QUALITA: Record<Qualita, string> = {
+  piena: "Tutto acceso: la grana che si muove, le vene vive, la luce della stanza, il segnale sui fili, i riflessi del casco, la sfocatura dietro i pannelli.",
+  leggera: "Per i computer meno potenti: la grana ferma, niente luce della stanza né sfocatura; il resto acceso.",
+  essenziale: "Il minimo: niente grana, vene ferme, niente luci, segnali, riflessi e sfocature. Restano i colori e le forme.",
+};
 
 export function PannelloOpzioni({ forma, opzioni, cambia, chiudi }: { forma: Forma; opzioni: Opzioni; cambia: (c: Partial<Opzioni>) => void; chiudi: () => void }) {
   const [scheda, setScheda] = useState<SchedaOpzioni>("gioco");
@@ -364,6 +371,33 @@ export function PannelloOpzioni({ forma, opzioni, cambia, chiudi }: { forma: For
             {riga("Aggiornamenti", "cercaAggiornamenti", [[true, "cercali all’avvio"], [false, "no"]], "All’avvio il gioco chiede a GitHub se è uscita una versione nuova; non manda niente di tuo. Dal menu si può cercare a mano.")}
             {riga("Comandi", "comandi", [["pulsanti", "con i pulsanti"], ["scritti", "scritti"]], "Con i pulsanti si sceglie toccando le cose. Scritti, il gioco è un’avventura testuale pura: si scrive ogni comando, con tutti i verbi, e i pulsanti spariscono.")}
             {riga("Nomi toccabili nel testo", "nomiToccabili", [[true, "sì"], [false, "no"]], "Toccare un nome nella descrizione apre il menu di quella cosa.")}
+          </>
+        )}
+        {scheda === "grafica" && (
+          <>
+            {(() => {
+              // il livello: tre scelte di effetti; se gli effetti sono scelti uno per uno, nessuno è premuto
+              const q = qualitaDi(opzioni);
+              return (
+                <div className="opzione" role="group" aria-label="Qualità degli effetti">
+                  <span className="nome-opzione">Qualità degli effetti</span>
+                  <span className="valori">
+                    {(Object.keys(QUALITA) as Qualita[]).map((x) => (
+                      <button key={x} type="button" aria-pressed={q === x} onClick={() => cambia(QUALITA[x])}>
+                        {x}
+                      </button>
+                    ))}
+                  </span>
+                  <span className="spiega">{q ? SPIEGA_QUALITA[q] : "Gli effetti sono scelti uno per uno, qui sotto."} Il movimento ridotto, nella scheda Gioco, li ferma tutti.</span>
+                </div>
+              );
+            })()}
+            {riga("Grana", "grana", [["mossa", "mossa"], ["ferma", "ferma"], ["no", "niente"]], "La grana del monitor di bordo, sulla Santa Maria, e del sensore del visore, nel relitto. Ferma costa quasi niente.")}
+            {riga("Vene della membrana", "veneVive", [[true, "vive"], [false, "ferme"]], "Vive: crescono dai bordi, si accendono, una luce le percorre. Ferme: disegnate una volta.")}
+            {riga("Luce della stanza", "luceStanza", [[true, "sì"], [false, "no"]], "Dietro il testo, lentissima: l’alone della membrana, il riverbero caldo del reattore.")}
+            {riga("Segnale sui fili", "segnaleFili", [[true, "sì"], [false, "no"]], "Ogni tanto una luce corre lungo il filo delle azioni.")}
+            {riga("Riflessi sul vetro", "riflessi", [[true, "sì"], [false, "no"]], "Con la tuta: il riflesso del casco, e il fiato che appanna il vetro quando l’aria è poca.")}
+            {riga("Sfocatura dietro i pannelli", "sfocatura", [[true, "sì"], [false, "no"]], "Con un pannello aperto, come questo, il gioco dietro si sfoca.")}
           </>
         )}
         {scheda === "audio" && (

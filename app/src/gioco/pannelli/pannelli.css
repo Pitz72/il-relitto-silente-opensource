@@ -10,10 +10,19 @@
   z-index: 30;
   display: grid;
   place-items: center;
-  background: color-mix(in srgb, var(--fondo-2) 72%, transparent);
-  animation: velo-entra .25s ease-out both;
+  background: color-mix(in srgb, var(--fondo-2) 62%, transparent);
+  /* il gioco dietro si sfoca (revisione 25, E6; documento 30, 2.4): il pannello non compete più con
+     la lamina e il visore. Dietro, intanto, i movimenti si fermano (gioco.css), e la sfocatura non si
+     rifà a ogni fotogramma */
+  -webkit-backdrop-filter: blur(6px) saturate(.75);
+  backdrop-filter: blur(6px) saturate(.75);
+  animation: velo-entra .3s ease-out both;
 }
 @keyframes velo-entra { from { opacity: 0; } to { opacity: 1; } }
+[data-sfocatura="no"] .velo-pannello { -webkit-backdrop-filter: none; backdrop-filter: none; background: color-mix(in srgb, var(--fondo-2) 74%, transparent); }
+/* il pannello sale di poco mentre compare */
+[data-movimento="pieno"] .velo-pannello > .pannello { animation: pannello-entra .38s cubic-bezier(.2, .8, .3, 1) both; }
+@keyframes pannello-entra { from { opacity: 0; transform: translateY(14px) scale(.985); } to { opacity: 1; transform: none; } }
 .pannello {
   min-width: min(560px, 80cqw);
   max-width: min(980px, 88cqw);

@@ -33,6 +33,7 @@ import { AIUTO_DELL_APP, interpreta, type ComandoApp } from "./scritti/comandiAp
 import Diario from "./diario/Diario";
 import type { IdPagina } from "./diario/pagine";
 import Vene from "./vene/Vene";
+import Grana from "./Grana";
 import { Avviso, Conferma, PannelloOpzioni, PannelloTasti, Pausa, Salvataggi, useAvviso, type Domanda } from "./pannelli/Pannelli";
 import { archivio, type IdPosto, type Posto } from "./salvataggi";
 import { salvaUscendo } from "./uscita";
@@ -614,6 +615,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
       data-protezione={clima?.protezione ? "" : undefined}
       data-ipossia={clima?.ipossia ? "" : undefined}
       data-in-mano={inMano ? "" : undefined}
+      data-pannello={pannello || domanda || domandaDelMotore ? "" : undefined}
       {...attributiSchermo(opzioni, ridotto)}
       onClickCapture={(e) => {
         // il tocco sul pulsante (bibbia sonora, §5.8): in cattura, prima che un pannello si chiuda
@@ -621,8 +623,11 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
         if (g) void suonaTocco(g);
       }}
     >
-      {clima && <Vene clima={clima} energia={turno?.stato.energia === "ripristinata"} ridotto={ridotto} crescita={crescita} />}
+      {clima && <Vene clima={clima} energia={turno?.stato.energia === "ripristinata"} ridotto={ridotto || !opzioni.veneVive} crescita={crescita} inPausa={!!pannello || !!domanda} />}
+      {turno && <Grana />}
       <main className="palco" aria-label="Il Relitto Silente" ref={palcoRef} onClick={() => (selezione.tipo !== "nessuna" || altri) && chiudi()}>
+        {/* la luce della stanza, dietro la lamina: respira, lentissima (documento 30, 1.4) */}
+        {turno && <div className="luce-stanza" aria-hidden="true" />}
         <div className="esplorazione" aria-hidden={inDialogo || !!pannello || !!domanda ? true : undefined}>
           {turno && (
             <div className="atto" aria-label={`Atto ${turno.stato.atto}: ${turno.stato.titolo_atto}`}>
@@ -683,6 +688,9 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
           />
         )}
         {aria !== null && <div className="vetro" style={{ ["--respiro" as string]: `${respiro}s` }} aria-hidden="true" />}
+        {/* il vetro del casco: il riflesso, e sotto il 30 % il fiato che lo appanna (documento 30, 1.3) */}
+        {aria !== null && <div className="riflesso" aria-hidden="true" />}
+        {aria !== null && aria < 30 && <div className="appannato" style={{ ["--respiro" as string]: `${respiro}s` }} aria-hidden="true" />}
         {clima?.protezione && (
           <div className="velo-protezione" role="status">
             protezione vitale · canali secondari chiusi
