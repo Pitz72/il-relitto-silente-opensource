@@ -8,6 +8,8 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+## [0.2.5-beta.5] - 2026-10-27
+
 ### Per chi gioca
 
 - **Le stanze si vedono.** Nel relitto il multiscanner disegna ogni stanza quando ci entri, e la scansione cambia con quello che fai (la nicchia vuota, la teca dissolta, il pilastro acceso o spento, la mappa sulla cupola del Ponte); sulla Santa Maria le telecamere di bordo mostrano la cuccetta, la stiva, la sala macchine e, da fuori, lo scafo.
