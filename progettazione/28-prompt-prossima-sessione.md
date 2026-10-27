@@ -1,5 +1,7 @@
 # Prompt per la prossima sessione (28)
 
+**Sostituito dal 31** (27 ottobre 2026): il punto di partenza è `31-prompt-prossima-sessione.md`. Qui resta valido il §1, i dettagli della colonna sonora ufficiale.
+
 Sostituisce il 27. Scritto il 19 ottobre 2026, a fine mattina, su richiesta dell’autore: «tutto questo lo faremo nella prossima sessione che questa è durata anche troppo quindi commit, push, verifica sync tra git e locale, salva tutto e prepara prossima sessione».
 
 ## Il prompt
