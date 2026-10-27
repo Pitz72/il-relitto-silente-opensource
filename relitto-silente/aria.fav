@@ -10,6 +10,9 @@
 #   portarlo −1 a turno (−4 nella fuga) · fuga −4 a turno
 # Lo restituiscono la cella di riserva (+25, santamaria.fav) e la ricarica al
 # generatore (+25, strato 3).
+# Non esce mai da 0–100: lo tiene l'invariante qui sotto (Favella1 1.6), che
+# fa da tetto alle ricariche e da fondo nella fuga, dove si muore a zero e non
+# a −5 (documento 29, §6.1).
 # Protezione vitale: sotto 30, e prima della fuga, la tuta non lascia
 # ascoltare né tradurre (le regole sono accanto a ogni eco, in echi.fav e
 # traduci.fav, perché una regola su un oggetto vince sempre su quella generale),
@@ -25,6 +28,7 @@
 
 L'aria è un contatore.
 L'aria parte da 100.
+L'aria resta sempre fra 0 e 100.
 
 # --- Il visore: la cifra sotto gli occhi ------------------------------------
 # Arriva con la tuta (santamaria.fav, «indossa la tuta»).

@@ -1,6 +1,6 @@
 # Favella1 1.6.0: che cosa cambia per il Relitto
 
-Versione 1.1, 27 ottobre 2026 (la prima è del 26; il §8 racconta la 1.6.1). Segue il documento 16, che ha fatto la stessa strada con la 1.5.0, e risponde
+Versione 1.2, 27 ottobre 2026 (la prima è del 26; il §8 racconta la 1.6.1, il §9 l’aria fra 0 e 100). Segue il documento 16, che ha fatto la stessa strada con la 1.5.0, e risponde
 alla richiesta dell’autore: «Ora Favella è arrivato a 1.6.0. Vedi di integrare il nuovo engine e cosa e come
 questo può portare vantaggi al gioco».
 
@@ -26,7 +26,7 @@ questo può portare vantaggi al gioco».
 - **I vantaggi veri stanno nelle frasi nuove**, che toccano i `.fav` (§6). Per il Relitto ne conta una:
   `L'aria resta sempre fra 0 e 100.`. Toglie una piccola incoerenza (quando si muore il visore segna −5 e il
   testo dice che la cifra è a zero), sostituisce cinque `resta fra` scritti a mano, e sui percorsi di
-  collaudo non cambia una sola parola. Le procedure servirebbero a mettere ordine nel sorgente; relazioni,
+  collaudo non cambia una sola parola. L’autore l’ha voluta il 27 ottobre, ed è nei `.fav` (§9). Le procedure servirebbero a mettere ordine nel sorgente; relazioni,
   oggetti contabili e passaggi senza ritorno qui servono poco o niente.
 
 ---
@@ -35,7 +35,7 @@ questo può portare vantaggi al gioco».
 
 | Frase | Esempio del manuale | Nel Relitto |
 |---|---|---|
-| l’invariante | `La sete resta sempre fra 0 e 100.` | l’aria: oggi il limite in alto è scritto a mano in cinque regole, in basso non c’è (§6.1) |
+| l’invariante | `La sete resta sempre fra 0 e 100.` | l’aria: dal 27 ottobre `L'aria resta sempre fra 0 e 100.`, al posto di cinque limiti in alto scritti a mano; in basso prima non c’era (§6.1, §9) |
 | il passaggio senza ritorno | `La botola collega giù a il pozzo senza ritorno.` | le due soglie del Ponte, che oggi rispondono «non torni indietro» (§6.2) |
 | le procedure | `Definisci "far passare la notte" come: …` e poi `esegui far passare la notte` | dieci sequenze di conseguenze ripetute, in 22 regole (§6.3) |
 | le relazioni | `"si fida di" è una relazione molti a molti.` | nessun uso: tre personaggi (l’eco, l’Anziano, Yusuf), con stati semplici |
@@ -168,7 +168,7 @@ Ogni riga di questo paragrafo tocca i `.fav`, che sono congelati: cambia l’imp
 nel CHANGELOG, e i salvataggi di prima si caricano «ricostruita», con l’avviso che la storia è cambiata.
 Sono decisioni dell’autore. Sono in ordine di utilità.
 
-### 6.1 L’aria fra 0 e 100 (consigliata, se il testo si riapre)
+### 6.1 L’aria fra 0 e 100 (fatta il 27 ottobre: §9)
 
 Oggi l’aria (`aria.fav`, «il contatore aria, 0–100») ha il tetto scritto a mano dopo ogni ricarica,
 `e adesso l'aria resta fra 0 e 100`, in cinque regole (`santamaria.fav:368` e `:371`, la cella di riserva;
@@ -224,8 +224,8 @@ da raccogliere), che oggi non è previsto.
 
 1. ~~**La lentezza della compilazione** (§5): correggerla nel repository Favella1, in una 1.6.1, e rifare la
    copia.~~ Fatto il 27 ottobre, su sua richiesta (§8).
-2. **L’aria fra 0 e 100** (§6.1): una riga nei `.fav`, oppure il visore che non scende sotto lo zero, oppure
-   niente.
+2. ~~**L’aria fra 0 e 100** (§6.1): una riga nei `.fav`, oppure il visore che non scende sotto lo zero, oppure
+   niente.~~ Fatto il 27 ottobre, su sua richiesta: la riga nei `.fav` (§9).
 3. ~~**Pubblicare la 1.6.1** come le versioni di prima.~~ Fatto il 27 ottobre, su sua richiesta: la Release
    «FAVELLA 1.6.1» con i tre installer e le note del CHANGELOG (l’ultima versione su GitHub), `favella1` 1.6.1
    su PyPI (provato installandolo da zero), il manuale PDF che dice v1.6.1, e favella.eu alla 2.12.1, con il
@@ -261,3 +261,34 @@ L’autore ha chiesto di correggere la lentezza nel repository Favella1 e poi di
 - **La copia** è rifatta dal tag `v1.6.1` con lo stesso elenco di file; viene con lei anche il manuale
   rigenerato per la 1.6. I collaudi del §4 sono di nuovo tutti verdi, con gli stessi numeri; i sei salvataggi
   veri dell’autore si caricano «identica».
+
+---
+
+## 9. L’aria fra 0 e 100 (27 ottobre 2026)
+
+L’autore ha scelto la riga nei `.fav`: «aggiungi ai .fav “L’aria resta sempre fra 0 e 100.” e togli i cinque
+“resta fra” scritti a mano, con CHANGELOG e collaudi».
+
+- **Il cambio.** In `aria.fav`, dopo `L'aria parte da 100.`, la riga `L'aria resta sempre fra 0 e 100.`, con
+  due righe di commento in testa al modulo. Tolte le cinque conseguenze `e adesso l'aria resta fra 0 e 100`:
+  `santamaria.fav`, la cella di riserva (due regole), e `tecnica.fav`, la ricarica al generatore (tre). I
+  `.fav` sono quelli della prova del §6.1, più il commento. È la prima riga dei `.fav` cambiata dal
+  congelamento del 16 ottobre.
+- **Il confronto**, la storia di prima e quella nuova con lo stesso motore 1.6.1:
+
+  | Prova | Esito |
+  |---|---|
+  | i 2.529 comandi dei file di `collaudo/` | testo identico a ogni passo; l’impronta cambia in due passi, la morte di `limite-I3` e il passo dopo (aria 0 invece di −5) |
+  | le 255 partite del §4 (percorsi e partite a caso), 39.083 passi | testo e pulsanti identici a ogni passo; l’impronta cambia in 16 passi, tutti a partita finita per l’aria (il turno della morte e quelli dopo), con l’aria a 0 invece che fra −1 e −5. Delle 261.560 sonde nessuna cambia il testo, e 270 l’impronta: tutte all’ultimo passo di `limite-I3` e di `stiva-al-limite`, dove un comando che fa passare il turno fa morire, e l’aria si ferma a 0 |
+
+- **I collaudi**, tutti verdi: `regressioni.py --riprese` (14 su 14; `limite-I3` finisce con l’aria a 0, prima
+  −5), `pulsanti.py` e `menu.mjs` con gli stessi numeri del §4 (`finali-menu.json` riscritto identico: lì
+  «Due lettere» si gioca con `due-lettere.txt`, dove l’aria arriva a zero esatto), `eventi.py` (85 su 85), `salvataggi.py` (463),
+  `diario.py`, `scritti.py`, `tipografia.mjs` (1.131 stringhe), `npm run prove` (92 su 92), le tracce sonore
+  con `prova_partite` (14 su 14), e l’eseguibile vero: i sei finali con i soli menu e i titoli di coda,
+  e il salvataggio che torna «identica».
+- **I salvataggi di prima.** L’impronta della storia è cambiata, quindi un salvataggio fatto prima si carica
+  «ricostruita»: il ponte rigioca i comandi sulla storia nuova e mostra l’avviso «la storia è cambiata dopo il
+  salvataggio». I sei salvataggi veri dell’autore (motore 1.5.0, gioco 0.2.0) si ricostruiscono tutti fino al
+  loro turno (0, 6, 20, 30, 113, 129).
+- **Il CHANGELOG** ha la riga «Per chi gioca» e la voce in «Corretto».

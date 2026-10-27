@@ -50,13 +50,13 @@ Invece di ricarica se l'energia è assente: dire "Il generatore è morto. Non c'
 Invece di ricarica se il giocatore non è nel laboratorio di risonanza: dire "Ricaricare la tuta? Servirebbe una presa, e corrente.".
 Invece di ricarica se la ricarica è usata: dire "Il generatore non ha più niente da darti: ogni filo di corrente va al Ponte.".
 Invece di ricarica se l'aria è più di 75: dire "La tuta è piena per tre quarti. La ricarica la tieni per quando servirà.".
-Invece di ricarica: dire "Stacchi il cavo di servizio dal fianco della tuta e lo innesti nella presa del generatore. Un ronzio, la cifra sul visore che risale. La nave ti dà un po' della sua corrente, e tu la trasformi in aria." e adesso aumenta l'aria di 25 e adesso l'aria resta fra 0 e 100 e adesso la ricarica è usata.
+Invece di ricarica: dire "Stacchi il cavo di servizio dal fianco della tuta e lo innesti nella presa del generatore. Un ronzio, la cifra sul visore che risale. La nave ti dà un po' della sua corrente, e tu la trasformi in aria." e adesso aumenta l'aria di 25 e adesso la ricarica è usata.
 Invece di ricarica la tuta se l'energia è assente: dire "Il generatore è morto. Non c'è niente da cui ricaricare.".
 Invece di ricarica la tuta se il giocatore non è nel laboratorio di risonanza: dire "Ricaricare la tuta? Servirebbe una presa, e corrente.".
 Invece di ricarica la tuta se la ricarica è usata: dire "Il generatore non ha più niente da darti: ogni filo di corrente va al Ponte.".
 Invece di ricarica la tuta se l'aria è più di 75: dire "La tuta è piena per tre quarti. La ricarica la tieni per quando servirà.".
-Invece di ricarica la tuta: dire "Stacchi il cavo di servizio dal fianco della tuta e lo innesti nella presa del generatore. Un ronzio, la cifra sul visore che risale. La nave ti dà un po' della sua corrente, e tu la trasformi in aria." e adesso aumenta l'aria di 25 e adesso l'aria resta fra 0 e 100 e adesso la ricarica è usata.
+Invece di ricarica la tuta: dire "Stacchi il cavo di servizio dal fianco della tuta e lo innesti nella presa del generatore. Un ronzio, la cifra sul visore che risale. La nave ti dà un po' della sua corrente, e tu la trasformi in aria." e adesso aumenta l'aria di 25 e adesso la ricarica è usata.
 Invece di usa la tuta sul generatore se l'energia è assente: dire "Il generatore è morto. Non c'è niente da cui ricaricare.".
 Invece di usa la tuta sul generatore se la ricarica è usata: dire "Il generatore non ha più niente da darti: ogni filo di corrente va al Ponte.".
 Invece di usa la tuta sul generatore se l'aria è più di 75: dire "La tuta è piena per tre quarti. La ricarica la tieni per quando servirà.".
-Invece di usa la tuta sul generatore: dire "Stacchi il cavo di servizio dal fianco della tuta e lo innesti nella presa del generatore. Un ronzio, la cifra sul visore che risale. La nave ti dà un po' della sua corrente, e tu la trasformi in aria." e adesso aumenta l'aria di 25 e adesso l'aria resta fra 0 e 100 e adesso la ricarica è usata.
+Invece di usa la tuta sul generatore: dire "Stacchi il cavo di servizio dal fianco della tuta e lo innesti nella presa del generatore. Un ronzio, la cifra sul visore che risale. La nave ti dà un po' della sua corrente, e tu la trasformi in aria." e adesso aumenta l'aria di 25 e adesso la ricarica è usata.

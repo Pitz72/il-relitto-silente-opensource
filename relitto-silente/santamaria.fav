@@ -365,10 +365,10 @@ Invece di lascia il faro del casco: dire "È parte del casco.".
 # --- La cella di riserva -----------------------------------------------------
 Invece di usa la cella di riserva se la tuta è svestita: dire "Prima devi avere la tuta addosso.".
 Invece di usa la cella di riserva se l'aria è più di 75: dire "La tuta è ancora piena per tre quarti: sprecheresti la cella. La tieni per quando servirà.".
-Invece di usa la cella di riserva: dire "Sganci la cella esausta dal fianco della tuta e innesti quella di riserva. La valvola sibila, e la cifra sul visore risale." e adesso aumenta l'aria di 25 e adesso l'aria resta fra 0 e 100 e adesso la cella di riserva è nel nulla.
+Invece di usa la cella di riserva: dire "Sganci la cella esausta dal fianco della tuta e innesti quella di riserva. La valvola sibila, e la cifra sul visore risale." e adesso aumenta l'aria di 25 e adesso la cella di riserva è nel nulla.
 Invece di usa la cella di riserva sulla tuta se la tuta è svestita: dire "Prima devi avere la tuta addosso.".
 Invece di usa la cella di riserva sulla tuta se l'aria è più di 75: dire "La tuta è ancora piena per tre quarti: sprecheresti la cella. La tieni per quando servirà.".
-Invece di usa la cella di riserva sulla tuta: dire "Sganci la cella esausta dal fianco della tuta e innesti quella di riserva. La valvola sibila, e la cifra sul visore risale." e adesso aumenta l'aria di 25 e adesso l'aria resta fra 0 e 100 e adesso la cella di riserva è nel nulla.
+Invece di usa la cella di riserva sulla tuta: dire "Sganci la cella esausta dal fianco della tuta e innesti quella di riserva. La valvola sibila, e la cifra sul visore risale." e adesso aumenta l'aria di 25 e adesso la cella di riserva è nel nulla.
 
 # --- Il boccaporto: per uscire servono la tuta e gli arpioni -----------------
 Invece di vai fuori se il giocatore è nella stiva e la tuta non è vestita: dire "Il boccaporto dà sul vuoto. Senza tuta, è l'ultima porta che apri.".
