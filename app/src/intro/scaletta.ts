@@ -8,6 +8,9 @@
 //  di 4; entra in 1,2 s ed esce in 1,0. Un blocco che continua il precedente
 //  (B4 dopo B3, B6 dopo B5) entra sotto quando il primo ha finito il suo tempo;
 //  il primo si attenua, ed escono insieme.
+//  Dal 29 ottobre 2026 L.V. ha una voce (documento 09, §13): i suoi blocchi
+//  restano anche il tempo che lui ci mette a dirli, e il blocco che continua
+//  la frase entra poco prima della sua prima parola.
 // ============================================================================
 
 export type IdScena = "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H";
@@ -39,6 +42,15 @@ export interface Blocco {
   via: number;
   /** il blocco sopra a cui si aggiunge, se ne continua la frase */
   sottoA?: string;
+  /** la voce di L.V. che comincia con questo blocco: quando (secondi dell'intro), e il pezzo del file */
+  pezzo?: Pezzo;
+}
+
+/** Un pezzo del file della voce di L.V.: comincia al secondo `t` dell'intro, e va da `da` ad `a` del file. */
+export interface Pezzo {
+  t: number;
+  da: number;
+  a: number;
 }
 
 export interface Sottotitolo {
@@ -78,6 +90,28 @@ export const PROLOGO = {
   B10: "Fine della traccia.",
 } as const;
 
+/** La voce di L.V. (documento 09, §13; `strumenti/intro/voce_lv.py`): dove sta ogni frase nel file,
+ *  in secondi. Il pezzo (da, a) si suona intero; parola e fine sono la prima e l'ultima parola del
+ *  blocco. Un blocco che continua la frase (B4, B6) sta nel pezzo del blocco sopra, com'è stato detto. */
+export const VOCE: Partial<Record<keyof typeof PROLOGO, { da?: number; a?: number; parola: number; fine: number }>> = {
+  B1: { da: 2.2, a: 15.1, parola: 2.48, fine: 13.86 },
+  B2: { da: 15.4, a: 26.6, parola: 16.78, fine: 25.32 },
+  B3: { da: 27.1, a: 43.5, parola: 28.14, fine: 33.5 },
+  B4: { parola: 34.26, fine: 42.24 },
+  B5: { da: 47.7, a: 60.0, parola: 49.58, fine: 53.62 },
+  B6: { parola: 57.88, fine: 58.78 },
+  B7: { da: 67.6, a: 71.05, parola: 68.08, fine: 70.66 },
+  B8: { da: 71.1, a: 77.0, parola: 72.64, fine: 76.66 },
+  B9: { da: 77.0, a: 85.6, parola: 78.0, fine: 84.12 },
+};
+/** la voce comincia appena dopo che il testo comincia a entrare */
+export const ANTICIPO_VOCE = 0.15;
+/** il blocco che continua la frase entra così prima della sua prima parola */
+const PRIMA_DELLA_PAROLA = 0.6;
+/** e ogni blocco resta almeno così dopo l'ultima parola */
+const DOPO_LA_PAROLA = 0.8;
+const SEGUITO: Partial<Record<string, keyof typeof PROLOGO>> = { B3: "B4", B5: "B6" };
+
 export const TITOLO = "IL RELITTO SILENTE";
 export const SOTTOTITOLO = "Una storia tratta da Il Registro della Santa Maria";
 
@@ -95,6 +129,8 @@ export interface Momenti {
   spia: number;
   battito: [number, number];
   stella: [number, number];
+  /** entra la musica: il tema della Santa Maria, quando si apre lo spazio */
+  tema: number;
   naveB: number;
   reB: number;
   radar: [number, number];
@@ -127,7 +163,21 @@ export function costruisciScaletta(): Scaletta {
   };
   const testo = (id: keyof typeof PROLOGO | "T", voce: Voce, scena: IdScena, sottoA?: string) => {
     const frase = id === "T" ? `${TITOLO} ${SOTTOTITOLO}` : PROLOGO[id];
-    const { fermo, parole } = id === "T" ? { ...fermoPer(frase), fermo: FERMO_TITOLO } : fermoPer(frase);
+    let { fermo } = id === "T" ? { fermo: FERMO_TITOLO } : fermoPer(frase);
+    const { parole } = fermoPer(frase);
+    // la voce: il testo resta finché L.V. l'ha detto
+    const v = id === "T" ? undefined : VOCE[id];
+    let pezzo: Pezzo | undefined;
+    if (v && !sottoA) {
+      pezzo = { t: arrotonda(T + ANTICIPO_VOCE), da: v.da!, a: v.a! };
+      const seguito = SEGUITO[id] ? VOCE[SEGUITO[id]!]! : undefined;
+      // con un seguito resta fino a quando entra il seguito, poco prima della sua prima parola
+      const fino = seguito ? pezzo.t + (seguito.parola - v.da!) - PRIMA_DELLA_PAROLA : pezzo.t + (v.fine - v.da!) + DOPO_LA_PAROLA;
+      fermo = Math.max(fermo, arrotonda(fino - (T + ENTRA)));
+    } else if (v && sottoA) {
+      const capo = blocchi.find((x) => x.id === sottoA)!.pezzo!;
+      fermo = Math.max(fermo, arrotonda(capo.t + (v.fine - capo.da) + DOPO_LA_PAROLA - (T + ENTRA)));
+    }
     const b: Blocco = {
       id,
       testo: id === "T" ? TITOLO : frase,
@@ -141,6 +191,7 @@ export function costruisciScaletta(): Scaletta {
       esce: arrotonda(T + ENTRA + fermo),
       via: arrotonda(T + ENTRA + fermo + ESCE),
       sottoA,
+      pezzo,
     };
     blocchi.push(b);
     T = T + ENTRA + fermo;
@@ -225,6 +276,7 @@ export function costruisciScaletta(): Scaletta {
     spia: r(spia),
     battito: [r(battito), r(battito + 3.0)],
     stella: [r(stella), r(stella + 2.5)],
+    tema: r(stella + 0.4),
     naveB: r(naveB),
     reB: r(reB),
     radar: [r(radar), r(radar + 6.2)],
@@ -249,23 +301,23 @@ export function costruisciScaletta(): Scaletta {
   // I sottotitoli dei suoni (§2.5): per chi non sente, e, nell'animatic, la
   // colonna sonora che ancora non c'è (§5 dello storyboard).
   const m = momenti;
+  const b1 = blocchi.find((b) => b.id === "B1")!;
   const sottotitoli: Sottotitolo[] = [
     { inizio: m.fruscioA, fine: m.spia, testo: "il fruscio di una traccia registrata" },
     { inizio: m.spia, fine: m.spia + 1.6, testo: "un clic" },
-    { inizio: 5.0, fine: m.battito[0], testo: "un respiro nel casco, vicino" },
-    { inizio: m.battito[0], fine: m.battito[1], testo: "un battito, che rallenta" },
-    { inizio: m.stella[0], fine: m.reB, testo: "silenzio" },
-    { inizio: m.reB, fine: m.radar[0], testo: "una nota bassa, tenuta" },
+    { inizio: b1.pezzo!.t, fine: b1.pezzo!.t + 4, testo: "la voce di L.V., dalla radio della tuta, senza fiato" },
+    { inizio: m.battito[0], fine: m.tema, testo: "un battito, che rallenta" },
+    { inizio: m.tema, fine: m.naveB + 3, testo: "il battito si allontana; entra la musica" },
     { inizio: m.radar[0], fine: m.stelleSpente[0], testo: "il reattore sotto il pavimento; il radar, un tic a ogni giro" },
     { inizio: m.stelleSpente[0], fine: m.faro, testo: "la plancia" },
     { inizio: m.faro, fine: m.brusio[0], testo: "il relè del faro" },
     { inizio: m.brusio[0], fine: m.brusio[1], testo: "dalla radio, molte voci" },
-    { inizio: m.scala[0], fine: m.fruscioF, testo: "la musica si assottiglia" },
-    { inizio: m.fruscioF, fine: m.pulsa[0], testo: "il fruscio della traccia; il respiro, più lento" },
+    { inizio: m.scala[0], fine: m.fruscioF, testo: "la musica" },
+    { inizio: m.fruscioF, fine: m.pulsa[0], testo: "il fruscio della traccia" },
     { inizio: m.pulsa[0], fine: m.pulsa[1], testo: "un battito" },
-    { inizio: m.spiaSpenta, fine: m.glifi[0], testo: "silenzio" },
+    { inizio: m.spiaSpenta, fine: m.glifi[0], testo: "la musica si spegne" },
     { inizio: m.glifi[0], fine: m.traduzione[1], testo: "clic sottili, poi fruscii che salgono" },
-    { inizio: m.traduzione[1], fine: m.raccordo[0], testo: "la musica si chiude su una nota" },
+    { inizio: m.traduzione[1], fine: m.raccordo[0], testo: "una nota bassa" },
     { inizio: m.arretra[0], fine: durata, testo: "il reattore; la console che si accende" },
   ].map((s) => ({ ...s, inizio: r(s.inizio), fine: r(s.fine) }));
 
@@ -303,6 +355,11 @@ export const formatoTempo = (t: number) => {
   const s = t - m * 60;
   return `${m}:${s.toFixed(1).padStart(4, "0").replace(".", ",")}`;
 };
+
+/** I pezzi della voce di L.V., in ordine: per il motore audio. */
+export function pezziDellaVoce(s: Scaletta = SCALETTA): Pezzo[] {
+  return s.blocchi.filter((b) => b.pezzo).map((b) => b.pezzo!);
+}
 
 /** I buchi della traccia: il fruscio cade a zero per un quarto di secondo fra una frase e l'altra,
  *  nelle scene A e F; mai sulle parole (storyboard, A). */

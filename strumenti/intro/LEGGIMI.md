@@ -11,6 +11,7 @@ Le immagini canoniche stanno fuori dal repo, nella cartella degli asset del Mist
 | `scontorna_prua.py` | Lo stesso, dallo still canonico di tre quarti dal davanti (v2). | numpy, opencv-python |
 | `cattura.ps1` | Fotografa una pagina WebGL con Edge senza finestra (SwiftShader): `cattura.ps1 <url> <file.png> [larghezza] [altezza]`. Con `?quadro=oblo` o `?quadro=faro` la prova di look dà le viste dall’oblò. | Edge, PowerShell |
 | `plancia.py` | Compone i quadri della plancia: la vista nell’oblò di `s_01_b`, il radar sullo schermo verde, la spia della prossimità. `plancia.py <cartella>`: nella cartella devono esserci `oblo.png` e `faro.png`; ne escono `C1`, `C2`, `D1`, `H1`. | numpy, Pillow |
+| `voce_lv.py` | La voce di L.V. (documento 09, §13): dal WAV che l’autore ha generato con Gemini (la voce «Riko») alla voce dell’intro, passata da una trasmittente leggera (banda 170 Hz–5,4 kHz dolce, un poco di presenza, il casco, una saturazione e un compressore lenti); scrive `audio/musica-ia/LV/LV-01-la-traccia.mp3` e l’inviluppo `app/src/intro/voce.ts`, e copia la sorgente in `audio/sorgenti/voce/` (fuori da git). Dove sta ogni frase nel file lo dice `VOCE` in `app/src/intro/scaletta.ts`. | numpy, scipy, ffmpeg |
 | `plancia_hd.py` | La plancia delle scene definitive (C, D, H): `s_01_b` intera, 3120 × 1328, con il vetro dell’oblò bucato, l’ombra dello spessore e un riflesso; più la stessa sfocata, per il cambio di fuoco. Scrive `plancia-hd.webp` e `plancia-sfocata.webp` in `app/public/intro/`. | numpy, Pillow |
 
 Uso tipico:

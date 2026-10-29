@@ -220,12 +220,13 @@ export default function Titoli({ ridotto, onFine }: Props) {
 
           <section>
             <h2>I suoni</h2>
-            {E.suoni.length === 0 ? (
-              <p className="tit-nota">Ogni suono del gioco è sintetizzato nel suo motore audio, senza registrazioni.</p>
-            ) : (
+            <p className="tit-nota">
+              {E.suoni.length === 0 ? "Ogni suono del gioco è sintetizzato nel suo motore audio, senza registrazioni." : "Ogni altro suono del gioco è sintetizzato nel suo motore audio, senza registrazioni."}
+            </p>
+            {E.suoni.length > 0 && (
               <dl className="tit-coppie">
                 {E.suoni.map((s) => (
-                  <Coppia key={s.sigla} ruolo={s.uso} nome={`«${s.titolo}»`} sotto={`di ${s.autore}`} />
+                  <Coppia key={s.sigla} ruolo={s.uso} nome={`«${s.titolo}»`} sotto={`di ${s.autore}, con ${s.fonte}`} />
                 ))}
               </dl>
             )}

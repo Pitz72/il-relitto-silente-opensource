@@ -1,8 +1,8 @@
 // ============================================================================
 //  L'intro (09-intro-storyboard.md), con le scene definitive (§10):
-//    A  la traccia: la spia e il nastro della scatola nera, che respira, batte
-//       e si interrompe nei buchi; la voce dell'apparecchio si stampa, quella
-//       di L.V. viene a fuoco
+//    A  la traccia: la spia e il nastro della scatola nera, che si muove con
+//       la voce vera di L.V. (§13) e con il suo cuore, e si interrompe nei
+//       buchi; la voce dell'apparecchio si stampa, quella di L.V. viene a fuoco
 //    B  il margine, nel motore della scala
 //    C  la plancia a piena risoluzione (plancia.ts): il radar a fosforo, la
 //       spia rossa, il cambio di fuoco vero; nell'oblò il cielo dal vivo, e le
@@ -30,12 +30,14 @@ import {
   TITOLO,
   buchiDellaTraccia,
   formatoTempo,
+  pezziDellaVoce,
   fra,
   morbido,
   opacitaBlocco,
   scenaA,
   type Blocco,
 } from "./scaletta";
+import { VOCE_INVILUPPO, VOCE_PASSO } from "./voce";
 import "./intro.css";
 
 const S = SCALETTA;
@@ -87,15 +89,24 @@ const caso = (a: number, b = 0) => {
   return x - Math.floor(x);
 };
 
-/** Il livello della traccia di A nell'istante τ (0–1): il fruscio, il respiro di L.V. che si accorcia,
+const PEZZI = pezziDellaVoce(S);
+
+/** Quanto parla L.V. nell'istante τ (0–1): l'inviluppo del file della voce, nel pezzo che suona. */
+function livelloVoce(τ: number): number {
+  for (const p of PEZZI) {
+    if (τ < p.t || τ >= p.t + (p.a - p.da)) continue;
+    const i = Math.floor((p.da + (τ - p.t)) / VOCE_PASSO);
+    return i < VOCE_INVILUPPO.length ? (VOCE_INVILUPPO.charCodeAt(i) - 48) / 63 : 0;
+  }
+  return 0;
+}
+
+/** Il livello della traccia di A nell'istante τ (0–1): il fruscio, la voce di L.V. con il suo fiato,
  *  il cuore; zero nei buchi e dopo l'ultimo colpo. */
 function livelloTraccia(τ: number): number {
   if (τ < M.spia || τ > BATTITI_A[3] + 0.9) return 0;
   for (const b of BUCHI) if (τ >= b && τ < b + 0.25) return 0;
-  // il respiro: un ciclo che si accorcia, da 4,6 a 3,5 secondi
-  const fase = (2 * Math.PI * τ) / 4.6 + (Math.PI * τ * τ) / (4.6 * 4.6 * 42);
-  const respiro = Math.max(0, Math.sin(fase)) ** 2 * 0.55 + Math.max(0, -Math.sin(fase)) ** 3 * 0.18;
-  return Math.min(1, 0.14 + respiro + impulso(τ, BATTITI_A) * 1.1);
+  return Math.min(1, 0.12 + livelloVoce(τ) * 1.05 + impulso(τ, BATTITI_A) * 1.1);
 }
 
 /** La lunghezza di un tratto "M x y L x y …" (i glifi sono spezzate). */
@@ -474,7 +485,9 @@ export default function Intro({
       const respiro = 0.86 + 0.14 * Math.sin((t * 2 * Math.PI) / 4.5);
       const colpo = impulso(t, BATTITI_A) * (ridotto ? 0.5 : 1);
       const sfoca = morbido(fra(t, M.stella[0], M.stella[0] + 1.8));
-      const luce = accesa * (0.62 * respiro + 0.5 * colpo) * (1 - sfoca);
+      // la spia della registrazione si accende un poco di più quando L.V. parla
+      const voce = livelloVoce(t) * (ridotto ? 0.15 : 0.32);
+      const luce = accesa * (0.56 * respiro + 0.5 * colpo + voce) * (1 - sfoca);
       spia(SPIA_A.x, SPIA_A.y, luce, sfoca);
     }
     if (t >= M.stella[0] + 0.5 && t < C0) {
@@ -495,10 +508,12 @@ export default function Intro({
     // F: la spia ricompare sopra il testo; con «La vedo pulsare» batte; a «Fine della traccia» si spegne
     if (t >= M.scala[1] - 0.5 && t < M.spiaSpenta + 1) {
       const accesa = morbido(fra(t, M.scala[1], M.scala[1] + 1.2)) * (1 - morbido(fra(t, M.spiaSpenta - 0.2, M.spiaSpenta + 0.6)));
+      // batte da «La vedo pulsare», con i colpi che si sentono (intro.rs), e continua finché resta il testo
       const colpi: number[] = [];
-      for (let c = M.pulsa[0] + 1.2; c < M.pulsa[1]; c += 1.15) colpi.push(c);
+      for (let c = M.pulsa[0] + 2.4; c < M.pulsa[1]; c += 1.15) colpi.push(c);
       const colpo = impulso(t, colpi) * (ridotto ? 0.5 : 1);
-      spia(SPIA_F.x, SPIA_F.y, accesa * (0.5 + 0.55 * colpo) * 0.85);
+      const voce = livelloVoce(t) * (ridotto ? 0.15 : 0.35);
+      spia(SPIA_F.x, SPIA_F.y, accesa * (0.46 + 0.55 * colpo + voce) * 0.85);
     }
 
     // G: i glifi che si tracciano, la matrice che li legge, il titolo

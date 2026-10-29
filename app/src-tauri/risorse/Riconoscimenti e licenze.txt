@@ -93,12 +93,17 @@ scelta e diretta da Simone Pizzi. I brani di Lyria portano la filigrana SynthID.
   di Simone Pizzi, con Lyria 3.5 (Google Flow Music) · CC BY-NC-SA 4.0
 «Voice in the Deep» — i titoli di coda
   di Simone Pizzi, con Lyria 3.5 (Google Flow Music) · CC BY-NC-SA 4.0
+«Santa Maria» — l'intro: il tema del Mistero della Santa Maria
+  di Alirio Bruni, con Suno (Suno) · CC BY-NC-SA 4.0
 
 
 I SUONI
 -------
 
-Ogni suono del gioco è sintetizzato nel suo motore audio, senza registrazioni.
+Ogni altro suono del gioco è sintetizzato nel suo motore audio, senza registrazioni.
+
+«La voce di L.V.» — l’intro: la voce di L.V.
+  di Simone Pizzi, da Gemini di Google, la voce «Riko» (sintesi vocale) · CC BY-NC-SA 4.0 per quanto di spettanza dell’autore; i Termini di Google prevalgono
 
 
 LE IMMAGINI

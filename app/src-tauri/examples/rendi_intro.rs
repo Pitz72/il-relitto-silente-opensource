@@ -1,6 +1,7 @@
 //! Rende su file WAV il suono dell'intro (09-intro-storyboard.md), con lo stesso motore che suona
 //! nell'app, e dice il livello di ogni scena. I momenti dell'animatic arrivano da un file JSON
 //! (`node strumenti/intro/momenti.mjs > momenti.json`), così il rendering segue i tempi di scaletta.ts.
+//! La voce di L.V. e il tema vengono dai file di `audio/musica-ia/` (con SENZA_FILE, senza).
 //!
 //!   cargo run --release --example rendi_intro -- <momenti.json> <cartella d'uscita>
 
@@ -22,8 +23,14 @@ fn main() -> Result<(), String> {
     let durata = dati.durata + 3.0;
 
     let (mut mondo, tx, _) = Mondo::nuovo(SR, 31);
+    if std::env::var_os("SENZA_FILE").is_none() {
+        mondo.cartella_musica(std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../audio/musica-ia"));
+    }
     tx.send(Comando::Intro(Some(dati.clone()))).map_err(|e| e.to_string())?;
+    // il primo blocco fa partire la decodifica dei file; nella realtà ha dieci secondi, qui li si aspetta
     let mut buf = vec![Frame::ZERO; 128];
+    mondo.rendi(&mut buf[..1], 1.0 / SR as f64);
+    std::thread::sleep(std::time::Duration::from_millis(2500));
     let n = (durata * SR) as usize;
     let mut pcm: Vec<i16> = Vec::with_capacity(n * 2);
     let mut i = 0;

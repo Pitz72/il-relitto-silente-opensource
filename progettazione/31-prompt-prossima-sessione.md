@@ -50,9 +50,11 @@ del lavoro.
 - **L’intro ha le scene definitive** (29 ottobre, seconda sessione: l’autore ha chiesto di portarla «a livello
   top», con un tocco cinematografico, prima delle altre cose; documento 09, §12). La plancia intera a piena
   risoluzione con la vista fuori dal vivo nell’oblò, il cambio di fuoco vero, il radar a fosforo, il faro che cerca,
-  i glifi che si tracciano, e la fine che vola nella lente del gioco mentre la partita parte sotto. Tempi e
-  suono come prima. È su `main`, non ancora in una beta: l’autore non l’ha ancora vista; poi decide se servono
-  aggiustamenti, i titoli di testa «o altro».
+  i glifi che si tracciano, e la fine che vola nella lente del gioco mentre la partita parte sotto. È nella
+  **0.2.5-beta.7**, pubblicata nel canale di prova la notte del 29.
+- **La voce di L.V. e il tema della Santa Maria nell’intro** (notte del 29–30 ottobre; documento 09, §13): la voce
+  l’ha generata l’autore con Gemini (voce «Riko»), passata da una trasmittente leggera; il tema è «Santa Maria» di
+  Alirio Bruni. L’intro dura 2:59. Su `main`, non ancora in una beta; l’ascolto è in `consegne/Ascolto intro 2026-10-30/`.
 - **Il motore** è Favella1 1.6.1 (documento 29), pubblicata anche su GitHub, PyPI e favella.eu.
 - **La revisione totale** (documento 25): i 30 problemi (5 gravi, 10 medi, 15 lievi) sono tutti
   corretti. Delle proposte estetiche sono fatte E1, E5, E6, E9 ed E10.
@@ -72,7 +74,8 @@ del lavoro.
 3. **L’intro, perfezionata**:
    - ~~le scene definitive~~: fatte il 29 ottobre (documento 09, §12). Prima cosa, le sue note quando la vede
      nel gioco, con il suono: gli aggiustamenti, i titoli di testa «o altro»;
-   - la sua musica, `I-B`, `I-E` e `I-G`: la genera lui, e i prompt sono nel documento 22, §5.8.
+   - ~~la musica~~: il tema della Santa Maria e la voce di L.V. (§13) prendono il posto di `I-B`, `I-E` e `I-G`
+     (documento 22, §5.8), che non servono più, se l’autore conferma.
 4. **Il finale** (revisione 25, E2): una schermata vera per il finale, invece della casella che scorre.
    L’autore ha detto «una eventuale finale»: si propone, e decide lui.
 5. **Il resto**, dopo:

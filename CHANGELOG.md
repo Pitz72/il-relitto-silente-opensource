@@ -8,6 +8,16 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+### Per chi gioca
+
+- **L.V. ha una voce.** Nell’intro la sua ultima registrazione si sente: stanca, senza fiato, dalla radio della tuta, con la statica e i suoi buchi. I testi restano sullo schermo il tempo che lui ci mette a dirli.
+- **Il tema della Santa Maria** accompagna l’intro da quando si apre lo spazio, e si abbassa quando L.V. parla; il suo cuore continua ancora un poco, lontano, dopo il buio.
+
+### Aggiunto
+
+- **La voce di L.V. nell’intro** (richiesta dell’autore, notte del 29 ottobre 2026: l’ha generata lui con la sintesi vocale di Gemini, la voce «Riko», sul copione con le pause e le indicazioni di recitazione preparate qui; documento 09, §13). Un file solo (`audio/musica-ia/LV/LV-01-la-traccia.mp3`), passato da una trasmittente leggera (`strumenti/intro/voce_lv.py`: banda 170 Hz–5,4 kHz dolce, un poco di presenza, il casco, una saturazione appena, un compressore lento che alza i respiri), che il motore audio suona a pezzi, uno per testo, sul cursore del parlato, con un lettore dei file suo (`mondo/intro.rs`). `VOCE` in `scaletta.ts` dice dove sta ogni frase nel file; i testi di L.V. restano finché lui li ha detti, e l’intro passa da 2:40,75 a 2:59,13 (la scena nera da 46 a 59 secondi). Il nastro della scatola nera in A si muove con la voce vera (il suo inviluppo, `app/src/intro/voce.ts`), e la spia si accende un poco di più quando L.V. parla. I respiri sintetizzati non ci sono più; restano la statica e i suoi buchi, che non cadono mai sulla voce. Il cuore va avanti per cinque colpi dopo il passaggio allo spazio, sempre più lento e lontano. La voce è nel registro dei suoni (`audio/LICENZE.md`, eccezione voluta dall’autore) e nei titoli di coda.
+- **Il tema della Santa Maria** («Santa Maria» di Alirio Bruni, la musica del menu del *Mistero della Santa Maria*, scelta dall’autore): entra quando si apre lo spazio, tre decibel sotto la musica del gioco, si abbassa di otto mentre L.V. parla, e finisce con la sua coda lunga sotto il titolo (il gioco non ha musica nella prima scena in cui sfumarlo). Prende il posto del re che nel vuoto faceva da musica; il reattore resta nella plancia, più basso. Nel registro della musica e nei titoli di coda.
+
 ## [0.2.5-beta.7] - 2026-10-29
 
 ### Per chi gioca

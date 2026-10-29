@@ -634,6 +634,8 @@ impl Mondo {
 
     /// Dove stanno i file della musica (`audio/musica-ia/`, o la cartella `musica/` dell’installazione).
     pub fn cartella_musica(&mut self, cartella: std::path::PathBuf) {
+        // l'intro ha i suoi due file (la voce di L.V. e il tema), e un lettore suo
+        self.intro.con_cartella(cartella.clone());
         self.musica.con_cartella(cartella);
     }
 
@@ -863,6 +865,7 @@ impl Mondo {
             let ge = self.c_effetti.passo();
             let gv = self.c_voci.passo();
             let gi = self.c_interfaccia.passo();
+            let gp = self.c_parlato.passo();
 
             // ogni 64 campioni i filtri che seguono la stanza
             self.conto = self.conto.wrapping_add(1);
@@ -1078,13 +1081,16 @@ impl Mondo {
                 l += fl * kf;
                 r += fr * kf;
             }
-            // l'intro: il suo sound design sta sul cursore degli effetti, la guida del re su quello della musica
+            // l'intro: il suo sound design sta sul cursore degli effetti, il re e il tema su quello della
+            // musica (il tema come i file di musica), la voce di L.V. su quello del parlato
             if self.intro.attiva() {
-                let ((fl, fr), (ml, mr)) = self.intro.campione();
+                let u = self.intro.campione();
                 let kfx = vg * ge * lv.intro;
                 let kmu = vg * gmus * s_musica * lv.musica;
-                l += fl * kfx + ml * kmu;
-                r += fr * kfx + mr * kmu;
+                let kfile = LIV_MUSICA * kmu;
+                let kpa = vg * gp;
+                l += u.suoni.0 * kfx + u.re.0 * kmu + u.tema.0 * kfile + u.voce.0 * kpa;
+                r += u.suoni.1 * kfx + u.re.1 * kmu + u.tema.1 * kfile + u.voce.1 * kpa;
             }
             // l’interfaccia: asciutta, fuori dalla pausa e dall’ingresso (si tocca anche lì)
             l += ui.0 * vg;

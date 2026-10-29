@@ -1,5 +1,7 @@
 //! Il lettore dei file di musica (documento 22, §7): suona i diciotto MP3 di
 //! `audio/musica-ia/` che il gioco usa, generati con Lyria 3.5 e con Suno e scelti dall’autore.
+//! Dal 29 ottobre 2026 ne suona due anche l’intro, con un lettore suo (`intro.rs`): il tema della
+//! Santa Maria e la voce di L.V.
 //! Il file è la base e non si ritocca (22, §7.1): qui si decide soltanto *quando* entra, *quanto*
 //! suona, come si incrocia con il successivo e come se ne va.
 //!
@@ -54,10 +56,14 @@ pub enum Pezzo {
     T2,
     /// i titoli di coda: la canzone «Voice in the Deep» (22, §5.9)
     CT,
+    /// l’intro (09, §13): il tema della Santa Maria, «Santa Maria» di Alirio Bruni, dal Mistero della Santa Maria
+    SM,
+    /// l’intro: la voce di L.V., tutta la traccia in un file, che si suona a pezzi
+    LV,
 }
 
 impl Pezzo {
-    pub const TUTTI: [Pezzo; 18] = [
+    pub const TUTTI: [Pezzo; 20] = [
         Pezzo::M1a,
         Pezzo::M1b,
         Pezzo::S2,
@@ -76,6 +82,8 @@ impl Pezzo {
         Pezzo::T1,
         Pezzo::T2,
         Pezzo::CT,
+        Pezzo::SM,
+        Pezzo::LV,
     ];
 
     /// (la cartella della scheda, il nome del file) come stanno in `audio/musica-ia/`.
@@ -99,6 +107,8 @@ impl Pezzo {
             Pezzo::T1 => ("T", "T-01-hull-of-the-ancient.mp3"),
             Pezzo::T2 => ("T", "T-02-held-by-the-dark.mp3"),
             Pezzo::CT => ("CT", "CT-01-voice-in-the-deep.mp3"),
+            Pezzo::SM => ("SM", "SM-01-santa-maria.mp3"),
+            Pezzo::LV => ("LV", "LV-01-la-traccia.mp3"),
         }
     }
 }

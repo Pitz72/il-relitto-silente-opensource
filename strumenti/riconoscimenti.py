@@ -193,8 +193,10 @@ USO_MUSICA = {
     "A1": "l'Anziano: il primo letto", "A2": "l'Anziano: il secondo letto", "A3": "l'Anziano: il terzo letto",
     "A4": "l'Anziano: il quarto letto", "C1": "il finale «Vivi»", "C2": "il finale «La prima nota»",
     "C3": "il finale «La stiva piena»", "C4": "il finale «Doppio fondo»", "C5": "il finale «Due lettere»",
-    "T": "il tema", "CT": "i titoli di coda",
+    "T": "il tema", "CT": "i titoli di coda", "SM": "l'intro: il tema del Mistero della Santa Maria",
 }
+# Chi ha fatto un brano, se non è l'autore del gioco.
+AUTORI_MUSICA = {"SM": "Alirio Bruni"}
 
 
 def musica():
@@ -211,7 +213,8 @@ def musica():
         modello = "Suno" if r["Modello"].startswith("Suno") else "Lyria 3.5"
         out.append({"sigla": r["Scheda"], "titolo": m.group(2), "modello": modello,
                     "fonte": "Suno" if modello == "Suno" else "Google Flow Music",
-                    "autore": "Simone Pizzi", "licenza": "CC BY-NC-SA 4.0", "uso": USO_MUSICA.get(r["Scheda"], "")})
+                    "autore": AUTORI_MUSICA.get(r["Scheda"], "Simone Pizzi"), "licenza": "CC BY-NC-SA 4.0",
+                    "uso": USO_MUSICA.get(r["Scheda"], "")})
     return out
 
 
@@ -486,6 +489,9 @@ def file_di_testo(d):
     titolo("I suoni")
     if not d["suoni"]:
         a("Ogni suono del gioco è sintetizzato nel suo motore audio, senza registrazioni.")
+    else:
+        a("Ogni altro suono del gioco è sintetizzato nel suo motore audio, senza registrazioni.")
+        a("")
     for x in d["suoni"]:
         a(f"«{x['titolo']}» — {x['uso']}")
         a(f"  di {x['autore']}, da {x['fonte']} · {x['licenza']}" + (f" · {x['url']}" if x["url"] else ""))
