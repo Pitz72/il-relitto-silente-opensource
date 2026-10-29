@@ -25,17 +25,28 @@ del lavoro.
   della scheda «Grafica» delle Opzioni, tutti accesi di base.
 - **Le misure** si fanno senza la lente di Windows: quando gioca la toglie.
 - **Prima di aprire l’eseguibile** lo avviso: il gioco gli si apre sullo schermo e gioca da solo.
-- **I `.fav` sono congelati**: toccarli è una sua decisione (l’ultima, il 27 ottobre: l’aria fra 0 e 100).
+- **I `.fav` sono congelati**: toccarli è una sua decisione (il 27 ottobre l’aria fra 0 e 100; il 29 tutto il testo
+  in prima persona). **William racconta in prima persona**; ogni indizio per chi gioca va fra parentesi
+  («Lo scanner saprebbe leggerla. (ANALIZZALA.)»), e le voci degli altri, le scelte e i messaggi del motore
+  restano come sono. Una frase cambiata va cercata anche in `app/src/motore/ponte.py` (`SEGNI_A_SORTE`) e nelle
+  righe `# atteso` di `collaudo/`.
   La copia del motore in `motore/` non si corregge mai a mano: si rifà da un tag di Favella1.
 - **Il nome del motore è «Favella1».** La musica è fantascienza, mai giallo. Il gioco è da scrivania:
   niente impaginazioni da telefono, nessun testo sotto i 12 px.
 - Le prove su GitHub (`prove.yml`) devono restare verdi.
 
-## Dove siamo (27 ottobre 2026)
+## Dove siamo (29 ottobre 2026)
 
-- **La versione** pubblicata è la **0.2.5-beta.5**, una pre-release nel canale di prova
-  (`aggiornamenti-prova`). L’autore la riceve dal suo gioco (la beta.4) con l’aggiornamento automatico;
-  dalla beta.4 alla beta.5 deve comparire per la prima volta la finestra delle novità.
+- **La versione** pubblicata è la **0.2.5-beta.6**, una pre-release nel canale di prova
+  (`aggiornamenti-prova`): William racconta in prima persona, in tutto il gioco (29 ottobre, su sua
+  richiesta: «committa pusha e rilascia. Così lo vedono anche gli altri»). Prima c’era la beta.5 (27 ottobre),
+  la prima con la finestra delle novità.
+- **La voce, più avanti.** Il 29 ottobre l’autore ha chiesto quanto lavoro sarebbe per **Leonardo Tomassetti**
+  (il William del *Mistero della Santa Maria*) leggere il gioco. Divisione come nel Viaggiatore: Leonardo il
+  racconto e le scelte (circa 14.500 parole tolti i doppioni, circa 1 ora e 50 di audio, 6–9 ore di sala,
+  contro le circa 5.900 parole di William nel Santa Maria); le altre voci (Yusuf è l’autore, l’Anziano, le echi,
+  L.V., le traduzioni) circa 2.300; una voce di servizio con la sintesi per i suggerimenti, le percentuali, i
+  referti dello scanner e i messaggi del motore, meno di 1.000. Niente è deciso oltre la prima persona.
 - **Il motore** è Favella1 1.6.1 (documento 29), pubblicata anche su GitHub, PyPI e favella.eu.
 - **La revisione totale** (documento 25): i 30 problemi (5 gravi, 10 medi, 15 lievi) sono tutti
   corretti. Delle proposte estetiche sono fatte E1, E5, E6, E9 ed E10.
@@ -45,8 +56,8 @@ del lavoro.
 
 ## L’ordine del lavoro (deciso dall’autore il 27 ottobre)
 
-1. **Le sue note sulla beta.5.** Prima cosa: chiedergli come gli è sembrata nel gioco vero, con il suono,
-   e correggere quello che dice.
+1. **Le sue note sulla beta.5 e sulla beta.6.** Prima cosa: chiedergli come gli sono sembrate nel gioco vero,
+   con il suono, e la prima persona, e correggere quello che dice.
 2. **Il resto dell’interfaccia** (documento 30):
    - i momenti 2.6–2.9: il cartello d’atto, l’ingresso nella protezione vitale, le crepe della fuga,
      l’ipossia;
