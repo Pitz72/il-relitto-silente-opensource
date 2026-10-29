@@ -8,6 +8,8 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+## [0.2.5-beta.6] - 2026-10-29
+
 ### Per chi gioca
 
 - **William racconta in prima persona.** Tutto il gioco, dalla Santa Maria ai finali, ora lo dice lui: «Lancio la scansione lunga», «Sono fuori», «Qualcuno è arrivato fin qui prima di me». I suggerimenti per chi gioca stanno fra parentesi, come «(ANALIZZALA.)», e restano pulsanti.
