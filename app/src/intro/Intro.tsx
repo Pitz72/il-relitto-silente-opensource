@@ -301,6 +301,8 @@ export default function Intro({
         const conPlancia = (t >= C0 && t < E0) || (t >= TAGLIO_H && t < VOLO[1]);
         const vis = grana === "no" ? 0 : conPlancia ? 1 - (t >= TAGLIO_H ? morbido(fra(t, VOLO[0], VOLO[1])) : 0) : 0;
         st.style.opacity = String(0.42 * vis);
+        // spenta, la grana non c'è proprio: uno strato che si fonde con quelli sotto costa anche invisibile
+        st.style.visibility = vis > 0 ? "visible" : "hidden";
         if (vis > 0 && grana === "mossa" && !ridotto) {
           const f = Math.floor(t * 24);
           st.style.backgroundPosition = `${Math.floor(caso(f, 1) * 256)}px ${Math.floor(caso(f, 2) * 256)}px`;

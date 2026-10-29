@@ -8,6 +8,8 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+## [0.2.5-beta.7] - 2026-10-29
+
 ### Per chi gioca
 
 - **L’intro è nuova, come al cinema.** La plancia della Santa Maria si vede nitida e grande; il fuoco passa dal radar all’oblò, e nell’oblò le stelle si spengono una a una dietro la sagoma nera; il faro si accende, cerca e si perde nel buio. Il titolo si scrive con i glifi alieni, che la matrice traduce lettera per lettera. Alla fine la camera esce dal nero del fuso, arretra fino alla plancia intera e la porta nel visore: lì comincia la partita, senza stacchi.
