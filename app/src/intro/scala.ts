@@ -10,7 +10,7 @@
 //  destro.
 // ============================================================================
 
-export type Quadro = "scala" | "margine" | "oblo" | "faro";
+export type Quadro = "scala" | "margine" | "oblo" | "faro" | "plancia";
 type V3 = [number, number, number];
 
 interface Inquadratura {
@@ -23,6 +23,8 @@ interface Inquadratura {
   fuso: boolean;
   polvere?: boolean;
   luceFaro?: number;
+  /** solo la plancia: di quanti gradi il faro si sposta dalla sua direzione */
+  faroGradi?: number;
 }
 
 // ---- vettori -----------------------------------------------------------------
@@ -49,12 +51,37 @@ const DIREZIONE = norm([Math.cos(ALFA), 0.03, -Math.sin(ALFA)]);
 // il fuso: 25 km per 4,6, fermo sulla rotta, a sei chilometri. Lo scanner dirà 340 metri.
 const FUSO = { centro: [4900, -380, -2380] as V3, semiLunghezza: 12500, semiLarghezza: 2300, inclinazione: (-6 * Math.PI) / 180 };
 const SOLE = norm([-0.55, 0.62, 0.56]);
-const faroDi = (q: Quadro) => ({
+const faroDi = (q: Quadro, gradi = 0) => ({
   origine: [44, 7, -3] as V3,
   apertura: (3.2 * Math.PI) / 180,
   portata: 210,
-  direzione: q === "faro" ? norm([Math.cos((-64 * Math.PI) / 180), 0.02, Math.sin((-64 * Math.PI) / 180)]) : norm([1, -0.03, -0.02]),
+  direzione:
+    q === "faro" || q === "plancia"
+      ? norm([Math.cos(((-64 + gradi) * Math.PI) / 180), 0.02 + gradi * 0.0015, Math.sin(((-64 + gradi) * Math.PI) / 180)])
+      : norm([1, -0.03, -0.02]),
 });
+
+/** L'oblò della plancia (C, D, H): la camera è il vetro. La nave scivola di lato, e il bordo del fuso
+ *  avanza sulle stelle e le spegne (C); il faro si accende e cerca (D). Il tempo è quello dell'intro.
+ *  La nave si porta dietro la camera e il faro; la polvere resta ferma, e le passa accanto. */
+const OBLO = { pos: [14, 15, 5] as V3, gradi: -60.5, elev: 1.2, fov: 46, deriva: 6 };
+function oblo(t: number, faro: number, faroGradi: number): Inquadratura {
+  const avanti = azimut(OBLO.gradi, OBLO.elev);
+  const destra = norm(croce(avanti, [0, 1, 0]));
+  const nave = per(destra, OBLO.deriva * t);
+  return {
+    pos: somma(OBLO.pos, nave),
+    nave,
+    fov: (OBLO.fov * Math.PI) / 180,
+    avanti,
+    sprite: null,
+    faro: faro > 0,
+    fuso: true,
+    polvere: faro > 0,
+    luceFaro: 0.06 * faro,
+    faroGradi,
+  };
+}
 
 /** La scala (E): 0–3 s segue la nave a 165 m; 3–23 s arretra fino a 18 km, a
  *  velocità costante in scala logaritmica, con un avvio e un arresto morbidi;
@@ -69,7 +96,8 @@ function camera(t: number): Inquadratura {
 }
 
 /** I quadri. `t` è il tempo del quadro, in secondi. */
-export function inquadratura(q: Quadro, t: number): Inquadratura {
+export function inquadratura(q: Quadro, t: number, faro = 0, faroGradi = 0): Inquadratura {
+  if (q === "plancia") return oblo(t, faro, faroGradi);
   if (q === "margine") {
     // la nave avanza; la camera, davanti e a babordo, è ferma
     const nave: V3 = [NAVE.velocita * 3 * (t - 4), 0, 0];
@@ -87,6 +115,39 @@ export function inquadratura(q: Quadro, t: number): Inquadratura {
 /** La direzione di riferimento del cielo: dove guarda il quadro (per la scala, alla fine). */
 const direzioneCielo = (q: Quadro): V3 => (q === "scala" ? DIREZIONE : inquadratura(q, 0).avanti);
 
+/** Il fuso nel mondo: i due capi. */
+function capiDelFuso(): [V3, V3] {
+  const asse: V3 = [0, Math.sin(FUSO.inclinazione), Math.cos(FUSO.inclinazione)];
+  return [somma(FUSO.centro, per(asse, -FUSO.semiLunghezza)), somma(FUSO.centro, per(asse, FUSO.semiLunghezza))];
+}
+
+/** La distanza dal fuso: la vesica dello shader FS_FUSO, in JavaScript. */
+function distanzaDalFuso(p: V3): number {
+  const [a, b] = capiDelFuso();
+  const w = FUSO.semiLarghezza;
+  const c = per(somma(a, b), 0.5);
+  const l = Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2]);
+  const v: V3 = [(b[0] - a[0]) / l, (b[1] - a[1]) / l, (b[2] - a[2]) / l];
+  const pc: V3 = [p[0] - c[0], p[1] - c[1], p[2] - c[2]];
+  const y = pc[0] * v[0] + pc[1] * v[1] + pc[2] * v[2];
+  const qx = Math.hypot(pc[0] - y * v[0], pc[1] - y * v[1], pc[2] - y * v[2]), qy = Math.abs(y);
+  const r = 0.5 * l, d = (0.5 * (r * r - w * w)) / w;
+  const h = r * qx < d * (qy - r) ? [0, r, 0] : [-d, 0, d + w];
+  return Math.hypot(qx - h[0], qy - h[1]) - h[2];
+}
+
+/** Se un raggio da `da` nella direzione `dir` incontra il fuso. */
+export function colpisceIlFuso(da: V3, dir: V3): boolean {
+  let t = 0;
+  for (let i = 0; i < 160; i++) {
+    const h = distanzaDalFuso(somma(da, per(dir, t)));
+    if (h < 0.0002 * Math.max(t, 1)) return true;
+    t += h * 0.9;
+    if (t > 80000) return false;
+  }
+  return false;
+}
+
 // ============================================================================
 //  Gli shader (identici alla prova di look)
 // ============================================================================
@@ -96,10 +157,12 @@ precision highp float;
 const VS_PIENO = TESTA + `
 in vec2 a; out vec2 uv;
 void main(){ uv = a * 0.5 + 0.5; gl_Position = vec4(a, 0.0, 1.0); }`;
+// L'ottica: il quadro virtuale (-1…1) va sullo schermo come ndc = q · uSca + uOff. Di solito è tutto lo
+// schermo (uSca 1, uOff 0); nell'oblò è il quadrato del vetro; nel raccordo di H, un ingrandimento.
 const VISTA = `
 uniform vec3 uDestra, uSu, uAvanti;
-uniform vec2 uTan;
-vec3 vista(vec2 uv){ vec2 p = (uv * 2.0 - 1.0) * uTan; return normalize(uDestra * p.x + uSu * p.y + uAvanti); }`;
+uniform vec2 uTan, uSca, uOff;
+vec3 vista(vec2 uv){ vec2 p = ((uv * 2.0 - 1.0) - uOff) / uSca * uTan; return normalize(uDestra * p.x + uSu * p.y + uAvanti); }`;
 const RUMORE = `
 float hash13(vec3 p){ p = fract(p * 0.1031); p += dot(p, p.zyx + 31.32); return fract((p.x + p.y) * p.z); }
 float rumore(vec3 x){
@@ -144,12 +207,12 @@ void main(){
 
 const VS_STELLE = TESTA + `
 in vec3 aDir; in vec4 aCol;
-uniform vec3 uDestra, uSu, uAvanti; uniform vec2 uTan; uniform float uScala;
+uniform vec3 uDestra, uSu, uAvanti; uniform vec2 uTan, uSca, uOff; uniform float uScala;
 out vec4 col; out float dim;
 void main(){
   vec3 c = vec3(dot(aDir, uDestra), dot(aDir, uSu), dot(aDir, uAvanti));
   if (c.z <= 0.0) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); gl_PointSize = 0.0; return; }
-  gl_Position = vec4(c.xy / c.z / uTan, 0.0, 1.0);
+  gl_Position = vec4(c.xy / c.z / uTan * uSca + uOff, 0.0, 1.0);
   dim = clamp(1.6 + sqrt(aCol.a) * 6.0, 1.5, 9.0) * uScala;
   gl_PointSize = dim;
   col = aCol;
@@ -242,10 +305,10 @@ void main(){
 
 const VS_POLVERE = TESTA + `
 in vec4 aP;
-uniform mat4 uVP; uniform vec3 uPos, uO, uD, uSole; uniform float uCos, uPortata, uAltezza, uT;
+uniform mat4 uVP; uniform vec3 uPos, uO, uD, uSole, uSposta; uniform float uCos, uPortata, uAltezza, uT;
 out float lum;
 void main(){
-  vec3 p = aP.xyz + vec3(sin(uT * 0.11 + aP.w * 7.0), cos(uT * 0.07 + aP.w * 3.0), sin(uT * 0.05 + aP.w)) * 1.2;
+  vec3 p = aP.xyz + uSposta + vec3(sin(uT * 0.11 + aP.w * 7.0), cos(uT * 0.07 + aP.w * 3.0), sin(uT * 0.05 + aP.w)) * 1.2;
   vec4 c = uVP * vec4(p, 1.0);
   gl_Position = c;
   float z = max(c.w, 0.1);
@@ -314,14 +377,14 @@ void main(){
 // uLuce porta il quadro dal nero (0) al pieno (1).
 const FS_FINALE = TESTA + `
 in vec2 uv; out vec4 o;
-uniform sampler2D uScena, uScenaB, uBagliore; uniform float uMisto, uBag, uEsp, uGrana, uSeme, uLuce;
+uniform sampler2D uScena, uScenaB, uBagliore; uniform float uMisto, uBag, uEsp, uGrana, uSeme, uLuce, uVignetta;
 vec3 aces(vec3 x){ return clamp((x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14), 0.0, 1.0); }
 float h12(vec2 p){ vec3 p3 = fract(vec3(p.xyx) * 0.1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }
 void main(){
   vec3 c = mix(texture(uScena, uv).rgb, texture(uScenaB, uv).rgb, uMisto);
   c += texture(uBagliore, uv).rgb * uBag;
   c = aces(c * uEsp);
-  vec2 v = uv - 0.5; c *= 1.0 - 0.32 * smoothstep(0.25, 0.85, dot(v * vec2(1.25, 1.0), v * vec2(1.25, 1.0)) * 2.0);
+  vec2 v = uv - 0.5; c *= 1.0 - uVignetta * 0.32 * smoothstep(0.25, 0.85, dot(v * vec2(1.25, 1.0), v * vec2(1.25, 1.0)) * 2.0);
   c = pow(c, vec3(1.0 / 2.2));
   float g = h12(gl_FragCoord.xy + uSeme * 97.13) + h12(gl_FragCoord.xy * 1.31 + uSeme * 13.7) - 1.0;
   c += g * uGrana * (0.35 + 0.65 * (1.0 - c));
@@ -377,11 +440,29 @@ function rumoreJs(x: number, y: number, z: number) {
   );
 }
 
+/** Dove va il quadro sullo schermo: ndc = q · sca + off (q da -1 a 1). Senza, tutto lo schermo. */
+export interface Ottica {
+  sca: [number, number];
+  off: [number, number];
+  /** il quadro è quadrato (l'oblò): lo stesso angolo in orizzontale e in verticale */
+  quadrata?: boolean;
+  /** solo dentro questo rettangolo, in frazioni dello schermo dall'alto a sinistra (x, y, l, a) */
+  ritaglio?: [number, number, number, number];
+}
+
 export interface OpzioniQuadro {
   /** metà della risoluzione e meno ottave nel cielo */
   ridotta?: boolean;
   /** 0 nero, 1 pieno */
   luce?: number;
+  ottica?: Ottica;
+  /** la plancia: il faro (0 spento, 1 pieno) e quanti gradi si sposta */
+  faro?: number;
+  faroGradi?: number;
+  /** la grana del motore (di base sì); l'oblò la prende dall'intro, come l'immagine intorno */
+  grana?: boolean;
+  /** la vignetta del motore (di base sì; nell'oblò no: la luce è quella della plancia) */
+  vignetta?: boolean;
 }
 
 export class Scala {
@@ -487,17 +568,17 @@ export class Scala {
   quadro(q: Quadro, t: number, opz: OpzioniQuadro = {}): void {
     this.dimensiona(!!opz.ridotta);
     const B = this.B!;
-    this.disegna(q, t, B.scena, !!opz.ridotta);
-    this.finale(0, this.bagliore(B.scena), Math.floor(t * 24), opz.luce ?? 1);
+    this.disegna(q, t, B.scena, opz);
+    this.finale(0, this.bagliore(B.scena), Math.floor(t * 24), opz);
   }
 
   /** Il movimento ridotto: due quadri fermi e una dissolvenza (0 il primo, 1 il secondo). */
   dissolvenza(q: Quadro, tA: number, tB: number, misto: number, opz: OpzioniQuadro = {}): void {
     this.dimensiona(!!opz.ridotta);
     const B = this.B!;
-    this.disegna(q, tA, B.scena, !!opz.ridotta);
-    this.disegna(q, tB, B.scenaB, !!opz.ridotta);
-    this.finale(misto, this.bagliore(misto < 0.5 ? B.scena : B.scenaB), 0, opz.luce ?? 1);
+    this.disegna(q, tA, B.scena, opz);
+    this.disegna(q, tB, B.scenaB, opz);
+    this.finale(misto, this.bagliore(misto < 0.5 ? B.scena : B.scenaB), 0, opz);
   }
 
   /** Dove cade la nave sullo schermo (0–1, dall'alto a sinistra), e quanto è larga. */
@@ -511,6 +592,26 @@ export class Scala {
     const y = (d[0] * su[0] + d[1] * su[1] + d[2] * su[2]) / z / tanY;
     const sp = cam.sprite ? this.sprite[cam.sprite] : { larghezza: 0 };
     return { x: 0.5 + x / 2, y: 0.5 - y / 2, larghezza: sp.larghezza / z / tanX / 2, davanti: z > 0 };
+  }
+
+  /** Una direzione del cielo vista dall'oblò della plancia all'istante t: dove cade (nel quadro, -1…1,
+   *  prima dell'ottica) e se il fuso la copre. Serve all'intro per le stelle che si spengono. */
+  cieloDallOblo(dir: V3, t: number): { x: number; y: number; coperta: boolean } {
+    const cam = inquadratura("plancia", t);
+    const avanti = cam.avanti, destra = norm(croce(avanti, [0, 1, 0])), su = croce(destra, avanti);
+    const z = dir[0] * avanti[0] + dir[1] * avanti[1] + dir[2] * avanti[2];
+    const tan = Math.tan(cam.fov / 2);
+    const x = (dir[0] * destra[0] + dir[1] * destra[1] + dir[2] * destra[2]) / z / tan;
+    const y = (dir[0] * su[0] + dir[1] * su[1] + dir[2] * su[2]) / z / tan;
+    return { x, y, coperta: colpisceIlFuso(cam.pos, dir) };
+  }
+
+  /** La direzione del cielo che dall'oblò cade nel punto (x, y) del quadro (-1…1) all'istante t. */
+  direzioneDallOblo(x: number, y: number, t: number): V3 {
+    const cam = inquadratura("plancia", t);
+    const avanti = cam.avanti, destra = norm(croce(avanti, [0, 1, 0])), su = croce(destra, avanti);
+    const tan = Math.tan(cam.fov / 2);
+    return norm(somma(avanti, somma(per(destra, x * tan), per(su, y * tan))));
   }
 
   distruggi(): void {
@@ -608,8 +709,10 @@ export class Scala {
     const r = generatore(7), dati: number[] = [];
     for (let i = 0; i < 1600; i++) dati.push(lerp(-500, 420, r()), lerp(-130, 150, r()), lerp(-230, 420, r()), r());
     const fd = FARO.direzione, fu = norm(croce(fd, [0, 1, 0])), fv = croce(fu, fd);
-    for (let i = 0; i < 1400; i++) {
-      const s = 40 + r() ** 1.6 * 260, raggio = Math.tan(FARO.apertura) * s * 1.3 * Math.sqrt(r()), a = r() * Math.PI * 2;
+    // nella plancia il fascio cerca: la polvere sta in un cono più largo
+    const largo = q === "plancia" ? 3.4 : 1.3;
+    for (let i = 0; i < (q === "plancia" ? 2600 : 1400); i++) {
+      const s = 40 + r() ** 1.6 * 260, raggio = Math.tan(FARO.apertura) * s * largo * Math.sqrt(r()), a = r() * Math.PI * 2;
       const p = somma(FARO.origine, somma(per(fd, s), somma(per(fu, Math.cos(a) * raggio), per(fv, Math.sin(a) * raggio))));
       dati.push(p[0], p[1], p[2], r());
     }
@@ -642,9 +745,9 @@ export class Scala {
   }
 
   private dimensiona(ridotta: boolean) {
-    const r = this.canvas.getBoundingClientRect();
+    // la misura del canvas senza le trasformazioni CSS
     const k = Math.min(devicePixelRatio || 1, 2) * (ridotta ? 0.5 : 1);
-    const w = Math.max(320, Math.round(r.width * k)), h = Math.max(180, Math.round(r.height * k));
+    const w = Math.max(320, Math.round(this.canvas.clientWidth * k)), h = Math.max(180, Math.round(this.canvas.clientHeight * k));
     if (this.B && this.B.w === w && this.B.h === h) return;
     const gl = this.gl;
     if (this.B) {
@@ -665,7 +768,7 @@ export class Scala {
     this.B = { w, h, scena: this.bersaglio(w, h), scenaB: this.bersaglio(w, h), catena };
   }
 
-  private matriceVP(cam: Inquadratura, destra: V3, su: V3, avanti: V3, aspetto: number) {
+  private matriceVP(cam: Inquadratura, destra: V3, su: V3, avanti: V3, aspetto: number, ot: Ottica) {
     const fx = 1 / Math.tan(cam.fov / 2), fy = fx * aspetto, n = 0.5, fr = 200000;
     const p = cam.pos;
     const V = [destra[0], su[0], -avanti[0], 0, destra[1], su[1], -avanti[1], 0, destra[2], su[2], -avanti[2], 0,
@@ -674,28 +777,48 @@ export class Scala {
     const Pm = [fx, 0, 0, 0, 0, fy, 0, 0, 0, 0, (fr + n) / (n - fr), -1, 0, 0, (2 * fr * n) / (n - fr), 0];
     const out = new Array<number>(16).fill(0);
     for (let c = 0; c < 4; c++) for (let r = 0; r < 4; r++) for (let k = 0; k < 4; k++) out[c * 4 + r] += Pm[k * 4 + r] * V[c * 4 + k];
+    // l'ottica, dopo la proiezione: x' = x · sca + off · w
+    for (let c = 0; c < 4; c++) {
+      out[c * 4] = out[c * 4] * ot.sca[0] + out[c * 4 + 3] * ot.off[0];
+      out[c * 4 + 1] = out[c * 4 + 1] * ot.sca[1] + out[c * 4 + 3] * ot.off[1];
+    }
     return out;
   }
 
-  private disegna(q: Quadro, t: number, verso: Bersaglio, ridotta: boolean) {
+  private disegna(q: Quadro, t: number, verso: Bersaglio, opz: OpzioniQuadro) {
     const gl = this.gl, P = this.P, B = this.B!;
-    const cam = inquadratura(q, t);
-    const FARO = faroDi(q);
+    const ridotta = !!opz.ridotta;
+    const cam = inquadratura(q, t, opz.faro ?? 0, opz.faroGradi ?? 0);
+    const FARO = faroDi(q, cam.faroGradi ?? 0);
     const cielo = this.cielo(q);
     const aspetto = B.w / B.h;
     const avanti = cam.avanti, destra = norm(croce(avanti, [0, 1, 0])), su = croce(destra, avanti);
-    const tanX = Math.tan(cam.fov / 2), tanY = tanX / aspetto;
-    const VP = this.matriceVP(cam, destra, su, avanti, aspetto);
+    const ot: Ottica = opz.ottica ?? { sca: [1, 1], off: [0, 0] };
+    const tanX = Math.tan(cam.fov / 2), tanY = ot.quadrata ? tanX : tanX / aspetto;
+    const VP = this.matriceVP(cam, destra, su, avanti, ot.quadrata ? 1 : aspetto, ot);
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, verso.fb);
     gl.viewport(0, 0, verso.w, verso.h);
     gl.disable(gl.DEPTH_TEST);
     gl.disable(gl.BLEND);
+    // fuori dal ritaglio (l'oblò) il quadro è nero, e non si calcola
+    gl.disable(gl.SCISSOR_TEST);
+    if (ot.ritaglio) {
+      gl.clearColor(0, 0, 0, 1);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      const [rx, ry, rw, rh] = ot.ritaglio;
+      const x0 = Math.max(0, Math.floor(rx * verso.w)), x1 = Math.min(verso.w, Math.ceil((rx + rw) * verso.w));
+      const y0 = Math.max(0, Math.floor((1 - ry - rh) * verso.h)), y1 = Math.min(verso.h, Math.ceil((1 - ry) * verso.h));
+      gl.enable(gl.SCISSOR_TEST);
+      gl.scissor(x0, y0, Math.max(0, x1 - x0), Math.max(0, y1 - y0));
+    }
     const vista = (prog: Programma) => {
       gl.uniform3fv(prog.u.uDestra, destra);
       gl.uniform3fv(prog.u.uSu, su);
       gl.uniform3fv(prog.u.uAvanti, avanti);
       gl.uniform2f(prog.u.uTan, tanX, tanY);
+      gl.uniform2f(prog.u.uSca, ot.sca[0], ot.sca[1]);
+      gl.uniform2f(prog.u.uOff, ot.off[0], ot.off[1]);
     };
 
     // 1. il cielo
@@ -727,7 +850,7 @@ export class Scala {
       gl.uniform3fv(P.fuso.u.uA, A);
       gl.uniform3fv(P.fuso.u.uB, Bp);
       gl.uniform1f(P.fuso.u.uW, FUSO.semiLarghezza);
-      gl.uniform1f(P.fuso.u.uPix, (2 * tanX) / verso.w);
+      gl.uniform1f(P.fuso.u.uPix, (2 * tanX) / (verso.w * ot.sca[0]));
       gl.bindVertexArray(this.vaoPieno);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }
@@ -758,9 +881,11 @@ export class Scala {
       gl.uniform3fv(P.polvere.u.uO, O);
       gl.uniform3fv(P.polvere.u.uD, FARO.direzione);
       gl.uniform3fv(P.polvere.u.uSole, SOLE);
+      // nella plancia la polvere del fascio viaggia con la nave, perché il faro la trovi
+      gl.uniform3fv(P.polvere.u.uSposta, q === "plancia" ? cam.nave : [0, 0, 0]);
       gl.uniform1f(P.polvere.u.uCos, Math.cos(FARO.apertura * 1.4));
       gl.uniform1f(P.polvere.u.uPortata, FARO.portata);
-      gl.uniform1f(P.polvere.u.uAltezza, verso.h);
+      gl.uniform1f(P.polvere.u.uAltezza, verso.h * ot.sca[1]);
       gl.uniform1f(P.polvere.u.uT, t);
       gl.bindVertexArray(pv.vao);
       gl.drawArrays(gl.POINTS, 0, pv.n);
@@ -794,11 +919,12 @@ export class Scala {
       gl.blendFunc(gl.ONE, gl.ONE);
       gl.useProgram(P.luci.p);
       gl.uniformMatrix4fv(P.luci.u.uVP, false, VP);
-      gl.uniform1f(P.luci.u.uAltezza, verso.h);
+      gl.uniform1f(P.luci.u.uAltezza, verso.h * ot.sca[1]);
       gl.bindVertexArray(this.luci.vao);
       gl.drawArrays(gl.POINTS, 0, 2);
     }
     gl.disable(gl.BLEND);
+    gl.disable(gl.SCISSOR_TEST);
   }
 
   private bagliore(sorgente: Bersaglio): Bersaglio {
@@ -835,7 +961,7 @@ export class Scala {
     return B.catena[0];
   }
 
-  private finale(misto: number, bag: Bersaglio, seme: number, luce: number) {
+  private finale(misto: number, bag: Bersaglio, seme: number, opz: OpzioniQuadro) {
     const gl = this.gl, P = this.P, B = this.B!;
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     gl.viewport(0, 0, B.w, B.h);
@@ -852,9 +978,10 @@ export class Scala {
     gl.uniform1f(P.finale.u.uMisto, misto);
     gl.uniform1f(P.finale.u.uBag, 0.085);
     gl.uniform1f(P.finale.u.uEsp, 1.55);
-    gl.uniform1f(P.finale.u.uGrana, 0.022);
+    gl.uniform1f(P.finale.u.uGrana, opz.grana === false ? 0 : 0.022);
     gl.uniform1f(P.finale.u.uSeme, seme);
-    gl.uniform1f(P.finale.u.uLuce, luce);
+    gl.uniform1f(P.finale.u.uLuce, opz.luce ?? 1);
+    gl.uniform1f(P.finale.u.uVignetta, opz.vignetta === false ? 0 : 1);
     gl.bindVertexArray(this.vaoPieno);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }

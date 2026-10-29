@@ -192,30 +192,16 @@
    "licenza": "dell’autore"
   },
   {
-   "file": "plancia-radar.webp",
-   "che_cosa": "la plancia, con il radar sullo schermo verde",
-   "da_dove": "s_01_b del sequel; il radar disegnato in codice",
+   "file": "plancia-hd.webp",
+   "che_cosa": "la plancia dell’intro a piena risoluzione, con il vetro dell’oblò bucato (dietro, la vista fuori la disegna l’intro dal vivo)",
+   "da_dove": "s_01_b del sequel, intera; il buco e l’ombra del vetro in codice (strumenti/intro/plancia_hd.py)",
    "autore": "Simone Pizzi",
    "licenza": "dell’autore"
   },
   {
-   "file": "plancia-oblo.webp",
-   "che_cosa": "l’oblò della plancia, da vicino",
-   "da_dove": "s_01_b del sequel; la vista resa in codice",
-   "autore": "Simone Pizzi",
-   "licenza": "dell’autore"
-  },
-  {
-   "file": "plancia-faro.webp",
-   "che_cosa": "l’oblò con il faro di prua acceso",
-   "da_dove": "s_01_b del sequel; il faro reso in codice",
-   "autore": "Simone Pizzi",
-   "licenza": "dell’autore"
-  },
-  {
-   "file": "lente.webp",
-   "che_cosa": "la plancia nella lente del visore",
-   "da_dove": "s_01_b del sequel, dalla tavola dell’intro",
+   "file": "plancia-sfocata.webp",
+   "che_cosa": "la stessa, sfocata: il fondo del cambio di fuoco",
+   "da_dove": "s_01_b del sequel; la sfocatura in codice (strumenti/intro/plancia_hd.py)",
    "autore": "Simone Pizzi",
    "licenza": "dell’autore"
   },

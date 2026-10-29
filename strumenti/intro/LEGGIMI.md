@@ -11,6 +11,7 @@ Le immagini canoniche stanno fuori dal repo, nella cartella degli asset del Mist
 | `scontorna_prua.py` | Lo stesso, dallo still canonico di tre quarti dal davanti (v2). | numpy, opencv-python |
 | `cattura.ps1` | Fotografa una pagina WebGL con Edge senza finestra (SwiftShader): `cattura.ps1 <url> <file.png> [larghezza] [altezza]`. Con `?quadro=oblo` o `?quadro=faro` la prova di look dà le viste dall’oblò. | Edge, PowerShell |
 | `plancia.py` | Compone i quadri della plancia: la vista nell’oblò di `s_01_b`, il radar sullo schermo verde, la spia della prossimità. `plancia.py <cartella>`: nella cartella devono esserci `oblo.png` e `faro.png`; ne escono `C1`, `C2`, `D1`, `H1`. | numpy, Pillow |
+| `plancia_hd.py` | La plancia delle scene definitive (C, D, H): `s_01_b` intera, 3120 × 1328, con il vetro dell’oblò bucato, l’ombra dello spessore e un riflesso; più la stessa sfocata, per il cambio di fuoco. Scrive `plancia-hd.webp` e `plancia-sfocata.webp` in `app/public/intro/`. | numpy, Pillow |
 
 Uso tipico:
 
@@ -21,6 +22,6 @@ python strumenti/intro/tempi.py > tempi.json
 
 La plancia è sempre `location/nuove/s_01_b.png`: mai `s_01.png`, mai `zoom_s01_teca.png`.
 
-Le immagini dell’animatic (`app/public/intro/`) sono quelle della tavola e della prova di look, estratte così come sono: i due still scontornati della nave (`poppa.webp`, `prua.webp`), i quadri della plancia di C, D e H (`plancia-radar.webp`, `plancia-oblo.webp`, `plancia-faro.webp`, `plancia.webp`) e la lente dell’interfaccia (`lente.webp`).
+Le immagini dell’intro (`app/public/intro/`): i due still scontornati della nave (`poppa.webp`, `prua.webp`), dalla tavola e dalla prova di look; la plancia a piena risoluzione con l’oblò bucato e la sua versione sfocata (`plancia-hd.webp`, `plancia-sfocata.webp`, da `plancia_hd.py`), su cui la camera di C, D e H si muove; `plancia.webp`, la plancia della lente del gioco, in cui l’intro finisce. I quadri fermi dell’animatic (`plancia-radar`, `plancia-oblo`, `plancia-faro`, `lente`) non servono più dal 29 ottobre 2026: restano nella storia di git e nella tavola.
 
 Le immagini dentro la tavola e la prova di look sono WebP in base64. Per cambiare un testo o una posizione si modifica l’HTML direttamente, con una sostituzione esatta: i file sono grandi e conviene non riscriverli interi.

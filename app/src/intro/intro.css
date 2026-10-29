@@ -1,6 +1,7 @@
 /* ==========================================================================
    L'intro (09-intro-storyboard.md). Il palco è 16:9; dentro, il formato
-   2,39:1 con le bande, che si ritirano solo nella plancia.
+   2,39:1 con le bande, che si ritirano solo nella plancia. Alla fine il gioco
+   parte sotto, e il nero dell'intro (--buio) si apre su di lui.
    Contrasti sul nero: apparecchio #9FA9A6 8,3:1 · voce di L.V. #DCE6E2 16:1 ·
    sottotitoli dei suoni #B8C2BF 10:1 · titolo #ECF0EE 17:1.
    ========================================================================== */
@@ -12,9 +13,11 @@
   --voce: #dce6e2;
   --didascalia: #b8c2bf;
   --verde: #8bf0a2;
+  --buio: 1;
   position: fixed;
   inset: 0;
-  background: #000;
+  z-index: 40;
+  background: rgba(0, 0, 0, var(--buio));
   color: var(--voce);
   display: flex;
   flex-direction: column;
@@ -30,48 +33,35 @@
   container-type: size;
   aspect-ratio: 16 / 9;
   width: min(100vw, calc((100vh - var(--barra, 0px)) * 16 / 9));
-  background: #000;
+  background: rgba(0, 0, 0, var(--buio));
   overflow: hidden;
 }
 .palco > * { position: absolute; }
 .palco canvas { inset: 0; width: 100%; height: 100%; display: block; }
 
-/* i quadri della plancia: immagini 2,39:1 dentro il formato */
-.quadro-fermo { left: 0; top: 12.8%; width: 100%; height: 74.4%; opacity: 0; will-change: opacity, transform; overflow: hidden; }
-.quadro-fermo img { width: 100%; height: 100%; object-fit: cover; display: block; transform-origin: 50% 50%; }
+.palco canvas.plancia { visibility: hidden; }
+
+/* la grana sopra la plancia (l'oblò e il cielo hanno la loro, nel motore): la scelta «Grana» della
+   scheda Grafica, mossa, ferma o niente */
+.grana-intro { inset: 0; opacity: 0; mix-blend-mode: overlay; pointer-events: none; background-repeat: repeat; }
 
 /* i testi */
 .blocco { opacity: 0; visibility: hidden; text-align: center; left: 20cqw; width: 60cqw; }
 .blocco.lv { font-family: var(--serif); font-style: italic; font-weight: 300; font-size: 1.77cqw; line-height: 1.42; color: var(--voce); }
 .blocco.apparecchio { font-family: var(--mono); font-size: 1.02cqw; letter-spacing: .2em; text-transform: uppercase; color: var(--tenue); line-height: 1.7; }
+.blocco.apparecchio .cursore { color: var(--verde); opacity: 0; margin-left: .05em; letter-spacing: 0; }
+.blocco.apparecchio .resto { visibility: hidden; }
 .blocco.scena-A { top: 52%; }
 .blocco.scena-A.sotto { top: 57.5%; }
 .blocco.scena-B { left: 60cqw; width: 33cqw; top: 19%; text-align: left; }
 .blocco.scena-B.sotto { top: 29%; }
 .blocco.scena-F { top: 39%; }
 
-/* l'interfaccia d'acciaio (scena H), dalla direzione C: la Santa Maria */
-.acciaio { inset: 0; opacity: 0; background: radial-gradient(ellipse 70% 80% at 30% 40%, #14110e, #080706 75%); color: #ede3d3; font-family: var(--serif); }
-.acciaio > * { position: absolute; opacity: 0; }
-.acciaio .atto { left: 4.4cqw; top: 2.6cqw; font-family: var(--stencil); font-weight: 700; font-size: 1.2cqw; letter-spacing: .24em; text-transform: uppercase; color: #a39684; }
-.acciaio .lamina { left: 4cqw; top: 5cqw; width: 54cqw; bottom: 9cqw; background: linear-gradient(180deg, #15120f, #100e0b); border: 1px solid #3a2f24; border-radius: .25cqw; padding: 3.6cqw 3.6cqw 2cqw; }
-.acciaio .lamina::before { content: "TSC-1972 · REGISTRO DI BORDO"; position: absolute; left: 3.6cqw; top: 1.3cqw; font-family: var(--stencil); font-weight: 700; font-size: .95cqw; letter-spacing: .3em; color: #8a7a66; }
-.acciaio h3 { font-weight: 400; font-size: 2.4cqw; margin: 0 0 .3cqw; }
-.acciaio .riga { height: 1px; background: linear-gradient(90deg, #f2a03d, transparent 70%); opacity: .5; margin-bottom: .9cqw; width: 60%; }
-.acciaio p { font-size: 1.18cqw; line-height: 1.6; margin: 0; max-width: 46cqw; opacity: 0; }
-.acciaio .cornice-lente { right: 3.6cqw; top: 3.2cqw; width: 31cqw; height: 17cqw; border: 1px solid #3a2f24; border-radius: .3cqw; }
-.acciaio .didas { right: 3.6cqw; top: 20.8cqw; width: 31cqw; text-align: center; font-family: var(--mono); font-size: .7cqw; letter-spacing: .2em; color: #a39684; text-transform: uppercase; }
-.acciaio .strumenti { right: 3.6cqw; top: 23.6cqw; width: 31cqw; display: grid; grid-template-columns: auto 1fr; gap: .5cqw 1.2cqw; font-family: var(--mono); font-size: .9cqw; margin: 0; }
-.acciaio .strumenti dt { color: #a39684; letter-spacing: .18em; font-size: .7cqw; text-transform: uppercase; padding-top: .15cqw; }
-.acciaio .strumenti dd { margin: 0; color: #ede3d3; }
-.acciaio .ramo { left: 3cqw; right: 3cqw; bottom: 3.2cqw; display: flex; flex-wrap: wrap; gap: .6cqw; align-items: center; border-top: 1px solid #3a2f24; padding-top: 1.2cqw; }
-.acciaio .ramo span { font-family: var(--mono); font-size: .75cqw; padding: .35cqw .8cqw; border: 1px solid #3a2f24; border-radius: .2cqw; background: #15120f; color: #ede3d3; opacity: 0; }
-.acciaio .ramo .et { border: none; background: none; color: #a39684; letter-spacing: .2em; text-transform: uppercase; font-size: .62cqw; }
-.acciaio .ramo .u { font-style: italic; color: #f2a03d; }
-
-/* la telecamera di bordo che scivola nella lente */
-.lente-mobile { overflow: hidden; opacity: 0; border-radius: .3cqw; }
-.lente-mobile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+/* la telecamera di bordo (H): la scritta in alto a sinistra, con la spia della registrazione, come
+   sotto la lente del gioco */
+.didascalia { left: 2.6cqw; top: 2.2cqw; opacity: 0; visibility: hidden; font-family: var(--mono); font-size: max(12px, .82cqw); letter-spacing: .2em; text-transform: uppercase; color: rgba(240, 232, 214, .88); text-shadow: 0 0 .4em rgba(0, 0, 0, .8); }
+.didascalia .rec { display: inline-block; width: .62em; height: .62em; margin-right: .8em; vertical-align: .02em; border-radius: 50%; background: #ff5247; box-shadow: 0 0 .5em rgba(255, 82, 71, .7); animation: rec-intro 2.2s steps(1) infinite; }
+@keyframes rec-intro { 55% { opacity: .18; } }
 
 /* le bande del formato, sopra a tutto il quadro */
 .banda { left: 0; right: 0; height: 12.8%; background: #000; }
@@ -105,4 +95,5 @@
 
 @media (prefers-reduced-motion: reduce) {
   .revisione button, .revisione input { transition: none; }
+  .didascalia .rec { animation: none; }
 }

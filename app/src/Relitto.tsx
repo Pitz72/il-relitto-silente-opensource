@@ -60,6 +60,9 @@ const VERSIONE = __VERSIONE__;
 const NOVITA = __NOVITA__;
 /** Lo sviluppo, con ?novita: la finestra delle novità con le righe della prossima versione. */
 const PROVA_NOVITA = import.meta.env.DEV && new URLSearchParams(location.search).has("novita");
+/** Lo sviluppo, con ?nuova: dritti all'intro di una partita nuova (con &da=150, da quel secondo), per
+ *  provare la fine dell'intro, che si apre sul gioco. */
+const PROVA_NUOVA = import.meta.env.DEV && new URLSearchParams(location.search).has("nuova");
 
 type Schermata =
   | { tipo: "nero" }
@@ -98,7 +101,8 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
 
   // all'avvio: il nero, poi i loghi; il registro dei finali si legge
   useEffect(() => {
-    const t = setTimeout(() => setSchermata((s) => (s.tipo === "nero" ? { tipo: "loghi" } : s)), NERO);
+    const t = setTimeout(() => setSchermata((s) => (s.tipo === "nero" ? (PROVA_NUOVA ? { tipo: "intro" } : { tipo: "loghi" }) : s)), NERO);
+    if (PROVA_NUOVA) void avviaMotore().catch(() => undefined);
     void leggiRegistro().then((r) => {
       registroRef.current = r;
       setRegistro(r);
@@ -146,6 +150,23 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
     setPannello(null);
     setSchermata({ tipo: "gioco", inizio, chiave: ++partite.current });
   }, []);
+
+  // la fine dell'intro (09-intro-storyboard.md, H): la partita parte sotto l'intro, che resta sopra
+  // finché la plancia non è andata nella lente del gioco, e poi si apre su di lui. Saltata prima, la
+  // partita parte quando l'intro se ne va
+  const [introSopra, setIntroSopra] = useState(false);
+  const partitaSotto = useRef(false);
+  const partitaDallIntro = useCallback(() => {
+    if (partitaSotto.current) return;
+    partitaSotto.current = true;
+    setIntroSopra(true);
+    gioca({ tipo: "nuova", seme: prova ? 1 : undefined });
+  }, [gioca, prova]);
+  const fineIntro = useCallback(() => {
+    if (!partitaSotto.current) gioca({ tipo: "nuova", seme: prova ? 1 : undefined });
+    partitaSotto.current = false;
+    setIntroSopra(false);
+  }, [gioca, prova]);
 
   const alMenu = useCallback(
     (esito: string, messaggio?: string) => {
@@ -349,17 +370,22 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
         <Loghi onFine={dopoILoghi} />
       </Suspense>
     );
-  if (schermata.tipo === "gioco")
+  // il gioco, e l'intro: alla fine dell'intro stanno insieme, l'intro sopra (la stessa posizione nell'albero,
+  // perché l'intro non riparta quando sotto arriva il gioco)
+  if (schermata.tipo === "gioco" || schermata.tipo === "intro")
     return (
-      <Suspense fallback={null}>
-        <Gioco key={schermata.chiave} prova={prova} inizio={schermata.inizio} alMenu={alMenu} alFinale={alFinale} aiTitoli={aiTitoli} />
-      </Suspense>
-    );
-  if (schermata.tipo === "intro")
-    return (
-      <Suspense fallback={null}>
-        <Intro ridotto={ridotto} onFine={() => gioca({ tipo: "nuova", seme: prova ? 1 : undefined })} />
-      </Suspense>
+      <>
+        {schermata.tipo === "gioco" ? (
+          <Suspense key="gioco" fallback={null}>
+            <Gioco key={schermata.chiave} prova={prova} inizio={schermata.inizio} alMenu={alMenu} alFinale={alFinale} aiTitoli={aiTitoli} />
+          </Suspense>
+        ) : null}
+        {schermata.tipo === "intro" || introSopra ? (
+          <Suspense key="intro" fallback={null}>
+            <Intro ridotto={ridotto} grana={opzioni.grana} onPartita={partitaDallIntro} onFine={fineIntro} />
+          </Suspense>
+        ) : null}
+      </>
     );
 
   const caricamento = passo === "pronto" || passo === MOTORE_FALLITO ? null : passo.replace(/…$/, "").toLowerCase() + "…";

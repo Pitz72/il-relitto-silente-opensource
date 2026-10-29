@@ -110,14 +110,10 @@ La Santa Maria di tre quarti dal davanti, scontornata
   Simone Pizzi · dell’autore · lo still canonico di tre quarti (v2) del sequel, scontornato con strumenti/intro/scontorna_prua.py
 La plancia, con la massa nell’oblò
   Simone Pizzi · dell’autore · s_01_b del sequel; la vista nell’oblò resa in codice (strumenti/intro/plancia.py)
-La plancia, con il radar sullo schermo verde
-  Simone Pizzi · dell’autore · s_01_b del sequel; il radar disegnato in codice
-L’oblò della plancia, da vicino
-  Simone Pizzi · dell’autore · s_01_b del sequel; la vista resa in codice
-L’oblò con il faro di prua acceso
-  Simone Pizzi · dell’autore · s_01_b del sequel; il faro reso in codice
-La plancia nella lente del visore
-  Simone Pizzi · dell’autore · s_01_b del sequel, dalla tavola dell’intro
+La plancia dell’intro a piena risoluzione, con il vetro dell’oblò bucato (dietro, la vista fuori la disegna l’intro dal vivo)
+  Simone Pizzi · dell’autore · s_01_b del sequel, intera; il buco e l’ombra del vetro in codice (strumenti/intro/plancia_hd.py)
+La stessa, sfocata: il fondo del cambio di fuoco
+  Simone Pizzi · dell’autore · s_01_b del sequel; la sfocatura in codice (strumenti/intro/plancia_hd.py)
 Yusuf al comunicatore del Magazzino Quattro
   Simone Pizzi · dell’autore · il ritratto del sequel (YUSUF_COM, nella versione del gioco com-yusuf.webp)
 La cuccetta, nella telecamera di bordo

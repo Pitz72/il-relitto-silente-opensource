@@ -16,10 +16,8 @@ Ogni immagine che entra nell’app ha una riga qui, prima di essere usata, come 
 | `app/public/intro/poppa.webp` | la Santa Maria da poppa, scontornata | lo still canonico della poppa (clip03) del sequel, scontornato con `strumenti/intro/scontorna_poppa.py` | Simone Pizzi | dell’autore |
 | `app/public/intro/prua.webp` | la Santa Maria di tre quarti dal davanti, scontornata | lo still canonico di tre quarti (v2) del sequel, scontornato con `strumenti/intro/scontorna_prua.py` | Simone Pizzi | dell’autore |
 | `app/public/intro/plancia.webp` | la plancia, con la massa nell’oblò | `s_01_b` del sequel; la vista nell’oblò resa in codice (`strumenti/intro/plancia.py`) | Simone Pizzi | dell’autore |
-| `app/public/intro/plancia-radar.webp` | la plancia, con il radar sullo schermo verde | `s_01_b` del sequel; il radar disegnato in codice | Simone Pizzi | dell’autore |
-| `app/public/intro/plancia-oblo.webp` | l’oblò della plancia, da vicino | `s_01_b` del sequel; la vista resa in codice | Simone Pizzi | dell’autore |
-| `app/public/intro/plancia-faro.webp` | l’oblò con il faro di prua acceso | `s_01_b` del sequel; il faro reso in codice | Simone Pizzi | dell’autore |
-| `app/public/intro/lente.webp` | la plancia nella lente del visore | `s_01_b` del sequel, dalla tavola dell’intro | Simone Pizzi | dell’autore |
+| `app/public/intro/plancia-hd.webp` | la plancia dell’intro a piena risoluzione, con il vetro dell’oblò bucato (dietro, la vista fuori la disegna l’intro dal vivo) | `s_01_b` del sequel, intera; il buco e l’ombra del vetro in codice (`strumenti/intro/plancia_hd.py`) | Simone Pizzi | dell’autore |
+| `app/public/intro/plancia-sfocata.webp` | la stessa, sfocata: il fondo del cambio di fuoco | `s_01_b` del sequel; la sfocatura in codice (`strumenti/intro/plancia_hd.py`) | Simone Pizzi | dell’autore |
 | `app/public/viste/yusuf.webp` | Yusuf al comunicatore del Magazzino Quattro | il ritratto del sequel (`YUSUF_COM`, nella versione del gioco `com-yusuf.webp`) | Simone Pizzi | dell’autore |
 | `app/public/viste/cuccetta.webp` | la cuccetta, nella telecamera di bordo | `s_03` del sequel (la cabina, con la branda di sopra), ridotta a 1280 px | Simone Pizzi | dell’autore |
 | `app/public/viste/stiva.webp` | la stiva verso poppa: il boccaporto esterno e le tute | `s_10` del sequel, ridotta a 1280 px (non `s_04`, che ha pallet e casse: la stiva del Relitto è vuota da sei settimane, 06 §17) | Simone Pizzi | dell’autore |
