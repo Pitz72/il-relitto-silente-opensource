@@ -583,7 +583,7 @@ SEGNI_A_SORTE = {
     "assestamento": "Da qualche parte nella nave qualcosa si assesta",
     "brusio_cala": "Nella cuffia il brusio cala fino quasi a sparire",
     "pareti_lampo": "Per un battito, qualcosa nelle pareti si accende tutto insieme",
-    "crollo": "Da qualche parte dietro di te qualcosa crolla",
+    "crollo": "Da qualche parte dietro di me qualcosa crolla",
     "incrinature": "Le pareti si incrinano in lunghe linee verdi",
 }
 

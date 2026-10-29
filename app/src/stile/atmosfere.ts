@@ -275,7 +275,7 @@ export function statoAria(aria: number | null): StatoAria {
 const DI_BORDO = new Set(["plancia", "cuccetta", "sala macchine", "stiva", "scafo"]);
 
 /** Il clima di un momento del gioco. La membrana cresce al primo contatto (nel
- *  vestibolo, «per farsi sentire beve dalla tua stessa batteria»), non prima:
+ *  vestibolo, «per farsi sentire beve dalla mia stessa batteria»), non prima:
  *  nella camera di compensazione la luce è già del relitto, l'interfaccia è
  *  ancora acciaio. La protezione vitale è quella del gioco (sotto 30, prima
  *  della fuga); l'ipossia comincia a 15, con la tuta addosso. */

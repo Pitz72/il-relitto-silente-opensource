@@ -8,6 +8,15 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+### Per chi gioca
+
+- **William racconta in prima persona.** Tutto il gioco, dalla Santa Maria ai finali, ora lo dice lui: «Lancio la scansione lunga», «Sono fuori», «Qualcuno è arrivato fin qui prima di me». I suggerimenti per chi gioca stanno fra parentesi, come «(ANALIZZALA.)», e restano pulsanti.
+- **I salvataggi di prima si caricano lo stesso**, con l’avviso che la storia è cambiata.
+
+### Cambiato
+
+- **La prima persona** (decisione dell’autore del 29 ottobre 2026, pensando a una versione recitata: William ha la voce di Leonardo Tomassetti, che nel *Mistero della Santa Maria* legge già in prima persona anche le descrizioni dei luoghi). Prima l’atto I, come prova, poi tutti gli atti: circa 370 frasi in tutti i quattordici `.fav`, la seconda eccezione al congelamento del 16 ottobre. William racconta al presente, in prima persona («Regolo la taglierina», «Mi siedo sullo scafo nero»); ogni indizio che parla a chi gioca va fra parentesi, staccato dal racconto («Lo scanner saprebbe leggerla. (ANALIZZALA.)», «(Adesso puoi ACCOSTARE.)», «(STACCALO.)»), e i 41 suggerimenti in maiuscolo trovano ancora tutti il loro pulsante (`collaudo/menu.mjs`). Restano come erano le voci degli altri (Yusuf, l’Anziano, le echi, L.V., le traduzioni), le etichette delle scelte e i messaggi del motore («Puoi vedere qui», «Uscite», «Stai portando»), che sono la voce del gioco e non di William. Cambiano con il testo l’ultima frase dell’intro (la plancia, `intro/Intro.tsx`), l’inizio del crollo nella fuga che il ponte riconosce per il suo segno (`motore/ponte.py`: senza, il crollo sarebbe rimasto muto), sei attese dei percorsi di `collaudo/` e i commenti che citano il testo (`regia.rs`, `stanze.rs`, `atmosfere.ts`, `suggerimenti.ts`); le trascrizioni sono rigenerate. Tutti i collaudi sono verdi: i quattordici percorsi, i pulsanti, i menu, gli scritti, il suono (gli stessi 1.826 eventi), il diario, i salvataggi, la tipografia e le 92 prove dell’app. Cambia l’impronta della storia: i salvataggi di prima si caricano «ricostruita», con l’avviso.
+
 ## [0.2.5-beta.5] - 2026-10-27
 
 ### Per chi gioca

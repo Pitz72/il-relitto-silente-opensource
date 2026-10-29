@@ -40,19 +40,19 @@ Il navarca si chiama anche "forma".
 Il navarca si chiama anche "alieno".
 La descrizione del navarca è "Il corpo è conservato fino all'ultimo dettaglio: una creatura alta e sottile, gli arti a doppia articolazione, la pelle traslucida tesa su ossa delicate. Nessun segno di violenza: la posa è serena, quasi di attesa. Una mano a tre dita stringe un piccolo cilindro di metallo.".
 La descrizione del navarca se il cilindro mnemonico non è nell'alloggio dell'equipaggio è "Il corpo è conservato fino all'ultimo dettaglio: una creatura alta e sottile, gli arti a doppia articolazione, la pelle traslucida tesa su ossa delicate. La posa è serena, quasi di attesa. La mano a tre dita, aperta, adesso non stringe più niente.".
-Invece di tocca il navarca: dire "No. Disturbare una posa così serena, durata così a lungo, ha qualcosa di sbagliato. Lasci il suo riposo com'è.".
+Invece di tocca il navarca: dire "No. Disturbare una posa così serena, durata così a lungo, ha qualcosa di sbagliato. Lascio il suo riposo com'è.".
 
 Il cilindro mnemonico è una cosa.
 Il cilindro mnemonico è prendibile.
 Il cilindro mnemonico è nell'alloggio dell'equipaggio.
 Il cilindro mnemonico si chiama anche "cilindro".
-La descrizione del cilindro mnemonico è "Un piccolo cilindro di metallo, freddo e liscio: un registratore personale. Lo scanner saprebbe leggerlo: ANALIZZALO.".
+La descrizione del cilindro mnemonico è "Un piccolo cilindro di metallo, freddo e liscio: un registratore personale. Lo scanner saprebbe leggerlo. (ANALIZZALO.)".
 
 # ============================================================================
 # NIDO
 # ============================================================================
 Il nido è una stanza.
-La descrizione del nido è "Una cella a misura di qualcuno più piccolo. Le pareti sono coperte dallo stesso disegno, ripetuto cento volte: un sole solo, giallo, piccolo.[se la proiezione è attiva] È il tuo.[fine] In un angolo, un bozzolo di riposo grande la metà degli altri. A sud si torna all'alloggio.".
+La descrizione del nido è "Una cella a misura di qualcuno più piccolo. Le pareti sono coperte dallo stesso disegno, ripetuto cento volte: un sole solo, giallo, piccolo.[se la proiezione è attiva] È il mio.[fine] In un angolo, un bozzolo di riposo grande la metà degli altri. A sud si torna all'alloggio.".
 
 I disegni è una cosa.
 I disegni è nel nido.
@@ -60,7 +60,7 @@ I disegni è di scena.
 I disegni si chiama anche "disegno".
 I disegni si chiama anche "sole".
 I disegni si chiama anche "soli".
-La descrizione dei disegni è "Un sole solo, giallo, piccolo, tracciato con qualcosa di morbido. Cento volte. Mai tre.[se la proiezione è attiva] Lo riconosci: è l'ultimo punto della rotta sulla mappa del Ponte. Il tuo sole. Chi ha disegnato qui non aveva mai visto i tre soli: disegnava quello verso cui andava.[fine]".
+La descrizione dei disegni è "Un sole solo, giallo, piccolo, tracciato con qualcosa di morbido. Cento volte. Mai tre.[se la proiezione è attiva] Lo riconosco: è l'ultimo punto della rotta sulla mappa del Ponte. Il mio sole. Chi ha disegnato qui non aveva mai visto i tre soli: disegnava quello verso cui andava.[fine]".
 
 La culla è una cosa.
 La culla è nel nido.
@@ -75,13 +75,13 @@ Il sonaglio è prendibile.
 Il sonaglio è nel nido.
 Il sonaglio si chiama anche "strumento".
 Il sonaglio si chiama anche "conchiglia".
-La descrizione del sonaglio è "Un piccolo strumento di metallo leggero, a forma di conchiglia, con tre fori. Se lo scuoti, suona.".
+La descrizione del sonaglio è "Un piccolo strumento di metallo leggero, a forma di conchiglia, con tre fori. Se lo scuoto, suona.".
 
 # --- La nota (N10): il re del sonaglio e il re del reattore ------------------
-Invece di suona il sonaglio se la nota è reattore: dire "Lo scuoti piano. Una nota sola, chiara, che resta nell'aria più del dovuto: un re. Lo stesso re che il reattore della Santa Maria tiene da sempre, sotto il pavimento della tua plancia. Resti fermo finché non si spegne." e adesso la nota è riconosciuta.
-Invece di suona il sonaglio se la nota è ignota: dire "Lo scuoti piano. Una nota sola, chiara, che resta nell'aria più del dovuto. Un re." e adesso la nota è sonaglio.
+Invece di suona il sonaglio se la nota è reattore: dire "Lo scuoto piano. Una nota sola, chiara, che resta nell'aria più del dovuto: un re. Lo stesso re che il reattore della Santa Maria tiene da sempre, sotto il pavimento della mia plancia. Resto fermo finché non si spegne." e adesso la nota è riconosciuta.
+Invece di suona il sonaglio se la nota è ignota: dire "Lo scuoto piano. Una nota sola, chiara, che resta nell'aria più del dovuto. Un re." e adesso la nota è sonaglio.
 Invece di suona il sonaglio: dire "Il re del sonaglio, chiaro, che resta nell'aria.".
-Invece di usa il sonaglio: dire "Lo scuoti piano. Il suo re resta nell'aria più del dovuto. (SUONA IL SONAGLIO, se vuoi ascoltarlo.)".
+Invece di usa il sonaglio: dire "Lo scuoto piano. Il suo re resta nell'aria più del dovuto. (SUONA IL SONAGLIO, se vuoi ascoltarlo.)".
 
 # --- L'eco del Piccolo: compare quando sintonizzi la culla (echi.fav) --------
 L'eco è un personaggio.
@@ -94,20 +94,20 @@ La descrizione dell'eco è "Non c'è nessuno: c'è una voce giovane, impressa ne
 Il dialogo dell'eco comincia con "domanda".
 
 L'eco al nodo "domanda" dice "«…perché non si muove… perché nessuno…» La domanda gira e ricomincia, uguale, come chi chiede e non aspetta più risposta.".
-L'eco al nodo "domanda" dice "La voce c'è, ma la tuta tiene chiusi i canali secondari: PROTEZIONE VITALE. Con l'aria a [aria] non ti lascia ascoltare." se l'aria è meno di 30 e la fuga è lontana.
+L'eco al nodo "domanda" dice "La voce c'è, ma la tuta tiene chiusi i canali secondari: PROTEZIONE VITALE. Con l'aria a [aria] non mi lascia ascoltare." se l'aria è meno di 30 e la fuga è lontana.
 L'eco al nodo "domanda" dice "La registrazione è ferma. La domanda non ricomincia più." se la risposta è vera.
-L'eco al nodo "domanda" dice "«…perché non si muove… perché nessuno…» Ricomincia, uguale. Le hai già detto che non lo sai." se la risposta è incerta.
-L'eco al nodo "domanda" dice "Il resto della registrazione l'hai già sentito. Dormi. Domani te lo dico." se la risposta è taciuta.
+L'eco al nodo "domanda" dice "«…perché non si muove… perché nessuno…» Ricomincia, uguale. Le ho già detto che non lo so." se la risposta è incerta.
+L'eco al nodo "domanda" dice "Il resto della registrazione l'ho già sentito. Dormi. Domani te lo dico." se la risposta è taciuta.
 Al nodo "domanda" l'opzione "Perché siete arrivati." se la proiezione è attiva e la risposta è nessuna e l'aria è almeno 30 conduce al nodo "arrivati" e adesso la risposta è vera e adesso aumenta le risonanze e adesso diminuisci l'aria di 6.
 Al nodo "domanda" l'opzione "Non lo so." se la risposta è nessuna e l'aria è almeno 30 conduce al nodo "nonso" e adesso la risposta è incerta e adesso aumenta le risonanze e adesso diminuisci l'aria di 6.
 Al nodo "domanda" l'opzione "[Resta in silenzio.]" se la risposta è nessuna e l'aria è almeno 30 conduce al nodo "taciuto" e adesso la risposta è taciuta e adesso aumenta le risonanze e adesso diminuisci l'aria di 6.
 Al nodo "domanda" l'opzione "Lascia stare." chiude il dialogo.
 
-L'eco al nodo "arrivati" dice "La domanda gira ancora una volta. «…perché non si muove…» Poi, per la prima volta, non ricomincia. Resta il fruscio della registrazione, e basta. Non sai se ti ha sentito. Non sai nemmeno se una registrazione può sentire.".
+L'eco al nodo "arrivati" dice "La domanda gira ancora una volta. «…perché non si muove…» Poi, per la prima volta, non ricomincia. Resta il fruscio della registrazione, e basta. Non so se mi ha sentito. Non so nemmeno se una registrazione può sentire.".
 Al nodo "arrivati" l'opzione "Lascia stare." chiude il dialogo.
 
 L'eco al nodo "nonso" dice "La domanda ricomincia, uguale. «…perché non si muove… perché nessuno…» Non era una risposta che potesse fermarla.".
 Al nodo "nonso" l'opzione "Lascia stare." chiude il dialogo.
 
-L'eco al nodo "taciuto" dice "Stai zitto, e ascolti la registrazione fino in fondo. Dopo l'ultima domanda c'è un'altra voce, più vecchia, stanca, vicinissima: «Dormi. Domani te lo dico.» Poi più niente.[se le alcove è risuonata] È la voce del Navarca.[fine]".
+L'eco al nodo "taciuto" dice "Sto zitto, e ascolto la registrazione fino in fondo. Dopo l'ultima domanda c'è un'altra voce, più vecchia, stanca, vicinissima: «Dormi. Domani te lo dico.» Poi più niente.[se le alcove è risuonata] È la voce del Navarca.[fine]".
 Al nodo "taciuto" l'opzione "Lascia stare." chiude il dialogo.

@@ -15,7 +15,7 @@ Il solco è uno stato.
 Il solco è ignoto.
 
 Il corridoio principale è una stanza.
-La descrizione del corridoio principale è "Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sei salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.".
+La descrizione del corridoio principale è "Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.".
 La descrizione del corridoio principale se la grande porta è aperta è "Il cuore del relitto, sotto la sua luce fredda. A ovest, dove c'era la Grande Porta, adesso si apre il passaggio verso il Ponte. A nord e a sud gli altri passaggi, giù il montacarichi, a nordest gli alloggi, a est la gola larga verso il vestibolo. Accanto all'imbocco, alla base della parete, le [se le tacche è segnata]quattro[altrimenti]tre[fine] tacche.".
 
 # --- Sfondo -----------------------------------------------------------------
@@ -34,21 +34,21 @@ Le tacche è vergine.
 Le tacche si chiama anche "segni".
 Le tacche si chiama anche "tre tacche".
 La descrizione delle tacche è "Tre tacche orizzontali, parallele, alla base della parete accanto all'imbocco. Troppo regolari per essere usura: qualcuno le ha fatte apposta, come fa chi segna i posti già visti per non perdersi.".
-La descrizione delle tacche se le tacche è segnata è "Quattro tacche, adesso. Tre di chi è passato prima di te, e una tua.".
+La descrizione delle tacche se le tacche è segnata è "Quattro tacche, adesso. Tre di chi è passato prima di me, e una mia.".
 
-Invece di analizza le tacche se il solco è ignoto: dire "Il multiscanner misura i solchi. La punta che li ha fatti era una punta da carotatore, attrezzatura terrestre di serie, un modello di un secolo e mezzo fa. Chi ha inciso qui veniva da dove vieni tu." e adesso il solco è misurato e adesso aumenta le tracce.
+Invece di analizza le tacche se il solco è ignoto: dire "Il multiscanner misura i solchi. La punta che li ha fatti era una punta da carotatore, attrezzatura terrestre di serie, un modello di un secolo e mezzo fa. Chi ha inciso qui veniva da dove vengo io." e adesso il solco è misurato e adesso aumenta le tracce.
 Invece di analizza le tacche: dire "Una punta da carotatore, terrestre, di un secolo e mezzo fa.".
 
-Invece di incidi le tacche se il giocatore non ha la taglierina: dire "Ti servirebbe qualcosa con cui incidere.".
-Invece di incidi le tacche se le tacche è segnata: dire "Il tuo segno è già lì: quattro tacche, adesso.".
-Invece di incidi le tacche: dire "Regoli la taglierina al minimo e, con un gesto lento, incidi una quarta linea accanto alle tre. Il materiale resiste, poi cede in un solco netto e sottile.\nQuattro tacche. [se il solco è misurato]Chi ha fatto le prime tre veniva da dove vieni tu, e non sai altro.[altrimenti]Non sai chi abbia fatto le prime tre, né quanto tempo fa.[fine] Hai voluto rispondergli lo stesso, nell'unico modo possibile: anch'io sono passato di qui." e adesso le tacche è segnata.
+Invece di incidi le tacche se il giocatore non ha la taglierina: dire "Mi servirebbe qualcosa con cui incidere.".
+Invece di incidi le tacche se le tacche è segnata: dire "Il mio segno è già lì: quattro tacche, adesso.".
+Invece di incidi le tacche: dire "Regolo la taglierina al minimo e, con un gesto lento, incido una quarta linea accanto alle tre. Il materiale resiste, poi cede in un solco netto e sottile.\nQuattro tacche. [se il solco è misurato]Chi ha fatto le prime tre veniva da dove vengo io, e non so altro.[altrimenti]Non so chi abbia fatto le prime tre, né quanto tempo fa.[fine] Ho voluto rispondergli lo stesso, nell'unico modo possibile: anch'io sono passato di qui." e adesso le tacche è segnata.
 
 # --- Essenziali -------------------------------------------------------------
 La lastra dati è una cosa.
 La lastra dati è prendibile.
 La lastra dati è nel corridoio principale.
 La lastra dati si chiama anche "lastra".
-La descrizione della lastra dati è "Una lastra sottile e levigata, fredda, che somiglia all'onice. Se la muovi nella luce, sotto la superficie scorrono deboli circuiti perlescenti. Lo scanner saprebbe leggerla: ANALIZZALA.".
+La descrizione della lastra dati è "Una lastra sottile e levigata, fredda, che somiglia all'onice. Se la muovi nella luce, sotto la superficie scorrono deboli circuiti perlescenti. Lo scanner saprebbe leggerla. (ANALIZZALA.)".
 
 La grande porta è una cosa.
 La grande porta è nel corridoio principale.
@@ -62,9 +62,9 @@ La descrizione della grande porta se la grande porta è aperta è "Dove c'era la
 
 # --- Le tre chiavi (il demone in relitto.fav apre la porta alla terza) -------
 # «Le chiavi» conta i depositi sulla porta, non le prese.
-Invece di usa il seme sulla grande porta se il giocatore ha il seme: dire "Avvicini il seme all'incavo ovoidale: viene attratto e si incastra con un clic delicato. La sua luce verde corre lungo il bordo della porta e ci resta. In mano, del seme, non hai più niente." e adesso il seme è nel nulla e adesso aumenta le chiavi.
-Invece di usa la stele sulla grande porta se il giocatore ha la stele: dire "Inserisci la Stele del Ricordo nell'incavo rettangolare. Si adatta. Una linea di luce bianca si aggiunge alla prima." e adesso la stele è nel nulla e adesso aumenta le chiavi.
-Invece di usa il nucleo sulla grande porta se il giocatore ha il nucleo: dire "Posizioni il Nucleo di Memoria nell'incavo a molte facce: una linea di luce ambrata chiude il circuito, e un ronzio profondo, armonico, riempie il corridoio." e adesso il nucleo è nel nulla e adesso aumenta le chiavi.
+Invece di usa il seme sulla grande porta se il giocatore ha il seme: dire "Avvicino il seme all'incavo ovoidale: viene attratto e si incastra con un clic delicato. La sua luce verde corre lungo il bordo della porta e ci resta. In mano, del seme, non ho più niente." e adesso il seme è nel nulla e adesso aumenta le chiavi.
+Invece di usa la stele sulla grande porta se il giocatore ha la stele: dire "Inserisco la Stele del Ricordo nell'incavo rettangolare. Si adatta. Una linea di luce bianca si aggiunge alla prima." e adesso la stele è nel nulla e adesso aumenta le chiavi.
+Invece di usa il nucleo sulla grande porta se il giocatore ha il nucleo: dire "Posiziono il Nucleo di Memoria nell'incavo a molte facce: una linea di luce ambrata chiude il circuito, e un ronzio profondo, armonico, riempie il corridoio." e adesso il nucleo è nel nulla e adesso aumenta le chiavi.
 Invece di apri la grande porta se la grande porta è chiusa: dire "Non ha maniglie né serrature: ha tre incavi, e aspetta quello che ci va dentro.".
 
 # --- Gating ------------------------------------------------------------------

@@ -5,7 +5,7 @@
 #   python motore/favella.py collaudo relitto-silente/relitto.fav --finali --percorso collaudo/due-lettere.txt
 # atteso: esito persa
 # atteso: fuga = lontana
-# atteso: finale «Il nome intero, a chi lo diresti?»
+# atteso: finale «Il nome intero, a chi lo direi?»
 # atteso: finale «Fra centocinquant'anni»
 analizza la nave aliena
 accosta

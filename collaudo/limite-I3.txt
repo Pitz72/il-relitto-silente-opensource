@@ -5,7 +5,7 @@
 # atteso: esito persa
 # atteso: stanza scafo
 # atteso: finale «i magneti degli stivali»
-# atteso: finale «Ti porta con sé.»
+# atteso: finale «Mi porta con sé.»
 
 # --- Atto I ---
 analizza la nave aliena

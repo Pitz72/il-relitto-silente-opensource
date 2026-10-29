@@ -6,7 +6,7 @@
 # atteso: esito in_corso
 # atteso: aria >= 20
 # atteso: compare «Anche il faro scende al minimo, da solo.»
-# atteso: compare «la tuta non ti ridà il faro»
+# atteso: compare «la tuta non mi ridà il faro»
 # atteso: finale «PROTEZIONE VITALE»
 # atteso: mai «La cifra sul visore è a zero»
 

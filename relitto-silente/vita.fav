@@ -59,7 +59,7 @@ La descrizione della serra morente è "Una serra a cupola, vasta, con l'aria sec
 La descrizione della serra morente se la teca è svuotata e la fuga è lontana è "La serra morta. Il campo di contenimento si è spento e il silenzio adesso è completo. Al centro, sul piedistallo, i resti della teca dissolta. Contro la colonna, a mezzo metro, l'uomo in tuta, il casco calato sul petto. A nord il corridoio; a ovest, dietro i funghi, il passaggio scuro.".
 
 # Lo specchio: la prima volta che entri.
-Quando il giocatore è nella serra morente e lo specchio è velato: dire "Il faro ci passa sopra e va oltre, poi torna indietro da solo, come la mano di chi ha visto qualcosa prima di saperlo. Contro la colonna c'è un uomo.\nUna tuta di un secolo e mezzo fa, di un modello che hai visto soltanto nei cataloghi dei pezzi fuori produzione. Ma umana: due braccia, due gambe, un casco fatto per una testa come la tua. È seduto, la schiena contro la base della colonna, le gambe allungate, il casco calato sul petto. Si è lasciato andare giù piano, si capisce, quando non c'era più nessun posto dove andare.\n[se la promessa è carico]Dentro non c'è mai nessuno, diceva Yusuf. [fine]Qualcuno è arrivato fin qui prima di te. Da solo. Come te." e adesso lo specchio è visto e adesso aumenta le tracce.
+Quando il giocatore è nella serra morente e lo specchio è velato: dire "Il faro ci passa sopra e va oltre, poi torna indietro da solo, come la mano di chi ha visto qualcosa prima di saperlo. Contro la colonna c'è un uomo.\nUna tuta di un secolo e mezzo fa, di un modello che ho visto soltanto nei cataloghi dei pezzi fuori produzione. Ma umana: due braccia, due gambe, un casco fatto per una testa come la mia. È seduto, la schiena contro la base della colonna, le gambe allungate, il casco calato sul petto. Si è lasciato andare giù piano, si capisce, quando non c'era più nessun posto dove andare.\n[se la promessa è carico]Dentro non c'è mai nessuno, diceva Yusuf. [fine]Qualcuno è arrivato fin qui prima di me. Da solo. Come me." e adesso lo specchio è visto e adesso aumenta le tracce.
 
 # --- Sfondo -----------------------------------------------------------------
 Le piante è una cosa.
@@ -68,8 +68,8 @@ Le piante è di scena.
 Le piante si chiama anche "funghi".
 Le piante si chiama anche "felci".
 Le piante si chiama anche "polvere".
-La descrizione delle piante è "Resti secchi di una flora aliena che un tempo doveva essere rigogliosa. Una felce sfiorata si sbriciola in una polvere fine che ti arriva in gola anche attraverso i filtri.".
-Invece di tocca le piante: dire "Sfiori una felce scheletrica e si sbriciola in una nuvola di polvere. Qui è tutto morto, ma morto così piano che sembra ancora in attesa.".
+La descrizione delle piante è "Resti secchi di una flora aliena che un tempo doveva essere rigogliosa. Una felce sfiorata si sbriciola in una polvere fine che mi arriva in gola anche attraverso i filtri.".
+Invece di tocca le piante: dire "Sfioro una felce scheletrica e si sbriciola in una nuvola di polvere. Qui è tutto morto, ma morto così piano che sembra ancora in attesa.".
 
 Il cadavere è una cosa.
 Il cadavere è nella serra morente.
@@ -80,9 +80,9 @@ Il cadavere si chiama anche "corpo".
 Il cadavere si chiama anche "morto".
 Il cadavere si chiama anche "tuta antica".
 Il cadavere si chiama anche "l.v.".
-La descrizione del cadavere è "Seduto contro la base della colonna, le gambe allungate, il casco calato sul petto. L'aria secca della serra non l'ha disfatto: l'ha seccato, come le felci. Dentro il casco c'è ancora una faccia, tesa sugli zigomi, di uno che a vederlo vivo avresti detto sui trentacinque anni. Nella destra stringe una punta da carotatore. Sul petto ha una placca graffiata a mano. Alla cintura, la scatola nera della tuta, spenta, e un metro di cavo di sicurezza tranciato di netto, come il tuo.".
+La descrizione del cadavere è "Seduto contro la base della colonna, le gambe allungate, il casco calato sul petto. L'aria secca della serra non l'ha disfatto: l'ha seccato, come le felci. Dentro il casco c'è ancora una faccia, tesa sugli zigomi, di uno che a vederlo vivo avrei detto sui trentacinque anni. Nella destra stringe una punta da carotatore. Sul petto ha una placca graffiata a mano. Alla cintura, la scatola nera della tuta, spenta, e un metro di cavo di sicurezza tranciato di netto, come il mio.".
 Invece di analizza il cadavere: dire "Il multiscanner emette un tono lento.\nANALISI BIOMETRICA — specie: Homo sapiens. Età al decesso: trentacinque anni circa. Cause: anossia, ipotermia. Decesso stimato: centocinquant'anni fa, con lo stesso margine d'errore della giuntura.\nUn uomo, su una nave che nessun uomo ha costruito. Venuto fin qui da solo.".
-Invece di tocca il cadavere: dire "Per mestiere, a un corpo in tuta ci si avvicina per vedere cosa gli si può ancora prendere. Ti fermi a un palmo. Non prendi niente.".
+Invece di tocca il cadavere: dire "Per mestiere, a un corpo in tuta ci si avvicina per vedere cosa gli si può ancora prendere. Mi fermo a un palmo. Non prendo niente.".
 Invece di prendi il cadavere: dire "No.".
 
 La placca è una cosa.
@@ -94,22 +94,22 @@ La placca si chiama anche "lettere".
 La placca si chiama anche "scritta".
 La placca si chiama anche "parola".
 La descrizione della placca è "In stampatello, graffiato con la punta del carotatore: QUI PRIMA. IL SEME. NON SIAMO S— e lì la lettera si perde in un graffio che parte e non torna. Sotto, due lettere, le sole arrivate in fondo: L.V. I primi solchi sono profondi, decisi; gli ultimi appena accennati, di quando la mano non teneva più.".
-La descrizione della placca se il segno è firma è "QUI PRIMA. IL SEME. NON SIAMO S— e la lettera che si perde in un graffio. Sotto, L.V. E accanto, storte, le tue due lettere.".
+La descrizione della placca se il segno è firma è "QUI PRIMA. IL SEME. NON SIAMO S— e la lettera che si perde in un graffio. Sotto, L.V. E accanto, storte, le mie due lettere.".
 La descrizione della placca se il segno è parola è "QUI PRIMA. IL SEME. NON SIAMO S— e poi, con un'altra mano, più storta: OLI. La frase adesso arriva in fondo. Sotto, L.V.".
 Invece di analizza la placca: dire "ANALISI MANIFATTURA — origine terrestre, centocinquant'anni circa, modello fuori produzione. IDENTIFICAZIONE MISSIONE — logo: AURORA-7. Esplorazione in solitaria, non documentata negli archivi pubblici.\nDi una missione così, in centocinquant'anni, non è mai arrivata una parola.".
-Invece di traduci la placca: dire "La matrice non si accende nemmeno: è stampatello, la tua lingua. Nessun alieno, nessun codice. Un uomo che voleva farsi capire.".
+Invece di traduci la placca: dire "La matrice non si accende nemmeno: è stampatello, la mia lingua. Nessun alieno, nessun codice. Un uomo che voleva farsi capire.".
 
-Invece di incidi la placca se il giocatore non ha la taglierina: dire "Ti servirebbe qualcosa con cui incidere.".
-Invece di incidi la placca se il segno non è assente: dire "C'era spazio per un segno solo, e l'hai fatto.".
-Invece di incidi la placca se la lastra incisa è svelata: dire "C'è spazio per un segno solo, accanto alle sue due lettere. Puoi lasciare le tue iniziali (FIRMA LA PLACCA), oppure finire la sua parola, dove il graffio si è fermato (COMPLETA LA PAROLA).".
-Invece di incidi la placca: dire "C'è spazio per un segno solo, accanto alle sue due lettere: le tue (FIRMA LA PLACCA).".
-Invece di firma la placca se il giocatore non ha la taglierina: dire "Ti servirebbe qualcosa con cui incidere.".
-Invece di firma la placca se il segno non è assente: dire "C'era spazio per un segno solo, e l'hai fatto.".
-Invece di firma la placca: dire "Regoli la taglierina al minimo e ti chini accanto a lui. Accanto alle sue due lettere incidi le tue, W ed E, piano, perché dentro il guanto la mano ti trema. Non ti chiedi perché lo fai: hai paura che, chiedendotelo, la mano si fermi." e adesso il segno è firma.
-Invece di completa la placca se il giocatore non ha la taglierina: dire "Ti servirebbe qualcosa con cui incidere.".
-Invece di completa la placca se il segno non è assente: dire "C'era spazio per un segno solo, e l'hai fatto.".
-Invece di completa la placca se la lastra incisa è celata: dire "Non sai come finisce. O credi di saperlo, e non ti basta.".
-Invece di completa la placca: dire "Ti chini. La parola si ferma all'inizio di una lettera, un graffio che parte e non torna, come il glifo dello Scriba. Con la taglierina al minimo lo prosegui: O. L. I. Non siamo soli. La tua grafia è storta accanto alla sua, ma la frase adesso arriva in fondo." e adesso il segno è parola.
+Invece di incidi la placca se il giocatore non ha la taglierina: dire "Mi servirebbe qualcosa con cui incidere.".
+Invece di incidi la placca se il segno non è assente: dire "C'era spazio per un segno solo, e l'ho fatto.".
+Invece di incidi la placca se la lastra incisa è svelata: dire "C'è spazio per un segno solo, accanto alle sue due lettere. Posso lasciare le mie iniziali, oppure finire la sua parola, dove il graffio si è fermato. (FIRMA LA PLACCA, oppure COMPLETA LA PAROLA.)".
+Invece di incidi la placca: dire "C'è spazio per un segno solo, accanto alle sue due lettere: le mie. (FIRMA LA PLACCA.)".
+Invece di firma la placca se il giocatore non ha la taglierina: dire "Mi servirebbe qualcosa con cui incidere.".
+Invece di firma la placca se il segno non è assente: dire "C'era spazio per un segno solo, e l'ho fatto.".
+Invece di firma la placca: dire "Regolo la taglierina al minimo e mi chino accanto a lui. Accanto alle sue due lettere incido le mie, W ed E, piano, perché dentro il guanto la mano mi trema. Non mi chiedo perché lo faccio: ho paura che, chiedendomelo, la mano si fermi." e adesso il segno è firma.
+Invece di completa la placca se il giocatore non ha la taglierina: dire "Mi servirebbe qualcosa con cui incidere.".
+Invece di completa la placca se il segno non è assente: dire "C'era spazio per un segno solo, e l'ho fatto.".
+Invece di completa la placca se la lastra incisa è celata: dire "Non so come finisce. O credo di saperlo, e non mi basta.".
+Invece di completa la placca: dire "Mi chino. La parola si ferma all'inizio di una lettera, un graffio che parte e non torna, come il glifo dello Scriba. Con la taglierina al minimo lo proseguo: O. L. I. Non siamo soli. La mia grafia è storta accanto alla sua, ma la frase adesso arriva in fondo." e adesso il segno è parola.
 
 La scatola nera è una cosa.
 La scatola nera è nella serra morente.
@@ -117,7 +117,7 @@ La scatola nera è di scena.
 La scatola nera si chiama anche "scatola".
 La scatola nera si chiama anche "registratore".
 La scatola nera si chiama anche "spia".
-La descrizione della scatola nera è "La scatola nera della sua tuta, agganciata alla cintura. La spia è spenta da un secolo e mezzo. Ha una presa di servizio standard: la stessa della tua tuta, che di corrente ne ha.".
+La descrizione della scatola nera è "La scatola nera della sua tuta, agganciata alla cintura. La spia è spenta da un secolo e mezzo. Ha una presa di servizio standard: la stessa della mia tuta, che di corrente ne ha.".
 La descrizione della scatola nera se il diario è ascoltato è "La scatola nera della sua tuta. La spia è di nuovo spenta. Quello che aveva da dire l'ha detto.".
 
 La punta del carotatore è una cosa.
@@ -126,12 +126,12 @@ La punta del carotatore è di scena.
 La punta del carotatore si chiama anche "punta".
 La punta del carotatore si chiama anche "carotatore".
 La descrizione della punta del carotatore è "Una punta da carotatore, di quelle che servono a staccare campioni di roccia, stretta ancora nella destra. Le dita, attorno al manico, le ha chiuse il freddo, e non le ha più riaperte.".
-Invece di prendi la punta del carotatore: dire "Il freddo gli ha chiuso le dita, e non saresti tu ad aprirgliele.".
+Invece di prendi la punta del carotatore: dire "Il freddo gli ha chiuso le dita, e non sarei io ad aprirgliele.".
 
 # --- La sua voce (N7, R7, T5): la tua tuta fa da batteria alla sua ----------
 Invece di ascolta la scatola nera se il diario è ascoltato: dire "La spia è di nuovo spenta. Quello che aveva da dire l'ha detto.".
 Invece di ascolta la scatola nera se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. Con l'aria a [aria] la tuta non cede corrente a nessuno.".
-Invece di ascolta la scatola nera: dire "Stacchi il cavo di servizio dal fianco della tua tuta e lo innesti nella presa della sua. La cifra sul visore scende di colpo; la spia della scatola, dopo un secolo e mezzo, si accende verde. Nella cuffia, rovinata, una voce d'uomo:\n«…acqua finita ieri. Il riscaldamento stanotte. L'aria la conto, ma la conto male…»\nUn buco.\n«…volevo andarmene, ecco la verità. Ho firmato tutto, al medico ho detto quello che voleva sentirsi dire. Una mi aveva detto di restare. Le ho detto che aveva ragione, e poi sono partito…»\nUn buco più lungo.\n«…la chiave della teca non c'è. Dev'essere giù, dove crescono quelle cose. Ci sono sceso. Mi hanno preso il cavo, capisci? Il cavo. Sono tornato su a tentoni, con la mano sulla parete fredda, che lì non ti seguono…»\n«…Matthew. Se mi senti: ci ho provato davvero. Con te, dico. Non so se è servito…»\nPoi la voce dice ancora qualcosa, troppo piano, e la registrazione finisce." e adesso il diario è ascoltato e adesso aumenta le risonanze e adesso aumenta le tracce e adesso diminuisci l'aria di 10.
+Invece di ascolta la scatola nera: dire "Stacco il cavo di servizio dal fianco della mia tuta e lo innesto nella presa della sua. La cifra sul visore scende di colpo; la spia della scatola, dopo un secolo e mezzo, si accende verde. Nella cuffia, rovinata, una voce d'uomo:\n«…acqua finita ieri. Il riscaldamento stanotte. L'aria la conto, ma la conto male…»\nUn buco.\n«…volevo andarmene, ecco la verità. Ho firmato tutto, al medico ho detto quello che voleva sentirsi dire. Una mi aveva detto di restare. Le ho detto che aveva ragione, e poi sono partito…»\nUn buco più lungo.\n«…la chiave della teca non c'è. Dev'essere giù, dove crescono quelle cose. Ci sono sceso. Mi hanno preso il cavo, capisci? Il cavo. Sono tornato su a tentoni, con la mano sulla parete fredda, che lì non ti seguono…»\n«…Matthew. Se mi senti: ci ho provato davvero. Con te, dico. Non so se è servito…»\nPoi la voce dice ancora qualcosa, troppo piano, e la registrazione finisce." e adesso il diario è ascoltato e adesso aumenta le risonanze e adesso aumenta le tracce e adesso diminuisci l'aria di 10.
 Invece di usa la scatola nera se il diario è ascoltato: dire "La spia è di nuovo spenta. Quello che aveva da dire l'ha detto.".
 Invece di usa la scatola nera: dire "(Per ascoltarla: ASCOLTA LA SCATOLA NERA. La corrente gliela darebbe la tua tuta.)".
 Invece di accendi la scatola nera: dire "(Per ascoltarla: ASCOLTA LA SCATOLA NERA. La corrente gliela darebbe la tua tuta.)".
@@ -148,7 +148,7 @@ Invece di analizza la teca: dire "Campo di stasi attivo, alimentazione autonoma,
 Invece di apri la teca se la teca è sigillata: dire "Niente maniglie: solo l'incavo, che aspetta la sua chiave.".
 Invece di usa la taglierina sulla teca se la teca è sigillata: dire "Il campo di stasi respinge il getto della taglierina come acqua su una piastra rovente. Per aprirla serve la sua chiave.".
 Invece di rompi la teca: dire "Il campo di stasi non si rompe. Per aprirla serve la sua chiave.".
-Invece di usa la tavoletta sulla teca se la teca è sigillata: dire "Inserisci la tavoletta nell'incavo: si adatta. I simboli si accendono uno dopo l'altro, con un clic armonioso, e la teca si dissolve in un pulviscolo di luce. Il seme resta a fluttuare libero davanti a te. La vibrazione cessa di colpo, e la serra diventa silenziosa del tutto." e adesso la teca è svuotata e adesso il seme è nella serra morente e adesso la tavoletta è nel nulla.
+Invece di usa la tavoletta sulla teca se la teca è sigillata: dire "Inserisco la tavoletta nell'incavo: si adatta. I simboli si accendono uno dopo l'altro, con un clic armonioso, e la teca si dissolve in un pulviscolo di luce. Il seme resta a fluttuare libero davanti a me. La vibrazione cessa di colpo, e la serra diventa silenziosa del tutto." e adesso la teca è svuotata e adesso il seme è nella serra morente e adesso la tavoletta è nel nulla.
 
 Il seme è una cosa.
 Il seme è prendibile.
@@ -157,13 +157,13 @@ Il seme si chiama anche "seme vivente".
 La descrizione del seme è "Caldo, quasi febbrile, e pulsa di luce verde.".
 La descrizione del seme se il seme è scuro è "Piccolo, scuro, della grandezza di un pugno chiuso. Non pulsa, non brilla. Pesa più di quanto dovrebbe.".
 Invece di prendi il seme se la teca è sigillata: dire "È dentro la teca, sospeso nel suo campo di stasi.".
-Invece di prendi il seme se il seme è nella serra morente: dire "Chiudi le dita attorno al seme. È caldo, quasi febbrile, e una vibrazione costante ti risale il braccio. A mezzo metro da qui un uomo l'ha guardato pulsare fino all'ultimo, senza poterlo toccare. Adesso ce l'hai in mano tu." e adesso il seme è in inventario.
+Invece di prendi il seme se il seme è nella serra morente: dire "Chiudo le dita attorno al seme. È caldo, quasi febbrile, e una vibrazione costante mi risale il braccio. A mezzo metro da qui un uomo l'ha guardato pulsare fino all'ultimo, senza poterlo toccare. Adesso ce l'ho in mano io." e adesso il seme è in inventario.
 
 # ============================================================================
 # ARCA BIOLOGICA
 # ============================================================================
 L'arca biologica è una stanza.
-La descrizione dell'arca biologica è "Una sala lunga e gelida, e il gelo arriva fino al casco: il respiro ti si condensa sul vetro. File di capsule di stasi, scure come vetro affumicato, si perdono oltre la portata del faro: centinaia, forse migliaia. Una brina sottile copre tutto e non prende impronte. A est, oltre i funghi secchi, si torna nella serra.".
+La descrizione dell'arca biologica è "Una sala lunga e gelida, e il gelo arriva fino al casco: il respiro mi si condensa sul vetro. File di capsule di stasi, scure come vetro affumicato, si perdono oltre la portata del faro: centinaia, forse migliaia. Una brina sottile copre tutto e non prende impronte. A est, oltre i funghi secchi, si torna nella serra.".
 
 Le capsule è una cosa.
 Le capsule è nell'arca biologica.
@@ -172,12 +172,12 @@ Le capsule è vergine.
 Le capsule si chiama anche "sarcofagi".
 Le capsule si chiama anche "capsula".
 Le capsule si chiama anche "brina".
-La descrizione delle capsule è "Capsule di stasi criogenica, vetro scuro coperto di brina, troppe per contarle. Attraverso il vetro opaco non distingui cosa contengano. Lo scanner, sì: ANALIZZALE.".
-La descrizione delle capsule se le capsule è segnata è "Capsule di stasi, vetro scuro sotto la brina. Su quella più vicina, il tuo segno.".
-Invece di analizza le capsule: dire "Punti lo scanner sulla capsula più vicina. Un bip lento.\nLETTURA: ‹FAUNA DEI TRE SOLI: GRANDE PASCOLATORE› — deceduto. Integrità genomica 0,02%. Provi con un'altra, e un'altra ancora: ‹FLORA DI XYLOS› — deceduto. ‹FORMA SILICEA: COSTRUTTORE› — deceduto.\nNon era una stiva: era un'arca. Un intero mondo, forse, conservato qui. E non c'è più.".
-Invece di incidi le capsule se il giocatore non ha la taglierina: dire "Ti servirebbe qualcosa con cui incidere.".
-Invece di incidi le capsule se le capsule è segnata: dire "Il tuo segno è già lì, sul vetro della capsula più vicina.".
-Invece di incidi le capsule: dire "Ti inginocchi davanti alla capsula più vicina e, con la taglierina al minimo, incidi un segno sul vetro scuro. Non un nome: non sapresti quale scrivere. Soltanto la prova che qualcuno è passato e si è fermato davanti a loro, morti nel sonno." e adesso le capsule è segnata.
+La descrizione delle capsule è "Capsule di stasi criogenica, vetro scuro coperto di brina, troppe per contarle. Attraverso il vetro opaco non distinguo cosa contengano. Lo scanner, sì. (ANALIZZALE.)".
+La descrizione delle capsule se le capsule è segnata è "Capsule di stasi, vetro scuro sotto la brina. Su quella più vicina, il mio segno.".
+Invece di analizza le capsule: dire "Punto lo scanner sulla capsula più vicina. Un bip lento.\nLETTURA: ‹FAUNA DEI TRE SOLI: GRANDE PASCOLATORE› — deceduto. Integrità genomica 0,02%. Provo con un'altra, e un'altra ancora: ‹FLORA DI XYLOS› — deceduto. ‹FORMA SILICEA: COSTRUTTORE› — deceduto.\nNon era una stiva: era un'arca. Un intero mondo, forse, conservato qui. E non c'è più.".
+Invece di incidi le capsule se il giocatore non ha la taglierina: dire "Mi servirebbe qualcosa con cui incidere.".
+Invece di incidi le capsule se le capsule è segnata: dire "Il mio segno è già lì, sul vetro della capsula più vicina.".
+Invece di incidi le capsule: dire "Mi inginocchio davanti alla capsula più vicina e, con la taglierina al minimo, incido un segno sul vetro scuro. Non un nome: non saprei quale scrivere. Soltanto la prova che qualcuno è passato e si è fermato davanti a loro, morti nel sonno." e adesso le capsule è segnata.
 
 # --- Essenziali (energia, parte prima) ---------------------------------------
 Il dispositivo medico è una cosa.
@@ -194,25 +194,25 @@ Il cristallo è opaco.
 Il cristallo si chiama anche "cristallo dati".
 La descrizione del cristallo è "Un piccolo cristallo scuro, freddo e inerte. Un supporto di memoria addormentato: gli serve uno stimolo per svegliarsi.".
 La descrizione del cristallo se il cristallo è attivo è "Il cristallo è trasparente, adesso, e dentro una trama di filamenti luminosi pulsa come un cuore che ha ripreso a battere. È tiepido, e aspetta di essere inserito in qualcosa.".
-Invece di usa il dispositivo medico sul cristallo se il cristallo è opaco: dire "Con una certa esitazione accendi il dispositivo medico: la punta di cristallo emette un ronzio appena udibile e una luce ambrata. La avvicini al cristallo opaco. Appena si toccano, la superficie lattiginosa diventa trasparente, e dentro una trama di filamenti luminosi comincia a pulsare. Adesso è tiepido, e vibra: sembra fatto per essere inserito in qualcosa." e adesso il cristallo è attivo.
+Invece di usa il dispositivo medico sul cristallo se il cristallo è opaco: dire "Con una certa esitazione accendo il dispositivo medico: la punta di cristallo emette un ronzio appena udibile e una luce ambrata. La avvicino al cristallo opaco. Appena si toccano, la superficie lattiginosa diventa trasparente, e dentro una trama di filamenti luminosi comincia a pulsare. Adesso è tiepido, e vibra: sembra fatto per essere inserito in qualcosa." e adesso il cristallo è attivo.
 
 # ============================================================================
 # SALA DELLE TECHE (N4) — si arriva dalla Gola di mezzo
 # ============================================================================
 La sala delle teche è una stanza.
-La descrizione della sala delle teche è "Il faro scorre per metri su un pavimento vuoto, poi la sala gli si riempie davanti tutta in una volta: file di teche alte il doppio di te, a perdita di luce. Molte sono state forzate da dentro, piano, in tempi che non sai contare, e da lì sono usciti filamenti pallidi, spessi come una fune, che corrono sul pavimento e salgono nel buio. Dove si posa il cono del faro, i più vicini si muovono. Verso di te. Lungo le pareti le teche sono ancora chiuse, bianche di brina. Su si torna nella gola di mezzo; a ovest, oltre il groviglio, si intravede un passaggio; a est un nodo di fibre chiude una strozzatura.".
+La descrizione della sala delle teche è "Il faro scorre per metri su un pavimento vuoto, poi la sala gli si riempie davanti tutta in una volta: file di teche alte il doppio di me, a perdita di luce. Molte sono state forzate da dentro, piano, in tempi che non so contare, e da lì sono usciti filamenti pallidi, spessi come una fune, che corrono sul pavimento e salgono nel buio. Dove si posa il cono del faro, i più vicini si muovono. Verso di me. Lungo le pareti le teche sono ancora chiuse, bianche di brina. Su si torna nella gola di mezzo; a ovest, oltre il groviglio, si intravede un passaggio; a est un nodo di fibre chiude una strozzatura.".
 La descrizione della sala delle teche se il bengala è acceso e la fuga è lontana è "In mezzo alla sala il bengala brucia rosso, e tutto il groviglio è lì, ammassato intorno al suo calore come intorno a un sole che finalmente è arrivato. Il passaggio a ovest è libero, finché dura. Su, la gola di mezzo; a est, il nodo di fibre.".
 La descrizione della sala delle teche se l'energia è ripristinata e la fuga è lontana è "Il campo regge a tratti. Una luce azzurrina corre lungo le file di teche e, dove passa, il groviglio si piega e resta giù, come erba sotto una mano. Fra le teche aperte si vede la strada per il passaggio a ovest. Su, la gola di mezzo; a est, il nodo di fibre.".
-La descrizione della sala delle teche se la sponda è lontana e il faro del casco è basso e la fuga è lontana è "Con il faro al minimo hai un alone e poco altro. Alle tue spalle, a ovest, il tepore del vivaio; davanti, fra te e la gola di mezzo, le teche aperte e il groviglio che cerca. Lungo le pareti senti, più che vedere, il freddo delle teche chiuse. Su, in fondo alla sala, l'imbocco della gola; a est, il nodo di fibre.".
-La descrizione della sala delle teche se la sponda è lontana e la fuga è lontana è "Dalla parte del vivaio la sala si vede al contrario: il groviglio sul pavimento, le teche aperte a perdita di luce e, in fondo, oltre tutto questo, l'imbocco della gola di mezzo. Dove si posa il cono del faro, i filamenti più vicini si muovono. Verso di te. Lungo le pareti le teche chiuse, bianche di brina. A ovest il vivaio; su, in fondo, la gola; a est, il nodo di fibre.".
-La descrizione della sala delle teche se il faro del casco è basso e la fuga è lontana è "Con il faro al minimo hai un alone e poco altro. Le teche aperte sono sagome; il groviglio, che prima ti veniva incontro, si è fermato a mezz'aria e cerca. Lungo le pareti senti, più che vedere, il freddo delle teche chiuse. Su, la gola di mezzo; a ovest, da qualche parte oltre il groviglio, il passaggio; a est, il nodo di fibre.".
+La descrizione della sala delle teche se la sponda è lontana e il faro del casco è basso e la fuga è lontana è "Con il faro al minimo ho un alone e poco altro. Alle mie spalle, a ovest, il tepore del vivaio; davanti, fra me e la gola di mezzo, le teche aperte e il groviglio che cerca. Lungo le pareti sento, più che vedere, il freddo delle teche chiuse. Su, in fondo alla sala, l'imbocco della gola; a est, il nodo di fibre.".
+La descrizione della sala delle teche se la sponda è lontana e la fuga è lontana è "Dalla parte del vivaio la sala si vede al contrario: il groviglio sul pavimento, le teche aperte a perdita di luce e, in fondo, oltre tutto questo, l'imbocco della gola di mezzo. Dove si posa il cono del faro, i filamenti più vicini si muovono. Verso di me. Lungo le pareti le teche chiuse, bianche di brina. A ovest il vivaio; su, in fondo, la gola; a est, il nodo di fibre.".
+La descrizione della sala delle teche se il faro del casco è basso e la fuga è lontana è "Con il faro al minimo ho un alone e poco altro. Le teche aperte sono sagome; il groviglio, che prima mi veniva incontro, si è fermato a mezz'aria e cerca. Lungo le pareti sento, più che vedere, il freddo delle teche chiuse. Su, la gola di mezzo; a ovest, da qualche parte oltre il groviglio, il passaggio; a est, il nodo di fibre.".
 
 # --- Sfondo -----------------------------------------------------------------
 Le teche aperte è una cosa.
 Le teche aperte è nella sala delle teche.
 Le teche aperte è di scena.
 Le teche aperte si chiama anche "teche".
-La descrizione delle teche aperte è "Teche alte il doppio di te, il vetro spinto in fuori da dentro. Una semina riuscita troppo bene, e poi lasciata sola.".
+La descrizione delle teche aperte è "Teche alte il doppio di me, il vetro spinto in fuori da dentro. Una semina riuscita troppo bene, e poi lasciata sola.".
 
 Le teche chiuse è una cosa.
 Le teche chiuse è nella sala delle teche.
@@ -231,16 +231,16 @@ Il groviglio si chiama anche "filamenti".
 Il groviglio si chiama anche "filamento".
 Il groviglio si chiama anche "fibre".
 Il groviglio si chiama anche "fibra".
-La descrizione del groviglio è "Filamenti pallidi, spessi come una fune, che corrono sul pavimento e salgono nel buio. Dove li tocca la luce si muovono, piano, verso la luce e verso di te.".
+La descrizione del groviglio è "Filamenti pallidi, spessi come una fune, che corrono sul pavimento e salgono nel buio. Dove li tocca la luce si muovono, piano, verso la luce e verso di me.".
 Invece di analizza il groviglio: dire "Organico. Vivo. Cresciuto per secoli su se stesso, senza un mondo in cui attecchire. Cerca calore e luce: è quello che gli era stato promesso, un sole e una terra, e non è mai arrivato.".
-Invece di tocca il groviglio: dire "Si muovono verso il guanto, verso il caldo della mano. Ritrai la mano prima che ti trovino.".
+Invece di tocca il groviglio: dire "Si muovono verso il guanto, verso il caldo della mano. Ritraggo la mano prima che mi trovino.".
 
 Il nodo di fibre è una cosa.
 Il nodo di fibre è nella sala delle teche.
 Il nodo di fibre è di scena.
 Il nodo di fibre si chiama anche "nodo".
 Il nodo di fibre si chiama anche "strozzatura".
-La descrizione del nodo di fibre è "A est, una strozzatura chiusa da un nodo di fibre spesso come un tronco. Dall'altra parte, se tieni ferma la mano, senti un'aria che si muove.".
+La descrizione del nodo di fibre è "A est, una strozzatura chiusa da un nodo di fibre spesso come un tronco. Dall'altra parte, se tengo ferma la mano, sento un'aria che si muove.".
 
 Il cavo spezzato è una cosa.
 Il cavo spezzato è nella sala delle teche.
@@ -256,8 +256,8 @@ Invece di analizza il cavo spezzato: dire "Lega terrestre, centocinquant'anni ci
 # --- Il groviglio sente il faro (solo prima della fuga) ----------------------
 # Faro al massimo: al primo turno si avvicina, al secondo ti afferra. Lo
 # tengono fermo il faro basso, il bengala acceso o il campo dell'energia.
-Ogni turno se il giocatore è nella sala delle teche e la fuga è lontana e il faro del casco è pieno e l'energia è assente e il bengala è spento e la minaccia è vicina: dire "Un filamento ti trova il fianco, dove la tuta scalda di più, e un altro la caviglia. Ti strappi via, scalci, e risali la gola a spinte di gomiti, senza voltarti. Quando ti fermi sei nella gola di mezzo, e la cifra sul visore è scesa di otto punti." e adesso diminuisci l'aria di 8 e adesso la minaccia è lontana e adesso il giocatore è nella gola di mezzo.
-Ogni turno se il giocatore è nella sala delle teche e la fuga è lontana e il faro del casco è pieno e l'energia è assente e il bengala è spento e la minaccia è lontana: dire "Il groviglio ha sentito il faro. I filamenti più vicini si protendono verso la luce e verso di te, piano, a cercare l'unica cosa calda e accesa in un posto morto. Uno ti sfiora lo stivale. Sul visore la cifra scende: qui qualcosa beve il calore della tuta." e adesso diminuisci l'aria di 4 e adesso la minaccia è vicina.
+Ogni turno se il giocatore è nella sala delle teche e la fuga è lontana e il faro del casco è pieno e l'energia è assente e il bengala è spento e la minaccia è vicina: dire "Un filamento mi trova il fianco, dove la tuta scalda di più, e un altro la caviglia. Mi strappo via, scalcio, e risalgo la gola a spinte di gomiti, senza voltarmi. Quando mi fermo sono nella gola di mezzo, e la cifra sul visore è scesa di otto punti." e adesso diminuisci l'aria di 8 e adesso la minaccia è lontana e adesso il giocatore è nella gola di mezzo.
+Ogni turno se il giocatore è nella sala delle teche e la fuga è lontana e il faro del casco è pieno e l'energia è assente e il bengala è spento e la minaccia è lontana: dire "Il groviglio ha sentito il faro. I filamenti più vicini si protendono verso la luce e verso di me, piano, a cercare l'unica cosa calda e accesa in un posto morto. Uno mi sfiora lo stivale. Sul visore la cifra scende: qui qualcosa beve il calore della tuta." e adesso diminuisci l'aria di 4 e adesso la minaccia è vicina.
 Ogni turno se la minaccia è vicina e il faro del casco è basso: la minaccia è lontana.
 Ogni turno se la minaccia è vicina e il giocatore non è nella sala delle teche: la minaccia è lontana.
 Ogni turno se l'appoggio è parete e il giocatore non è nella sala delle teche: l'appoggio è libero.
@@ -269,24 +269,24 @@ Ogni turno se il giocatore è nella gola di mezzo: la sponda è vicina.
 Invece di vai est se il giocatore è nella sala delle teche e la fuga è lontana: dire "A est la strozzatura è chiusa dal nodo di fibre, spesso come un tronco. Dall'altra parte si sente un'aria che si muove, ma di qui non si passa.".
 
 # --- Attraversare (N4) --------------------------------------------------------
-Invece di vai ovest se il giocatore è nella sala delle teche e la fuga è lontana e la sponda è vicina e l'energia è assente e il bengala è spento e l'appoggio è libero: dire "[se il faro del casco è pieno]Il groviglio ti si stringe davanti, verso la luce. Così non passi.[altrimenti]Al buio, fra le teche aperte, perdi l'orientamento. Le mani cercano qualcosa di freddo a cui tenersi.[fine]".
-Invece di vai su se il giocatore è nella sala delle teche e la fuga è lontana e la sponda è lontana e l'energia è assente e il bengala è spento e l'appoggio è libero: dire "[se il faro del casco è pieno]Il groviglio ti si stringe davanti, verso la luce. Così non passi.[altrimenti]Al buio, fra le teche aperte, perdi l'orientamento. Le mani cercano qualcosa di freddo a cui tenersi.[fine]".
+Invece di vai ovest se il giocatore è nella sala delle teche e la fuga è lontana e la sponda è vicina e l'energia è assente e il bengala è spento e l'appoggio è libero: dire "[se il faro del casco è pieno]Il groviglio mi si stringe davanti, verso la luce. Così non passo.[altrimenti]Al buio, fra le teche aperte, perdo l'orientamento. Le mani cercano qualcosa di freddo a cui tenersi.[fine]".
+Invece di vai su se il giocatore è nella sala delle teche e la fuga è lontana e la sponda è lontana e l'energia è assente e il bengala è spento e l'appoggio è libero: dire "[se il faro del casco è pieno]Il groviglio mi si stringe davanti, verso la luce. Così non passo.[altrimenti]Al buio, fra le teche aperte, perdo l'orientamento. Le mani cercano qualcosa di freddo a cui tenersi.[fine]".
 
 Invece di segui le teche chiuse se il giocatore non è nella sala delle teche: dire "Non qui.".
-Invece di segui le teche chiuse se il faro del casco è pieno: dire "Con il faro al massimo, lungo le pareti il groviglio ti viene dietro.".
-Invece di segui le teche chiuse: dire "Metti la spalla contro le teche chiuse e ti tieni lì, dove il freddo tiene fermi i filamenti. Passo corto, il faro basso puntato sulle suole. Uno ti cerca all'altezza del fianco e trova solo vetro gelato. Adesso sai dove sei: la parete ti porta [se la sponda è lontana]verso la gola di mezzo, su[altrimenti]verso il passaggio, a ovest[fine]." e adesso l'appoggio è parete.
-Invece di tocca le teche chiuse se il faro del casco è pieno: dire "Con il faro al massimo, lungo le pareti il groviglio ti viene dietro.".
-Invece di tocca le teche chiuse: dire "Metti la spalla contro le teche chiuse e ti tieni lì, dove il freddo tiene fermi i filamenti. Passo corto, il faro basso puntato sulle suole. Uno ti cerca all'altezza del fianco e trova solo vetro gelato. Adesso sai dove sei: la parete ti porta [se la sponda è lontana]verso la gola di mezzo, su[altrimenti]verso il passaggio, a ovest[fine]." e adesso l'appoggio è parete.
+Invece di segui le teche chiuse se il faro del casco è pieno: dire "Con il faro al massimo, lungo le pareti il groviglio mi viene dietro.".
+Invece di segui le teche chiuse: dire "Metto la spalla contro le teche chiuse e mi tengo lì, dove il freddo tiene fermi i filamenti. Passo corto, il faro basso puntato sulle suole. Uno mi cerca all'altezza del fianco e trova solo vetro gelato. Adesso so dove sono: la parete mi porta [se la sponda è lontana]verso la gola di mezzo, su[altrimenti]verso il passaggio, a ovest[fine]." e adesso l'appoggio è parete.
+Invece di tocca le teche chiuse se il faro del casco è pieno: dire "Con il faro al massimo, lungo le pareti il groviglio mi viene dietro.".
+Invece di tocca le teche chiuse: dire "Metto la spalla contro le teche chiuse e mi tengo lì, dove il freddo tiene fermi i filamenti. Passo corto, il faro basso puntato sulle suole. Uno mi cerca all'altezza del fianco e trova solo vetro gelato. Adesso so dove sono: la parete mi porta [se la sponda è lontana]verso la gola di mezzo, su[altrimenti]verso il passaggio, a ovest[fine]." e adesso l'appoggio è parete.
 Invece di costeggia se il giocatore non è nella sala delle teche: dire "Costeggiare cosa? Qui non serve.".
-Invece di costeggia se il faro del casco è pieno: dire "Con il faro al massimo, lungo le pareti il groviglio ti viene dietro.".
-Invece di costeggia: dire "Metti la spalla contro le teche chiuse e ti tieni lì, dove il freddo tiene fermi i filamenti. Passo corto, il faro basso puntato sulle suole. Uno ti cerca all'altezza del fianco e trova solo vetro gelato. Adesso sai dove sei: la parete ti porta [se la sponda è lontana]verso la gola di mezzo, su[altrimenti]verso il passaggio, a ovest[fine]." e adesso l'appoggio è parete.
+Invece di costeggia se il faro del casco è pieno: dire "Con il faro al massimo, lungo le pareti il groviglio mi viene dietro.".
+Invece di costeggia: dire "Metto la spalla contro le teche chiuse e mi tengo lì, dove il freddo tiene fermi i filamenti. Passo corto, il faro basso puntato sulle suole. Uno mi cerca all'altezza del fianco e trova solo vetro gelato. Adesso so dove sono: la parete mi porta [se la sponda è lontana]verso la gola di mezzo, su[altrimenti]verso il passaggio, a ovest[fine]." e adesso l'appoggio è parete.
 
 # --- Il bengala: un sole finto per tre turni ---------------------------------
 Il bengala è spento.
-Invece di accendi il bengala se il giocatore è nella sala delle teche: dire "Strappi la linguetta del bengala e lo lanci in mezzo alla sala. Luce rossa, violenta, e un calore che senti anche attraverso il guanto. Il groviglio si gira tutto insieme e striscia verso il finto sole. Per un poco la strada è libera." e adesso il bengala è acceso e adesso il bengala è nella sala delle teche.
-Invece di lancia il bengala se il giocatore è nella sala delle teche: dire "Strappi la linguetta del bengala e lo lanci in mezzo alla sala. Luce rossa, violenta, e un calore che senti anche attraverso il guanto. Il groviglio si gira tutto insieme e striscia verso il finto sole. Per un poco la strada è libera." e adesso il bengala è acceso e adesso il bengala è nella sala delle teche.
-Invece di usa il bengala se il giocatore è nella sala delle teche: dire "Strappi la linguetta del bengala e lo lanci in mezzo alla sala. Luce rossa, violenta, e un calore che senti anche attraverso il guanto. Il groviglio si gira tutto insieme e striscia verso il finto sole. Per un poco la strada è libera." e adesso il bengala è acceso e adesso il bengala è nella sala delle teche.
-Invece di lancia il bengala: dire "È l'unico che hai. Lo tieni per quando servirà davvero.".
+Invece di accendi il bengala se il giocatore è nella sala delle teche: dire "Strappo la linguetta del bengala e lo lancio in mezzo alla sala. Luce rossa, violenta, e un calore che sento anche attraverso il guanto. Il groviglio si gira tutto insieme e striscia verso il finto sole. Per un poco la strada è libera." e adesso il bengala è acceso e adesso il bengala è nella sala delle teche.
+Invece di lancia il bengala se il giocatore è nella sala delle teche: dire "Strappo la linguetta del bengala e lo lancio in mezzo alla sala. Luce rossa, violenta, e un calore che sento anche attraverso il guanto. Il groviglio si gira tutto insieme e striscia verso il finto sole. Per un poco la strada è libera." e adesso il bengala è acceso e adesso il bengala è nella sala delle teche.
+Invece di usa il bengala se il giocatore è nella sala delle teche: dire "Strappo la linguetta del bengala e lo lancio in mezzo alla sala. Luce rossa, violenta, e un calore che sento anche attraverso il guanto. Il groviglio si gira tutto insieme e striscia verso il finto sole. Per un poco la strada è libera." e adesso il bengala è acceso e adesso il bengala è nella sala delle teche.
+Invece di lancia il bengala: dire "È l'unico che ho. Lo tengo per quando servirà davvero.".
 Invece di prendi il bengala se il bengala è acceso: dire "Brucia. E il groviglio gli sta addosso.".
 Tre turni dopo che il bengala è acceso: dire "[se il giocatore è nella sala delle teche]Il bengala sfrigola, si fa arancione, poi si spegne. Il groviglio resta un momento dov'era, poi torna a cercare.[altrimenti]Dalla sala delle teche arriva un ultimo bagliore rosso, poi più niente: il bengala si è spento.[fine]" e adesso il bengala è spento e adesso il bengala è nel nulla.
 
@@ -294,7 +294,7 @@ Tre turni dopo che il bengala è acceso: dire "[se il giocatore è nella sala de
 # VIVAIO
 # ============================================================================
 Il vivaio è una stanza.
-La descrizione del vivaio è "Un locale basso e tiepido: il primo posto caldo da quando sei entrato. Banchi di semina in file ordinate, ognuno sotto la sua lampada spenta. Qui la semina era ancora sotto controllo: niente è scappato, niente è cresciuto storto. Al centro un germinatoio lavora ancora, a malapena. Sui banchi, colonne di simboli: le tabelle di chi seminava. A est si torna fra le teche.".
+La descrizione del vivaio è "Un locale basso e tiepido: il primo posto caldo da quando sono entrato. Banchi di semina in file ordinate, ognuno sotto la sua lampada spenta. Qui la semina era ancora sotto controllo: niente è scappato, niente è cresciuto storto. Al centro un germinatoio lavora ancora, a malapena. Sui banchi, colonne di simboli: le tabelle di chi seminava. A est si torna fra le teche.".
 
 Il germinatoio è una cosa.
 Il germinatoio è nel vivaio.
@@ -316,7 +316,7 @@ Le tabelle di semina è nel vivaio.
 Le tabelle di semina è di scena.
 Le tabelle di semina si chiama anche "tabelle".
 Le tabelle di semina si chiama anche "simboli".
-La descrizione delle tabelle di semina è "Colonne di simboli e di numeri, ordinate, tracciate con cura. Senza la matrice non dicono niente: TRADUCILE.".
+La descrizione delle tabelle di semina è "Colonne di simboli e di numeri, ordinate, tracciate con cura. Senza la matrice non dicono niente. (TRADUCILE.)".
 
 La tavoletta è una cosa.
 La tavoletta è prendibile.

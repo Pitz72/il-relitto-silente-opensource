@@ -408,7 +408,7 @@ impl Mondo {
             gr.frusta.verso(0.0, t, sr);
             gr.g.verso(db(-10.0), t, sr);
         } else if ha(Speciale::GroviglioInFondo) {
-            // «In fondo, a ovest, senti un fruscio che conosci»
+            // «In fondo, a ovest, sento un fruscio che conosco»
             gr.densita.verso(4.0, t, sr);
             gr.vicino.verso(0.25, t, sr);
             gr.centro.verso(-0.7, t, sr);
@@ -921,7 +921,7 @@ impl Mondo {
             }
             "primo_contatto" => self.evento(Evento::PrimoContatto),
             "risuonatore_staccato" => {
-                // «ti cade nel palmo»
+                // «mi cade nel palmo»
                 let c = Corpo::Tonfo(Tonfo::nuovo(190.0, 120.0, 0.02, 0.18, 1.0, 0.004, 0.4, 1200.0, sr));
                 self.suona(c, Bus::Ossa, -12.0, 0.0, 0.6);
             }
@@ -966,7 +966,7 @@ impl Mondo {
                 self.suona(c, Bus::Ossa, -14.0, 0.0, 1.4);
             }
             "groviglio_prende" => {
-                // «Un filamento ti trova il fianco»; ti strappi via, scalci
+                // «Un filamento mi trova il fianco»; mi strappo via, scalcio
                 for t in [0.0, 0.25] {
                     let c = colpi::frustata(&mut self.caso, sr);
                     self.suona(c, Bus::Esterno, -14.0, 0.4, t);
@@ -1097,7 +1097,7 @@ impl Mondo {
                 }
             }
             "sonaglio" => {
-                // §5.4: «Resti fermo finché non si spegne»: il fiato si ferma
+                // §5.4: «Resto fermo finché non si spegne»: il fiato si ferma
                 let c = colpi::sonaglio(&mut self.caso, sr);
                 self.suona(c, Bus::Esterno, -12.0, 0.1, 0.0);
                 self.fiato.trattieni(8.0);
@@ -1129,7 +1129,7 @@ impl Mondo {
                 self.dopo(11.0, Azione::Ascolto(false));
             }
             "casco_tolto" => {
-                // «Ti strappi il casco prima che la pressione sia pareggiata»: un colpo d’aria,
+                // «Mi strappo il casco prima che la pressione sia pareggiata»: un colpo d’aria,
                 // e tutto il mondo che torna insieme
                 self.casa = true;
                 self.suona(colpi::colpo_d_aria(sr), Bus::Esterno, -14.0, 0.0, 0.0);
@@ -1207,7 +1207,7 @@ impl Mondo {
                 }
             }
             "protezione_fuga" => {
-                // tre note d’allarme e nessun relè: «Adesso la tuta non ti protegge più da niente»
+                // tre note d’allarme e nessun relè: «Adesso la tuta non mi protegge più da niente»
                 for (k, f) in [988.0, 988.0, 740.0].into_iter().enumerate() {
                     self.suona(colpi::nota(f, 0.15, sr), Bus::Casco, -28.0, 0.0, k as f32 * 0.18);
                 }
@@ -1308,21 +1308,21 @@ impl Mondo {
             self.dopo(quando, Azione::Musica(b));
         }
         if quale == Some("due-lettere") {
-            // «il visore non ha più niente da dirti»: la ventola rallenta e si ferma; il
+            // «il visore non ha più niente da dirmi»: la ventola rallenta e si ferma; il
             // fiato si fa lento, poi l’ultimo
             self.ventola_spenta = true;
             self.ventola.giri.verso(0.15, 5.0, sr);
             self.ventola.g.verso(0.0, 6.0, sr);
             self.fiato.ultimi();
             if in_fuga {
-                // «la nave trema, e poi, dopo tanto tempo, si muove. Ti porta con sé»
+                // «la nave trema, e poi, dopo tanto tempo, si muove. Mi porta con sé»
                 let c = colpi::crollo(&mut self.caso, sr);
                 self.suona(c, Bus::Ossa, -6.0, 0.0, 2.0);
                 self.suona(colpi::salita(28.0, 18.0, 6.0, 0.3, sr), Bus::Ossa, -8.0, 0.0, 3.0);
             }
             self.dopo(24.0, Azione::Silenzio(6.0));
         } else {
-            // il casco tolto nella stiva: «Il pavimento si avvicina. Dormi.»; poi la plancia
+            // il casco tolto nella stiva: «Il pavimento si avvicina. Dormo.»; poi la plancia
             self.dopo(4.0, Azione::Silenzio(6.0));
             self.dopo(12.0, Azione::Risveglio);
         }
@@ -1417,7 +1417,7 @@ impl Mondo {
                 }
             }
             Evento::SalaTace => {
-                // «come una sala piena che smette di parlare quando entri. Poi riprende»
+                // «come una sala piena che smette di parlare quando entro. Poi riprende»
                 if self.brusio_base > 0.0 {
                     self.brusio.guadagno.verso(0.0, 2.0, sr);
                     self.dopo(5.0, Azione::Brusio(self.brusio_base, 4.0));
@@ -1457,7 +1457,7 @@ impl Mondo {
                 }
             }
             Nave::Agganciata => {
-                // «Due colpi sordi, che senti nelle ossa più che nelle orecchie»
+                // «Due colpi sordi, che sento nelle ossa più che nelle orecchie»
                 for t in [0.0, 0.45] {
                     let c = colpi::arpione(&mut self.caso, sr);
                     self.suona(c, Bus::Ossa, -11.0, 0.0, t);

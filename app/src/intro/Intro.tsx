@@ -58,7 +58,7 @@ const SETTORE_MUTO = [-55, 10]; // gradi, in senso orario dall'asse x
 const BATTITI_A = [M.battito[0], M.battito[0] + 0.95, M.battito[0] + 1.95, M.battito[0] + 3.0];
 
 const PLANCIA_TESTO =
-  "La plancia della Santa Maria: due poltrone, e ne usi una; schermi che conosci a memoria; sotto il pavimento, il lamento basso del reattore. Sul quadrante del margine la lancetta sta dove hai imparato a non guardarla. Nell’oblò, contro le stelle, c’è una sagoma nera che non ne lascia passare nessuna.";
+  "La plancia della Santa Maria: due poltrone, e ne uso una; schermi che conosco a memoria; sotto il pavimento, il lamento basso del reattore. Sul quadrante del margine la lancetta sta dove ho imparato a non guardarla. Nell’oblò, contro le stelle, c’è una sagoma nera che non ne lascia passare nessuna.";
 
 interface Opzioni {
   ridotto: boolean;

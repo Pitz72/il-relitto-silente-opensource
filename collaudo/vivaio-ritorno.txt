@@ -3,8 +3,8 @@
 # risale nella gola di mezzo.
 #   python collaudo/regressioni.py collaudo/vivaio-ritorno.txt
 # atteso: esito in_corso
-# atteso: compare «perdi l'orientamento»
-# atteso: compare «la parete ti porta verso la gola di mezzo, su»
+# atteso: compare «perdo l'orientamento»
+# atteso: compare «la parete mi porta verso la gola di mezzo, su»
 # atteso: stanza gola di mezzo
 
 # --- Atto I: la Santa Maria ---

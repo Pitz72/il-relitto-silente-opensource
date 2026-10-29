@@ -46,7 +46,7 @@ pub enum Superficie {
     Vibrante,
     /// ogni passo risuona come in una navata
     Navata,
-    /// nessun passo: «I tuoi passi non fanno rumore»
+    /// nessun passo: «I miei passi non fanno rumore»
     Nessuna,
     /// in discesa, sul materiale che si sbriciola
     Sbriciola,
@@ -76,7 +76,7 @@ pub enum Speciale {
     Groviglio,
     /// vivaio: il groviglio di là dalla parete est
     GroviglioLontano,
-    /// gola del ritorno: «In fondo, a ovest, senti un fruscio che conosci»
+    /// gola del ritorno: «In fondo, a ovest, sento un fruscio che conosco»
     GroviglioInFondo,
     /// vivaio: il germinatoio che respira piano
     Germinatoio,

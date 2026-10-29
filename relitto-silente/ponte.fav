@@ -28,14 +28,14 @@ L'ascolto è mancato.
 Il ponte di comando è una stanza.
 La descrizione del ponte di comando è "Una sala vasta e tonda, al buio e muta. Il soffitto è una cupola di cristallo nero. Al centro, una struttura a forma di stella galleggia immobile, spenta; intorno, postazioni di controllo silenziose. Dietro la più grande, nella parete, il profilo sottile di una porta tonda. A est si torna al corridoio.".
 La descrizione del ponte di comando se la porta circolare è aperta è "Il Ponte, sotto la mappa stellare. Dietro la postazione del comandante la porta tonda è aperta su un buio pieno: a ovest, l'anticamera. A est si torna al corridoio.".
-La descrizione del ponte di comando se la proiezione è attiva è "Il Ponte non è più buio. Dalla struttura centrale si alza sulla cupola una mappa stellare a tre dimensioni: una rotta tracciata attraverso il vuoto, con un arrivo che riconosceresti fra mille. Il tuo sole. Dietro la postazione del comandante, la porta tonda. A est si torna al corridoio.".
+La descrizione del ponte di comando se la proiezione è attiva è "Il Ponte non è più buio. Dalla struttura centrale si alza sulla cupola una mappa stellare a tre dimensioni: una rotta tracciata attraverso il vuoto, con un arrivo che riconoscerei fra mille. Il mio sole. Dietro la postazione del comandante, la porta tonda. A est si torna al corridoio.".
 
 La struttura centrale è una cosa.
 La struttura centrale è nel ponte di comando.
 La struttura centrale è di scena.
 La struttura centrale si chiama anche "stella".
 La struttura centrale si chiama anche "proiettore olografico".
-La descrizione della struttura centrale è "Una scultura di anelli e punte intrecciati: un proiettore olografico di una complessità che non riesci a seguire.".
+La descrizione della struttura centrale è "Una scultura di anelli e punte intrecciati: un proiettore olografico di una complessità che non riesco a seguire.".
 
 La mappa stellare è una cosa.
 La mappa stellare è nel ponte di comando.
@@ -44,7 +44,7 @@ La mappa stellare si chiama anche "rotta".
 La mappa stellare si chiama anche "mappa".
 La mappa stellare si chiama anche "cupola".
 La descrizione della mappa stellare è "Quando il Ponte non ha energia, la cupola è soltanto nera.".
-La descrizione della mappa stellare se la proiezione è attiva è "Una proiezione che ti riempie la cupola sopra la testa. Una rotta parte da tre soli stretti in un pugno di cielo, segnati con un contorno diverso dagli altri, attraversa una distanza che fa male anche solo a guardarla, e finisce su un punto piccolo, giallo, senza niente di speciale. Il tuo sole. Lo studi meglio se lo ANALIZZI.".
+La descrizione della mappa stellare se la proiezione è attiva è "Una proiezione che mi riempie la cupola sopra la testa. Una rotta parte da tre soli stretti in un pugno di cielo, segnati con un contorno diverso dagli altri, attraversa una distanza che fa male anche solo a guardarla, e finisce su un punto piccolo, giallo, senza niente di speciale. Il mio sole. (Per studiarla meglio: ANALIZZALA.)".
 
 # --- Essenziali -------------------------------------------------------------
 La postazione è una cosa.
@@ -52,7 +52,7 @@ La postazione è nel ponte di comando.
 La postazione si chiama anche "console di comando".
 La postazione si chiama anche "depressione".
 La postazione si chiama anche "postazione del comandante".
-La descrizione della postazione è "La postazione del comandante, più grande delle altre: una superficie scura con un'unica depressione a forma di mano al centro. Fatta per essere toccata: USALA.".
+La descrizione della postazione è "La postazione del comandante, più grande delle altre: una superficie scura con un'unica depressione a forma di mano al centro. Fatta per essere toccata. (USALA.)".
 
 La porta circolare è una cosa.
 La porta circolare è nel ponte di comando.
@@ -68,34 +68,34 @@ Le punte si chiama anche "punte luminose".
 La descrizione delle punte è "Cinque punte luminose retrattili, disposte a raggiera sul pannello della porta. Quante premerne? Il numero dev'essere la chiave.".
 
 # --- La console e la mappa ----------------------------------------------------
-Invece di usa la postazione se l'energia è assente: dire "Appoggi la mano sulla depressione, ma la console resta morta e gelida. Manca l'energia: finché la nave non si sveglia, il Ponte è inerte.".
-Invece di usa la postazione se la proiezione è attiva: dire "La console è già sveglia: la mappa stellare brilla sopra di te.".
-Invece di usa la postazione: dire "Appoggi la mano guantata sulla depressione, e la console reagisce: non a chi sei, ma a quello che vuoi. Un'ondata di energia silenziosa attraversa la sala, le postazioni si accendono, e la struttura centrale proietta sulla cupola una mappa stellare a tre dimensioni. La rotta è chiara, e il punto d'arrivo inconfondibile: il tuo sole." e adesso la proiezione è attiva.
+Invece di usa la postazione se l'energia è assente: dire "Appoggio la mano sulla depressione, ma la console resta morta e gelida. Manca l'energia: finché la nave non si sveglia, il Ponte è inerte.".
+Invece di usa la postazione se la proiezione è attiva: dire "La console è già sveglia: la mappa stellare brilla sopra di me.".
+Invece di usa la postazione: dire "Appoggio la mano guantata sulla depressione, e la console reagisce: non a chi sono, ma a quello che voglio. Un'ondata di energia silenziosa attraversa la sala, le postazioni si accendono, e la struttura centrale proietta sulla cupola una mappa stellare a tre dimensioni. La rotta è chiara, e il punto d'arrivo inconfondibile: il mio sole." e adesso la proiezione è attiva.
 Invece di tocca la postazione: dire "(Per svegliarla: USA LA POSTAZIONE.)".
 
 Invece di analizza la mappa stellare se la proiezione è spenta: dire "Non c'è nessuna mappa da analizzare: il Ponte è ancora inerte.".
-Invece di analizza la mappa stellare se il sistema è noto: dire "La rotta la conosci: un sistema trino, tre soli. La loro culla.".
-Invece di analizza la mappa stellare: dire "Segui la rotta all'indietro, partendo da casa. Attraversa un'altra galassia, fino a un ammasso denso e luminoso. Il punto d'origine non lascia dubbi: un sistema trino, tre soli che girano l'uno intorno all'altro, spenti. La culla della loro civiltà.\nIl tuo sole non l'hanno scelto a caso. Accanto c'è un'annotazione che la matrice rende così: proto-fertile, candidato primario, classe Giardino." e adesso il sistema è noto.
+Invece di analizza la mappa stellare se il sistema è noto: dire "La rotta la conosco: un sistema trino, tre soli. La loro culla.".
+Invece di analizza la mappa stellare: dire "Seguo la rotta all'indietro, partendo da casa. Attraversa un'altra galassia, fino a un ammasso denso e luminoso. Il punto d'origine non lascia dubbi: un sistema trino, tre soli che girano l'uno intorno all'altro, spenti. La culla della loro civiltà.\nIl mio sole non l'hanno scelto a caso. Accanto c'è un'annotazione che la matrice rende così: proto-fertile, candidato primario, classe Giardino." e adesso il sistema è noto.
 
 # --- La porta circolare: tre punte --------------------------------------------
 Invece di tocca le punte se la porta circolare è aperta: dire "La porta è già aperta.".
 Invece di tocca le punte se la proiezione è spenta: dire "Il pannello della porta è morto: nessuna punta risponde finché il Ponte non ha energia e la console non è sveglia.".
-Invece di tocca le punte se il sistema è ignoto: dire "Le punte aspettano un numero preciso, e non sai quale. Da qualche parte, sulla nave, ci sarà un indizio.".
-Invece di tocca le punte: dire "Ripensi alla culla della rotta, i tre soli, e appoggi la mano sul pannello: premi tre punte. Un clic armonioso, e la porta tonda si apre con un movimento senza attrito su un buio pieno." e adesso la porta circolare è aperta.
+Invece di tocca le punte se il sistema è ignoto: dire "Le punte aspettano un numero preciso, e non so quale. Da qualche parte, sulla nave, ci sarà un indizio.".
+Invece di tocca le punte: dire "Ripenso alla culla della rotta, i tre soli, e appoggio la mano sul pannello: premo tre punte. Un clic armonioso, e la porta tonda si apre con un movimento senza attrito su un buio pieno." e adesso la porta circolare è aperta.
 Invece di premi le punte se la porta circolare è aperta: dire "La porta è già aperta.".
 Invece di premi le punte se la proiezione è spenta: dire "Il pannello della porta è morto: nessuna punta risponde finché il Ponte non ha energia e la console non è sveglia.".
-Invece di premi le punte se il sistema è ignoto: dire "Le punte aspettano un numero preciso, e non sai quale. Da qualche parte, sulla nave, ci sarà un indizio.".
-Invece di premi le punte: dire "Ripensi alla culla della rotta, i tre soli, e appoggi la mano sul pannello: premi tre punte. Un clic armonioso, e la porta tonda si apre con un movimento senza attrito su un buio pieno." e adesso la porta circolare è aperta.
+Invece di premi le punte se il sistema è ignoto: dire "Le punte aspettano un numero preciso, e non so quale. Da qualche parte, sulla nave, ci sarà un indizio.".
+Invece di premi le punte: dire "Ripenso alla culla della rotta, i tre soli, e appoggio la mano sul pannello: premo tre punte. Un clic armonioso, e la porta tonda si apre con un movimento senza attrito su un buio pieno." e adesso la porta circolare è aperta.
 
 # --- Gating e l'ultimo avviso -------------------------------------------------
 Invece di vai ovest se il giocatore è nel ponte di comando e la porta circolare è chiusa: dire "La porta tonda è chiusa. Prima va sbloccato il suo meccanismo.".
-Invece di vai ovest se il giocatore è nel ponte di comando e l'aria è meno di 45 e l'avviso è pendente: dire "Sul visore la tuta ti mette davanti un conto che non le hai chiesto: aria [aria], e oltre quella porta, se c'è un ritorno, sarà lungo.[se la ricarica è disponibile] Il generatore, con la sua presa, è di qua.[fine][se il giocatore ha la cella di riserva] La cella di riserva ce l'hai ancora.[fine] Di là, chissà. (Se vuoi passare lo stesso, ripeti.)" e adesso l'avviso è dato.
+Invece di vai ovest se il giocatore è nel ponte di comando e l'aria è meno di 45 e l'avviso è pendente: dire "Sul visore la tuta mi mette davanti un conto che non le ho chiesto: aria [aria], e oltre quella porta, se c'è un ritorno, sarà lungo.[se la ricarica è disponibile] Il generatore, con la sua presa, è di qua.[fine][se il giocatore ha la cella di riserva] La cella di riserva ce l'ho ancora.[fine] Di là, chissà. (Se vuoi passare lo stesso, ripeti.)" e adesso l'avviso è dato.
 
 # ============================================================================
 # ANTICAMERA [!]
 # ============================================================================
 L'anticamera è una stanza.
-La descrizione dell'anticamera è "Il passaggio si stringe. Le pareti non fanno più luce: qui è tutto scuro, di un buio che assorbe invece di mancare. I tuoi passi non fanno rumore, e non sai se è il pavimento o se hai smesso di farne tu. Davanti, a ovest, una soglia aperta.".
+La descrizione dell'anticamera è "Il passaggio si stringe. Le pareti non fanno più luce: qui è tutto scuro, di un buio che assorbe invece di mancare. I miei passi non fanno rumore, e non so se è il pavimento o se ho smesso di farne io. Davanti, a ovest, una soglia aperta.".
 
 Il buio è una cosa.
 Il buio è nell'anticamera.
@@ -104,20 +104,20 @@ Il buio si chiama anche "soglia aperta".
 Il buio si chiama anche "soglia".
 La descrizione del buio è "Non è assenza di luce: è qualcosa che la beve. Le pareti si avvicinano verso il centro, come una strozzatura. Uno spazio fatto per essere attraversato, non visitato.".
 
-Invece di vai est se il giocatore è nell'anticamera: dire "Hai attraversato la soglia. Non torni indietro, adesso.".
+Invece di vai est se il giocatore è nell'anticamera: dire "Ho attraversato la soglia. Non torno indietro, adesso.".
 
 # ============================================================================
 # SANTUARIO CENTRALE
 # ============================================================================
 Il santuario centrale è una stanza.
-La descrizione del santuario centrale è "Una stanza più piccola di quanto ti aspettassi, le pareti che convergono nel buio in alto. Il pavimento è uno schema di linee luminose, la stessa geometria stellare del Ponte ridotta a qualcosa di intimo. Il silenzio non è quello del vuoto, né quello delle capsule: è il silenzio di qualcosa che aspetta da molto tempo di essere ascoltato. Al centro, sopra un sostegno sottile, galleggia la figura luminosa dell'Anziano, i bordi che si sfanno appena, come una fotografia esposta troppe volte. Ti sta guardando. (PARLA CON L'ANZIANO.)".
+La descrizione del santuario centrale è "Una stanza più piccola di quanto mi aspettassi, le pareti che convergono nel buio in alto. Il pavimento è uno schema di linee luminose, la stessa geometria stellare del Ponte ridotta a qualcosa di intimo. Il silenzio non è quello del vuoto, né quello delle capsule: è il silenzio di qualcosa che aspetta da molto tempo di essere ascoltato. Al centro, sopra un sostegno sottile, galleggia la figura luminosa dell'Anziano, i bordi che si sfanno appena, come una fotografia esposta troppe volte. Mi sta guardando. (PARLA CON L'ANZIANO.)".
 La descrizione del santuario centrale se la fuga è iniziata è "Le linee del pavimento sono spente. Al centro c'è ancora il sostegno su cui galleggiava la figura; accanto, il pavimento si è aperto su una gola che scende. La stanza trema.".
 
 Il sostegno è una cosa.
 Il sostegno è nel santuario centrale.
 Il sostegno è di scena.
 Il sostegno si chiama anche "piedistallo".
-La descrizione del sostegno è "Un sostegno sottile, cresciuto dal pavimento come tutto il resto. Sul bordo, una riga di glifi: TRADUCILA.".
+La descrizione del sostegno è "Un sostegno sottile, cresciuto dal pavimento come tutto il resto. Sul bordo, una riga di glifi. (TRADUCILA.)".
 
 L'anziano è un personaggio.
 L'anziano è nel santuario centrale.
@@ -127,25 +127,25 @@ L'anziano si chiama anche "ologramma".
 La descrizione dell'anziano è "Una proiezione di uno di loro, ma più vecchio del Navarca, con paramenti da cerimonia e un'espressione di calma profonda. Non minaccia: aspetta. (PARLA CON L'ANZIANO.)".
 La descrizione dell'anziano se la fuga è iniziata è "Non c'è più. La sua luce è dentro il seme.".
 
-Invece di vai est se il giocatore è nel santuario centrale: dire "Non c'è più nessun indietro. C'è soltanto la figura luminosa, e quello che ha da dirti.".
+Invece di vai est se il giocatore è nel santuario centrale: dire "Non c'è più nessun indietro. C'è soltanto la figura luminosa, e quello che ha da dirmi.".
 
 # --- Il seme, tornato scuro (al congedo) -------------------------------------
-Invece di prendi il seme se il seme è nel santuario centrale: dire "Il sostegno lo lascia andare appena lo tocchi. Te lo infili nella tasca sul petto della tuta, dove lo senti premere a ogni respiro." e adesso il seme è in inventario.
+Invece di prendi il seme se il seme è nel santuario centrale: dire "Il sostegno lo lascia andare appena lo tocchi. Me lo infilo nella tasca sul petto della tuta, dove lo sento premere a ogni respiro." e adesso il seme è in inventario.
 
 # ============================================================================
 # L'ANZIANO — quattordici nodi (l'ultimo è l'ultima voce, U1)
 # ============================================================================
 Il dialogo dell'anziano comincia con "benvenuto".
 
-L'anziano al nodo "benvenuto" dice "(La figura non muove le labbra, ma le parole ti si aprono dentro la testa, limpide e intere.) «Creatura di carbonio. Figlio delle stelle, forse. Benvenuto.[se gli echi è almeno 8] Hai ascoltato molte delle nostre voci. Ognuna ti è costata un po' del tuo fiato, e hai continuato.[fine] So cosa cerchi: una risposta. Ma io non sono che la memoria di una domanda. Sono quello che resta quando il cantastorie è svanito: l'ultima frase, scritta nella luce.»".
-L'anziano al nodo "benvenuto" dice "(La figura non muove le labbra, ma le parole ti si aprono nella mente.) «Porti con te le nostre voci. Le sento, tutte insieme, nella tua mano.» (Non c'è rimprovero.) «Benvenuto lo stesso.[se gli echi è almeno 8] Prima di prenderle, molte le hai ascoltate una per una.[fine] Io non sono che la memoria di una domanda: l'ultima frase, scritta nella luce.»" se il giocatore ha il risuonatore.
+L'anziano al nodo "benvenuto" dice "(La figura non muove le labbra, ma le parole mi si aprono dentro la testa, limpide e intere.) «Creatura di carbonio. Figlio delle stelle, forse. Benvenuto.[se gli echi è almeno 8] Hai ascoltato molte delle nostre voci. Ognuna ti è costata un po' del tuo fiato, e hai continuato.[fine] So cosa cerchi: una risposta. Ma io non sono che la memoria di una domanda. Sono quello che resta quando il cantastorie è svanito: l'ultima frase, scritta nella luce.»".
+L'anziano al nodo "benvenuto" dice "(La figura non muove le labbra, ma le parole mi si aprono nella mente.) «Porti con te le nostre voci. Le sento, tutte insieme, nella tua mano.» (Non c'è rimprovero.) «Benvenuto lo stesso.[se gli echi è almeno 8] Prima di prenderle, molte le hai ascoltate una per una.[fine] Io non sono che la memoria di una domanda: l'ultima frase, scritta nella luce.»" se il giocatore ha il risuonatore.
 Al nodo "benvenuto" l'opzione "Chi eravate?" conduce al nodo "salto".
 Al nodo "benvenuto" l'opzione "Cosa ne è stato di voi?" conduce al nodo "memoria".
 Al nodo "benvenuto" l'opzione "C'era un uomo, prima di me." se le tracce è almeno 3 conduce al nodo "altro".
 Al nodo "benvenuto" l'opzione "Sono venuto per vendervi." se la promessa è carico conduce al nodo "prezzo".
 Al nodo "benvenuto" l'opzione "Resto ad ascoltare." conduce al nodo "silenzio".
 
-L'anziano al nodo "silenzio" dice "(La figura tace. Per un tempo che non sai misurare senti soltanto la nave: un ronzio lontano, il tuo fiato nel casco, qualcosa che si assesta. Poi la voce riprende, come se non avesse mai smesso.) «Restare è già una risposta. Pochi la danno.»".
+L'anziano al nodo "silenzio" dice "(La figura tace. Per un tempo che non so misurare sento soltanto la nave: un ronzio lontano, il mio fiato nel casco, qualcosa che si assesta. Poi la voce riprende, come se non avesse mai smesso.) «Restare è già una risposta. Pochi la danno.»".
 Al nodo "silenzio" l'opzione "Chi eravate?" conduce al nodo "salto" e adesso l'ascolto è dato.
 Al nodo "silenzio" l'opzione "Cosa ne è stato di voi?" conduce al nodo "memoria" e adesso l'ascolto è dato.
 
@@ -192,11 +192,11 @@ Al nodo "tracce" l'opzione "Allora cosa devo fare?" conduce al nodo "congedo".
 L'anziano al nodo "musica" dice "«La nostra lingua era un canto. Le tue macchine traducono le parole, e le parole ne erano la parte più piccola. Quello che resta, quando le parole finiscono, non si conserva: si compone. Si suona di nuovo, in un altro modo, con un'altra voce.»".
 Al nodo "musica" l'opzione "Allora cosa devo fare?" conduce al nodo "congedo".
 
-L'anziano al nodo "congedo" dice "(La figura ti guarda, e per un istante senti il peso di un tempo che non si può contare.) «La nostra canzone è finita. Le ultime armonie si sciolgono adesso, in questo istante. A chi viene dopo abbiamo sempre chiesto una cosa sola: che la musica fosse suonata, con forza, fino all'ultima nota. Vivi. Sarà il suono più bello.»".
-L'anziano al nodo "congedo" dice "(La figura ti guarda, e per un istante senti il peso di un tempo che non si può contare.) «La nostra canzone è finita. Le ultime armonie si sciolgono adesso, in questo istante. A chi viene dopo abbiamo sempre chiesto una cosa sola: che la musica fosse suonata, con forza, fino all'ultima nota. Vivi. Sarà il suono più bello.» (E poi, più piano:) «Grazie di essere rimasto.»" se l'ascolto è dato.
+L'anziano al nodo "congedo" dice "(La figura mi guarda, e per un istante sento il peso di un tempo che non si può contare.) «La nostra canzone è finita. Le ultime armonie si sciolgono adesso, in questo istante. A chi viene dopo abbiamo sempre chiesto una cosa sola: che la musica fosse suonata, con forza, fino all'ultima nota. Vivi. Sarà il suono più bello.»".
+L'anziano al nodo "congedo" dice "(La figura mi guarda, e per un istante sento il peso di un tempo che non si può contare.) «La nostra canzone è finita. Le ultime armonie si sciolgono adesso, in questo istante. A chi viene dopo abbiamo sempre chiesto una cosa sola: che la musica fosse suonata, con forza, fino all'ultima nota. Vivi. Sarà il suono più bello.» (E poi, più piano:) «Grazie di essere rimasto.»" se l'ascolto è dato.
 Al nodo "congedo" l'opzione "[Chiudi gli occhi e lascia andare.]" conduce al nodo "dissolvenza".
 
-L'anziano al nodo "dissolvenza" dice "(Chiudi gli occhi. Quando li riapri appena, la figura si sta raccogliendo: i bordi rientrano, la luce si stringe in un punto, e il punto scende piano sul sostegno al centro della stanza. Lì adesso c'è il seme che avevi dato alla porta. La luce ci entra dentro, e si spegne.)".
+L'anziano al nodo "dissolvenza" dice "(Chiudo gli occhi. Quando li riapro appena, la figura si sta raccogliendo: i bordi rientrano, la luce si stringe in un punto, e il punto scende piano sul sostegno al centro della stanza. Lì adesso c'è il seme che avevo dato alla porta. La luce ci entra dentro, e si spegne.)".
 Al nodo "dissolvenza" l'opzione "[Resta.]" conduce al nodo "ultima voce".
 
 L'anziano al nodo "ultima voce" dice "(Poi arriva l'ultima voce. È la più rovinata di tutte. La matrice la prende e la restituisce piena di vuoti, e nei vuoti, ogni tanto, una parola:) «…non… prendere…» (Vuoto.) «…comporre…» (Vuoto. Poi una parola intera:) «Musica.» (E per ultima, piccola:) «Vivi.» (La matrice non sa cosa ci fosse in mezzo. Neanche al cento per cento: quello che manca non sono parole.)".

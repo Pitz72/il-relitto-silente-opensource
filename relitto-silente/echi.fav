@@ -29,101 +29,101 @@ Il bassorilievo è celata.
 Il generatore è muta.
 Il generatore è celata.
 
-Invece di sintonizza se il giocatore non ha il sintonizzatore: dire "Ti serve il Sintonizzatore di Frequenza.".
+Invece di sintonizza se il giocatore non ha il sintonizzatore: dire "Mi serve il Sintonizzatore di Frequenza.".
 Invece di sintonizza: dire "Il Sintonizzatore scorre le frequenze e torna a zero: lì non è rimasta impressa nessuna voce. Le voci stanno nelle cose silenziose delle stanze dove è rimasta memoria.".
 
 # ╔════════════════════════════════════════════════════════════════════════╗
 # ║ CORRIDOIO — quattro voci in una (la partenza)                            ║
 # ╚════════════════════════════════════════════════════════════════════════╝
-Invece di sintonizza le pareti del corridoio se il giocatore non ha il sintonizzatore: dire "Ti serve il Sintonizzatore di Frequenza.".
-Invece di sintonizza le pareti del corridoio se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. Con l'aria a [aria] la tuta non ti lascia ascoltare niente che non sia il tuo fiato. Ti serve una ricarica.".
-Invece di sintonizza le pareti del corridoio se il giocatore ha il risuonatore: dire "Il Sintonizzatore cerca una voce e ne trova cento: con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovresti posarlo.".
+Invece di sintonizza le pareti del corridoio se il giocatore non ha il sintonizzatore: dire "Mi serve il Sintonizzatore di Frequenza.".
+Invece di sintonizza le pareti del corridoio se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.".
+Invece di sintonizza le pareti del corridoio se il giocatore ha il risuonatore: dire "Il Sintonizzatore cerca una voce e ne trova cento: con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovrei posarlo.".
 Invece di sintonizza le pareti del corridoio se le pareti del corridoio è muta: dire "Il Sintonizzatore impazzisce: aggancia una dopo l'altra le frequenze rimaste impresse nel corridoio, voci sovrapposte che tornano su dal silenzio dei secoli.\nUNA VOCE SENZA RUOLO: «Il Seme è al sicuro. La Stele è al sicuro. Il Nucleo è al sicuro. Abbiamo fatto tutto quello che potevamo. Adesso è nelle mani del tempo, e di un futuro che non conosceremo.»\nIL CAPITANO: «Rotta impostata. Lasciamo il sistema trino. I motori reggeranno quanto basta: non serve che reggano il ritorno.»\nIL TECNICO DI CARICO: «Il Seme è sigillato. Ho controllato ogni capsula tre volte. Se tutto il resto fallisse, questo deve arrivare. Deve.»\nIL TECNICO DI BORDO: «Porta esterna sigillata, protocollo del silenzio attivato. La musica ha trovato la sua ultima casa. Che continui, oltre il freddo, oltre il buio. Che continui.»" e adesso le pareti del corridoio è risuonata e adesso aumenta gli echi e adesso aumenta gli echi e adesso aumenta gli echi e adesso aumenta gli echi e adesso diminuisci l'aria di 4.
-Invece di sintonizza le pareti del corridoio: dire "Soltanto un residuo statico: queste voci le hai già sentite.".
+Invece di sintonizza le pareti del corridoio: dire "Soltanto un residuo statico: queste voci le ho già sentite.".
 
 # ╔════════════════════════════════════════════════════════════════════════╗
 # ║ SERRA — lo xeno-botanico (R1: dopo che la teca è aperta)                 ║
 # ╚════════════════════════════════════════════════════════════════════════╝
-Invece di sintonizza le piante se il giocatore non ha il sintonizzatore: dire "Ti serve il Sintonizzatore di Frequenza.".
-Invece di sintonizza le piante se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. Con l'aria a [aria] la tuta non ti lascia ascoltare niente che non sia il tuo fiato. Ti serve una ricarica.".
-Invece di sintonizza le piante se il giocatore ha il risuonatore: dire "Il Sintonizzatore cerca una voce e ne trova cento: con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovresti posarlo.".
+Invece di sintonizza le piante se il giocatore non ha il sintonizzatore: dire "Mi serve il Sintonizzatore di Frequenza.".
+Invece di sintonizza le piante se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.".
+Invece di sintonizza le piante se il giocatore ha il risuonatore: dire "Il Sintonizzatore cerca una voce e ne trova cento: con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovrei posarlo.".
 Invece di sintonizza le piante se le piante è muta: dire "Il Sintonizzatore fischia e aggancia una frequenza. LO XENO-BOTANICO: «Stanno morendo tutte. Il filtro dell'aria è collassato, non c'è più acqua. Ho chiuso il Seme nella teca, ma la chiave è rimasta giù, al vivaio, e giù non si passa più. Quelli delle teche cercano il sole che gli avevamo promesso. Vanno dove c'è caldo. Vanno dove c'è luce.»" e adesso le piante è risuonata e adesso aumenta gli echi e adesso diminuisci l'aria di 4.
 Invece di sintonizza le piante se le piante è risuonata e le piante è celata e la teca è svuotata: dire "Il Sintonizzatore torna sull'eco già nota, ma non si ferma: la frequenza scende sotto la soglia di prima, e dal fondo viene su un secondo strato, più nudo. LO XENO-BOTANICO, con un filo di voce più fermo: «Uno. Ne ho salvato uno. Lo so che non basta: un giardino non lo fai con un seme solo. Ma una foresta sì. Una foresta intera può cominciare da uno, se trova la terra giusta e qualcuno che abbia la pazienza del tempo. Quel qualcuno non sarò io. Forse sarai tu.»" e adesso le piante è svelata e adesso aumenta le risonanze e adesso diminuisci l'aria di 6.
 Invece di sintonizza le piante se le piante è risuonata e le piante è celata: dire "Sotto questa voce c'è un secondo strato, ma resta fuori fuoco: qualcosa, qui, non è ancora compiuto.".
-Invece di sintonizza le piante: dire "Soltanto un residuo statico: questa eco l'hai già sentita fino in fondo.".
+Invece di sintonizza le piante: dire "Soltanto un residuo statico: questa eco l'ho già sentita fino in fondo.".
 
 # ╔════════════════════════════════════════════════════════════════════════╗
 # ║ ARCA BIOLOGICA — l'ufficiale medico                                      ║
 # ╚════════════════════════════════════════════════════════════════════════╝
-Invece di sintonizza le capsule se il giocatore non ha il sintonizzatore: dire "Ti serve il Sintonizzatore di Frequenza.".
-Invece di sintonizza le capsule se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. Con l'aria a [aria] la tuta non ti lascia ascoltare niente che non sia il tuo fiato. Ti serve una ricarica.".
-Invece di sintonizza le capsule se il giocatore ha il risuonatore: dire "Il Sintonizzatore cerca una voce e ne trova cento: con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovresti posarlo.".
+Invece di sintonizza le capsule se il giocatore non ha il sintonizzatore: dire "Mi serve il Sintonizzatore di Frequenza.".
+Invece di sintonizza le capsule se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.".
+Invece di sintonizza le capsule se il giocatore ha il risuonatore: dire "Il Sintonizzatore cerca una voce e ne trova cento: con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovrei posarlo.".
 Invece di sintonizza le capsule se le capsule è muta: dire "Il Sintonizzatore aggancia una frequenza. L'UFFICIALE MEDICO: «I sistemi vitali sono spenti. Sono morti tutti nel sonno. Il freddo… il freddo è stato misericordioso.»" e adesso le capsule è risuonata e adesso aumenta gli echi e adesso diminuisci l'aria di 4.
-Invece di sintonizza le capsule: dire "Soltanto un residuo statico: questa eco l'hai già sentita.".
+Invece di sintonizza le capsule: dire "Soltanto un residuo statico: questa eco l'ho già sentita.".
 
 # ╔════════════════════════════════════════════════════════════════════════╗
 # ║ ALLOGGIO — il Navarca (R2: con il cilindro in mano)                      ║
 # ╚════════════════════════════════════════════════════════════════════════╝
-Invece di sintonizza le alcove se il giocatore non ha il sintonizzatore: dire "Ti serve il Sintonizzatore di Frequenza.".
-Invece di sintonizza le alcove se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. Con l'aria a [aria] la tuta non ti lascia ascoltare niente che non sia il tuo fiato. Ti serve una ricarica.".
-Invece di sintonizza le alcove se il giocatore ha il risuonatore: dire "Il Sintonizzatore cerca una voce e ne trova cento: con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovresti posarlo.".
+Invece di sintonizza le alcove se il giocatore non ha il sintonizzatore: dire "Mi serve il Sintonizzatore di Frequenza.".
+Invece di sintonizza le alcove se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.".
+Invece di sintonizza le alcove se il giocatore ha il risuonatore: dire "Il Sintonizzatore cerca una voce e ne trova cento: con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovrei posarlo.".
 Invece di sintonizza le alcove se le alcove è muta: dire "Il Sintonizzatore aggancia una frequenza. IL NAVARCA: «Questo sarà il mio ultimo ciclo di veglia. Ho chiesto di restare l'ultimo. Qualcuno deve spegnere le luci, quando tutti se ne sono andati. È… è un onore.»" e adesso le alcove è risuonata e adesso aumenta gli echi e adesso diminuisci l'aria di 4.
 Invece di sintonizza le alcove se le alcove è risuonata e le alcove è celata e il giocatore ha il cilindro mnemonico: dire "Il Sintonizzatore non si spegne: scende di frequenza, e dal fondo viene su un secondo strato. IL NAVARCA, e stavolta non parla all'equipaggio, parla a se stesso: «Mi domando se qualcuno verrà. Non per salvarci: è impossibile da prima che io nascessi. Solo per vedere. Per sapere che siamo stati qui. Se sei tu che ascolti, da qualunque tempo tu venga: ho tenuto le luci accese fino all'ultimo respiro. Non contro il buio. Perché tu trovassi la strada.»" e adesso le alcove è svelata e adesso aumenta le risonanze e adesso diminuisci l'aria di 6.
-Invece di sintonizza le alcove se le alcove è risuonata e le alcove è celata: dire "Dietro l'eco del Navarca intuisci un secondo strato, più privato. Il Sintonizzatore non riesce a fissarlo: manca qualcosa, qui, che lo tenga ancorato. Qualcosa che era suo.".
-Invece di sintonizza le alcove: dire "Soltanto un residuo statico: questa eco l'hai già sentita fino in fondo.".
+Invece di sintonizza le alcove se le alcove è risuonata e le alcove è celata: dire "Dietro l'eco del Navarca intuisco un secondo strato, più privato. Il Sintonizzatore non riesce a fissarlo: manca qualcosa, qui, che lo tenga ancorato. Qualcosa che era suo.".
+Invece di sintonizza le alcove: dire "Soltanto un residuo statico: questa eco l'ho già sentita fino in fondo.".
 
 # ╔════════════════════════════════════════════════════════════════════════╗
 # ║ NIDO — la voce giovane (poi l'eco del Piccolo, equipaggio.fav)           ║
 # ╚════════════════════════════════════════════════════════════════════════╝
-Invece di sintonizza la culla se il giocatore non ha il sintonizzatore: dire "Ti serve il Sintonizzatore di Frequenza.".
-Invece di sintonizza la culla se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. Con l'aria a [aria] la tuta non ti lascia ascoltare niente che non sia il tuo fiato. Ti serve una ricarica.".
-Invece di sintonizza la culla se il giocatore ha il risuonatore: dire "Il Sintonizzatore cerca una voce e ne trova cento: con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovresti posarlo.".
-Invece di sintonizza la culla se la culla è muta: dire "Il Sintonizzatore aggancia una voce giovane, acuta, che torna sempre sulla stessa frase: «…perché non si muove… perché nessuno…» Non aspetta risposta: la domanda gira su se stessa, consumata. Il Sintonizzatore la tiene agganciata. Potresti provare a risponderle. (PARLA CON L'ECO.)" e adesso la culla è risuonata e adesso aumenta gli echi e adesso diminuisci l'aria di 4 e adesso l'eco è nel nido.
+Invece di sintonizza la culla se il giocatore non ha il sintonizzatore: dire "Mi serve il Sintonizzatore di Frequenza.".
+Invece di sintonizza la culla se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.".
+Invece di sintonizza la culla se il giocatore ha il risuonatore: dire "Il Sintonizzatore cerca una voce e ne trova cento: con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovrei posarlo.".
+Invece di sintonizza la culla se la culla è muta: dire "Il Sintonizzatore aggancia una voce giovane, acuta, che torna sempre sulla stessa frase: «…perché non si muove… perché nessuno…» Non aspetta risposta: la domanda gira su se stessa, consumata. Il Sintonizzatore la tiene agganciata. Potrei provare a risponderle. (PARLA CON L'ECO.)" e adesso la culla è risuonata e adesso aumenta gli echi e adesso diminuisci l'aria di 4 e adesso l'eco è nel nido.
 Invece di sintonizza la culla: dire "La voce giovane è ancora agganciata. (PARLA CON L'ECO.)".
 
 # ╔════════════════════════════════════════════════════════════════════════╗
 # ║ PONTE — l'ufficiale di navigazione                                       ║
 # ╚════════════════════════════════════════════════════════════════════════╝
-Invece di sintonizza la struttura centrale se il giocatore non ha il sintonizzatore: dire "Ti serve il Sintonizzatore di Frequenza.".
-Invece di sintonizza la struttura centrale se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. Con l'aria a [aria] la tuta non ti lascia ascoltare niente che non sia il tuo fiato. Ti serve una ricarica.".
-Invece di sintonizza la struttura centrale se il giocatore ha il risuonatore: dire "Il Sintonizzatore cerca una voce e ne trova cento: con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovresti posarlo.".
+Invece di sintonizza la struttura centrale se il giocatore non ha il sintonizzatore: dire "Mi serve il Sintonizzatore di Frequenza.".
+Invece di sintonizza la struttura centrale se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.".
+Invece di sintonizza la struttura centrale se il giocatore ha il risuonatore: dire "Il Sintonizzatore cerca una voce e ne trova cento: con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovrei posarlo.".
 Invece di sintonizza la struttura centrale se la struttura centrale è muta: dire "Il Sintonizzatore aggancia una frequenza. L'UFFICIALE DI NAVIGAZIONE: «La rotta è confermata e sigillata nei cristalli. Fra quattro milioni e settecentomila cicli il sistema bersaglio sarà maturo. Noi non ci saremo. Ma il canto… il canto ci sarà.»" e adesso la struttura centrale è risuonata e adesso aumenta gli echi e adesso diminuisci l'aria di 4.
-Invece di sintonizza la struttura centrale: dire "Soltanto un residuo statico: questa eco l'hai già sentita.".
+Invece di sintonizza la struttura centrale: dire "Soltanto un residuo statico: questa eco l'ho già sentita.".
 
 # ╔════════════════════════════════════════════════════════════════════════╗
 # ║ SCRIPTORIUM — lo Scriba (globi) e il suo raschio (lastra incisa, R6)     ║
 # ╚════════════════════════════════════════════════════════════════════════╝
-Invece di sintonizza il globo olografico se il giocatore non ha il sintonizzatore: dire "Ti serve il Sintonizzatore di Frequenza.".
-Invece di sintonizza il globo olografico se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. Con l'aria a [aria] la tuta non ti lascia ascoltare niente che non sia il tuo fiato. Ti serve una ricarica.".
-Invece di sintonizza il globo olografico se il giocatore ha il risuonatore: dire "Il Sintonizzatore cerca una voce e ne trova cento: con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovresti posarlo.".
+Invece di sintonizza il globo olografico se il giocatore non ha il sintonizzatore: dire "Mi serve il Sintonizzatore di Frequenza.".
+Invece di sintonizza il globo olografico se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.".
+Invece di sintonizza il globo olografico se il giocatore ha il risuonatore: dire "Il Sintonizzatore cerca una voce e ne trova cento: con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovrei posarlo.".
 Invece di sintonizza il globo olografico se il globo olografico è muta: dire "Il Sintonizzatore aggancia una frequenza. LO SCRIBA: «L'ultima iscrizione è finita. La Stele porta tutto quello che siamo stati: ogni scoperta, ogni errore, ogni speranza. Non so se sarà mai letta. Ma la verità deve avere un posto dove stare.»" e adesso il globo olografico è risuonata e adesso aumenta gli echi e adesso diminuisci l'aria di 4.
-Invece di sintonizza il globo olografico: dire "Soltanto un residuo statico: questa eco l'hai già sentita.".
+Invece di sintonizza il globo olografico: dire "Soltanto un residuo statico: questa eco l'ho già sentita.".
 
-Invece di sintonizza la lastra incisa se il giocatore non ha il sintonizzatore: dire "Ti serve il Sintonizzatore di Frequenza.".
-Invece di sintonizza la lastra incisa se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. Con l'aria a [aria] la tuta non ti lascia ascoltare niente che non sia il tuo fiato. Ti serve una ricarica.".
-Invece di sintonizza la lastra incisa se il giocatore ha il risuonatore: dire "Il Sintonizzatore cerca una voce e ne trova cento: con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovresti posarlo.".
-Invece di sintonizza la lastra incisa se la lastra incisa è celata e lo specchio è visto: dire "Il Sintonizzatore non trova una voce. Trova un suono: una punta contro la pietra, ostinata, che incide, si ferma, riprende. Si interrompe sempre allo stesso punto, a metà del segno, come una firma rimasta a metà.\nL'hai già visto, quel punto. Sulla placca di un uomo, nella serra, dove una parola parte e non torna." e adesso la lastra incisa è svelata e adesso aumenta le risonanze e adesso diminuisci l'aria di 6.
-Invece di sintonizza la lastra incisa se la lastra incisa è celata: dire "Sotto la pietra c'è un suono, non una voce, e il Sintonizzatore non riesce a fissarlo. Forse ti manca qualcosa con cui confrontarlo.".
+Invece di sintonizza la lastra incisa se il giocatore non ha il sintonizzatore: dire "Mi serve il Sintonizzatore di Frequenza.".
+Invece di sintonizza la lastra incisa se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.".
+Invece di sintonizza la lastra incisa se il giocatore ha il risuonatore: dire "Il Sintonizzatore cerca una voce e ne trova cento: con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovrei posarlo.".
+Invece di sintonizza la lastra incisa se la lastra incisa è celata e lo specchio è visto: dire "Il Sintonizzatore non trova una voce. Trova un suono: una punta contro la pietra, ostinata, che incide, si ferma, riprende. Si interrompe sempre allo stesso punto, a metà del segno, come una firma rimasta a metà.\nL'ho già visto, quel punto. Sulla placca di un uomo, nella serra, dove una parola parte e non torna." e adesso la lastra incisa è svelata e adesso aumenta le risonanze e adesso diminuisci l'aria di 6.
+Invece di sintonizza la lastra incisa se la lastra incisa è celata: dire "Sotto la pietra c'è un suono, non una voce, e il Sintonizzatore non riesce a fissarlo. Forse mi manca qualcosa con cui confrontarlo.".
 Invece di sintonizza la lastra incisa: dire "Il raschio, e il punto in cui si ferma. Non c'è altro.".
 
 # ╔════════════════════════════════════════════════════════════════════════╗
 # ║ SANTUARIO DEL SILENZIO — il Custode (R3: con la matrice al 100%)         ║
 # ╚════════════════════════════════════════════════════════════════════════╝
-Invece di sintonizza il bassorilievo se il giocatore non ha il sintonizzatore: dire "Ti serve il Sintonizzatore di Frequenza.".
-Invece di sintonizza il bassorilievo se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. Con l'aria a [aria] la tuta non ti lascia ascoltare niente che non sia il tuo fiato. Ti serve una ricarica.".
-Invece di sintonizza il bassorilievo se il giocatore ha il risuonatore: dire "Il Sintonizzatore cerca una voce e ne trova cento: con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovresti posarlo.".
+Invece di sintonizza il bassorilievo se il giocatore non ha il sintonizzatore: dire "Mi serve il Sintonizzatore di Frequenza.".
+Invece di sintonizza il bassorilievo se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.".
+Invece di sintonizza il bassorilievo se il giocatore ha il risuonatore: dire "Il Sintonizzatore cerca una voce e ne trova cento: con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovrei posarlo.".
 Invece di sintonizza il bassorilievo se il bassorilievo è muta: dire "Il Sintonizzatore aggancia una frequenza. IL CUSTODE: «Il silenzio non è assenza. È la forma che prende la memoria quando le parole finiscono. Ci ho messo tutta la vita a impararlo. Soltanto adesso capisco che era vero.»" e adesso il bassorilievo è risuonata e adesso aumenta gli echi e adesso diminuisci l'aria di 4.
 Invece di sintonizza il bassorilievo se il bassorilievo è risuonata e il bassorilievo è celata e la traduzione è almeno 100: dire "Il Sintonizzatore scende sotto la soglia di prima, e dal fondo viene su un secondo strato. IL CUSTODE, e adesso la voce non trema più: «Ti ho aspettato. Non te: la tua faccia non potevo conoscerla. Ma qualcuno. Chiunque arrivasse fin qui e si fermasse ad ascoltare, invece di prendere e ripartire. Il silenzio non era una serratura da forzare. Era una domanda. E tu, restando, hai risposto.»" e adesso il bassorilievo è svelata e adesso aumenta le risonanze e adesso diminuisci l'aria di 6.
-Invece di sintonizza il bassorilievo se il bassorilievo è risuonata e il bassorilievo è celata: dire "Sotto le parole del Custode senti una risonanza più profonda, ancora illeggibile. Forse quando la matrice di traduzione sarà completa.".
-Invece di sintonizza il bassorilievo: dire "Soltanto un residuo statico: questa eco l'hai già sentita fino in fondo.".
+Invece di sintonizza il bassorilievo se il bassorilievo è risuonata e il bassorilievo è celata: dire "Sotto le parole del Custode sento una risonanza più profonda, ancora illeggibile. Forse quando la matrice di traduzione sarà completa.".
+Invece di sintonizza il bassorilievo: dire "Soltanto un residuo statico: questa eco l'ho già sentita fino in fondo.".
 
 # ╔════════════════════════════════════════════════════════════════════════╗
 # ║ LABORATORIO — l'Ingegnere capo (R4: con la matrice ad almeno 75%)        ║
 # ╚════════════════════════════════════════════════════════════════════════╝
-Invece di sintonizza il generatore se il giocatore non ha il sintonizzatore: dire "Ti serve il Sintonizzatore di Frequenza.".
-Invece di sintonizza il generatore se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. Con l'aria a [aria] la tuta non ti lascia ascoltare niente che non sia il tuo fiato. Ti serve una ricarica.".
-Invece di sintonizza il generatore se il giocatore ha il risuonatore: dire "Il Sintonizzatore cerca una voce e ne trova cento: con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovresti posarlo.".
+Invece di sintonizza il generatore se il giocatore non ha il sintonizzatore: dire "Mi serve il Sintonizzatore di Frequenza.".
+Invece di sintonizza il generatore se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.".
+Invece di sintonizza il generatore se il giocatore ha il risuonatore: dire "Il Sintonizzatore cerca una voce e ne trova cento: con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovrei posarlo.".
 Invece di sintonizza il generatore se il generatore è muta: dire "Il Sintonizzatore fischia. L'INGEGNERE CAPO: «La risonanza è instabile! Il cristallo non regge il carico! Evacuate il settore, subito!» Poi, più piano: «Non ci riesco. Se lascio il generatore adesso il campo crolla, e con lui tutta la Sezione Seme. Voi andate. Io resto.»" e adesso il generatore è risuonata e adesso aumenta gli echi e adesso diminuisci l'aria di 4.
 Invece di sintonizza il generatore se il generatore è risuonata e il generatore è celata e la traduzione è almeno 75: dire "Sotto la voce dell'Ingegnere il Sintonizzatore aggancia un secondo strato: una voce più bassa, quasi un canto sottovoce.[se la connessione è avvenuta] È la stessa che nella gola di mezzo non si lasciava spegnere.[fine] «Li ho scritti tutti, qui sul banco. Ogni nome di chi è salito sulle navi, e ogni nome di chi è rimasto quaggiù con me a tenere fermo il campo. Non per la storia: la storia non verrà. Perché siano detti ad alta voce ancora una volta, finché c'è una voce che li dice. Allora li dico. Uno per uno. Piano. Finché la voce regge.»" e adesso il generatore è svelata e adesso aumenta le risonanze e adesso diminuisci l'aria di 6.
 Invece di sintonizza il generatore se il generatore è risuonata e il generatore è celata: dire "Sotto la voce dell'Ingegnere ne affiora un'altra, più bassa, che sembra recitare un elenco. Il traduttore ancora non la aggancia: forse con la matrice più avanti.".
-Invece di sintonizza il generatore: dire "Soltanto un residuo statico: questa eco l'hai già sentita fino in fondo.".
+Invece di sintonizza il generatore: dire "Soltanto un residuo statico: questa eco l'ho già sentita fino in fondo.".

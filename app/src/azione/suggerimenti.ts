@@ -1,10 +1,11 @@
 // ============================================================================
 //  I suggerimenti in maiuscolo (06-app-desktop.md, §6.1 e §4.2).
-//  Il gioco scrive i suoi indizi in maiuscolo, in quattro forme:
+//  Il gioco scrive i suoi indizi in maiuscolo, fra parentesi (William racconta in
+//  prima persona, l'indizio parla a chi gioca), in quattro forme:
 //    il comando intero         (Per chiamare Yusuf: PARLA CON YUSUF.)
-//    il verbo, poi la cosa     … il multiscanner lo troverebbe: ANALIZZA lo scafo nero.
-//    il verbo con il pronome   Lo scanner saprebbe leggerla: ANALIZZALA.
-//    l'infinito                adesso puoi ACCOSTARE · dovresti STACCARLO
+//    il verbo, poi la cosa     … il multiscanner lo troverebbe. (ANALIZZA lo scafo nero.)
+//    il verbo con il pronome   Lo scanner saprebbe leggerla. (ANALIZZALA.) · (STACCALO.)
+//    l'infinito                (Adesso puoi ACCOSTARE.)
 //  Qui una frase in maiuscolo diventa il pulsante che la gioca, se c'è nei menu
 //  di adesso. Il pronome indica la cosa del comando appena dato («esamina il
 //  cilindro» → «ANALIZZALO» → analizza il cilindro). Una frase che non nomina

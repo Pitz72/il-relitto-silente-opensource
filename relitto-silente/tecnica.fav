@@ -15,7 +15,7 @@ La ricarica è disponibile.
 "ricarica" è un comando.
 
 Il laboratorio di risonanza è una stanza.
-La descrizione del laboratorio di risonanza è "Il ventre della nave. L'aria è carica di elettricità statica: la senti pizzicare sotto il casco, e il multiscanner crepita di interferenze. Macchinari massicci, bobine, cristalli di focalizzazione: qui si lavorava sulla risonanza, e qualcuno ci ha lavorato fino all'ultimo, in fretta. Su un banco ingombro di schemi, qualcosa pulsa di una luce irregolare. Il montacarichi risale al corridoio.".
+La descrizione del laboratorio di risonanza è "Il ventre della nave. L'aria è carica di elettricità statica: la sento pizzicare sotto il casco, e il multiscanner crepita di interferenze. Macchinari massicci, bobine, cristalli di focalizzazione: qui si lavorava sulla risonanza, e qualcuno ci ha lavorato fino all'ultimo, in fretta. Su un banco ingombro di schemi, qualcosa pulsa di una luce irregolare. Il montacarichi risale al corridoio.".
 La descrizione del laboratorio di risonanza se l'energia è ripristinata è "Il ventre della nave, adesso vivo: archi di elettricità corrono fra le bobine, i monitor mostrano flussi stabili diretti al Ponte e all'Archivio. L'aria vibra. Il montacarichi risale al corridoio.".
 
 # --- Sfondo -----------------------------------------------------------------
@@ -23,7 +23,7 @@ Il banco è una cosa.
 Il banco è nel laboratorio di risonanza.
 Il banco è di scena.
 Il banco si chiama anche "schemi".
-La descrizione del banco è "Un banco ingombro di schemi e di componenti smontati: qualcuno calibrava qualcosa in fretta. Lo scanner lo leggerebbe meglio di te: ANALIZZALO.".
+La descrizione del banco è "Un banco ingombro di schemi e di componenti smontati: qualcuno calibrava qualcosa in fretta. Lo scanner lo leggerebbe meglio di me. (ANALIZZALO.)".
 Invece di analizza il banco: dire "Appunti frenetici, simboli incisi quasi con rabbia, cifre che tornano accanto a schemi di cristalli. Ma nella parte bassa del piano, lontano dai calcoli, una fila di simboli piccoli e ordinatissimi. Non numeri: nomi. Dodici, forse quattordici, incisi con cura. Chi lavorava qui ha voluto che restassero.".
 
 # --- Essenziali -------------------------------------------------------------
@@ -32,31 +32,31 @@ Il generatore è nel laboratorio di risonanza.
 Il generatore si chiama anche "macchinari".
 Il generatore si chiama anche "bobine".
 Il generatore si chiama anche "presa di servizio".
-La descrizione del generatore è "Generatori di campo e stabilizzatori di fase, bobine, cristalli di focalizzazione: tecnologia che non sai nemmeno da dove cominciare a capire, e che adesso tace. Il vano di alimentazione, al centro, è vuoto: ci starebbe un cristallo.".
-La descrizione del generatore se l'energia è ripristinata è "I macchinari rombano, l'elettricità corre fra le bobine: l'energia è tornata e va al Ponte e all'Archivio. Sul fianco c'è una presa di servizio dalla forma universale delle prese di servizio: ci entrerebbe anche il cavo della tua tuta. (RICARICA LA TUTA, se ti serve aria: una volta sola.)".
+La descrizione del generatore è "Generatori di campo e stabilizzatori di fase, bobine, cristalli di focalizzazione: tecnologia che non so nemmeno da dove cominciare a capire, e che adesso tace. Il vano di alimentazione, al centro, è vuoto: ci starebbe un cristallo.".
+La descrizione del generatore se l'energia è ripristinata è "I macchinari rombano, l'elettricità corre fra le bobine: l'energia è tornata e va al Ponte e all'Archivio. Sul fianco c'è una presa di servizio dalla forma universale delle prese di servizio: ci entrerebbe anche il cavo della mia tuta. (RICARICA LA TUTA, se ti serve aria: una volta sola.)".
 
 Il sintonizzatore è una cosa.
 Il sintonizzatore è prendibile.
 Il sintonizzatore è nel laboratorio di risonanza.
 Il sintonizzatore si chiama anche "sintonizzatore di frequenza".
-La descrizione del sintonizzatore è "Un apparecchio portatile, un display a frequenza d'onda e due manopole di calibrazione: un rilevatore di anomalie. Ascolta gli echi che restano impressi nella materia. SINTONIZZA le cose delle stanze silenziose. (Ascoltare costa aria.)".
+La descrizione del sintonizzatore è "Un apparecchio portatile, un display a frequenza d'onda e due manopole di calibrazione: un rilevatore di anomalie. Ascolta gli echi che restano impressi nella materia. (SINTONIZZA le cose delle stanze silenziose. Ascoltare costa aria.)".
 
 # --- L'energia: il cristallo vivo nel generatore -----------------------------
 Invece di usa il cristallo sul generatore se il cristallo è opaco: dire "Il cristallo è freddo e opaco: il generatore non lo accetta. Gli serve un cristallo sveglio.".
-Invece di usa il cristallo sul generatore se il cristallo è attivo: dire "Inserisci il cristallo pulsante nel vano del generatore. Con un rombo che sale, i macchinari si svegliano dopo secoli: l'elettricità corre fra le bobine, i monitor si accendono su flussi stabili, diretti al Ponte e all'Archivio." e adesso l'energia è ripristinata e adesso il cristallo è nel nulla.
+Invece di usa il cristallo sul generatore se il cristallo è attivo: dire "Inserisco il cristallo pulsante nel vano del generatore. Con un rombo che sale, i macchinari si svegliano dopo secoli: l'elettricità corre fra le bobine, i monitor si accendono su flussi stabili, diretti al Ponte e all'Archivio." e adesso l'energia è ripristinata e adesso il cristallo è nel nulla.
 
 # --- La ricarica: una volta sola ---------------------------------------------
 Invece di ricarica se l'energia è assente: dire "Il generatore è morto. Non c'è niente da cui ricaricare.".
 Invece di ricarica se il giocatore non è nel laboratorio di risonanza: dire "Ricaricare la tuta? Servirebbe una presa, e corrente.".
-Invece di ricarica se la ricarica è usata: dire "Il generatore non ha più niente da darti: ogni filo di corrente va al Ponte.".
-Invece di ricarica se l'aria è più di 75: dire "La tuta è piena per tre quarti. La ricarica la tieni per quando servirà.".
-Invece di ricarica: dire "Stacchi il cavo di servizio dal fianco della tuta e lo innesti nella presa del generatore. Un ronzio, la cifra sul visore che risale. La nave ti dà un po' della sua corrente, e tu la trasformi in aria." e adesso aumenta l'aria di 25 e adesso la ricarica è usata.
+Invece di ricarica se la ricarica è usata: dire "Il generatore non ha più niente da darmi: ogni filo di corrente va al Ponte.".
+Invece di ricarica se l'aria è più di 75: dire "La tuta è piena per tre quarti. La ricarica la tengo per quando servirà.".
+Invece di ricarica: dire "Stacco il cavo di servizio dal fianco della tuta e lo innesto nella presa del generatore. Un ronzio, la cifra sul visore che risale. La nave mi dà un po' della sua corrente, e io la trasformo in aria." e adesso aumenta l'aria di 25 e adesso la ricarica è usata.
 Invece di ricarica la tuta se l'energia è assente: dire "Il generatore è morto. Non c'è niente da cui ricaricare.".
 Invece di ricarica la tuta se il giocatore non è nel laboratorio di risonanza: dire "Ricaricare la tuta? Servirebbe una presa, e corrente.".
-Invece di ricarica la tuta se la ricarica è usata: dire "Il generatore non ha più niente da darti: ogni filo di corrente va al Ponte.".
-Invece di ricarica la tuta se l'aria è più di 75: dire "La tuta è piena per tre quarti. La ricarica la tieni per quando servirà.".
-Invece di ricarica la tuta: dire "Stacchi il cavo di servizio dal fianco della tuta e lo innesti nella presa del generatore. Un ronzio, la cifra sul visore che risale. La nave ti dà un po' della sua corrente, e tu la trasformi in aria." e adesso aumenta l'aria di 25 e adesso la ricarica è usata.
+Invece di ricarica la tuta se la ricarica è usata: dire "Il generatore non ha più niente da darmi: ogni filo di corrente va al Ponte.".
+Invece di ricarica la tuta se l'aria è più di 75: dire "La tuta è piena per tre quarti. La ricarica la tengo per quando servirà.".
+Invece di ricarica la tuta: dire "Stacco il cavo di servizio dal fianco della tuta e lo innesto nella presa del generatore. Un ronzio, la cifra sul visore che risale. La nave mi dà un po' della sua corrente, e io la trasformo in aria." e adesso aumenta l'aria di 25 e adesso la ricarica è usata.
 Invece di usa la tuta sul generatore se l'energia è assente: dire "Il generatore è morto. Non c'è niente da cui ricaricare.".
-Invece di usa la tuta sul generatore se la ricarica è usata: dire "Il generatore non ha più niente da darti: ogni filo di corrente va al Ponte.".
-Invece di usa la tuta sul generatore se l'aria è più di 75: dire "La tuta è piena per tre quarti. La ricarica la tieni per quando servirà.".
-Invece di usa la tuta sul generatore: dire "Stacchi il cavo di servizio dal fianco della tuta e lo innesti nella presa del generatore. Un ronzio, la cifra sul visore che risale. La nave ti dà un po' della sua corrente, e tu la trasformi in aria." e adesso aumenta l'aria di 25 e adesso la ricarica è usata.
+Invece di usa la tuta sul generatore se la ricarica è usata: dire "Il generatore non ha più niente da darmi: ogni filo di corrente va al Ponte.".
+Invece di usa la tuta sul generatore se l'aria è più di 75: dire "La tuta è piena per tre quarti. La ricarica la tengo per quando servirà.".
+Invece di usa la tuta sul generatore: dire "Stacco il cavo di servizio dal fianco della tuta e lo innesto nella presa del generatore. Un ronzio, la cifra sul visore che risale. La nave mi dà un po' della sua corrente, e io la trasformo in aria." e adesso aumenta l'aria di 25 e adesso la ricarica è usata.

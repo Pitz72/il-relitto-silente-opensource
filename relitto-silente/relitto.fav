@@ -90,11 +90,11 @@ Svelata e celata sono opposte.
 
 # Le regole senza oggetto valgono per le cose che non ne hanno una propria
 # (il verbo da solo lo gestisce il motore, che chiede «che cosa?»).
-Invece di tocca: dire "[se l'ingresso è richiuso]Passi il guanto, piano: su questa nave quasi tutto chiede di essere sfiorato con rispetto. Non succede niente.[altrimenti]Sfiori appena. Non succede niente.[fine]".
-Invece di incidi se il giocatore non ha la taglierina: dire "Ti servirebbe qualcosa con cui incidere.".
-Invece di analizza: dire "[se la tuta è vestita]Il multiscanner registra, confronta, e non trova niente da segnalare.[altrimenti]Il multiscanner sta sulla spalla della tuta, e la tuta non ce l'hai addosso.[fine]".
-Invece di ascolta: dire "[se l'ingresso è richiuso]Ascolti. Il brusio della nave, che non smette, e il tuo fiato nel casco.[altrimenti]Ascolti. Niente, a parte il tuo fiato.[fine]".
-Invece di incidi: dire "Sollevi la taglierina, poi ti fermi. Non ogni parete merita un segno. Alcuni luoghi, su questa nave, lo chiedono. Qui no.".
+Invece di tocca: dire "[se l'ingresso è richiuso]Passo il guanto, piano: su questa nave quasi tutto chiede di essere sfiorato con rispetto. Non succede niente.[altrimenti]Sfioro appena. Non succede niente.[fine]".
+Invece di incidi se il giocatore non ha la taglierina: dire "Mi servirebbe qualcosa con cui incidere.".
+Invece di analizza: dire "[se la tuta è vestita]Il multiscanner registra, confronta, e non trova niente da segnalare.[altrimenti]Il multiscanner sta sulla spalla della tuta, e la tuta non ce l'ho addosso.[fine]".
+Invece di ascolta: dire "[se l'ingresso è richiuso]Ascolto. Il brusio della nave, che non smette, e il mio fiato nel casco.[altrimenti]Ascolto. Niente, a parte il mio fiato.[fine]".
+Invece di incidi: dire "Sollevo la taglierina, poi mi fermo. Non ogni parete merita un segno. Alcuni luoghi, su questa nave, lo chiedono. Qui no.".
 
 # ============================================================================
 # 3. DIREZIONI
@@ -172,9 +172,9 @@ Includi "finali.fav".
 # (Era «Ogni 9 turni» nell'originale, sempre la stessa frase, e si sentiva
 # anche sulla Santa Maria.) Tre segni diversi, rari: insieme circa uno ogni
 # dodici turni.
-Ogni turno se l'ingresso è richiuso e la fuga è lontana e càpita (1 su 36): dire "Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che ti arriva nei denti prima che nelle cuffie. Poi più niente.".
-Ogni turno se l'ingresso è richiuso e la fuga è lontana e càpita (1 su 36): dire "Nella cuffia il brusio cala fino quasi a sparire, come una sala piena che smette di parlare quando entri. Poi riprende.".
-Ogni turno se l'ingresso è richiuso e la fuga è lontana e càpita (1 su 36): dire "Per un battito, qualcosa nelle pareti si accende tutto insieme e si rispegne. Non le hai toccate.".
+Ogni turno se l'ingresso è richiuso e la fuga è lontana e càpita (1 su 36): dire "Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che mi arriva nei denti prima che nelle cuffie. Poi più niente.".
+Ogni turno se l'ingresso è richiuso e la fuga è lontana e càpita (1 su 36): dire "Nella cuffia il brusio cala fino quasi a sparire, come una sala piena che smette di parlare quando entro. Poi riprende.".
+Ogni turno se l'ingresso è richiuso e la fuga è lontana e càpita (1 su 36): dire "Per un battito, qualcosa nelle pareti si accende tutto insieme e si rispegne. Non le ho toccate.".
 
 # ============================================================================
 # 8. DEMONI — if-then autonomi, valutati a fine turno
@@ -182,4 +182,4 @@ Ogni turno se l'ingresso è richiuso e la fuga è lontana e càpita (1 su 36): d
 # Fronte di salita: scattano una volta sulla transizione falso→vero.
 Quando le chiavi è almeno 3: dire "Le tre luci — verde, bianca e ambrata — pulsano all'unisono. La loro frequenza accelera, il ronzio diventa un gong risonante che vibra in tutta la nave. Il simbolo a stella brilla di luce accecante, e la Grande Porta, a ovest, non si apre: si dissolve in particelle di luce, come stelle che tornano al cielo." e adesso la grande porta è aperta.
 Quando l'energia è ripristinata diventa vera: dire "Un brivido percorre lo scafo. Lontano, sistemi dormienti da secoli tornano a respirare uno dopo l'altro. Per la prima volta, il relitto non è del tutto morto.".
-Quando la traduzione è almeno 100 diventa vera: dire "(MATRICE DI TRADUZIONE: [traduzione]% — DECODIFICA COMPLETATA) Per un momento la distanza tra te e loro collassa: non c'è più nulla di alieno nel linguaggio. Non sei più uno scopritore. Sei un testimone.".
+Quando la traduzione è almeno 100 diventa vera: dire "(MATRICE DI TRADUZIONE: [traduzione]% — DECODIFICA COMPLETATA) Per un momento la distanza tra me e loro collassa: non c'è più nulla di alieno nel linguaggio. Non sono più uno scopritore. Sono un testimone.".

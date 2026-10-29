@@ -9,25 +9,25 @@ Fine della traccia.
 
 
 --- La plancia ---
-La plancia della Santa Maria: due poltrone, e ne usi una; schermi che conosci a memoria; sotto il pavimento, il lamento basso del reattore. Sul quadrante del margine la lancetta sta dove hai imparato a non guardarla. Nell'oblò, contro le stelle, c'è una sagoma nera che non ne lascia passare nessuna. Il radar la segnala da un'ora e non sa dirti cosa sia: per saperlo ti servirebbe una scansione lunga. A ovest si va in stiva; a nord, la cuccetta.
+La plancia della Santa Maria: due poltrone, e ne uso una; schermi che conosco a memoria; sotto il pavimento, il lamento basso del reattore. Sul quadrante del margine la lancetta sta dove ho imparato a non guardarla. Nell'oblò, contro le stelle, c'è una sagoma nera che non ne lascia passare nessuna. Il radar la segnala da un'ora e non sa dirmi cosa sia: per saperlo mi servirebbe una scansione lunga. A ovest si va in stiva; a nord, la cuccetta.
 Puoi vedere qui: dei comandi di manovra, un lanciarpioni, una radio.
 Uscite: Ovest, Nord.
 
 > analizza la nave aliena
-Lanci la scansione lunga. Il computer di bordo ha la tua età e se la prende comoda.
+Lancio la scansione lunga. Il computer di bordo ha la mia età e se la prende comoda.
 Lunghezza: trecentoquaranta metri. Massa: stima incerta, il doppio della Santa Maria. Composizione: il calcolo parte, si ferma, riparte. Al terzo tentativo si arrende e scrive MATERIALE NON IN ARCHIVIO.
-Una cosa che l'archivio non conosce o non vale niente, o vale abbastanza da chiudere il conto con Yusuf. Disinserisci il pilota automatico: adesso puoi ACCOSTARE.
+Una cosa che l'archivio non conosce o non vale niente, o vale abbastanza da chiudere il conto con Yusuf. Disinserisco il pilota automatico. (Adesso puoi ACCOSTARE.)
 
 > accosta
-Porti la Santa Maria verso la massa a spinte corte, con gli occhi sulla distanza che scende. Il reattore abbassa il suo lamento. A cinquanta metri ti fermi: la sagoma riempie l'oblò e non restituisce niente, né un riflesso né un bordo. Adesso gli arpioni ci arrivano.
+Porto la Santa Maria verso la massa a spinte corte, con gli occhi sulla distanza che scende. Il reattore abbassa il suo lamento. A cinquanta metri mi fermo: la sagoma riempie l'oblò e non restituisce niente, né un riflesso né un bordo. Adesso gli arpioni ci arrivano.
 
 > spara gli arpioni
-Due colpi sordi, che senti nelle ossa più che nelle orecchie. Gli arpioni volano, mordono lo scafo nero e tengono. Avvolgi i cavi a strappi corti finché le due navi non si toccano, con un urto lungo che fa tremare la plancia.
+Due colpi sordi, che sento nelle ossa più che nelle orecchie. Gli arpioni volano, mordono lo scafo nero e tengono. Avvolgo i cavi a strappi corti finché le due navi non si toccano, con un urto lungo che fa tremare la plancia.
 
 > ovest
 
 --- La stiva ---
-La stiva della Santa Maria è vuota da sei settimane. Dai ganci del soffitto non pende niente, e senza casse a fermarlo il tuo passo rimbomba fino alla paratia di poppa. Ogni giorno così lo paghi in aria e in reattore. Contro la paratia, la rastrelliera dell'attrezzatura; su una cassa vuota rovesciata, il vecchio lettore di ebook. A est si torna in plancia, da una botola si scende in sala macchine, e a poppa il boccaporto esterno dà sul vuoto.
+La stiva della Santa Maria è vuota da sei settimane. Dai ganci del soffitto non pende niente, e senza casse a fermarlo il mio passo rimbomba fino alla paratia di poppa. Ogni giorno così lo pago in aria e in reattore. Contro la paratia, la rastrelliera dell'attrezzatura; su una cassa vuota rovesciata, il vecchio lettore di ebook. A est si torna in plancia, da una botola si scende in sala macchine, e a poppa il boccaporto esterno dà sul vuoto.
 Puoi vedere qui: una tuta, un kit, una cella di riserva.
 Uscite: Est (La plancia), Giù, Fuori.
 
@@ -35,10 +35,10 @@ Uscite: Est (La plancia), Giù, Fuori.
 Preso: la tuta.
 
 > indossa la tuta
-Strato su strato, come sempre: chiusure, guarnizioni, il casco. Ogni cosa la verifichi due volte, perché dall'altra parte del boccaporto non c'è nessuno a verificarla per te. Il visore si accende e ti mette davanti la prima cifra, quella dell'aria. Sul casco si accende il faro.
+Strato su strato, come sempre: chiusure, guarnizioni, il casco. Ogni cosa la verifico due volte, perché dall'altra parte del boccaporto non c'è nessuno a verificarla per me. Il visore si accende e mi mette davanti la prima cifra, quella dell'aria. Sul casco si accende il faro.
 
 > apri il kit
-Fai scattare le chiusure. Nella gommapiuma sagomata ci sono la taglierina al plasma e la batteria d'emergenza.
+Faccio scattare le chiusure. Nella gommapiuma sagomata ci sono la taglierina al plasma e la batteria d'emergenza.
 
 > prendi la taglierina
 Preso: la taglierina.
@@ -52,65 +52,65 @@ Preso: la cella di riserva.
 > fuori
 
 --- Lo scafo ---
-Sei fuori. Le funi degli arpioni corrono tese fra le due navi, e il tuo cavo di sicurezza si srotola dal boccaporto alle tue spalle. Sotto i magneti degli stivali c'è lo scafo nero: liscio, senza una vite, senza una linea, come colato in un pezzo solo. Ci hai girato intorno con la Santa Maria cercando un portello, un punto qualunque che dicesse si entra di qui. Non c'è. Finché tieni un piede sulla rampa senti il reattore nelle ossa; sullo scafo nero, più niente. Dentro, alle tue spalle, il boccaporto.
+Sono fuori. Le funi degli arpioni corrono tese fra le due navi, e il mio cavo di sicurezza si srotola dal boccaporto alle mie spalle. Sotto i magneti degli stivali c'è lo scafo nero: liscio, senza una vite, senza una linea, come colato in un pezzo solo. Ci ho girato intorno con la Santa Maria cercando un portello, un punto qualunque che dicesse si entra di qui. Non c'è. Finché tengo un piede sulla rampa sento il reattore nelle ossa; sullo scafo nero, più niente. Dentro, alle mie spalle, il boccaporto.
 Uscite: Dentro (La stiva), Giù.
 
 > analizza lo scafo nero
-Il multiscanner non si decide: una lettura dice organico, la successiva minerale, la terza rinuncia e scrive di nuovo MATERIALE NON IN ARCHIVIO. Poi, a tre passi da te, trova quello che cercavi: una giuntura più sottile del resto dello scafo, sigillata dall'interno. Fatta per essere tagliata, e per richiudersi.
+Il multiscanner non si decide: una lettura dice organico, la successiva minerale, la terza rinuncia e scrive di nuovo MATERIALE NON IN ARCHIVIO. Poi, a tre passi da me, trova quello che cercavo: una giuntura più sottile del resto dello scafo, sigillata dall'interno. Fatta per essere tagliata, e per richiudersi.
 
 > usa la taglierina sulla giuntura
-Regoli la taglierina e l'appoggi alla giuntura. Nessuna scintilla: il materiale si ritira dal getto come carne da una brace, e dal taglio esce un odore che il casco non dovrebbe lasciar passare, vecchio, di chiuso. Chiudi il giro. Un lembo si piega verso l'interno senza un suono e lascia un'apertura buia. Si scende giù.
+Regolo la taglierina e l'appoggio alla giuntura. Nessuna scintilla: il materiale si ritira dal getto come carne da una brace, e dal taglio esce un odore che il casco non dovrebbe lasciar passare, vecchio, di chiuso. Chiudo il giro. Un lembo si piega verso l'interno senza un suono e lascia un'apertura buia. Si scende giù.
 
 > giù
 
 --- La camera di compensazione ---
-Una camera bassa e tonda, senza un angolo. Le pareti curvano con la grana fine di qualcosa che è cresciuto invece di essere montato: fredde, senza odore. Sopra di te il varco, e in fondo al varco la luce gialla del boccaporto. A ovest, nello stesso nero dello scafo, il profilo di una porta; sopra la porta, un'incisione.
+Una camera bassa e tonda, senza un angolo. Le pareti curvano con la grana fine di qualcosa che è cresciuto invece di essere montato: fredde, senza odore. Sopra di me il varco, e in fondo al varco la luce gialla del boccaporto. A ovest, nello stesso nero dello scafo, il profilo di una porta; sopra la porta, un'incisione.
 Puoi vedere qui: un pannello, una porta interna.
 Uscite: Su (Lo scafo), Ovest.
-Sopra di te il lembo si richiude. Non lo vedi muoversi: un momento c'è l'apertura, con la luce gialla del boccaporto in fondo, e il momento dopo c'è parete. Il cavo di sicurezza, tranciato di netto, ti pende dalla cintura. Un metro, e basta.
+Sopra di me il lembo si richiude. Non lo vedo muoversi: un momento c'è l'apertura, con la luce gialla del boccaporto in fondo, e il momento dopo c'è parete. Il cavo di sicurezza, tranciato di netto, mi pende dalla cintura. Un metro, e basta.
 
 > usa la batteria sul pannello
-Trovi l'incavo sotto il bordo del pannello e ci premi il connettore della batteria. Si accende una linea di luce ambrata, e dalla porta arriva un clac sordo.
+Trovo l'incavo sotto il bordo del pannello e ci premo il connettore della batteria. Si accende una linea di luce ambrata, e dalla porta arriva un clac sordo.
 
 > apri la porta interna
-Appoggi il guanto sulla linea ambrata del pannello. Con un sibilo appena percepibile la porta si ritira nella parete. Di là c'è una sala bassa, e un brusio che ti arriva nelle cuffie prima ancora che tu entri.
+Appoggio il guanto sulla linea ambrata del pannello. Con un sibilo appena percepibile la porta si ritira nella parete. Di là c'è una sala bassa, e un brusio che mi arriva nelle cuffie prima ancora che io entri.
 
 > ovest
 
 --- Il vestibolo delle gole ---
-Una sala bassa e tonda, la prima vera sala della nave. Tre gole si aprono nella parete verso il buio: quella larga, a ovest, sale verso una luminescenza azzurrina; quella di mezzo scende, ed è da lì che il brusio sale più forte; la terza è crollata su se stessa. Le pareti sono percorse da venature spente, una rete fine che un tempo doveva fare luce. In una nicchia, all'altezza esatta della tua mano, qualcuno ha posato qualcosa, e il multiscanner l'ha già schedato. A est, la porta interna e la camera.
+Una sala bassa e tonda, la prima vera sala della nave. Tre gole si aprono nella parete verso il buio: quella larga, a ovest, sale verso una luminescenza azzurrina; quella di mezzo scende, ed è da lì che il brusio sale più forte; la terza è crollata su se stessa. Le pareti sono percorse da venature spente, una rete fine che un tempo doveva fare luce. In una nicchia, all'altezza esatta della mia mano, qualcuno ha posato qualcosa, e il multiscanner l'ha già schedato. A est, la porta interna e la camera.
 Puoi vedere qui: un risuonatore.
 Uscite: Est (La camera di compensazione), Ovest, Giù.
-Appoggi il guanto alla parete per orientarti, e il multiscanner sulla spalla si impenna: il display si riempie di righe che si scavalcano. Nella cuffia, dove fino a un attimo fa c'era soltanto il tuo fiato, entra un brusio. Tante voci, una sopra l'altra, nessuna intera. La tuta prova a tradurre e ti restituisce una sillaba, poi niente. E intanto, sul bordo del visore, la cifra dell'aria scende di un punto. Poi di un altro.
-Stacchi la mano. Il brusio si abbassa, la cifra si ferma.
-Qualunque cosa sia, per farsi sentire beve dalla tua stessa batteria.
+Appoggio il guanto alla parete per orientarmi, e il multiscanner sulla spalla si impenna: il display si riempie di righe che si scavalcano. Nella cuffia, dove fino a un attimo fa c'era soltanto il mio fiato, entra un brusio. Tante voci, una sopra l'altra, nessuna intera. La tuta prova a tradurre e mi restituisce una sillaba, poi niente. E intanto, sul bordo del visore, la cifra dell'aria scende di un punto. Poi di un altro.
+Stacco la mano. Il brusio si abbassa, la cifra si ferma.
+Qualunque cosa sia, per farsi sentire beve dalla mia stessa batteria.
 
 > giù
 
 --- La gola di mezzo ---
-La gola scende a scatti: si stringe fino a sfiorarti le spalle, poi si riallarga senza una regola, come se fosse cresciuta per conto suo. Qui le venature non sono spente del tutto: dove passa il guanto, una corre di un verde stanco per un palmo e si riaddormenta. Il brusio è più forte, e dal basso sale un freddo diverso, umido. Su si torna al vestibolo; la gola continua a scendere.
+La gola scende a scatti: si stringe fino a sfiorarmi le spalle, poi si riallarga senza una regola, come se fosse cresciuta per conto suo. Qui le venature non sono spente del tutto: dove passa il guanto, una corre di un verde stanco per un palmo e si riaddormenta. Il brusio è più forte, e dal basso sale un freddo diverso, umido. Su si torna al vestibolo; la gola continua a scendere.
 Uscite: Su (Il vestibolo delle gole), Giù.
-Per un battito, qualcosa nelle pareti si accende tutto insieme e si rispegne. Non le hai toccate.
+Per un battito, qualcosa nelle pareti si accende tutto insieme e si rispegne. Non le ho toccate.
 
 > abbassa il faro
-Giri la ghiera del faro al minimo, fin quasi a chiuderlo nel guanto. Il buio ti si fa più vicino.
+Giro la ghiera del faro al minimo, fin quasi a chiuderlo nel guanto. Il buio mi si fa più vicino.
 
 > giù
 
 --- La sala delle teche ---
-Con il faro al minimo hai un alone e poco altro. Le teche aperte sono sagome; il groviglio, che prima ti veniva incontro, si è fermato a mezz'aria e cerca. Lungo le pareti senti, più che vedere, il freddo delle teche chiuse. Su, la gola di mezzo; a ovest, da qualche parte oltre il groviglio, il passaggio; a est, il nodo di fibre.
+Con il faro al minimo ho un alone e poco altro. Le teche aperte sono sagome; il groviglio, che prima mi veniva incontro, si è fermato a mezz'aria e cerca. Lungo le pareti sento, più che vedere, il freddo delle teche chiuse. Su, la gola di mezzo; a ovest, da qualche parte oltre il groviglio, il passaggio; a est, il nodo di fibre.
 Uscite: Su (La gola di mezzo), Ovest.
 
 > segui la parete
-Metti la spalla contro le teche chiuse e ti tieni lì, dove il freddo tiene fermi i filamenti. Passo corto, il faro basso puntato sulle suole. Uno ti cerca all'altezza del fianco e trova solo vetro gelato. Adesso sai dove sei: la parete ti porta verso il passaggio, a ovest.
+Metto la spalla contro le teche chiuse e mi tengo lì, dove il freddo tiene fermi i filamenti. Passo corto, il faro basso puntato sulle suole. Uno mi cerca all'altezza del fianco e trova solo vetro gelato. Adesso so dove sono: la parete mi porta verso il passaggio, a ovest.
 
 > ovest
 
 --- Il vivaio ---
-Un locale basso e tiepido: il primo posto caldo da quando sei entrato. Banchi di semina in file ordinate, ognuno sotto la sua lampada spenta. Qui la semina era ancora sotto controllo: niente è scappato, niente è cresciuto storto. Al centro un germinatoio lavora ancora, a malapena. Sui banchi, colonne di simboli: le tabelle di chi seminava. A est si torna fra le teche.
+Un locale basso e tiepido: il primo posto caldo da quando sono entrato. Banchi di semina in file ordinate, ognuno sotto la sua lampada spenta. Qui la semina era ancora sotto controllo: niente è scappato, niente è cresciuto storto. Al centro un germinatoio lavora ancora, a malapena. Sui banchi, colonne di simboli: le tabelle di chi seminava. A est si torna fra le teche.
 Puoi vedere qui: una tavoletta.
 Uscite: Est (La sala delle teche).
-Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che ti arriva nei denti prima che nelle cuffie. Poi più niente.
+Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che mi arriva nei denti prima che nelle cuffie. Poi più niente.
 
 > prendi la tavoletta
 Preso: la tavoletta.
@@ -118,29 +118,29 @@ Preso: la tavoletta.
 > est
 
 --- La sala delle teche ---
-Con il faro al minimo hai un alone e poco altro. Alle tue spalle, a ovest, il tepore del vivaio; davanti, fra te e la gola di mezzo, le teche aperte e il groviglio che cerca. Lungo le pareti senti, più che vedere, il freddo delle teche chiuse. Su, in fondo alla sala, l'imbocco della gola; a est, il nodo di fibre.
+Con il faro al minimo ho un alone e poco altro. Alle mie spalle, a ovest, il tepore del vivaio; davanti, fra me e la gola di mezzo, le teche aperte e il groviglio che cerca. Lungo le pareti sento, più che vedere, il freddo delle teche chiuse. Su, in fondo alla sala, l'imbocco della gola; a est, il nodo di fibre.
 Uscite: Su (La gola di mezzo), Ovest (Il vivaio).
 
 > segui la parete
-Metti la spalla contro le teche chiuse e ti tieni lì, dove il freddo tiene fermi i filamenti. Passo corto, il faro basso puntato sulle suole. Uno ti cerca all'altezza del fianco e trova solo vetro gelato. Adesso sai dove sei: la parete ti porta verso la gola di mezzo, su.
+Metto la spalla contro le teche chiuse e mi tengo lì, dove il freddo tiene fermi i filamenti. Passo corto, il faro basso puntato sulle suole. Uno mi cerca all'altezza del fianco e trova solo vetro gelato. Adesso so dove sono: la parete mi porta verso la gola di mezzo, su.
 
 > su
 
 --- La gola di mezzo ---
-La gola scende a scatti: si stringe fino a sfiorarti le spalle, poi si riallarga senza una regola, come se fosse cresciuta per conto suo. Qui le venature non sono spente del tutto: dove passa il guanto, una corre di un verde stanco per un palmo e si riaddormenta. Il brusio è più forte, e dal basso sale un freddo diverso, umido. Su si torna al vestibolo; la gola continua a scendere.
+La gola scende a scatti: si stringe fino a sfiorarmi le spalle, poi si riallarga senza una regola, come se fosse cresciuta per conto suo. Qui le venature non sono spente del tutto: dove passa il guanto, una corre di un verde stanco per un palmo e si riaddormenta. Il brusio è più forte, e dal basso sale un freddo diverso, umido. Su si torna al vestibolo; la gola continua a scendere.
 Uscite: Su (Il vestibolo delle gole), Giù (La sala delle teche).
 
 > su
 
 --- Il vestibolo delle gole ---
-Una sala bassa e tonda, la prima vera sala della nave. Tre gole si aprono nella parete verso il buio: quella larga, a ovest, sale verso una luminescenza azzurrina; quella di mezzo scende, ed è da lì che il brusio sale più forte; la terza è crollata su se stessa. Le pareti sono percorse da venature spente, una rete fine che un tempo doveva fare luce. In una nicchia, all'altezza esatta della tua mano, qualcuno ha posato qualcosa, e il multiscanner l'ha già schedato. A est, la porta interna e la camera.
+Una sala bassa e tonda, la prima vera sala della nave. Tre gole si aprono nella parete verso il buio: quella larga, a ovest, sale verso una luminescenza azzurrina; quella di mezzo scende, ed è da lì che il brusio sale più forte; la terza è crollata su se stessa. Le pareti sono percorse da venature spente, una rete fine che un tempo doveva fare luce. In una nicchia, all'altezza esatta della mia mano, qualcuno ha posato qualcosa, e il multiscanner l'ha già schedato. A est, la porta interna e la camera.
 Puoi vedere qui: un risuonatore.
 Uscite: Est (La camera di compensazione), Ovest, Giù (La gola di mezzo).
 
 > ovest
 
 --- Il corridoio principale ---
-Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sei salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.
+Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.
 Puoi vedere qui: una lastra dati, una grande porta.
 Uscite: Est (Il vestibolo delle gole), Nord, Sud, Giù, Nordest, Ovest.
 
@@ -151,19 +151,19 @@ Una serra a cupola, vasta, con l'aria secca come carta. Felci scheletriche e fun
 Puoi vedere qui: una teca.
 Uscite: Nord (Il corridoio principale), Ovest.
 Il faro ci passa sopra e va oltre, poi torna indietro da solo, come la mano di chi ha visto qualcosa prima di saperlo. Contro la colonna c'è un uomo.
-Una tuta di un secolo e mezzo fa, di un modello che hai visto soltanto nei cataloghi dei pezzi fuori produzione. Ma umana: due braccia, due gambe, un casco fatto per una testa come la tua. È seduto, la schiena contro la base della colonna, le gambe allungate, il casco calato sul petto. Si è lasciato andare giù piano, si capisce, quando non c'era più nessun posto dove andare.
-Qualcuno è arrivato fin qui prima di te. Da solo. Come te.
+Una tuta di un secolo e mezzo fa, di un modello che ho visto soltanto nei cataloghi dei pezzi fuori produzione. Ma umana: due braccia, due gambe, un casco fatto per una testa come la mia. È seduto, la schiena contro la base della colonna, le gambe allungate, il casco calato sul petto. Si è lasciato andare giù piano, si capisce, quando non c'era più nessun posto dove andare.
+Qualcuno è arrivato fin qui prima di me. Da solo. Come me.
 
 > usa la tavoletta sulla teca
-Inserisci la tavoletta nell'incavo: si adatta. I simboli si accendono uno dopo l'altro, con un clic armonioso, e la teca si dissolve in un pulviscolo di luce. Il seme resta a fluttuare libero davanti a te. La vibrazione cessa di colpo, e la serra diventa silenziosa del tutto.
+Inserisco la tavoletta nell'incavo: si adatta. I simboli si accendono uno dopo l'altro, con un clic armonioso, e la teca si dissolve in un pulviscolo di luce. Il seme resta a fluttuare libero davanti a me. La vibrazione cessa di colpo, e la serra diventa silenziosa del tutto.
 
 > prendi il seme
-Chiudi le dita attorno al seme. È caldo, quasi febbrile, e una vibrazione costante ti risale il braccio. A mezzo metro da qui un uomo l'ha guardato pulsare fino all'ultimo, senza poterlo toccare. Adesso ce l'hai in mano tu.
+Chiudo le dita attorno al seme. È caldo, quasi febbrile, e una vibrazione costante mi risale il braccio. A mezzo metro da qui un uomo l'ha guardato pulsare fino all'ultimo, senza poterlo toccare. Adesso ce l'ho in mano io.
 
 > ovest
 
 --- L'arca biologica ---
-Una sala lunga e gelida, e il gelo arriva fino al casco: il respiro ti si condensa sul vetro. File di capsule di stasi, scure come vetro affumicato, si perdono oltre la portata del faro: centinaia, forse migliaia. Una brina sottile copre tutto e non prende impronte. A est, oltre i funghi secchi, si torna nella serra.
+Una sala lunga e gelida, e il gelo arriva fino al casco: il respiro mi si condensa sul vetro. File di capsule di stasi, scure come vetro affumicato, si perdono oltre la portata del faro: centinaia, forse migliaia. Una brina sottile copre tutto e non prende impronte. A est, oltre i funghi secchi, si torna nella serra.
 Puoi vedere qui: un dispositivo medico, un cristallo.
 Uscite: Est (La serra morente).
 
@@ -174,7 +174,7 @@ Preso: il dispositivo medico.
 Preso: il cristallo.
 
 > usa il dispositivo medico sul cristallo
-Con una certa esitazione accendi il dispositivo medico: la punta di cristallo emette un ronzio appena udibile e una luce ambrata. La avvicini al cristallo opaco. Appena si toccano, la superficie lattiginosa diventa trasparente, e dentro una trama di filamenti luminosi comincia a pulsare. Adesso è tiepido, e vibra: sembra fatto per essere inserito in qualcosa.
+Con una certa esitazione accendo il dispositivo medico: la punta di cristallo emette un ronzio appena udibile e una luce ambrata. La avvicino al cristallo opaco. Appena si toccano, la superficie lattiginosa diventa trasparente, e dentro una trama di filamenti luminosi comincia a pulsare. Adesso è tiepido, e vibra: sembra fatto per essere inserito in qualcosa.
 
 > est
 
@@ -186,14 +186,14 @@ Uscite: Nord (Il corridoio principale), Ovest (L'arca biologica).
 > nord
 
 --- Il corridoio principale ---
-Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sei salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.
+Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.
 Puoi vedere qui: una lastra dati, una grande porta.
 Uscite: Est (Il vestibolo delle gole), Nord, Sud (La serra morente), Giù, Nordest, Ovest.
 
 > giù
 
 --- Il laboratorio di risonanza ---
-Il ventre della nave. L'aria è carica di elettricità statica: la senti pizzicare sotto il casco, e il multiscanner crepita di interferenze. Macchinari massicci, bobine, cristalli di focalizzazione: qui si lavorava sulla risonanza, e qualcuno ci ha lavorato fino all'ultimo, in fretta. Su un banco ingombro di schemi, qualcosa pulsa di una luce irregolare. Il montacarichi risale al corridoio.
+Il ventre della nave. L'aria è carica di elettricità statica: la sento pizzicare sotto il casco, e il multiscanner crepita di interferenze. Macchinari massicci, bobine, cristalli di focalizzazione: qui si lavorava sulla risonanza, e qualcuno ci ha lavorato fino all'ultimo, in fretta. Su un banco ingombro di schemi, qualcosa pulsa di una luce irregolare. Il montacarichi risale al corridoio.
 Puoi vedere qui: un generatore, un sintonizzatore.
 Uscite: Su (Il corridoio principale).
 
@@ -201,13 +201,13 @@ Uscite: Su (Il corridoio principale).
 Preso: il sintonizzatore.
 
 > usa il cristallo sul generatore
-Inserisci il cristallo pulsante nel vano del generatore. Con un rombo che sale, i macchinari si svegliano dopo secoli: l'elettricità corre fra le bobine, i monitor si accendono su flussi stabili, diretti al Ponte e all'Archivio.
+Inserisco il cristallo pulsante nel vano del generatore. Con un rombo che sale, i macchinari si svegliano dopo secoli: l'elettricità corre fra le bobine, i monitor si accendono su flussi stabili, diretti al Ponte e all'Archivio.
 Un brivido percorre lo scafo. Lontano, sistemi dormienti da secoli tornano a respirare uno dopo l'altro. Per la prima volta, il relitto non è del tutto morto.
 
 > su
 
 --- Il corridoio principale ---
-Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sei salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.
+Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.
 Puoi vedere qui: una lastra dati, una grande porta.
 Uscite: Est (Il vestibolo delle gole), Nord, Sud (La serra morente), Giù (Il laboratorio di risonanza), Nordest, Ovest.
 
@@ -217,7 +217,7 @@ Uscite: Est (Il vestibolo delle gole), Nord, Sud (La serra morente), Giù (Il la
 Una sala circolare, il soffitto così alto che il faro non lo trova. Una luce bianca e fredda sale dai disegni geometrici del pavimento. Le pareti sono coperte di bassorilievi, da terra fino al buio: creature alte e sottili sotto un cielo a tre soli, semi di luce piantati su un mondo fertile, navi immense in partenza. Al centro, un blocco cilindrico di pietra nera. A sud si torna al corridoio; a ovest si apre un altro passaggio.
 Puoi vedere qui: un altare.
 Uscite: Sud (Il corridoio principale), Ovest.
-Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che ti arriva nei denti prima che nelle cuffie. Poi più niente.
+Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che mi arriva nei denti prima che nelle cuffie. Poi più niente.
 
 > ovest
 
@@ -227,7 +227,7 @@ Puoi vedere qui: un disco.
 Uscite: Est (Il santuario del silenzio), Nord.
 
 > prendi il disco
-Liberi il disco di pietra incastrato nel meccanismo del proiettore. Il proiettore non lo ripari, ma il disco, coperto di incisioni come quelle dell'altare, adesso ce l'hai tu.
+Libero il disco di pietra incastrato nel meccanismo del proiettore. Il proiettore non lo ripari, ma il disco, coperto di incisioni come quelle dell'altare, adesso ce l'ho io.
 
 > nord
 
@@ -235,11 +235,11 @@ Liberi il disco di pietra incastrato nel meccanismo del proiettore. Il proiettor
 Una caverna di cristallo nero. Pilastri di dati alti come monoliti salgono verso un soffitto che non si vede: quasi tutti spenti, molti incrinati. In fondo un pilastro solo pulsa ancora, d'una luce ambrata, intermittente, come se aspettasse qualcosa. È l'unica luce, qui dentro. A sud si torna allo scriptorium.
 Puoi vedere qui: un terminale.
 Uscite: Sud (Lo scriptorium).
-Appena entri, l'ultimo pilastro smette di pulsare e si accende per intero, e la sua luce ambrata arriva fino alle pareti. Il terminale accanto si sveglia da solo. Sullo schermo scorre una riga sola, e la matrice la rende al primo colpo: «Sei arrivato. Puoi prenderlo.» Lo scomparto alla base si apre piano, come una mano.
+Appena entro, l'ultimo pilastro smette di pulsare e si accende per intero, e la sua luce ambrata arriva fino alle pareti. Il terminale accanto si sveglia da solo. Sullo schermo scorre una riga sola, e la matrice la rende al primo colpo: «Sei arrivato. Puoi prenderlo.» Lo scomparto alla base si apre piano, come una mano.
 
 > prendi il nucleo
-Prendi il Nucleo di Memoria dallo scomparto del terminale. La terza chiave.
-Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che ti arriva nei denti prima che nelle cuffie. Poi più niente.
+Prendo il Nucleo di Memoria dallo scomparto del terminale. La terza chiave.
+Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che mi arriva nei denti prima che nelle cuffie. Poi più niente.
 
 > sud
 
@@ -255,33 +255,33 @@ Puoi vedere qui: un altare.
 Uscite: Sud (Il corridoio principale), Ovest (Lo scriptorium).
 
 > gira il disco
-Giri il disco di un terzo: il sole più grande adesso è a sinistra.
+Giro il disco di un terzo: il sole più grande adesso è a sinistra.
 
 > gira il disco
-Giri il disco di un terzo: il sole più grande adesso è in alto.
+Giro il disco di un terzo: il sole più grande adesso è in alto.
 
 > usa il disco sull'altare
-Appoggi il disco nell'incavo, con il sole più grande verso la tacca. Questa volta scende fino in fondo. Per un istante non succede niente, poi dall'interno della pietra arriva un colpo profondo, e una sezione dell'altare si ritira senza rumore. Nello scomparto, posata su un cuscino di luce che sembra solida, c'è la Stele del Ricordo.
+Appoggio il disco nell'incavo, con il sole più grande verso la tacca. Questa volta scende fino in fondo. Per un istante non succede niente, poi dall'interno della pietra arriva un colpo profondo, e una sezione dell'altare si ritira senza rumore. Nello scomparto, posata su un cuscino di luce che sembra solida, c'è la Stele del Ricordo.
 
 > prendi la stele
-Prendi la Stele del Ricordo dallo scomparto. È leggera, più di quanto ti aspettassi, e tiepida. La seconda chiave.
-Nella cuffia il brusio cala fino quasi a sparire, come una sala piena che smette di parlare quando entri. Poi riprende.
+Prendo la Stele del Ricordo dallo scomparto. È leggera, più di quanto mi aspettassi, e tiepida. La seconda chiave.
+Nella cuffia il brusio cala fino quasi a sparire, come una sala piena che smette di parlare quando entro. Poi riprende.
 
 > sud
 
 --- Il corridoio principale ---
-Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sei salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.
+Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.
 Puoi vedere qui: una lastra dati, una grande porta.
 Uscite: Est (Il vestibolo delle gole), Nord (Il santuario del silenzio), Sud (La serra morente), Giù (Il laboratorio di risonanza), Nordest, Ovest.
 
 > usa il seme sulla grande porta
-Avvicini il seme all'incavo ovoidale: viene attratto e si incastra con un clic delicato. La sua luce verde corre lungo il bordo della porta e ci resta. In mano, del seme, non hai più niente.
+Avvicino il seme all'incavo ovoidale: viene attratto e si incastra con un clic delicato. La sua luce verde corre lungo il bordo della porta e ci resta. In mano, del seme, non ho più niente.
 
 > usa la stele sulla grande porta
-Inserisci la Stele del Ricordo nell'incavo rettangolare. Si adatta. Una linea di luce bianca si aggiunge alla prima.
+Inserisco la Stele del Ricordo nell'incavo rettangolare. Si adatta. Una linea di luce bianca si aggiunge alla prima.
 
 > usa il nucleo sulla grande porta
-Posizioni il Nucleo di Memoria nell'incavo a molte facce: una linea di luce ambrata chiude il circuito, e un ronzio profondo, armonico, riempie il corridoio.
+Posiziono il Nucleo di Memoria nell'incavo a molte facce: una linea di luce ambrata chiude il circuito, e un ronzio profondo, armonico, riempie il corridoio.
 Le tre luci — verde, bianca e ambrata — pulsano all'unisono. La loro frequenza accelera, il ronzio diventa un gong risonante che vibra in tutta la nave. Il simbolo a stella brilla di luce accecante, e la Grande Porta, a ovest, non si apre: si dissolve in particelle di luce, come stelle che tornano al cielo.
 
 > ovest
@@ -292,31 +292,31 @@ Puoi vedere qui: una postazione, una porta circolare, delle punte.
 Uscite: Est (Il corridoio principale), Ovest.
 
 > usa la postazione
-Appoggi la mano guantata sulla depressione, e la console reagisce: non a chi sei, ma a quello che vuoi. Un'ondata di energia silenziosa attraversa la sala, le postazioni si accendono, e la struttura centrale proietta sulla cupola una mappa stellare a tre dimensioni. La rotta è chiara, e il punto d'arrivo inconfondibile: il tuo sole.
-Nella cuffia il brusio cala fino quasi a sparire, come una sala piena che smette di parlare quando entri. Poi riprende.
+Appoggio la mano guantata sulla depressione, e la console reagisce: non a chi sono, ma a quello che voglio. Un'ondata di energia silenziosa attraversa la sala, le postazioni si accendono, e la struttura centrale proietta sulla cupola una mappa stellare a tre dimensioni. La rotta è chiara, e il punto d'arrivo inconfondibile: il mio sole.
+Nella cuffia il brusio cala fino quasi a sparire, come una sala piena che smette di parlare quando entro. Poi riprende.
 
 > analizza la mappa stellare
-Segui la rotta all'indietro, partendo da casa. Attraversa un'altra galassia, fino a un ammasso denso e luminoso. Il punto d'origine non lascia dubbi: un sistema trino, tre soli che girano l'uno intorno all'altro, spenti. La culla della loro civiltà.
-Il tuo sole non l'hanno scelto a caso. Accanto c'è un'annotazione che la matrice rende così: proto-fertile, candidato primario, classe Giardino.
+Seguo la rotta all'indietro, partendo da casa. Attraversa un'altra galassia, fino a un ammasso denso e luminoso. Il punto d'origine non lascia dubbi: un sistema trino, tre soli che girano l'uno intorno all'altro, spenti. La culla della loro civiltà.
+Il mio sole non l'hanno scelto a caso. Accanto c'è un'annotazione che la matrice rende così: proto-fertile, candidato primario, classe Giardino.
 
 > tocca le punte
-Ripensi alla culla della rotta, i tre soli, e appoggi la mano sul pannello: premi tre punte. Un clic armonioso, e la porta tonda si apre con un movimento senza attrito su un buio pieno.
+Ripenso alla culla della rotta, i tre soli, e appoggio la mano sul pannello: premo tre punte. Un clic armonioso, e la porta tonda si apre con un movimento senza attrito su un buio pieno.
 
 > ovest
 
 --- L'anticamera ---
-Il passaggio si stringe. Le pareti non fanno più luce: qui è tutto scuro, di un buio che assorbe invece di mancare. I tuoi passi non fanno rumore, e non sai se è il pavimento o se hai smesso di farne tu. Davanti, a ovest, una soglia aperta.
+Il passaggio si stringe. Le pareti non fanno più luce: qui è tutto scuro, di un buio che assorbe invece di mancare. I miei passi non fanno rumore, e non so se è il pavimento o se ho smesso di farne io. Davanti, a ovest, una soglia aperta.
 Uscite: Est (Il ponte di comando), Ovest.
 
 > ovest
 
 --- Il santuario centrale ---
-Una stanza più piccola di quanto ti aspettassi, le pareti che convergono nel buio in alto. Il pavimento è uno schema di linee luminose, la stessa geometria stellare del Ponte ridotta a qualcosa di intimo. Il silenzio non è quello del vuoto, né quello delle capsule: è il silenzio di qualcosa che aspetta da molto tempo di essere ascoltato. Al centro, sopra un sostegno sottile, galleggia la figura luminosa dell'Anziano, i bordi che si sfanno appena, come una fotografia esposta troppe volte. Ti sta guardando. (PARLA CON L'ANZIANO.)
+Una stanza più piccola di quanto mi aspettassi, le pareti che convergono nel buio in alto. Il pavimento è uno schema di linee luminose, la stessa geometria stellare del Ponte ridotta a qualcosa di intimo. Il silenzio non è quello del vuoto, né quello delle capsule: è il silenzio di qualcosa che aspetta da molto tempo di essere ascoltato. Al centro, sopra un sostegno sottile, galleggia la figura luminosa dell'Anziano, i bordi che si sfanno appena, come una fotografia esposta troppe volte. Mi sta guardando. (PARLA CON L'ANZIANO.)
 Uscite: Est (L'anticamera).
 
 > parla con l'anziano
 
-L'anziano: (La figura non muove le labbra, ma le parole ti si aprono dentro la testa, limpide e intere.) «Creatura di carbonio. Figlio delle stelle, forse. Benvenuto. So cosa cerchi: una risposta. Ma io non sono che la memoria di una domanda. Sono quello che resta quando il cantastorie è svanito: l'ultima frase, scritta nella luce.»
+L'anziano: (La figura non muove le labbra, ma le parole mi si aprono dentro la testa, limpide e intere.) «Creatura di carbonio. Figlio delle stelle, forse. Benvenuto. So cosa cerchi: una risposta. Ma io non sono che la memoria di una domanda. Sono quello che resta quando il cantastorie è svanito: l'ultima frase, scritta nella luce.»
   1. Chi eravate?
   2. Cosa ne è stato di voi?
   3. Resto ad ascoltare.
@@ -334,12 +334,12 @@ L'anziano: «Forse sei tu, quella musica nuova. Ci piacerebbe crederlo: che nel 
 
 > Allora cosa devo fare?
 
-L'anziano: (La figura ti guarda, e per un istante senti il peso di un tempo che non si può contare.) «La nostra canzone è finita. Le ultime armonie si sciolgono adesso, in questo istante. A chi viene dopo abbiamo sempre chiesto una cosa sola: che la musica fosse suonata, con forza, fino all'ultima nota. Vivi. Sarà il suono più bello.»
+L'anziano: (La figura mi guarda, e per un istante sento il peso di un tempo che non si può contare.) «La nostra canzone è finita. Le ultime armonie si sciolgono adesso, in questo istante. A chi viene dopo abbiamo sempre chiesto una cosa sola: che la musica fosse suonata, con forza, fino all'ultima nota. Vivi. Sarà il suono più bello.»
   1. [Chiudi gli occhi e lascia andare.]
 
 > [Chiudi gli occhi e lascia andare.]
 
-L'anziano: (Chiudi gli occhi. Quando li riapri appena, la figura si sta raccogliendo: i bordi rientrano, la luce si stringe in un punto, e il punto scende piano sul sostegno al centro della stanza. Lì adesso c'è il seme che avevi dato alla porta. La luce ci entra dentro, e si spegne.)
+L'anziano: (Chiudo gli occhi. Quando li riapro appena, la figura si sta raccogliendo: i bordi rientrano, la luce si stringe in un punto, e il punto scende piano sul sostegno al centro della stanza. Lì adesso c'è il seme che avevo dato alla porta. La luce ci entra dentro, e si spegne.)
   1. [Resta.]
 
 > [Resta.]
@@ -351,21 +351,21 @@ L'anziano: (Poi arriva l'ultima voce. È la più rovinata di tutte. La matrice l
 (Fine della conversazione.)
 
 > prendi il seme
-Il sostegno lo lascia andare appena lo tocchi. Te lo infili nella tasca sul petto della tuta, dove lo senti premere a ogni respiro.
-La nave trema. Sotto i tuoi piedi le linee del pavimento si spengono una dopo l'altra, e accanto al sostegno il pavimento si è aperto su una gola che scende. Sul visore, la cifra dell'aria ha cominciato a scendere da sola.
+Il sostegno lo lascia andare appena lo tocchi. Me lo infilo nella tasca sul petto della tuta, dove lo sento premere a ogni respiro.
+La nave trema. Sotto i miei piedi le linee del pavimento si spengono una dopo l'altra, e accanto al sostegno il pavimento si è aperto su una gola che scende. Sul visore, la cifra dell'aria ha cominciato a scendere da sola.
 
 > giù
-Ti cali nell'apertura accanto al sostegno, e la gola ti prende. È ripida, nera, e trema: il faro ti apre davanti un metro alla volta, e dalle pareti cade una polvere fine. In fondo, a ovest, senti un fruscio che conosci: il groviglio.
+Mi calo nell'apertura accanto al sostegno, e la gola mi prende. È ripida, nera, e trema: il faro mi apre davanti un metro alla volta, e dalle pareti cade una polvere fine. In fondo, a ovest, sento un fruscio che conosco: il groviglio.
 
 > ovest
 
 --- La sala delle teche ---
-La sala delle teche, sveglia. Il campo è caduto del tutto: il groviglio si muove dappertutto, a frustate molli e cieche, e cerca il caldo. Lungo le pareti, le teche chiuse, bianche di brina. Su, in fondo alla sala, l'imbocco della gola di mezzo; a ovest il vivaio; a est la gola da cui sei arrivato.
+La sala delle teche, sveglia. Il campo è caduto del tutto: il groviglio si muove dappertutto, a frustate molli e cieche, e cerca il caldo. Lungo le pareti, le teche chiuse, bianche di brina. Su, in fondo alla sala, l'imbocco della gola di mezzo; a ovest il vivaio; a est la gola da cui sono arrivato.
 Uscite: Su (La gola di mezzo), Ovest (Il vivaio), Est.
 
 > segui la parete
-Metti la spalla contro le teche chiuse e ti tieni lì, dove il freddo tiene fermi i filamenti. Passo corto, il faro basso puntato sulle suole. Uno ti cerca all'altezza del fianco e trova solo vetro gelato. Adesso sai dove sei: la parete ti porta verso la gola di mezzo, su.
-Da qualche parte dietro di te qualcosa crolla, con un rumore che non arriva: lo senti nelle suole.
+Metto la spalla contro le teche chiuse e mi tengo lì, dove il freddo tiene fermi i filamenti. Passo corto, il faro basso puntato sulle suole. Uno mi cerca all'altezza del fianco e trova solo vetro gelato. Adesso so dove sono: la parete mi porta verso la gola di mezzo, su.
+Da qualche parte dietro di me qualcosa crolla, con un rumore che non arriva: lo sento nelle suole.
 Le pareti si incrinano in lunghe linee verdi, come vene che si accendono per l'ultima volta.
 
 > su
@@ -385,17 +385,17 @@ Uscite: Est (La camera di compensazione), Giù (La gola di mezzo).
 > est
 
 --- La camera di compensazione ---
-La camera trema. Sopra di te la parete si è riaperta: il varco, e in fondo al varco la luce gialla del boccaporto. Dal bordo pende ancora il resto del tuo cavo di sicurezza.
+La camera trema. Sopra di me la parete si è riaperta: il varco, e in fondo al varco la luce gialla del boccaporto. Dal bordo pende ancora il resto del mio cavo di sicurezza.
 Puoi vedere qui: un pannello, una porta interna.
 Uscite: Ovest (Il vestibolo delle gole), Su (Lo scafo).
 
 > su
 
 --- Lo scafo ---
-Sei fuori. Lo scafo nero trema sotto i magneti degli stivali, e le funi degli arpioni vibrano come corde tese. Il boccaporto della Santa Maria è lì, con la sua luce gialla: dentro.
+Sono fuori. Lo scafo nero trema sotto i magneti degli stivali, e le funi degli arpioni vibrano come corde tese. Il boccaporto della Santa Maria è lì, con la sua luce gialla: dentro.
 Puoi vedere qui: una giuntura.
 Uscite: Dentro (La stiva), Giù (La camera di compensazione).
-Da qualche parte dietro di te qualcosa crolla, con un rumore che non arriva: lo senti nelle suole.
+Da qualche parte dietro di me qualcosa crolla, con un rumore che non arriva: lo sento nelle suole.
 
 > dentro
 
@@ -403,14 +403,14 @@ Da qualche parte dietro di te qualcosa crolla, con un rumore che non arriva: lo 
 La stiva della Santa Maria, vuota, con la sua luce gialla di servizio.
 Puoi vedere qui: un kit.
 Uscite: Est (La plancia), Giù, Fuori (Lo scafo).
-Il portello interno si chiude alle tue spalle. Ti strappi il casco prima che la pressione sia pareggiata, e l'aria della stiva ti arriva addosso fredda, tutta insieme, e sa di olio e di casa. Il pavimento si avvicina. Dormi.
+Il portello interno si chiude alle mie spalle. Mi strappo il casco prima che la pressione sia pareggiata, e l'aria della stiva mi arriva addosso fredda, tutta insieme, e sa di olio e di casa. Il pavimento si avvicina. Dormo.
 
-Ti svegli in plancia, sulla tua poltrona. Non ricordi di esserci salito. Fuori dall'oblò non c'è niente: il radar batte il vuoto e ridà vuoto. I cavi degli arpioni risultano riavvolti, e non ricordi di averli mollati. Forse la massa nera è andata alla deriva. Forse non c'è mai stata, e un uomo solo, con poca aria e meno sonno, si è inventato una compagnia.
+Mi sveglio in plancia, sulla mia poltrona. Non ricordo di esserci salito. Fuori dall'oblò non c'è niente: il radar batte il vuoto e ridà vuoto. I cavi degli arpioni risultano riavvolti, e non ricordo di averli mollati. Forse la massa nera è andata alla deriva. Forse non c'è mai stata, e un uomo solo, con poca aria e meno sonno, si è inventato una compagnia.
 
-Ti accorgi di avere il pugno chiuso, e non sai da quanto. Lo apri. Dentro c'è il seme, scuro, piccolo, di nessun valore per nessun compratore al mondo. E allora, come se aspettasse proprio questo, dentro il seme si accende un battito di luce verde. Si spegne. Torna.
-Non c'è nessuno a cui dirlo, e il silenzio della plancia, per la prima volta, non ti basta.
-Lo appoggi sul ripiano, proprio davanti alla poltrona, in un punto dove ti cadrà l'occhio ogni volta. Prima o poi gli troverai un posto più sicuro, una teca, qualcosa di stagno: alla prima sosta.
-Sblocchi i comandi, rimetti in asse i giroscopi, dai mezza spinta di prua. Il reattore ricomincia a cantare il suo re, sotto il pavimento, e la Santa Maria si allontana.
+Mi accorgo di avere il pugno chiuso, e non so da quanto. Lo apro. Dentro c'è il seme, scuro, piccolo, di nessun valore per nessun compratore al mondo. E allora, come se aspettasse proprio questo, dentro il seme si accende un battito di luce verde. Si spegne. Torna.
+Non c'è nessuno a cui dirlo, e il silenzio della plancia, per la prima volta, non mi basta.
+Lo appoggio sul ripiano, proprio davanti alla poltrona, in un punto dove mi cadrà l'occhio ogni volta. Prima o poi gli troverò un posto più sicuro, una teca, qualcosa di stagno: alla prima sosta.
+Sblocco i comandi, rimetto in asse i giroscopi, do mezza spinta di prua. Il reattore ricomincia a cantare il suo re, sotto il pavimento, e la Santa Maria si allontana.
 
 Registro di bordo, TSC-1972. Operatore W. T. Eriksonn. Rotta ripresa. Carico: nessuno.
 

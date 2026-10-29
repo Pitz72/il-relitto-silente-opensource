@@ -3,7 +3,7 @@
 #   python motore/favella.py collaudo relitto-silente/relitto.fav --finali --percorso collaudo/mani-vuote.txt
 # atteso: esito vinta
 # atteso: finale «Nessun evento da registrare.»
-# atteso: finale «Il seme l'hai lasciato dov'era.»
+# atteso: finale «Il seme l'ho lasciato dov'era.»
 
 # --- Atto I: la Santa Maria ---
 analizza la nave aliena

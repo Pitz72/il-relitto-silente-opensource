@@ -9,7 +9,7 @@ Fine della traccia.
 
 
 --- La plancia ---
-La plancia della Santa Maria: due poltrone, e ne usi una; schermi che conosci a memoria; sotto il pavimento, il lamento basso del reattore. Sul quadrante del margine la lancetta sta dove hai imparato a non guardarla. Nell'oblò, contro le stelle, c'è una sagoma nera che non ne lascia passare nessuna. Il radar la segnala da un'ora e non sa dirti cosa sia: per saperlo ti servirebbe una scansione lunga. A ovest si va in stiva; a nord, la cuccetta.
+La plancia della Santa Maria: due poltrone, e ne uso una; schermi che conosco a memoria; sotto il pavimento, il lamento basso del reattore. Sul quadrante del margine la lancetta sta dove ho imparato a non guardarla. Nell'oblò, contro le stelle, c'è una sagoma nera che non ne lascia passare nessuna. Il radar la segnala da un'ora e non sa dirmi cosa sia: per saperlo mi servirebbe una scansione lunga. A ovest si va in stiva; a nord, la cuccetta.
 Puoi vedere qui: dei comandi di manovra, un lanciarpioni, una radio.
 Uscite: Ovest, Nord.
 
@@ -17,19 +17,19 @@ Uscite: Ovest, Nord.
 Dall'oblò principale si vede la sagoma: un fuso allungato, più lungo della Santa Maria, così nero che contro il cielo sembra un taglio.
 
 > esamina il quadrante del margine
-Il margine: quanta aria, quanto reattore, quanti giorni ti restano prima di dover chiamare Yusuf senza niente da offrirgli. Sei settimane di stiva vuota hanno portato la lancetta nel rosso martedì. Da martedì non la guardi.
+Il margine: quanta aria, quanto reattore, quanti giorni mi restano prima di dover chiamare Yusuf senza niente da offrirgli. Sei settimane di stiva vuota hanno portato la lancetta nel rosso martedì. Da martedì non la guardo.
 
 > esamina il quadro di prossimità
-La spia rossa della prossimità lampeggia da un'ora. Il suono l'hai tolto subito; la spia no, quella non si spegne.
+La spia rossa della prossimità lampeggia da un'ora. Il suono l'ho tolto subito; la spia no, quella non si spegne.
 
 > esamina la radio
-La radio a lungo raggio. Fra i canali salvati ce n'è uno solo che usi: Magazzino Quattro. (Per chiamare Yusuf: PARLA CON YUSUF.)
+La radio a lungo raggio. Fra i canali salvati ce n'è uno solo che uso: Magazzino Quattro. (Per chiamare Yusuf: PARLA CON YUSUF.)
 
 > accosta
-Accostare a una cosa che non sai cos'è, no. Prima la scansione lunga.
+Accostare a una cosa che non so cos'è, no. Prima la scansione lunga.
 
 > spara gli arpioni
-Troppo lontano: a questa distanza i cavi tornerebbero indietro a vuoto. Prima bisogna ACCOSTARE.
+Troppo lontano: a questa distanza i cavi tornerebbero indietro a vuoto. (Prima ACCOSTA.)
 
 > parla con yusuf
 
@@ -39,16 +39,16 @@ Yusuf: «Magazzino Quattro.» Una pausa, il tempo di leggere chi chiama. «Willi
 
 > Mi serve credito.
 
-Yusuf: «Sei settimane, William. Ti ho mandato i filtri, le guarnizioni e la cella buona, e da te non è arrivato niente.» Lo senti contare sottovoce, come fa sempre prima di dirti di sì. Arriva a dieci. «No. Portami qualcosa da vendere, e ne riparliamo.»
+Yusuf: «Sei settimane, William. Ti ho mandato i filtri, le guarnizioni e la cella buona, e da te non è arrivato niente.» Lo sento contare sottovoce, come fa sempre prima di dirmi di sì. Arriva a dieci. «No. Portami qualcosa da vendere, e ne riparliamo.»
   1. Va bene.
 
 > Va bene.
 (Fine della conversazione.)
 
 > analizza la nave aliena
-Lanci la scansione lunga. Il computer di bordo ha la tua età e se la prende comoda.
+Lancio la scansione lunga. Il computer di bordo ha la mia età e se la prende comoda.
 Lunghezza: trecentoquaranta metri. Massa: stima incerta, il doppio della Santa Maria. Composizione: il calcolo parte, si ferma, riparte. Al terzo tentativo si arrende e scrive MATERIALE NON IN ARCHIVIO.
-Una cosa che l'archivio non conosce o non vale niente, o vale abbastanza da chiudere il conto con Yusuf. Disinserisci il pilota automatico: adesso puoi ACCOSTARE.
+Una cosa che l'archivio non conosce o non vale niente, o vale abbastanza da chiudere il conto con Yusuf. Disinserisco il pilota automatico. (Adesso puoi ACCOSTARE.)
 
 > guarda
 
@@ -58,7 +58,7 @@ Puoi vedere qui: dei comandi di manovra, un lanciarpioni, una radio.
 Uscite: Ovest, Nord.
 
 > accendi il faro di prua
-Da qui la luce si perde molto prima di arrivare alla sagoma. Bisogna avvicinarsi.
+Da qui la luce si perde molto prima di arrivare alla sagoma. Devo avvicinarmi.
 
 > parla con yusuf
 
@@ -69,26 +69,26 @@ Yusuf: «Magazzino Quattro.» Una pausa, il tempo di leggere chi chiama. «Willi
 
 > Ho trovato una cosa.
 
-Yusuf: «Una cosa.» Aspetta che continui. Gli racconti della massa: la scansione, i trecentoquaranta metri, la riga che lo scanner continua a scrivere. Per un po' dall'altra parte non arriva niente. Poi: «Tagliane un pezzo. Uno solo, pulito, e portamelo. Se è roba che l'archivio non conosce, il compratore lo trovo io. E in fretta.»
+Yusuf: «Una cosa.» Aspetta che continui. Gli racconto della massa: la scansione, i trecentoquaranta metri, la riga che lo scanner continua a scrivere. Per un po' dall'altra parte non arriva niente. Poi: «Tagliane un pezzo. Uno solo, pulito, e portamelo. Se è roba che l'archivio non conosce, il compratore lo trovo io. E in fretta.»
   1. E se dentro c'è qualcuno?
   2. Te lo porto.
 
 > E se dentro c'è qualcuno?
 
-Yusuf: «Dentro una cosa così?» Lo senti ridere, corto. «Allora non è roba mia, William. E nemmeno tua.» Un'altra pausa. «Ma dentro non c'è mai nessuno.»
+Yusuf: «Dentro una cosa così?» Lo sento ridere, corto. «Allora non è roba mia, William. E nemmeno tua.» Un'altra pausa. «Ma dentro non c'è mai nessuno.»
   1. Te lo porto.
 
 > Te lo porto.
 (Fine della conversazione.)
 
 > accosta
-Porti la Santa Maria verso la massa a spinte corte, con gli occhi sulla distanza che scende. Il reattore abbassa il suo lamento. A cinquanta metri ti fermi: la sagoma riempie l'oblò e non restituisce niente, né un riflesso né un bordo. Adesso gli arpioni ci arrivano.
+Porto la Santa Maria verso la massa a spinte corte, con gli occhi sulla distanza che scende. Il reattore abbassa il suo lamento. A cinquanta metri mi fermo: la sagoma riempie l'oblò e non restituisce niente, né un riflesso né un bordo. Adesso gli arpioni ci arrivano.
 
 > accendi il faro di prua
-Accendi il riflettore di prua e lo fai correre lungo la massa. Su qualunque scafo il fascio troverebbe uno spigolo, una saldatura, un riflesso da restituirti. Su questo scorre come su velluto bagnato, e non torna indietro niente. Lo spegni.
+Accendo il riflettore di prua e lo faccio correre lungo la massa. Su qualunque scafo il fascio troverebbe uno spigolo, una saldatura, un riflesso da restituirmi. Su questo scorre come su velluto bagnato, e non torna indietro niente. Lo spengo.
 
 > spara gli arpioni
-Due colpi sordi, che senti nelle ossa più che nelle orecchie. Gli arpioni volano, mordono lo scafo nero e tengono. Avvolgi i cavi a strappi corti finché le due navi non si toccano, con un urto lungo che fa tremare la plancia.
+Due colpi sordi, che sento nelle ossa più che nelle orecchie. Gli arpioni volano, mordono lo scafo nero e tengono. Avvolgo i cavi a strappi corti finché le due navi non si toccano, con un urto lungo che fa tremare la plancia.
 
 > guarda
 
@@ -98,7 +98,7 @@ Puoi vedere qui: dei comandi di manovra, un lanciarpioni, una radio.
 Uscite: Ovest, Nord.
 
 > esamina la radio
-Fra un canale e l'altro c'è un fruscio che il filtro non toglie: tante voci una sopra l'altra, nessuna intera. Abbassi il volume. Il fruscio resta sullo schermo, una riga che trema. (Per chiamare Yusuf: PARLA CON YUSUF.)
+Fra un canale e l'altro c'è un fruscio che il filtro non toglie: tante voci una sopra l'altra, nessuna intera. Abbasso il volume. Il fruscio resta sullo schermo, una riga che trema. (Per chiamare Yusuf: PARLA CON YUSUF.)
 
 > parla con yusuf
 
@@ -108,7 +108,7 @@ Yusuf: «Magazzino Quattro.» Una pausa. «Ce l'hai il mio pezzo? No. E allora c
 
 > Niente. Volevo sentire una voce.
 
-Yusuf: «Allora sei messo peggio di quanto pensassi.» Però non chiude. Per qualche secondo senti il magazzino dietro di lui: un muletto in retromarcia, qualcuno che litiga con una bolla di carico. Poi la linea fa il suo schiocco.
+Yusuf: «Allora sei messo peggio di quanto pensassi.» Però non chiude. Per qualche secondo sento il magazzino dietro di lui: un muletto in retromarcia, qualcuno che litiga con una bolla di carico. Poi la linea fa il suo schiocco.
   1. Chiudi la comunicazione.
 
 > Chiudi la comunicazione.
@@ -117,32 +117,32 @@ Yusuf: «Allora sei messo peggio di quanto pensassi.» Però non chiude. Per qua
 > nord
 
 --- La cuccetta ---
-La cuccetta è poco più di un corridoio: due brande una sopra l'altra, un armadietto, un oblò grande quanto una mano. Dormi in quella di sotto. Quella di sopra è rifatta, le coperte tese, e non ci ha mai dormito nessuno. A sud si torna in plancia.
+La cuccetta è poco più di un corridoio: due brande una sopra l'altra, un armadietto, un oblò grande quanto una mano. Dormo in quella di sotto. Quella di sopra è rifatta, le coperte tese, e non ci ha mai dormito nessuno. A sud si torna in plancia.
 Puoi vedere qui: un registro di bordo.
 Uscite: Sud (La plancia).
 
 > esamina la branda di sopra
-La rifai ogni mese, anche se nessuno la disfa. La Santa Maria è omologata per un equipaggio di quattro: le brande ci sono, gli altri no. Yusuf la chiama incoscienza. Tu non la chiami.
+La rifaccio ogni mese, anche se nessuno la disfa. La Santa Maria è omologata per un equipaggio di quattro: le brande ci sono, gli altri no. Yusuf la chiama incoscienza. Io non la chiamo.
 
 > esamina l'armadietto
-Due tute da lavoro, una giacca buona che non metti da anni, una scatola di fusibili che non sapevi dove altro tenere.
+Due tute da lavoro, una giacca buona che non metto da anni, una scatola di fusibili che non sapevo dove altro tenere.
 
 > esamina l'oblò
 Grande quanto una mano. Da questo lato la massa non si vede: solo stelle, ferme.
 
 > leggi il registro
-Il registro della Santa Maria è di carta: i file si perdono, la carta resta dove la metti. La prima pagina non l'hai scritta tu. In una grafia d'altri tempi: «TSC-1972. Prima registrazione autonoma: 14 marzo 2105.» Novantasei anni di nave, tre alla radiazione.
-Le ultime pagine sono tue e si somigliano tutte. L'ultima dice: «Settimana sei. Stiva vuota. Nessun contatto. W. T. Eriksonn.»
+Il registro della Santa Maria è di carta: i file si perdono, la carta resta dove la metto. La prima pagina non l'ho scritta io. In una grafia d'altri tempi: «TSC-1972. Prima registrazione autonoma: 14 marzo 2105.» Novantasei anni di nave, tre alla radiazione.
+Le ultime pagine sono mie e si somigliano tutte. L'ultima dice: «Settimana sei. Stiva vuota. Nessun contatto. W. T. Eriksonn.»
 Fra le pagine, a tenere il segno, c'è la chiavetta della cassetta di ferraglia.
 
 > prendi il registro
-Il registro non lascia la nave. È la regola più vecchia che rispetti.
+Il registro non lascia la nave. È la regola più vecchia che rispetto.
 
 > prendi la chiavetta
 Preso: la chiavetta.
 
 > leggi il registro
-Il registro della Santa Maria. La prima pagina non è tua: «TSC-1972. Prima registrazione autonoma: 14 marzo 2105.» Novantasei anni di nave, tre alla radiazione. Le ultime pagine sono tue, e l'ultima riga aspetta la settimana sette.
+Il registro della Santa Maria. La prima pagina non è mia: «TSC-1972. Prima registrazione autonoma: 14 marzo 2105.» Novantasei anni di nave, tre alla radiazione. Le ultime pagine sono mie, e l'ultima riga aspetta la settimana sette.
 
 > sud
 
@@ -154,30 +154,30 @@ Uscite: Ovest, Nord (La cuccetta).
 > ovest
 
 --- La stiva ---
-La stiva della Santa Maria è vuota da sei settimane. Dai ganci del soffitto non pende niente, e senza casse a fermarlo il tuo passo rimbomba fino alla paratia di poppa. Ogni giorno così lo paghi in aria e in reattore. Contro la paratia, la rastrelliera dell'attrezzatura; su una cassa vuota rovesciata, il vecchio lettore di ebook. A est si torna in plancia, da una botola si scende in sala macchine, e a poppa il boccaporto esterno dà sul vuoto.
+La stiva della Santa Maria è vuota da sei settimane. Dai ganci del soffitto non pende niente, e senza casse a fermarlo il mio passo rimbomba fino alla paratia di poppa. Ogni giorno così lo pago in aria e in reattore. Contro la paratia, la rastrelliera dell'attrezzatura; su una cassa vuota rovesciata, il vecchio lettore di ebook. A est si torna in plancia, da una botola si scende in sala macchine, e a poppa il boccaporto esterno dà sul vuoto.
 Puoi vedere qui: una tuta, un kit, una cella di riserva.
 Uscite: Est (La plancia), Giù, Fuori.
 
 > esamina il lettore
-Un vecchio lettore di ebook, lo schermo incrinato ma ancora acceso. Mostra il titolo di un'avventura testuale italiana: «…nello di Ghiaccio». Qualcuno ci ha giocato, su questa nave, prima di te.
+Un vecchio lettore di ebook, lo schermo incrinato ma ancora acceso. Mostra il titolo di un'avventura testuale italiana: «…nello di Ghiaccio». Qualcuno ci ha giocato, su questa nave, prima di me.
 
 > esamina i ganci
 Otto file di ganci da carico, vuoti. L'ultima volta reggevano filtri per una colonia di Callisto: pagavano poco, ma pagavano.
 
 > fuori
-Il boccaporto dà sul vuoto. Senza tuta, è l'ultima porta che apri.
+Il boccaporto dà sul vuoto. Senza tuta, è l'ultima porta che apro.
 
 > esamina la tuta
-La tua tuta extraveicolare, rattoppata a un gomito. Visore, cuffie, il faro sul casco, il multiscanner sulla spalla. Con la cella piena tiene sei ore.
+La mia tuta extraveicolare, rattoppata a un gomito. Visore, cuffie, il faro sul casco, il multiscanner sulla spalla. Con la cella piena tiene sei ore.
 
 > indossa la tuta
-Prima staccala dalla rastrelliera.
+Prima devo staccarla dalla rastrelliera.
 
 > prendi la tuta
 Preso: la tuta.
 
 > indossa la tuta
-Strato su strato, come sempre: chiusure, guarnizioni, il casco. Ogni cosa la verifichi due volte, perché dall'altra parte del boccaporto non c'è nessuno a verificarla per te. Il visore si accende e ti mette davanti la prima cifra, quella dell'aria. Sul casco si accende il faro.
+Strato su strato, come sempre: chiusure, guarnizioni, il casco. Ogni cosa la verifico due volte, perché dall'altra parte del boccaporto non c'è nessuno a verificarla per me. Il visore si accende e mi mette davanti la prima cifra, quella dell'aria. Sul casco si accende il faro.
 
 > inventario
 Stai portando:
@@ -190,19 +190,19 @@ Stai portando:
 Sul bordo del visore, in verde, la cifra dell'aria: 100.
 
 > esamina il faro del casco
-Il faro del casco, al massimo: un cono bianco che apre il buio davanti a te e lo richiude alle tue spalle.
+Il faro del casco, al massimo: un cono bianco che apre il buio davanti a me e lo richiude alle mie spalle.
 
 > abbassa il faro
-Giri la ghiera del faro al minimo, fin quasi a chiuderlo nel guanto. Il buio ti si fa più vicino.
+Giro la ghiera del faro al minimo, fin quasi a chiuderlo nel guanto. Il buio mi si fa più vicino.
 
 > alza il faro
-Riapri la ghiera. Il cono bianco torna a spingere il buio un po' più in là.
+Riapro la ghiera. Il cono bianco torna a spingere il buio un po' più in là.
 
 > usa la cella di riserva
-La tuta è ancora piena per tre quarti: sprecheresti la cella. La tieni per quando servirà.
+La tuta è ancora piena per tre quarti: sprecherei la cella. La tengo per quando servirà.
 
 > apri il kit
-Fai scattare le chiusure. Nella gommapiuma sagomata ci sono la taglierina al plasma e la batteria d'emergenza.
+Faccio scattare le chiusure. Nella gommapiuma sagomata ci sono la taglierina al plasma e la batteria d'emergenza.
 
 > prendi la taglierina
 Preso: la taglierina.
@@ -216,31 +216,31 @@ Preso: la cella di riserva.
 > guarda
 
 --- La stiva ---
-Dentro la tuta il respiro ti torna addosso, più vicino, e la stiva vuota rimbomba lo stesso. A est la plancia, giù la sala macchine. A poppa il boccaporto esterno ha la spia verde: fuori, a pochi metri, c'è la massa nera.
+Dentro la tuta il respiro mi torna addosso, più vicino, e la stiva vuota rimbomba lo stesso. A est la plancia, giù la sala macchine. A poppa il boccaporto esterno ha la spia verde: fuori, a pochi metri, c'è la massa nera.
 Puoi vedere qui: un kit.
 Uscite: Est (La plancia), Giù, Fuori.
 
 > giù
 
 --- La sala macchine ---
-Si scende per una scaletta stretta e l'aria cambia: calda, ferma, olio e ozono. Il reattore prende quasi tutto lo spazio, un cilindro d'acciaio rattoppato in tre punti, e tiene la sua nota bassa, la stessa che senti in tutta la nave da tanto tempo che non la senti più. Su, si torna in stiva.
+Si scende per una scaletta stretta e l'aria cambia: calda, ferma, olio e ozono. Il reattore prende quasi tutto lo spazio, un cilindro d'acciaio rattoppato in tre punti, e tiene la sua nota bassa, la stessa che sento in tutta la nave da tanto tempo che non la sento più. Su, si torna in stiva.
 Puoi vedere qui: una cassetta di ferraglia.
 Uscite: Su (La stiva).
 
 > apri la cassetta
-Giri la chiavetta, e il coperchio si alza con il suo cigolio di sempre. Fusibili, un rotolo di nastro, un amplificatore di firma che non usi da anni, e un bengala di soccorso ancora sigillato.
+Giro la chiavetta, e il coperchio si alza con il suo cigolio di sempre. Fusibili, un rotolo di nastro, un amplificatore di firma che non uso da anni, e un bengala di soccorso ancora sigillato.
 
 > prendi l'amplificatore di firma
-Lo lasci dov'è. Oggi non ti serve.
+Lo lascio dov'è. Oggi non mi serve.
 
 > prendi il bengala
 Preso: il bengala.
 
 > accendi il bengala
-È l'unico che hai. Lo tieni per quando servirà davvero.
+È l'unico che ho. Lo tengo per quando servirà davvero.
 
 > ascolta il reattore
-Stai fermo e lo ascolti davvero, per una volta. Una nota sola, tenuta, che non cambia mai: un re basso. Anni che ci vivi dentro, e non ti eri mai accorto che fosse una nota.
+Sto fermo e lo ascolto davvero, per una volta. Una nota sola, tenuta, che non cambia mai: un re basso. Anni che ci vivo dentro, e non mi ero mai accorto che fosse una nota.
 
 > ascolta il reattore
 Il re del reattore. Sempre quello.
@@ -248,75 +248,75 @@ Il re del reattore. Sempre quello.
 > su
 
 --- La stiva ---
-Dentro la tuta il respiro ti torna addosso, più vicino, e la stiva vuota rimbomba lo stesso. A est la plancia, giù la sala macchine. A poppa il boccaporto esterno ha la spia verde: fuori, a pochi metri, c'è la massa nera.
+Dentro la tuta il respiro mi torna addosso, più vicino, e la stiva vuota rimbomba lo stesso. A est la plancia, giù la sala macchine. A poppa il boccaporto esterno ha la spia verde: fuori, a pochi metri, c'è la massa nera.
 Puoi vedere qui: un kit.
 Uscite: Est (La plancia), Giù (La sala macchine), Fuori.
 
 > esci
 
 --- Lo scafo ---
-Sei fuori. Le funi degli arpioni corrono tese fra le due navi, e il tuo cavo di sicurezza si srotola dal boccaporto alle tue spalle. Sotto i magneti degli stivali c'è lo scafo nero: liscio, senza una vite, senza una linea, come colato in un pezzo solo. Ci hai girato intorno con la Santa Maria cercando un portello, un punto qualunque che dicesse si entra di qui. Non c'è. Finché tieni un piede sulla rampa senti il reattore nelle ossa; sullo scafo nero, più niente. Dentro, alle tue spalle, il boccaporto.
+Sono fuori. Le funi degli arpioni corrono tese fra le due navi, e il mio cavo di sicurezza si srotola dal boccaporto alle mie spalle. Sotto i magneti degli stivali c'è lo scafo nero: liscio, senza una vite, senza una linea, come colato in un pezzo solo. Ci ho girato intorno con la Santa Maria cercando un portello, un punto qualunque che dicesse si entra di qui. Non c'è. Finché tengo un piede sulla rampa sento il reattore nelle ossa; sullo scafo nero, più niente. Dentro, alle mie spalle, il boccaporto.
 Uscite: Dentro (La stiva), Giù.
 
 > guarda
 
 --- Lo scafo ---
-Sei fuori. Le funi degli arpioni corrono tese fra le due navi, e il tuo cavo di sicurezza si srotola dal boccaporto alle tue spalle. Sotto i magneti degli stivali c'è lo scafo nero: liscio, senza una vite, senza una linea, come colato in un pezzo solo. Ci hai girato intorno con la Santa Maria cercando un portello, un punto qualunque che dicesse si entra di qui. Non c'è. Finché tieni un piede sulla rampa senti il reattore nelle ossa; sullo scafo nero, più niente. Dentro, alle tue spalle, il boccaporto.
+Sono fuori. Le funi degli arpioni corrono tese fra le due navi, e il mio cavo di sicurezza si srotola dal boccaporto alle mie spalle. Sotto i magneti degli stivali c'è lo scafo nero: liscio, senza una vite, senza una linea, come colato in un pezzo solo. Ci ho girato intorno con la Santa Maria cercando un portello, un punto qualunque che dicesse si entra di qui. Non c'è. Finché tengo un piede sulla rampa sento il reattore nelle ossa; sullo scafo nero, più niente. Dentro, alle mie spalle, il boccaporto.
 Uscite: Dentro (La stiva), Giù.
 
 > usa la taglierina sullo scafo nero
-Tagliare alla cieca uno scafo che non conosci, senza sapere cosa c'è dietro: no. Prima trova dove.
+Tagliare alla cieca uno scafo che non conosco, senza sapere cosa c'è dietro: no. Prima devo trovare dove.
 
 > analizza lo scafo nero
-Il multiscanner non si decide: una lettura dice organico, la successiva minerale, la terza rinuncia e scrive di nuovo MATERIALE NON IN ARCHIVIO. Poi, a tre passi da te, trova quello che cercavi: una giuntura più sottile del resto dello scafo, sigillata dall'interno. Fatta per essere tagliata, e per richiudersi.
+Il multiscanner non si decide: una lettura dice organico, la successiva minerale, la terza rinuncia e scrive di nuovo MATERIALE NON IN ARCHIVIO. Poi, a tre passi da me, trova quello che cercavo: una giuntura più sottile del resto dello scafo, sigillata dall'interno. Fatta per essere tagliata, e per richiudersi.
 
 > giù
 Sotto gli stivali c'è solo scafo nero. Per scendere, prima bisogna aprirlo.
 
 > analizza la giuntura
 Il multiscanner segue la linea e si ferma sul tratto dalla grana diversa. È un taglio, rifatto: qualcuno ha già aperto qui, e la nave ha richiuso. Datazione della saldatura: centocinquant'anni, con un margine d'errore che lo scanner stesso definisce imbarazzante.
-Per scrupolo allarghi il raggio della scansione. Intorno alla massa non c'è nessun'altra nave, nemmeno un rottame: chi ha tagliato qui non ha lasciato niente ad aspettarlo.
-Centocinquant'anni fa. E di una cosa così, in centocinquant'anni, non ti è mai arrivata una parola.
+Per scrupolo allargo il raggio della scansione. Intorno alla massa non c'è nessun'altra nave, nemmeno un rottame: chi ha tagliato qui non ha lasciato niente ad aspettarlo.
+Centocinquant'anni fa. E di una cosa così, in centocinquant'anni, non mi è mai arrivata una parola.
 
 > esamina il cavo di sicurezza
-Il tuo cavo di sicurezza, agganciato alla cintura e srotolato dal boccaporto. Finché c'è, la strada di casa è una linea.
+Il mio cavo di sicurezza, agganciato alla cintura e srotolato dal boccaporto. Finché c'è, la strada di casa è una linea.
 
 > taglia la giuntura
-Regoli la taglierina e l'appoggi alla giuntura. Nessuna scintilla: il materiale si ritira dal getto come carne da una brace, e dal taglio esce un odore che il casco non dovrebbe lasciar passare, vecchio, di chiuso. Chiudi il giro. Un lembo si piega verso l'interno senza un suono e lascia un'apertura buia. Si scende giù.
+Regolo la taglierina e l'appoggio alla giuntura. Nessuna scintilla: il materiale si ritira dal getto come carne da una brace, e dal taglio esce un odore che il casco non dovrebbe lasciar passare, vecchio, di chiuso. Chiudo il giro. Un lembo si piega verso l'interno senza un suono e lascia un'apertura buia. Si scende giù.
 
 > guarda
 
 --- Lo scafo ---
-Sei fuori, sullo scafo nero. Dove hai tagliato, un lembo si è piegato verso l'interno senza rumore e ha lasciato un'apertura buia, larga quanto le tue spalle: si scende giù, nel varco. Le funi degli arpioni, tese. Alle tue spalle il boccaporto della Santa Maria, con la sua luce gialla: dentro.
+Sono fuori, sullo scafo nero. Dove ho tagliato, un lembo si è piegato verso l'interno senza rumore e ha lasciato un'apertura buia, larga quanto le mie spalle: si scende giù, nel varco. Le funi degli arpioni, tese. Alle mie spalle il boccaporto della Santa Maria, con la sua luce gialla: dentro.
 Puoi vedere qui: una giuntura.
 Uscite: Dentro (La stiva), Giù.
 
 > rientra
-Ti tiri lungo il cavo fino al boccaporto e richiudi il portello esterno alle tue spalle.
+Mi tiro lungo il cavo fino al boccaporto e richiudo il portello esterno alle mie spalle.
 
 --- La stiva ---
-Dentro la tuta il respiro ti torna addosso, più vicino, e la stiva vuota rimbomba lo stesso. A est la plancia, giù la sala macchine. A poppa il boccaporto esterno ha la spia verde: fuori, a pochi metri, c'è la massa nera.
+Dentro la tuta il respiro mi torna addosso, più vicino, e la stiva vuota rimbomba lo stesso. A est la plancia, giù la sala macchine. A poppa il boccaporto esterno ha la spia verde: fuori, a pochi metri, c'è la massa nera.
 Puoi vedere qui: un kit.
 Uscite: Est (La plancia), Giù (La sala macchine), Fuori (Lo scafo).
 
 > fuori
 
 --- Lo scafo ---
-Sei fuori, sullo scafo nero. Dove hai tagliato, un lembo si è piegato verso l'interno senza rumore e ha lasciato un'apertura buia, larga quanto le tue spalle: si scende giù, nel varco. Le funi degli arpioni, tese. Alle tue spalle il boccaporto della Santa Maria, con la sua luce gialla: dentro.
+Sono fuori, sullo scafo nero. Dove ho tagliato, un lembo si è piegato verso l'interno senza rumore e ha lasciato un'apertura buia, larga quanto le mie spalle: si scende giù, nel varco. Le funi degli arpioni, tese. Alle mie spalle il boccaporto della Santa Maria, con la sua luce gialla: dentro.
 Puoi vedere qui: una giuntura.
 Uscite: Dentro (La stiva), Giù.
 
 > entra nel varco
-Metti un piede oltre il bordo, poi l'altro, e ti lasci scendere. Il tremito del reattore, che ti saliva dalle suole, non c'è più.
+Metto un piede oltre il bordo, poi l'altro, e mi lascio scendere. Il tremito del reattore, che mi saliva dalle suole, non c'è più.
 
 --- La camera di compensazione ---
-Una camera bassa e tonda, senza un angolo. Le pareti curvano con la grana fine di qualcosa che è cresciuto invece di essere montato: fredde, senza odore. Sopra di te il varco, e in fondo al varco la luce gialla del boccaporto. A ovest, nello stesso nero dello scafo, il profilo di una porta; sopra la porta, un'incisione.
+Una camera bassa e tonda, senza un angolo. Le pareti curvano con la grana fine di qualcosa che è cresciuto invece di essere montato: fredde, senza odore. Sopra di me il varco, e in fondo al varco la luce gialla del boccaporto. A ovest, nello stesso nero dello scafo, il profilo di una porta; sopra la porta, un'incisione.
 Puoi vedere qui: un pannello, una porta interna.
 Uscite: Su (Lo scafo), Ovest.
-Sopra di te il lembo si richiude. Non lo vedi muoversi: un momento c'è l'apertura, con la luce gialla del boccaporto in fondo, e il momento dopo c'è parete. Il cavo di sicurezza, tranciato di netto, ti pende dalla cintura. Un metro, e basta.
+Sopra di me il lembo si richiude. Non lo vedo muoversi: un momento c'è l'apertura, con la luce gialla del boccaporto in fondo, e il momento dopo c'è parete. Il cavo di sicurezza, tranciato di netto, mi pende dalla cintura. Un metro, e basta.
 
 > su
-Sopra di te c'è solo parete, liscia come se nessuno l'avesse mai tagliata.
+Sopra di me c'è solo parete, liscia come se nessuno l'avesse mai tagliata.
 
 > ovest
 La porta non ha maniglia, né fessura, né niente da spingere. Sta chiusa.
@@ -326,16 +326,16 @@ Non c'è niente da tirare né da spingere, e il meccanismo, se c'è, non ha corr
 
 > esamina l'incisione
 Una stella stilizzata da cui parte una linea che finisce in una piccola spirale, come un seme che germoglia. Quasi una dichiarazione d'intenti.
-Per un battito, qualcosa nelle pareti si accende tutto insieme e si rispegne. Non le hai toccate.
+Per un battito, qualcosa nelle pareti si accende tutto insieme e si rispegne. Non le ho toccate.
 
 > analizza il pannello
-Sotto la superficie il multiscanner trova una rete di fibre: pressurizzazione e apertura, tutto addormentato. E un ingresso per una fonte esterna, a bassa tensione: la batteria d'emergenza del kit, oppure, in mancanza d'altro, la tua tuta, che di corrente ne ha e ne darebbe.
+Sotto la superficie il multiscanner trova una rete di fibre: pressurizzazione e apertura, tutto addormentato. E un ingresso per una fonte esterna, a bassa tensione: la batteria d'emergenza del kit, oppure, in mancanza d'altro, la mia tuta, che di corrente ne ha e ne darebbe.
 
 > usa la batteria sul pannello
-Trovi l'incavo sotto il bordo del pannello e ci premi il connettore della batteria. Si accende una linea di luce ambrata, e dalla porta arriva un clac sordo.
+Trovo l'incavo sotto il bordo del pannello e ci premo il connettore della batteria. Si accende una linea di luce ambrata, e dalla porta arriva un clac sordo.
 
 > apri la porta interna
-Appoggi il guanto sulla linea ambrata del pannello. Con un sibilo appena percepibile la porta si ritira nella parete. Di là c'è una sala bassa, e un brusio che ti arriva nelle cuffie prima ancora che tu entri.
+Appoggio il guanto sulla linea ambrata del pannello. Con un sibilo appena percepibile la porta si ritira nella parete. Di là c'è una sala bassa, e un brusio che mi arriva nelle cuffie prima ancora che io entri.
 
 > inventario
 Stai portando:
@@ -347,35 +347,35 @@ Stai portando:
   - La taglierina
   - La tuta
   - Il visore
-Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che ti arriva nei denti prima che nelle cuffie. Poi più niente.
+Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che mi arriva nei denti prima che nelle cuffie. Poi più niente.
 
 > ovest
 
 --- Il vestibolo delle gole ---
-Una sala bassa e tonda, la prima vera sala della nave. Tre gole si aprono nella parete verso il buio: quella larga, a ovest, sale verso una luminescenza azzurrina; quella di mezzo scende, ed è da lì che il brusio sale più forte; la terza è crollata su se stessa. Le pareti sono percorse da venature spente, una rete fine che un tempo doveva fare luce. In una nicchia, all'altezza esatta della tua mano, qualcuno ha posato qualcosa, e il multiscanner l'ha già schedato. A est, la porta interna e la camera.
+Una sala bassa e tonda, la prima vera sala della nave. Tre gole si aprono nella parete verso il buio: quella larga, a ovest, sale verso una luminescenza azzurrina; quella di mezzo scende, ed è da lì che il brusio sale più forte; la terza è crollata su se stessa. Le pareti sono percorse da venature spente, una rete fine che un tempo doveva fare luce. In una nicchia, all'altezza esatta della mia mano, qualcuno ha posato qualcosa, e il multiscanner l'ha già schedato. A est, la porta interna e la camera.
 Puoi vedere qui: un risuonatore.
 Uscite: Est (La camera di compensazione), Ovest, Giù.
-Appoggi il guanto alla parete per orientarti, e il multiscanner sulla spalla si impenna: il display si riempie di righe che si scavalcano. Nella cuffia, dove fino a un attimo fa c'era soltanto il tuo fiato, entra un brusio. Tante voci, una sopra l'altra, nessuna intera. La tuta prova a tradurre e ti restituisce una sillaba, poi niente. E intanto, sul bordo del visore, la cifra dell'aria scende di un punto. Poi di un altro.
-Stacchi la mano. Il brusio si abbassa, la cifra si ferma.
-Qualunque cosa sia, per farsi sentire beve dalla tua stessa batteria.
+Appoggio il guanto alla parete per orientarmi, e il multiscanner sulla spalla si impenna: il display si riempie di righe che si scavalcano. Nella cuffia, dove fino a un attimo fa c'era soltanto il mio fiato, entra un brusio. Tante voci, una sopra l'altra, nessuna intera. La tuta prova a tradurre e mi restituisce una sillaba, poi niente. E intanto, sul bordo del visore, la cifra dell'aria scende di un punto. Poi di un altro.
+Stacco la mano. Il brusio si abbassa, la cifra si ferma.
+Qualunque cosa sia, per farsi sentire beve dalla mia stessa batteria.
 
 > esamina le gole
 Tre bocche nella parete. La gola larga sale verso ovest, verso una luce azzurrina. Quella di mezzo scende. La terza è crollata su se stessa: dentro si vede solo materia schiacciata, piegata come carta bagnata.
 
 > esamina l'arnese
-Non somiglia a niente che tu conosca, eppure è un attrezzo: ha un davanti, un dietro, un punto dove la mano lo prenderebbe. Il multiscanner, che non sa come chiamarlo, l'ha schedato come «risuonatore». Il brusio viene da lui. Una cosa che parla ancora dopo tutto questo tempo è una cosa che funziona, e una cosa che funziona si vende: staccato intero e portato a Yusuf, varrebbe sei mesi di stive vuote. Forse un anno.
+Non somiglia a niente che io conosca, eppure è un attrezzo: ha un davanti, un dietro, un punto dove la mano lo prenderebbe. Il multiscanner, che non sa come chiamarlo, l'ha schedato come «risuonatore». Il brusio viene da lui. Una cosa che parla ancora dopo tutto questo tempo è una cosa che funziona, e una cosa che funziona si vende: staccato intero e portato a Yusuf, varrebbe sei mesi di stive vuote. Forse un anno.
 
 > prendi il risuonatore
-Allunghi la mano. Il brusio sale, la cifra sul visore riprende a scendere, e ti fermi con il guanto a un palmo dall'arnese. È saldato alla nicchia, cresciuto insieme alla parete: per portarlo via dovresti STACCARLO.
+Allungo la mano. Il brusio sale, la cifra sul visore riprende a scendere, e mi fermo con il guanto a un palmo dall'arnese. È saldato alla nicchia, cresciuto insieme alla parete: per portarlo via dovrei staccarlo. (STACCALO.)
 
 > stacca il risuonatore
-Regoli la taglierina al minimo e incidi il bordo della nicchia, dove l'arnese si salda alla parete. Il brusio si alza di colpo, e per un istante una voce si stacca dalle altre: chiede qualcosa, in fretta, a qualcuno. Poi rientra nel coro. Servono altri due tagli.
+Regolo la taglierina al minimo e incido il bordo della nicchia, dove l'arnese si salda alla parete. Il brusio si alza di colpo, e per un istante una voce si stacca dalle altre: chiede qualcosa, in fretta, a qualcuno. Poi rientra nel coro. Servono altri due tagli.
 
 > stacca il risuonatore
 Secondo taglio. La parete cede come cartilagine. Nella cuffia le voci adesso sono tante e vicine, e una sembra contare. Ne manca uno.
 
 > stacca il risuonatore
-L'ultimo lembo si stacca e l'arnese ti cade nel palmo, più leggero di quanto pensassi, e tiepido. Il brusio adesso viene da lì, dalla tua mano. Sul bordo del visore la cifra scende di un punto, poi di un altro, e non smette.
+L'ultimo lembo si stacca e l'arnese mi cade nel palmo, più leggero di quanto pensassi, e tiepido. Il brusio adesso viene da lì, dalla mia mano. Sul bordo del visore la cifra scende di un punto, poi di un altro, e non smette.
 
 > inventario
 Stai portando:
@@ -390,7 +390,7 @@ Stai portando:
   - Il visore
 
 > esamina il risuonatore
-Tiepido, più leggero di quanto pensassi. Il brusio viene da lì, e finché lo porti la cifra dell'aria scende a ogni passo. Vale sei mesi di stive vuote. Forse un anno.
+Tiepido, più leggero di quanto pensassi. Il brusio viene da lì, e finché lo porto la cifra dell'aria scende a ogni passo. Vale sei mesi di stive vuote. Forse un anno.
 
 > esamina il visore
 Sul bordo del visore, in verde, la cifra dell'aria: 87.
@@ -398,32 +398,32 @@ Sul bordo del visore, in verde, la cifra dell'aria: 87.
 > guarda
 
 --- Il vestibolo delle gole ---
-Una sala bassa e tonda, la prima vera sala della nave. Tre gole si aprono nella parete verso il buio: quella larga, a ovest, sale verso una luminescenza azzurrina; quella di mezzo scende; la terza è crollata su se stessa. Le pareti sono percorse da venature spente. La nicchia è vuota: dove l'arnese si saldava alla parete restano i tuoi tagli. A est, la porta interna e la camera.
+Una sala bassa e tonda, la prima vera sala della nave. Tre gole si aprono nella parete verso il buio: quella larga, a ovest, sale verso una luminescenza azzurrina; quella di mezzo scende; la terza è crollata su se stessa. Le pareti sono percorse da venature spente. La nicchia è vuota: dove l'arnese si saldava alla parete restano i miei tagli. A est, la porta interna e la camera.
 Uscite: Est (La camera di compensazione), Ovest, Giù.
 
 > giù
 
 --- La gola di mezzo ---
-La gola scende a scatti: si stringe fino a sfiorarti le spalle, poi si riallarga senza una regola, come se fosse cresciuta per conto suo. Qui le venature non sono spente del tutto: dove passa il guanto, una corre di un verde stanco per un palmo e si riaddormenta. Il brusio è più forte, e dal basso sale un freddo diverso, umido. Su si torna al vestibolo; la gola continua a scendere.
+La gola scende a scatti: si stringe fino a sfiorarmi le spalle, poi si riallarga senza una regola, come se fosse cresciuta per conto suo. Qui le venature non sono spente del tutto: dove passa il guanto, una corre di un verde stanco per un palmo e si riaddormenta. Il brusio è più forte, e dal basso sale un freddo diverso, umido. Su si torna al vestibolo; la gola continua a scendere.
 Uscite: Su (Il vestibolo delle gole), Giù.
 
 > tocca le venature
-Una venatura si accende sotto il guanto, verde, e ti corre davanti per un palmo, giù per la gola, come se ti indicasse la strada. Poi si spegne.
+Una venatura si accende sotto il guanto, verde, e mi corre davanti per un palmo, giù per la gola, come se mi indicasse la strada. Poi si spegne.
 
 > su
 
 --- Il vestibolo delle gole ---
-Una sala bassa e tonda, la prima vera sala della nave. Tre gole si aprono nella parete verso il buio: quella larga, a ovest, sale verso una luminescenza azzurrina; quella di mezzo scende; la terza è crollata su se stessa. Le pareti sono percorse da venature spente. La nicchia è vuota: dove l'arnese si saldava alla parete restano i tuoi tagli. A est, la porta interna e la camera.
+Una sala bassa e tonda, la prima vera sala della nave. Tre gole si aprono nella parete verso il buio: quella larga, a ovest, sale verso una luminescenza azzurrina; quella di mezzo scende; la terza è crollata su se stessa. Le pareti sono percorse da venature spente. La nicchia è vuota: dove l'arnese si saldava alla parete restano i miei tagli. A est, la porta interna e la camera.
 Uscite: Est (La camera di compensazione), Ovest, Giù (La gola di mezzo).
 
 > lascia il risuonatore
 Lasciato: il risuonatore.
 
 > esamina la nicchia
-Vuota. Dove l'arnese si saldava alla parete restano i tuoi tagli, netti, già meno netti.
+Vuota. Dove l'arnese si saldava alla parete restano i miei tagli, netti, già meno netti.
 
 > tocca le venature
-Il brusio risale sotto il guanto, e la cifra sul visore scende di un punto. Togli la mano.
+Il brusio risale sotto il guanto, e la cifra sul visore scende di un punto. Tolgo la mano.
 
 > esamina il visore
 Sul bordo del visore, in verde, la cifra dell'aria: 81.
@@ -431,22 +431,22 @@ Sul bordo del visore, in verde, la cifra dell'aria: 81.
 > ovest
 
 --- Il corridoio principale ---
-Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sei salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.
+Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.
 Puoi vedere qui: una lastra dati, una grande porta.
 Uscite: Est (Il vestibolo delle gole), Nord, Sud, Giù, Nordest, Ovest.
 
 > est
 
 --- Il vestibolo delle gole ---
-Una sala bassa e tonda, la prima vera sala della nave. Tre gole si aprono nella parete verso il buio: quella larga, a ovest, sale verso una luminescenza azzurrina; quella di mezzo scende; la terza è crollata su se stessa. Le pareti sono percorse da venature spente. La nicchia è vuota: dove l'arnese si saldava alla parete restano i tuoi tagli. A est, la porta interna e la camera.
+Una sala bassa e tonda, la prima vera sala della nave. Tre gole si aprono nella parete verso il buio: quella larga, a ovest, sale verso una luminescenza azzurrina; quella di mezzo scende; la terza è crollata su se stessa. Le pareti sono percorse da venature spente. La nicchia è vuota: dove l'arnese si saldava alla parete restano i miei tagli. A est, la porta interna e la camera.
 Puoi vedere qui: un risuonatore.
 Uscite: Est (La camera di compensazione), Ovest (Il corridoio principale), Giù (La gola di mezzo).
-Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che ti arriva nei denti prima che nelle cuffie. Poi più niente.
+Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che mi arriva nei denti prima che nelle cuffie. Poi più niente.
 
 > est
 
 --- La camera di compensazione ---
-La camera bassa e tonda, ormai attraversata. A ovest la porta interna è aperta su una sala bassa da cui sale un brusio. Sopra di te, dove c'era il varco, solo parete.
+La camera bassa e tonda, ormai attraversata. A ovest la porta interna è aperta su una sala bassa da cui sale un brusio. Sopra di me, dove c'era il varco, solo parete.
 Puoi vedere qui: un pannello, una porta interna.
 Uscite: Ovest (Il vestibolo delle gole).
 
