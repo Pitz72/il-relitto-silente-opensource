@@ -8,6 +8,8 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+## [0.2.5-beta.8] - 2026-10-30
+
 ### Per chi gioca
 
 - **L.V. ha una voce.** Nell’intro la sua ultima registrazione si sente: stanca, senza fiato, dalla radio della tuta, sopra una statica continua. Mentre parla, sullo schermo resta solo la scritta della scatola nera.
