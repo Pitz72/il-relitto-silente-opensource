@@ -22,7 +22,7 @@ Una riga per ogni file che l’autore tiene, in ordine di data. Colonne:
 
 ## I brani
 
-**La voce di L.V.** (`LV/LV-01-la-traccia.mp3`) non è musica, ma sta in questa cartella perché il gioco la suona con lo stesso lettore: l’ha generata l’autore il 29 ottobre 2026 con la sintesi vocale di Gemini (la voce «Riko»), sul copione e le indicazioni di recitazione della sessione di quel giorno, e io l’ho passata da una trasmittente leggera (`strumenti/intro/voce_lv.py`). La sorgente, intatta, è `audio/sorgenti/voce/lv-gemini-riko-2026-10-29.wav` (fuori da git; WAV 24 kHz 16 bit mono, 1:28), SHA-256 `8d971ab58ef2a11be454b55426d5e31bb3068d0d18a10dce750e04613374e8c6`. Il suo registro è in `audio/LICENZE.md`.
+**La voce di L.V.** (`LV/LV-01-la-traccia.mp3`) non è musica, ma sta in questa cartella perché il gioco la suona con lo stesso lettore: l’ha generata l’autore con la sintesi vocale di Google, sul copione e le indicazioni di recitazione preparate qui, e io l’ho passata da una trasmittente leggera (`strumenti/intro/voce_lv.py`). La ripresa in uso è del 30 ottobre 2026, con la voce «Elio» e il testo rivisto: `audio/sorgenti/voce/lv-gemini-elio-2026-10-30.wav` (fuori da git; WAV 24 kHz 16 bit mono, 1:27), SHA-256 `f8ba9b1e612c2e592157de9112d07bbd8a0acee60a2fcc01b0b051725d86211a`; il modello vi legge ad alta voce «lunga pausa» e «molta pausa», che i pezzi lasciano fuori. La prima, del 29 ottobre (voce «Riko», il testo di prima), resta in `audio/sorgenti/voce/` e non si usa. Il suo registro è in `audio/LICENZE.md`.
 
 | File | Scheda | Data | Piano | Modello | Strada | Prompt e correzioni | Esito | Impronta (SHA-256 dell’originale) |
 |---|---|---|---|---|---|---|---|---|

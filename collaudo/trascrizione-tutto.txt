@@ -1,9 +1,9 @@
 Scatola nera di una tuta extraveicolare. Traccia recuperata, integrità parziale.
 
-«…la spia è verde. Allora registra. Facciamo finta che registri.
-L'acqua è finita ieri. Il riscaldamento stanotte. L'aria la conto ancora, ma la conto male: i numeri mi arrivano tardi, uno alla volta, e lo so cosa vuol dire.
-Ho firmato tutte le carte che servivano per partire da solo. Ci tenevo tanto.
-Qui dentro c'è una cosa viva. Sta dietro un vetro, a mezzo metro da me. La vedo pulsare. Non la so aprire.»
+«…la spia è verde. Allora registra, o almeno così dice.
+L'acqua è finita ieri. Il riscaldamento stanotte. Il numero dell'aria lo leggo sul visore e, prima di dirlo, l'ho già perso. Lo rileggo: diciannove.
+Ho firmato tutte le carte che servivano per partire da solo. Ho insistito io.
+Qui dentro c'è una cosa viva. Sta dietro un vetro, a mezzo metro da me. La vedo pulsare, e quel vetro non lo so aprire.»
 
 Fine della traccia.
 
@@ -247,12 +247,12 @@ Chiudo le dita attorno al seme. È caldo, quasi febbrile, e una vibrazione costa
 
 > ascolta la scatola nera
 Stacco il cavo di servizio dal fianco della mia tuta e lo innesto nella presa della sua. La cifra sul visore scende di colpo; la spia della scatola, dopo un secolo e mezzo, si accende verde. Nella cuffia, rovinata, una voce d'uomo:
-«…acqua finita ieri. Il riscaldamento stanotte. L'aria la conto, ma la conto male…»
+«…acqua finita ieri. Il riscaldamento stanotte. Il numero dell'aria lo leggo, e me lo scordo…»
 Un buco.
-«…volevo andarmene, ecco la verità. Ho firmato tutto, al medico ho detto quello che voleva sentirsi dire. Una mi aveva detto di restare. Le ho detto che aveva ragione, e poi sono partito…»
+«…volevo andarmene. Ho firmato tutto, al medico ho detto quello che voleva sentirsi dire. Una mi aveva detto di restare. Le ho detto che aveva ragione, e poi sono partito…»
 Un buco più lungo.
-«…la chiave della teca non c'è. Dev'essere giù, dove crescono quelle cose. Ci sono sceso. Mi hanno preso il cavo, capisci? Il cavo. Sono tornato su a tentoni, con la mano sulla parete fredda, che lì non ti seguono…»
-«…Matthew. Se mi senti: ci ho provato davvero. Con te, dico. Non so se è servito…»
+«…la chiave della teca non c'è. Dev'essere giù, dove crescono quelle cose. Ci sono sceso, e mi hanno preso il cavo, capisci? Sono tornato su a tentoni, con la mano sulla parete fredda, che lì non ti seguono…»
+«…Matthew. Se mi senti: ci ho provato. Con te, dico. Non so se è servito…»
 Poi la voce dice ancora qualcosa, troppo piano, e la registrazione finisce.
 
 > ovest

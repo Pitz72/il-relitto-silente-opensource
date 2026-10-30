@@ -7,20 +7,20 @@ import { ANTICIPO_VOCE, SCALETTA, VOCE, fermoPer, opacitaBlocco, pezziDellaVoce,
 
 const blocco = (id: string) => SCALETTA.blocchi.find((b) => b.id === id)!;
 
-test("la durata: 2:59,13 (era 2:40,75 prima della voce di L.V.)", () => {
-  assert.equal(SCALETTA.durata, 179.13);
+test("la durata: 3:02,12 (era 2:40,75 prima della voce di L.V.)", () => {
+  assert.equal(SCALETTA.durata, 182.12);
 });
 
 test("la regola di lettura: 0,35 s per parola più 2, mai meno di 4", () => {
-  assert.deepEqual(fermoPer("Ci tenevo tanto."), { fermo: 4, parole: 3 });
+  assert.deepEqual(fermoPer("Ho insistito io."), { fermo: 4, parole: 3 });
   assert.deepEqual(fermoPer("i numeri mi arrivano tardi, uno alla volta, e lo so cosa vuol dire."), { fermo: 6.9, parole: 14 });
 });
 
 test("i testi entrano, sono pieni ed escono quando dicono la regola e la voce", () => {
   const attesi: Record<string, [number, number, number]> = {
-    B0: [3.0, 4.2, 10.7], B1: [11.6, 12.8, 25.21], B2: [26.11, 27.31, 37.98], B3: [38.88, 40.08, 55.97],
-    B4: [45.59, 46.79, 55.97], B5: [62.47, 63.67, 78.4], B6: [72.2, 73.4, 78.4], B7: [124.7, 125.9, 131.0],
-    B8: [131.6, 132.8, 139.11], B9: [139.71, 140.91, 148.78], B10: [149.38, 150.58, 155.58], T: [161.38, 162.58, 170.13],
+    B0: [3.0, 4.2, 10.7], B1: [11.6, 12.8, 25.15], B2: [26.05, 27.25, 36.9], B3: [37.8, 39.0, 57.15],
+    B4: [50.03, 51.23, 57.15], B5: [63.65, 64.85, 78.18], B6: [71.98, 73.18, 78.18], B7: [124.48, 125.68, 132.97],
+    B8: [133.57, 134.77, 141.34], B9: [141.94, 143.14, 151.77], B10: [152.37, 153.57, 158.57], T: [164.37, 165.57, 173.12],
   };
   for (const [id, [entra, pieno, via]] of Object.entries(attesi)) {
     const b = blocco(id);
@@ -30,7 +30,7 @@ test("i testi entrano, sono pieni ed escono quando dicono la regola e la voce", 
 
 test("le scene cominciano dove dice la scaletta", () => {
   const inizi = Object.fromEntries(SCALETTA.scene.map((s) => [s.id, s.inizio]));
-  assert.deepEqual(inizi, { A: 0, B: 58.97, C: 79.4, D: 92.2, E: 101.2, F: 124.7, G: 156.58, H: 170.13 });
+  assert.deepEqual(inizi, { A: 0, B: 60.15, C: 79.18, D: 91.98, E: 100.98, F: 124.48, G: 159.57, H: 173.12 });
   assert.equal(scenaA(85).id, "C");
   assert.equal(scenaA(200).id, "H");
 });
@@ -38,8 +38,8 @@ test("le scene cominciano dove dice la scaletta", () => {
 test("un blocco che continua la frase attenua quello sopra, ed escono insieme", () => {
   const b3 = blocco("B3");
   assert.equal(opacitaBlocco(b3, 42), 1);
-  assert.ok(opacitaBlocco(b3, 48) < 0.7 && opacitaBlocco(b3, 48) > 0.5);
-  assert.equal(opacitaBlocco(b3, 56.0), 0);
+  assert.ok(opacitaBlocco(b3, 52) < 0.7 && opacitaBlocco(b3, 52) > 0.5);
+  assert.equal(opacitaBlocco(b3, 57.2), 0);
 });
 
 test("i sottotitoli dei suoni stanno dentro l'intro e in ordine", () => {
@@ -51,8 +51,8 @@ test("i sottotitoli dei suoni stanno dentro l'intro e in ordine", () => {
 });
 
 test("la scala dura 23,5 s e si ferma a 23", () => {
-  assert.deepEqual(SCALETTA.momenti.scala, [101.2, 124.7]);
-  assert.equal(SCALETTA.momenti.scalaFerma, 124.2);
+  assert.deepEqual(SCALETTA.momenti.scala, [100.98, 124.48]);
+  assert.equal(SCALETTA.momenti.scalaFerma, 123.98);
 });
 
 test("la voce di L.V.: ogni frase comincia con il suo testo, e il testo resta finché l'ha detta", () => {
@@ -67,9 +67,14 @@ test("la voce di L.V.: ogni frase comincia con il suo testo, e il testo resta fi
     const prima = p.t + (v.parola - p.da), ultima = p.t + (v.fine - p.da);
     assert.ok(prima >= b.entra, `${b.id}: la prima parola arriva prima del testo`);
     assert.ok(ultima + 0.79 <= b.esce, `${b.id}: il testo comincia a uscire prima dell'ultima parola`);
-    // e il pezzo finisce prima che il testo se ne sia andato
+    // e il pezzo, respiri compresi, finisce prima che il testo se ne sia andato: il blocco dopo non gli comincia sopra
     assert.ok(p.t + (p.a - p.da) <= b.via + 0.01, `${b.id}: la voce va oltre il suo testo`);
   }
+});
+
+test("il cuore della cosa viva batte dopo «La vedo pulsare», mentre c'è ancora il suo testo", () => {
+  const m = SCALETTA.momenti;
+  assert.ok(m.pulsare > m.pulsa[0] && m.pulsare + 1.5 < m.pulsa[1], `«pulsare» finisce a ${m.pulsare} s`);
 });
 
 test("la musica entra quando si apre lo spazio", () => {

@@ -10,8 +10,8 @@
 //!
 //! Quattro uscite: il **sound design** (il fruscio della traccia, i clic, il cuore), il **re** (nella
 //! plancia è il reattore; sul titolo, una nota), il **tema** e la **voce**. La voce di L.V. e il tema
-//! sono due file (decisione dell'autore del 29 ottobre 2026: la voce generata da lui con Gemini, la
-//! voce «Riko», passata da una trasmittente leggera, `strumenti/intro/voce_lv.py`; il tema è «The Santa
+//! sono due file (decisione dell'autore del 29 ottobre 2026: la voce generata da lui con la sintesi
+//! vocale di Google, la voce «Elio» dal 30, passata da una trasmittente leggera, `strumenti/intro/voce_lv.py`; il tema è «The Santa
 //! Maria Theme» di Alirio Bruni, la musica del menu del *Mistero della Santa Maria*): li suona un lettore
 //! dei file dell'intro, il suo (`musica_file.rs`). Il tema entra quando si apre lo spazio e si
 //! abbassa sotto la voce; la voce va sul cursore del parlato.
@@ -50,6 +50,9 @@ pub struct Momenti {
     pub scala_ferma: f32,
     pub fruscio_f: f32,
     pub pulsa: [f32; 2],
+    /// finisce «La vedo pulsare» (−1: la pagina non lo manda)
+    #[serde(default = "senza")]
+    pub pulsare: f32,
     pub spia_spenta: f32,
     pub glifi: [f32; 2],
     pub traduzione: [f32; 2],
@@ -182,8 +185,9 @@ pub fn partitura(d: &DatiIntro) -> Vec<(f32, Cue)> {
 
     // ---- F · la traccia, seconda parte: il ponte dal fruscio; il cuore, dopo «La vedo pulsare»
     p(m.fruscio_f, Cue::Nastro(-18.0, 1.5));
-    p(m.pulsa[0] + 2.4, Cue::Cuore(-16.0));
-    p(m.pulsa[0] + 3.55, Cue::Cuore(-19.0));
+    let pulsare = if m.pulsare >= 0.0 { m.pulsare } else { m.pulsa[0] + 2.1 };
+    p(pulsare + 0.3, Cue::Cuore(-16.0));
+    p(pulsare + 1.45, Cue::Cuore(-19.0));
     p(m.spia_spenta - 0.2, Cue::Tace(0.6));
 
     // ---- G · il titolo: sedici glifi, un clic granulare ciascuno; sedici lettere, un fruscio che sale
@@ -516,7 +520,7 @@ mod prove {
             "glifi": [130.0, 131.8], "traduzione": [131.8, 134.8], "raccordo": [138.0, 139.2], "arretra": [139.2, 142.4],
             "interfaccia": [142.4, 145.4], "partita": [145.4, 147.0]},
             "durata": 147.0,
-            "voce": [{"t": 11.75, "da": 2.2, "a": 15.1}, {"t": 50.0, "da": 47.7, "a": 60.0}]}"#;
+            "voce": [{"t": 11.75, "da": 0.05, "a": 13.45}, {"t": 50.0, "da": 51.4, "a": 62.3}]}"#;
         serde_json::from_str(json).expect("i momenti di prova sono scritti male")
     }
 
@@ -529,13 +533,13 @@ mod prove {
         assert!(tra(0.0, 3.0, &|c| matches!(c, Cue::Nastro(..))), "A: manca il fruscio della traccia");
         assert!(tra(0.0, 3.0, &|c| matches!(c, Cue::Tic(..))), "A: manca il clic della spia");
         assert_eq!(p.iter().filter(|(_, c)| matches!(c, Cue::Voce(..))).count(), 2, "i pezzi della voce");
-        assert!(tra(11.7, 11.8, &|c| *c == Cue::Voce(2.2, 15.1)), "A: la prima frase di L.V. non comincia con il suo testo");
+        assert!(tra(11.7, 11.8, &|c| *c == Cue::Voce(0.05, 13.45)), "A: la prima frase di L.V. non comincia con il suo testo");
         assert!(tra(42.0, 46.0, &|c| matches!(c, Cue::Cuore(..))), "A: manca il battito");
         assert!(tra(47.0, 56.0, &|c| matches!(c, Cue::Cuore(..))), "B: il cuore non va avanti nello spazio");
         assert!(!tra(57.0, 60.0, &|c| matches!(c, Cue::Cuore(..))), "B: il cuore non si spegne");
         assert!(tra(46.2, 46.4, &|c| *c == Cue::Tema), "B: il tema non entra con lo spazio");
         assert!(tra(49.0, 49.6, &|c| matches!(c, Cue::Abbassa(l, _) if *l < 0.0)), "B: il tema non si abbassa sotto la voce");
-        assert!(tra(62.0, 63.0, &|c| *c == Cue::Abbassa(0.0, 2.5)), "B: il tema non torna su dopo la voce");
+        assert!(tra(61.0, 61.2, &|c| *c == Cue::Abbassa(0.0, 2.5)), "B: il tema non torna su dopo la voce");
         assert!(!tra(46.0, 60.0, &|c| matches!(c, Cue::Re(..))), "B: il re della guida non c'è più, c'è il tema");
         assert!(tra(60.0, 73.0, &|c| matches!(c, Cue::Vent(..))), "C: manca la ventilazione");
         assert!(p.iter().filter(|(t, c)| *t >= 60.0 && *t < 72.8 && matches!(c, Cue::Tic(..))).count() >= 3, "C: il radar fa un tic a ogni giro");

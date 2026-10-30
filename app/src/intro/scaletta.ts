@@ -78,32 +78,36 @@ const FERMO_TITOLO = 6.55;
 // trasformazione è quella permessa dal §7 del 06: gli apostrofi tipografici.
 export const PROLOGO = {
   B0: "Scatola nera di una tuta extraveicolare. Traccia recuperata, integrità parziale.",
-  B1: "«…la spia è verde. Allora registra. Facciamo finta che registri.",
+  B1: "«…la spia è verde. Allora registra, o almeno così dice.",
   B2: "L’acqua è finita ieri. Il riscaldamento stanotte.",
-  B3: "L’aria la conto ancora, ma la conto male:",
-  B4: "i numeri mi arrivano tardi, uno alla volta, e lo so cosa vuol dire.",
+  B3: "Il numero dell’aria lo leggo sul visore e, prima di dirlo, l’ho già perso.",
+  B4: "Lo rileggo: diciannove.",
   B5: "Ho firmato tutte le carte che servivano per partire da solo.",
-  B6: "Ci tenevo tanto.",
+  B6: "Ho insistito io.",
   B7: "Qui dentro c’è una cosa viva.",
   B8: "Sta dietro un vetro, a mezzo metro da me.",
-  B9: "La vedo pulsare. Non la so aprire.»",
+  B9: "La vedo pulsare, e quel vetro non lo so aprire.»",
   B10: "Fine della traccia.",
 } as const;
 
-/** La voce di L.V. (documento 09, §13; `strumenti/intro/voce_lv.py`): dove sta ogni frase nel file,
+/** La voce di L.V. (documento 09, §13; `strumenti/intro/voce_lv.py`; la voce «Elio», 30 ottobre 2026: fuori
+ *  dai pezzi restano «lunga pausa» e «molta pausa», che il modello ha letto ad alta voce, a 13,9 e a 47,9 s
+ *  del file; il resto c'è tutto, respiri compresi): dove sta ogni frase nel file,
  *  in secondi. Il pezzo (da, a) si suona intero; parola e fine sono la prima e l'ultima parola del
  *  blocco. Un blocco che continua la frase (B4, B6) sta nel pezzo del blocco sopra, com'è stato detto. */
 export const VOCE: Partial<Record<keyof typeof PROLOGO, { da?: number; a?: number; parola: number; fine: number }>> = {
-  B1: { da: 2.2, a: 15.1, parola: 2.48, fine: 13.86 },
-  B2: { da: 15.4, a: 26.6, parola: 16.78, fine: 25.32 },
-  B3: { da: 27.1, a: 43.5, parola: 28.14, fine: 33.5 },
-  B4: { parola: 34.26, fine: 42.24 },
-  B5: { da: 47.7, a: 60.0, parola: 49.58, fine: 53.62 },
-  B6: { parola: 57.88, fine: 58.78 },
-  B7: { da: 67.6, a: 71.05, parola: 68.08, fine: 70.66 },
-  B8: { da: 71.1, a: 77.0, parola: 72.64, fine: 76.66 },
-  B9: { da: 77.0, a: 85.6, parola: 78.0, fine: 84.12 },
+  B1: { da: 0.05, a: 13.45, parola: 2.48, fine: 8.22 },
+  B2: { da: 15.3, a: 26.0, parola: 17.8, fine: 24.2 },
+  B3: { da: 26.4, a: 45.6, parola: 28.32, fine: 35.9 },
+  B4: { parola: 39.08, fine: 43.16 },
+  B5: { da: 51.4, a: 62.3, parola: 52.86, fine: 56.9 },
+  B6: { parola: 60.18, fine: 61.12 },
+  B7: { da: 64.4, a: 71.6, parola: 67.68, fine: 70.94 },
+  B8: { da: 71.6, a: 78.3, parola: 73.24, fine: 77.42 },
+  B9: { da: 78.3, a: 86.55, parola: 79.72, fine: 86.18 },
 };
+/** dove finisce «La vedo pulsare» nel file: dopo, il cuore della cosa viva (F) */
+const FINE_PULSARE = 81.56;
 /** la voce comincia appena dopo che il testo comincia a entrare */
 export const ANTICIPO_VOCE = 0.15;
 /** il blocco che continua la frase entra così prima della sua prima parola */
@@ -142,6 +146,8 @@ export interface Momenti {
   scalaFerma: number;
   fruscioF: number;
   pulsa: [number, number];
+  /** finisce «La vedo pulsare»: poco dopo si sente il cuore della cosa viva */
+  pulsare: number;
   spiaSpenta: number;
   glifi: [number, number];
   traduzione: [number, number];
@@ -171,12 +177,17 @@ export function costruisciScaletta(): Scaletta {
     if (v && !sottoA) {
       pezzo = { t: arrotonda(T + ANTICIPO_VOCE), da: v.da!, a: v.a! };
       const seguito = SEGUITO[id] ? VOCE[SEGUITO[id]!]! : undefined;
-      // con un seguito resta fino a quando entra il seguito, poco prima della sua prima parola
-      const fino = seguito ? pezzo.t + (seguito.parola - v.da!) - PRIMA_DELLA_PAROLA : pezzo.t + (v.fine - v.da!) + DOPO_LA_PAROLA;
+      // con un seguito resta fino a quando entra il seguito, poco prima della sua prima parola; senza,
+      // fino all'ultima parola, e comunque finché il pezzo suona (i respiri dopo le parole sono suoi:
+      // il blocco dopo non comincia sopra di loro)
+      const fino = seguito
+        ? pezzo.t + (seguito.parola - v.da!) - PRIMA_DELLA_PAROLA
+        : Math.max(pezzo.t + (v.fine - v.da!) + DOPO_LA_PAROLA, pezzo.t + (v.a! - v.da!) - ESCE);
       fermo = Math.max(fermo, arrotonda(fino - (T + ENTRA)));
     } else if (v && sottoA) {
       const capo = blocchi.find((x) => x.id === sottoA)!.pezzo!;
-      fermo = Math.max(fermo, arrotonda(capo.t + (v.fine - capo.da) + DOPO_LA_PAROLA - (T + ENTRA)));
+      const fino = Math.max(capo.t + (v.fine - capo.da) + DOPO_LA_PAROLA, capo.t + (capo.a - capo.da) - ESCE);
+      fermo = Math.max(fermo, arrotonda(fino - (T + ENTRA)));
     }
     const b: Blocco = {
       id,
@@ -289,6 +300,7 @@ export function costruisciScaletta(): Scaletta {
     scalaFerma: r(scala + 23),
     fruscioF: r(f - 2),
     pulsa: [r(b9.entra), r(b9.via)],
+    pulsare: r(b9.pezzo!.t + (FINE_PULSARE - b9.pezzo!.da)),
     spiaSpenta: r(spiaSpenta),
     glifi: [r(glifi), r(glifi + 1.8)],
     traduzione: [r(traduzione), r(traduzione + 3.0)],

@@ -1,7 +1,9 @@
 # La voce di L.V. nell'intro (09-intro-storyboard.md, §13): la registrazione che l'autore ha
-# generato con Gemini (la voce «Riko», 29 ottobre 2026), passata da una trasmittente, ma poco.
+# generato con la sintesi vocale di Google (la voce «Elio», 30 ottobre 2026, sul testo rivisto; prima
+# «Riko», 29 ottobre), passata da una trasmittente, ma poco.
 #
-#   python strumenti/intro/voce_lv.py <il file .wav dell'autore>
+#   python strumenti/intro/voce_lv.py <il file .wav dell'autore> <il nome della copia>
+#   (per esempio: lv-gemini-elio-2026-10-30)
 #
 # La catena, leggera apposta («non rendiamo l'effetto pacchiano»):
 #   - la banda di una radio buona, non di un telefono: passa-alto a 170 Hz, passa-basso a 5,4 kHz,
@@ -29,7 +31,7 @@ RADICE = os.path.normpath(os.path.join(QUI, "..", ".."))
 SORGENTE = sys.argv[1]
 USCITA = os.path.join(RADICE, "audio", "musica-ia", "LV", "LV-01-la-traccia.mp3")
 INVILUPPO = os.path.join(RADICE, "app", "src", "intro", "voce.ts")
-COPIA = os.path.join(RADICE, "audio", "sorgenti", "voce", "lv-gemini-riko-2026-10-29.wav")
+COPIA = os.path.join(RADICE, "audio", "sorgenti", "voce", sys.argv[2] + ".wav")
 
 w = wave.open(SORGENTE)
 sr, n, ch = w.getframerate(), w.getnframes(), w.getnchannels()

@@ -81,7 +81,7 @@ test("la scatola nera di L.V.: la voce, i buchi, la chiusura", () => {
 test("il prologo: l'apparecchio, la voce su più righe, la fine della traccia", () => {
   const e = [
     testo(
-      "Scatola nera di una tuta extraveicolare. Traccia recuperata, integrità parziale.\n\n«…la spia è verde. Allora registra.\nL'acqua è finita ieri.\nNon la so aprire.»\n\nFine della traccia.",
+      "Scatola nera di una tuta extraveicolare. Traccia recuperata, integrità parziale.\n\n«…la spia è verde. Allora registra, o almeno così dice.\nL'acqua è finita ieri.\nQuel vetro non lo so aprire.»\n\nFine della traccia.",
       true,
     ),
   ];

@@ -519,7 +519,7 @@ export default function Intro({
       const accesa = morbido(fra(t, M.scala[1], M.scala[1] + 1.2)) * (1 - morbido(fra(t, M.spiaSpenta - 0.2, M.spiaSpenta + 0.6)));
       // batte da «La vedo pulsare», con i colpi che si sentono (intro.rs), e continua finché resta il testo
       const colpi: number[] = [];
-      for (let c = M.pulsa[0] + 2.4; c < M.pulsa[1]; c += 1.15) colpi.push(c);
+      for (let c = M.pulsare + 0.3; c < M.pulsa[1]; c += 1.15) colpi.push(c);
       const colpo = impulso(t, colpi) * (ridotto ? 0.5 : 1);
       const voce = livelloVoce(t) * (ridotto ? 0.15 : 0.35);
       spia(SPIA_F.x, SPIA_F.y, accesa * (0.46 + 0.55 * colpo + voce) * 0.85);
