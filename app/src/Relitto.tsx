@@ -382,7 +382,13 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
         ) : null}
         {schermata.tipo === "intro" || introSopra ? (
           <Suspense key="intro" fallback={null}>
-            <Intro ridotto={ridotto} grana={opzioni.grana} onPartita={partitaDallIntro} onFine={fineIntro} />
+            <Intro
+              ridotto={ridotto}
+              grana={opzioni.grana}
+              voce={dentroTauri() && opzioni.volume > 0 && opzioni.volumeParlato > 0}
+              onPartita={partitaDallIntro}
+              onFine={fineIntro}
+            />
           </Suspense>
         ) : null}
       </>

@@ -181,12 +181,12 @@
   },
   {
    "sigla": "SM",
-   "titolo": "Santa Maria",
-   "modello": "Suno",
-   "fonte": "Suno",
+   "titolo": "The Santa Maria Theme",
+   "modello": "",
+   "fonte": "Il Mistero della Santa Maria",
    "autore": "Alirio Bruni",
-   "licenza": "CC BY-NC-SA 4.0",
-   "uso": "l'intro: il tema del Mistero della Santa Maria"
+   "licenza": "",
+   "uso": "l'intro"
   }
  ],
  "immagini": [

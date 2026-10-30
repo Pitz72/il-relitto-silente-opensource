@@ -56,7 +56,7 @@ pub enum Pezzo {
     T2,
     /// i titoli di coda: la canzone «Voice in the Deep» (22, §5.9)
     CT,
-    /// l’intro (09, §13): il tema della Santa Maria, «Santa Maria» di Alirio Bruni, dal Mistero della Santa Maria
+    /// l’intro (09, §13): «The Santa Maria Theme» di Alirio Bruni, dal Mistero della Santa Maria
     SM,
     /// l’intro: la voce di L.V., tutta la traccia in un file, che si suona a pezzi
     LV,

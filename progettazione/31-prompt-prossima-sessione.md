@@ -53,7 +53,7 @@ del lavoro.
   i glifi che si tracciano, e la fine che vola nella lente del gioco mentre la partita parte sotto. È nella
   **0.2.5-beta.7**, pubblicata nel canale di prova la notte del 29.
 - **La voce di L.V. e il tema della Santa Maria nell’intro** (notte del 29–30 ottobre; documento 09, §13): la voce
-  l’ha generata l’autore con Gemini (voce «Riko»), passata da una trasmittente leggera; il tema è «Santa Maria» di
+  l’ha generata l’autore con Gemini (voce «Riko»), passata da una trasmittente leggera; il tema è «The Santa Maria Theme» di
   Alirio Bruni. L’intro dura 2:59. Su `main`, non ancora in una beta; l’ascolto è in `consegne/Ascolto intro 2026-10-30/`.
 - **Il motore** è Favella1 1.6.1 (documento 29), pubblicata anche su GitHub, PyPI e favella.eu.
 - **La revisione totale** (documento 25): i 30 problemi (5 gravi, 10 medi, 15 lievi) sono tutti
@@ -76,6 +76,15 @@ del lavoro.
      nel gioco, con il suono: gli aggiustamenti, i titoli di testa «o altro»;
    - ~~la musica~~: il tema della Santa Maria e la voce di L.V. (§13) prendono il posto di `I-B`, `I-E` e `I-G`
      (documento 22, §5.8), che non servono più, se l’autore conferma.
+   - **il testo di L.V., rivisto** (30 ottobre: «il discorso del contare»; con stop-slop, humanizer e prosa-italiana).
+     Proposto all’autore, da approvare; poi lui rigenera la voce con Gemini e io la rimonto (`VOCE` in `scaletta.ts`),
+     e il testo nuovo va nel prologo di `relitto.fav`, in `PROLOGO` di `scaletta.ts` e nella scatola nera di `vita.fav`
+     (riga 134). La proposta, per l’intro: «…la spia è verde. Allora registra, o almeno così dice. / L'acqua è finita
+     ieri. Il riscaldamento stanotte. Il numero dell'aria lo leggo sul visore e, prima di dirlo, l'ho già perso. Lo
+     rileggo: diciannove. / Ho firmato tutte le carte che servivano per partire da solo. Ho insistito io. / Qui dentro
+     c'è una cosa viva. Sta dietro un vetro, a mezzo metro da me. La vedo pulsare, e quel vetro non lo so aprire.»
+     Per la scatola nera: «Il numero dell'aria lo leggo, e me lo scordo…»; via «ecco la verità», «Il cavo.» ripetuto e
+     «davvero».
 4. **Il finale** (revisione 25, E2): una schermata vera per il finale, invece della casella che scorre.
    L’autore ha detto «una eventuale finale»: si propone, e decide lui.
 5. **Il resto**, dopo:

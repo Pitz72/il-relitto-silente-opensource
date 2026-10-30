@@ -11,8 +11,8 @@
 //! Quattro uscite: il **sound design** (il fruscio della traccia, i clic, il cuore), il **re** (nella
 //! plancia è il reattore; sul titolo, una nota), il **tema** e la **voce**. La voce di L.V. e il tema
 //! sono due file (decisione dell'autore del 29 ottobre 2026: la voce generata da lui con Gemini, la
-//! voce «Riko», passata da una trasmittente leggera, `strumenti/intro/voce_lv.py`; il tema è «Santa
-//! Maria» di Alirio Bruni, la musica del menu del *Mistero della Santa Maria*): li suona un lettore
+//! voce «Riko», passata da una trasmittente leggera, `strumenti/intro/voce_lv.py`; il tema è «The Santa
+//! Maria Theme» di Alirio Bruni, la musica del menu del *Mistero della Santa Maria*): li suona un lettore
 //! dei file dell'intro, il suo (`musica_file.rs`). Il tema entra quando si apre lo spazio e si
 //! abbassa sotto la voce; la voce va sul cursore del parlato.
 
@@ -21,7 +21,7 @@ use std::path::PathBuf;
 use serde::{Deserialize, Serialize};
 
 use super::colpi::{self, Bus, Colpo, Corpo};
-use super::dsp::{db, Biquad, Caso, Lento, Scorrevole};
+use super::dsp::{db, Biquad, Caso, Scorrevole};
 use super::fondi::Ventilazione;
 use super::brusio::Brusio;
 use super::musica_file::{Biblioteca, Dopo, Lettore, Pezzo, Richiesta};
@@ -77,8 +77,6 @@ pub struct DatiIntro {
     pub momenti: Momenti,
     /// la durata dell'intro
     pub durata: f32,
-    /// dove la traccia ha i suoi buchi: fra una frase e l'altra, mai sulle parole (storyboard, A)
-    pub buchi: Vec<f32>,
     /// i pezzi della voce di L.V., ognuno con il suo testo
     #[serde(default)]
     pub voce: Vec<PezzoVoce>,
@@ -89,8 +87,6 @@ pub struct DatiIntro {
 pub enum Cue {
     /// il fruscio della traccia: (livello dB, secondi); −120 lo toglie
     Nastro(f32, f32),
-    /// la traccia ha un buco: il fruscio cade a zero per un quarto di secondo
-    Buco,
     /// un pezzo della voce di L.V.: (da, a) nel file
     Voce(f32, f32),
     /// entra il tema
@@ -137,13 +133,12 @@ pub fn partitura(d: &DatiIntro) -> Vec<(f32, Cue)> {
     let mut c: Vec<(f32, Cue)> = Vec::new();
     let mut p = |t: f32, q: Cue| c.push((t.max(0.0), q));
 
-    // ---- A · la traccia: la statica della radio della tuta, con i suoi buchi, il clic della spia.
-    // Il fiato è quello vero, nella voce di L.V.: il respiro sintetizzato non c'è più
+    // ---- A · la traccia: la statica della radio della tuta, continua, e il clic della spia. Il fiato
+    // è quello vero, nella voce di L.V.: il respiro sintetizzato non c'è più. I buchi della traccia
+    // (un quarto di secondo di silenzio fra le frasi) non ci sono più: si sentivano come le cuciture di
+    // un file in loop (l'autore, 30 ottobre 2026: «dobbiamo rendere tutto omogeneo»)
     p(m.fruscio_a, Cue::Nastro(-14.0, 1.0));
     p(m.spia, Cue::Tic(600.0, -16.0, 0.0));
-    for &b in &d.buchi {
-        p(b, Cue::Buco);
-    }
     // la voce di L.V., un pezzo per ogni testo; mentre parla il tema (se suona) si abbassa
     for v in &d.voce {
         p(v.t, Cue::Voce(v.da, v.a));
@@ -221,36 +216,29 @@ pub fn partitura(d: &DatiIntro) -> Vec<(f32, Cue)> {
     c
 }
 
-/// Il fruscio di una registrazione rovinata: rumore alto, con i suoi scoppiettii, che un buco può far cadere.
+/// La statica della radio della tuta: un fruscio alto e continuo, sempre uguale. Niente respiro del
+/// volume, niente scoppiettii, niente buchi: un fondo omogeneo, che non si nota se non quando manca.
 struct Nastro {
     caso: Caso,
     hp: Biquad,
     lp: Biquad,
-    onda: Lento,
     g: Scorrevole,
-    buco: Scorrevole,
-    buco_fino: f32,
 }
 
 impl Nastro {
     fn nuovo(sr: f32, seme: u64) -> Self {
-        let mut caso = Caso::nuovo(seme);
-        let onda = Lento::nuovo((0.3, 1.2), &mut caso);
-        Nastro { caso, hp: Biquad::passaalto(1400.0, 0.7, sr), lp: Biquad::passabasso(9000.0, 0.7, sr), onda, g: Scorrevole::nuovo(0.0), buco: Scorrevole::nuovo(1.0), buco_fino: -1.0 }
+        Nastro { caso: Caso::nuovo(seme), hp: Biquad::passaalto(1400.0, 0.7, sr), lp: Biquad::passabasso(9000.0, 0.7, sr), g: Scorrevole::nuovo(0.0) }
     }
 
     #[inline]
-    fn campione(&mut self, dt: f32) -> f32 {
+    fn campione(&mut self) -> f32 {
         let b = self.caso.bianco();
-        let mut y = self.lp.elabora(self.hp.elabora(b, 0), 0);
-        // il fruscio respira piano, e ogni tanto scoppietta
-        y *= 0.7 + 0.3 * self.onda.campione(dt, &mut self.caso);
-        if self.caso.f() < 0.0004 {
-            y += self.caso.bianco() * 3.0;
-        }
-        y * self.g.passo() * self.buco.passo() * NORM_NASTRO
+        self.lp.elabora(self.hp.elabora(b, 0), 0) * self.g.passo() * NORM_NASTRO * NORM_CONTINUO
     }
 }
+
+/// Il fruscio senza il suo respiro (che lo portava fra 0,7 e 1) vale come prima, in media.
+const NORM_CONTINUO: f32 = 0.85;
 
 /// Livelli a cui un «0 dB» di ogni strato vale circa −30 dBFS di valore efficace.
 const NORM_NASTRO: f32 = 0.10;
@@ -373,10 +361,6 @@ impl Intro {
         let sr = self.sr;
         match c {
             Cue::Nastro(liv, s) => self.nastro.g.verso(lin(liv), s, sr),
-            Cue::Buco => {
-                self.nastro.buco.verso(0.0, 0.03, sr);
-                self.nastro.buco_fino = self.t + 0.25;
-            }
             Cue::Voce(da, a) => self.voce.avvia(Richiesta { pezzo: Pezzo::LV, da, a: Some(a), entra: 0.03, dopo: Dopo::Niente, incrocio: 0.0, esce: 0.2, livello: LIV_VOCE }),
             Cue::Tema => self.tema.avvia(Richiesta { pezzo: Pezzo::SM, da: 0.0, a: None, entra: 2.5, dopo: Dopo::Niente, incrocio: 0.0, esce: 4.0, livello: LIV_TEMA }),
             Cue::Abbassa(liv, s) => self.abbassa.verso(db(liv), s, sr),
@@ -449,10 +433,6 @@ impl Intro {
             self.prossimo += 1;
             self.esegui(c);
         }
-        if self.nastro.buco_fino >= 0.0 && self.t >= self.nastro.buco_fino {
-            self.nastro.buco.verso(1.0, 0.05, self.sr);
-            self.nastro.buco_fino = -1.0;
-        }
         self.voce.passo(dt);
         self.tema.passo(dt);
         // finito: la partitura è esaurita, il volume è a zero
@@ -474,7 +454,7 @@ impl Intro {
         let mut l = 0.0f32;
         let mut r = 0.0f32;
         // il fruscio della traccia, al centro
-        let n = self.nastro.campione(dt);
+        let n = self.nastro.campione();
         l += n;
         r += n;
         // la ventilazione della plancia
@@ -535,7 +515,7 @@ mod prove {
             "scala": [80.0, 103.5], "scalaFerma": 103.0, "fruscioF": 101.5, "pulsa": [115.0, 120.0], "spiaSpenta": 124.0,
             "glifi": [130.0, 131.8], "traduzione": [131.8, 134.8], "raccordo": [138.0, 139.2], "arretra": [139.2, 142.4],
             "interfaccia": [142.4, 145.4], "partita": [145.4, 147.0]},
-            "durata": 147.0, "buchi": [3.5, 14.5, 22.0, 30.0],
+            "durata": 147.0,
             "voce": [{"t": 11.75, "da": 2.2, "a": 15.1}, {"t": 50.0, "da": 47.7, "a": 60.0}]}"#;
         serde_json::from_str(json).expect("i momenti di prova sono scritti male")
     }
@@ -550,7 +530,6 @@ mod prove {
         assert!(tra(0.0, 3.0, &|c| matches!(c, Cue::Tic(..))), "A: manca il clic della spia");
         assert_eq!(p.iter().filter(|(_, c)| matches!(c, Cue::Voce(..))).count(), 2, "i pezzi della voce");
         assert!(tra(11.7, 11.8, &|c| *c == Cue::Voce(2.2, 15.1)), "A: la prima frase di L.V. non comincia con il suo testo");
-        assert_eq!(p.iter().filter(|(_, c)| *c == Cue::Buco).count(), 4, "i buchi della traccia");
         assert!(tra(42.0, 46.0, &|c| matches!(c, Cue::Cuore(..))), "A: manca il battito");
         assert!(tra(47.0, 56.0, &|c| matches!(c, Cue::Cuore(..))), "B: il cuore non va avanti nello spazio");
         assert!(!tra(57.0, 60.0, &|c| matches!(c, Cue::Cuore(..))), "B: il cuore non si spegne");
@@ -569,32 +548,34 @@ mod prove {
     }
 
     #[test]
-    fn i_buchi_non_cadono_sulle_parole_e_il_nastro_li_fa() {
-        // il quarto di secondo di buco porta il fruscio quasi a zero
+    fn la_statica_e_continua_senza_buchi_ne_respiri() {
+        // l'autore, 30 ottobre 2026: le interruzioni della statica si sentivano come un file in loop
         let mut i = Intro::nuovo(24000.0, 5);
         let d = momenti_di_prova();
         i.avvia(&d);
-        let rms = |i: &mut Intro, da: f32, a: f32| {
-            let mut e = 0.0f64;
-            let mut n = 0;
-            let mut t = i.t;
-            while t < a {
-                i.passo(128.0 / 24000.0);
-                for _ in 0..128 {
-                    let u = i.campione();
-                    if t >= da {
-                        e += (u.suoni.0 * u.suoni.0) as f64;
-                        n += 1;
-                    }
+        let mut finestre: Vec<f64> = Vec::new();
+        let (mut e, mut n) = (0.0f64, 0usize);
+        let mut t = 0.0f32;
+        while t < 11.0 {
+            i.passo(128.0 / 24000.0);
+            for _ in 0..128 {
+                let u = i.campione();
+                if t >= 3.0 {
+                    e += (u.suoni.0 * u.suoni.0) as f64;
+                    n += 1;
                 }
-                t += 128.0 / 24000.0;
             }
-            10.0 * (e / n.max(1) as f64 + 1e-20).log10()
-        };
-        let fuori = rms(&mut i, 2.8, 3.4);
-        let dentro = rms(&mut i, 3.55, 3.7);
-        assert!(fuori > -60.0, "il fruscio non suona ({fuori:.1} dB)");
-        assert!(dentro < fuori - 12.0, "il buco non c'è: {fuori:.1} → {dentro:.1} dB");
+            t += 128.0 / 24000.0;
+            // finestre di un quinto di secondo
+            if n >= 4800 {
+                finestre.push(10.0 * (e / n as f64 + 1e-20).log10());
+                e = 0.0;
+                n = 0;
+            }
+        }
+        let (min, max) = finestre.iter().fold((f64::MAX, f64::MIN), |(a, b), &x| (a.min(x), b.max(x)));
+        assert!(min > -60.0, "il fruscio non suona ({min:.1} dB)");
+        assert!(max - min < 1.0, "la statica non è omogenea: da {min:.1} a {max:.1} dB in finestre di 0,2 s");
     }
 
     #[test]

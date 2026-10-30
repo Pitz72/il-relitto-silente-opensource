@@ -28,7 +28,6 @@ import {
   SCALETTA,
   SOTTOTITOLO,
   TITOLO,
-  buchiDellaTraccia,
   formatoTempo,
   pezziDellaVoce,
   fra,
@@ -44,7 +43,6 @@ const S = SCALETTA;
 const M = S.momenti;
 const C0 = S.scene[2].inizio;
 const E0 = M.scala[0];
-const BUCHI = buchiDellaTraccia(S);
 // La spia verde: in A poco sopra il centro; in F nel nero del fuso, sopra il testo e sopra il punto
 // della nave (il bordo del fuso, al centro, è a 0,32 del palco; il punto a 0,51).
 const SPIA_A = { x: 0.5, y: 0.455 };
@@ -62,6 +60,8 @@ interface Opzioni {
   ridotto: boolean;
   sottotitoli: boolean;
   ridotta: boolean;
+  /** la voce di L.V. si sente: i suoi testi non compaiono (l'autore, 30 ottobre 2026) */
+  voce: boolean;
 }
 
 const preferisceMenoMovimento = () => typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -102,10 +102,9 @@ function livelloVoce(τ: number): number {
 }
 
 /** Il livello della traccia di A nell'istante τ (0–1): il fruscio, la voce di L.V. con il suo fiato,
- *  il cuore; zero nei buchi e dopo l'ultimo colpo. */
+ *  il cuore; zero dopo l'ultimo colpo. */
 function livelloTraccia(τ: number): number {
   if (τ < M.spia || τ > BATTITI_A[3] + 0.9) return 0;
-  for (const b of BUCHI) if (τ >= b && τ < b + 0.25) return 0;
   return Math.min(1, 0.12 + livelloVoce(τ) * 1.05 + impulso(τ, BATTITI_A) * 1.1);
 }
 
@@ -123,6 +122,7 @@ export default function Intro({
   onPartita,
   ridotto,
   grana = "mossa",
+  voce = false,
 }: {
   revisione?: boolean;
   onFine?: () => void;
@@ -130,6 +130,10 @@ export default function Intro({
   onPartita?: () => void;
   ridotto?: boolean;
   grana?: Grana;
+  /** la voce di L.V. si sente (il suono c'è e il parlato non è a zero): allora i suoi testi non compaiono,
+   *  e resta solo la scritta della scatola nera. Senza voce (la revisione nel browser, il parlato a zero)
+   *  i testi ci sono, come prima */
+  voce?: boolean;
 }) {
   const radice = useRef<HTMLDivElement>(null);
   const palco = useRef<HTMLDivElement>(null);
@@ -156,7 +160,7 @@ export default function Intro({
   const giocoPronto = useRef<number | null>(null);
   const conPartita = !!onPartita && !revisione;
   // il movimento ridotto: l'opzione dell'app, se arriva dal gioco; se no, il sistema
-  const [opzioni, setOpzioni] = useState<Opzioni>(() => ({ ridotto: ridotto ?? preferisceMenoMovimento(), sottotitoli: revisione, ridotta: false }));
+  const [opzioni, setOpzioni] = useState<Opzioni>(() => ({ ridotto: ridotto ?? preferisceMenoMovimento(), sottotitoli: revisione, ridotta: false, voce }));
   const opz = useRef(opzioni);
   opz.current = opzioni;
   const [pronta, setPronta] = useState(false);
@@ -344,6 +348,11 @@ export default function Intro({
           const dopo = t - (b.entra + STAMPA);
           cursore.style.opacity = !ridotto && t >= b.entra && (dopo < 0 || (dopo < 1.9 && Math.floor(dopo / 0.32) % 2 === 1)) ? "1" : "0";
           el.style.opacity = String(t < b.esce ? (t >= b.entra ? 1 : 0) : op);
+        } else if (o.voce) {
+          // L.V. parla: il suo testo non c'è
+          el.style.opacity = "0";
+          el.style.visibility = "hidden";
+          continue;
         } else {
           // la voce di L.V. viene a fuoco, salendo di un poco
           const entra = morbido(fra(t, b.entra, b.pieno));
@@ -892,6 +901,10 @@ export default function Intro({
             <label>
               <input type="checkbox" checked={opzioni.ridotta} onChange={(e) => setOpzioni({ ...opzioni, ridotta: e.target.checked })} />
               qualità ridotta
+            </label>
+            <label>
+              <input type="checkbox" checked={opzioni.voce} onChange={(e) => setOpzioni({ ...opzioni, voce: e.target.checked })} />
+              con la voce di L.V. (senza i suoi testi)
             </label>
             <span className="misura">{fps}</span>
           </div>

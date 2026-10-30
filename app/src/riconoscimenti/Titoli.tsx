@@ -209,11 +209,11 @@ export default function Titoli({ ridotto, onFine }: Props) {
             <h2>La musica</h2>
             <p className="tit-nota">
               Generata con l’intelligenza artificiale (Lyria 3.5 di Google, in Flow Music, e Suno), scelta e diretta da {E.gioco.autore}. I brani
-              di Lyria portano la filigrana SynthID.
+              di Lyria portano la filigrana SynthID. Il tema dell’intro è «The Santa Maria Theme» di Alirio Bruni, dal Mistero della Santa Maria.
             </p>
             <dl className="tit-coppie">
               {E.musica.map((m) => (
-                <Coppia key={m.sigla + m.titolo} ruolo={m.uso} nome={`«${m.titolo}»`} sotto={`con ${m.modello}`} />
+                <Coppia key={m.sigla + m.titolo} ruolo={m.uso} nome={`«${m.titolo}»`} sotto={m.modello ? `con ${m.modello}` : `di ${m.autore}`} />
               ))}
             </dl>
           </section>

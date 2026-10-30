@@ -3,7 +3,7 @@
 //   node --test prove/intro.test.ts        (da app/)
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { ANTICIPO_VOCE, SCALETTA, VOCE, buchiDellaTraccia, fermoPer, opacitaBlocco, pezziDellaVoce, scenaA } from "../src/intro/scaletta.ts";
+import { ANTICIPO_VOCE, SCALETTA, VOCE, fermoPer, opacitaBlocco, pezziDellaVoce, scenaA } from "../src/intro/scaletta.ts";
 
 const blocco = (id: string) => SCALETTA.blocchi.find((b) => b.id === id)!;
 
@@ -75,18 +75,4 @@ test("la voce di L.V.: ogni frase comincia con il suo testo, e il testo resta fi
 test("la musica entra quando si apre lo spazio", () => {
   const m = SCALETTA.momenti;
   assert.ok(m.tema > m.stella[0] && m.tema < m.naveB, `il tema a ${m.tema} s`);
-});
-
-test("i buchi della traccia: un quarto di secondo fra una frase e l'altra, mai su una parola né sulla voce", () => {
-  const buchi = buchiDellaTraccia(SCALETTA);
-  assert.ok(buchi.length >= 5, `pochi buchi: ${buchi.length}`);
-  for (const t of buchi) {
-    const scena = scenaA(t).id;
-    assert.ok(scena === "A" || scena === "F", `il buco a ${t} s è nella scena ${scena}`);
-    // nessun testo visibile (neanche un poco) nel quarto di secondo del buco
-    for (const b of SCALETTA.blocchi) {
-      for (const x of [t, t + 0.25]) assert.equal(opacitaBlocco(b, x), 0, `il buco a ${t} s cade sul blocco ${b.id}`);
-    }
-    for (const p of pezziDellaVoce()) assert.ok(t + 0.25 <= p.t || t >= p.t + (p.a - p.da), `il buco a ${t} s cade sulla voce`);
-  }
 });

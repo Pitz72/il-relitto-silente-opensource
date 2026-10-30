@@ -193,7 +193,7 @@ USO_MUSICA = {
     "A1": "l'Anziano: il primo letto", "A2": "l'Anziano: il secondo letto", "A3": "l'Anziano: il terzo letto",
     "A4": "l'Anziano: il quarto letto", "C1": "il finale «Vivi»", "C2": "il finale «La prima nota»",
     "C3": "il finale «La stiva piena»", "C4": "il finale «Doppio fondo»", "C5": "il finale «Due lettere»",
-    "T": "il tema", "CT": "i titoli di coda", "SM": "l'intro: il tema del Mistero della Santa Maria",
+    "T": "il tema", "CT": "i titoli di coda", "SM": "l'intro",
 }
 # Chi ha fatto un brano, se non è l'autore del gioco.
 AUTORI_MUSICA = {"SM": "Alirio Bruni"}
@@ -209,6 +209,11 @@ def musica():
         if not m or "/originali/" in m.group(1) or "/anteprime/" in m.group(1):
             continue
         if not os.path.isfile(os.path.join(RADICE, "audio", "musica-ia", m.group(1))):
+            continue
+        # un brano non generato (il tema della Santa Maria, di Alirio Bruni) non ha modello né la licenza del gioco
+        if r["Modello"].strip() in ("", "—"):
+            out.append({"sigla": r["Scheda"], "titolo": m.group(2), "modello": "", "fonte": "Il Mistero della Santa Maria",
+                        "autore": AUTORI_MUSICA.get(r["Scheda"], "Simone Pizzi"), "licenza": "", "uso": USO_MUSICA.get(r["Scheda"], "")})
             continue
         modello = "Suno" if r["Modello"].startswith("Suno") else "Lyria 3.5"
         out.append({"sigla": r["Scheda"], "titolo": m.group(2), "modello": modello,
@@ -481,10 +486,14 @@ def file_di_testo(d):
     titolo("La musica")
     a("Generata con l’intelligenza artificiale (Lyria 3.5 di Google, in Flow Music, e Suno),")
     a(f"scelta e diretta da {g['autore']}. I brani di Lyria portano la filigrana SynthID.")
+    a("Il tema dell’intro è «The Santa Maria Theme» di Alirio Bruni, dal Mistero della Santa Maria.")
     a("")
     for m in d["musica"]:
         a(f"«{m['titolo']}» — {m['uso']}")
-        a(f"  di {m['autore']}, con {m['modello']} ({m['fonte']}) · {m['licenza']}")
+        if m["modello"]:
+            a(f"  di {m['autore']}, con {m['modello']} ({m['fonte']}) · {m['licenza']}")
+        else:
+            a(f"  di {m['autore']}, dal gioco «{m['fonte']}»")
 
     titolo("I suoni")
     if not d["suoni"]:
