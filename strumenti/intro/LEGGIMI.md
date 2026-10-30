@@ -11,7 +11,9 @@ Le immagini canoniche stanno fuori dal repo, nella cartella degli asset del Mist
 | `scontorna_prua.py` | Lo stesso, dallo still canonico di tre quarti dal davanti (v2). | numpy, opencv-python |
 | `cattura.ps1` | Fotografa una pagina WebGL con Edge senza finestra (SwiftShader): `cattura.ps1 <url> <file.png> [larghezza] [altezza]`. Con `?quadro=oblo` o `?quadro=faro` la prova di look dà le viste dall’oblò. | Edge, PowerShell |
 | `plancia.py` | Compone i quadri della plancia: la vista nell’oblò di `s_01_b`, il radar sullo schermo verde, la spia della prossimità. `plancia.py <cartella>`: nella cartella devono esserci `oblo.png` e `faro.png`; ne escono `C1`, `C2`, `D1`, `H1`. | numpy, Pillow |
-| `voce_lv.py` | La voce di L.V. (documento 09, §13): dal WAV che l’autore ha generato con Gemini (la voce «Riko») alla voce dell’intro, passata da una trasmittente leggera (banda 170 Hz–5,4 kHz dolce, un poco di presenza, il casco, una saturazione e un compressore lenti); scrive `audio/musica-ia/LV/LV-01-la-traccia.mp3` e l’inviluppo `app/src/intro/voce.ts`, e copia la sorgente in `audio/sorgenti/voce/` (fuori da git). Dove sta ogni frase nel file lo dice `VOCE` in `app/src/intro/scaletta.ts`. | numpy, scipy, ffmpeg |
+| `voce_lv.py` | La voce di L.V. (documento 09, §13): dal WAV che l’autore ha generato con la sintesi vocale di Google (la voce «Elio», 30 ottobre 2026) alla voce dell’intro, passata da una trasmittente leggera (banda 170 Hz–5,4 kHz dolce, un poco di presenza, il casco, una saturazione e un compressore lenti); scrive `audio/musica-ia/LV/LV-01-la-traccia.mp3` e l’inviluppo `app/src/intro/voce.ts`, e copia la sorgente in `audio/sorgenti/voce/` (fuori da git). Dove sta ogni frase nel file lo dice `VOCE` in `app/src/intro/scaletta.ts`. | numpy, scipy, ffmpeg |
+| `trascrivi.py` | La trascrizione di una ripresa della voce, parola per parola con i tempi (faster-whisper large-v3, in locale): dice dove tagliare i pezzi di `VOCE` e trova le indicazioni lette ad alta voce dal modello; sull’intro resa da `rendi_intro` controlla che ci siano tutte le frasi. | faster-whisper |
+| `momenti.mjs` | I momenti dell’intro e i pezzi della voce, in JSON, per `cargo run --release --example rendi_intro` (il suono dell’intro reso su file, con il motore del gioco). | Node |
 | `plancia_hd.py` | La plancia delle scene definitive (C, D, H): `s_01_b` intera, 3120 × 1328, con il vetro dell’oblò bucato, l’ombra dello spessore e un riflesso; più la stessa sfocata, per il cambio di fuoco. Scrive `plancia-hd.webp` e `plancia-sfocata.webp` in `app/public/intro/`. | numpy, Pillow |
 
 Uso tipico:
@@ -20,6 +22,8 @@ Uso tipico:
 python strumenti/intro/scontorna_poppa.py sm-poppa.png sm-poppa-prova.png
 python strumenti/intro/tempi.py > tempi.json
 ```
+
+L’intro nell’eseguibile vero, con il suono misurato dal motore e il testo a schermo mentre L.V. parla: `node strumenti/misure/intro_voce.mjs <exe> <cartella delle foto>` (il gioco si apre sullo schermo e va da solo per tre minuti).
 
 La plancia è sempre `location/nuove/s_01_b.png`: mai `s_01.png`, mai `zoom_s01_teca.png`.
 

@@ -2,6 +2,8 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
+Aggiornato l’ultima volta il 30 ottobre 2026, all’alba, quando l’autore ha chiuso la sessione dopo la beta.8:
+«per ora ci fermiamo qui. […] c’è ancora da fare nell’intro. Lo faremo prossimamente».
 
 Questo documento è **il punto di partenza unico**: dove siamo e che cosa viene dopo, in ordine. A fine
 sessione si aggiorna qui, e non con note aggiunte in fondo ad altri documenti.
@@ -10,7 +12,8 @@ sessione si aggiorna qui, e non con note aggiunte in fondo ad altri documenti.
 
 Riprendiamo «Il Relitto Silente». Carica la memoria del progetto, poi leggi questo documento, e solo
 questo. Gli altri si aprono quando il lavoro li tocca (l’elenco è in fondo). Comincia dal punto 1 dell’ordine
-del lavoro.
+del lavoro. L’ultima sessione si è chiusa con l’intro ancora da finire: chiedigli che cosa vuole cambiare
+nell’intro e se cominciare da lì.
 
 ## Le regole fisse dell’autore
 
@@ -58,6 +61,7 @@ del lavoro.
   il tema è «The Santa Maria Theme» di Alirio Bruni (non è musica generata). Statica continua, nessun testo di L.V.
   a schermo mentre parla: c’è solo il nastro della scatola nera, e la sua scritta prima che parli. L’intro dura
   3:02. È nella **0.2.5-beta.8**; l’ascolto è anche in `consegne/Ascolto intro 2026-10-30/`.
+- **La sessione** si è chiusa il 30 ottobre 2026 con l’albero pulito e `main` uguale a `origin/main`.
 - **Il motore** è Favella1 1.6.1 (documento 29), pubblicata anche su GitHub, PyPI e favella.eu.
 - **La revisione totale** (documento 25): i 30 problemi (5 gravi, 10 medi, 15 lievi) sono tutti
   corretti. Delle proposte estetiche sono fatte E1, E5, E6, E9 ed E10.
@@ -80,6 +84,11 @@ del lavoro.
    - ~~la musica~~: il tema della Santa Maria e la voce di L.V. (§13) prendono il posto di `I-B`, `I-E` e `I-G`
      (documento 22, §5.8), che non servono più, se l’autore conferma.
    - ~~il testo di L.V., rivisto~~: approvato dall’autore il 30 ottobre e applicato, con la voce «Elio» (09, §13).
+   - **c’è ancora da fare** (l’autore, 30 ottobre, chiudendo la sessione: «c’è ancora da fare nell’intro. Lo
+     faremo prossimamente»). Non ha detto che cosa: chiederglielo, insieme alle note sulla beta.8, prima di
+     toccare l’intro. Restano aperti anche i titoli di testa «o altro» e, se conferma, l’addio ai pezzi `I-B`,
+     `I-E` e `I-G`. Gli attrezzi: `strumenti/intro/` (la voce, la trascrizione con Whisper, i momenti per
+     rendere il suono) e `strumenti/misure/intro_voce.mjs` (l’intro nell’eseguibile, con i livelli del suono).
 4. **Il finale** (revisione 25, E2): una schermata vera per il finale, invece della casella che scorre.
    L’autore ha detto «una eventuale finale»: si propone, e decide lui.
 5. **Il resto**, dopo:
