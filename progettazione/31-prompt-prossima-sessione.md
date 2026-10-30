@@ -35,12 +35,12 @@ del lavoro.
   niente impaginazioni da telefono, nessun testo sotto i 12 px.
 - Le prove su GitHub (`prove.yml`) devono restare verdi.
 
-## Dove siamo (29 ottobre 2026)
+## Dove siamo (30 ottobre 2026)
 
-- **La versione** pubblicata è la **0.2.5-beta.6**, una pre-release nel canale di prova
-  (`aggiornamenti-prova`): William racconta in prima persona, in tutto il gioco (29 ottobre, su sua
-  richiesta: «committa pusha e rilascia. Così lo vedono anche gli altri»). Prima c’era la beta.5 (27 ottobre),
-  la prima con la finestra delle novità.
+- **La versione** pubblicata è la **0.2.5-beta.8**, una pre-release nel canale di prova
+  (`aggiornamenti-prova`), del 30 ottobre: la voce di L.V. e il tema della Santa Maria nell’intro. Prima: la
+  beta.7 (29 ottobre, notte: le scene definitive dell’intro), la beta.6 (29 ottobre: William racconta in prima
+  persona, in tutto il gioco), la beta.5 (27 ottobre, la prima con la finestra delle novità).
 - **La voce, più avanti.** Il 29 ottobre l’autore ha chiesto quanto lavoro sarebbe per **Leonardo Tomassetti**
   (il William del *Mistero della Santa Maria*) leggere il gioco. Divisione come nel Viaggiatore: Leonardo il
   racconto e le scelte (circa 14.500 parole tolti i doppioni, circa 1 ora e 50 di audio, 6–9 ore di sala,
@@ -56,8 +56,8 @@ del lavoro.
   l’ha generata l’autore con la sintesi vocale di Google (la voce «Elio», sul testo di L.V. rivisto e approvato il 30:
   nuovo anche nel prologo di `relitto.fav` e nella scatola nera di `vita.fav`), passata da una trasmittente leggera;
   il tema è «The Santa Maria Theme» di Alirio Bruni (non è musica generata). Statica continua, nessun testo di L.V.
-  a schermo mentre parla. L’intro dura 3:02. Su `main`, non ancora in una beta; l’ascolto è in
-  `consegne/Ascolto intro 2026-10-30/`.
+  a schermo mentre parla: c’è solo il nastro della scatola nera, e la sua scritta prima che parli. L’intro dura
+  3:02. È nella **0.2.5-beta.8**; l’ascolto è anche in `consegne/Ascolto intro 2026-10-30/`.
 - **Il motore** è Favella1 1.6.1 (documento 29), pubblicata anche su GitHub, PyPI e favella.eu.
 - **La revisione totale** (documento 25): i 30 problemi (5 gravi, 10 medi, 15 lievi) sono tutti
   corretti. Delle proposte estetiche sono fatte E1, E5, E6, E9 ed E10.
@@ -67,8 +67,8 @@ del lavoro.
 
 ## L’ordine del lavoro (deciso dall’autore il 27 ottobre)
 
-1. **Le sue note sulla beta.5 e sulla beta.6.** Prima cosa: chiedergli come gli sono sembrate nel gioco vero,
-   con il suono, e la prima persona, e correggere quello che dice.
+1. **Le sue note sulle beta, dalla 5 alla 8.** Prima cosa: chiedergli come gli sono sembrate nel gioco vero,
+   con il suono, la prima persona e l’intro con la voce di L.V., e correggere quello che dice.
 2. **Il resto dell’interfaccia** (documento 30):
    - i momenti 2.6–2.9: il cartello d’atto, l’ingresso nella protezione vitale, le crepe della fuga,
      l’ipossia;
