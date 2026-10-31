@@ -46,6 +46,8 @@ Windows è la piattaforma provata; su Linux si costruiscono `.deb` e AppImage, m
 
 ## Licenza
 
+> **Nota del 31 ottobre 2026.** La licenza con cui verrà distribuito il gioco 1.0 è ancora in definizione. Le versioni già pubblicate, fino alla 0.2.5-beta.8, restano come dichiarato qui sotto.
+
 Due licenze, scelte dall’autore: **MIT per il codice**, **CC BY-NC-SA 4.0 per la storia, i testi, le immagini e la musica**. Come si dividono le cartelle, le dipendenze di terzi e le note sull’intelligenza artificiale sono in [`LICENZE.md`](LICENZE.md).
 
 ## Intelligenza artificiale
