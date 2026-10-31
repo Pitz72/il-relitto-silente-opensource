@@ -1,5 +1,7 @@
 # Come è licenziato «Il Relitto Silente»
 
+> **Nota del 31 ottobre 2026.** La licenza con cui verrà distribuito il gioco 1.0 è ancora in definizione. Le versioni già pubblicate, fino alla 0.2.5-beta.8, restano come dichiarato qui sotto.
+
 Copyright © 2026 Simone Pizzi. Il repository ha **due licenze**, una per il codice e una per il contenuto creativo, scelte dall’autore il 16 ottobre 2026.
 
 ## In breve
