@@ -280,6 +280,26 @@ sempre chiesto una cosa sola: che la musica fosse suonata, con forza, fino all'u
 
 Due prese delle tre battute insieme, in una presa sola ciascuna: preventivo 1830 crediti.
 
+**Le due prese (2 novembre 2026)**, 69 secondi l’una, misurate con Whisper e con
+`esamina_anziano.py` (nella cartella di lavoro della sessione):
+
+| | Presa 1 | Presa 2 |
+|---|---|---|
+| Parole | tutte, più una ripetuta: «adesso **in in** questo istante» (a 52 s) | tutte, nessuna differenza |
+| Tag letti ad alta voce | nessuno | nessuno |
+| Passo (parole al secondo) | benvenuto 1,65 · piccolo 2,27 · congedo 1,99 | 1,73 · 2,25 · 1,92 |
+| Pausa più lunga | 1,5 s | 1,5 s |
+| Fiato | cinque prese brevi, da −10 a −15 dB sotto la voce | sei, da −14 a −22 dB |
+| Il grave | fondamentale 90 Hz; il 68 % dell’energia sotto i 150 Hz | 91 Hz; 69 % |
+
+Raccomandazione: **la seconda**, intera e pulita. Il grave misurato conferma l’orecchio dell’autore: una
+fondamentale intorno ai 90 Hz, più bassa della voce maschile comune, e due terzi dell’energia sotto i 150 Hz.
+
+**Che cosa resta da fare dopo, e perché è facile.** I `[long pause]` danno al massimo un secondo e mezzo, poco
+per «(Una pausa lunga.)». Ma l’Anziano non respira: le poche prese di fiato stanno nei vuoti e si tolgono, e
+un vuoto senza fiato si allunga quanto si vuole aggiungendo silenzio, senza che si senta il taglio. Le pause
+lunghe si fanno al montaggio, come chiede la regola dei tempi lunghi (respiri e pause veri, mai accorciati).
+
 ## 4. L’ordine proposto
 
 1. **L.V., la voce.** L’autore approva la descrizione (§2.3); tre anteprime sul prologo; sceglie lui; si salva.
