@@ -121,6 +121,10 @@ dall’inizio (l’acqua è finita ieri).
 
 La frase delle anteprime è il prologo approvato (circa 400 caratteri, nei limiti).
 
+**La voce scelta (1° novembre 2026).** L’autore ha approvato la bozza così com’è; il disegno (eleven_ttv_v3,
+italiano) ha dato tre anteprime di 29, 33 e 31 secondi. L’autore ha scelto **la seconda** e l’ha salvata nel suo
+spazio ElevenLabs con il nome «Leonard De Rossi» (`voice_id` `R1Pl0D3WybQUkHdcw5HK`).
+
 ### 2.4 Il respiro, dopo
 
 v4 respira da sé (con `[breathless]` ed `[exhales]` respira di più), ma quanti respiri e dove non si decide
@@ -231,7 +235,7 @@ parte della versione doppiata.
 | | Domanda | Raccomandazione |
 |---|---|---|
 | D-V1 | Sostituire «Elio» con ElevenLabs? | Sì, quando la presa nuova lo convince all’ascolto; fino ad allora resta «Elio». |
-| D-V2 | La descrizione della voce di L.V. | La bozza del §2.3. |
+| D-V2 | La descrizione della voce di L.V. | **Decisa** il 1° novembre: la bozza del §2.3; scelta la seconda anteprima, «Leonard De Rossi». |
 | D-V3 | Il canto prima delle parole, al primo contatto con l’Anziano | Sì, soltanto la prima volta (§3.3). |
 | D-V4 | La descrizione della voce dell’Anziano | La bozza del §3.4. |
 | D-V5 | L’Anziano con la voce subito, o con la versione doppiata? | Prima trovare la voce (passo 3); poi decidere. |
