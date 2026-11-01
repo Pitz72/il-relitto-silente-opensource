@@ -393,7 +393,9 @@ sentono alcune parole tagliate e un briciolo di quello che è tagliato riparte p
 intera**, com’è nella presa, tagliata soltanto ai due capi di ogni battuta (nessun fiato tolto, nessuna pausa
 allungata: le pause sono quelle che ha recitato); **la musica fissa**, 5 dB sotto il livello del motore, senza
 abbassarsi quando lui parla. Le battute durano 21,6, 22,7 e 23,4 secondi, come nella presa; Whisper ci sente
-tutte le parole, senza frammenti. Le regole che ne
+tutte le parole, senza frammenti. Per il team c’è anche un file solo, «L’Anziano - ascolto di prova
+(integrale)», 1:28, MP3 a 256 kbps nella stessa cartella: le tre battute in fila, 2,5 secondi di silenzio fra
+l’una e l’altra, la musica della seconda e della terza che entra in un secondo. Le regole che ne
 vengono, per tutte le voci: una presa non si taglia dentro, e sotto una voce la musica non fa ducking. Il resto
 di questo paragrafo descrive la prima versione, scartata.
 
