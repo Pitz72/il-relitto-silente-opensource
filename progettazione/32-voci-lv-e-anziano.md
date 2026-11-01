@@ -292,13 +292,68 @@ Due prese delle tre battute insieme, in una presa sola ciascuna: preventivo 1830
 | Fiato | cinque prese brevi, da −10 a −15 dB sotto la voce | sei, da −14 a −22 dB |
 | Il grave | fondamentale 90 Hz; il 68 % dell’energia sotto i 150 Hz | 91 Hz; 69 % |
 
-Raccomandazione: **la seconda**, intera e pulita. Il grave misurato conferma l’orecchio dell’autore: una
+Raccomandazione: **la seconda**, intera e pulita. **L’autore ha scelto la seconda** (2 novembre). Il grave misurato conferma l’orecchio dell’autore: una
 fondamentale intorno ai 90 Hz, più bassa della voce maschile comune, e due terzi dell’energia sotto i 150 Hz.
 
 **Che cosa resta da fare dopo, e perché è facile.** I `[long pause]` danno al massimo un secondo e mezzo, poco
 per «(Una pausa lunga.)». Ma l’Anziano non respira: le poche prese di fiato stanno nei vuoti e si tolgono, e
 un vuoto senza fiato si allunga quanto si vuole aggiungendo silenzio, senza che si senta il taglio. Le pause
 lunghe si fanno al montaggio, come chiede la regola dei tempi lunghi (respiri e pause veri, mai accorciati).
+
+### 3.6 La musica di ElevenLabs: come funziona, e i tempi (2 novembre 2026)
+
+L’autore: «Attenzione che 11labs genera anche musica. Ma dovresti documentarti come questa versione viene gestita
+o con che sintassi e se è possibile dare il timing che si vuole.» Fonti: la documentazione ufficiale (le
+*composition plans*, l’*inpainting*, le buone pratiche, il registro delle modifiche del 22 giugno 2026) e lo
+schema del connettore.
+
+**I modelli.** `eleven_music_v1`, `v2` e `v2.5`; il più avanzato è il **v2.5**. Si scrive come suona la musica,
+non che cosa racconta: genere, umore, strumenti, tempo, produzione, in una-tre frasi; per i pezzi lunghi, come
+cambia l’energia nel tempo. Tonalità e BPM scritti nel testo («in A minor», «130 BPM») vengono tenuti con
+precisione, abbastanza da sovrapporre il pezzo ad altro materiale.
+
+**Due strade, e il controllo dei tempi è diverso.**
+
+| | Il connettore (quello che usiamo) | Le API, con la chiave |
+|---|---|---|
+| Che cosa si dà | la descrizione; `duration_seconds` (da 3 a 600); `lyrics_type` (`auto`, `custom`, `instrumental`) e `lyrics`; un audio di riferimento facoltativo (circa 30 secondi, solo musica propria, con un controllo dei diritti) | un **piano di composizione**: una lista `chunks` di blocchi, fino a 30 |
+| La durata totale | esatta | esatta (da 3 secondi a 10 minuti) |
+| I tempi dentro | solo a parole: «le voci entrano a 15 secondi», «solo strumentale dopo 1:45»; il modello li segue, ma niente li garantisce, e i silenzi vanno scritti, altrimenti li riempie | **ogni blocco ha la sua durata in millisecondi** (`duration_ms`, da 3.000 a 120.000), e con v2 e v2.5 la durata è sempre rispettata |
+| Altro | | `with_timestamps` dà i tempi di ogni parola cantata; l’*inpainting* (sotto) |
+
+**La sintassi di un blocco** (`chunks`): `text` con il nome della sezione fra quadre, le righe del testo
+separate da a capo, le indicazioni brevi fra graffe e i suoni senza parole fra tonde, per esempio
+`"[Canto]\n(ooh)\n(aah)"` o `{instrumental break}`; `duration_ms`; `positive_styles` e `negative_styles` (fino a
+50 parole ciascuno: «a cappella», «G sharp», «no percussion»…); `context_adherence` (`low`, `medium`, `high`:
+quanto il blocco segue quelli accanto). Gli stili del primo blocco danno il tono a tutto il pezzo.
+
+**L’inpainting** (v2 e v2.5): un brano si conserva (`song_id`) e si ricompone con un piano che mescola pezzi
+tenuti uguali (`range`, `start_ms`–`end_ms`, al minimo 50 millisecondi) e blocchi nuovi. Così si rifà una
+finestra precisa, si allunga un pezzo o se ne fa un giro che si ripete.
+
+**Quindi: si può dare il tempo che si vuole?** Sì, a blocchi di almeno 3 secondi, al millisecondo, con le API;
+dentro un blocco no. Con il connettore è esatta soltanto la durata totale, e il resto si chiede a parole. Le API
+vogliono la chiave del suo account ElevenLabs: per le sue regole gli preparo uno script e un solo comando, e la
+chiave resta fuori da git, come i segreti dell’aggiornamento (revisione 25, G4).
+
+**Che cosa può dare all’Anziano: il canto del primo contatto (§3.3).** È un pezzo corto con una forma sola,
+quindi basta il connettore: una durata esatta di 7 secondi, voci senza parole (`lyrics_type` `custom`, `lyrics`
+solo vocali fra tonde: `(ooooh)`, `(aaaah)`, come vuole la documentazione per i suoni senza parole), e la
+sfumatura finale si rifinisce al montaggio. In sol♯, la nota della scena «benvenuto»: il letto A1 è «il sol♯ da
+solo, e il re sotto», e il coro sintetico del gioco canta l’accordo «clic» sul sol♯. La descrizione, scritta come
+una partitura (la regola dei prompt di musica):
+
+> A cappella wordless choir, about twelve low male and female voices on sustained open vowels, centred on G sharp
+> with a minor seventh and an open fifth. No pulse, no rhythm: a very slow swell from silence to a soft, warm
+> chord, then the voices thin out to a single held note and fade. Distant and airy, as if heard from far inside a
+> vast, empty ship. Science fiction, ancient and gentle; not religious, not gregorian, not a horror or mystery
+> choir. No lyrics, no instruments, no percussion. 7 seconds.
+
+Il nodo è pronto nel suo spazio ElevenLabs («Canto del primo contatto (prova)», v2.5, 7 secondi), non generato.
+**Preventivo: 350 crediti per due versioni** (circa 25 crediti al secondo di musica). Nel montaggio di prova si
+mettono a confronto, sotto la stessa voce, il canto di ElevenLabs e il coro sintetico che il gioco ha già: decide
+l’orecchio. Se resta il canto di ElevenLabs, è un file di musica come i letti A1–A4: va nel registro della musica
+(`audio/musica-ia/REGISTRO.md`), nella Dichiarazione sull’IA e nei titoli di coda.
 
 ## 4. L’ordine proposto
 
