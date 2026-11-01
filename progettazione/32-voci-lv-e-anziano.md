@@ -236,12 +236,49 @@ quando il cantastorie è svanito: l’ultima frase, scritta nella luce. La nostr
 armonie si sciolgono adesso, in questo istante. A chi viene dopo abbiamo sempre chiesto una cosa sola: che la
 musica fosse suonata, con forza, fino all’ultima nota. Vivi. Sarà il suono più bello.»
 
+**La voce scelta (2 novembre 2026).** L’autore ha approvato la descrizione rivista; il disegno (eleven_ttv_v3,
+italiano) ha dato tre anteprime di 56, 64 e 59 secondi: il passo lento chiesto nella descrizione è arrivato (con
+il passo di L.V. lo stesso testo durerebbe circa 35 secondi). L’autore ha scelto **la terza** e l’ha salvata con il
+nome «Edoardo Straniero» (`voice_id` `iTY5K16b3692EfhKhm8M`): «il suo suono profondo quasi da subwoofer lo rende
+qualcosa che è oltre un suono in una stanza. Perfetta».
+
+**Il basso è la sua firma, e non si taglia.** Nessun passa-alto su questa voce, né nella lavorazione né nel gioco
+(il canale del parlato, oggi, è soltanto un guadagno: va bene così). Due attenzioni: sotto di lui suonano il re
+grave della scena e i letti A1–A4, che possono impastarsi con la sua voce, quindi sotto la voce la musica scende
+nel grave più che nel resto; e le parole devono capirsi anche dagli altoparlanti di un portatile, dove il grave
+non arriva (si prova anche lì).
+
 **Quanto è.** 917 parole in 31 battute diverse (23 righe, con le varianti che dipendono da quello che il
 giocatore ha fatto). Una voce, una sessione.
 
 **Dove suona.** Oggi nel gioco l’Anziano è testo da leggere con la musica sotto (`LIVELLO_ANZIANO`); la regia
 segue già i nodi uno per uno, e la voce entrerebbe lì. Sarebbe il primo dialogo con la voce dentro il gioco, una
 parte della versione doppiata.
+
+### 3.5 Le battute di prova
+
+Tre battute, scelte perché fanno sentire tre registri: il primo contatto («benvenuto», senza le varianti delle
+echi e del risuonatore), il calore («piccolo», nella variante della risposta vera, la più ricca) e l’addio
+(«congedo», nella variante dell’ascolto dato, che finisce con «Grazie di essere rimasto»). Soltanto le sue parole,
+quelle fra «»; le indicazioni fra parentesi del testo diventano tag: «(Una pausa lunga.)» è `[long pause]`,
+«(E poi, più piano:)» è `[softly]`. Niente `[slowly]`: la voce è già lenta di suo. Le parole non cambiano;
+si aggiungono soltanto i tag e due ellissi.
+
+```
+[softly] Creatura di carbonio… Figlio delle stelle, forse. [pause] Benvenuto. [long pause] So cosa cerchi:
+una risposta. [pause] Ma io non sono che la memoria di una domanda. [pause] Sono quello che resta quando il
+cantastorie è svanito… l'ultima frase, scritta nella luce.
+
+Era l'unico nato durante il viaggio. Non vide mai i tre soli: disegnava quello verso cui andavamo. Quando la
+nave si fermò, chiese perché, e nessuno di noi ebbe il coraggio di rispondergli. [long pause] [warmly] Glielo
+hai detto tu. Siete arrivati. [pause] Era vero, ed era la sola cosa che avesse bisogno di sentire.
+
+La nostra canzone è finita. Le ultime armonie si sciolgono adesso, in questo istante. A chi viene dopo abbiamo
+sempre chiesto una cosa sola: che la musica fosse suonata, con forza, fino all'ultima nota. [pause] Vivi.
+[pause] Sarà il suono più bello. [long pause] [softly] Grazie di essere rimasto.
+```
+
+Due prese delle tre battute insieme, in una presa sola ciascuna: preventivo 1830 crediti.
 
 ## 4. L’ordine proposto
 
@@ -260,5 +297,5 @@ parte della versione doppiata.
 | D-V1 | Sostituire «Elio» con ElevenLabs? | **Decisa** il 1° novembre: no, L.V. resta «Elio», che ha i respiri (§2.6). |
 | D-V2 | La descrizione della voce di L.V. | **Decisa** il 1° novembre: la bozza del §2.3; scelta la seconda anteprima, «Leonard De Rossi». |
 | D-V3 | Il canto prima delle parole, al primo contatto con l’Anziano | Sì, soltanto la prima volta (§3.3). |
-| D-V4 | La descrizione della voce dell’Anziano | La bozza del §3.4. |
+| D-V4 | La descrizione della voce dell’Anziano | **Decisa** il 2 novembre: la bozza rivista del §3.4; scelta la terza anteprima, «Edoardo Straniero». |
 | D-V5 | L’Anziano con la voce subito, o con la versione doppiata? | Prima trovare la voce (passo 3); poi decidere. |
