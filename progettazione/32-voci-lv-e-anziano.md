@@ -355,6 +355,54 @@ mettono a confronto, sotto la stessa voce, il canto di ElevenLabs e il coro sint
 l’orecchio. Se resta il canto di ElevenLabs, è un file di musica come i letti A1–A4: va nel registro della musica
 (`audio/musica-ia/REGISTRO.md`), nella Dichiarazione sull’IA e nei titoli di coda.
 
+### 3.7 Il canto e l’ascolto di prova (2 novembre 2026)
+
+**Il canto.** Due versioni, chieste di 7 secondi: ne sono arrivate una di 7,03 e una di 9,02 (la durata del
+connettore non è sempre esatta). Nessuna delle due è in sol♯, nonostante la descrizione: la prima sta su **re e
+la**, la quinta vuota di re (nel gioco è l’accordo «ReVuoto», «la quinta vuota di casa»); la seconda su re con
+mi♭, si♭, sol e fa. L’autore: «la prima è indubbiamente più evocativa mentre la seconda già partiva un qualcosa
+di simil gregoriano. Quindi la prima per me è perfetta ed è incredibile». **Resta la prima, così com’è.** Due
+lezioni: la tonalità scritta nella descrizione non è garantita (come con Lyria e Suno: in A3 manca il fa♯, in A4
+il sol♯), quindi ogni file si misura; e il re, per caso, è la nota d’arrivo del colloquio («dal sol♯ al re»,
+06, §18): il primo contatto canta la casa che il colloquio raggiunge alla fine. Sotto il benvenuto suona però A1,
+in sol♯, a un tritono dal re: nell’ascolto la musica della scena entra a 4 secondi, mentre il canto sfuma, e i
+due si toccano piano per due o tre secondi. Il coro sintetico non è servito: l’autore ha scelto a orecchio.
+
+**L’ascolto** sta in `consegne/Ascolto Anziano 2026-11-02/` (fuori da git): «1 - Benvenuto, con il canto»,
+«2 - Il Piccolo (la risposta vera)», «3 - Congedo (con l’ascolto)», circa 35 secondi l’uno.
+
+- **La voce:** la presa 2, battuta per battuta, pulita dai fiati (21 vuoti dove la presa di fiato è diventata
+  silenzio vero), con le pause allungate fino alla misura della punteggiatura e delle indicazioni: 2,6 secondi
+  dopo «Benvenuto.», 3,2 prima di «Glielo hai detto tu», 3,0 prima di «Grazie di essere rimasto». A circa
+  −20 dBFS di valore efficace, al centro, asciutta.
+- **I tagli** non seguono i tempi di Whisper, che sbagliano di qualche centesimo (la prima prova spezzava le
+  parole: «tu. Tu siete arrivati», «Sì, era vero»), ma l’inviluppo della voce: si taglia dove il suono si spegne
+  davvero, 35 dB sotto le parole, e dove ricomincia. Nella presa le battute sono attaccate («…di sentire la
+  nostra canzone»): lì si taglia sull’attacco di Whisper, mai dentro la parola dell’altra battuta.
+- **La musica** è quella del gioco, resa dal motore (`rendi_musica` e una prova temporanea, ora fuori dal repo):
+  i letti A1, A3 e A4 dai file. Il dialogo si apre sempre dal benvenuto, che precarica i letti; aprirlo a freddo
+  su un altro nodo, nella resa più veloce del tempo reale, dà silenzio, perché il file non è ancora pronto. Sotto
+  la voce la musica scende di 7 dB, e il grave sotto i 200 Hz di altri 5.
+- **Il canto** entra a 0,3 secondi, la voce a 4,6, mentre il canto sfuma.
+
+**La verifica con Whisper**, sul missaggio pieno e sullo stesso senza il grave (un passa-alto a 250 Hz, come da
+un portatile): tutte le parole delle tre battute, in tutti e due i casi, e nessun frammento ai tagli. L’unica
+mancanza è un «è» («il cantastorie è svanito») nel missaggio pieno del benvenuto, che senza il grave c’è: una
+svista di Whisper su una parola di una sillaba, non un taglio. Le parole si capiscono anche senza il grave.
+
+### 3.8 La canzone dei titoli di coda con ElevenLabs? (proposta, 2 novembre 2026)
+
+L’autore: «dato che lyria e suno tendono ad usare sempre le stesse canzoni e dato che qui con il connettore puoi
+comunicare perfettamente quello che vuoi e come lo vuoi dalla canzone, che ne pensi di provare a generarla se
+avanzano crediti per farla esattamente come la vuoi per metterla a confronto con quella che abbiamo?»
+
+Pronta nel suo spazio ElevenLabs, non generata (nodo «Titoli di coda: Voice in the Deep (prova ElevenLabs)»,
+v2.5): **lo stesso testo e lo stesso stile** del §5.9 del documento 22, perché il confronto con «Voice in the
+Deep» sia alla pari; la stessa durata, **178 secondi**, perché il nastro dei titoli resti con l’orologio della
+canzone; le indicazioni del testo fra graffe, come vuole ElevenLabs (`{low strings enter}`, `{voice alone}`), e
+nella descrizione, a parole, «a 2:40 la voce canta da sola l’ultima riga». Che cosa non è garantito: i tempi
+interni e la tonalità (§3.6, §3.7). **Preventivo: 8900 crediti per due versioni**, 4450 per una.
+
 ## 4. L’ordine proposto
 
 1. **L.V., la voce.** L’autore approva la descrizione (§2.3); tre anteprime sul prologo; sceglie lui; si salva.
