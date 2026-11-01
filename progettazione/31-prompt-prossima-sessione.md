@@ -89,6 +89,10 @@ nell’intro e se cominciare da lì.
      toccare l’intro. Restano aperti anche i titoli di testa «o altro» e, se conferma, l’addio ai pezzi `I-B`,
      `I-E` e `I-G`. Gli attrezzi: `strumenti/intro/` (la voce, la trascrizione con Whisper, i momenti per
      rendere il suono) e `strumenti/misure/intro_voce.mjs` (l’intro nell’eseguibile, con i livelli del suono).
+   - **le voci con ElevenLabs v4** (1° novembre, documento 32): l’autore vorrebbe una voce di qualità per L.V.,
+     con la stanchezza, l’affanno e il respiro della fine dell’aria, e un’idea per la voce dell’Anziano. L’analisi
+     è fatta (la voce disegnata sana e la fatica nei tag; l’Anziano senza traduttore, senza fiato, con il canto
+     sotto); restano le decisioni D-V1–D-V5, a cominciare dalla descrizione della voce di L.V.
 4. **Il finale** (revisione 25, E2): una schermata vera per il finale, invece della casella che scorre.
    L’autore ha detto «una eventuale finale»: si propone, e decide lui.
 5. **Il resto**, dopo:
@@ -113,4 +117,5 @@ nell’intro e se cominciare da lì.
 | `progettazione/30-interfaccia-viva.md` | il programma dell’interfaccia, il registro, la scheda «Grafica», le misure |
 | `progettazione/28-prompt-prossima-sessione.md` | il prompt di prima; il §1 tiene i dettagli della colonna sonora |
 | `progettazione/09-intro-storyboard.md`, `22-musica-con-lyria.md` | l’intro e la sua musica |
+| `progettazione/32-voci-lv-e-anziano.md` | le voci di L.V. e dell’Anziano con ElevenLabs v4: l’analisi e le decisioni |
 | `strumenti/prova_eseguibile.py`, `strumenti/misure/consumo.mjs` | le prove e le misure nell’eseguibile vero |
