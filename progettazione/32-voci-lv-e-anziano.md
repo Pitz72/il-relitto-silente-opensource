@@ -145,6 +145,24 @@ va controllato che con la voce nuova non diventino troppi.
   commerciale (con il Viaggiatore è già così, da verificare).
 - **«Elio» resta** finché la voce nuova non lo convince all’ascolto.
 
+### 2.6 La prova, e la decisione (1° novembre 2026)
+
+Tre prese del prologo con i tag del §2.2 e la voce «Leonard De Rossi» (eleven_v4, 1674 crediti). Whisper:
+tutte le 77 parole in tutte e tre, nessun tag letto ad alta voce, nessuna parola incerta (una sola, «una», nella
+terza). Durano 38, 40 e 36 secondi, contro gli 86,6 della ripresa «Elio». Dentro le frasi il passo è simile a
+quello di «Elio» o più svelto (fino a 3 parole al secondo in B3, B5, B7 e B8); i `[long pause]` hanno dato pause
+di un secondo e mezzo al massimo, e i respiri sono brevi: la misura ne trova, ma sono prese di fiato corte, non i
+respiri lunghi di «Elio».
+
+L’autore: «sono tutte e tre di grande qualità. Ma per quanto la qualità di 11labs sia superiore al tts di
+google, a Google resta tutta la parte di respiri che qui praticamente non c’è. Credo che teniamo quella di
+Google senza spendere altri soldi.» **L.V. resta «Elio»** (D-V1). La voce «Leonard De Rossi» resta salvata nel
+suo spazio ElevenLabs, non usata.
+
+**Che cosa insegna per l’Anziano.** v4 respira poco e corre: per L.V. è un difetto, per l’Anziano, che non
+respira e non ha fretta, la prima metà è un pregio. La seconda va corretta già nel disegno: la descrizione deve
+chiedere un passo molto lento, e nel testo servono ellissi, non soltanto i tag delle pause.
+
 ## 3. L’Anziano
 
 ### 3.1 Che cosa dice già il testo
@@ -203,15 +221,20 @@ Alla dissolvenza il suono c’è già: la luce entra nel seme sulla nota di vetr
   «(Una pausa lunga.)»; per «(E poi, più piano:) Grazie di essere rimasto.» un `[softly]` più basso.
 - **Non deve somigliare** alla voce di William (Leonardo Tomassetti, nella versione doppiata) né al traduttore.
 
-**Bozza della descrizione** (da approvare o cambiare):
+**Bozza della descrizione** (da approvare o cambiare; rivista dopo la prova di L.V., §2.6: il passo molto lento
+e il fiato che non si sente sono scritti nella descrizione):
 
-> Very old man, calm and unhurried, with a deep, warm voice and a soft grain. He speaks quietly and very close,
-> as if right beside the listener, with long natural pauses. Gentle, patient and kind; never solemn, never
-> theatrical, never mysterious. Native Italian, clear standard diction.
+> Very old man, calm, unhurried and deeply patient; his age is in the timbre, not in weakness. Deep, warm voice
+> with a soft grain. He speaks very slowly and quietly, very close, as if right beside the listener, leaving long
+> silences between sentences. No audible breathing. Gentle and kind; never solemn, never theatrical, never
+> mysterious, never frail or trembling. Native Italian, clear standard diction.
 
-La frase delle anteprime, dal nodo «benvenuto»: «Creatura di carbonio. Figlio delle stelle, forse. Benvenuto. So
-cosa cerchi: una risposta. Ma io non sono che la memoria di una domanda. Sono quello che resta quando il
-cantastorie è svanito: l’ultima frase, scritta nella luce.» (circa 230 caratteri).
+La frase delle anteprime: il primo e l’ultimo saluto, «benvenuto» e «congedo», perché si senta la voce
+all’inizio e alla fine del colloquio (circa 470 caratteri): «Creatura di carbonio. Figlio delle stelle, forse.
+Benvenuto. So cosa cerchi: una risposta. Ma io non sono che la memoria di una domanda. Sono quello che resta
+quando il cantastorie è svanito: l’ultima frase, scritta nella luce. La nostra canzone è finita. Le ultime
+armonie si sciolgono adesso, in questo istante. A chi viene dopo abbiamo sempre chiesto una cosa sola: che la
+musica fosse suonata, con forza, fino all’ultima nota. Vivi. Sarà il suono più bello.»
 
 **Quanto è.** 917 parole in 31 battute diverse (23 righe, con le varianti che dipendono da quello che il
 giocatore ha fatto). Una voce, una sessione.
@@ -234,7 +257,7 @@ parte della versione doppiata.
 
 | | Domanda | Raccomandazione |
 |---|---|---|
-| D-V1 | Sostituire «Elio» con ElevenLabs? | Sì, quando la presa nuova lo convince all’ascolto; fino ad allora resta «Elio». |
+| D-V1 | Sostituire «Elio» con ElevenLabs? | **Decisa** il 1° novembre: no, L.V. resta «Elio», che ha i respiri (§2.6). |
 | D-V2 | La descrizione della voce di L.V. | **Decisa** il 1° novembre: la bozza del §2.3; scelta la seconda anteprima, «Leonard De Rossi». |
 | D-V3 | Il canto prima delle parole, al primo contatto con l’Anziano | Sì, soltanto la prima volta (§3.3). |
 | D-V4 | La descrizione della voce dell’Anziano | La bozza del §3.4. |
