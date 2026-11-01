@@ -212,8 +212,8 @@ Alla dissolvenza il suono c’è già: la luce entra nel seme sulla nota di vetr
   accanto. «Non minaccia: aspetta.»
 - **Dentro la testa.** Asciutta, al centro, vicinissima, senza l’eco della stanza: l’unica voce del gioco senza
   stanza e senza radio. L’orecchio capisce «dentro la testa» da questo, senza effetti.
-- **Non respira.** È una memoria fatta di luce: tutti i respiri si tolgono dopo, e nei suoi testi non si mettono
-  tag di fiato. L.V. è tutto fiato, l’Anziano non ne ha. Al nodo «silenzio» si sente soltanto il fiato di William
+- **Non respira.** È una memoria fatta di luce: nei suoi testi non si mettono tag di fiato. (Che i respiri si
+  tolgano dopo, tagliando, è superato: l’autore li accetta, e i tagli dentro la presa rovinano le parole, §3.7.) L.V. è tutto fiato, l’Anziano non ne ha. Al nodo «silenzio» si sente soltanto il fiato di William
   nel casco: il testo lo fa già.
 - **L’età nel timbro, non nella debolezza.** Vecchio, più del Navarca, ma non fragile né tremante: è durato.
 - **Stabilità alta** (0,7): le sue 31 battute devono essere della stessa persona, uguale a sé. Lui non cambia,
@@ -295,7 +295,7 @@ Due prese delle tre battute insieme, in una presa sola ciascuna: preventivo 1830
 Raccomandazione: **la seconda**, intera e pulita. **L’autore ha scelto la seconda** (2 novembre). Il grave misurato conferma l’orecchio dell’autore: una
 fondamentale intorno ai 90 Hz, più bassa della voce maschile comune, e due terzi dell’energia sotto i 150 Hz.
 
-**Che cosa resta da fare dopo, e perché è facile.** I `[long pause]` danno al massimo un secondo e mezzo, poco
+**Che cosa resta da fare dopo, e perché è facile** (superato: l’autore non vuole tagli dentro la presa, §3.7). I `[long pause]` danno al massimo un secondo e mezzo, poco
 per «(Una pausa lunga.)». Ma l’Anziano non respira: le poche prese di fiato stanno nei vuoti e si tolgono, e
 un vuoto senza fiato si allunga quanto si vuole aggiungendo silenzio, senza che si senta il taglio. Le pause
 lunghe si fanno al montaggio, come chiede la regola dei tempi lunghi (respiri e pause veri, mai accorciati).
@@ -385,7 +385,19 @@ due si toccano piano per due o tre secondi. Il coro sintetico non è servito: l�
   la voce la musica scende di 7 dB, e il grave sotto i 200 Hz di altri 5.
 - **Il canto** entra a 0,3 secondi, la voce a 4,6, mentre il canto sfuma.
 
-**La verifica con Whisper**, sul missaggio pieno e sullo stesso senza il grave (un passa-alto a 250 Hz, come da
+**Le note dell’autore e la seconda versione (2 novembre 2026).** Sul canto: «Sotto non si tratta di un coro ma
+di un brano armonioso e molto spazio misterioso. Per me è un capolavoro.» Sulla voce: «nello spezzone 2 e 3 la
+voce è tagliata malissimo. Le prese di fiato non c’erano e anche se ci fossero stati erano accettabili. Così si
+sentono alcune parole tagliate e un briciolo di quello che è tagliato riparte più avanti.» Sulla musica:
+«preferisco che abbassi un po’ la musica e che togli il ducking che fa troppo radio.» Rifatto così: **la voce
+intera**, com’è nella presa, tagliata soltanto ai due capi di ogni battuta (nessun fiato tolto, nessuna pausa
+allungata: le pause sono quelle che ha recitato); **la musica fissa**, 5 dB sotto il livello del motore, senza
+abbassarsi quando lui parla. Le battute durano 21,6, 22,7 e 23,4 secondi, come nella presa; Whisper ci sente
+tutte le parole, senza frammenti. Le regole che ne
+vengono, per tutte le voci: una presa non si taglia dentro, e sotto una voce la musica non fa ducking. Il resto
+di questo paragrafo descrive la prima versione, scartata.
+
+**La verifica con Whisper** della prima versione, sul missaggio pieno e sullo stesso senza il grave (un passa-alto a 250 Hz, come da
 un portatile): tutte le parole delle tre battute, in tutti e due i casi, e nessun frammento ai tagli. L’unica
 mancanza è un «è» («il cantastorie è svanito») nel missaggio pieno del benvenuto, che senza il grave c’è: una
 svista di Whisper su una parola di una sillaba, non un taglio. Le parole si capiscono anche senza il grave.
@@ -402,6 +414,23 @@ Deep» sia alla pari; la stessa durata, **178 secondi**, perché il nastro dei t
 canzone; le indicazioni del testo fra graffe, come vuole ElevenLabs (`{low strings enter}`, `{voice alone}`), e
 nella descrizione, a parole, «a 2:40 la voce canta da sola l’ultima riga». Che cosa non è garantito: i tempi
 interni e la tonalità (§3.6, §3.7). **Preventivo: 8900 crediti per due versioni**, 4450 per una.
+
+**Rimandata** (l’autore, 2 novembre): «mi sono rimasti 1.700 crediti, non ce la facciamo. Questa cosa la
+aggiorneremo.» Il nodo resta pronto nel suo spazio ElevenLabs, con il testo e la durata: quando ci sono i
+crediti, basta generarlo.
+
+### 3.9 Gli effetti sonori con ElevenLabs (idea, 2 novembre 2026)
+
+L’autore: «appuntiamoci anche che possiamo rifare tutto il reparto sound fx con 11labs, vedo che si possono fare
+anche effetti sonori.» Oggi tutti i suoni del gioco sono sintetizzati nel motore in Rust (bibbia sonora, §10 e
+§11: 23 stanze, 85 eventi), da quando, il 15 ottobre, l’autore ha scartato i campioni di prova scaricati; aveva
+detto che dei suoni veri sarebbero potuti arrivare più avanti. Che cosa offre ElevenLabs (il modello
+`eleven_text_to_sound_v2`, dal connettore): un suono per volta, descritto in una frase concreta (che cos’è, la
+grana, l’altezza, l’attacco, lo spazio: «close-mic», «distant»); `duration_seconds` da 0,5 a 30; `loop`, per un
+suono che si ripete senza giunture (i fondi delle stanze); `prompt_influence`, quanto segue la descrizione. Le
+regole della guida: niente parole visive, un suono per generazione (gli strati si fanno a parte), clip corte.
+Niente è deciso: se si fa, è un lavoro a sé, da progettare con la bibbia sonora (quali suoni, quali restano
+sintetici, come entrano nel motore), e ha bisogno di crediti.
 
 ## 4. L’ordine proposto
 

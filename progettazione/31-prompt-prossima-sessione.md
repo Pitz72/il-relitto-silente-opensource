@@ -93,6 +93,9 @@ nell’intro e se cominciare da lì.
      con la stanchezza, l’affanno e il respiro della fine dell’aria, e un’idea per la voce dell’Anziano. L’analisi
      è fatta (la voce disegnata sana e la fatica nei tag; l’Anziano senza traduttore, senza fiato, con il canto
      sotto); restano le decisioni D-V1–D-V5, a cominciare dalla descrizione della voce di L.V.
+     Aggiornamento del 2 novembre: L.V. resta «Elio»; l’Anziano ha la sua voce («Edoardo Straniero») e il canto
+     del primo contatto; l’ascolto di prova è in `consegne/Ascolto Anziano 2026-11-02/` (32, §3.4–3.7). Rimandati
+     per i crediti: la canzone dei titoli con ElevenLabs (32, §3.8) e l’idea degli effetti sonori (32, §3.9).
 4. **Il finale** (revisione 25, E2): una schermata vera per il finale, invece della casella che scorre.
    L’autore ha detto «una eventuale finale»: si propone, e decide lui.
 5. **Il resto**, dopo:
