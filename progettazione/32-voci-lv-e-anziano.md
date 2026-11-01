@@ -395,7 +395,15 @@ allungata: le pause sono quelle che ha recitato); **la musica fissa**, 5 dB sott
 abbassarsi quando lui parla. Le battute durano 21,6, 22,7 e 23,4 secondi, come nella presa; Whisper ci sente
 tutte le parole, senza frammenti. Per il team c’è anche un file solo, «L’Anziano - ascolto di prova
 (integrale)», 1:28, MP3 a 256 kbps nella stessa cartella: le tre battute in fila, 2,5 secondi di silenzio fra
-l’una e l’altra, la musica della seconda e della terza che entra in un secondo. Le regole che ne
+l’una e l’altra, la musica della seconda e della terza che entra in un secondo.
+
+**L’ultima correzione.** L’autore: «quando dice "avesse bisogno di sentire" il re è spezzato e si riprende nel
+segmento finale». Whisper aveva messo l’attacco di «La nostra canzone» a 45,32 secondi della presa, dentro il
+«re»; in realtà «sentire» finisce a 45,58, segue più di un secondo di silenzio vero, e «La» comincia a 46,68. Il
+taglio fra due battute ora cade nel silenzio vero più lungo che le separa (almeno 80 ms, 45 dB sotto le parole),
+non sui tempi di Whisper: il Piccolo finisce a 45,63, il Congedo comincia a 46,63. L’integrale dura 1:26; Whisper
+ci sente tutte le 138 parole (più un «Grazie a tutti» inventato a 85,5 secondi, sulla musica che sfuma: la voce
+finisce a 82,9). Per il resto l’autore: «tutto perfetto direi». Le regole che ne
 vengono, per tutte le voci: una presa non si taglia dentro, e sotto una voce la musica non fa ducking. Il resto
 di questo paragrafo descrive la prima versione, scartata.
 
@@ -420,6 +428,12 @@ interni e la tonalità (§3.6, §3.7). **Preventivo: 8900 crediti per due versio
 **Rimandata** (l’autore, 2 novembre): «mi sono rimasti 1.700 crediti, non ce la facciamo. Questa cosa la
 aggiorneremo.» Il nodo resta pronto nel suo spazio ElevenLabs, con il testo e la durata: quando ci sono i
 crediti, basta generarlo.
+
+**«Voice in the Deep», riascoltata e approvata**: la canzone di **Lyria** 3.5 del 19 ottobre, che c’è già (l’impronta
+del file è quella del registro; la versione di ElevenLabs non è mai stata generata). L’autore, 2 novembre, dopo averla
+risentita da sola: «la
+canzone è meravigliosa, degna di un grande film di fantascienza evocativa e riflessiva. Approvato.» Resta nei
+titoli di coda; la prova con ElevenLabs, se un giorno si fa, è soltanto un confronto.
 
 ### 3.9 Gli effetti sonori con ElevenLabs (idea, 2 novembre 2026)
 
