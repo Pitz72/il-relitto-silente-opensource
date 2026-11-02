@@ -48,8 +48,22 @@ const NORM_CAMPO: f32 = 0.507;
 const NORM_CORO: f32 = 0.451;
 const NORM_BATTITO: f32 = 3.0;
 
-/// L’Anziano parla sotto un testo da leggere: la sua musica sta poco sopra la scrittura.
-const LIVELLO_ANZIANO: f32 = 3.0;
+/// L’Anziano parla sotto un testo da leggere: la sua musica sta poco sopra la scrittura (prima
+/// era 3 dB sopra; dal 2 novembre 2026, con la sua voce, 5 dB più giù, come i letti da file).
+const LIVELLO_ANZIANO: f32 = -2.0;
+/// I letti dell’Anziano da file, sotto il livello a cui il lettore porta ogni file: fissi, anche
+/// quando lui parla (l’autore, 2 novembre 2026: «abbassa un po’ la musica e togli il ducking»).
+const LIVELLO_LETTI: f32 = -5.0;
+/// La voce dell’Anziano sopra il livello del lettore: il parlato a circa −22 dBFS di valore
+/// efficace, come nell’ascolto approvato (32, §3.7) e come la voce di L.V. nell’intro.
+const LIVELLO_VOCE: f32 = 4.0;
+/// Il canto del primo contatto, sopra il livello del lettore (nell’ascolto: −24 dBFS).
+const LIVELLO_CANTO: f32 = 1.0;
+/// Al primo contatto: quando entra il primo letto (il canto sfuma sotto di lui) e quando la voce.
+const CANTO_LETTO: f32 = 4.0;
+const CANTO_VOCE: f32 = 4.6;
+/// Una battuta comincia poco dopo il suo testo.
+const VOCE_DOPO: f32 = 0.4;
 
 const MAX_PROGRAMMA: usize = 256;
 const MAX_COLPI_MUSICA: usize = 32;
@@ -178,6 +192,8 @@ enum Az {
     Scena(usize),
     /// il letto dell’Anziano da file: il pezzo entra incrociandosi con quello che c’era
     Letto(Pezzo),
+    /// una battuta dell’Anziano con la voce (un file intero, sul cursore del parlato)
+    Voce(Pezzo),
     /// il brano è finito: la musica si ferma
     Fine,
 }
@@ -524,6 +540,10 @@ pub struct Musica {
     file: Lettore,
     /// il brano in corso suona dai file
     in_file: bool,
+    /// le battute dell’Anziano con la voce (32): un lettore loro, perché vanno sul cursore del parlato
+    voce: Lettore,
+    /// il canto del primo contatto si sente una volta sola
+    canto_sentito: bool,
 }
 
 impl Musica {
@@ -549,12 +569,21 @@ impl Musica {
             muta_da: 1e9,
             file: Lettore::nuovo(sr),
             in_file: false,
+            voce: Lettore::nuovo(sr),
+            canto_sentito: false,
         }
     }
 
     /// Dove stanno i file della musica. Senza, suona soltanto la musica sintetizzata.
     pub fn con_cartella(&mut self, cartella: std::path::PathBuf) {
-        self.file.biblioteca = Some(super::musica_file::Biblioteca::nuova(cartella));
+        self.file.biblioteca = Some(super::musica_file::Biblioteca::nuova(cartella.clone()));
+        self.voce.biblioteca = Some(super::musica_file::Biblioteca::nuova(cartella));
+    }
+
+    /// Per le prove: il lettore delle voci.
+    #[cfg(test)]
+    pub fn lettore_voce(&mut self) -> &mut Lettore {
+        &mut self.voce
     }
 
     /// Per le prove: la biblioteca con pezzi già in memoria.
@@ -570,7 +599,7 @@ impl Musica {
     /// Serve ancora il suo calcolo? Finché un brano suona sì, e dopo che è finito finché
     /// ne resta la coda del riverbero.
     pub fn attiva(&self) -> bool {
-        self.brano != Brano::Silenzio || self.muta_da < 16.0 || self.file.attivo()
+        self.brano != Brano::Silenzio || self.muta_da < 16.0 || self.file.attivo() || self.voce.attivo()
     }
 
     // ---- il programma
@@ -598,6 +627,7 @@ impl Musica {
         self.azzera_programma();
         self.brano = Brano::Silenzio;
         self.file.tace(s);
+        self.voce.tace(s);
         self.esegui(Az::Tace(s));
     }
 
@@ -873,34 +903,73 @@ impl Musica {
 
     // ---- l’Anziano
 
-    /// L’Anziano comincia a parlare: la musica entra piano, sulla scena del nodo.
-    pub fn anziano_entra(&mut self, nodo: &str) {
+    /// Una partita nuova: il canto del primo contatto torna a sentirsi.
+    pub fn nuova_partita(&mut self) {
+        self.canto_sentito = false;
+    }
+
+    /// L’Anziano comincia a parlare: la musica entra piano, sulla scena del nodo. `voce`: la sua
+    /// battuta con la voce, se a schermo ci sono proprio quelle parole (lo dice il ponte);
+    /// `canto`: il dialogo si apre (non un caricamento nel mezzo), e al primo contatto, una volta
+    /// sola, prima delle parole si sente il canto, la sua lingua (32, §3.3 e §3.7).
+    pub fn anziano_entra(&mut self, nodo: &str, voce: Option<Pezzo>, canto: bool) {
         self.azzera_programma();
         self.brano = Brano::Anziano;
         self.visitati = 0;
         self.t = 0.0;
+        self.voce.tace(0.3);
+        for p in [Pezzo::AN1, Pezzo::AN2, Pezzo::AN3] {
+            self.voce.precarica(p);
+        }
         if self.file.disponibile(&LETTI) {
             self.esegui(Az::Tace(2.0));
-            self.file.tieni(&LETTI);
+            self.file.tieni(&[Pezzo::A1, Pezzo::A2, Pezzo::A3, Pezzo::A4, Pezzo::CA]);
+            let canta = canto && !self.canto_sentito && self.file.disponibile(&[Pezzo::CA]);
+            if canta {
+                // il canto si chiede per primo: il thread decodifica in fila, e i letti durano due
+                // minuti l'uno (dopo di loro arriverebbe tardi, e il primo letto lo scarterebbe)
+                self.canto_sentito = true;
+                let r = Richiesta { pezzo: Pezzo::CA, da: 0.0, a: None, entra: 0.05, dopo: Dopo::Niente, incrocio: 0.0, esce: 1.5, livello: LIVELLO_CANTO };
+                self.file.avvia(r);
+            }
             for l in LETTI {
                 self.file.precarica(l);
             }
             self.in_file = true;
-            self.esegui(Az::Letto(letto_del_nodo(nodo).unwrap_or(Pezzo::A1)));
+            let letto = Az::Letto(letto_del_nodo(nodo).unwrap_or(Pezzo::A1));
+            if canta {
+                // il primo letto entra mentre il canto sfuma; poi le parole
+                self.p(CANTO_LETTO, letto);
+                self.dice(voce, CANTO_VOCE);
+            } else {
+                self.esegui(letto);
+                self.dice(voce, VOCE_DOPO);
+            }
             return;
         }
         self.in_file = false;
         self.esegui(Az::Master(LIVELLO_ANZIANO, 3.0));
-        self.anziano_nodo(nodo);
+        self.anziano_nodo(nodo, voce);
     }
 
-    /// Un altro nodo: le note passano alla scena nuova.
-    pub fn anziano_nodo(&mut self, nodo: &str) {
+    /// La battuta con la voce, `dopo` secondi da adesso.
+    fn dice(&mut self, voce: Option<Pezzo>, dopo: f32) {
+        if let Some(p) = voce {
+            self.voce.precarica(p);
+            self.p(dopo, Az::Voce(p));
+        }
+    }
+
+    /// Un altro nodo: le note passano alla scena nuova; la battuta di prima, se lui stava ancora
+    /// parlando, lascia il posto a quella nuova.
+    pub fn anziano_nodo(&mut self, nodo: &str, voce: Option<Pezzo>) {
         if self.brano != Brano::Anziano {
             return;
         }
+        self.voce.tace(0.3);
         if self.in_file {
             self.letto_del_nodo(nodo);
+            self.dice(voce, VOCE_DOPO);
             return;
         }
         let Some(i) = SCENE.iter().position(|s| s.nodo == nodo) else { return };
@@ -917,6 +986,7 @@ impl Musica {
             self.esegui(Az::Master(LIVELLO_ANZIANO, 1.0));
             self.esegui(Az::Scena(i));
         }
+        self.dice(voce, VOCE_DOPO);
     }
 
     /// L’Anziano da file: il nodo sceglie il letto (22, §5.3), e il letto entra incrociandosi con
@@ -964,6 +1034,7 @@ impl Musica {
             return;
         }
         self.azzera_programma();
+        self.voce.tace(1.5);
         self.esegui(Az::Tace(6.0));
         self.p(10.0, Az::Fine);
     }
@@ -1019,8 +1090,13 @@ impl Musica {
                 self.file.tace(s);
             }
             Az::Letto(p) => {
-                let r = Richiesta { pezzo: p, da: 0.0, a: None, entra: 4.0, dopo: Dopo::Ripeti, incrocio: 6.0, esce: 0.0, livello: 0.0 };
+                let r = Richiesta { pezzo: p, da: 0.0, a: None, entra: 4.0, dopo: Dopo::Ripeti, incrocio: 6.0, esce: 0.0, livello: LIVELLO_LETTI };
                 self.file.letto(r, 4.0);
+            }
+            Az::Voce(p) => {
+                // la presa intera, com’è: le sue dissolvenze ce le ha già
+                let r = Richiesta { pezzo: p, da: 0.0, a: None, entra: 0.02, dopo: Dopo::Niente, incrocio: 0.0, esce: 0.0, livello: LIVELLO_VOCE };
+                self.voce.avvia(r);
             }
             Az::Master(liv, s) => self.master.verso(lin(liv), s, sr),
             Az::Scena(i) => self.scena(i),
@@ -1028,6 +1104,7 @@ impl Musica {
                 self.brano = Brano::Silenzio;
                 self.in_file = false;
                 self.file.tace(1.0);
+                self.voce.tace(1.0);
                 self.azzera_programma();
             }
         }
@@ -1042,6 +1119,7 @@ impl Musica {
     /// Fa andare il tempo della musica di `dt` secondi (a ogni blocco).
     pub fn passo(&mut self, dt: f32) {
         self.file.passo(dt);
+        self.voce.passo(dt);
         if self.file.prendi_fallita() && self.in_file && !matches!(self.brano, Brano::Anziano | Brano::Silenzio) {
             // un file che serviva non c’è: suona il brano sintetizzato
             let b = self.brano;
@@ -1082,6 +1160,13 @@ impl Musica {
     #[inline]
     pub fn campione_file(&mut self) -> (f32, f32) {
         self.file.campione()
+    }
+
+    /// Un campione della voce dell’Anziano: asciutta, va sul cursore del parlato (è «dentro la
+    /// testa»: niente sala, niente stanza).
+    #[inline]
+    pub fn campione_voce(&mut self) -> (f32, f32) {
+        self.voce.campione()
     }
 
     /// Un campione di musica asciutta, stereo (senza il volume generale, che sta dopo la sala).
@@ -1333,27 +1418,27 @@ mod prove {
     #[test]
     fn l_anziano_segue_i_nodi_e_tace_otto_secondi() {
         let mut m = Musica::nuova(SR, 17);
-        m.anziano_entra("benvenuto");
+        m.anziano_entra("benvenuto", None, false);
         let x = rendi(&mut m, 14.0);
         assert!(rms_db(&x[(SR * 8.0) as usize..]) > -55.0, "l’Anziano comincia senza musica");
         assert_eq!(m.brano(), Brano::Anziano);
         // «Resto ad ascoltare»: per otto secondi la musica tace, poi torna
-        m.anziano_nodo("silenzio");
+        m.anziano_nodo("silenzio", None);
         let y = rendi(&mut m, 14.0);
         let dopo_la_sfumata = &y[(SR * 6.0) as usize..(SR * 8.0) as usize];
         assert!(rms_db(dopo_la_sfumata) < -80.0, "il silenzio non è silenzio: {:.1} dB", rms_db(dopo_la_sfumata));
         assert!(rms_db(&y[(SR * 11.0) as usize..]) > -55.0, "dopo il silenzio la musica non torna");
         // «dal sol♯ al re»: più si ascolta, più il re sale e il sol♯ scende
         let mut a = Musica::nuova(SR, 19);
-        a.anziano_entra("benvenuto");
+        a.anziano_entra("benvenuto", None, false);
         let prima = a.progresso();
         for nodo in ["salto", "memoria", "altro", "aiuto", "prezzo", "piccolo", "sangue", "tracce", "musica"] {
-            a.anziano_nodo(nodo);
+            a.anziano_nodo(nodo, None);
             rendi(&mut a, 1.0);
         }
         assert!(a.progresso() > prima && a.progresso() >= 0.99, "il progresso non cresce: {} → {}", prima, a.progresso());
         // nodi sconosciuti non rompono niente
-        a.anziano_nodo("un nodo che non c’è");
+        a.anziano_nodo("un nodo che non c’è", None);
         // l’Anziano finisce: la musica se ne va in dieci secondi, e il brano finisce
         a.anziano_esce();
         let z = rendi(&mut a, 20.0);
@@ -1721,27 +1806,27 @@ mod prove_file {
     #[test]
     fn i_nodi_dell_anziano_scelgono_il_letto_e_il_silenzio_e_vero() {
         let mut m = con_pezzi(&[(Pezzo::A1, 200.0, 60.0), (Pezzo::A2, 300.0, 60.0), (Pezzo::A3, 400.0, 60.0), (Pezzo::A4, 500.0, 60.0)]);
-        m.anziano_entra("benvenuto");
+        m.anziano_entra("benvenuto", None, false);
         let x = rendi(&mut m, 12.0);
         assert!(goertzel(sec(&x, 6.0, 11.0), 200.0) > 1e-6, "benvenuto non è il primo letto");
         assert!(goertzel(sec(&x, 6.0, 11.0), 300.0) < 1e-8);
         // un altro nodo, un altro letto: si incrociano, poi resta solo il nuovo
-        m.anziano_nodo("prezzo");
+        m.anziano_nodo("prezzo", None);
         let y = rendi(&mut m, 14.0);
         assert!(goertzel(sec(&y, 1.0, 3.0), 200.0) > 1e-8 && goertzel(sec(&y, 1.0, 3.0), 300.0) > 1e-8, "i due letti non si incrociano");
         assert!(goertzel(sec(&y, 8.0, 13.0), 300.0) > 1e-6, "prezzo non è il secondo letto");
         assert!(goertzel(sec(&y, 8.0, 13.0), 200.0) < 1e-8, "il primo letto non se n'è andato");
         // lo stesso letto: niente cambia
-        m.anziano_nodo("aiuto");
+        m.anziano_nodo("aiuto", None);
         let z = rendi(&mut m, 4.0);
         assert!(rms_db(&z) > -35.0);
         // silenzio: otto secondi di niente, poi il primo letto
-        m.anziano_nodo("silenzio");
+        m.anziano_nodo("silenzio", None);
         let s = rendi(&mut m, 14.0);
         assert!(rms_db(sec(&s, 2.5, 7.5)) < -90.0, "il silenzio non è vero ({:.1} dB)", rms_db(sec(&s, 2.5, 7.5)));
         assert!(goertzel(sec(&s, 11.0, 14.0), 200.0) > 1e-7, "dopo il silenzio non torna il primo letto");
         // il congedo: lo scioglimento; poi la musica se ne va
-        m.anziano_nodo("congedo");
+        m.anziano_nodo("congedo", None);
         let c = rendi(&mut m, 10.0);
         assert!(goertzel(sec(&c, 6.0, 9.5), 500.0) > 1e-6, "congedo non è il quarto letto");
         m.anziano_esce();
@@ -1750,10 +1835,76 @@ mod prove_file {
         assert_eq!(m.brano(), Brano::Silenzio);
     }
 
+    /// Fa suonare `secondi`: il mono dei file e quello della voce dell’Anziano.
+    fn rendi_con_voce(m: &mut Musica, secondi: f32) -> (Vec<f32>, Vec<f32>) {
+        let blocco = 128usize;
+        let (mut f, mut v) = (Vec::new(), Vec::new());
+        for _ in 0..(secondi * SR / blocco as f32) as usize {
+            m.passo(blocco as f32 / SR);
+            for _ in 0..blocco {
+                let (l, r) = m.campione_file();
+                f.push((l + r) * 0.5);
+                let (l, r) = m.campione_voce();
+                v.push((l + r) * 0.5);
+            }
+        }
+        (f, v)
+    }
+
+    #[test]
+    fn al_primo_contatto_il_canto_poi_il_letto_poi_la_voce() {
+        let mut m = con_pezzi(&[(Pezzo::A1, 200.0, 60.0), (Pezzo::A2, 300.0, 60.0), (Pezzo::A3, 400.0, 60.0), (Pezzo::A4, 500.0, 60.0), (Pezzo::CA, 700.0, 7.0)]);
+        let mut b = Biblioteca::nuova(std::path::PathBuf::from("non-esiste"));
+        b.inserisci(Pezzo::AN1, seno_a(900.0, 0.3, 10.0));
+        b.inserisci(Pezzo::AN2, seno_a(1100.0, 0.3, 10.0));
+        m.lettore_voce().biblioteca = Some(b);
+        m.anziano_entra("benvenuto", Some(Pezzo::AN1), true);
+        let (f, v) = rendi_con_voce(&mut m, 12.0);
+        // il canto subito, da solo; il primo letto entra a quattro secondi, mentre il canto sfuma
+        assert!(goertzel(sec(&f, 0.5, 3.5), 700.0) > 1e-6, "il canto non comincia subito");
+        assert!(goertzel(sec(&f, 0.5, 3.5), 200.0) < 1e-8, "il letto entra prima del canto");
+        assert!(goertzel(sec(&f, 9.0, 11.5), 200.0) > 1e-6, "il primo letto non entra");
+        assert!(goertzel(sec(&f, 9.0, 11.5), 700.0) < 1e-8, "il canto non se n'è andato");
+        // le parole si aprono dal canto: la voce a 4,6 secondi, non prima
+        assert!(rms_db(sec(&v, 0.0, 4.4)) < -90.0, "la voce parte prima del canto");
+        assert!(goertzel(sec(&v, 5.0, 9.0), 900.0) > 1e-6, "la voce del benvenuto non parte");
+        // un altro nodo: la battuta nuova prende il posto della vecchia
+        m.anziano_nodo("piccolo", Some(Pezzo::AN2));
+        let (_, w) = rendi_con_voce(&mut m, 4.0);
+        assert!(goertzel(sec(&w, 1.0, 3.5), 1100.0) > 1e-6, "la battuta del Piccolo non parte");
+        assert!(goertzel(sec(&w, 1.0, 3.5), 900.0) < 1e-8, "la battuta di prima non si ferma");
+        // un nodo senza voce (le sue parole non sono quelle registrate): tace
+        m.anziano_nodo("sangue", None);
+        let (_, z) = rendi_con_voce(&mut m, 2.0);
+        assert!(rms_db(sec(&z, 1.0, 2.0)) < -90.0, "un nodo senza voce parla ancora");
+        // il canto si sente una volta sola; una partita nuova lo rimette
+        m.anziano_esce();
+        rendi_con_voce(&mut m, 12.0);
+        m.anziano_entra("benvenuto", None, true);
+        let (g, _) = rendi_con_voce(&mut m, 3.0);
+        assert!(goertzel(sec(&g, 0.5, 2.5), 700.0) < 1e-8, "il canto si sente due volte");
+        m.anziano_esce();
+        rendi_con_voce(&mut m, 12.0);
+        m.nuova_partita();
+        m.anziano_entra("benvenuto", None, true);
+        let (h, _) = rendi_con_voce(&mut m, 3.0);
+        assert!(goertzel(sec(&h, 0.5, 2.5), 700.0) > 1e-6, "in una partita nuova il canto non torna");
+    }
+
+    #[test]
+    fn un_caricamento_nel_colloquio_non_canta_e_la_voce_non_c_e() {
+        let mut m = con_pezzi(&[(Pezzo::A1, 200.0, 60.0), (Pezzo::A2, 300.0, 60.0), (Pezzo::A3, 400.0, 60.0), (Pezzo::A4, 500.0, 60.0), (Pezzo::CA, 700.0, 7.0)]);
+        m.anziano_entra("benvenuto", None, false);
+        let (f, v) = rendi_con_voce(&mut m, 8.0);
+        assert!(goertzel(sec(&f, 0.5, 7.5), 700.0) < 1e-8, "un caricamento fa cantare");
+        assert!(goertzel(sec(&f, 5.0, 7.5), 200.0) > 1e-6, "il letto non entra subito");
+        assert!(rms_db(&v) < -90.0);
+    }
+
     #[test]
     fn un_letto_si_ripete_senza_stacco() {
         let mut m = con_pezzi(&[(Pezzo::A1, 200.0, 20.0), (Pezzo::A2, 300.0, 20.0), (Pezzo::A3, 400.0, 20.0), (Pezzo::A4, 500.0, 20.0)]);
-        m.anziano_entra("benvenuto");
+        m.anziano_entra("benvenuto", None, false);
         let x = rendi(&mut m, 70.0);
         // sessanta secondi con un file da venti: ha ripetuto più volte e il livello non cade mai
         for k in 6..62 {
@@ -1810,7 +1961,9 @@ mod prove_file {
         for p in Pezzo::TUTTI {
             let pcm = b.pronto(p).unwrap_or_else(|| panic!("{p:?} non si decodifica"));
             println!("{p:?}: {:.1} s", pcm.durata());
-            assert!(pcm.durata() > 30.0, "{p:?} dura {} s", pcm.durata());
+            // il canto e le battute dell’Anziano sono corti: il resto è musica lunga
+            let minimo = if matches!(p, Pezzo::CA | Pezzo::AN1 | Pezzo::AN2 | Pezzo::AN3) { 5.0 } else { 30.0 };
+            assert!(pcm.durata() > minimo, "{p:?} dura {} s", pcm.durata());
         }
         println!("decodificati in {:.1} s", t0.elapsed().as_secs_f32());
     }

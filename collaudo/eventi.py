@@ -15,7 +15,8 @@
 #      o sui rami scritti qui per quelli che nessun percorso tocca (il bengala
 #      acceso, il reattore toccato, la radio, l'archivio forzato, la ripresa
 #      dopo un ANNULLA alla fine…);
-#   5. i segni a sorte che si riconoscono dal testo sono ancora nel gioco;
+#   5. i segni a sorte che si riconoscono dal testo sono ancora nel gioco, e così
+#      le battute dell'Anziano con la voce (parola per parola);
 #   6. il ponte non cambia la partita: lo stesso percorso giocato dal ponte e
 #      giocato dal motore da solo arriva alla stessa impronta.
 
@@ -196,6 +197,12 @@ def main():
     if persi:
         print(f"     non più nel gioco: {', '.join(persi)}")
 
+    voci = json.loads(ponte.rel_voci_anziano())
+    perse = [n for n, c in voci.items() if not c]
+    print(f"[{'NO' if perse else 'OK'}] le battute dell'Anziano con la voce nel gioco ({len(voci)})")
+    if perse:
+        print(f"     non più nel gioco, parola per parola: {', '.join(perse)}")
+
     mondo = compila_mondo(STORIA)
     divergenze = [d for d in (indisturbato(mondo, os.path.join(QUI, f"{n}.txt")) for n in ponte.FINALI) if d]
     print(f"[{'NO' if divergenze else 'OK'}] il ponte non cambia la partita (i sei finali)")
@@ -206,7 +213,7 @@ def main():
         print()
         for nome, n in sorted(conta.items()):
             print(f"  {n:5}  {nome}")
-    sbagli = falliti + bool(rami) + bool(mai or ignoti) + bool(persi) + bool(divergenze)
+    sbagli = falliti + bool(rami) + bool(mai or ignoti) + bool(persi) + bool(perse) + bool(divergenze)
     print(f"\nPercorsi: {len(percorsi)}; falliti: {falliti}. Eventi diversi: {len(conta)}; "
           f"eventi in tutto: {sum(conta.values())}.")
     return 1 if sbagli else 0

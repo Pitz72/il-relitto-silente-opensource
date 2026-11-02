@@ -14,6 +14,16 @@
    "licenza": "CC BY-NC-SA 4.0 per quanto di spettanza dell’autore; i Termini di Google prevalgono",
    "ridistribuibile": "sì",
    "uso": "l’intro: la voce di L.V."
+  },
+  {
+   "sigla": "AN",
+   "titolo": "La voce dell’Anziano (tre battute)",
+   "autore": "Simone Pizzi",
+   "fonte": "ElevenLabs, eleven_v4 (la voce disegnata «Edoardo Straniero»)",
+   "url": null,
+   "licenza": "CC BY-NC-SA 4.0 per quanto di spettanza dell’autore; i Termini di ElevenLabs prevalgono",
+   "ridistribuibile": "sì",
+   "uso": "l’Anziano: il benvenuto, il Piccolo, il congedo"
   }
  ],
  "musica": [
@@ -187,6 +197,15 @@
    "autore": "Alirio Bruni",
    "licenza": "",
    "uso": "l'intro"
+  },
+  {
+   "sigla": "AN",
+   "titolo": "Canto del primo contatto",
+   "modello": "ElevenLabs Music",
+   "fonte": "ElevenLabs",
+   "autore": "Simone Pizzi",
+   "licenza": "CC BY-NC-SA 4.0",
+   "uso": "l'Anziano: il canto del primo contatto"
   }
  ],
  "immagini": [

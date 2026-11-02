@@ -8,6 +8,20 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+### Per chi gioca
+
+- **L’Anziano parla.** La prima volta che lo incontri, prima delle parole, si sente il suo canto, la sua lingua; poi la sua voce, profonda e vicina, come dentro la testa. Per ora parla con la voce in tre momenti: il benvenuto, il Piccolo e il congedo; le altre sue parole restano scritte.
+- **La musica dell’Anziano è più bassa**, e sempre uguale anche mentre parla.
+
+### Aggiunto
+
+- **La voce e il canto dell’Anziano** (richiesta dell’autore del 1° e 2 novembre 2026; documento 32, §3). La voce è stata disegnata con ElevenLabs sulla descrizione approvata dall’autore («Edoardo Straniero», eleven_v4: la terza anteprima, scelta da lui per «il suo suono profondo quasi da subwoofer»); tre battute dalla seconda presa, intera, tagliate soltanto ai due capi (`audio/musica-ia/AN/AN-01-benvenuto.mp3`, `AN-02-piccolo-vera.mp3`, `AN-03-congedo-ascolto.mp3`). Il canto è di ElevenLabs Music v2.5 (`AN-00-canto.mp3`, 7 secondi; la prima di due versioni, «perfetta ed è incredibile»; non è in sol♯ come chiesto, ma su re e la). Il ponte (`ponte.py`, `VOCI_ANZIANO`) aggiunge agli eventi «dialogo» e «nodo» dell’Anziano il nome della battuta con la voce, solo se a schermo ci sono proprio quelle parole: il benvenuto con le echi o con il risuonatore, il Piccolo senza la risposta vera, il congedo senza l’ascolto restano scritti. Il motore audio suona la battuta con un lettore suo, sul cursore del parlato, asciutta, quattro decimi dopo il testo; se si passa al nodo dopo mentre parla, la battuta sfuma. Al primo contatto, una volta per partita, il canto suona da solo, il primo letto entra a quattro secondi mentre il canto sfuma, e la voce a 4,6, come nell’ascolto approvato (`consegne/Ascolto Anziano 2026-11-02/`); un caricamento nel mezzo del colloquio non canta e non parla. La voce è nel registro dei suoni (`audio/LICENZE.md`, AN), il canto in quello della musica; tutti e due nei titoli di coda e nel file dei riconoscimenti. Il collaudo degli eventi controlla che le tre battute siano ancora nel gioco, parola per parola; sui percorsi del collaudo il benvenuto parla in otto partite su dieci (nelle altre il giocatore ha già le echi o il risuonatore). Due prove nuove in Rust: il canto, il letto e la voce al primo contatto; il caricamento che non canta.
+
+### Cambiato
+
+- **La musica dell’Anziano, 5 dB più giù e fissa** (l’autore, 2 novembre 2026: «preferisco che abbassi un po’ la musica e che togli il ducking che fa troppo radio»): i letti da file a −5 dB, la musica sintetizzata di ripiego da +3 a −2 dB; nessun abbassamento sotto la voce.
+- **La dichiarazione d’apertura e i titoli di coda** dicono anche ElevenLabs: «La musica è stata generata con l’intelligenza artificiale (Lyria 3.5 di Google, Suno ed ElevenLabs), scelta e diretta dall’autore; […] La voce di L.V. è stata generata con la sintesi vocale di Google, quella dell’Anziano con ElevenLabs; ogni altro suono del gioco è sintetizzato dal suo motore audio.»
+
 ## [0.2.5-beta.8] - 2026-10-30
 
 ### Per chi gioca

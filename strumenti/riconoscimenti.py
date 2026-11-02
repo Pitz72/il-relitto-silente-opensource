@@ -193,7 +193,7 @@ USO_MUSICA = {
     "A1": "l'Anziano: il primo letto", "A2": "l'Anziano: il secondo letto", "A3": "l'Anziano: il terzo letto",
     "A4": "l'Anziano: il quarto letto", "C1": "il finale «Vivi»", "C2": "il finale «La prima nota»",
     "C3": "il finale «La stiva piena»", "C4": "il finale «Doppio fondo»", "C5": "il finale «Due lettere»",
-    "T": "il tema", "CT": "i titoli di coda", "SM": "l'intro",
+    "T": "il tema", "CT": "i titoli di coda", "SM": "l'intro", "AN": "l'Anziano: il canto del primo contatto",
 }
 # Chi ha fatto un brano, se non è l'autore del gioco.
 AUTORI_MUSICA = {"SM": "Alirio Bruni"}
@@ -215,9 +215,13 @@ def musica():
             out.append({"sigla": r["Scheda"], "titolo": m.group(2), "modello": "", "fonte": "Il Mistero della Santa Maria",
                         "autore": AUTORI_MUSICA.get(r["Scheda"], "Simone Pizzi"), "licenza": "", "uso": USO_MUSICA.get(r["Scheda"], "")})
             continue
-        modello = "Suno" if r["Modello"].startswith("Suno") else "Lyria 3.5"
-        out.append({"sigla": r["Scheda"], "titolo": m.group(2), "modello": modello,
-                    "fonte": "Suno" if modello == "Suno" else "Google Flow Music",
+        if r["Modello"].startswith("ElevenLabs"):
+            modello, fonte = "ElevenLabs Music", "ElevenLabs"
+        elif r["Modello"].startswith("Suno"):
+            modello, fonte = "Suno", "Suno"
+        else:
+            modello, fonte = "Lyria 3.5", "Google Flow Music"
+        out.append({"sigla": r["Scheda"], "titolo": m.group(2), "modello": modello, "fonte": fonte,
                     "autore": AUTORI_MUSICA.get(r["Scheda"], "Simone Pizzi"), "licenza": "CC BY-NC-SA 4.0",
                     "uso": USO_MUSICA.get(r["Scheda"], "")})
     return out
@@ -484,7 +488,7 @@ def file_di_testo(d):
         pacchetto(p, p["ruolo"])
 
     titolo("La musica")
-    a("Generata con l’intelligenza artificiale (Lyria 3.5 di Google, in Flow Music, e Suno),")
+    a("Generata con l’intelligenza artificiale (Lyria 3.5 di Google, in Flow Music, Suno ed ElevenLabs),")
     a(f"scelta e diretta da {g['autore']}. I brani di Lyria portano la filigrana SynthID.")
     a("Il tema dell’intro è «The Santa Maria Theme» di Alirio Bruni, dal Mistero della Santa Maria.")
     a("")

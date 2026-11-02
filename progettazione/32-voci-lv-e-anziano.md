@@ -448,6 +448,37 @@ regole della guida: niente parole visive, un suono per generazione (gli strati s
 Niente è deciso: se si fa, è un lavoro a sé, da progettare con la bibbia sonora (quali suoni, quali restano
 sintetici, come entrano nel motore), e ha bisogno di crediti.
 
+### 3.10 L’Anziano nel gioco (2 novembre 2026)
+
+L’autore: «ok... integra l’anziano che è approvato» (D-V3 e D-V5 decise così: il canto al primo contatto, e la voce
+subito, con quello che c’è). Che cosa c’è nel gioco:
+
+- **I file** (`audio/musica-ia/AN/`, nelle risorse dell’app): `AN-00-canto.mp3` (il canto scelto, intatto) e le tre
+  battute, tagliate dalla presa 2 soltanto ai due capi, nei punti dell’ascolto approvato (`AN-01-benvenuto.mp3`,
+  21,6 s; `AN-02-piccolo-vera.mp3`, 22,8 s; `AN-03-congedo-ascolto.mp3`, 22,0 s). Le sorgenti (la presa intera, le
+  due versioni del canto) in `audio/sorgenti/voce/`, fuori da git.
+- **Il ponte** (`ponte.py`, `VOCI_ANZIANO`): agli eventi «dialogo» e «nodo» dell’Anziano aggiunge `voce`, il nome
+  della battuta, solo se le parole fra «» a schermo sono proprio quelle registrate. Così il benvenuto con le echi
+  (almeno otto) o con il risuonatore, il Piccolo senza la risposta vera, il congedo senza l’ascolto, e tutte le
+  altre battute restano scritte. Sui percorsi del collaudo il benvenuto parla in otto partite su dieci.
+- **Il motore audio** (`musica.rs`): un lettore dei file per la voce, sul cursore del parlato, asciutto. La battuta
+  parte 0,4 s dopo il suo testo; se si passa a un altro nodo mentre lui parla, sfuma in 0,3 s. Al primo contatto
+  (il dialogo che si apre, non un caricamento), una volta per partita: il canto subito, il primo letto a 4 s mentre
+  il canto sfuma, la voce a 4,6 s. Il canto si chiede al decodificatore prima dei letti, che durano due minuti
+  l’uno: dopo di loro arrivava tardi, e il primo letto lo scartava (l’ha trovato la resa con il motore vero).
+- **I livelli**, come nell’ascolto approvato: i letti a −5 dB (la musica sintetizzata di ripiego da +3 a −2), fissi;
+  la voce a +4 dB sul livello del lettore, il canto a +1. Misurato con il motore vero, sul missaggio intero: la
+  voce a −19,9 dBFS di valore efficace, la musica sotto a −30,5, il canto a −25,5; Whisper ci sente tutto il
+  benvenuto.
+- **Le prove**: due nuove in Rust (il canto, il letto e la voce al primo contatto, con la battuta che lascia il
+  posto alla nuova e il canto una volta sola; il caricamento che non canta e non parla); il collaudo degli eventi
+  controlla che le tre battute siano ancora nel gioco parola per parola.
+- **I registri**: la voce in `audio/LICENZE.md` (AN), il canto in `audio/musica-ia/REGISTRO.md`; nei titoli di
+  coda, nel file dei riconoscimenti, e nella dichiarazione d’apertura, che ora dice anche ElevenLabs.
+
+Restano senza voce le altre 28 battute dell’Anziano (circa 780 parole: intorno ai 4.700 crediti per una presa):
+quando ci sono i crediti, si generano con la stessa voce e si aggiungono a `VOCI_ANZIANO` e ai pezzi `AN`.
+
 ## 4. L’ordine proposto
 
 1. **L.V., la voce.** L’autore approva la descrizione (§2.3); tre anteprime sul prologo; sceglie lui; si salva.
@@ -464,6 +495,6 @@ sintetici, come entrano nel motore), e ha bisogno di crediti.
 |---|---|---|
 | D-V1 | Sostituire «Elio» con ElevenLabs? | **Decisa** il 1° novembre: no, L.V. resta «Elio», che ha i respiri (§2.6). |
 | D-V2 | La descrizione della voce di L.V. | **Decisa** il 1° novembre: la bozza del §2.3; scelta la seconda anteprima, «Leonard De Rossi». |
-| D-V3 | Il canto prima delle parole, al primo contatto con l’Anziano | Sì, soltanto la prima volta (§3.3). |
+| D-V3 | Il canto prima delle parole, al primo contatto con l’Anziano | **Deciso** il 2 novembre: sì, il canto di ElevenLabs, una volta per partita (§3.7, §3.10). |
 | D-V4 | La descrizione della voce dell’Anziano | **Decisa** il 2 novembre: la bozza rivista del §3.4; scelta la terza anteprima, «Edoardo Straniero». |
-| D-V5 | L’Anziano con la voce subito, o con la versione doppiata? | Prima trovare la voce (passo 3); poi decidere. |
+| D-V5 | L’Anziano con la voce subito, o con la versione doppiata? | **Deciso** il 2 novembre: subito, con le tre battute approvate; le altre quando ci sono i crediti (§3.10). |

@@ -32,6 +32,7 @@ import hashlib
 import io
 import json
 import os
+import re
 import sys
 import time
 
@@ -587,6 +588,42 @@ SEGNI_A_SORTE = {
     "incrinature": "Le pareti si incrinano in lunghe linee verdi",
 }
 
+# Le battute dell'Anziano con la voce (progettazione/32-voci-lv-e-anziano.md, §3.5–3.7): le sue
+# parole, quelle fra «», come sono nel gioco (ponte.fav). Il suono le fa sentire solo se a
+# schermo ci sono proprio queste: la variante del benvenuto con le echi, per esempio, resta scritta.
+VOCI_ANZIANO = {
+    "benvenuto": "Creatura di carbonio. Figlio delle stelle, forse. Benvenuto. So cosa cerchi: una "
+                 "risposta. Ma io non sono che la memoria di una domanda. Sono quello che resta quando "
+                 "il cantastorie è svanito: l'ultima frase, scritta nella luce.",
+    "piccolo-vera": "Era l'unico nato durante il viaggio. Non vide mai i tre soli: disegnava quello "
+                    "verso cui andavamo. Quando la nave si fermò, chiese perché, e nessuno di noi ebbe "
+                    "il coraggio di rispondergli. Glielo hai detto tu. Siete arrivati. Era vero, ed era "
+                    "la sola cosa che avesse bisogno di sentire.",
+    "congedo-ascolto": "La nostra canzone è finita. Le ultime armonie si sciolgono adesso, in questo "
+                       "istante. A chi viene dopo abbiamo sempre chiesto una cosa sola: che la musica "
+                       "fosse suonata, con forza, fino all'ultima nota. Vivi. Sarà il suono più bello. "
+                       "Grazie di essere rimasto.",
+}
+
+
+def _parole_dette(testo):
+    """Le parole fra «» di una battuta, in fila: quello che il personaggio dice davvero (le
+    parentesi sono il racconto di William)."""
+    testo = testo.replace("’", "'")
+    return " ".join(" ".join(p.split()) for p in re.findall(r"«([^»]*)»", testo))
+
+
+def _voce_anziano(eventi):
+    """La battuta dell'Anziano con la voce, se in questo turno è a schermo."""
+    for e in eventi:
+        if e["tipo"] == "dialogo" and (e.get("dati") or {}).get("personaggio") == "anziano":
+            dette = _parole_dette(e["testo"])
+            for nome, parole in VOCI_ANZIANO.items():
+                if dette == parole:
+                    return nome
+    return None
+
+
 # Le soglie del visore (aria.fav; bibbia sonora, §4.4).
 _SOGLIE = (("ambra", 60), ("ipossia", 15))
 
@@ -628,14 +665,20 @@ def _rileva(prima, dopo, comando, eventi):
     for nome, chiave, da, a in _PASSAGGI:
         if prima.get(chiave) != dopo.get(chiave) and dopo.get(chiave) == a and (da is None or prima.get(chiave) == da):
             out.append({"evento": nome})
-    # il dialogo: chi, e i nodi (il silenzio dell'Anziano)
+    # il dialogo: chi, e i nodi (il silenzio dell'Anziano); con l'Anziano, la battuta con la voce
+    nodo = None
     if prima["dialogo"] != dopo["dialogo"]:
         if prima["dialogo"]:
             out.append({"evento": "dialogo_fine", "con": prima["dialogo"]})
         if dopo["dialogo"]:
-            out.append({"evento": "dialogo", "con": dopo["dialogo"], "nodo": dopo["nodo"]})
+            nodo = {"evento": "dialogo", "con": dopo["dialogo"], "nodo": dopo["nodo"]}
     elif dopo["dialogo"] and prima["nodo"] != dopo["nodo"]:
-        out.append({"evento": "nodo", "con": dopo["dialogo"], "nodo": dopo["nodo"]})
+        nodo = {"evento": "nodo", "con": dopo["dialogo"], "nodo": dopo["nodo"]}
+    if nodo:
+        voce = _voce_anziano(eventi) if dopo["dialogo"] == "anziano" else None
+        if voce:
+            nodo["voce"] = voce
+        out.append(nodo)
     # i contatori
     for chiave in ("chiavi", "echi", "risonanze", "tracce", "taglio"):
         a, b = prima.get(chiave) or 0, dopo.get(chiave) or 0
@@ -697,6 +740,18 @@ def rel_segni_a_sorte():
         if isinstance(val, str):
             testi.append(val)
     return _json({nome: any(inizio in t for t in testi) for nome, inizio in SEGNI_A_SORTE.items()})
+
+
+def rel_voci_anziano():
+    """Per il collaudo: ogni battuta con la voce deve essere ancora, parola per parola, una
+    battuta dell'Anziano nel gioco (se no la voce non partirebbe più)."""
+    battute = []
+    for n in _base.dialogo_nodi.values():
+        battute.append(n.battuta)
+        battute.extend(testo for _, testo in n.battute_condizionali)
+    # le parti condizionali dentro la battuta («[se …]…[fine]») qui non ci sono
+    dette = {_parole_dette(re.sub(r"\[se [^\]]*\].*?\[fine\]", "", b, flags=re.S)) for b in battute}
+    return _json({nome: parole in dette for nome, parole in VOCI_ANZIANO.items()})
 
 
 # ----------------------------------------------------------------------------

@@ -77,6 +77,9 @@ pub struct EventoGioco {
     pub finale: Option<String>,
     pub esito: Option<String>,
     pub stanza: Option<String>,
+    /// la battuta dell’Anziano con la voce («dialogo», «nodo»): il ponte la manda solo se a schermo
+    /// ci sono proprio le parole registrate (`VOCI_ANZIANO` in ponte.py)
+    pub voce: Option<String>,
 }
 
 impl EventoGioco {

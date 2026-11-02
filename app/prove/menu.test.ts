@@ -74,8 +74,9 @@ test("l'elenco dei riconoscimenti ha un testo per ogni licenza che usa", () => {
   const tutti = [...e.caratteri, ...e.principali, ...e.javascript, ...Object.values(e.rust).flat()];
   for (const p of tutti) for (const l of p.usata) assert.ok(e.testi[l], `${p.nome}: manca il testo di ${l}`);
   for (const p of tutti) assert.ok(p.copyright.length || p.autori?.length, `${p.nome}: né copyright né autori`);
-  // dal 15 ottobre 2026 ogni suono è sintetizzato; dal 29 la voce di L.V. nell'intro è l'unica registrazione
-  assert.deepEqual(e.suoni.map((s) => s.titolo), ["La voce di L.V."]);
+  // dal 15 ottobre 2026 ogni suono è sintetizzato; le sole registrazioni sono le voci: dal 29 ottobre
+  // quella di L.V. nell'intro, dal 2 novembre quella dell'Anziano (documento 32)
+  assert.deepEqual(e.suoni.map((s) => s.titolo), ["La voce di L.V.", "La voce dell’Anziano (tre battute)"]);
   assert.ok(e.immagini.length);
   // i quattro del gioco, e Sora e Inter dei loghi d'apertura
   assert.deepEqual(e.caratteri.map((c) => c.famiglia).sort(), ["Atkinson Hyperlegible Next", "Big Shoulders Stencil", "IBM Plex Mono", "Inter", "Newsreader", "Sora"]);

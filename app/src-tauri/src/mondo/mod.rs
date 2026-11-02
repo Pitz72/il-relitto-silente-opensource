@@ -1080,6 +1080,11 @@ impl Mondo {
                 let kf = LIV_MUSICA * vp * gmus * s_musica * lv.musica;
                 l += fl * kf;
                 r += fr * kf;
+                // la voce dell’Anziano (32): asciutta, sul cursore del parlato
+                let (al, ar) = self.musica.campione_voce();
+                let kv = vp * gp;
+                l += al * kv;
+                r += ar * kv;
             }
             // l'intro: il suo sound design sta sul cursore degli effetti, il re e il tema su quello della
             // musica (il tema come i file di musica), la voce di L.V. su quello del parlato

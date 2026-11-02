@@ -60,10 +60,16 @@ pub enum Pezzo {
     SM,
     /// l’intro: la voce di L.V., tutta la traccia in un file, che si suona a pezzi
     LV,
+    /// l’Anziano (32, §3.6–3.7): il canto del primo contatto, la sua lingua prima delle parole
+    CA,
+    /// l’Anziano: le tre battute con la voce (ElevenLabs, «Edoardo Straniero»), una per file
+    AN1,
+    AN2,
+    AN3,
 }
 
 impl Pezzo {
-    pub const TUTTI: [Pezzo; 20] = [
+    pub const TUTTI: [Pezzo; 24] = [
         Pezzo::M1a,
         Pezzo::M1b,
         Pezzo::S2,
@@ -84,6 +90,10 @@ impl Pezzo {
         Pezzo::CT,
         Pezzo::SM,
         Pezzo::LV,
+        Pezzo::CA,
+        Pezzo::AN1,
+        Pezzo::AN2,
+        Pezzo::AN3,
     ];
 
     /// (la cartella della scheda, il nome del file) come stanno in `audio/musica-ia/`.
@@ -109,6 +119,21 @@ impl Pezzo {
             Pezzo::CT => ("CT", "CT-01-voice-in-the-deep.mp3"),
             Pezzo::SM => ("SM", "SM-01-santa-maria.mp3"),
             Pezzo::LV => ("LV", "LV-01-la-traccia.mp3"),
+            Pezzo::CA => ("AN", "AN-00-canto.mp3"),
+            Pezzo::AN1 => ("AN", "AN-01-benvenuto.mp3"),
+            Pezzo::AN2 => ("AN", "AN-02-piccolo-vera.mp3"),
+            Pezzo::AN3 => ("AN", "AN-03-congedo-ascolto.mp3"),
+        }
+    }
+
+    /// La battuta dell’Anziano con la voce, dal nome che le dà il ponte (`VOCI_ANZIANO` in
+    /// ponte.py): il ponte lo manda solo se a schermo ci sono proprio quelle parole.
+    pub fn della_voce(nome: &str) -> Option<Pezzo> {
+        match nome {
+            "benvenuto" => Some(Pezzo::AN1),
+            "piccolo-vera" => Some(Pezzo::AN2),
+            "congedo-ascolto" => Some(Pezzo::AN3),
+            _ => None,
         }
     }
 }

@@ -96,6 +96,10 @@ nell’intro e se cominciare da lì.
      Aggiornamento del 2 novembre: L.V. resta «Elio»; l’Anziano ha la sua voce («Edoardo Straniero») e il canto
      del primo contatto; l’ascolto di prova è in `consegne/Ascolto Anziano 2026-11-02/` (32, §3.4–3.7). Rimandati
      per i crediti: la canzone dei titoli con ElevenLabs (32, §3.8) e l’idea degli effetti sonori (32, §3.9).
+     **L’Anziano è nel gioco** (2 novembre, «integra l’anziano che è approvato»; 32, §3.10): il canto al primo
+     contatto e la voce nelle tre battute approvate, la musica dei letti 5 dB più bassa e fissa. Non è ancora in una
+     beta. Le altre 28 battute restano scritte finché non ci sono i crediti (circa 4.700 per una presa).
+     «Voice in the Deep» di Lyria, riascoltata, è approvata di nuovo.
 4. **Il finale** (revisione 25, E2): una schermata vera per il finale, invece della casella che scorre.
    L’autore ha detto «una eventuale finale»: si propone, e decide lui.
 5. **Il resto**, dopo:

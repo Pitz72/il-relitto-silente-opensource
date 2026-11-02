@@ -208,7 +208,7 @@ export default function Titoli({ ridotto, onFine }: Props) {
           <section>
             <h2>La musica</h2>
             <p className="tit-nota">
-              Generata con l’intelligenza artificiale (Lyria 3.5 di Google, in Flow Music, e Suno), scelta e diretta da {E.gioco.autore}. I brani
+              Generata con l’intelligenza artificiale (Lyria 3.5 di Google, in Flow Music, Suno ed ElevenLabs), scelta e diretta da {E.gioco.autore}. I brani
               di Lyria portano la filigrana SynthID. Il tema dell’intro è «The Santa Maria Theme» di Alirio Bruni, dal Mistero della Santa Maria.
             </p>
             <dl className="tit-coppie">

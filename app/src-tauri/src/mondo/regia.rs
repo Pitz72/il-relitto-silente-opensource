@@ -19,6 +19,7 @@ use serde_json::Value;
 use super::ambienti::FormaRonzio;
 use super::colpi::{self, Bus, Corpo, Tonfo, CLIC_ARMONIOSO};
 use super::dsp::{db, Biquad, Scorrevole};
+use super::musica_file::Pezzo;
 use super::stanze::{self, Luogo, Speciale, Specie, Superficie};
 use super::sintonia::{self, voce, Eco, Forma, Profilo, GIRO_DELL_ANELLO};
 use super::stato::{EventoGioco, StatiGioco, TurnoSuono};
@@ -66,6 +67,9 @@ impl Mondo {
         // «ripresa»: un ANNULLA che riporta la partita a uno stato di prima, anche dopo un
         // finale (revisione 25, G2). Per il suono vale come un caricamento.
         let carica = primo || inizio || ha("caricamento") || ha("ripresa");
+        if inizio {
+            self.musica.nuova_partita();
+        }
         if carica {
             // una partita che comincia o si riprende: niente di quello che restava della fine
             self.casa = false;
@@ -173,7 +177,8 @@ impl Mondo {
         if carica {
             if StatiGioco::e(&self.gioco.dialogo, "anziano") {
                 let nodo = self.gioco.nodo.clone().unwrap_or_else(|| "benvenuto".to_string());
-                self.musica.anziano_entra(&nodo);
+                // nel mezzo del colloquio: niente canto, e la battuta resta scritta
+                self.musica.anziano_entra(&nodo, None, false);
             } else {
                 self.musica.avvia(Brano::Silenzio);
             }
@@ -1144,13 +1149,16 @@ impl Mondo {
                     let c = colpi::sintonia(&mut self.caso, sr);
                     self.suona_in(super::Canale::Voci, c, Bus::Em, -24.0, 0.0, 0.0);
                 }
-                // «L’Anziano»: la musica, sul nodo da cui parte
-                Some("anziano") => self.musica.anziano_entra(e.nodo.as_deref().unwrap_or("benvenuto")),
+                // «L’Anziano»: la musica, sul nodo da cui parte; al primo contatto il canto, e la voce
+                Some("anziano") => {
+                    let voce = e.voce.as_deref().and_then(Pezzo::della_voce);
+                    self.musica.anziano_entra(e.nodo.as_deref().unwrap_or("benvenuto"), voce, true);
+                }
                 _ => {}
             },
             "nodo" => {
                 if let (Some("anziano"), Some(nodo)) = (e.con.as_deref(), e.nodo.as_deref()) {
-                    self.musica.anziano_nodo(nodo);
+                    self.musica.anziano_nodo(nodo, e.voce.as_deref().and_then(Pezzo::della_voce));
                 }
             }
             "dialogo_fine" => {
