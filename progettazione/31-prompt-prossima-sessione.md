@@ -90,7 +90,7 @@ registro (§9).
   dell’Anziano (la pazienza regala la cosa salvata dall’Archivista); la scelta fra forza e pazienza la vede
   chiunque; nella fuga la nave risponde, e fermarsi per i nomi è una scelta senza suggerimento.
 - **Il diario di William** (RN-F7, idea dell’autore del 4 novembre, deciso): la storia fin qui e le cose da fare,
-  nella sua voce, mai i gesti che contano; una pagina nella pausa. I punti della revisione sono ora 37.
+  nella sua voce, mai i gesti che contano; due pagine nuove nel diario che l’app ha già. I punti della revisione sono ora 37.
 - **Il blocco E è deciso** (4 novembre; documento 33, §9 e §11, punti 6 e 7): i finali non giudicano più; «Vivi» è
   il finale del racconto e quello da cui parte «Il mistero della Santa Maria», per tutti, con il salvataggio del
   Relitto come dono che cambia i dettagli e mai la premessa (il seme in plancia); la Santa Maria ha 96 anni nel

@@ -394,8 +394,10 @@ I criteri con cui pesare ogni punto e ogni proposta:
      che ha notato e non capisce, come domande («Tre tacche nel corridoio. Chi le ha fatte?»). I gesti che contano
      (ascoltare, firmare, restituire le voci, restare) non compaiono mai.
 - **Dove sta.** Sono gli appunti che William detta alla tuta («Il registro non lascia la nave» resta vero); alla
-  fine li ricopia sul registro di carta, ed è la riga che chiude ogni finale. Nell’app: una pagina nella pausa,
-  accanto a «Tasti», con il testo grande e tutto il mouse.
+  fine li ricopia sul registro di carta, ed è la riga che chiude ogni finale. Nell’app il diario **c’è già** (si
+  apre con D; `app/src/gioco/diario/`) con quattro pagine: la trascrizione, il fascicolo di L.V., le voci, le
+  traduzioni. Le due funzioni nuove sono **due pagine in più dello stesso diario**, con il testo grande e tutto il
+  mouse (correzione del 4 novembre 2026: prima avevo scritto «una pagina nella pausa»).
 - **Con l’F4.** Molti suggerimenti fra parentesi passano nel diario, e il testo del racconto si pulisce.
 
 ### Blocco G — Lo stile (per ultimo)
@@ -480,7 +482,7 @@ Si riempie in sessione, punto per punto. «—» vuol dire da discutere.
 | RN-F4 | i suggerimenti dei gesti | via il comando dai gesti | — |
 | RN-F5 | i gesti facoltativi | un invito per ciascuno | — |
 | RN-F6 | le voci profonde e l’ordine | il segno leggibile ovunque | — |
-| RN-F7 | il diario (idea dell’autore) | il diario lo scrive William | **Sì** (4 novembre 2026): la storia fin qui e le cose da fare (quello che lo blocca, quello che non capisce), nella sua voce; mai i gesti che contano; gli appunti della tuta, ricopiati sul registro alla fine; una pagina nella pausa (§8, RN-F7) |
+| RN-F7 | il diario (idea dell’autore) | il diario lo scrive William | **Sì** (4 novembre 2026): la storia fin qui e le cose da fare (quello che lo blocca, quello che non capisce), nella sua voce; mai i gesti che contano; gli appunti della tuta, ricopiati sul registro alla fine; due pagine nuove nel diario che l’app ha già (§8, RN-F7) |
 | RN-G1 | «non X: Y» | tenerne un terzo | — |
 | RN-G2 | «come chi…» | dimezzarle | — |
 | RN-G3 | le chiuse secche | solo a fine capitolo | — |
