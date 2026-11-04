@@ -2,7 +2,7 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 4 novembre 2026, dopo le decisioni dei blocchi A e B della revisione narrativa.
+Aggiornato l’ultima volta il 4 novembre 2026, dopo le decisioni dei blocchi A, B e C della revisione narrativa.
 Prima, il 3 novembre, a notte, l’autore aveva chiuso la sessione dopo la lettura integrale e la valutazione:
 «Dalla prossima sessione fare punto per tutto i tanti piccoli dettagli rilevati con
 una discussione e delle decisioni. Interverremo fortemente su tutto quello che allontana questo gioco da
@@ -16,8 +16,8 @@ sessione si aggiorna qui, e non con note aggiunte in fondo ad altri documenti.
 Riprendiamo «Il Relitto Silente». Carica la memoria del progetto, poi leggi questo documento e il documento 33
 (`progettazione/33-revisione-narrativa.md`, la roadmap della revisione narrativa). Gli altri si aprono quando il
 lavoro li tocca (l’elenco è in fondo). Comincia dal punto 0 dell’ordine del lavoro: i blocchi A e B del documento 33
-sono decisi (4 novembre 2026; le schede delle voci sono nel documento 34); si continua con il blocco C (l’Anziano) e
-il blocco D (la struttura), un punto per volta, con la mia raccomandazione, e la decisione dell’autore scritta nel
+sono decisi, e anche il C (4 novembre 2026; le schede delle voci sono nel documento 34); si continua con il
+blocco D (la struttura), un punto per volta, con la mia raccomandazione, e la decisione dell’autore scritta nel
 registro (§9).
 
 ## Le regole fisse dell’autore
@@ -80,6 +80,11 @@ registro (§9).
   messaggi «a chi verrà» ne restano cinque; tre crepe (il «domani» del Navarca, l’errore delle teche dello
   xeno-botanico, la voce senza ruolo che non voleva partire); il «Seminare comunque» del capitano manda le navi di
   semina sul terzo pianeta con la nave che muore (l’autore: «è proprio qui che volevo arrivare»).
+- **Il blocco C è deciso** (4 novembre; documento 33, §9): l’Anziano dice soltanto quello che William non sa
+  (a chi ha letto la Stele: «Piangemmo»); tre gesti nuovi nel colloquio (il sonaglio, il Sintonizzatore, la cifra
+  dell’aria); «[Posa il risuonatore.]» restituisce le voci e si vede nella fuga, nel vestibolo delle gole. E una
+  regola nuova dell’autore per tutta la revisione: **nessun vincolo tecnico decide** («tutto si riscrive, codice o
+  doppiaggio che sia»); le tre battute di ElevenLabs erano prove e si rifanno con nuovi crediti.
 - **La sessione** si è chiusa il 3 novembre 2026 con l’albero pulito e `main` uguale a `origin/main`.
 - **Il motore** è Favella1 1.6.1 (documento 29), pubblicata anche su GitHub, PyPI e favella.eu.
 - **La revisione totale** (documento 25): i 30 problemi (5 gravi, 10 medi, 15 lievi) sono tutti

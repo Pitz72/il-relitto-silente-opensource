@@ -57,6 +57,10 @@ I criteri con cui pesare ogni punto e ogni proposta:
   dell’app e del motore audio (`prove.yml` verde).
 - **I `.fav` sono congelati**: questa revisione è un’eccezione voluta dall’autore il 3 novembre 2026, e vale per
   i punti che lui decide.
+- **Nessun vincolo tecnico decide** (l’autore, 4 novembre 2026: «Stiamo portando la narrazione ad un altro livello,
+  non poniamoci ostacoli tecnici… tutto si riscrive, codice o doppiaggio che sia»). Le voci già registrate, il
+  ponte, il collaudo, i salvataggi e il codice si adeguano al testo, mai il contrario. Il blocco H elenca che cosa
+  rifare, non che cosa evitare; le registrazioni di ElevenLabs erano anche prove e si rifanno, con nuovi crediti.
 
 ---
 
@@ -438,11 +442,11 @@ Si riempie in sessione, punto per punto. «—» vuol dire da discutere.
 | RN-B3 | alieni senza colpa | due o tre crepe | **Sì** (4 novembre 2026; l’autore: «è proprio qui che volevo arrivare»): tre crepe, il «domani» del Navarca (c’è già), l’errore delle teche dello xeno-botanico, la voce senza ruolo che non voleva partire. Il capitano scrive «Seminare comunque»: con la nave ferma e tutto che moriva, qualcosa è stato mandato lo stesso sul terzo pianeta (§11). Fuori il medico e l’ingegnere |
 | RN-B4 | gli strati profondi | ognuno rivela o cambia qualcosa | **Sì** (4 novembre 2026): restano il Navarca (le luci nella fuga), l’ingegnere (i nomi) e il raschio dello Scriba (il gesto sulla placca); lo xeno-botanico ammette l’errore delle teche; il Custode rivela di aver inciso lui, da solo, di notte e senza crederci, l’ultima riga del fregio (`echi.fav` 116, al posto di «Ti ho aspettato») |
 | RN-B5 | il coro del corridoio | dice altro, non le chiavi | **Sì** (4 novembre 2026): la voce senza ruolo è chi non voleva partire e nomina una cosa piccola rimasta a casa; via l’annuncio delle tre chiavi e «Adesso è nelle mani del tempo» (`echi.fav` 41). Le chiavi le dice già la Grande Porta, con i tre incavi di forma diversa (`corridoio.fav` 60) |
-| RN-C1 | l’Anziano spiega | reagisce a quanto William ha ascoltato | — |
-| RN-C2 | opzioni-domande | più gesti | — |
-| RN-C3 | restituire le voci | «[Posa il risuonatore.]» | — |
-| RN-C4 | una scelta che si vede nella fuga | una conseguenza piccola e chiara | — |
-| RN-C5 | le battute già registrate | prima il testo, poi le voci | — |
+| RN-C1 | l’Anziano spiega | reagisce a quanto William ha ascoltato | **Sì** (4 novembre 2026): l’Anziano dice soltanto quello che manca. «Chi eravate?» (nodo «salto»): a chi ha letto poco la storia in breve; a chi ha letto la Stele soltanto quello che le pareti non dicono («La Stele dice che non piangemmo il nostro mondo. Piangemmo.»). «Cosa ne è stato di voi?» (nodo «memoria»): via l’elenco di quello che William ha visto, resta la reazione a quello che ha fatto (l’archivio, gli echi) |
+| RN-C2 | opzioni-domande | più gesti | **Sì** (4 novembre 2026): tre gesti nuovi. «[Mostra il sonaglio.]» al posto di «Perché la nave si è fermata?» se William ha il sonaglio (stesso nodo «piccolo»; senza sonaglio resta la domanda); «[Accendi il Sintonizzatore.]» al posto di «E la musica?»; «[Guarda la cifra dell’aria.]» al posto di «Allora cosa devo fare?». Le altre scelte restano. Le etichette si aggiornano anche nel collaudo (H3) |
+| RN-C3 | restituire le voci | «[Posa il risuonatore.]» | **Sì** (4 novembre 2026): nel benvenuto, se William porta il risuonatore. Il brusio lascia la mano e nella stanza le voci si sentono una per una; l’Anziano tace (A4); il risuonatore smette di bere aria e resta sulla nave. Costa «La stiva piena» e «Doppio fondo»; «Vivi» e «Mani vuote» ne tengono una riga. L’autore: «se necessario torneremo su ElevenLabs per aggiungere frasi o modificarle» (vale anche per il C5) |
+| RN-C4 | una scelta che si vede nella fuga | una conseguenza piccola e chiara | **Sì** (4 novembre 2026): è la scelta del C3. Nel vestibolo delle gole, durante la fuga: se William ha posato il risuonatore, accanto alla nicchia vuota le voci si sentono una per una e ne riconosce una (per esempio il «Deve.» del tecnico di carico); se l’ha tenuto, il brusio nella mano sale, come se le voci tirassero verso le pareti. Nessun costo d’aria in più (il bilancio è dell’F1) |
+| RN-C5 | le battute già registrate | prima il testo, poi le voci | **Sì, senza vincoli** (4 novembre 2026). L’autore: «le registrazioni ElevenLabs erano anche delle prove. Le rifaremo quando avremo nuovi crediti, anche per questione di coerenza. Ma soprattutto non dobbiamo farci condizionare […] non poniamoci ostacoli tecnici: tutto si riscrive, codice o doppiaggio che sia». Il testo dell’Anziano si riscrive tutto, le tre battute comprese; il congedo segue l’A4 (un saluto, non una lezione; «Vivi» resta, perché l’ultima voce lo ripete); poi si registra tutto insieme |
 | RN-D1 | l’atto III a raccolta | chiavi che costano, ali che si intrecciano | — |
 | RN-D2 | Stele e Nucleo spariscono | almeno una torna trasformata | — |
 | RN-D3 | forza o pazienza | l’indizio della pazienza leggibile | — |
