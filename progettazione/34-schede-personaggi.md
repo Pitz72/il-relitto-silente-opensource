@@ -128,8 +128,9 @@ Per ogni persona: **chi è**, **dove si sente** (con la battuta di oggi, per ric
   dopo tutte le altre» («E se la semina ha attecchito, allora qualcuno sta leggendo…»).
 - **Teme.** Che il silenzio, dopo tutto, sia soltanto assenza.
 - **Come parla.** Solenne: è il suo modo, e resta. Frasi lente, poche immagini.
-- **Lo strato profondo (RN-A4).** Parla di sé: alla fine avrebbe voluto gridare, chiamare qualcuno, e non l’ha fatto.
-  Il dubbio di un maestro, al posto della morale.
+- **Lo strato profondo (RN-A4, RN-B4, deciso il 4 novembre 2026).** Parla di sé e rivela un fatto: l’ultima riga
+  del fregio l’ha incisa lui, da solo, di notte, senza crederci. La speranza più grande della nave l’ha scritta chi
+  ne dubitava di più. (La prima idea, il grido trattenuto, è stata scartata: confessava, ma non rivelava niente.)
 
 ### 12. L’ingegnere capo
 - **Chi è.** Tiene il campo del generatore che protegge la Sezione Seme.
@@ -164,8 +165,8 @@ sanguinare e non maledicemmo il cielo… Non fu una fuga: fu una semina.»), il 
 Sono scritti per essere incisi: la solennità è il loro modo, e resta. Sono la versione ufficiale; le persone, qua e
 là, la smentiscono.
 
-## 4. Una domanda aperta
+## 4. Le navi dell’ingegnere (deciso)
 
-- **Le navi dell’ingegnere.** Nel profondo del generatore: «ogni nome di chi è salito sulle navi, e ogni nome di chi
-  è rimasto quaggiù con me». Proposta per la cronologia privata: all’arrivo partirono piccole navi di semina verso il
-  terzo pianeta, e non tornò nessuno. Da decidere con il RN-B3.
+Nel profondo del generatore: «ogni nome di chi è salito sulle navi, e ogni nome di chi è rimasto quaggiù con me».
+Deciso con il RN-B3 (4 novembre 2026): sono le piccole navi di semina mandate sul terzo pianeta per il «Seminare
+comunque» del capitano, con la nave ferma e tutto che moriva; non tornò nessuno (documento 33, §11).

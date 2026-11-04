@@ -2,8 +2,9 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 4 novembre 2026, dopo le decisioni del blocco A della revisione narrativa. Prima, il 3 novembre, a notte, l’autore aveva chiuso la sessione dopo la lettura
-integrale e la valutazione: «Dalla prossima sessione fare punto per tutto i tanti piccoli dettagli rilevati con
+Aggiornato l’ultima volta il 4 novembre 2026, dopo le decisioni dei blocchi A e B della revisione narrativa.
+Prima, il 3 novembre, a notte, l’autore aveva chiuso la sessione dopo la lettura integrale e la valutazione:
+«Dalla prossima sessione fare punto per tutto i tanti piccoli dettagli rilevati con
 una discussione e delle decisioni. Interverremo fortemente su tutto quello che allontana questo gioco da
 un’opera matura vera e non solo “sopra la media”. […] Per ora è tutto. Buonanotte».
 
@@ -14,10 +15,10 @@ sessione si aggiorna qui, e non con note aggiunte in fondo ad altri documenti.
 
 Riprendiamo «Il Relitto Silente». Carica la memoria del progetto, poi leggi questo documento e il documento 33
 (`progettazione/33-revisione-narrativa.md`, la roadmap della revisione narrativa). Gli altri si aprono quando il
-lavoro li tocca (l’elenco è in fondo). Comincia dal punto 0 dell’ordine del lavoro: il blocco A del documento 33 è
-deciso (4 novembre 2026); si continua con il blocco B, un punto per volta, con la mia raccomandazione, e la
-decisione dell’autore scritta nel registro (§9). Per il blocco B, prima, le schede in bozza dei sedici personaggi
-della nave.
+lavoro li tocca (l’elenco è in fondo). Comincia dal punto 0 dell’ordine del lavoro: i blocchi A e B del documento 33
+sono decisi (4 novembre 2026; le schede delle voci sono nel documento 34); si continua con il blocco C (l’Anziano) e
+il blocco D (la struttura), un punto per volta, con la mia raccomandazione, e la decisione dell’autore scritta nel
+registro (§9).
 
 ## Le regole fisse dell’autore
 
@@ -74,6 +75,11 @@ della nave.
   dubbio; la persona a cui va il seme appartiene al secondo gioco, e qui non compare; la cuccetta ha una branda
   sola e la plancia una poltrona sola, come nei racconti e nelle immagini; della morale detta resta una frase sola,
   dell’Anziano. Niente è ancora scritto nei `.fav`: si scrive dopo le decisioni.
+- **Il blocco B è deciso** (4 novembre; documento 33, §9, e le schede del documento 34): quattordici persone e tre
+  testi pubblici; la solennità resta soltanto alla Stele, al fregio, al sostegno, al Custode e all’Anziano; dei
+  messaggi «a chi verrà» ne restano cinque; tre crepe (il «domani» del Navarca, l’errore delle teche dello
+  xeno-botanico, la voce senza ruolo che non voleva partire); il «Seminare comunque» del capitano manda le navi di
+  semina sul terzo pianeta con la nave che muore (l’autore: «è proprio qui che volevo arrivare»).
 - **La sessione** si è chiusa il 3 novembre 2026 con l’albero pulito e `main` uguale a `origin/main`.
 - **Il motore** è Favella1 1.6.1 (documento 29), pubblicata anche su GitHub, PyPI e favella.eu.
 - **La revisione totale** (documento 25): i 30 problemi (5 gravi, 10 medi, 15 lievi) sono tutti
@@ -148,5 +154,6 @@ della nave.
 | `progettazione/28-prompt-prossima-sessione.md` | il prompt di prima; il §1 tiene i dettagli della colonna sonora |
 | `progettazione/09-intro-storyboard.md`, `22-musica-con-lyria.md` | l’intro e la sua musica |
 | `progettazione/33-revisione-narrativa.md` | la revisione narrativa: i 36 punti, il metodo, il registro delle decisioni, il calendario |
+| `progettazione/34-schede-personaggi.md` | le schede delle voci della nave (blocco B della revisione narrativa) |
 | `progettazione/32-voci-lv-e-anziano.md` | le voci di L.V. e dell’Anziano con ElevenLabs v4: l’analisi e le decisioni |
 | `strumenti/prova_eseguibile.py`, `strumenti/misure/consumo.mjs` | le prove e le misure nell’eseguibile vero |

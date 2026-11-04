@@ -433,11 +433,11 @@ Si riempie in sessione, punto per punto. «—» vuol dire da discutere.
 | RN-A2 | quanto dire della semina | il dubbio, senza conferme | **Sì** (4 novembre 2026): restano le tabelle («non calcolabile», «Seminare comunque») e la mappa, che dicono il bersaglio e non la riuscita; dall’Anziano (nodo «sangue») via «nel tuo sangue», «la musica nuova», «la prima nota», resta il dubbio con «Ma tu sei qui»; la parentela si mostra soltanto nell’immagine della nota comune nel finale segreto, mai spiegata |
 | RN-A3 | William e la persona del racconto | un oggetto che allude, senza spiegare | **No** (4 novembre 2026): la persona a cui William darà il seme appartiene al secondo gioco, «Il mistero della Santa Maria»; qui nessuna allusione, e «Vivi» resta aperto com’è. Nel racconto e nell’immagine la cuccetta ha una branda sola: via la branda di sopra (§11) |
 | RN-A4 | la morale detta ad alta voce | una sola, nell’Anziano | **Sì** (4 novembre 2026): resta soltanto «Restare è già una risposta. Pochi la danno.» (Anziano, nodo «silenzio»). Via «Sono un testimone» (`relitto.fav` 185: il momento resta, il nome no); il Custode parla di sé (`echi.fav` 116, nel blocco B); nel nodo «prezzo» restano «Lo so» e «Tu sei ancora qui», senza la massima (`ponte.fav` 171); nel nodo «tracce» resta il paragone con le tre tacche, senza «Perché essere passati conta…» (`ponte.fav` 186–188) |
-| RN-B1 | voci tutte uguali | una scheda per personaggio | — |
-| RN-B2 | troppi messaggi «a chi verrà» | tenerne tre o quattro | — |
-| RN-B3 | alieni senza colpa | due o tre crepe | — |
-| RN-B4 | gli strati profondi | ognuno rivela o cambia qualcosa | — |
-| RN-B5 | il coro del corridoio | dice altro, non le chiavi | — |
+| RN-B1 | voci tutte uguali | una scheda per personaggio | **Sì** (4 novembre 2026): le schede del documento 34 (quattordici persone, tre testi pubblici, le mani dei sette testi senza autore); la solennità resta ai testi pubblici, al Custode e all’Anziano; le crepe «se la si vuole» si scelgono nel RN-B3 |
+| RN-B2 | troppi messaggi «a chi verrà» | tenerne tre o quattro | **Sì, cinque** (4 novembre 2026): restano le luci del Navarca (`echi.fav` 71), il globo «Leggine uno» (`traduci.fav` 60), «Per chi raccoglie» (`traduci.fav` 87), l’ultima riga del fregio (`traduci.fav` 53) e il terminale «Sei arrivato. Puoi prenderlo.» (`memoria.fav` 156: risponde all’attesa e richiama «Perché siete arrivati»). Parlano di sé il Custode, l’Archivista, la firma dello Scriba e lo xeno-botanico (documento 34); via «perché chi verrà dopo conosca il motivo» dal cilindro (`traduci.fav` 33–34) e «Chi troverà queste pareti lo sappia» dal fregio al 75% (`traduci.fav` 52) |
+| RN-B3 | alieni senza colpa | due o tre crepe | **Sì** (4 novembre 2026; l’autore: «è proprio qui che volevo arrivare»): tre crepe, il «domani» del Navarca (c’è già), l’errore delle teche dello xeno-botanico, la voce senza ruolo che non voleva partire. Il capitano scrive «Seminare comunque»: con la nave ferma e tutto che moriva, qualcosa è stato mandato lo stesso sul terzo pianeta (§11). Fuori il medico e l’ingegnere |
+| RN-B4 | gli strati profondi | ognuno rivela o cambia qualcosa | **Sì** (4 novembre 2026): restano il Navarca (le luci nella fuga), l’ingegnere (i nomi) e il raschio dello Scriba (il gesto sulla placca); lo xeno-botanico ammette l’errore delle teche; il Custode rivela di aver inciso lui, da solo, di notte e senza crederci, l’ultima riga del fregio (`echi.fav` 116, al posto di «Ti ho aspettato») |
+| RN-B5 | il coro del corridoio | dice altro, non le chiavi | **Sì** (4 novembre 2026): la voce senza ruolo è chi non voleva partire e nomina una cosa piccola rimasta a casa; via l’annuncio delle tre chiavi e «Adesso è nelle mani del tempo» (`echi.fav` 41). Le chiavi le dice già la Grande Porta, con i tre incavi di forma diversa (`corridoio.fav` 60) |
 | RN-C1 | l’Anziano spiega | reagisce a quanto William ha ascoltato | — |
 | RN-C2 | opzioni-domande | più gesti | — |
 | RN-C3 | restituire le voci | «[Posa il risuonatore.]» | — |
@@ -487,8 +487,12 @@ a scegliere le parole, perché quello che il gioco dice torni.
 2. **L’arrivo e la semina.** Arrivano quando il Sole è giovane, circa quattro miliardi di anni fa, e seminano.
    Un loro ciclo vale circa mille dei nostri anni: i 4.700.000 cicli dell’ufficiale di navigazione scadono più o
    meno adesso. Nessuno, nel gioco, lo fa notare.
-3. **La fine dell’equipaggio.** Muoiono poco dopo l’arrivo, il Piccolo con loro. La nave resta, scura: beve la
-   luce e il radar.
+3. **La fine dell’equipaggio.** Arrivati, la nave si ferma e tutto comincia a morire: la serra, il generatore, i
+   dormienti. Le quote di attecchimento sono vicine allo zero, e il capitano scrive sotto, in piedi, «Seminare
+   comunque»: piccole navi di semina scendono lo stesso verso il terzo pianeta, e non torna nessuno (sono «quelli
+   saliti sulle navi» dell’ingegnere). L’autore, il 4 novembre 2026: «il seminare comunque ha fatto sì che qualcosa
+   è stato mandato sul terzo pianeta comunque». Un seme solo resta a bordo, chiuso nella teca dallo xeno-botanico.
+   Gli altri muoiono poco dopo, il Piccolo con loro. La nave resta, scura: beve la luce e il radar.
 4. **Dove sta.** Gira su un’orbita lunghissima, che la porta vicino alle rotte di Giove una volta ogni
    centocinquant’anni circa; il resto del tempo è lontana, al buio. Per questo nessuno l’ha mai trovata. Il finale
    «Due lettere» lo dice già senza saperlo: «Fra centocinquant’anni, forse, qualcuno passerà di qui».
