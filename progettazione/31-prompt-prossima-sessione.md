@@ -2,7 +2,7 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 4 novembre 2026, dopo le decisioni dei blocchi A, B, C, D ed E della revisione narrativa.
+Aggiornato l’ultima volta il 4 novembre 2026, dopo le decisioni dei blocchi A, B, C, D, E ed F della revisione narrativa.
 Prima, il 3 novembre, a notte, l’autore aveva chiuso la sessione dopo la lettura integrale e la valutazione:
 «Dalla prossima sessione fare punto per tutto i tanti piccoli dettagli rilevati con
 una discussione e delle decisioni. Interverremo fortemente su tutto quello che allontana questo gioco da
@@ -15,10 +15,12 @@ sessione si aggiorna qui, e non con note aggiunte in fondo ad altri documenti.
 
 Riprendiamo «Il Relitto Silente». Carica la memoria del progetto, poi leggi questo documento e il documento 33
 (`progettazione/33-revisione-narrativa.md`, la roadmap della revisione narrativa). Gli altri si aprono quando il
-lavoro li tocca (l’elenco è in fondo). Comincia dal punto 0 dell’ordine del lavoro: i blocchi A e B del documento 33
-sono decisi, e anche il C, il D e l’E (4 novembre 2026; le schede delle voci sono nel documento 34); si continua
-con il blocco F (il gioco, con il diario nuovo, RN-F7), un punto per volta, con la mia raccomandazione, e la decisione dell’autore scritta nel
-registro (§9).
+lavoro li tocca (l’elenco è in fondo). Comincia dal punto 0 dell’ordine del lavoro: i blocchi dalla A alla F del
+documento 33 sono decisi (4 novembre 2026; le decisioni sono nel registro, §9; le schede delle voci nel documento
+34). Si continua con **la scrittura** (documento 33, §2 e §10, punto 4): i `.fav` si cambiano blocco per blocco,
+cominciando dalla A, con le skill di scrittura e le prove dopo ogni blocco. Lo stile (blocco G) viene dopo, sul
+testo fermo; poi le dipendenze (blocco H) e una beta sola. Ogni proposta all’autore va scritta per intera nel
+messaggio finale, dopo la casella della domanda: mai «la proposta è quella sopra».
 
 ## Le regole fisse dell’autore
 
@@ -96,6 +98,13 @@ registro (§9).
   Relitto come dono che cambia i dettagli e mai la premessa (il seme in plancia); la Santa Maria ha 96 anni nel
   Relitto e il Mistero comincia al disarmo, a 99, tre anni dopo; il risveglio comune resta; Yusuf chiama durante la
   fuga; «Due lettere» dice quando a uccidere è il risuonatore.
+- **Il blocco F è deciso** (4 novembre; documento 33, §9): l’aria si ritara a tavolino dopo la scrittura, con tre
+  partite da principiante scritte da me (il curioso, il frettoloso, lo sperduto) e una regola (il curioso arriva alla
+  Grande Porta con le tre chiavi sopra il 30%; ascoltare tutto non si può); le persone vere non sono garantite.
+  Tradurre sotto il 18% non costa aria, con una frase di William al cilindro. «La prima nota» si apre anche
+  riconoscendo il re in stiva. Dei 41 suggerimenti si toglie il comando soltanto dai due dell’eco della culla. Un
+  invito nel bassorilievo e nelle capsule. Una riga alla fine della prima eco delle quattro voci a due strati, e
+  una domanda nel diario.
 - **La sessione** si è chiusa il 3 novembre 2026 con l’albero pulito e `main` uguale a `origin/main`.
 - **Il motore** è Favella1 1.6.1 (documento 29), pubblicata anche su GitHub, PyPI e favella.eu.
 - **La revisione totale** (documento 25): i 30 problemi (5 gravi, 10 medi, 15 lievi) sono tutti
