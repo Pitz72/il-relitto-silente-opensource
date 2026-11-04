@@ -23,7 +23,7 @@ soltanto dopo le decisioni di un blocco intero.
   morale detta ad alta voce; alcuni tic di stile; un’economia dell’aria e dei suggerimenti mai provata da chi
   non conosce il gioco.
 - **I blocchi** (§3–§8): A le fondamenta; B le voci della nave; C l’Anziano; D la struttura; E i finali; F il
-  gioco; G lo stile; H le dipendenze. In tutto **36 punti**.
+  gioco; G lo stile; H le dipendenze. In tutto **37 punti** (il 37°, il diario, è un’idea dell’autore del 4 novembre 2026).
 - **Il metodo** (§2): un blocco per sessione, una decisione per volta, con la mia raccomandazione; poi la
   scrittura; lo stile per ultimo, quando il contenuto è fermo.
 
@@ -380,6 +380,24 @@ I criteri con cui pesare ogni punto e ogni proposta:
   ovunque. (b) Lasciare.
 - **Raccomandazione.** (a).
 
+#### RN-F7 · Il diario di William (proposta dell’autore, 4 novembre 2026)
+
+- **L’idea.** L’autore, discutendo il RN-D1: «Oggi la gente non è molto abituata a narrativa intrecciata o cose che
+  richiedono una esplorazione profonda. Quindi che ne pensi di mettere un “diario” di gioco con doppia funzione:
+  tenere traccia della storia fino a quel momento; le missioni, ossia le cose che il protagonista deve fare tra
+  obbligatorie e facoltative».
+- **Il rischio.** Una lista di missioni con le caselle rifà la lista da spuntare (RN-D1), e le missioni facoltative
+  farebbero i gesti al posto del giocatore (criterio 5).
+- **Deciso** (4 novembre 2026): il diario lo scrive William, in prima persona.
+  1. **La storia fin qui**: annotazioni brevi nei momenti importanti; servono anche da riassunto dopo una pausa.
+  2. **Le cose da fare**: quello che lo blocca, detto da lui («La porta aspetta tre chiavi. Ne ho una.»), e quello
+     che ha notato e non capisce, come domande («Tre tacche nel corridoio. Chi le ha fatte?»). I gesti che contano
+     (ascoltare, firmare, restituire le voci, restare) non compaiono mai.
+- **Dove sta.** Sono gli appunti che William detta alla tuta («Il registro non lascia la nave» resta vero); alla
+  fine li ricopia sul registro di carta, ed è la riga che chiude ogni finale. Nell’app: una pagina nella pausa,
+  accanto a «Tasti», con il testo grande e tutto il mouse.
+- **Con l’F4.** Molti suggerimenti fra parentesi passano nel diario, e il testo del racconto si pulisce.
+
 ### Blocco G — Lo stile (per ultimo)
 
 #### RN-G1 · L’antitesi «non X: Y»
@@ -447,10 +465,10 @@ Si riempie in sessione, punto per punto. «—» vuol dire da discutere.
 | RN-C3 | restituire le voci | «[Posa il risuonatore.]» | **Sì** (4 novembre 2026): nel benvenuto, se William porta il risuonatore. Il brusio lascia la mano e nella stanza le voci si sentono una per una; l’Anziano tace (A4); il risuonatore smette di bere aria e resta sulla nave. Costa «La stiva piena» e «Doppio fondo»; «Vivi» e «Mani vuote» ne tengono una riga. L’autore: «se necessario torneremo su ElevenLabs per aggiungere frasi o modificarle» (vale anche per il C5) |
 | RN-C4 | una scelta che si vede nella fuga | una conseguenza piccola e chiara | **Sì** (4 novembre 2026): è la scelta del C3. Nel vestibolo delle gole, durante la fuga: se William ha posato il risuonatore, accanto alla nicchia vuota le voci si sentono una per una e ne riconosce una (per esempio il «Deve.» del tecnico di carico); se l’ha tenuto, il brusio nella mano sale, come se le voci tirassero verso le pareti. Nessun costo d’aria in più (il bilancio è dell’F1) |
 | RN-C5 | le battute già registrate | prima il testo, poi le voci | **Sì, senza vincoli** (4 novembre 2026). L’autore: «le registrazioni ElevenLabs erano anche delle prove. Le rifaremo quando avremo nuovi crediti, anche per questione di coerenza. Ma soprattutto non dobbiamo farci condizionare […] non poniamoci ostacoli tecnici: tutto si riscrive, codice o doppiaggio che sia». Il testo dell’Anziano si riscrive tutto, le tre battute comprese; il congedo segue l’A4 (un saluto, non una lezione; «Vivi» resta, perché l’ultima voce lo ripete); poi si registra tutto insieme |
-| RN-D1 | l’atto III a raccolta | chiavi che costano, ali che si intrecciano | — |
-| RN-D2 | Stele e Nucleo spariscono | almeno una torna trasformata | — |
-| RN-D3 | forza o pazienza | l’indizio della pazienza leggibile | — |
-| RN-D4 | la fuga è un ritorno | la conseguenza del C4, e la scelta dei nomi | — |
+| RN-D1 | l’atto III a raccolta | chiavi che costano, ali che si intrecciano | **Sì** (4 novembre 2026; «approvo totalmente»): tre chiavi e mappa come sono, e tre fili che attraversano le ali. La colpa (l’errore delle teche → il groviglio → la chiave rimasta al vivaio → L.V. morto a mezzo metro dal seme); la versione ufficiale (la Stele «Non piangemmo» → la voce senza ruolo → «Piangemmo» dell’Anziano); la semina («Seminare comunque» nel vivaio → «chi è salito sulle navi» nel laboratorio → l’ultima riga del fregio del Custode). Restano il sole del Piccolo con la mappa e il raschio con la placca |
+| RN-D2 | Stele e Nucleo spariscono | almeno una torna trasformata | **Sì** (4 novembre 2026): la Stele torna nel colloquio, smentita (C1: «Piangemmo»). Il Nucleo diventa la memoria dell’Anziano: preso con la forza, la memoria ha buchi (detto senza rimprovero); preso con la pazienza, l’Anziano dice la cosa sola che l’Archivista aveva salvato (documento 34, scheda 13), che chi ha usato la forza non sentirà mai |
+| RN-D3 | forza o pazienza | l’indizio della pazienza leggibile | **Sì, la scelta per tutti** (4 novembre 2026): senza energia l’indizio sta nella descrizione della stanza (il pilastro aspetta corrente, il terminale non ne ha) e nel diario («Il pilastro aspetta corrente. Il generatore, giù, è spento.»); con l’energia il pilastro si sveglia piano, una fascia alla volta, accanto al pannello di emergenza: aspettare costa aria, la taglierina è subito. Il costo si tara con l’F1 |
+| RN-D4 | la fuga è un ritorno | la conseguenza del C4, e la scelta dei nomi | **Sì** (4 novembre 2026): la fuga è la nave che risponde (le luci del Navarca, le voci nel vestibolo del C4, la voce dei nomi). La scelta è fermarsi per i nomi (−6 d’aria): via «(Potresti fermarti ad ASCOLTARE LA VOCE.)» (`fuga.fav` 79), la scelta si sente dal testo (la voce smette appena William sale). Nessuna scelta in più |
 | RN-E1 | i finali giudicano | ogni finale con la sua verità e il suo prezzo | — |
 | RN-E2 | Doppio fondo e il racconto | «Vivi» o un finale nuovo vicino al racconto | — |
 | RN-E3 | il risveglio contro le prove | il dubbio solo dove non ci sono prove | — |
@@ -462,6 +480,7 @@ Si riempie in sessione, punto per punto. «—» vuol dire da discutere.
 | RN-F4 | i suggerimenti dei gesti | via il comando dai gesti | — |
 | RN-F5 | i gesti facoltativi | un invito per ciascuno | — |
 | RN-F6 | le voci profonde e l’ordine | il segno leggibile ovunque | — |
+| RN-F7 | il diario (idea dell’autore) | il diario lo scrive William | **Sì** (4 novembre 2026): la storia fin qui e le cose da fare (quello che lo blocca, quello che non capisce), nella sua voce; mai i gesti che contano; gli appunti della tuta, ricopiati sul registro alla fine; una pagina nella pausa (§8, RN-F7) |
 | RN-G1 | «non X: Y» | tenerne un terzo | — |
 | RN-G2 | «come chi…» | dimezzarle | — |
 | RN-G3 | le chiuse secche | solo a fine capitolo | — |

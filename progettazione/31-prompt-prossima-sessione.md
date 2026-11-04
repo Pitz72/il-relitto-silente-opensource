@@ -2,7 +2,7 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 4 novembre 2026, dopo le decisioni dei blocchi A, B e C della revisione narrativa.
+Aggiornato l’ultima volta il 4 novembre 2026, dopo le decisioni dei blocchi A, B, C e D della revisione narrativa.
 Prima, il 3 novembre, a notte, l’autore aveva chiuso la sessione dopo la lettura integrale e la valutazione:
 «Dalla prossima sessione fare punto per tutto i tanti piccoli dettagli rilevati con
 una discussione e delle decisioni. Interverremo fortemente su tutto quello che allontana questo gioco da
@@ -16,8 +16,8 @@ sessione si aggiorna qui, e non con note aggiunte in fondo ad altri documenti.
 Riprendiamo «Il Relitto Silente». Carica la memoria del progetto, poi leggi questo documento e il documento 33
 (`progettazione/33-revisione-narrativa.md`, la roadmap della revisione narrativa). Gli altri si aprono quando il
 lavoro li tocca (l’elenco è in fondo). Comincia dal punto 0 dell’ordine del lavoro: i blocchi A e B del documento 33
-sono decisi, e anche il C (4 novembre 2026; le schede delle voci sono nel documento 34); si continua con il
-blocco D (la struttura), un punto per volta, con la mia raccomandazione, e la decisione dell’autore scritta nel
+sono decisi, e anche il C e il D (4 novembre 2026; le schede delle voci sono nel documento 34); si continua con
+il blocco E (i finali) e il blocco F (il gioco, con il diario nuovo, RN-F7), un punto per volta, con la mia raccomandazione, e la decisione dell’autore scritta nel
 registro (§9).
 
 ## Le regole fisse dell’autore
@@ -85,6 +85,12 @@ registro (§9).
   dell’aria); «[Posa il risuonatore.]» restituisce le voci e si vede nella fuga, nel vestibolo delle gole. E una
   regola nuova dell’autore per tutta la revisione: **nessun vincolo tecnico decide** («tutto si riscrive, codice o
   doppiaggio che sia»); le tre battute di ElevenLabs erano prove e si rifanno con nuovi crediti.
+- **Il blocco D è deciso** (4 novembre; documento 33, §9): tre chiavi e mappa come sono, con tre fili fra le ali
+  (la colpa delle teche che uccise L.V., la versione ufficiale della Stele, la semina); il Nucleo diventa la memoria
+  dell’Anziano (la pazienza regala la cosa salvata dall’Archivista); la scelta fra forza e pazienza la vede
+  chiunque; nella fuga la nave risponde, e fermarsi per i nomi è una scelta senza suggerimento.
+- **Il diario di William** (RN-F7, idea dell’autore del 4 novembre, deciso): la storia fin qui e le cose da fare,
+  nella sua voce, mai i gesti che contano; una pagina nella pausa. I punti della revisione sono ora 37.
 - **La sessione** si è chiusa il 3 novembre 2026 con l’albero pulito e `main` uguale a `origin/main`.
 - **Il motore** è Favella1 1.6.1 (documento 29), pubblicata anche su GitHub, PyPI e favella.eu.
 - **La revisione totale** (documento 25): i 30 problemi (5 gravi, 10 medi, 15 lievi) sono tutti
@@ -96,7 +102,7 @@ registro (§9).
 ## L’ordine del lavoro (deciso dall’autore il 27 ottobre; il punto 0 il 3 novembre)
 
 0. **La revisione narrativa** (documento 33; l’autore, 3 novembre 2026: «Interverremo fortemente su tutto quello
-   che allontana questo gioco da un’opera matura vera»). 36 punti in otto blocchi: A le fondamenta (cronologia,
+   che allontana questo gioco da un’opera matura vera»). 37 punti in otto blocchi: A le fondamenta (cronologia,
    quanto dire della semina, William e la persona del racconto, la morale detta ad alta voce), B le voci della
    nave, C l’Anziano, D la struttura, E i finali, F il gioco (con una prova vera dell’aria), G lo stile, H le
    dipendenze (le voci già registrate di L.V. e dell’Anziano, il ponte, il collaudo, i salvataggi). Un blocco per
@@ -158,7 +164,7 @@ registro (§9).
 | `progettazione/30-interfaccia-viva.md` | il programma dell’interfaccia, il registro, la scheda «Grafica», le misure |
 | `progettazione/28-prompt-prossima-sessione.md` | il prompt di prima; il §1 tiene i dettagli della colonna sonora |
 | `progettazione/09-intro-storyboard.md`, `22-musica-con-lyria.md` | l’intro e la sua musica |
-| `progettazione/33-revisione-narrativa.md` | la revisione narrativa: i 36 punti, il metodo, il registro delle decisioni, il calendario |
+| `progettazione/33-revisione-narrativa.md` | la revisione narrativa: i 37 punti, il metodo, il registro delle decisioni, il calendario |
 | `progettazione/34-schede-personaggi.md` | le schede delle voci della nave (blocco B della revisione narrativa) |
 | `progettazione/32-voci-lv-e-anziano.md` | le voci di L.V. e dell’Anziano con ElevenLabs v4: l’analisi e le decisioni |
 | `strumenti/prova_eseguibile.py`, `strumenti/misure/consumo.mjs` | le prove e le misure nell’eseguibile vero |
