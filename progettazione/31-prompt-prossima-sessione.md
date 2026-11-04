@@ -2,7 +2,7 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 3 novembre 2026, a notte, quando l’autore ha chiuso la sessione dopo la lettura
+Aggiornato l’ultima volta il 4 novembre 2026, dopo le decisioni del blocco A della revisione narrativa. Prima, il 3 novembre, a notte, l’autore aveva chiuso la sessione dopo la lettura
 integrale e la valutazione: «Dalla prossima sessione fare punto per tutto i tanti piccoli dettagli rilevati con
 una discussione e delle decisioni. Interverremo fortemente su tutto quello che allontana questo gioco da
 un’opera matura vera e non solo “sopra la media”. […] Per ora è tutto. Buonanotte».
@@ -14,9 +14,10 @@ sessione si aggiorna qui, e non con note aggiunte in fondo ad altri documenti.
 
 Riprendiamo «Il Relitto Silente». Carica la memoria del progetto, poi leggi questo documento e il documento 33
 (`progettazione/33-revisione-narrativa.md`, la roadmap della revisione narrativa). Gli altri si aprono quando il
-lavoro li tocca (l’elenco è in fondo). Comincia dal punto 0 dell’ordine del lavoro: la discussione del blocco A
-del documento 33, un punto per volta, con la mia raccomandazione, e la decisione dell’autore scritta nel registro
-(§9). Per il blocco B, prima, le schede in bozza dei sedici personaggi della nave.
+lavoro li tocca (l’elenco è in fondo). Comincia dal punto 0 dell’ordine del lavoro: il blocco A del documento 33 è
+deciso (4 novembre 2026); si continua con il blocco B, un punto per volta, con la mia raccomandazione, e la
+decisione dell’autore scritta nel registro (§9). Per il blocco B, prima, le schede in bozza dei sedici personaggi
+della nave.
 
 ## Le regole fisse dell’autore
 
@@ -68,6 +69,11 @@ del documento 33, un punto per volta, con la mia raccomandazione, e la decisione
   canto del primo contatto e tre battute (non ancora in una beta).
 - **La lettura integrale e la valutazione** (3 novembre): la storia raccontata per intero, la valutazione come
   racconto e come gioco, e la roadmap della revisione narrativa (documento 33).
+- **Il blocco A della revisione è deciso** (4 novembre; documento 33, §9 e §11): una cronologia privata (arrivo e
+  semina circa quattro miliardi di anni fa, un’orbita che ripassa ogni centocinquant’anni); la semina resta un
+  dubbio; la persona a cui va il seme appartiene al secondo gioco, e qui non compare; la cuccetta ha una branda
+  sola e la plancia una poltrona sola, come nei racconti e nelle immagini; della morale detta resta una frase sola,
+  dell’Anziano. Niente è ancora scritto nei `.fav`: si scrive dopo le decisioni.
 - **La sessione** si è chiusa il 3 novembre 2026 con l’albero pulito e `main` uguale a `origin/main`.
 - **Il motore** è Favella1 1.6.1 (documento 29), pubblicata anche su GitHub, PyPI e favella.eu.
 - **La revisione totale** (documento 25): i 30 problemi (5 gravi, 10 medi, 15 lievi) sono tutti

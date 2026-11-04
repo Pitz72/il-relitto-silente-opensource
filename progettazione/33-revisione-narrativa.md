@@ -429,10 +429,10 @@ Si riempie in sessione, punto per punto. «—» vuol dire da discutere.
 
 | Punto | Che cosa | Raccomandazione | Decisione dell’autore |
 |---|---|---|---|
-| RN-A1 | la cronologia | una cronologia privata coerente | — |
-| RN-A2 | quanto dire della semina | il dubbio, senza conferme | — |
-| RN-A3 | William e la persona del racconto | un oggetto che allude, senza spiegare | — |
-| RN-A4 | la morale detta ad alta voce | una sola, nell’Anziano | — |
+| RN-A1 | la cronologia | una cronologia privata coerente | **Sì** (4 novembre 2026): la cronologia del §11, mai mostrata; si cambiano i cinque «secoli» |
+| RN-A2 | quanto dire della semina | il dubbio, senza conferme | **Sì** (4 novembre 2026): restano le tabelle («non calcolabile», «Seminare comunque») e la mappa, che dicono il bersaglio e non la riuscita; dall’Anziano (nodo «sangue») via «nel tuo sangue», «la musica nuova», «la prima nota», resta il dubbio con «Ma tu sei qui»; la parentela si mostra soltanto nell’immagine della nota comune nel finale segreto, mai spiegata |
+| RN-A3 | William e la persona del racconto | un oggetto che allude, senza spiegare | **No** (4 novembre 2026): la persona a cui William darà il seme appartiene al secondo gioco, «Il mistero della Santa Maria»; qui nessuna allusione, e «Vivi» resta aperto com’è. Nel racconto e nell’immagine la cuccetta ha una branda sola: via la branda di sopra (§11) |
+| RN-A4 | la morale detta ad alta voce | una sola, nell’Anziano | **Sì** (4 novembre 2026): resta soltanto «Restare è già una risposta. Pochi la danno.» (Anziano, nodo «silenzio»). Via «Sono un testimone» (`relitto.fav` 185: il momento resta, il nome no); il Custode parla di sé (`echi.fav` 116, nel blocco B); nel nodo «prezzo» restano «Lo so» e «Tu sei ancora qui», senza la massima (`ponte.fav` 171); nel nodo «tracce» resta il paragone con le tre tacche, senza «Perché essere passati conta…» (`ponte.fav` 186–188) |
 | RN-B1 | voci tutte uguali | una scheda per personaggio | — |
 | RN-B2 | troppi messaggi «a chi verrà» | tenerne tre o quattro | — |
 | RN-B3 | alieni senza colpa | due o tre crepe | — |
@@ -476,3 +476,46 @@ Si riempie in sessione, punto per punto. «—» vuol dire da discutere.
 4. **La scrittura**, blocco per blocco, con le prove dopo ognuno.
 5. **Lo stile** (blocco G), su tutto il testo fermo.
 6. **Le dipendenze** (blocco H), le voci da rifare, una beta sola.
+
+## 11. La cronologia privata (RN-A1)
+
+Approvata dall’autore il 4 novembre 2026. È per noi: **il gioco non la dice mai**, né per intero né a pezzi. Serve
+a scegliere le parole, perché quello che il gioco dice torni.
+
+1. **La partenza.** Il loro mondo gira intorno a tre soli che si spengono. Con il Grande Salto la nave attraversa
+   un’altra galassia, e il viaggio dura una vita sola: il Piccolo nasce a bordo, l’unico.
+2. **L’arrivo e la semina.** Arrivano quando il Sole è giovane, circa quattro miliardi di anni fa, e seminano.
+   Un loro ciclo vale circa mille dei nostri anni: i 4.700.000 cicli dell’ufficiale di navigazione scadono più o
+   meno adesso. Nessuno, nel gioco, lo fa notare.
+3. **La fine dell’equipaggio.** Muoiono poco dopo l’arrivo, il Piccolo con loro. La nave resta, scura: beve la
+   luce e il radar.
+4. **Dove sta.** Gira su un’orbita lunghissima, che la porta vicino alle rotte di Giove una volta ogni
+   centocinquant’anni circa; il resto del tempo è lontana, al buio. Per questo nessuno l’ha mai trovata. Il finale
+   «Due lettere» lo dice già senza saperlo: «Fra centocinquant’anni, forse, qualcuno passerà di qui».
+5. **L.V. e William.** L.V. la trova al passaggio di centocinquant’anni fa; William a questo.
+
+**Le parole che la contraddicono**, da riscrivere come un tempo senza misura (nella fase di scrittura):
+`relitto.fav` 184 («sistemi dormienti da secoli»), `tecnica.fav` 46 («si svegliano dopo secoli»), `vita.fav` 235
+(«Cresciuto per secoli»), `vita.fav` 304 («preme da secoli»), `echi.fav` 41 («il silenzio dei secoli»). Reggono già
+i millenni dell’archivio, i cicli dell’ufficiale e i centocinquant’anni di L.V.
+
+### La Santa Maria e William, secondo i racconti (RN-A3)
+
+Detto dall’autore il 4 novembre 2026: la trilogia di racconti «Dal registro della Santa Maria» comanda, e il gioco
+non la contraddice.
+
+- **La persona a cui va il seme** è materia del secondo gioco, «Il mistero della Santa Maria». In questo non
+  compare e non si allude a lei; «Vivi» («il silenzio della plancia, per la prima volta, non mi basta») resta
+  aperto e porta di là.
+- **La cuccetta ha una branda sola**, nel racconto e nell’immagine del gioco (`app/public/viste/cuccetta.webp`:
+  sopra il letto c’è una mensola). La branda di sopra è un’invenzione del testo e si toglie: `santamaria.fav` 174
+  (la cuccetta) e 176–183 (la branda di sopra, con «omologata per un equipaggio di quattro» e «Yusuf la chiama
+  incoscienza»). Si correggono anche `collaudo/prova-atti-I-II.txt` 35 («esamina la branda di sopra») e la
+  provenienza dell’immagine, che dice «con la branda di sopra», in `grafica/LICENZE.md`,
+  `app/src/riconoscimenti/elenco.json` e `app/src-tauri/risorse/Riconoscimenti e licenze.txt`.
+- **La giacca buona** dell’armadietto è l’uniforme da marina mercantile dei racconti. Resta com’è: William non la
+  indossa nel gioco (sotto la tuta non avrebbe senso).
+- **La plancia ha una poltrona sola**, come nell’immagine dell’intro (`app/public/intro/plancia.webp`). Il testo ne
+  dice due: si corregge con la branda (`santamaria.fav` 44, «due poltrone, e ne uso una»; 45, «la sua poltrona
+  consumata e quella intatta»), insieme alle trascrizioni del collaudo che le citano. Proposto il 4 novembre 2026
+  con la branda; l’autore non ha obiettato.
