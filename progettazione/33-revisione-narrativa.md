@@ -469,11 +469,11 @@ Si riempie in sessione, punto per punto. «—» vuol dire da discutere.
 | RN-D2 | Stele e Nucleo spariscono | almeno una torna trasformata | **Sì** (4 novembre 2026): la Stele torna nel colloquio, smentita (C1: «Piangemmo»). Il Nucleo diventa la memoria dell’Anziano: preso con la forza, la memoria ha buchi (detto senza rimprovero); preso con la pazienza, l’Anziano dice la cosa sola che l’Archivista aveva salvato (documento 34, scheda 13), che chi ha usato la forza non sentirà mai |
 | RN-D3 | forza o pazienza | l’indizio della pazienza leggibile | **Sì, la scelta per tutti** (4 novembre 2026): senza energia l’indizio sta nella descrizione della stanza (il pilastro aspetta corrente, il terminale non ne ha) e nel diario («Il pilastro aspetta corrente. Il generatore, giù, è spento.»); con l’energia il pilastro si sveglia piano, una fascia alla volta, accanto al pannello di emergenza: aspettare costa aria, la taglierina è subito. Il costo si tara con l’F1 |
 | RN-D4 | la fuga è un ritorno | la conseguenza del C4, e la scelta dei nomi | **Sì** (4 novembre 2026): la fuga è la nave che risponde (le luci del Navarca, le voci nel vestibolo del C4, la voce dei nomi). La scelta è fermarsi per i nomi (−6 d’aria): via «(Potresti fermarti ad ASCOLTARE LA VOCE.)» (`fuga.fav` 79), la scelta si sente dal testo (la voce smette appena William sale). Nessuna scelta in più |
-| RN-E1 | i finali giudicano | ogni finale con la sua verità e il suo prezzo | — |
-| RN-E2 | Doppio fondo e il racconto | «Vivi» o un finale nuovo vicino al racconto | — |
-| RN-E3 | il risveglio contro le prove | il dubbio solo dove non ci sono prove | — |
-| RN-E4 | Yusuf scompare | un ritorno della sua voce | — |
-| RN-E5 | Due lettere e il risuonatore | una riga | — |
+| RN-E1 | i finali giudicano | ogni finale con la sua verità e il suo prezzo | **Sì** (4 novembre 2026): «La stiva piena» tiene il margine verde e perde «a nessuno»; «Doppio fondo» perde «cioè sempre» e «Per vent’anni nessuno lo saprà», che contraddice il secondo gioco (tre anni dopo, §11) e chiude sul seme nella teca e sul battito verde |
+| RN-E2 | Doppio fondo e il racconto | «Vivi» o un finale nuovo vicino al racconto | **Sì, «Vivi»** (4 novembre 2026): «Vivi» è il finale del racconto e quello da cui parte il secondo gioco («La prima nota» ne è la versione piena); «Doppio fondo» resta il gemello scuro. Nessun finale nuovo. Per chi giocherà il Mistero, la regola del §11, punto 7 |
+| RN-E3 | il risveglio contro le prove | il dubbio solo dove non ci sono prove | **Lasciarlo com’è** (4 novembre 2026; la raccomandazione è cambiata rileggendo): non è una contraddizione ma una scena in due tempi, il dubbio uguale per tutti e poi la risposta di ogni finale (il pugno con il seme, il brusio dalla stiva); il dubbio resta soltanto in «Mani vuote», dove deve restare |
+| RN-E4 | Yusuf scompare | un ritorno della sua voce | **Sì** (4 novembre 2026): una chiamata nella fuga, sullo scafo, dalla radio della Santa Maria attraverso il boccaporto. Con la promessa del carico chiede se ce l’ha; senza, chiama senza motivo. William non risponde. Una battuta in più da registrare con la voce dell’autore. (Nota per il Mistero: in «Vivi» il seme resta «sul ripiano, proprio davanti alla poltrona… alla prima sosta», ed è lì che l’intro del secondo gioco lo trova: la frase resta così) |
+| RN-E5 | Due lettere e il risuonatore | una riga | **Sì** (4 novembre 2026): una riga soltanto quando William muore con il risuonatore: a cifra zero il brusio nella mano continua, le voci hanno bevuto anche l’ultima aria e vanno avanti senza di lui. Nessun commento. Il resto di «Due lettere» non si tocca |
 | RN-F1 | il bilancio dell’aria | una prova con chi non sa niente | — |
 | RN-F2 | tradurre a vuoto | gratis sotto il 18% | — |
 | RN-F3 | il finale segreto | il re riconosciuto anche in stiva | — |
@@ -520,6 +520,17 @@ a scegliere le parole, perché quello che il gioco dice torni.
    centocinquant’anni circa; il resto del tempo è lontana, al buio. Per questo nessuno l’ha mai trovata. Il finale
    «Due lettere» lo dice già senza saperlo: «Fra centocinquant’anni, forse, qualcuno passerà di qui».
 5. **L.V. e William.** L.V. la trova al passaggio di centocinquant’anni fa; William a questo.
+6. **Le date della Santa Maria** (verificate il 4 novembre 2026, RN-E1). Prima registrazione autonoma: 14 marzo
+   2105 (`santamaria.fav` 202, il registro di bordo). Il Relitto si svolge intorno al 2201: «Novantasei anni di nave,
+   tre alla radiazione». Il disarmo arriva a 99 anni, intorno al 2204, ed è l’inizio del secondo gioco, «Il mistero
+   della Santa Maria» (l’autore). Fra i due giochi passano **tre anni**: nessun testo del Relitto può parlare di un
+   tempo più lungo (per questo via «Per vent’anni nessuno lo saprà» da «Doppio fondo»).
+7. **Dal Relitto al Mistero** (RN-E2, 4 novembre 2026). Il secondo gioco parte da «Vivi» per tutti: William ha il
+   seme, ha lasciato le voci, non l’ha detto a nessuno (il Mistero può dirlo dalla prima pagina, con la riga di
+   registro di «Vivi»: «Rotta ripresa. Carico: nessuno.»). Il salvataggio del Relitto è un dono: il Mistero, fatto
+   anch’esso con Favella1, lo legge se c’è e cambia piccoli dettagli, mai la premessa (per esempio, dopo «Doppio
+   fondo», il compratore di Ganimede che «non fa domande»). Chi non ha il seme («La stiva piena», «Mani vuote»), chi
+   è morto («Due lettere») e chi non ha giocato il Relitto partono da «Vivi». Nel Relitto non cambia niente.
 
 **Le parole che la contraddicono**, da riscrivere come un tempo senza misura (nella fase di scrittura):
 `relitto.fav` 184 («sistemi dormienti da secoli»), `tecnica.fav` 46 («si svegliano dopo secoli»), `vita.fav` 235

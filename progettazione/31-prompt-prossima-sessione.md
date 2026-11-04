@@ -2,7 +2,7 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 4 novembre 2026, dopo le decisioni dei blocchi A, B, C e D della revisione narrativa.
+Aggiornato l’ultima volta il 4 novembre 2026, dopo le decisioni dei blocchi A, B, C, D ed E della revisione narrativa.
 Prima, il 3 novembre, a notte, l’autore aveva chiuso la sessione dopo la lettura integrale e la valutazione:
 «Dalla prossima sessione fare punto per tutto i tanti piccoli dettagli rilevati con
 una discussione e delle decisioni. Interverremo fortemente su tutto quello che allontana questo gioco da
@@ -16,8 +16,8 @@ sessione si aggiorna qui, e non con note aggiunte in fondo ad altri documenti.
 Riprendiamo «Il Relitto Silente». Carica la memoria del progetto, poi leggi questo documento e il documento 33
 (`progettazione/33-revisione-narrativa.md`, la roadmap della revisione narrativa). Gli altri si aprono quando il
 lavoro li tocca (l’elenco è in fondo). Comincia dal punto 0 dell’ordine del lavoro: i blocchi A e B del documento 33
-sono decisi, e anche il C e il D (4 novembre 2026; le schede delle voci sono nel documento 34); si continua con
-il blocco E (i finali) e il blocco F (il gioco, con il diario nuovo, RN-F7), un punto per volta, con la mia raccomandazione, e la decisione dell’autore scritta nel
+sono decisi, e anche il C, il D e l’E (4 novembre 2026; le schede delle voci sono nel documento 34); si continua
+con il blocco F (il gioco, con il diario nuovo, RN-F7), un punto per volta, con la mia raccomandazione, e la decisione dell’autore scritta nel
 registro (§9).
 
 ## Le regole fisse dell’autore
@@ -91,6 +91,11 @@ registro (§9).
   chiunque; nella fuga la nave risponde, e fermarsi per i nomi è una scelta senza suggerimento.
 - **Il diario di William** (RN-F7, idea dell’autore del 4 novembre, deciso): la storia fin qui e le cose da fare,
   nella sua voce, mai i gesti che contano; una pagina nella pausa. I punti della revisione sono ora 37.
+- **Il blocco E è deciso** (4 novembre; documento 33, §9 e §11, punti 6 e 7): i finali non giudicano più; «Vivi» è
+  il finale del racconto e quello da cui parte «Il mistero della Santa Maria», per tutti, con il salvataggio del
+  Relitto come dono che cambia i dettagli e mai la premessa (il seme in plancia); la Santa Maria ha 96 anni nel
+  Relitto e il Mistero comincia al disarmo, a 99, tre anni dopo; il risveglio comune resta; Yusuf chiama durante la
+  fuga; «Due lettere» dice quando a uccidere è il risuonatore.
 - **La sessione** si è chiusa il 3 novembre 2026 con l’albero pulito e `main` uguale a `origin/main`.
 - **Il motore** è Favella1 1.6.1 (documento 29), pubblicata anche su GitHub, PyPI e favella.eu.
 - **La revisione totale** (documento 25): i 30 problemi (5 gravi, 10 medi, 15 lievi) sono tutti
