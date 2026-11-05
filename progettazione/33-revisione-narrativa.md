@@ -524,6 +524,11 @@ Si riempie in sessione, punto per punto. «—» vuol dire da discutere.
 - **Blocco E, scritto il 5 novembre 2026.** `finali.fav`: E1 in «La stiva piena» e «Doppio fondo», E5 in «Due
   lettere»; `fuga.fav`: E4, la chiamata di Yusuf sullo scafo (una battuta per l’autore da registrare, nelle due
   versioni). E2 ed E3 senza testo.
+- **Blocco F, il testo, scritto il 5 novembre 2026.** F2 (`traduci.fav`: cinque traduzioni gratis sotto il 18%, la
+  frase al cilindro), F3 (`finali.fav`: il re riconosciuto in stiva, le condizioni con «oppure sonaglio»), F4
+  (`echi.fav` 81 e 82, `equipaggio.fav` 92), F5 (`memoria.fav`, il bassorilievo; `vita.fav`, le capsule), F6
+  (`echi.fav`: le quattro prime eco a due strati). Nel collaudo `prima-nota-in-stiva.txt`. Restano l’F7 (il diario)
+  e l’F1 (la taratura).
 
 ## 10. Il calendario proposto
 

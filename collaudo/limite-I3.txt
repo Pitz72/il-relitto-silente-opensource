@@ -1,6 +1,7 @@
 # Percorso limite I3: come tutto.txt, ma nella fuga si stacca anche il
 # risuonatore. Chi ha ascoltato tutto non ha l'aria per portarlo via:
-# deve finire in «Due lettere».
+# deve finire in «Due lettere», sullo scafo. (Il Nucleo si prende con la
+# taglierina: con la pazienza, 6 d'aria in meno, si muore un passo prima.)
 #   python motore/favella.py collaudo relitto-silente/relitto.fav --finali --percorso collaudo/limite-I3.txt
 # atteso: esito persa
 # atteso: stanza scafo
@@ -105,9 +106,7 @@ traduci il globo olografico
 traduci la lastra incisa
 sintonizza la lastra incisa
 nord
-aspetta
-aspetta
-aspetta
+usa la taglierina sul terminale
 prendi il nucleo
 analizza il nucleo
 sud

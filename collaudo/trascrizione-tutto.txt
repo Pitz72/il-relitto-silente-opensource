@@ -298,7 +298,7 @@ Preso: il sintonizzatore.
 Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che mi arriva nei denti prima che nelle cuffie. Poi più niente.
 
 > sintonizza il generatore
-Il Sintonizzatore fischia. L'INGEGNERE CAPO: «La risonanza è instabile! Il cristallo non regge il carico! Evacuate il settore, subito!» Poi, più piano: «Non ci riesco. Se lascio il generatore adesso il campo crolla, e con lui tutta la Sezione Seme. Voi andate. Io resto.»
+Il Sintonizzatore fischia. L'INGEGNERE CAPO: «La risonanza è instabile! Il cristallo non regge il carico! Evacuate il settore, subito!» Poi, più piano: «Non ci riesco. Se lascio il generatore adesso il campo crolla, e con lui tutta la Sezione Seme. Voi andate. Io resto.» Il Sintonizzatore resta agganciato più del dovuto, come se sotto ci fosse altro.
 
 > usa il cristallo sul generatore
 Inserisco il cristallo pulsante nel vano del generatore. Con un rombo che sale, i macchinari si svegliano: l'elettricità corre fra le bobine, i monitor si accendono su flussi stabili, diretti al Ponte e all'Archivio.
@@ -363,11 +363,11 @@ Uscite: Sudovest (Il corridoio principale), Nord.
 Preso: il cilindro mnemonico.
 
 > analizza il cilindro mnemonico
-Infilo il cilindro nello scanner: un'altra registrazione, e la matrice si aggiorna. La voce è più chiara, più personale: «…il legame che ci teneva insieme si affievolisce. I cicli sono quasi compiuti. Il Grande Salto è riuscito, ma il nostro tempo finisce. Lasciamo questa eco… questo (intraducibile: seme-dell'anima)… Non la fine. La continuazione…» (Matrice di traduzione: 18%)
+Infilo il cilindro nello scanner: un'altra registrazione, e la matrice si aggiorna. La voce è più chiara, più personale: «…il legame che ci teneva insieme si affievolisce. I cicli sono quasi compiuti. Il Grande Salto è riuscito, ma il nostro tempo finisce. Lasciamo questa eco… questo (intraducibile: seme-dell'anima)… Non la fine. La continuazione…» (Matrice di traduzione: 18%) Adesso la matrice legge davvero. E leggere, come ascoltare, costa fiato.
 Nella cuffia il brusio cala fino quasi a sparire, come una sala piena che smette di parlare quando entro. Poi riprende.
 
 > sintonizza le alcove
-Il Sintonizzatore aggancia una frequenza. IL NAVARCA: «Questo sarà il mio ultimo ciclo di veglia. Ho chiesto di restare l'ultimo. Qualcuno deve spegnere le luci, quando tutti se ne sono andati. È… è un onore.»
+Il Sintonizzatore aggancia una frequenza. IL NAVARCA: «Questo sarà il mio ultimo ciclo di veglia. Ho chiesto di restare l'ultimo. Qualcuno deve spegnere le luci, quando tutti se ne sono andati. È… è un onore.» Il Sintonizzatore resta agganciato più del dovuto, come se sotto ci fosse altro.
 
 > sintonizza le alcove
 Il Sintonizzatore non si spegne: scende di frequenza, e dal fondo viene su un secondo strato. IL NAVARCA, e stavolta non parla all'equipaggio, parla a se stesso: «Mi domando se qualcuno verrà. Non per salvarci: è impossibile da prima che io nascessi. Solo per vedere. Per sapere che siamo stati qui. Se sei tu che ascolti, da qualunque tempo tu venga: ho tenuto le luci accese fino all'ultimo respiro. Non contro il buio. Perché tu trovassi la strada.»
@@ -380,8 +380,8 @@ Puoi vedere qui: un sonaglio.
 Uscite: Sud (L'alloggio dell'equipaggio).
 
 > sintonizza la culla
-Il Sintonizzatore aggancia una voce giovane, acuta, che torna sempre sulla stessa frase: «…perché non si muove… perché nessuno…» Non aspetta risposta: la domanda gira su se stessa, consumata. Il Sintonizzatore la tiene agganciata. Potrei provare a risponderle. (PARLA CON L'ECO.)
-Sul bordo del visore la cifra passa all'ambra: 58.
+Il Sintonizzatore aggancia una voce giovane, acuta, che torna sempre sulla stessa frase: «…perché non si muove… perché nessuno…» Non aspetta risposta: la domanda gira su se stessa, consumata. Il Sintonizzatore la tiene agganciata. Potrei provare a risponderle.
+Sul bordo del visore la cifra passa all'ambra: 59.
 
 > suona il sonaglio
 Lo scuoto piano. Una nota sola, chiara, che resta nell'aria più del dovuto: un re. Lo stesso re che il reattore della Santa Maria tiene da sempre, sotto il pavimento della mia plancia. Resto fermo finché non si spegne.
@@ -407,7 +407,7 @@ Puoi vedere qui: un altare.
 Uscite: Sud (Il corridoio principale), Ovest.
 
 > sintonizza il bassorilievo
-Il Sintonizzatore aggancia una frequenza. IL CUSTODE: «Il silenzio non è assenza. È la forma che prende la memoria quando le parole finiscono. Ci ho messo tutta la vita a impararlo. Soltanto adesso capisco che era vero.»
+Il Sintonizzatore aggancia una frequenza. IL CUSTODE: «Il silenzio non è assenza. È la forma che prende la memoria quando le parole finiscono. Ci ho messo tutta la vita a impararlo. Soltanto adesso capisco che era vero.» Il Sintonizzatore resta agganciato più del dovuto, come se sotto ci fosse altro.
 
 > ovest
 
@@ -493,7 +493,6 @@ Il Sintonizzatore scende sotto la soglia di prima, e dal fondo viene su un secon
 
 > traduci il bassorilievo
 Il fregio si apre del tutto. «Vedemmo i tre soli sanguinare e non maledicemmo il cielo. Piantammo dove non avremmo raccolto. Salimmo sapendo di non arrivare. Non fu una fuga: fu una semina.» E al margine corre un'ultima riga, più piccola, incisa forse da una mano sola dopo tutte le altre: «E se la semina ha attecchito, allora qualcuno sta leggendo. Allora non eravamo soli. Allora è bastato.»
-29. La cifra è rossa. La tuta fa da sola quello che le hanno insegnato: stacca i canali secondari, e sul visore compare la scritta che speravo di non leggere, PROTEZIONE VITALE. Niente ascolto, niente traduzione, finché non le do altra aria. Anche il faro scende al minimo, da solo.
 
 > sud
 
@@ -510,14 +509,15 @@ Puoi vedere qui: un generatore.
 Uscite: Su (Il corridoio principale).
 
 > sintonizza il generatore
-PROTEZIONE VITALE. Con l'aria a 29 la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.
+Sotto la voce dell'Ingegnere il Sintonizzatore aggancia un secondo strato: una voce più bassa, quasi un canto sottovoce. È la stessa che nella gola di mezzo non si lasciava spegnere. «Li ho scritti tutti, qui sul banco. Ogni nome di chi è salito sulle navi, e ogni nome di chi è rimasto quaggiù con me a tenere fermo il campo. Non per la storia: la storia non verrà. Perché siano detti ad alta voce ancora una volta, finché c'è una voce che li dice. Allora li dico. Uno per uno. Piano. Finché la voce regge.»
+24. La cifra è rossa. La tuta fa da sola quello che le hanno insegnato: stacca i canali secondari, e sul visore compare la scritta che speravo di non leggere, PROTEZIONE VITALE. Niente ascolto, niente traduzione, finché non le do altra aria. Anche il faro scende al minimo, da solo.
 
 > ricarica la tuta
 Stacco il cavo di servizio dal fianco della tuta e lo innesto nella presa del generatore. Un ronzio, la cifra sul visore che risale. La nave mi dà un po' della sua corrente, e io la trasformo in aria.
-La cifra torna sopra il rosso: 54. La tuta riapre i canali secondari, e mi restituisce il faro.
+La cifra torna sopra il rosso: 49. La tuta riapre i canali secondari, e mi restituisce il faro.
 
 > sintonizza il generatore
-Sotto la voce dell'Ingegnere il Sintonizzatore aggancia un secondo strato: una voce più bassa, quasi un canto sottovoce. È la stessa che nella gola di mezzo non si lasciava spegnere. «Li ho scritti tutti, qui sul banco. Ogni nome di chi è salito sulle navi, e ogni nome di chi è rimasto quaggiù con me a tenere fermo il campo. Non per la storia: la storia non verrà. Perché siano detti ad alta voce ancora una volta, finché c'è una voce che li dice. Allora li dico. Uno per uno. Piano. Finché la voce regge.»
+Soltanto un residuo statico: questa eco l'ho già sentita fino in fondo.
 
 > su
 
@@ -534,7 +534,7 @@ Puoi vedere qui: una teca.
 Uscite: Nord (Il corridoio principale), Ovest (L'arca biologica).
 
 > sintonizza le piante
-Il Sintonizzatore fischia e aggancia una frequenza. LO XENO-BOTANICO: «Stanno morendo tutte. Il filtro dell'aria è collassato, non c'è più acqua. Ho chiuso il Seme nella teca, ma la chiave è rimasta giù, al vivaio, e giù non si passa più. Quelli delle teche cercano il sole che gli avevamo promesso. Vanno dove c'è caldo. Vanno dove c'è luce.»
+Il Sintonizzatore fischia e aggancia una frequenza. LO XENO-BOTANICO: «Stanno morendo tutte. Il filtro dell'aria è collassato, non c'è più acqua. Ho chiuso il Seme nella teca, ma la chiave è rimasta giù, al vivaio, e giù non si passa più. Quelli delle teche cercano il sole che gli avevamo promesso. Vanno dove c'è caldo. Vanno dove c'è luce.» Il Sintonizzatore resta agganciato più del dovuto, come se sotto ci fosse altro.
 
 > sintonizza le piante
 Il Sintonizzatore torna sull'eco già nota, ma non si ferma: la frequenza scende sotto la soglia di prima, e dal fondo viene su un secondo strato, più nudo. LO XENO-BOTANICO, con un filo di voce più fermo: «Uno. Ne ho salvato uno. Quelli delle teche li ho rovinati io: volevo qualcosa di verde da far vedere all'arrivo, e ho forzato la crescita, senza terra, senza sole. Sono cresciuti lo stesso, e non sanno smettere. Sono miei.»
@@ -598,11 +598,9 @@ Nella cuffia il brusio cala fino quasi a sparire, come una sala piena che smette
 
 > traduci la mappa stellare
 Leggo tutto. «Giardino: qui, se da qualche parte.» E proprio sopra il mio sole, in una grafia più piccola, aggiunta dopo, una riga che non è una rotta: «Non torneremo a vedere se è fiorito. Va bene così.»
-29. La cifra è rossa. La tuta fa da sola quello che le hanno insegnato: stacca i canali secondari, e sul visore compare la scritta che speravo di non leggere, PROTEZIONE VITALE. Niente ascolto, niente traduzione, finché non le do altra aria. Anche il faro scende al minimo, da solo.
 
 > usa la cella di riserva
 Sgancio la cella esausta dal fianco della tuta e innesto quella di riserva. La valvola sibila, e la cifra sul visore risale.
-La cifra torna sopra il rosso: 54. La tuta riapre i canali secondari, e mi restituisce il faro.
 
 > est
 
@@ -661,7 +659,7 @@ Puoi vedere qui: una postazione, una porta circolare, delle punte.
 Uscite: Est (Il corridoio principale), Ovest.
 
 > esamina il visore
-Sul bordo del visore, in ambra, la cifra dell'aria: 48.
+Sul bordo del visore, in ambra, la cifra dell'aria: 49.
 Per un battito, qualcosa nelle pareti si accende tutto insieme e si rispegne. Non le ho toccate.
 
 > tocca le punte
@@ -710,7 +708,7 @@ L'anziano: (Accendo il Sintonizzatore. Non aggancia parole: aggancia quello che 
 
 > [Guarda la cifra dell'aria.]
 
-L'anziano: (Abbasso gli occhi sul visore: aria 47. Quando li rialzo, la figura guarda la stessa cifra.) «Allora è ora. La nostra canzone è finita da tempo; a te resta del fiato.» (Una pausa.) «Vivi.»
+L'anziano: (Abbasso gli occhi sul visore: aria 48. Quando li rialzo, la figura guarda la stessa cifra.) «Allora è ora. La nostra canzone è finita da tempo; a te resta del fiato.» (Una pausa.) «Vivi.»
   1. [Chiudi gli occhi e lascia andare.]
 
 > [Chiudi gli occhi e lascia andare.]
@@ -753,7 +751,7 @@ Il vestibolo trema. A ovest la gola larga è crollata: dove c'era il passaggio p
 Puoi vedere qui: un risuonatore.
 Uscite: Est (La camera di compensazione), Giù (La gola di mezzo).
 Sotto di me, nella gola, la voce dei nomi tace a metà di un nome.
-27. La cifra è rossa. Adesso la tuta non mi protegge più da niente: mi tiene in vita, e basta.
+28. La cifra è rossa. Adesso la tuta non mi protegge più da niente: mi tiene in vita, e basta.
 
 > est
 
@@ -795,4 +793,4 @@ Registro di bordo, TSC-1972. Operatore W. T. Eriksonn. Rotta ripresa. Carico: ne
 
 ============================================================
 Stato: vinta · stanza: stiva · comandi: 155 · eccezioni del motore: 0
-Contatori: aria=19, chiavi=3, echi=14, risonanze=7, risveglio=3, rotazione=2, taglio=0, tracce=5, traduzione=100
+Contatori: aria=20, chiavi=3, echi=14, risonanze=7, risveglio=3, rotazione=2, taglio=0, tracce=5, traduzione=100
