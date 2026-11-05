@@ -47,6 +47,9 @@
    "ovest",
    "prendi il disco",
    "nord",
+   "aspetta",
+   "aspetta",
+   "aspetta",
    "prendi il nucleo",
    "sud",
    "est",
@@ -81,7 +84,7 @@
    "su",
    "dentro"
   ],
-  "impronta": "0cca94ec55569ed85fc89fa23c5ea8a254c8c4789971e7093dc9c4620265bb04",
+  "impronta": "6f7e2de2366f3d9a4d26cb99ea52ee7074131e02016e93a4ef9d7ddc132fe8f4",
   "esito": "vinta",
   "finale": "vivi"
  },
@@ -167,6 +170,9 @@
    "sintonizza il globo olografico",
    "sintonizza la lastra incisa",
    "nord",
+   "aspetta",
+   "aspetta",
+   "aspetta",
    "prendi il nucleo",
    "analizza il nucleo",
    "sud",
@@ -226,7 +232,7 @@
    "su",
    "dentro"
   ],
-  "impronta": "c02a2d59b3b1b5d9f0509538c924901df9ef9c27f17b21f6a09f94726b9e7085",
+  "impronta": "a8613a61676549963705c98a756cc5a7df5ec1d2f8d37a55e3ba537dcd93d9a6",
   "esito": "vinta",
   "finale": "prima-nota"
  },
@@ -278,6 +284,9 @@
    "ovest",
    "prendi il disco",
    "nord",
+   "aspetta",
+   "aspetta",
+   "aspetta",
    "prendi il nucleo",
    "sud",
    "est",
@@ -314,7 +323,7 @@
    "su",
    "dentro"
   ],
-  "impronta": "0490970c10c0a6a81ffd5d0dda481155cebd27c68815cbe038d1aa73a47647e7",
+  "impronta": "cc848cbc891671d8cd0a100d791550615e6949983ff69fd6ae0537efc47c8003",
   "esito": "vinta",
   "finale": "stiva-piena"
  },
@@ -366,6 +375,9 @@
    "ovest",
    "prendi il disco",
    "nord",
+   "aspetta",
+   "aspetta",
+   "aspetta",
    "prendi il nucleo",
    "sud",
    "est",
@@ -403,7 +415,7 @@
    "su",
    "dentro"
   ],
-  "impronta": "ab0f198b6b437268a9ce16775e46982a65c82a163505133b5bf1945dfe0b4e26",
+  "impronta": "39e892bd46ef896aa74b91385f1f6d8977908cd7c5fb4831e2870707d8f686ad",
   "esito": "vinta",
   "finale": "doppio-fondo"
  },
@@ -455,6 +467,9 @@
    "ovest",
    "prendi il disco",
    "nord",
+   "aspetta",
+   "aspetta",
+   "aspetta",
    "prendi il nucleo",
    "sud",
    "est",
@@ -488,7 +503,7 @@
    "su",
    "dentro"
   ],
-  "impronta": "84e2f619373eb74f8b82cab0ffbf1b2ed46cbc6c6a298ac434b6272ce2753104",
+  "impronta": "82bdc8aee34b23a0416ccba883cda99dda7c8357dd56030910000f1249ebe7d8",
   "esito": "vinta",
   "finale": "mani-vuote"
  },
@@ -606,7 +621,7 @@
    "aspetta",
    "aspetta"
   ],
-  "impronta": "ee674d4787e1918d480e3eb1888f09bae40cd0d43e612aee1266f78c7088e62e",
+  "impronta": "02aacb3de094786e25046f854d83eb575d1a24b68cc068fd69cd72fb45ab711a",
   "esito": "persa",
   "finale": "due-lettere"
  }

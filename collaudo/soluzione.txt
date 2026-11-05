@@ -59,6 +59,9 @@ nord
 ovest
 prendi il disco
 nord
+aspetta
+aspetta
+aspetta
 prendi il nucleo
 sud
 est

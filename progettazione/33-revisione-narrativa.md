@@ -514,6 +514,13 @@ Si riempie in sessione, punto per punto. «—» vuol dire da discutere.
   congedo registrato non suona più (`VOCI_ANZIANO`): si registra con il resto. «La prima nota» resta senza righe
   in più. **Per il blocco D:** il D2 è scritto qui; resta da decidere se la cosa salvata (la pioggia) si senta
   anche altrove.
+- **Blocco D, scritto il 5 novembre 2026.** Il D1 passa già per le voci (B) e per l’Anziano (C): la colpa
+  (`echi.fav` 51, `ponte.fav` «altro»), la versione ufficiale (`echi.fav` 41 e 99, `ponte.fav` «salto»), la semina
+  (le tabelle, l’ingegnere, `echi.fav` 116). Il D3 in `memoria.fav` (la stanza senza corrente, il pilastro che si
+  sveglia in tre turni a 2 d’aria l’uno, il contatore «risveglio»); la riga del diario («Il pilastro aspetta
+  corrente. Il generatore, giù, è spento.») si scrive con l’F7. Il D4 in `fuga.fav` (via il suggerimento; la voce
+  tace se William sale). Misura dopo il blocco: la soluzione più corta finisce al 60%, «tutto» al 19%, «La prima
+  nota» al 38%.
 
 ## 10. Il calendario proposto
 

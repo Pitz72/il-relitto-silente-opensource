@@ -76,12 +76,14 @@ Invece di strappa: dire "Non c'è niente da strappare.".
 La descrizione della gola di mezzo se la fuga è iniziata e l'aria è al massimo 15 è "Gola. Su. Su.".
 La descrizione della gola di mezzo se la fuga è iniziata è "La gola di mezzo trema e si stringe, e le venature si accendono tutte insieme di un verde malato, come per l'ultima volta. Sopra, il vestibolo. Sotto, il groviglio.".
 
-Quando il giocatore è nella gola di mezzo e la fuga è iniziata e la voce dei nomi è attesa: dire "[se la connessione è avvenuta]Nella cuffia torna la voce dei nomi[altrimenti]Nella cuffia entra una voce bassa, paziente, che dice nomi[fine], una parola dopo l'altra.[se il generatore è svelata] È l'Ingegnere. Sta ancora dicendo i nomi.[fine] (Potresti fermarti ad ASCOLTARE LA VOCE.)" e adesso la voce dei nomi è udita.
+Quando il giocatore è nella gola di mezzo e la fuga è iniziata e la voce dei nomi è attesa: dire "[se la connessione è avvenuta]Nella cuffia torna la voce dei nomi[altrimenti]Nella cuffia entra una voce bassa, paziente, che dice nomi[fine], una parola dopo l'altra, senza fretta.[se il generatore è svelata] È l'Ingegnere. Sta ancora dicendo i nomi.[fine]" e adesso la voce dei nomi è udita.
+# Se William sale senza fermarsi, la voce smette (RN-D4).
+Quando il giocatore è nel vestibolo delle gole e la fuga è iniziata e la voce dei nomi è udita: dire "Sotto di me, nella gola, la voce dei nomi tace a metà di un nome." e adesso la voce dei nomi è taciuta.
 
 Le venature verdi si chiama anche "voce".
 Le venature verdi si chiama anche "nomi".
 Le venature verdi si chiama anche "voce dei nomi".
-Invece di ascolta le venature verdi se la fuga è iniziata: dire "Mi fermo. Lascio che la voce vada avanti, e la cifra dell'aria scende con lei. Dice i nomi uno per uno, e io li ascolto anche se non ne capisco nessuno. Poi l'elenco finisce, e la voce, dopo una pausa, ne dice uno in più, più piano degli altri. Il traduttore scrive la sua riga di sempre, nome proprio, intraducibile. Ma io lo so, di chi è. È il suo." e adesso diminuisci l'aria di 6.
+Invece di ascolta le venature verdi se la fuga è iniziata: dire "Mi fermo. Lascio che la voce vada avanti, e la cifra dell'aria scende con lei. Dice i nomi uno per uno, e io li ascolto anche se non ne capisco nessuno. Poi l'elenco finisce, e la voce, dopo una pausa, ne dice uno in più, più piano degli altri. Il traduttore scrive la sua riga di sempre, nome proprio, intraducibile. Ma io lo so, di chi è. È il suo." e adesso diminuisci l'aria di 6 e adesso la voce dei nomi è ascoltata.
 Invece di ascolta le venature verdi: dire "Il brusio, e sotto il brusio un ritmo, come qualcuno che legge.".
 
 # ============================================================================

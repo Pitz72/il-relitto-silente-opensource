@@ -119,7 +119,8 @@ Invece di gira il disco: dire "Giro il disco di un terzo: il sole più grande ad
 # ARCA DELLA MEMORIA (N6)
 # ============================================================================
 L'arca della memoria è una stanza.
-La descrizione dell'arca della memoria è "Una caverna di cristallo nero. Pilastri di dati alti come monoliti salgono verso un soffitto che non si vede: quasi tutti spenti, molti incrinati. In fondo un pilastro solo pulsa ancora, d'una luce ambrata, intermittente, come se aspettasse qualcosa. È l'unica luce, qui dentro. A sud si torna allo scriptorium.".
+La descrizione dell'arca della memoria è "Una caverna di cristallo nero. Pilastri di dati alti come monoliti salgono verso un soffitto che non si vede: quasi tutti spenti, molti incrinati. In fondo un pilastro solo pulsa ancora, d'una luce ambrata, intermittente, come se aspettasse corrente; il terminale accanto è spento, e non ne ha. È l'unica luce, qui dentro. A sud si torna allo scriptorium.".
+La descrizione dell'arca della memoria se l'energia è ripristinata e il terminale è spento è "La caverna di cristallo nero. In fondo l'ultimo pilastro si accende dal basso, piano, una fascia ambrata alla volta; accanto, sul terminale, la spia del pannello di emergenza. A sud si torna allo scriptorium.".
 La descrizione dell'arca della memoria se l'archivio è forzato è "La caverna dei pilastri spenti. In fondo anche l'ultimo, adesso, è buio: l'ho spento io. A sud si torna allo scriptorium.".
 La descrizione dell'arca della memoria se l'archivio è salutato è "La caverna di cristallo nero. In fondo l'ultimo pilastro è acceso per intero, e la sua luce ambrata arriva fino alle pareti. A sud si torna allo scriptorium.".
 
@@ -129,6 +130,7 @@ Il pilastro è di scena.
 Il pilastro si chiama anche "pilastri".
 Il pilastro si chiama anche "monoliti".
 La descrizione del pilastro è "Archivi di dati cristallini, di una capacità che non so immaginare. Quasi tutti incrinati, attraversati da crepe come ferite. L'ultimo pulsa ancora, appena: come se aspettasse corrente. Lo scanner mi direbbe quanto ne resta. (ANALIZZALI.)".
+La descrizione del pilastro se l'energia è ripristinata e il terminale è spento è "L'ultimo pilastro si sveglia dal basso, una fascia alla volta: ne sono accese [risveglio] su quattro. Il resto della corrente lo prende dalla mia tuta.".
 La descrizione del pilastro se l'archivio è forzato è "L'ultimo pilastro è spento. L'ho spento io, con il plasma, per arrivare prima.".
 La descrizione del pilastro se l'archivio è salutato è "L'ultimo pilastro è acceso per intero. Ha avuto la sua corrente, e mi ha salutato.".
 Invece di analizza il pilastro: dire "ANALISI DELL'ARCHIVIO CENTRALE — integrità dei dati stimata: 0,001%. Corruzione a cascata per degradazione entropica, perdita irreversibile.\nMillenni di storia, scienza, arte, filosofia di una civiltà che ha attraversato una galassia: polvere digitale. È la loro seconda morte, più totale della prima.".
@@ -140,6 +142,7 @@ Il terminale è spento.
 Il terminale si chiama anche "console".
 Il terminale si chiama anche "bypass".
 La descrizione del terminale è "Un terminale d'accesso al pilastro, spento: non ha corrente. Sulla superficie, un pannello di bypass per le emergenze.".
+La descrizione del terminale se l'energia è ripristinata e il terminale è spento è "Un terminale d'accesso al pilastro. Sul pannello di emergenza la spia è accesa: il terminale beve dalla mia tuta, senza toccarla, come il risuonatore. Il bypass, con la taglierina, si aprirebbe subito.".
 La descrizione del terminale se il terminale è acceso è "Lo schermo regge a malapena un'unica parola aliena. Alla base, uno scomparto aperto.".
 
 Il nucleo è una cosa.
@@ -152,8 +155,19 @@ La descrizione del nucleo è "Un cristallo a molte facce che pulsa di luce ambra
 Invece di usa la taglierina sul terminale se il terminale è spento: dire "Imposto la taglierina al massimo e, per una frazione di secondo, dirigo il getto sul pannello di bypass. Il terminale sfrigola, un odore acre di metallo fuso; lo schermo si accende su un'unica parola aliena e uno scomparto si apre alla base. Accanto, l'ultimo pilastro fa una scintilla ambrata, più forte delle altre, e si spegne." e adesso il terminale è acceso e adesso il nucleo è nell'arca della memoria e adesso l'archivio è forzato.
 Invece di usa la taglierina sul terminale: dire "È già aperto.".
 
-# --- La pazienza: con l'energia il terminale si sveglia da sé ----------------
-Quando il giocatore è nell'arca della memoria e l'energia è ripristinata e il terminale è spento: dire "Appena entro, l'ultimo pilastro smette di pulsare e si accende per intero, e la sua luce ambrata arriva fino alle pareti. Il terminale accanto si sveglia da solo. Sullo schermo scorre una riga sola, e la matrice la rende al primo colpo: «Sei arrivato. Puoi prenderlo.» Lo scomparto alla base si apre piano, come una mano." e adesso il terminale è acceso e adesso il nucleo è nell'arca della memoria e adesso l'archivio è salutato.
+# --- La pazienza: con l'energia il pilastro si sveglia piano (RN-D3) ----------
+# Una fascia per turno, finché resto nell'arca: ogni fascia costa 2 d'aria, che
+# il terminale beve dalla tuta come il risuonatore. La taglierina, intanto,
+# apre subito. Le regole vanno dall'ultima fascia alla prima, perché in un
+# turno ne scatti una sola; sotto 3 d'aria il pilastro aspetta (prima della
+# fuga non si muore se non portando il risuonatore). Il costo si tara con
+# l'F1 della revisione narrativa.
+Il risveglio è un contatore.
+Il risveglio parte da 0.
+Ogni turno se il giocatore è nell'arca della memoria e l'energia è ripristinata e il terminale è spento e il risveglio è almeno 3 e l'aria è più di 2: dire "L'ultimo pilastro si accende per intero, e la sua luce ambrata arriva fino alle pareti. La cifra smette di scendere. Il terminale si sveglia: sullo schermo scorre una riga sola, e la matrice la rende al primo colpo: «Sei arrivato. Puoi prenderlo.» Lo scomparto alla base si apre piano, come una mano." e adesso diminuisci l'aria di 2 e adesso il terminale è acceso e adesso il nucleo è nell'arca della memoria e adesso l'archivio è salutato.
+Ogni turno se il giocatore è nell'arca della memoria e l'energia è ripristinata e il terminale è spento e il risveglio è almeno 2 e il risveglio è meno di 3 e l'aria è più di 2: dire "La terza fascia. La luce ambrata sale quasi fino in cima, e la cifra scende ancora." e adesso diminuisci l'aria di 2 e adesso aumenta il risveglio.
+Ogni turno se il giocatore è nell'arca della memoria e l'energia è ripristinata e il terminale è spento e il risveglio è almeno 1 e il risveglio è meno di 2 e l'aria è più di 2: dire "Una seconda fascia si accende sopra la prima. Sul visore la cifra scende di due punti." e adesso diminuisci l'aria di 2 e adesso aumenta il risveglio.
+Ogni turno se il giocatore è nell'arca della memoria e l'energia è ripristinata e il terminale è spento e il risveglio è meno di 1: dire "Appena entro, l'ultimo pilastro smette di pulsare: una fascia alla base si accende, ambrata, e resta accesa. La corrente che ho ridato alla nave arriva fin qui, ma è poca, e il resto il terminale lo cerca addosso a me: sul visore la cifra trema, come quando ho toccato il risuonatore. Se resto, il pilastro salirà una fascia alla volta, e la tuta pagherà. Oppure la taglierina apre il bypass adesso." e adesso aumenta il risveglio.
 
 Invece di prendi il nucleo se il terminale è spento: dire "È chiuso dentro il terminale.".
 Invece di prendi il nucleo se il giocatore ha il nucleo: dire "Ce l'ho già.".

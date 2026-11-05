@@ -105,6 +105,9 @@ traduci il globo olografico
 traduci la lastra incisa
 sintonizza la lastra incisa
 nord
+aspetta
+aspetta
+aspetta
 prendi il nucleo
 analizza il nucleo
 sud

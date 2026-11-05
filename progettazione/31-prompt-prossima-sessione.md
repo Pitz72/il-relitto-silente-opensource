@@ -2,7 +2,7 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 5 novembre 2026, dopo la scrittura dei blocchi A, B e C della revisione narrativa.
+Aggiornato l’ultima volta il 5 novembre 2026, dopo la scrittura dei blocchi A, B, C e D della revisione narrativa.
 Prima, il 3 novembre, a notte, l’autore aveva chiuso la sessione dopo la lettura integrale e la valutazione:
 «Dalla prossima sessione fare punto per tutto i tanti piccoli dettagli rilevati con
 una discussione e delle decisioni. Interverremo fortemente su tutto quello che allontana questo gioco da
@@ -18,11 +18,10 @@ Riprendiamo «Il Relitto Silente». Carica la memoria del progetto, poi leggi qu
 lavoro li tocca (l’elenco è in fondo). Comincia dal punto 0 dell’ordine del lavoro: i blocchi dalla A alla F del
 documento 33 sono decisi (4 novembre 2026; le decisioni sono nel registro, §9; le schede delle voci nel documento
 34). Si continua con **la scrittura** (documento 33, §2 e §10, punto 4): i `.fav` si cambiano blocco per blocco,
-con le skill di scrittura e le prove dopo ogni blocco; i blocchi A, B e C sono scritti (5 novembre 2026), si
-continua con il **D** (la struttura). Del D, il D2 è già scritto con il C, e due dei tre fili del D1 passano già
-per le voci del B e per l’Anziano (controllarli); restano il D3 (l’indizio della pazienza nella stanza e nel
-diario, il pilastro che si sveglia una fascia alla volta, l’attesa che costa aria) e il D4 (via
-«(Potresti fermarti ad ASCOLTARE LA VOCE.)» da `fuga.fav` 79). Prima del commit di
+con le skill di scrittura e le prove dopo ogni blocco; i blocchi A, B, C e D sono scritti (5 novembre 2026), si
+continua con l’**E** (i finali: E1 «La stiva piena» e «Doppio fondo»; E4 la chiamata di Yusuf nella fuga, una
+battuta da registrare con la voce dell’autore; E5 la riga di «Due lettere» quando uccide il risuonatore; E2 ed E3
+non chiedono testo), poi l’**F** (con il diario nuovo, RN-F7, e la riga del diario del D3). Prima del commit di
 ogni blocco, all’autore si mostra ogni frase prima e dopo, e si aspetta il suo sì. Lo stile (blocco G) viene dopo, sul
 testo fermo; poi le dipendenze (blocco H) e una beta sola. Ogni proposta all’autore va scritta per intera nel
 messaggio finale, dopo la casella della domanda: mai «la proposta è quella sopra».
@@ -122,6 +121,10 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   tre gesti al posto di tre domande; il congedo è un saluto; «[Posa il risuonatore.]» restituisce le voci, che
   si sentono nella fuga e lasciano una riga in «Vivi» e «Mani vuote». La voce registrata del congedo non suona
   più finché non si registra di nuovo; il benvenuto e il Piccolo la tengono. I percorsi del collaudo sono 15.
+- **Il blocco D è scritto** (5 novembre 2026, approvato): nell’arca della memoria la scelta fra forza e pazienza
+  la vede chiunque (con la corrente il pilastro si sveglia in tre turni, 2 d’aria l’uno; la taglierina apre
+  subito); nella fuga la voce dei nomi non ha più il suggerimento, e tace se William sale. Dopo il blocco la
+  soluzione più corta finisce al 60%, «tutto» al 19%.
 - **La sessione** si è chiusa il 3 novembre 2026 con l’albero pulito e `main` uguale a `origin/main`.
 - **Il motore** è Favella1 1.6.1 (documento 29), pubblicata anche su GitHub, PyPI e favella.eu.
 - **La revisione totale** (documento 25): i 30 problemi (5 gravi, 10 medi, 15 lievi) sono tutti

@@ -232,14 +232,26 @@ Libero il disco di pietra incastrato nel meccanismo del proiettore. Il proiettor
 > nord
 
 --- L'arca della memoria ---
-Una caverna di cristallo nero. Pilastri di dati alti come monoliti salgono verso un soffitto che non si vede: quasi tutti spenti, molti incrinati. In fondo un pilastro solo pulsa ancora, d'una luce ambrata, intermittente, come se aspettasse qualcosa. È l'unica luce, qui dentro. A sud si torna allo scriptorium.
+La caverna di cristallo nero. In fondo l'ultimo pilastro si accende dal basso, piano, una fascia ambrata alla volta; accanto, sul terminale, la spia del pannello di emergenza. A sud si torna allo scriptorium.
 Puoi vedere qui: un terminale.
 Uscite: Sud (Lo scriptorium).
-Appena entro, l'ultimo pilastro smette di pulsare e si accende per intero, e la sua luce ambrata arriva fino alle pareti. Il terminale accanto si sveglia da solo. Sullo schermo scorre una riga sola, e la matrice la rende al primo colpo: «Sei arrivato. Puoi prenderlo.» Lo scomparto alla base si apre piano, come una mano.
+Appena entro, l'ultimo pilastro smette di pulsare: una fascia alla base si accende, ambrata, e resta accesa. La corrente che ho ridato alla nave arriva fin qui, ma è poca, e il resto il terminale lo cerca addosso a me: sul visore la cifra trema, come quando ho toccato il risuonatore. Se resto, il pilastro salirà una fascia alla volta, e la tuta pagherà. Oppure la taglierina apre il bypass adesso.
+
+> aspetta
+Il tempo passa.
+Una seconda fascia si accende sopra la prima. Sul visore la cifra scende di due punti.
+Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che mi arriva nei denti prima che nelle cuffie. Poi più niente.
+
+> aspetta
+Il tempo passa.
+La terza fascia. La luce ambrata sale quasi fino in cima, e la cifra scende ancora.
+
+> aspetta
+Il tempo passa.
+L'ultimo pilastro si accende per intero, e la sua luce ambrata arriva fino alle pareti. La cifra smette di scendere. Il terminale si sveglia: sullo schermo scorre una riga sola, e la matrice la rende al primo colpo: «Sei arrivato. Puoi prenderlo.» Lo scomparto alla base si apre piano, come una mano.
 
 > prendi il nucleo
 Prendo il Nucleo di Memoria dallo scomparto del terminale. La terza chiave.
-Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che mi arriva nei denti prima che nelle cuffie. Poi più niente.
 
 > sud
 
@@ -256,6 +268,7 @@ Uscite: Sud (Il corridoio principale), Ovest (Lo scriptorium).
 
 > gira il disco
 Giro il disco di un terzo: il sole più grande adesso è a sinistra.
+Nella cuffia il brusio cala fino quasi a sparire, come una sala piena che smette di parlare quando entro. Poi riprende.
 
 > gira il disco
 Giro il disco di un terzo: il sole più grande adesso è in alto.
@@ -265,7 +278,6 @@ Appoggio il disco nell'incavo, con il sole più grande verso la tacca. Questa vo
 
 > prendi la stele
 Prendo la Stele del Ricordo dallo scomparto. È leggera, più di quanto mi aspettassi, e tiepida. La seconda chiave.
-Nella cuffia il brusio cala fino quasi a sparire, come una sala piena che smette di parlare quando entro. Poi riprende.
 
 > sud
 
@@ -279,6 +291,7 @@ Avvicino il seme all'incavo ovoidale: viene attratto e si incastra con un clic d
 
 > usa la stele sulla grande porta
 Inserisco la Stele del Ricordo nell'incavo rettangolare. Si adatta. Una linea di luce bianca si aggiunge alla prima.
+Nella cuffia il brusio cala fino quasi a sparire, come una sala piena che smette di parlare quando entro. Poi riprende.
 
 > usa il nucleo sulla grande porta
 Posiziono il Nucleo di Memoria nell'incavo a molte facce: una linea di luce ambrata chiude il circuito, e un ronzio profondo, armonico, riempie il corridoio.
@@ -293,7 +306,6 @@ Uscite: Est (Il corridoio principale), Ovest.
 
 > usa la postazione
 Appoggio la mano guantata sulla depressione, e la console reagisce: non a chi sono, ma a quello che voglio. Un'ondata di energia silenziosa attraversa la sala, le postazioni si accendono, e la struttura centrale proietta sulla cupola una mappa stellare a tre dimensioni. La rotta è chiara, e il punto d'arrivo inconfondibile: il mio sole.
-Nella cuffia il brusio cala fino quasi a sparire, come una sala piena che smette di parlare quando entro. Poi riprende.
 
 > analizza la mappa stellare
 Seguo la rotta all'indietro, partendo da casa. Attraversa un'altra galassia, fino a un ammasso denso e luminoso. Il punto d'origine non lascia dubbi: un sistema trino, tre soli che girano l'uno intorno all'altro, spenti. La culla della loro civiltà.
@@ -334,7 +346,7 @@ L'anziano: «Abbiamo seminato in un mondo scelto perché la vita ci attecchisse.
 
 > [Guarda la cifra dell'aria.]
 
-L'anziano: (Abbasso gli occhi sul visore: aria 98. Quando li rialzo, la figura guarda la stessa cifra.) «Allora è ora. La nostra canzone è finita da tempo; a te resta del fiato.» (Una pausa.) «Vivi.»
+L'anziano: (Abbasso gli occhi sul visore: aria 92. Quando li rialzo, la figura guarda la stessa cifra.) «Allora è ora. La nostra canzone è finita da tempo; a te resta del fiato.» (Una pausa.) «Vivi.»
   1. [Chiudi gli occhi e lascia andare.]
 
 > [Chiudi gli occhi e lascia andare.]
@@ -362,18 +374,18 @@ Mi calo nell'apertura accanto al sostegno, e la gola mi prende. È ripida, nera,
 --- La sala delle teche ---
 La sala delle teche, sveglia. Il campo è caduto del tutto: il groviglio si muove dappertutto, a frustate molli e cieche, e cerca il caldo. Lungo le pareti, le teche chiuse, bianche di brina. Su, in fondo alla sala, l'imbocco della gola di mezzo; a ovest il vivaio; a est la gola da cui sono arrivato.
 Uscite: Su (La gola di mezzo), Ovest (Il vivaio), Est.
+Le pareti si incrinano in lunghe linee verdi, come vene che si accendono per l'ultima volta.
 
 > segui la parete
 Metto la spalla contro le teche chiuse e mi tengo lì, dove il freddo tiene fermi i filamenti. Passo corto, il faro basso puntato sulle suole. Uno mi cerca all'altezza del fianco e trova solo vetro gelato. Adesso so dove sono: la parete mi porta verso la gola di mezzo, su.
-Da qualche parte dietro di me qualcosa crolla, con un rumore che non arriva: lo sento nelle suole.
-Le pareti si incrinano in lunghe linee verdi, come vene che si accendono per l'ultima volta.
 
 > su
 
 --- La gola di mezzo ---
 La gola di mezzo trema e si stringe, e le venature si accendono tutte insieme di un verde malato, come per l'ultima volta. Sopra, il vestibolo. Sotto, il groviglio.
 Uscite: Su (Il vestibolo delle gole), Giù (La sala delle teche).
-Nella cuffia entra una voce bassa, paziente, che dice nomi, una parola dopo l'altra. (Potresti fermarti ad ASCOLTARE LA VOCE.)
+Le pareti si incrinano in lunghe linee verdi, come vene che si accendono per l'ultima volta.
+Nella cuffia entra una voce bassa, paziente, che dice nomi, una parola dopo l'altra, senza fretta.
 
 > su
 
@@ -381,6 +393,8 @@ Nella cuffia entra una voce bassa, paziente, che dice nomi, una parola dopo l'al
 Il vestibolo trema. A ovest la gola larga è crollata: dove c'era il passaggio per il corridoio c'è un tappo di materia schiacciata. A est la porta interna è aperta sulla camera; sotto, la gola di mezzo. Dalla nicchia il brusio sale, uguale a sempre.
 Puoi vedere qui: un risuonatore.
 Uscite: Est (La camera di compensazione), Giù (La gola di mezzo).
+Le pareti si incrinano in lunghe linee verdi, come vene che si accendono per l'ultima volta.
+Sotto di me, nella gola, la voce dei nomi tace a metà di un nome.
 
 > est
 
@@ -396,6 +410,7 @@ Sono fuori. Lo scafo nero trema sotto i magneti degli stivali, e le funi degli a
 Puoi vedere qui: una giuntura.
 Uscite: Dentro (La stiva), Giù (La camera di compensazione).
 Da qualche parte dietro di me qualcosa crolla, con un rumore che non arriva: lo sento nelle suole.
+Sul bordo del visore la cifra passa all'ambra: 60.
 
 > dentro
 
@@ -417,5 +432,5 @@ Registro di bordo, TSC-1972. Operatore W. T. Eriksonn. Rotta ripresa. Carico: ne
 (La partita è finita. Scrivi ANNULLA per tornare indietro di un turno, RICOMINCIA per ripartire da capo, CARICA per riprendere un salvataggio o FINE per uscire.)
 
 ============================================================
-Stato: vinta · stanza: stiva · comandi: 78 · eccezioni del motore: 0
-Contatori: aria=66, chiavi=3, echi=0, risonanze=0, rotazione=2, taglio=0, tracce=1, traduzione=0
+Stato: vinta · stanza: stiva · comandi: 81 · eccezioni del motore: 0
+Contatori: aria=60, chiavi=3, echi=0, risonanze=0, risveglio=3, rotazione=2, taglio=0, tracce=1, traduzione=0

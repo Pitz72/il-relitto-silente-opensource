@@ -452,4 +452,4 @@ Uscite: Ovest (Il vestibolo delle gole).
 
 ============================================================
 Stato: in_corso · stanza: camera di compensazione · comandi: 101 · eccezioni del motore: 0
-Contatori: aria=81, chiavi=0, echi=0, risonanze=0, rotazione=0, taglio=2, tracce=1, traduzione=0
+Contatori: aria=81, chiavi=0, echi=0, risonanze=0, risveglio=0, rotazione=0, taglio=2, tracce=1, traduzione=0

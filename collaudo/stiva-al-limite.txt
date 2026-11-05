@@ -55,11 +55,12 @@ prendi il sintonizzatore
 usa il cristallo sul generatore
 su
 
-# --- Ala della Memoria: il disco e il nucleo (con l'energia, la pazienza) ---
+# --- Ala della Memoria: il disco e il nucleo (con la taglierina: la pazienza costerebbe 6 d’aria) ---
 nord
 ovest
 prendi il disco
 nord
+usa la taglierina sul terminale
 prendi il nucleo
 sud
 est
