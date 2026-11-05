@@ -1,0 +1,192 @@
+# Partita da principiante: LO SPERDUTO (revisione narrativa, RN-F1).
+# Non conosce il gioco e si perde: prova uscite che non ci sono, torna indietro,
+# fa le cose nell'ordine sbagliato. Dal kit prende soltanto la taglierina, e al
+# pannello paga con la tuta. Scende fra le teche troppo presto, con il faro
+# acceso. Traduce tutto appena può, prima che la matrice sia pronta, e ritraduce
+# dopo. Ascolta quello che gli capita sotto mano, non tutto. La cella la usa
+# appena la tuta va in protezione vitale (lo fa aria.py da sé), e senza
+# cella va a ricaricare al generatore; all'avviso del Ponte ricarica, poi passa.
+#   python collaudo/aria.py relitto-silente/relitto.fav collaudo/principiante-sperduto.txt --passi
+
+# --- Atto I: ci mette un po' ---
+esamina la plancia
+nord
+esamina la branda
+sud
+ovest
+prendi la tuta
+indossa la tuta
+fuori
+est
+spara gli arpioni
+accosta
+analizza la nave aliena
+accosta
+spara gli arpioni
+parla con yusuf
+Ho trovato una cosa.
+Te lo porto.
+ovest
+apri il kit
+prendi la taglierina
+prendi la cella di riserva
+fuori
+
+# --- Atto II: senza batteria ---
+giù
+esamina lo scafo nero
+analizza lo scafo nero
+usa la taglierina sulla giuntura
+giù
+ovest
+apri la porta interna
+esamina il pannello
+analizza il pannello
+usa la tuta sul pannello
+apri la porta interna
+ovest
+
+# --- Il vestibolo ---
+nord
+prendi il risuonatore
+ovest
+
+# --- Il corridoio, e la memoria troppo presto ---
+ovest
+nord
+traduci il bassorilievo
+ovest
+traduci il globo olografico
+prendi il disco
+nord
+aspetta
+esamina il terminale
+sud
+est
+usa il disco sull'altare
+gira il disco
+usa il disco sull'altare
+gira il disco
+usa il disco sull'altare
+prendi la stele
+analizza la stele
+traduci il bassorilievo
+sud
+
+# --- Giù fra le teche, con il faro acceso ---
+est
+giù
+giù
+ovest
+su
+su
+ovest
+
+# --- La serra e l'arca biologica, nell'ordine sbagliato ---
+sud
+esamina l'uomo
+prendi il seme
+ascolta la scatola nera
+ovest
+prendi il cristallo
+est
+nord
+giù
+prendi il sintonizzatore
+usa il cristallo sul generatore
+sintonizza il generatore
+sintonizza il generatore
+su
+sud
+ovest
+prendi il dispositivo medico
+usa il dispositivo medico sul cristallo
+est
+nord
+giù
+usa il cristallo sul generatore
+su
+sintonizza le pareti del corridoio
+
+# --- Di nuovo giù, adesso con la corrente ---
+est
+giù
+giù
+ovest
+prendi la tavoletta
+traduci le tabelle di semina
+est
+su
+su
+ovest
+sud
+usa la tavoletta sulla teca
+prendi il seme
+sintonizza le piante
+nord
+
+# --- L'equipaggio ---
+nordest
+prendi il cilindro mnemonico
+analizza il cilindro mnemonico
+sintonizza le alcove
+sintonizza le alcove
+nord
+sintonizza la culla
+parla con l'eco
+Lascia stare.
+parla con l'eco
+[Resta in silenzio.]
+Lascia stare.
+sud
+sudovest
+
+# --- Di nuovo all'archivio ---
+nord
+ovest
+traduci la lastra incisa
+nord
+esamina il terminale
+aspetta
+aspetta
+aspetta
+prendi il nucleo
+analizza il nucleo
+sud
+traduci il globo olografico
+traduci la lastra incisa
+est
+traduci il bassorilievo
+sud
+
+# --- La Grande Porta ---
+usa il seme sulla grande porta
+usa la stele sulla grande porta
+usa il nucleo sulla grande porta
+ovest
+usa la postazione
+tocca le punte
+analizza la mappa stellare
+tocca le punte
+traduci la mappa stellare
+ovest
+ovest
+
+# --- Atto IV ---
+parla con l'anziano
+Cosa ne è stato di voi?
+E allora perché tutto questo?
+[Guarda la cifra dell'aria.]
+[Chiudi gli occhi e lascia andare.]
+[Resta.]
+[Apri gli occhi.]
+
+# --- Atto V ---
+prendi il seme
+giù
+ovest
+su
+su
+est
+su
+dentro

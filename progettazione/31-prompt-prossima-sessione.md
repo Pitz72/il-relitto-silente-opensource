@@ -2,7 +2,7 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 5 novembre 2026, dopo la scrittura dei blocchi dalla A alla E, del testo del blocco F e del diario di William.
+Aggiornato l’ultima volta il 5 novembre 2026, dopo la scrittura dei blocchi dalla A alla F e la taratura dell’aria (F1).
 Prima, il 3 novembre, a notte, l’autore aveva chiuso la sessione dopo la lettura integrale e la valutazione:
 «Dalla prossima sessione fare punto per tutto i tanti piccoli dettagli rilevati con
 una discussione e delle decisioni. Interverremo fortemente su tutto quello che allontana questo gioco da
@@ -17,13 +17,12 @@ Riprendiamo «Il Relitto Silente». Carica la memoria del progetto, poi leggi qu
 (`progettazione/33-revisione-narrativa.md`, la roadmap della revisione narrativa). Gli altri si aprono quando il
 lavoro li tocca (l’elenco è in fondo). Comincia dal punto 0 dell’ordine del lavoro: i blocchi dalla A alla F del
 documento 33 sono decisi (4 novembre 2026; le decisioni sono nel registro, §9; le schede delle voci nel documento
-34). Si continua con **la scrittura** (documento 33, §2 e §10, punto 4): i `.fav` si cambiano blocco per blocco,
-con le skill di scrittura e le prove dopo ogni blocco; i blocchi dalla A alla E sono scritti (5 novembre 2026),
-e del blocco F il testo (F2–F6) e il diario di William (F7, «Appunti» e «In sospeso»); si continua con
-l’**F1**, la taratura dell’aria a tavolino: tre partite da principiante scritte da me (il curioso, il frettoloso,
-lo sperduto) e misurate passo per passo, con la regola del registro (§9). Poi lo stile (blocco G). Prima del commit di
-ogni blocco, all’autore si mostra ogni frase prima e dopo, e si aspetta il suo sì. Lo stile (blocco G) viene dopo, sul
-testo fermo; poi le dipendenze (blocco H) e una beta sola. Ogni proposta all’autore va scritta per intera nel
+34). **La scrittura** (documento 33, §2 e §10, punto 4) è finita per i blocchi dalla A alla F (5 novembre 2026),
+compresi il diario di William (F7) e la taratura dell’aria (F1, documento 33, §12: i costi restano, cambiano due
+avvisi). Si continua con **lo stile (blocco G)**, sul testo fermo, con le skill di
+scrittura; dopo il G si rigiocano le partite verosimili dell’aria (§12), che devono dare gli stessi numeri. Prima del
+commit di ogni blocco, all’autore si mostra ogni frase prima e dopo, e si aspetta il suo sì. Poi le dipendenze
+(blocco H) e una beta sola. Ogni proposta all’autore va scritta per intera nel
 messaggio finale, dopo la casella della domanda: mai «la proposta è quella sopra».
 
 ## Le regole fisse dell’autore
@@ -48,6 +47,9 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 - **Il nome del motore è «Favella1».** La musica è fantascienza, mai giallo. Il gioco è da scrivania:
   niente impaginazioni da telefono, nessun testo sotto i 12 px.
 - Le prove su GitHub (`prove.yml`) devono restare verdi.
+- **Il bilanciamento si misura su molte partite verosimili**, mai su una sola (5 novembre: «la combinazione che rende
+  più verosimile il fatto che ce la possano fare»; e «se così vincono sempre tutti, dove sta la sfida?»):
+  `collaudo/verosimili.py`, con la fuga giocata da principianti veri.
 
 ## Dove siamo (3 novembre 2026)
 
@@ -133,7 +135,14 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   nelle capsule; la riga dopo la prima eco delle voci a due strati. I percorsi del collaudo sono 16.
 - **Il diario di William è fatto** (5 novembre 2026, approvato): nel diario dell’app le pagine «Appunti» (venti
   appunti, la storia fin qui) e «In sospeso» (quello che lo blocca e le sue domande), scritte dal ponte
-  (`ponte.py`, `APPUNTI` e `SOSPESI`). Resta dell’F soltanto la taratura dell’aria (F1).
+  (`ponte.py`, `APPUNTI` e `SOSPESI`).
+- **La taratura dell’aria è fatta** (5 novembre 2026; documento 33, §12): tre partite da principiante scritte a mano
+  (`collaudo/principiante-*.txt`) e, dall’indicazione dell’autore («la combinazione che rende più verosimile il fatto
+  che ce la possano fare»), centinaia di partite verosimili per carattere (`collaudo/verosimili.py`, con
+  `collaudo/aria.py`), con la fuga giocata da principianti veri. I costi restano; l’avviso del Ponte scatta sotto il
+  55 (prima 45) e c’è un preavviso al 40%. L’autore: «Oggi, più avvisi». Più si ascolta, più si rischia: il curioso
+  torna in due partite su tre o quattro su cinque, chi vuole tutto in una su due o meno, chi ascolta poco quasi
+  sempre. Il blocco F è finito.
 - **La sessione** si è chiusa il 3 novembre 2026 con l’albero pulito e `main` uguale a `origin/main`.
 - **Il motore** è Favella1 1.6.1 (documento 29), pubblicata anche su GitHub, PyPI e favella.eu.
 - **La revisione totale** (documento 25): i 30 problemi (5 gravi, 10 medi, 15 lievi) sono tutti

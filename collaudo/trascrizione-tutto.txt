@@ -447,6 +447,7 @@ Una seconda fascia si accende sopra la prima. Sul visore la cifra scende di due 
 > aspetta
 Il tempo passa.
 La terza fascia. La luce ambrata sale quasi fino in cima, e la cifra scende ancora.
+39. Sotto la cifra si accende una riga che conosco dal manuale: SOTTO 30, PROTEZIONE VITALE. Ancora poco, e la tuta non mi lascerà più ascoltare né tradurre.
 
 > aspetta
 Il tempo passa.
@@ -666,6 +667,9 @@ Per un battito, qualcosa nelle pareti si accende tutto insieme e si rispegne. No
 Ripenso alla culla della rotta, i tre soli, e appoggio la mano sul pannello: premo tre punte. Un clic armonioso, e la porta tonda si apre con un movimento senza attrito su un buio pieno.
 
 > ovest
+Sul visore la tuta mi mette davanti un conto che non le ho chiesto: aria 49, e oltre quella porta, se c'è un ritorno, sarà lungo. Di là, chissà. (Se vuoi passare lo stesso, ripeti.)
+
+> ovest
 
 --- L'anticamera ---
 Il passaggio si stringe. Le pareti non fanno più luce: qui è tutto scuro, di un buio che assorbe invece di mancare. I miei passi non fanno rumore, e non so se è il pavimento o se ho smesso di farne io. Davanti, a ovest, una soglia aperta.
@@ -750,6 +754,7 @@ Nella cuffia torna la voce dei nomi, una parola dopo l'altra, senza fretta. È l
 Il vestibolo trema. A ovest la gola larga è crollata: dove c'era il passaggio per il corridoio c'è un tappo di materia schiacciata. A est la porta interna è aperta sulla camera; sotto, la gola di mezzo. Dalla nicchia il brusio sale, uguale a sempre.
 Puoi vedere qui: un risuonatore.
 Uscite: Est (La camera di compensazione), Giù (La gola di mezzo).
+Da qualche parte dietro di me qualcosa crolla, con un rumore che non arriva: lo sento nelle suole.
 Sotto di me, nella gola, la voce dei nomi tace a metà di un nome.
 28. La cifra è rossa. Adesso la tuta non mi protegge più da niente: mi tiene in vita, e basta.
 
@@ -776,7 +781,6 @@ Nella cuffia entra il canale della Santa Maria: il boccaporto è a pochi metri, 
 La stiva della Santa Maria, vuota, con la sua luce gialla di servizio.
 Puoi vedere qui: un kit.
 Uscite: Est (La plancia), Giù (La sala macchine), Fuori (Lo scafo).
-Da qualche parte dietro di me qualcosa crolla, con un rumore che non arriva: lo sento nelle suole.
 Il portello interno si chiude alle mie spalle. Mi strappo il casco prima che la pressione sia pareggiata, e l'aria della stiva mi arriva addosso fredda, tutta insieme, e sa di olio e di casa. Il pavimento si avvicina. Dormo.
 
 Mi sveglio in plancia, sulla mia poltrona. Non ricordo di esserci salito. Fuori dall'oblò non c'è niente: il radar batte il vuoto e ridà vuoto. I cavi degli arpioni risultano riavvolti, e non ricordo di averli mollati. Forse la massa nera è andata alla deriva. Forse non c'è mai stata, e un uomo solo, con poca aria e meno sonno, si è inventato una compagnia.
@@ -792,5 +796,5 @@ Registro di bordo, TSC-1972. Operatore W. T. Eriksonn. Rotta ripresa. Carico: ne
 (La partita è finita. Scrivi ANNULLA per tornare indietro di un turno, RICOMINCIA per ripartire da capo, CARICA per riprendere un salvataggio o FINE per uscire.)
 
 ============================================================
-Stato: vinta · stanza: stiva · comandi: 155 · eccezioni del motore: 0
+Stato: vinta · stanza: stiva · comandi: 156 · eccezioni del motore: 0
 Contatori: aria=20, chiavi=3, echi=14, risonanze=7, risveglio=3, rotazione=2, taglio=0, tracce=5, traduzione=100

@@ -531,7 +531,11 @@ Si riempie in sessione, punto per punto. «—» vuol dire da discutere.
   e l’F1 (la taratura).
 - **F7, il diario di William, scritto il 5 novembre 2026.** Due pagine nuove nel diario dell’app, «Appunti» e «In
   sospeso», scritte dal ponte (`app/src/motore/ponte.py`, `APPUNTI` e `SOSPESI`: venti appunti e quattordici cose
-  in sospeso, con le righe del D3 e dell’F6; quella dell’F2 è l’appunto «matrice»). Resta l’F1.
+  in sospeso, con le righe del D3 e dell’F6; quella dell’F2 è l’appunto «matrice»).
+- **F1, la taratura dell’aria, fatta il 5 novembre 2026** (§12). Misurata su centinaia di partite verosimili per
+  carattere, con la fuga giocata da principianti veri. I costi restano quelli di oggi; cambiano due avvisi: quello
+  del Ponte scatta sotto il 55 (prima 45, `ponte.fav`) e c’è un preavviso al 40%, una volta sola (`aria.fav`).
+  L’autore: «Oggi, più avvisi». Il blocco F è finito.
 
 ## 10. Il calendario proposto
 
@@ -601,3 +605,78 @@ non la contraddice.
   dice due: si corregge con la branda (`santamaria.fav` 44, «due poltrone, e ne uso una»; 45, «la sua poltrona
   consumata e quella intatta»), insieme alle trascrizioni del collaudo che le citano. Proposto il 4 novembre 2026
   con la branda; l’autore non ha obiettato.
+
+## 12. La taratura dell’aria (RN-F1)
+
+Fatta il 5 novembre 2026, a tavolino, sul gioco già riscritto (blocchi dalla A alla F). Decisione dell’autore:
+«Oggi, più avvisi».
+
+### Il metodo
+
+- **Tre partite da principiante**, scritte a mano: `collaudo/principiante-curioso.txt` (apre e ascolta tutto, sbaglia
+  come chi arriva nuovo: le venature, l’arnese, il faro acceso fra le teche), `principiante-frettoloso.txt` (va
+  dritto, ascolta una voce sola, all’archivio usa la taglierina) e `principiante-sperduto.txt` (sbaglia strada,
+  paga il pannello con la tuta, traduce prima del tempo, ascolta quello che gli capita). Dicono che cosa vuole fare
+  chi gioca, non come gestisce l’aria: la cella e la ricarica le usa da sé `collaudo/aria.py`, come un principiante
+  (la cella appena scatta la protezione vitale, poi la ricarica al generatore; all’avviso del Ponte va a ricaricare,
+  se può, e passa; nella fuga, se il groviglio lo prende, si strappa via; sotto il 20, se ha ancora la cella, la
+  usa). `aria.py` misura l’aria passo per passo.
+- **Tre partite sono tre esempi.** Tarare i numeri su di loro, fino al punto esatto, li cuce addosso a tre
+  percorsi. L’autore: «non dobbiamo trovare la combinazione per far vincere i giocatori ma la combinazione che rende
+  più verosimile il fatto che ce la possano fare. Si tratta di bilanciamento». Così `collaudo/verosimili.py`
+  ricava dalle tre partite centinaia di partite diverse per sei caratteri: ogni voce, traduzione ed errore si fa
+  oppure no, con le probabilità del carattere (scritte nel file); il curioso, chi vuole tutto, il medio e il
+  maldestro partono dalla partita del curioso, lo sperduto e il frettoloso dalla loro.
+- **La fuga decide quasi tutto.** Ogni turno costa 4, anche guardarsi intorno o esaminare (le uscite sbagliate no).
+  Le prime misure davano una fuga perfetta, e tornavano tutti; l’autore: «ma se così vincono sempre tutti, dove sta
+  la sfida?». Nella fuga un principiante esita, guarda, entra nel vivaio e torna, a volte ignora l’avviso del Ponte:
+  quanto, non si sa. Si misura con due livelli di errore, a metà e pieno (`--fuga 0.5` e `--fuga 1`).
+
+### Le misure
+
+Trecento partite per carattere; quanti tornano vivi, con gli errori nella fuga a metà e pieni.
+
+| Carattere | Oggi | Con i due avvisi | «La prima nota» |
+|---|---|---|---|
+| curioso | 79% e 63% | 79% e 63% | 55% e 44% |
+| vuole tutto | 62% e 34% | 62% e 34% | 62% e 34% |
+| medio | 100% e 98% | 100% e 99% | 3% |
+| maldestro | 82% e 60% | 83% e 61% | 24% e 16% |
+| sperduto | 75% e 46% | 86% e 65% | 0% |
+| frettoloso | 100% | 100% | 0% |
+
+Il preavviso non cambia i numeri: informa chi gioca, e le partite simulate non leggono il testo.
+
+Il curioso arriva alla Grande Porta con le tre chiavi sopra il 30% in tre partite su quattro (73%); passa per la
+protezione vitale quasi sempre (99%). È la forma voluta: più si ascolta, più si rischia, e si muore come L.V.,
+perché si è rimasti troppo; chi ascolta poco torna quasi sempre, ma quasi mai con «La prima nota»: la sua sfida non
+è sopravvivere, è capire. «Ascoltare tutto non si può» regge: chi ci prova torna in una partita su due, o meno.
+
+**Le morti ingiuste.** Con l’avviso del Ponte sotto il 45 si poteva uscire dal Ponte col 45% e morire sullo scafo a
+un passo dal boccaporto, senza un avviso: una fuga con due esitazioni o con il groviglio costa di più. Sotto il 55
+l’avviso arriva a tutti quelli che rischiano; chi ha ancora la cella o la ricarica si salva (gli sperduti vivi
+salgono di venti punti), chi ha già speso tutto lo sa. Per chi ascolta molto l’avviso del Ponte arriva tardi: per
+questo il preavviso al 40%, prima di aver speso tutto.
+
+### Che cosa si è scartato
+
+- **La prima voce di ogni eco a 3 invece di 4**, con l’avviso a 55 (e il risuonatore nella fuga a 6, perché
+  «limite I3» muoia ancora): tornano quasi tutti, il curioso nell’88–95% delle partite, chi vuole tutto
+  nell’81–98%. Sparisce la sfida, e «ascoltare tutto» torna possibile.
+- **La fuga a 6 per turno**: muore un curioso e un medio su cinque anche senza errori nella fuga.
+- **La cella a 30 o 35 e la ricarica a 15**: spostano aria fra prima e dopo la porta, non servono.
+
+### La decisione
+
+I costi restano quelli di oggi. Due avvisi:
+
+1. **L’avviso del Ponte** (`ponte.fav`, prima della porta tonda) scatta sotto il 55 invece che sotto il 45. Il testo
+   non cambia.
+2. **Il preavviso** (`aria.fav`, stato nuovo «preavviso»): al 40%, prima della fuga e una volta sola, «[aria]. Sotto
+   la cifra si accende una riga che conosco dal manuale: SOTTO 30, PROTEZIONE VITALE. Ancora poco, e la tuta non mi
+   lascerà più ascoltare né tradurre.». Nell’app «SOTTO 30,» è una scritta dello schermo (`app/src/gioco/lamina/grammatica.ts`).
+
+Nel collaudo `tutto.txt` passa l’avviso del Ponte (un «ovest» in più) e controlla che i due avvisi compaiano.
+**Per il blocco H:** il preavviso potrebbe avere un suo suono, come l’ambra (bibbia sonora, §4.4). Gli strumenti
+restano pronti per ogni ritocco: dopo il blocco G si rigioca `python collaudo/verosimili.py relitto-silente/relitto.fav
+--fuga 0.5` e `--fuga 1`, e i numeri devono restare quelli della tabella.

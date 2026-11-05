@@ -151,6 +151,8 @@ const SEGNI: { re: RegExp; tipo: TipoSegmento }[] = [
   { re: /QUI PRIMA\. IL SEME\. NON SIAMO S—/g, tipo: "graffio" },
   { re: /(?<=: )OLI(?=\.)/g, tipo: "graffio" },
   { re: /TSC-1972|\bTSC\b|AURORA-7/g, tipo: "stampo" },
+  // Il preavviso al 40% (aria.fav, RN-F1): «SOTTO 30, PROTEZIONE VITALE», la soglia sullo schermo.
+  { re: /SOTTO 30,(?= PROTEZIONE VITALE)/g, tipo: "schermo" },
   { re: /PROTEZIONE VITALE/g, tipo: "protezione" },
   { re: /MATERIALE NON IN ARCHIVIO|CHIUSURA RIFIUTATA|CANALE APERTO DA REMOTO|DECODIFICA COMPLETATA/g, tipo: "schermo" },
   {

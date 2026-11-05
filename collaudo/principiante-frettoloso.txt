@@ -1,0 +1,108 @@
+# Partita da principiante: IL FRETTOLOSO (revisione narrativa, RN-F1).
+# Non conosce il gioco e va dritto: prende quello che vede, non chiama Yusuf,
+# non scende in sala macchine, prova il Sintonizzatore una volta sola e poi lo
+# tiene in tasca. All'archivio usa la taglierina, senza aspettare. Scende fra le
+# teche soltanto quando gli serve la chiave, e nella fuga, se il groviglio lo prende,
+# si strappa via (lo fa aria.py da sé).
+# La misura dice quanta aria avanza a chi ascolta poco.
+#   python collaudo/aria.py relitto-silente/relitto.fav collaudo/principiante-frettoloso.txt --passi
+
+# --- Atto I ---
+analizza la nave aliena
+accosta
+spara gli arpioni
+ovest
+prendi la tuta
+indossa la tuta
+apri il kit
+prendi la taglierina
+prendi la batteria
+prendi la cella di riserva
+fuori
+
+# --- Atto II ---
+giù
+analizza lo scafo nero
+usa la taglierina sulla giuntura
+giù
+usa la batteria sul pannello
+apri la porta interna
+ovest
+ovest
+
+# --- Atto III, dritto ---
+esamina la grande porta
+sud
+prendi il seme
+ovest
+prendi il cristallo
+prendi il dispositivo medico
+usa il dispositivo medico sul cristallo
+est
+nord
+giù
+prendi il sintonizzatore
+sintonizza il generatore
+usa il cristallo sul generatore
+su
+nord
+ovest
+prendi il disco
+nord
+usa la taglierina sul terminale
+prendi il nucleo
+sud
+est
+usa il disco sull'altare
+gira il disco
+usa il disco sull'altare
+gira il disco
+usa il disco sull'altare
+prendi la stele
+sud
+nordest
+prendi il cilindro mnemonico
+sudovest
+est
+giù
+giù
+ovest
+prendi la tavoletta
+est
+su
+su
+ovest
+sud
+usa la tavoletta sulla teca
+prendi il seme
+nord
+
+# --- La Grande Porta ---
+usa il seme sulla grande porta
+usa la stele sulla grande porta
+usa il nucleo sulla grande porta
+ovest
+usa la postazione
+analizza la mappa stellare
+tocca le punte
+ovest
+ovest
+
+# --- Atto IV ---
+parla con l'anziano
+Chi eravate?
+E io che c'entro?
+[Guarda la cifra dell'aria.]
+[Chiudi gli occhi e lascia andare.]
+[Resta.]
+[Apri gli occhi.]
+
+# --- Atto V ---
+prendi il seme
+giù
+ovest
+su
+su
+est
+su
+dentro

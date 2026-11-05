@@ -95,7 +95,9 @@ Invece di premi le punte: dire "Ripenso alla culla della rotta, i tre soli, e ap
 
 # --- Gating e l'ultimo avviso -------------------------------------------------
 Invece di vai ovest se il giocatore è nel ponte di comando e la porta circolare è chiusa: dire "La porta tonda è chiusa. Prima va sbloccato il suo meccanismo.".
-Invece di vai ovest se il giocatore è nel ponte di comando e l'aria è meno di 45 e l'avviso è pendente: dire "Sul visore la tuta mi mette davanti un conto che non le ho chiesto: aria [aria], e oltre quella porta, se c'è un ritorno, sarà lungo.[se la ricarica è disponibile] Il generatore, con la sua presa, è di qua.[fine][se il giocatore ha la cella di riserva] La cella di riserva ce l'ho ancora.[fine] Di là, chissà. (Se vuoi passare lo stesso, ripeti.)" e adesso l'avviso è dato.
+# Sotto 55 (RN-F1, 5 novembre 2026; prima 45): una fuga con qualche esitazione costa
+# più di 45, e nessuno deve morire sullo scafo senza essere stato avvisato.
+Invece di vai ovest se il giocatore è nel ponte di comando e l'aria è meno di 55 e l'avviso è pendente: dire "Sul visore la tuta mi mette davanti un conto che non le ho chiesto: aria [aria], e oltre quella porta, se c'è un ritorno, sarà lungo.[se la ricarica è disponibile] Il generatore, con la sua presa, è di qua.[fine][se il giocatore ha la cella di riserva] La cella di riserva ce l'ho ancora.[fine] Di là, chissà. (Se vuoi passare lo stesso, ripeti.)" e adesso l'avviso è dato.
 
 # ============================================================================
 # ANTICAMERA [!]

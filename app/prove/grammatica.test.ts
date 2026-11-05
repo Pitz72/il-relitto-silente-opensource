@@ -111,6 +111,7 @@ test("i segni dentro la prosa: protezione, schermo, matrice, intraducibile, stam
   const tipi = (s: string) => segmenta(s).filter((x) => x.tipo !== "testo").map((x) => [x.tipo, dritto(x.testo)]);
   assert.deepEqual(tipi("sul visore compare la scritta PROTEZIONE VITALE. Niente ascolto."), [["protezione", "PROTEZIONE VITALE"]]);
   assert.deepEqual(tipi("una riga: CHIUSURA RIFIUTATA. CANALE APERTO DA REMOTO."), [["schermo", "CHIUSURA RIFIUTATA"], ["schermo", "CANALE APERTO DA REMOTO"]]);
+  assert.deepEqual(tipi("conosco dal manuale: SOTTO 30, PROTEZIONE VITALE. Ancora poco"), [["schermo", "SOTTO 30,"], ["protezione", "PROTEZIONE VITALE"]]);
   assert.deepEqual(tipi("«…nuove stelle…» (Matrice di traduzione: 4%)"), [["matrice", "(Matrice di traduzione: 4%)"]]);
   assert.deepEqual(tipi("(MATRICE DI TRADUZIONE: 100% — DECODIFICA COMPLETATA) Per un momento"), [["matrice", "(MATRICE DI TRADUZIONE: 100% — DECODIFICA COMPLETATA)"]]);
   assert.deepEqual(tipi("questo (intraducibile: seme-dell'anima) perché"), [["intraducibile", "(intraducibile: seme-dell'anima)"]]);

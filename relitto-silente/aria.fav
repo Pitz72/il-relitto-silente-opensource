@@ -19,8 +19,13 @@
 # tiene il faro al minimo (santamaria.fav) e non cede corrente alle venature
 # del vestibolo (ingresso.fav). Il risuonatore invece beve sempre.
 # Si muore solo nella fuga o portando il risuonatore (finali.fav).
+# Il preavviso: al 40, una volta sola, la tuta annuncia la protezione vitale
+# (revisione narrativa, RN-F1).
 # Valori tarati nello strato 5 con i percorsi di collaudo (collaudo/): vedi
-# progettazione/03-strati-3-5.md.
+# progettazione/03-strati-3-5.md. Riprovati a tavolino il 5 novembre 2026 con
+# le partite verosimili (collaudo/verosimili.py; documento 33, RN-F1): i costi
+# restano questi, cambiano soltanto gli avvisi (il preavviso qui, quello del
+# Ponte in ponte.fav).
 # Incluso da relitto.fav per penultimo, prima di finali.fav: i consumi e le
 # soglie devono vedere quello che gli altri moduli tolgono nello stesso turno
 # (il groviglio, il primo contatto, la connessione).
@@ -29,6 +34,9 @@
 L'aria è un contatore.
 L'aria parte da 100.
 L'aria resta sempre fra 0 e 100.
+
+Il preavviso è uno stato.
+Il preavviso è nuovo.
 
 # --- Il visore: la cifra sotto gli occhi ------------------------------------
 # Arriva con la tuta (santamaria.fav, «indossa la tuta»).
@@ -51,6 +59,8 @@ Ogni turno se la fuga è iniziata e il giocatore non è nella stiva: diminuisci 
 
 # --- Le soglie: ogni passaggio si annuncia ----------------------------------
 Quando l'aria è al massimo 60 diventa vera: dire "Sul bordo del visore la cifra passa all'ambra: [aria].".
+# Il preavviso (RN-F1): chi ascolta molto deve saperlo prima di aver speso tutto.
+Quando l'aria è al massimo 40 e la fuga è lontana e il preavviso è nuovo diventa vera: dire "[aria]. Sotto la cifra si accende una riga che conosco dal manuale: SOTTO 30, PROTEZIONE VITALE. Ancora poco, e la tuta non mi lascerà più ascoltare né tradurre." e adesso il preavviso è dato.
 # La protezione vitale (sotto 30, prima della fuga) chiude anche il faro: al
 # minimo il groviglio delle teche non trova più niente da cercare, e prima
 # della fuga non si muore se non portando il risuonatore (decisione D6).

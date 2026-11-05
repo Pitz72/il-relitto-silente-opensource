@@ -9,6 +9,8 @@
 # atteso: tracce = 5
 # atteso: traduzione = 100
 # atteso: aria > 0
+# atteso: compare «SOTTO 30, PROTEZIONE VITALE»
+# atteso: compare «un conto che non le ho chiesto»
 
 # --- Atto I ---
 analizza la nave aliena
@@ -167,6 +169,8 @@ esamina il visore
 
 # --- Atto IV ---
 tocca le punte
+# l'avviso del Ponte (sotto 55): si passa lo stesso
+ovest
 ovest
 ovest
 traduci il sostegno

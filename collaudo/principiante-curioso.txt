@@ -1,0 +1,228 @@
+# Partita da principiante: IL CURIOSO (revisione narrativa, RN-F1).
+# Non conosce il gioco. Apre tutto, legge tutto, segue ogni invito fra parentesi
+# e ascolta ogni voce appena può: riprova il Sintonizzatore quando William dice
+# che «resta agganciato», risponde subito all'eco della culla, ritraduce quando
+# la matrice sale. Sbaglia come sbaglia chi arriva nuovo: tocca le venature,
+# allunga la mano sull'arnese, scende fra le teche con il faro acceso. La cella
+# la usa appena la tuta va in protezione vitale (lo fa aria.py da sé), e
+# senza cella va a ricaricare al generatore; all'avviso del Ponte ricarica, poi passa.
+# La regola del registro: alla Grande Porta con le tre chiavi sopra il 30%.
+#   python collaudo/aria.py relitto-silente/relitto.fav collaudo/principiante-curioso.txt --passi
+
+# --- Atto I: la Santa Maria, guardata tutta ---
+esamina l'oblò principale
+esamina il quadrante del margine
+analizza la nave aliena
+accosta
+spara gli arpioni
+parla con yusuf
+Ho trovato una cosa.
+E se dentro c'è qualcuno?
+Te lo porto.
+nord
+esamina l'armadietto
+leggi il registro
+prendi la chiavetta
+sud
+ovest
+esamina il lettore
+prendi la tuta
+indossa la tuta
+esamina il visore
+apri il kit
+prendi la taglierina
+prendi la batteria
+prendi la cella di riserva
+giù
+ascolta il reattore
+apri la cassetta
+prendi il bengala
+su
+fuori
+
+# --- Atto II: lo scafo e la camera ---
+analizza lo scafo nero
+analizza la giuntura
+usa la taglierina sulla giuntura
+giù
+esamina l'incisione
+esamina il pannello
+usa la batteria sul pannello
+apri la porta interna
+ovest
+
+# --- Il vestibolo: tocca tutto ---
+esamina il risuonatore
+tocca le venature
+prendi il risuonatore
+esamina la nicchia
+esamina le gole
+
+# --- Giù dove il brusio è più forte, con il faro acceso ---
+giù
+tocca le venature
+giù
+esamina il groviglio
+abbassa il faro
+giù
+esamina il cavo spezzato
+ovest
+tocca le teche chiuse
+ovest
+prendi la tavoletta
+esamina il germinatoio
+traduci le tabelle di semina
+est
+segui la parete
+su
+su
+alza il faro
+
+# --- Il corridoio ---
+ovest
+analizza le tacche
+analizza la lastra dati
+esamina la grande porta
+
+# --- La serra: l'uomo, la scatola nera, la teca ---
+sud
+esamina l'uomo
+esamina la placca
+completa la parola
+esamina la scatola nera
+ascolta la scatola nera
+usa la tavoletta sulla teca
+prendi il seme
+ovest
+esamina le capsule
+prendi il dispositivo medico
+prendi il cristallo
+usa il dispositivo medico sul cristallo
+est
+nord
+
+# --- Il laboratorio: il Sintonizzatore, e subito tutte le voci ---
+giù
+prendi il sintonizzatore
+esamina il sintonizzatore
+sintonizza il generatore
+sintonizza il generatore
+analizza il banco
+usa il cristallo sul generatore
+esamina il generatore
+su
+sintonizza le pareti del corridoio
+sud
+sintonizza le piante
+sintonizza le piante
+ovest
+sintonizza le capsule
+est
+nord
+est
+sintonizza le gole
+giù
+giù
+su
+su
+ovest
+
+# --- L'equipaggio ---
+nordest
+prendi il cilindro mnemonico
+analizza il cilindro mnemonico
+sintonizza le alcove
+sintonizza le alcove
+nord
+sintonizza la culla
+parla con l'eco
+Non lo so.
+Lascia stare.
+esamina il visore
+suona il sonaglio
+sud
+sudovest
+
+# --- La memoria ---
+nord
+sintonizza il bassorilievo
+sintonizza il bassorilievo
+traduci il bassorilievo
+esamina l'altare
+ovest
+prendi il disco
+sintonizza il globo olografico
+traduci il globo olografico
+traduci la lastra incisa
+sintonizza la lastra incisa
+nord
+esamina il pilastro
+aspetta
+aspetta
+aspetta
+prendi il nucleo
+analizza il nucleo
+sud
+traduci il globo olografico
+traduci la lastra incisa
+est
+usa il disco sull'altare
+gira il disco
+usa il disco sull'altare
+gira il disco
+usa il disco sull'altare
+prendi la stele
+analizza la stele
+sintonizza il bassorilievo
+traduci il bassorilievo
+sud
+
+# --- Alla Grande Porta con le tre chiavi ---
+esamina la grande porta
+usa il seme sulla grande porta
+usa la stele sulla grande porta
+usa il nucleo sulla grande porta
+
+# --- Il diario dice che sotto l'ingegnere c'è un'altra voce ---
+giù
+sintonizza il generatore
+sintonizza il generatore
+su
+
+# --- E sotto il Custode, dice il diario, ce n'è un'altra ---
+nord
+sintonizza il bassorilievo
+sud
+
+# --- Il Ponte ---
+ovest
+usa la postazione
+analizza la mappa stellare
+sintonizza la struttura centrale
+traduci la mappa stellare
+esamina le punte
+tocca le punte
+ovest
+ovest
+
+# --- Atto IV ---
+traduci il sostegno
+parla con l'anziano
+Chi eravate?
+Perché la nave si è fermata?
+E io che c'entro?
+[Accendi il Sintonizzatore.]
+[Guarda la cifra dell'aria.]
+[Chiudi gli occhi e lascia andare.]
+[Resta.]
+[Apri gli occhi.]
+
+# --- Atto V ---
+prendi il seme
+giù
+ovest
+su
+su
+est
+su
+dentro
