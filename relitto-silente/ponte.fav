@@ -168,7 +168,7 @@ L'anziano al nodo "aiuto" dice "«No. Potevamo solo ascoltarlo. È quello che ab
 Al nodo "aiuto" l'opzione "E io che c'entro?" conduce al nodo "sangue".
 Al nodo "aiuto" l'opzione "Gli ho lasciato un segno." se il segno non è assente conduce al nodo "tracce".
 
-L'anziano al nodo "prezzo" dice "«Lo so.» (Nella voce non c'è rimprovero.) «Tutti quelli che arrivano vengono a prendere. Qualcuno resta ad ascoltare. Tu sei ancora qui.»".
+L'anziano al nodo "prezzo" dice "«Lo so.» (Nella voce non c'è rimprovero.) «Tu sei ancora qui.»".
 Al nodo "prezzo" l'opzione "Mi serve per vivere." conduce al nodo "sangue" e adesso l'onestà è detta.
 Al nodo "prezzo" l'opzione "Non più." conduce al nodo "sangue" e adesso l'onestà è detta e adesso la promessa è nessuna.
 
@@ -178,14 +178,14 @@ L'anziano al nodo "piccolo" dice "«Era l'unico nato durante il viaggio. Non vid
 L'anziano al nodo "piccolo" dice "«Era l'unico nato durante il viaggio. Non vide mai i tre soli: disegnava quello verso cui andavamo. Quando la nave si fermò, chiese perché.» (Una pausa.) «Hai ascoltato senza rispondere, fino alla fine. Hai sentito anche cosa gli dicemmo noi: domani. È quello che facemmo, per tutto il tempo che restava.»" se la risposta è taciuta.
 Al nodo "piccolo" l'opzione "E io che c'entro?" conduce al nodo "sangue".
 
-L'anziano al nodo "sangue" dice "«Forse sei tu, quella musica nuova. Ci piacerebbe crederlo: che nel tuo sangue ci sia il fantasma dei nostri tre soli, che siamo stati la prima nota di qualcosa. Abbiamo seminato in un mondo scelto perché la vita ci attecchisse, molto prima che tu nascessi. Se abbia attecchito, da qui non potevamo saperlo. Non lo sappiamo nemmeno adesso, che sei qui.» (Una pausa.) «Ma tu sei qui.»".
+L'anziano al nodo "sangue" dice "«Abbiamo seminato in un mondo scelto perché la vita ci attecchisse. Se abbia attecchito, da qui non potevamo saperlo. Non lo sappiamo nemmeno adesso, che sei qui.» (Una pausa.) «Ma tu sei qui.»".
 Al nodo "sangue" l'opzione "Ho lasciato dei segni, là dietro." se le tacche è segnata oppure il bassorilievo è segnata oppure le capsule è segnata oppure il segno non è assente conduce al nodo "tracce".
 Al nodo "sangue" l'opzione "E la musica?" se le risonanze è almeno 4 conduce al nodo "musica".
 Al nodo "sangue" l'opzione "Allora cosa devo fare?" conduce al nodo "congedo".
 
-L'anziano al nodo "tracce" dice "«Lo so. Ho sentito la tua mano sulla pietra, goffa accanto alla nostra. Non cambierà niente: forse diventeranno polvere insieme alla nave. Ma li hai fatti lo stesso, per la stessa ragione per cui qualcuno, prima di te, incise tre tacche in una parete che nessuno avrebbe più letto. Perché essere passati conta, anche quando non guarda nessuno.»".
-L'anziano al nodo "tracce" dice "«Lo so. Hai firmato accanto a lui, sulla sua placca: adesso lì non c'è più un uomo solo. Non cambierà niente, forse. Ma l'hai fatto per la stessa ragione per cui lui incise tre tacche in una parete che nessuno avrebbe più letto. Perché essere passati conta, anche quando non guarda nessuno.»" se il segno è firma.
-L'anziano al nodo "tracce" dice "«Lo so. Hai finito la sua frase: aveva ragione, e adesso è scritto. Non cambierà niente, forse. Ma l'hai fatto per la stessa ragione per cui lui incise tre tacche in una parete che nessuno avrebbe più letto. Perché essere passati conta, anche quando non guarda nessuno.»" se il segno è parola.
+L'anziano al nodo "tracce" dice "«Lo so. Ho sentito la tua mano sulla pietra, goffa accanto alla nostra. Non cambierà niente: forse diventeranno polvere insieme alla nave. Ma li hai fatti lo stesso, per la stessa ragione per cui qualcuno, prima di te, incise tre tacche in una parete che nessuno avrebbe più letto.»".
+L'anziano al nodo "tracce" dice "«Lo so. Hai firmato accanto a lui, sulla sua placca: adesso lì non c'è più un uomo solo. Non cambierà niente, forse. Ma l'hai fatto per la stessa ragione per cui lui incise tre tacche in una parete che nessuno avrebbe più letto.»" se il segno è firma.
+L'anziano al nodo "tracce" dice "«Lo so. Hai finito la sua frase: aveva ragione, e adesso è scritto. Non cambierà niente, forse. Ma l'hai fatto per la stessa ragione per cui lui incise tre tacche in una parete che nessuno avrebbe più letto.»" se il segno è parola.
 Al nodo "tracce" l'opzione "E la musica?" se le risonanze è almeno 4 conduce al nodo "musica".
 Al nodo "tracce" l'opzione "Allora cosa devo fare?" conduce al nodo "congedo".
 

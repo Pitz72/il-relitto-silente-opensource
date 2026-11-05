@@ -12,6 +12,8 @@ documenti di `progettazione/`.
 
 - **L’Anziano parla.** La prima volta che lo incontri, prima delle parole, si sente il suo canto, la sua lingua; poi la sua voce, profonda e vicina, come dentro la testa. Per ora parla con la voce in tre momenti: il benvenuto, il Piccolo e il congedo; le altre sue parole restano scritte.
 - **La musica dell’Anziano è più bassa**, e sempre uguale anche mentre parla.
+- **La Santa Maria è com’è nei racconti:** in plancia c’è una poltrona sola, in cuccetta una branda sola.
+- **Il gioco dice meno ad alta voce.** William non si chiama più «un testimone», e l’Anziano non fa più la morale: del senso del viaggio resta una frase sola, la sua.
 
 ### Aggiunto
 
@@ -19,6 +21,7 @@ documenti di `progettazione/`.
 
 ### Cambiato
 
+- **La revisione narrativa, blocco A: le fondamenta** (decisioni dell’autore del 4 novembre 2026; documento 33, §9 e §11). La cronologia privata non si dice mai, ma il testo non la contraddice più: i «secoli» diventano un tempo senza misura («sistemi spenti da sempre», i macchinari che «si svegliano», il groviglio «cresciuto su se stesso per un tempo che lo scanner non sa datare», che preme verso il germinatoio «chissà da quanto»); il quinto, nel corridoio (`echi.fav` 41), si riscrive con il blocco B. La semina resta un dubbio: dall’Anziano (nodo «sangue») via «quella musica nuova», «nel tuo sangue», «la prima nota» e «molto prima che tu nascessi»; restano il seminare, il non saperlo e «Ma tu sei qui». Della morale detta resta soltanto «Restare è già una risposta. Pochi la danno.»: via «Non sono più uno scopritore. Sono un testimone.» alla matrice completa (il momento resta: «Per un momento leggo i loro glifi senza più accorgermi che sono glifi.»), via la massima del nodo «prezzo» («Tutti quelli che arrivano vengono a prendere. Qualcuno resta ad ascoltare.») e la chiusa del nodo «tracce» («Perché essere passati conta, anche quando non guarda nessuno.»). La Santa Maria come nei racconti e nelle immagini: una poltrona sola in plancia, una branda sola in cuccetta (via la branda di sopra, «omologata per un equipaggio di quattro» e «Yusuf la chiama incoscienza»); cambiano anche il percorso `prova-atti-I-II.txt`, le trascrizioni e la provenienza dell’immagine della cuccetta nei riconoscimenti. Le tre battute con la voce dell’Anziano non cambiano. Cambia l’impronta della storia: i salvataggi di prima si caricano «ricostruita», con l’avviso.
 - **La musica dell’Anziano, 5 dB più giù e fissa** (l’autore, 2 novembre 2026: «preferisco che abbassi un po’ la musica e che togli il ducking che fa troppo radio»): i letti da file a −5 dB, la musica sintetizzata di ripiego da +3 a −2 dB; nessun abbassamento sotto la voce.
 - **La dichiarazione d’apertura e i titoli di coda** dicono anche ElevenLabs: «La musica è stata generata con l’intelligenza artificiale (Lyria 3.5 di Google, Suno ed ElevenLabs), scelta e diretta dall’autore; […] La voce di L.V. è stata generata con la sintesi vocale di Google, quella dell’Anziano con ElevenLabs; ogni altro suono del gioco è sintetizzato dal suo motore audio.»
 

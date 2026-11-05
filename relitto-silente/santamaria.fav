@@ -41,8 +41,8 @@ Pieno e basso sono opposte.
 # PLANCIA
 # ============================================================================
 La plancia è una stanza.
-La descrizione della plancia è "La plancia della Santa Maria: due poltrone, e ne uso una; schermi che conosco a memoria; sotto il pavimento, il lamento basso del reattore. Sul quadrante del margine la lancetta sta dove ho imparato a non guardarla. Nell'oblò, contro le stelle, c'è una sagoma nera che non ne lascia passare nessuna. Il radar la segnala da un'ora e non sa dirmi cosa sia: per saperlo mi servirebbe una scansione lunga. A ovest si va in stiva; a nord, la cuccetta.".
-La descrizione della plancia se l'aggancio è fatto è "La plancia, con la sua poltrona consumata e quella intatta. Gli arpioni tengono: la Santa Maria e la massa nera adesso sono una cosa sola, e ogni minuto così costa reattore. Nell'oblò c'è soltanto nero. Dalla radio, ogni tanto, un fruscio che non è statica. A ovest si va in stiva; a nord, la cuccetta.".
+La descrizione della plancia è "La plancia della Santa Maria: una poltrona sola, la mia; schermi che conosco a memoria; sotto il pavimento, il lamento basso del reattore. Sul quadrante del margine la lancetta sta dove ho imparato a non guardarla. Nell'oblò, contro le stelle, c'è una sagoma nera che non ne lascia passare nessuna. Il radar la segnala da un'ora e non sa dirmi cosa sia: per saperlo mi servirebbe una scansione lunga. A ovest si va in stiva; a nord, la cuccetta.".
+La descrizione della plancia se l'aggancio è fatto è "La plancia, con la mia poltrona consumata. Gli arpioni tengono: la Santa Maria e la massa nera adesso sono una cosa sola, e ogni minuto così costa reattore. Nell'oblò c'è soltanto nero. Dalla radio, ogni tanto, un fruscio che non è statica. A ovest si va in stiva; a nord, la cuccetta.".
 La descrizione della plancia se l'aggancio è accostato è "La massa nera riempie l'oblò da un bordo all'altro, a cinquanta metri dalla prua. Niente saldature, niente portelli, niente luci, eppure ha una forma troppo pulita per essere un sasso. Il reattore tiene il minimo, e sul quadrante del margine la lancetta scende di un pelo. A ovest si va in stiva; a nord, la cuccetta.".
 La descrizione della plancia se la scansione è completa è "La plancia della Santa Maria. Sullo schermo grande la scansione lunga è ancora aperta, ferma sulla sua ultima riga: materiale non in archivio. Nell'oblò la sagoma nera non si è mossa di un metro, e il radar ci batte contro e torna corto, con un'eco che non somiglia a niente di metallico. A ovest si va in stiva; a nord, la cuccetta.".
 
@@ -171,16 +171,15 @@ Al nodo "voce" l'opzione "Chiudi la comunicazione." chiude il dialogo.
 # CUCCETTA
 # ============================================================================
 La cuccetta è una stanza.
-La descrizione della cuccetta è "La cuccetta è poco più di un corridoio: due brande una sopra l'altra, un armadietto, un oblò grande quanto una mano. Dormo in quella di sotto. Quella di sopra è rifatta, le coperte tese, e non ci ha mai dormito nessuno. A sud si torna in plancia.".
+La descrizione della cuccetta è "La cuccetta è poco più di un corridoio: una branda con i cassetti sotto, una lampada da lettura, un armadietto, un oblò grande quanto una mano. A sud si torna in plancia.".
 
-La branda di sopra è una cosa.
-La branda di sopra è nella cuccetta.
-La branda di sopra è di scena.
-La branda di sopra si chiama anche "brande".
-La branda di sopra si chiama anche "branda".
-La branda di sopra si chiama anche "letto".
-La branda di sopra si chiama anche "coperte".
-La descrizione della branda di sopra è "La rifaccio ogni mese, anche se nessuno la disfa. La Santa Maria è omologata per un equipaggio di quattro: le brande ci sono, gli altri no. Yusuf la chiama incoscienza. Io non la chiamo.".
+La branda è una cosa.
+La branda è nella cuccetta.
+La branda è di scena.
+La branda si chiama anche "letto".
+La branda si chiama anche "coperta".
+La branda si chiama anche "coperte".
+La descrizione della branda è "La mia branda, stretta, con i cassetti sotto. La coperta è tirata su alla meglio: tanto non la vede nessuno.".
 
 L'armadietto è una cosa.
 L'armadietto è nella cuccetta.

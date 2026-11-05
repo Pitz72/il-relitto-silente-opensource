@@ -492,6 +492,15 @@ Si riempie in sessione, punto per punto. «—» vuol dire da discutere.
 | RN-G6 | i motivi ripetuti | contati e decisi | — |
 | RN-H | le dipendenze | dopo le decisioni | — |
 
+**La scrittura**, blocco per blocco (§10, punto 4):
+
+- **Blocco A, scritto il 5 novembre 2026.** I quattro «secoli» di `relitto.fav` 184, `tecnica.fav` 46, `vita.fav`
+  235 e 304; il nodo «sangue» (`ponte.fav` 181, anche senza «molto prima che tu nascessi»); «Sono un testimone»
+  (`relitto.fav` 185); i nodi «prezzo» (171) e «tracce» (186–188); la poltrona e la branda (`santamaria.fav` 44,
+  45, 174, la branda), con il percorso `prova-atti-I-II.txt`, le trascrizioni e la provenienza dell’immagine. Il
+  quinto «secoli» (`echi.fav` 41) si riscrive con il B5, che cambia quella riga; il Custode (`echi.fav` 116) con il
+  B4. Dettagli nel CHANGELOG.
+
 ## 10. Il calendario proposto
 
 1. **Prima sessione**: il blocco A (le fondamenta) e il blocco B (le voci). Per il B preparo prima le schede dei

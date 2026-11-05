@@ -9,7 +9,7 @@ Fine della traccia.
 
 
 --- La plancia ---
-La plancia della Santa Maria: due poltrone, e ne uso una; schermi che conosco a memoria; sotto il pavimento, il lamento basso del reattore. Sul quadrante del margine la lancetta sta dove ho imparato a non guardarla. Nell'oblò, contro le stelle, c'è una sagoma nera che non ne lascia passare nessuna. Il radar la segnala da un'ora e non sa dirmi cosa sia: per saperlo mi servirebbe una scansione lunga. A ovest si va in stiva; a nord, la cuccetta.
+La plancia della Santa Maria: una poltrona sola, la mia; schermi che conosco a memoria; sotto il pavimento, il lamento basso del reattore. Sul quadrante del margine la lancetta sta dove ho imparato a non guardarla. Nell'oblò, contro le stelle, c'è una sagoma nera che non ne lascia passare nessuna. Il radar la segnala da un'ora e non sa dirmi cosa sia: per saperlo mi servirebbe una scansione lunga. A ovest si va in stiva; a nord, la cuccetta.
 Puoi vedere qui: dei comandi di manovra, un lanciarpioni, una radio.
 Uscite: Ovest, Nord.
 
@@ -43,7 +43,7 @@ Yusuf: «Una cosa.» Aspetta che continui. Gli racconto della massa: la scansion
 > nord
 
 --- La cuccetta ---
-La cuccetta è poco più di un corridoio: due brande una sopra l'altra, un armadietto, un oblò grande quanto una mano. Dormo in quella di sotto. Quella di sopra è rifatta, le coperte tese, e non ci ha mai dormito nessuno. A sud si torna in plancia.
+La cuccetta è poco più di un corridoio: una branda con i cassetti sotto, una lampada da lettura, un armadietto, un oblò grande quanto una mano. A sud si torna in plancia.
 Puoi vedere qui: un registro di bordo.
 Uscite: Sud (La plancia).
 
@@ -58,7 +58,7 @@ Preso: la chiavetta.
 > sud
 
 --- La plancia ---
-La plancia, con la sua poltrona consumata e quella intatta. Gli arpioni tengono: la Santa Maria e la massa nera adesso sono una cosa sola, e ogni minuto così costa reattore. Nell'oblò c'è soltanto nero. Dalla radio, ogni tanto, un fruscio che non è statica. A ovest si va in stiva; a nord, la cuccetta.
+La plancia, con la mia poltrona consumata. Gli arpioni tengono: la Santa Maria e la massa nera adesso sono una cosa sola, e ogni minuto così costa reattore. Nell'oblò c'è soltanto nero. Dalla radio, ogni tanto, un fruscio che non è statica. A ovest si va in stiva; a nord, la cuccetta.
 Puoi vedere qui: dei comandi di manovra, un lanciarpioni, una radio.
 Uscite: Ovest, Nord (La cuccetta).
 
@@ -301,8 +301,8 @@ Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che
 Il Sintonizzatore fischia. L'INGEGNERE CAPO: «La risonanza è instabile! Il cristallo non regge il carico! Evacuate il settore, subito!» Poi, più piano: «Non ci riesco. Se lascio il generatore adesso il campo crolla, e con lui tutta la Sezione Seme. Voi andate. Io resto.»
 
 > usa il cristallo sul generatore
-Inserisco il cristallo pulsante nel vano del generatore. Con un rombo che sale, i macchinari si svegliano dopo secoli: l'elettricità corre fra le bobine, i monitor si accendono su flussi stabili, diretti al Ponte e all'Archivio.
-Un brivido percorre lo scafo. Lontano, sistemi dormienti da secoli tornano a respirare uno dopo l'altro. Per la prima volta, il relitto non è del tutto morto.
+Inserisco il cristallo pulsante nel vano del generatore. Con un rombo che sale, i macchinari si svegliano: l'elettricità corre fra le bobine, i monitor si accendono su flussi stabili, diretti al Ponte e all'Archivio.
+Un brivido percorre lo scafo. Lontano, sistemi spenti da sempre tornano a respirare uno dopo l'altro. Per la prima volta, il relitto non è del tutto morto.
 
 > su
 
@@ -445,7 +445,7 @@ Prendo il Nucleo di Memoria dallo scomparto del terminale. La terza chiave.
 
 > analizza il nucleo
 Il cristallo non contiene storia: una registrazione sola, l'ultima salvata prima che l'archivio crollasse. Una voce calma, stanca fino in fondo: «Registro dell'Archivista, ciclo… non ha più importanza. Le matrici si sfaldano. Il canto della nostra storia svanisce. Presto tutto quello che eravamo non sarà mai stato. Ho salvato questo pensiero solo. Un'eco nel buio. Se qualcuno un giorno lo troverà, sappia che siamo esistiti. E che abbiamo sperato. Fine della registrazione.»
-(MATRICE DI TRADUZIONE: 100% — DECODIFICA COMPLETATA) Per un momento la distanza tra me e loro collassa: non c'è più nulla di alieno nel linguaggio. Non sono più uno scopritore. Sono un testimone.
+(MATRICE DI TRADUZIONE: 100% — DECODIFICA COMPLETATA) Per un momento leggo i loro glifi senza più accorgermi che sono glifi.
 
 > sud
 
@@ -684,7 +684,7 @@ L'anziano: «Lo sentimmo arrivare. Camminava per la nave come cammini tu, contan
 
 > Gli ho lasciato un segno.
 
-L'anziano: «Lo so. Hai finito la sua frase: aveva ragione, e adesso è scritto. Non cambierà niente, forse. Ma l'hai fatto per la stessa ragione per cui lui incise tre tacche in una parete che nessuno avrebbe più letto. Perché essere passati conta, anche quando non guarda nessuno.»
+L'anziano: «Lo so. Hai finito la sua frase: aveva ragione, e adesso è scritto. Non cambierà niente, forse. Ma l'hai fatto per la stessa ragione per cui lui incise tre tacche in una parete che nessuno avrebbe più letto.»
   1. E la musica?
   2. Allora cosa devo fare?
 

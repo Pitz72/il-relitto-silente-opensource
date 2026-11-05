@@ -181,5 +181,5 @@ Ogni turno se l'ingresso è richiuso e la fuga è lontana e càpita (1 su 36): d
 # ============================================================================
 # Fronte di salita: scattano una volta sulla transizione falso→vero.
 Quando le chiavi è almeno 3: dire "Le tre luci — verde, bianca e ambrata — pulsano all'unisono. La loro frequenza accelera, il ronzio diventa un gong risonante che vibra in tutta la nave. Il simbolo a stella brilla di luce accecante, e la Grande Porta, a ovest, non si apre: si dissolve in particelle di luce, come stelle che tornano al cielo." e adesso la grande porta è aperta.
-Quando l'energia è ripristinata diventa vera: dire "Un brivido percorre lo scafo. Lontano, sistemi dormienti da secoli tornano a respirare uno dopo l'altro. Per la prima volta, il relitto non è del tutto morto.".
-Quando la traduzione è almeno 100 diventa vera: dire "(MATRICE DI TRADUZIONE: [traduzione]% — DECODIFICA COMPLETATA) Per un momento la distanza tra me e loro collassa: non c'è più nulla di alieno nel linguaggio. Non sono più uno scopritore. Sono un testimone.".
+Quando l'energia è ripristinata diventa vera: dire "Un brivido percorre lo scafo. Lontano, sistemi spenti da sempre tornano a respirare uno dopo l'altro. Per la prima volta, il relitto non è del tutto morto.".
+Quando la traduzione è almeno 100 diventa vera: dire "(MATRICE DI TRADUZIONE: [traduzione]% — DECODIFICA COMPLETATA) Per un momento leggo i loro glifi senza più accorgermi che sono glifi.".

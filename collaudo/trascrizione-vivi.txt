@@ -9,7 +9,7 @@ Fine della traccia.
 
 
 --- La plancia ---
-La plancia della Santa Maria: due poltrone, e ne uso una; schermi che conosco a memoria; sotto il pavimento, il lamento basso del reattore. Sul quadrante del margine la lancetta sta dove ho imparato a non guardarla. Nell'oblò, contro le stelle, c'è una sagoma nera che non ne lascia passare nessuna. Il radar la segnala da un'ora e non sa dirmi cosa sia: per saperlo mi servirebbe una scansione lunga. A ovest si va in stiva; a nord, la cuccetta.
+La plancia della Santa Maria: una poltrona sola, la mia; schermi che conosco a memoria; sotto il pavimento, il lamento basso del reattore. Sul quadrante del margine la lancetta sta dove ho imparato a non guardarla. Nell'oblò, contro le stelle, c'è una sagoma nera che non ne lascia passare nessuna. Il radar la segnala da un'ora e non sa dirmi cosa sia: per saperlo mi servirebbe una scansione lunga. A ovest si va in stiva; a nord, la cuccetta.
 Puoi vedere qui: dei comandi di manovra, un lanciarpioni, una radio.
 Uscite: Ovest, Nord.
 
@@ -201,8 +201,8 @@ Uscite: Su (Il corridoio principale).
 Preso: il sintonizzatore.
 
 > usa il cristallo sul generatore
-Inserisco il cristallo pulsante nel vano del generatore. Con un rombo che sale, i macchinari si svegliano dopo secoli: l'elettricità corre fra le bobine, i monitor si accendono su flussi stabili, diretti al Ponte e all'Archivio.
-Un brivido percorre lo scafo. Lontano, sistemi dormienti da secoli tornano a respirare uno dopo l'altro. Per la prima volta, il relitto non è del tutto morto.
+Inserisco il cristallo pulsante nel vano del generatore. Con un rombo che sale, i macchinari si svegliano: l'elettricità corre fra le bobine, i monitor si accendono su flussi stabili, diretti al Ponte e all'Archivio.
+Un brivido percorre lo scafo. Lontano, sistemi spenti da sempre tornano a respirare uno dopo l'altro. Per la prima volta, il relitto non è del tutto morto.
 
 > su
 
@@ -329,7 +329,7 @@ L'anziano: «Il nostro tempo era un cerchio che si chiudeva. Il grande fuoco del
 
 > E io che c'entro?
 
-L'anziano: «Forse sei tu, quella musica nuova. Ci piacerebbe crederlo: che nel tuo sangue ci sia il fantasma dei nostri tre soli, che siamo stati la prima nota di qualcosa. Abbiamo seminato in un mondo scelto perché la vita ci attecchisse, molto prima che tu nascessi. Se abbia attecchito, da qui non potevamo saperlo. Non lo sappiamo nemmeno adesso, che sei qui.» (Una pausa.) «Ma tu sei qui.»
+L'anziano: «Abbiamo seminato in un mondo scelto perché la vita ci attecchisse. Se abbia attecchito, da qui non potevamo saperlo. Non lo sappiamo nemmeno adesso, che sei qui.» (Una pausa.) «Ma tu sei qui.»
   1. Allora cosa devo fare?
 
 > Allora cosa devo fare?

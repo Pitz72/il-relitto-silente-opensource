@@ -9,7 +9,7 @@ Fine della traccia.
 
 
 --- La plancia ---
-La plancia della Santa Maria: due poltrone, e ne uso una; schermi che conosco a memoria; sotto il pavimento, il lamento basso del reattore. Sul quadrante del margine la lancetta sta dove ho imparato a non guardarla. Nell'oblò, contro le stelle, c'è una sagoma nera che non ne lascia passare nessuna. Il radar la segnala da un'ora e non sa dirmi cosa sia: per saperlo mi servirebbe una scansione lunga. A ovest si va in stiva; a nord, la cuccetta.
+La plancia della Santa Maria: una poltrona sola, la mia; schermi che conosco a memoria; sotto il pavimento, il lamento basso del reattore. Sul quadrante del margine la lancetta sta dove ho imparato a non guardarla. Nell'oblò, contro le stelle, c'è una sagoma nera che non ne lascia passare nessuna. Il radar la segnala da un'ora e non sa dirmi cosa sia: per saperlo mi servirebbe una scansione lunga. A ovest si va in stiva; a nord, la cuccetta.
 Puoi vedere qui: dei comandi di manovra, un lanciarpioni, una radio.
 Uscite: Ovest, Nord.
 
@@ -93,7 +93,7 @@ Due colpi sordi, che sento nelle ossa più che nelle orecchie. Gli arpioni volan
 > guarda
 
 --- La plancia ---
-La plancia, con la sua poltrona consumata e quella intatta. Gli arpioni tengono: la Santa Maria e la massa nera adesso sono una cosa sola, e ogni minuto così costa reattore. Nell'oblò c'è soltanto nero. Dalla radio, ogni tanto, un fruscio che non è statica. A ovest si va in stiva; a nord, la cuccetta.
+La plancia, con la mia poltrona consumata. Gli arpioni tengono: la Santa Maria e la massa nera adesso sono una cosa sola, e ogni minuto così costa reattore. Nell'oblò c'è soltanto nero. Dalla radio, ogni tanto, un fruscio che non è statica. A ovest si va in stiva; a nord, la cuccetta.
 Puoi vedere qui: dei comandi di manovra, un lanciarpioni, una radio.
 Uscite: Ovest, Nord.
 
@@ -117,12 +117,12 @@ Yusuf: «Allora sei messo peggio di quanto pensassi.» Però non chiude. Per qua
 > nord
 
 --- La cuccetta ---
-La cuccetta è poco più di un corridoio: due brande una sopra l'altra, un armadietto, un oblò grande quanto una mano. Dormo in quella di sotto. Quella di sopra è rifatta, le coperte tese, e non ci ha mai dormito nessuno. A sud si torna in plancia.
+La cuccetta è poco più di un corridoio: una branda con i cassetti sotto, una lampada da lettura, un armadietto, un oblò grande quanto una mano. A sud si torna in plancia.
 Puoi vedere qui: un registro di bordo.
 Uscite: Sud (La plancia).
 
-> esamina la branda di sopra
-La rifaccio ogni mese, anche se nessuno la disfa. La Santa Maria è omologata per un equipaggio di quattro: le brande ci sono, gli altri no. Yusuf la chiama incoscienza. Io non la chiamo.
+> esamina la branda
+La mia branda, stretta, con i cassetti sotto. La coperta è tirata su alla meglio: tanto non la vede nessuno.
 
 > esamina l'armadietto
 Due tute da lavoro, una giacca buona che non metto da anni, una scatola di fusibili che non sapevo dove altro tenere.
@@ -147,7 +147,7 @@ Il registro della Santa Maria. La prima pagina non è mia: «TSC-1972. Prima reg
 > sud
 
 --- La plancia ---
-La plancia, con la sua poltrona consumata e quella intatta. Gli arpioni tengono: la Santa Maria e la massa nera adesso sono una cosa sola, e ogni minuto così costa reattore. Nell'oblò c'è soltanto nero. Dalla radio, ogni tanto, un fruscio che non è statica. A ovest si va in stiva; a nord, la cuccetta.
+La plancia, con la mia poltrona consumata. Gli arpioni tengono: la Santa Maria e la massa nera adesso sono una cosa sola, e ogni minuto così costa reattore. Nell'oblò c'è soltanto nero. Dalla radio, ogni tanto, un fruscio che non è statica. A ovest si va in stiva; a nord, la cuccetta.
 Puoi vedere qui: dei comandi di manovra, un lanciarpioni, una radio.
 Uscite: Ovest, Nord (La cuccetta).
 

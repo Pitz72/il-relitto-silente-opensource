@@ -32,7 +32,7 @@ Chiudi la comunicazione.
 
 # --- Cuccetta ---
 nord
-esamina la branda di sopra
+esamina la branda
 esamina l'armadietto
 esamina l'oblò
 leggi il registro
