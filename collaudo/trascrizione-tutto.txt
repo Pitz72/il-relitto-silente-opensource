@@ -312,11 +312,11 @@ Puoi vedere qui: una lastra dati, una grande porta.
 Uscite: Est (Il vestibolo delle gole), Nord, Sud (La serra morente), Giù (Il laboratorio di risonanza), Nordest, Ovest.
 
 > sintonizza le pareti del corridoio
-Il Sintonizzatore impazzisce: aggancia una dopo l'altra le frequenze rimaste impresse nel corridoio, voci sovrapposte che tornano su dal silenzio dei secoli.
-UNA VOCE SENZA RUOLO: «Il Seme è al sicuro. La Stele è al sicuro. Il Nucleo è al sicuro. Abbiamo fatto tutto quello che potevamo. Adesso è nelle mani del tempo, e di un futuro che non conosceremo.»
+Il Sintonizzatore impazzisce: aggancia una dopo l'altra le frequenze rimaste impresse nel corridoio, voci sovrapposte che tornano su dal silenzio.
+UNA VOCE SENZA RUOLO: «Io non volevo salire. Hanno letto il mio nome, e sono salito. A casa ho lasciato la finestra aperta. Me ne ricordo adesso, che hanno chiuso la porta.»
 IL CAPITANO: «Rotta impostata. Lasciamo il sistema trino. I motori reggeranno quanto basta: non serve che reggano il ritorno.»
 IL TECNICO DI CARICO: «Il Seme è sigillato. Ho controllato ogni capsula tre volte. Se tutto il resto fallisse, questo deve arrivare. Deve.»
-IL TECNICO DI BORDO: «Porta esterna sigillata, protocollo del silenzio attivato. La musica ha trovato la sua ultima casa. Che continui, oltre il freddo, oltre il buio. Che continui.»
+IL TECNICO DI BORDO: «Porta esterna sigillata, protocollo del silenzio attivato.» Poi d'un fiato, come una formula imparata a memoria: «La musica ha trovato la sua ultima casa. Che continui, oltre il freddo, oltre il buio.»
 
 > est
 
@@ -363,7 +363,7 @@ Uscite: Sudovest (Il corridoio principale), Nord.
 Preso: il cilindro mnemonico.
 
 > analizza il cilindro mnemonico
-Infilo il cilindro nello scanner: un'altra registrazione, e la matrice si aggiorna. La voce è più chiara, più personale: «…il legame che ci teneva insieme si affievolisce. I cicli sono quasi compiuti. Il Grande Salto è riuscito, ma il nostro tempo finisce. Lasciamo questa eco… questo (intraducibile: seme-dell'anima)… perché chi verrà dopo conosca il motivo. Non la fine. La continuazione…» (Matrice di traduzione: 18%)
+Infilo il cilindro nello scanner: un'altra registrazione, e la matrice si aggiorna. La voce è più chiara, più personale: «…il legame che ci teneva insieme si affievolisce. I cicli sono quasi compiuti. Il Grande Salto è riuscito, ma il nostro tempo finisce. Lasciamo questa eco… questo (intraducibile: seme-dell'anima)… Non la fine. La continuazione…» (Matrice di traduzione: 18%)
 Nella cuffia il brusio cala fino quasi a sparire, come una sala piena che smette di parlare quando entro. Poi riprende.
 
 > sintonizza le alcove
@@ -420,7 +420,7 @@ Uscite: Est (Il santuario del silenzio), Nord.
 Libero il disco di pietra incastrato nel meccanismo del proiettore. Il proiettore non lo ripari, ma il disco, coperto di incisioni come quelle dell'altare, adesso ce l'ho io.
 
 > sintonizza il globo olografico
-Il Sintonizzatore aggancia una frequenza. LO SCRIBA: «L'ultima iscrizione è finita. La Stele porta tutto quello che siamo stati: ogni scoperta, ogni errore, ogni speranza. Non so se sarà mai letta. Ma la verità deve avere un posto dove stare.»
+Il Sintonizzatore aggancia una frequenza. LO SCRIBA: «L'ultima iscrizione è finita. Sulla Stele c'è tutto quello che ci hanno chiesto di ricordare, e ogni solco è dritto. Le mie dita non lo sono più. Non so se qualcuno la leggerà mai.»
 
 > traduci il globo olografico
 Rallentando i globi riesco a fermare qualche intestazione: «registro di chi nacque sotto il primo sole», «atlante delle acque perdute», «canti per chi resta». Soltanto i titoli. Ma bastano a misurare il vuoto: qui c'è la memoria intera di un popolo.
@@ -444,7 +444,7 @@ Appena entro, l'ultimo pilastro smette di pulsare e si accende per intero, e la 
 Prendo il Nucleo di Memoria dallo scomparto del terminale. La terza chiave.
 
 > analizza il nucleo
-Il cristallo non contiene storia: una registrazione sola, l'ultima salvata prima che l'archivio crollasse. Una voce calma, stanca fino in fondo: «Registro dell'Archivista, ciclo… non ha più importanza. Le matrici si sfaldano. Il canto della nostra storia svanisce. Presto tutto quello che eravamo non sarà mai stato. Ho salvato questo pensiero solo. Un'eco nel buio. Se qualcuno un giorno lo troverà, sappia che siamo esistiti. E che abbiamo sperato. Fine della registrazione.»
+Il cristallo non contiene storia. In testa c'è una registrazione breve, l'ultima prima che l'archivio crollasse; dietro, qualcosa che la matrice non sa aprire. Una voce calma, stanca fino in fondo: «Registro dell'Archivista, ciclo… non ha più importanza. Le matrici si sfaldano più in fretta di quanto riesca a copiarle. In questo cristallo c'è posto per una cosa sola. Ho scelto. Fine della registrazione.»
 (MATRICE DI TRADUZIONE: 100% — DECODIFICA COMPLETATA) Per un momento leggo i loro glifi senza più accorgermi che sono glifi.
 
 > sud
@@ -477,7 +477,7 @@ Prendo la Stele del Ricordo dallo scomparto. È leggera, più di quanto mi aspet
 La voce della stele, malinconica, quasi perfetta: «Quando i tre soli sanguinarono, sapemmo che il tempo era cenere. Lo affidammo al Grande Vuoto, perché un seme nuovo potesse attecchire in una terra non ancora scritta. Il nostro corpo è polvere, ma il nostro ricordo è una stella.» (I tre soli, adesso, hanno un nome.)
 
 > sintonizza il bassorilievo
-Il Sintonizzatore scende sotto la soglia di prima, e dal fondo viene su un secondo strato. IL CUSTODE, e adesso la voce non trema più: «Ti ho aspettato. Non te: la tua faccia non potevo conoscerla. Ma qualcuno. Chiunque arrivasse fin qui e si fermasse ad ascoltare, invece di prendere e ripartire. Il silenzio non era una serratura da forzare. Era una domanda. E tu, restando, hai risposto.»
+Il Sintonizzatore scende sotto la soglia di prima, e dal fondo viene su un secondo strato. IL CUSTODE, più piano, senza la solennità di prima: «L'ultima riga del fregio l'ho incisa io. Di notte, da solo, quando nella sala non c'era più nessuno. Ho insegnato il silenzio per tutta la vita, e quella notte non lo reggevo. Ho scritto che qualcuno avrebbe letto. Non ci credevo. Non ci credo nemmeno adesso.»
 
 > traduci il bassorilievo
 Il fregio si apre del tutto. «Vedemmo i tre soli sanguinare e non maledicemmo il cielo. Piantammo dove non avremmo raccolto. Salimmo sapendo di non arrivare. Non fu una fuga: fu una semina.» E al margine corre un'ultima riga, più piccola, incisa forse da una mano sola dopo tutte le altre: «E se la semina ha attecchito, allora qualcuno sta leggendo. Allora non eravamo soli. Allora è bastato.»
@@ -522,7 +522,7 @@ Uscite: Nord (Il corridoio principale), Ovest (L'arca biologica).
 Il Sintonizzatore fischia e aggancia una frequenza. LO XENO-BOTANICO: «Stanno morendo tutte. Il filtro dell'aria è collassato, non c'è più acqua. Ho chiuso il Seme nella teca, ma la chiave è rimasta giù, al vivaio, e giù non si passa più. Quelli delle teche cercano il sole che gli avevamo promesso. Vanno dove c'è caldo. Vanno dove c'è luce.»
 
 > sintonizza le piante
-Il Sintonizzatore torna sull'eco già nota, ma non si ferma: la frequenza scende sotto la soglia di prima, e dal fondo viene su un secondo strato, più nudo. LO XENO-BOTANICO, con un filo di voce più fermo: «Uno. Ne ho salvato uno. Lo so che non basta: un giardino non lo fai con un seme solo. Ma una foresta sì. Una foresta intera può cominciare da uno, se trova la terra giusta e qualcuno che abbia la pazienza del tempo. Quel qualcuno non sarò io. Forse sarai tu.»
+Il Sintonizzatore torna sull'eco già nota, ma non si ferma: la frequenza scende sotto la soglia di prima, e dal fondo viene su un secondo strato, più nudo. LO XENO-BOTANICO, con un filo di voce più fermo: «Uno. Ne ho salvato uno. Quelli delle teche li ho rovinati io: volevo qualcosa di verde da far vedere all'arrivo, e ho forzato la crescita, senza terra, senza sole. Sono cresciuti lo stesso, e non sanno smettere. Sono miei.»
 
 > ovest
 
@@ -577,7 +577,7 @@ Appoggio la mano guantata sulla depressione, e la console reagisce: non a chi so
 La rotta la conosco: un sistema trino, tre soli. La loro culla.
 
 > sintonizza la struttura centrale
-Il Sintonizzatore aggancia una frequenza. L'UFFICIALE DI NAVIGAZIONE: «La rotta è confermata e sigillata nei cristalli. Fra quattro milioni e settecentomila cicli il sistema bersaglio sarà maturo. Noi non ci saremo. Ma il canto… il canto ci sarà.»
+Il Sintonizzatore aggancia una frequenza. L'UFFICIALE DI NAVIGAZIONE: «La rotta è confermata e sigillata nei cristalli. Fra quattro milioni e settecentomila cicli il sistema bersaglio sarà maturo. Noi non ci saremo.»
 
 > traduci la mappa stellare
 Leggo tutto. «Giardino: qui, se da qualche parte.» E proprio sopra il mio sole, in una grafia più piccola, aggiunta dopo, una riga che non è una rotta: «Non torneremo a vedere se è fiorito. Va bene così.»

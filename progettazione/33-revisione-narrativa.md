@@ -500,6 +500,12 @@ Si riempie in sessione, punto per punto. «—» vuol dire da discutere.
   45, 174, la branda), con il percorso `prova-atti-I-II.txt`, le trascrizioni e la provenienza dell’immagine. Il
   quinto «secoli» (`echi.fav` 41) si riscrive con il B5, che cambia quella riga; il Custode (`echi.fav` 116) con il
   B4. Dettagli nel CHANGELOG.
+- **Blocco B, scritto il 5 novembre 2026.** `echi.fav` 41 (la voce senza ruolo, il tecnico di bordo, l’ultimo
+  «secoli»), 51 (lo xeno-botanico nel profondo), 90 (l’ufficiale di navigazione), 99 (lo Scriba), 116 (il Custode
+  nel profondo); `traduci.fav` 33–34 (il cilindro), 41–42 (l’Archivista), 52 (il fregio al 75%), 66–67 (la firma
+  dello Scriba). **Per il blocco D:** il Nucleo adesso contiene, dietro la registrazione dell’Archivista, «qualcosa
+  che la matrice non sa aprire»: è la cosa sola che ha salvato, e la dice l’Anziano soltanto a chi ha avuto
+  pazienza (D2).
 
 ## 10. Il calendario proposto
 

@@ -2,7 +2,7 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 5 novembre 2026, dopo la scrittura del blocco A della revisione narrativa.
+Aggiornato l’ultima volta il 5 novembre 2026, dopo la scrittura dei blocchi A e B della revisione narrativa.
 Prima, il 3 novembre, a notte, l’autore aveva chiuso la sessione dopo la lettura integrale e la valutazione:
 «Dalla prossima sessione fare punto per tutto i tanti piccoli dettagli rilevati con
 una discussione e delle decisioni. Interverremo fortemente su tutto quello che allontana questo gioco da
@@ -18,8 +18,9 @@ Riprendiamo «Il Relitto Silente». Carica la memoria del progetto, poi leggi qu
 lavoro li tocca (l’elenco è in fondo). Comincia dal punto 0 dell’ordine del lavoro: i blocchi dalla A alla F del
 documento 33 sono decisi (4 novembre 2026; le decisioni sono nel registro, §9; le schede delle voci nel documento
 34). Si continua con **la scrittura** (documento 33, §2 e §10, punto 4): i `.fav` si cambiano blocco per blocco,
-con le skill di scrittura e le prove dopo ogni blocco; il blocco A è scritto (5 novembre 2026), si continua con
-il **B** (le schede del documento 34; dentro c’è anche il quinto «secoli», `echi.fav` 41). Prima del commit di
+con le skill di scrittura e le prove dopo ogni blocco; i blocchi A e B sono scritti (5 novembre 2026), si continua
+con il **C** (l’Anziano: il testo si riscrive tutto, le tre battute con la voce comprese, e poi si registra di
+nuovo; documento 33, §9, RN-C1–C5 e A2, A4). Prima del commit di
 ogni blocco, all’autore si mostra ogni frase prima e dopo, e si aspetta il suo sì. Lo stile (blocco G) viene dopo, sul
 testo fermo; poi le dipendenze (blocco H) e una beta sola. Ogni proposta all’autore va scritta per intera nel
 messaggio finale, dopo la casella della domanda: mai «la proposta è quella sopra».
@@ -110,6 +111,10 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 - **Il blocco A è scritto** (5 novembre 2026, approvato dall’autore frase per frase): via i «secoli», la semina
   resta un dubbio nel nodo «sangue», della morale resta solo «Restare è già una risposta», una poltrona e una
   branda sole sulla Santa Maria. Prove tutte verdi; i salvataggi di prima si caricano «ricostruita».
+- **Il blocco B è scritto** (5 novembre 2026, approvato voce per voce): la voce senza ruolo è chi non voleva
+  partire; lo xeno-botanico ammette l’errore delle teche; lo Scriba parla da artigiano e la sua firma si ferma dove
+  comincia il nome; il Custode ha inciso da solo l’ultima riga del fregio; l’Archivista ha salvato una cosa sola,
+  e nel Nucleo c’è «qualcosa che la matrice non sa aprire» (la dirà l’Anziano, con il blocco D).
 - **La sessione** si è chiusa il 3 novembre 2026 con l’albero pulito e `main` uguale a `origin/main`.
 - **Il motore** è Favella1 1.6.1 (documento 29), pubblicata anche su GitHub, PyPI e favella.eu.
 - **La revisione totale** (documento 25): i 30 problemi (5 gravi, 10 medi, 15 lievi) sono tutti
