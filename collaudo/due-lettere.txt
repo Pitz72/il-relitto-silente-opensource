@@ -6,6 +6,7 @@
 # atteso: esito persa
 # atteso: fuga = lontana
 # atteso: finale «Il nome intero, a chi lo direi?»
+# atteso: compare «le voci hanno bevuto anche l'ultima aria, e vanno avanti senza di me.»
 # atteso: finale «Fra centocinquant'anni»
 analizza la nave aliena
 accosta

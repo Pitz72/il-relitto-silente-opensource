@@ -521,6 +521,9 @@ Si riempie in sessione, punto per punto. «—» vuol dire da discutere.
   corrente. Il generatore, giù, è spento.») si scrive con l’F7. Il D4 in `fuga.fav` (via il suggerimento; la voce
   tace se William sale). Misura dopo il blocco: la soluzione più corta finisce al 60%, «tutto» al 19%, «La prima
   nota» al 38%.
+- **Blocco E, scritto il 5 novembre 2026.** `finali.fav`: E1 in «La stiva piena» e «Doppio fondo», E5 in «Due
+  lettere»; `fuga.fav`: E4, la chiamata di Yusuf sullo scafo (una battuta per l’autore da registrare, nelle due
+  versioni). E2 ed E3 senza testo.
 
 ## 10. Il calendario proposto
 

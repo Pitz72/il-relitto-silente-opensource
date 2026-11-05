@@ -2,7 +2,7 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 5 novembre 2026, dopo la scrittura dei blocchi A, B, C e D della revisione narrativa.
+Aggiornato l’ultima volta il 5 novembre 2026, dopo la scrittura dei blocchi dalla A alla E della revisione narrativa.
 Prima, il 3 novembre, a notte, l’autore aveva chiuso la sessione dopo la lettura integrale e la valutazione:
 «Dalla prossima sessione fare punto per tutto i tanti piccoli dettagli rilevati con
 una discussione e delle decisioni. Interverremo fortemente su tutto quello che allontana questo gioco da
@@ -18,10 +18,12 @@ Riprendiamo «Il Relitto Silente». Carica la memoria del progetto, poi leggi qu
 lavoro li tocca (l’elenco è in fondo). Comincia dal punto 0 dell’ordine del lavoro: i blocchi dalla A alla F del
 documento 33 sono decisi (4 novembre 2026; le decisioni sono nel registro, §9; le schede delle voci nel documento
 34). Si continua con **la scrittura** (documento 33, §2 e §10, punto 4): i `.fav` si cambiano blocco per blocco,
-con le skill di scrittura e le prove dopo ogni blocco; i blocchi A, B, C e D sono scritti (5 novembre 2026), si
-continua con l’**E** (i finali: E1 «La stiva piena» e «Doppio fondo»; E4 la chiamata di Yusuf nella fuga, una
-battuta da registrare con la voce dell’autore; E5 la riga di «Due lettere» quando uccide il risuonatore; E2 ed E3
-non chiedono testo), poi l’**F** (con il diario nuovo, RN-F7, e la riga del diario del D3). Prima del commit di
+con le skill di scrittura e le prove dopo ogni blocco; i blocchi dalla A alla E sono scritti (5 novembre 2026),
+si continua con l’**F** (il gioco): F2 le traduzioni gratis sotto il 18% con la frase al cilindro; F3 il re
+riconosciuto in stiva; F4 il comando via dai due suggerimenti dell’eco; F5 gli inviti nel bassorilievo e nelle
+capsule; F6 la riga dopo la prima eco delle quattro voci a due strati; F7 il diario di William, due pagine nuove
+nel diario dell’app (`app/src/gioco/diario/`), con le righe del D3, dell’F2 e dell’F6; per ultimo l’F1, la
+taratura dell’aria a tavolino con le tre partite da principiante. Prima del commit di
 ogni blocco, all’autore si mostra ogni frase prima e dopo, e si aspetta il suo sì. Lo stile (blocco G) viene dopo, sul
 testo fermo; poi le dipendenze (blocco H) e una beta sola. Ogni proposta all’autore va scritta per intera nel
 messaggio finale, dopo la casella della domanda: mai «la proposta è quella sopra».
@@ -125,6 +127,9 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   la vede chiunque (con la corrente il pilastro si sveglia in tre turni, 2 d’aria l’uno; la taglierina apre
   subito); nella fuga la voce dei nomi non ha più il suggerimento, e tace se William sale. Dopo il blocco la
   soluzione più corta finisce al 60%, «tutto» al 19%.
+- **Il blocco E è scritto** (5 novembre 2026, approvato): i finali non giudicano più («a nessuno», «cioè
+  sempre» e i vent’anni via); Yusuf chiama sullo scafo durante la fuga, e William non risponde (due battute
+  da registrare con la voce dell’autore); «Due lettere» ha la sua riga quando uccide il risuonatore.
 - **La sessione** si è chiusa il 3 novembre 2026 con l’albero pulito e `main` uguale a `origin/main`.
 - **Il motore** è Favella1 1.6.1 (documento 29), pubblicata anche su GitHub, PyPI e favella.eu.
 - **La revisione totale** (documento 25): i 30 problemi (5 gravi, 10 medi, 15 lievi) sono tutti

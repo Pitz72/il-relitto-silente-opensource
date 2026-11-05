@@ -19,6 +19,9 @@
 
 La voce dei nomi è uno stato.
 La voce dei nomi è attesa.
+# Yusuf chiama sullo scafo, dalla radio della Santa Maria (RN-E4): una volta.
+La chiamata di Yusuf è uno stato.
+La chiamata di Yusuf è attesa.
 
 "strappa" è un comando.
 "calcia" è come strappa.
@@ -98,5 +101,9 @@ La descrizione della camera di compensazione se la fuga è iniziata è "La camer
 
 La descrizione dello scafo se la fuga è iniziata e l'aria è al massimo 15 è "Fuori. Le funi. Il boccaporto. Dentro.".
 La descrizione dello scafo se la fuga è iniziata è "Sono fuori. Lo scafo nero trema sotto i magneti degli stivali, e le funi degli arpioni vibrano come corde tese. Il boccaporto della Santa Maria è lì, con la sua luce gialla: dentro.".
+
+# Yusuf chiama, e William non risponde (RN-E4). La battuta è da registrare con la voce
+# dell'autore, che è Yusuf.
+Quando il giocatore è sullo scafo e la fuga è iniziata e la chiamata di Yusuf è attesa: dire "Nella cuffia entra il canale della Santa Maria: il boccaporto è a pochi metri, e la tuta lo aggancia da sola. Yusuf.[se la promessa è carico] «William. Ce l'hai, il mio pezzo?» Aspetta. «William?»[altrimenti] «William.» Una pausa, e dietro di lui il magazzino. «Niente. Volevo sapere se c'eri.»[fine] Non rispondo. Il fiato mi serve per arrivarci." e adesso la chiamata di Yusuf è fatta.
 
 La descrizione della stiva se la fuga è iniziata è "La stiva della Santa Maria, vuota, con la sua luce gialla di servizio.".
