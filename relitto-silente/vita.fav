@@ -55,8 +55,8 @@ Desto e quieto sono opposte.
 # SERRA MORENTE
 # ============================================================================
 La serra morente è una stanza.
-La descrizione della serra morente è "Una serra a cupola, vasta, con l'aria secca come carta. Felci scheletriche e funghi contorti pendono dalle pareti nella posa in cui sono morti, sotto uno strato di polvere che sembra neve grigia. Una vibrazione bassa attraversa la stanza, più nelle ossa che nell'aria. Al centro, sotto la cupola, qualcosa brilla di luce propria. Contro la base di una delle colonne spente che reggono la cupola, a mezzo metro da quella luce, è seduto un uomo in tuta. A nord si torna al corridoio; dietro i funghi, a ovest, si apre un passaggio più scuro.".
-La descrizione della serra morente se la teca è svuotata e la fuga è lontana è "La serra morta. Il campo di contenimento si è spento e il silenzio adesso è completo. Al centro, sul piedistallo, i resti della teca dissolta. Contro la colonna, a mezzo metro, l'uomo in tuta, il casco calato sul petto. A nord il corridoio; a ovest, dietro i funghi, il passaggio scuro.".
+La descrizione della serra morente è "Una serra a cupola, vasta, con l'aria secca come carta. Felci scheletriche e funghi contorti pendono dalle pareti nella posa in cui sono morti, sotto uno strato di polvere che sembra neve grigia. Una vibrazione bassa attraversa la stanza, più nelle ossa che nell'aria. Al centro, sotto la cupola, pulsa piano una luce verde. Contro la base di una delle colonne spente che reggono la cupola, a mezzo metro da quella luce, è seduto un uomo in tuta. A nord si torna al corridoio; dietro i funghi, a ovest, si apre un passaggio più scuro.".
+La descrizione della serra morente se la teca è svuotata e la fuga è lontana è "La serra morta. Il campo di contenimento si è spento e il silenzio adesso è completo. Al centro, sul piedistallo, la polvere della teca. Contro la colonna, l'uomo in tuta, il casco calato sul petto. A nord il corridoio; a ovest, dietro i funghi, il passaggio scuro.".
 
 # Lo specchio: la prima volta che entri.
 Quando il giocatore è nella serra morente e lo specchio è velato: dire "Il faro ci passa sopra e va oltre, poi torna indietro da solo, come la mano di chi ha visto qualcosa prima di saperlo. Contro la colonna c'è un uomo.\nUna tuta di un secolo e mezzo fa, di un modello che ho visto soltanto nei cataloghi dei pezzi fuori produzione. Ma umana: due braccia, due gambe, un casco fatto per una testa come la mia. È seduto, la schiena contro la base della colonna, le gambe allungate, il casco calato sul petto. Si è lasciato andare giù piano, si capisce, quando non c'era più nessun posto dove andare.\n[se la promessa è carico]Dentro non c'è mai nessuno, diceva Yusuf. [fine]Qualcuno è arrivato fin qui prima di me. Da solo. Come me." e adesso lo specchio è visto e adesso aumenta le tracce.
@@ -81,7 +81,7 @@ Il cadavere si chiama anche "morto".
 Il cadavere si chiama anche "tuta antica".
 Il cadavere si chiama anche "l.v.".
 La descrizione del cadavere è "Seduto contro la base della colonna, le gambe allungate, il casco calato sul petto. L'aria secca della serra non l'ha disfatto: l'ha seccato, come le felci. Dentro il casco c'è ancora una faccia, tesa sugli zigomi, di uno che a vederlo vivo avrei detto sui trentacinque anni. Nella destra stringe una punta da carotatore. Sul petto ha una placca graffiata a mano. Alla cintura, la scatola nera della tuta, spenta, e un metro di cavo di sicurezza tranciato di netto, come il mio.".
-Invece di analizza il cadavere: dire "Il multiscanner emette un tono lento.\nANALISI BIOMETRICA — specie: Homo sapiens. Età al decesso: trentacinque anni circa. Cause: anossia, ipotermia. Decesso stimato: centocinquant'anni fa, con lo stesso margine d'errore della giuntura.\nUn uomo, su una nave che nessun uomo ha costruito. Venuto fin qui da solo.".
+Invece di analizza il cadavere: dire "Il multiscanner emette un tono lento.\nANALISI BIOMETRICA — specie: Homo sapiens. Età al decesso: trentacinque anni circa. Cause: anossia, ipotermia. Decesso stimato: centocinquant'anni fa, con lo stesso margine d'errore della giuntura.\nUn uomo, su una nave che nessun uomo ha costruito.".
 Invece di tocca il cadavere: dire "Per mestiere, a un corpo in tuta ci si avvicina per vedere cosa gli si può ancora prendere. Mi fermo a un palmo. Non prendo niente.".
 Invece di prendi il cadavere: dire "No.".
 
@@ -96,7 +96,7 @@ La placca si chiama anche "parola".
 La descrizione della placca è "In stampatello, graffiato con la punta del carotatore: QUI PRIMA. IL SEME. NON SIAMO S— e lì la lettera si perde in un graffio che parte e non torna. Sotto, due lettere, le sole arrivate in fondo: L.V. I primi solchi sono profondi, decisi; gli ultimi appena accennati, di quando la mano non teneva più.".
 La descrizione della placca se il segno è firma è "QUI PRIMA. IL SEME. NON SIAMO S— e la lettera che si perde in un graffio. Sotto, L.V. E accanto, storte, le mie due lettere.".
 La descrizione della placca se il segno è parola è "QUI PRIMA. IL SEME. NON SIAMO S— e poi, con un'altra mano, più storta: OLI. La frase adesso arriva in fondo. Sotto, L.V.".
-Invece di analizza la placca: dire "ANALISI MANIFATTURA — origine terrestre, centocinquant'anni circa, modello fuori produzione. IDENTIFICAZIONE MISSIONE — logo: AURORA-7. Esplorazione in solitaria, non documentata negli archivi pubblici.\nDi una missione così, in centocinquant'anni, non è mai arrivata una parola.".
+Invece di analizza la placca: dire "ANALISI MANIFATTURA — origine terrestre, centocinquant'anni circa, modello fuori produzione. IDENTIFICAZIONE MISSIONE — logo: AURORA-7. Esplorazione in solitaria, non documentata negli archivi pubblici.\nAURORA-7. Non l'ho mai sentita nominare.".
 Invece di traduci la placca: dire "La matrice non si accende nemmeno: è stampatello, la mia lingua. Nessun alieno, nessun codice. Un uomo che voleva farsi capire.".
 
 Invece di incidi la placca se il giocatore non ha la taglierina: dire "Mi servirebbe qualcosa con cui incidere.".
@@ -109,7 +109,7 @@ Invece di firma la placca: dire "Regolo la taglierina al minimo e mi chino accan
 Invece di completa la placca se il giocatore non ha la taglierina: dire "Mi servirebbe qualcosa con cui incidere.".
 Invece di completa la placca se il segno non è assente: dire "C'era spazio per un segno solo, e l'ho fatto.".
 Invece di completa la placca se la lastra incisa è celata: dire "Non so come finisce. O credo di saperlo, e non mi basta.".
-Invece di completa la placca: dire "Mi chino. La parola si ferma all'inizio di una lettera, un graffio che parte e non torna, come il glifo dello Scriba. Con la taglierina al minimo lo proseguo: O. L. I. Non siamo soli. La mia grafia è storta accanto alla sua, ma la frase adesso arriva in fondo." e adesso il segno è parola.
+Invece di completa la placca: dire "Mi chino. La parola si ferma all'inizio di una lettera, in un graffio rimasto a metà, come il segno dello Scriba sulla lastra. Con la taglierina al minimo lo proseguo: O. L. I. Non siamo soli. La mia grafia è storta accanto alla sua, ma la frase adesso arriva in fondo." e adesso il segno è parola.
 
 La scatola nera è una cosa.
 La scatola nera è nella serra morente.
@@ -142,13 +142,13 @@ La teca è una cosa.
 La teca è nella serra morente.
 La teca è sigillata.
 La descrizione della teca è "Una teca di contenimento alta un metro, sigillata. Dentro, sospeso in un campo di stasi, un seme pulsa di una luce verde gentile: l'unica cosa viva, qui. Alla base, un pannello con tre simboli botanici e un incavo rettangolare, vuoto. La chiave che ci andava, qualcuno l'ha tenuta da un'altra parte.".
-La descrizione della teca se la teca è svuotata e il seme è nella serra morente è "La teca si è dissolta in pulviscolo di luce, e il seme fluttua libero sopra il piedistallo.".
+La descrizione della teca se la teca è svuotata e il seme è nella serra morente è "Della teca resta una polvere fine sparsa sul piedistallo; sopra, il seme fluttua libero.".
 La descrizione della teca se la teca è svuotata è "Della teca restano il piedistallo e un velo di pulviscolo spento.".
 Invece di analizza la teca: dire "Campo di stasi attivo, alimentazione autonoma, quasi esaurita. Il seme, dentro, è vivo. L'incavo alla base è una serratura: forma rettangolare, tre simboli botanici. Chiave non presente.".
-Invece di apri la teca se la teca è sigillata: dire "Niente maniglie: solo l'incavo, che aspetta la sua chiave.".
+Invece di apri la teca se la teca è sigillata: dire "Niente maniglie: solo l'incavo alla base, rettangolare, dove va la sua chiave.".
 Invece di usa la taglierina sulla teca se la teca è sigillata: dire "Il campo di stasi respinge il getto della taglierina come acqua su una piastra rovente. Per aprirla serve la sua chiave.".
 Invece di rompi la teca: dire "Il campo di stasi non si rompe. Per aprirla serve la sua chiave.".
-Invece di usa la tavoletta sulla teca se la teca è sigillata: dire "Inserisco la tavoletta nell'incavo: si adatta. I simboli si accendono uno dopo l'altro, con un clic armonioso, e la teca si dissolve in un pulviscolo di luce. Il seme resta a fluttuare libero davanti a me. La vibrazione cessa di colpo, e la serra diventa silenziosa del tutto." e adesso la teca è svuotata e adesso il seme è nella serra morente e adesso la tavoletta è nel nulla.
+Invece di usa la tavoletta sulla teca se la teca è sigillata: dire "Inserisco la tavoletta nell'incavo: si adatta. I simboli si accendono uno dopo l'altro, con un clic armonioso, e le pareti della teca si coprono di crepe e si sbriciolano in una polvere fine, che si posa sul piedistallo. Il seme resta a fluttuare libero davanti a me. La vibrazione cessa di colpo, e la serra diventa silenziosa del tutto." e adesso la teca è svuotata e adesso il seme è nella serra morente e adesso la tavoletta è nel nulla.
 
 Il seme è una cosa.
 Il seme è prendibile.
@@ -174,7 +174,7 @@ Le capsule si chiama anche "capsula".
 Le capsule si chiama anche "brina".
 La descrizione delle capsule è "Capsule di stasi criogenica, vetro scuro coperto di brina, troppe per contarle. Attraverso il vetro opaco non distinguo cosa contengano, e su nessuna c'è un segno, un nome, niente che dica chi c'è dentro. Lo scanner, sì. (ANALIZZALE.)".
 La descrizione delle capsule se le capsule è segnata è "Capsule di stasi, vetro scuro sotto la brina. Su quella più vicina, il mio segno.".
-Invece di analizza le capsule: dire "Punto lo scanner sulla capsula più vicina. Un bip lento.\nLETTURA: ‹FAUNA DEI TRE SOLI: GRANDE PASCOLATORE› — deceduto. Integrità genomica 0,02%. Provo con un'altra, e un'altra ancora: ‹FLORA DI XYLOS› — deceduto. ‹FORMA SILICEA: COSTRUTTORE› — deceduto.\nNon era una stiva: era un'arca. Un intero mondo, forse, conservato qui. E non c'è più.".
+Invece di analizza le capsule: dire "Punto lo scanner sulla capsula più vicina. Un bip lento.\nLETTURA: ‹FAUNA DEI TRE SOLI: GRANDE PASCOLATORE› — deceduto. Integrità genomica 0,02%. Provo con un'altra, e un'altra ancora: ‹FLORA DI XYLOS› — deceduto. ‹FORMA SILICEA: COSTRUTTORE› — deceduto.\nNon era una stiva: era un'arca. Lo scanner scrive «deceduto» su ogni capsula che inquadro, finché lo abbasso.".
 Invece di incidi le capsule se il giocatore non ha la taglierina: dire "Mi servirebbe qualcosa con cui incidere.".
 Invece di incidi le capsule se le capsule è segnata: dire "Il mio segno è già lì, sul vetro della capsula più vicina.".
 Invece di incidi le capsule: dire "Mi inginocchio davanti alla capsula più vicina e, con la taglierina al minimo, incido un segno sul vetro scuro. Non un nome: non saprei quale scrivere. Soltanto la prova che qualcuno è passato e si è fermato davanti a loro, morti nel sonno." e adesso le capsule è segnata.
@@ -193,7 +193,7 @@ Il cristallo è nell'arca biologica.
 Il cristallo è opaco.
 Il cristallo si chiama anche "cristallo dati".
 La descrizione del cristallo è "Un piccolo cristallo scuro, freddo e inerte. Un supporto di memoria addormentato: gli serve uno stimolo per svegliarsi.".
-La descrizione del cristallo se il cristallo è attivo è "Il cristallo è trasparente, adesso, e dentro una trama di filamenti luminosi pulsa come un cuore che ha ripreso a battere. È tiepido, e aspetta di essere inserito in qualcosa.".
+La descrizione del cristallo se il cristallo è attivo è "Il cristallo è trasparente, adesso, e dentro una trama di filamenti luminosi pulsa come un cuore che ha ripreso a battere. È tiepido, e ha l'aria di un pezzo da montare in qualche macchina.".
 Invece di usa il dispositivo medico sul cristallo se il cristallo è opaco: dire "Con una certa esitazione accendo il dispositivo medico: la punta di cristallo emette un ronzio appena udibile e una luce ambrata. La avvicino al cristallo opaco. Appena si toccano, la superficie lattiginosa diventa trasparente, e dentro una trama di filamenti luminosi comincia a pulsare. Adesso è tiepido, e vibra: sembra fatto per essere inserito in qualcosa." e adesso il cristallo è attivo.
 
 # ============================================================================

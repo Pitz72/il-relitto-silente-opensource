@@ -25,7 +25,7 @@ Le pareti del corridoio è di scena.
 Le pareti del corridoio si chiama anche "muro".
 Le pareti del corridoio si chiama anche "pareti".
 Le pareti del corridoio si chiama anche "luce azzurrina".
-La descrizione delle pareti del corridoio è "Non sembrano costruite: sembrano cresciute, con una trama fine come d'osso o di madreperla. È da lì dentro che viene la luce azzurrina.".
+La descrizione delle pareti del corridoio è "Sembrano cresciute, con una trama fine come d'osso o di madreperla, senza una saldatura. È da lì dentro che viene la luce azzurrina.".
 
 Le tacche è una cosa.
 Le tacche è nel corridoio principale.
@@ -33,7 +33,7 @@ Le tacche è di scena.
 Le tacche è vergine.
 Le tacche si chiama anche "segni".
 Le tacche si chiama anche "tre tacche".
-La descrizione delle tacche è "Tre tacche orizzontali, parallele, alla base della parete accanto all'imbocco. Troppo regolari per essere usura: qualcuno le ha fatte apposta, come fa chi segna i posti già visti per non perdersi.".
+La descrizione delle tacche è "Tre tacche orizzontali, parallele, alla base della parete accanto all'imbocco. Troppo regolari per essere usura: qualcuno le ha fatte apposta, forse per segnare un posto già visto e non perdersi.".
 La descrizione delle tacche se le tacche è segnata è "Quattro tacche, adesso. Tre di chi è passato prima di me, e una mia.".
 
 Invece di analizza le tacche se il solco è ignoto: dire "Il multiscanner misura i solchi. La punta che li ha fatti era una punta da carotatore, attrezzatura terrestre di serie, un modello di un secolo e mezzo fa. Chi ha inciso qui veniva da dove vengo io." e adesso il solco è misurato e adesso aumenta le tracce.
@@ -57,15 +57,15 @@ La grande porta si chiama anche "porta ovest".
 La grande porta si chiama anche "incavi".
 La grande porta si chiama anche "incavo".
 La grande porta si chiama anche "diagramma".
-La descrizione della grande porta è "Massiccia, con un diagramma stellare a più punte inciso al centro. Alla base, tre incavi scuri di forma diversa: uno ovoidale, uno rettangolare e piatto, uno cristallino a molte facce. Aspetta tre chiavi.".
-La descrizione della grande porta se la grande porta è aperta è "Dove c'era la Grande Porta adesso c'è luce che si disperde: il passaggio a ovest è aperto sul Ponte.".
+La descrizione della grande porta è "Massiccia, con un diagramma stellare a più punte inciso al centro. Alla base, tre incavi scuri di forma diversa: uno ovoidale, uno rettangolare e piatto, uno cristallino a molte facce. Per aprirla servono tre chiavi.".
+La descrizione della grande porta se la grande porta è aperta è "Dove c'era la Grande Porta adesso c'è un varco netto, senza stipiti: il passaggio a ovest dà sul Ponte.".
 
 # --- Le tre chiavi (il demone in relitto.fav apre la porta alla terza) -------
 # «Le chiavi» conta i depositi sulla porta, non le prese.
 Invece di usa il seme sulla grande porta se il giocatore ha il seme: dire "Avvicino il seme all'incavo ovoidale: viene attratto e si incastra con un clic delicato. La sua luce verde corre lungo il bordo della porta e ci resta. In mano, del seme, non ho più niente." e adesso il seme è nel nulla e adesso aumenta le chiavi.
 Invece di usa la stele sulla grande porta se il giocatore ha la stele: dire "Inserisco la Stele del Ricordo nell'incavo rettangolare. Si adatta. Una linea di luce bianca si aggiunge alla prima." e adesso la stele è nel nulla e adesso aumenta le chiavi.
 Invece di usa il nucleo sulla grande porta se il giocatore ha il nucleo: dire "Posiziono il Nucleo di Memoria nell'incavo a molte facce: una linea di luce ambrata chiude il circuito, e un ronzio profondo, armonico, riempie il corridoio." e adesso il nucleo è nel nulla e adesso aumenta le chiavi.
-Invece di apri la grande porta se la grande porta è chiusa: dire "Non ha maniglie né serrature: ha tre incavi, e aspetta quello che ci va dentro.".
+Invece di apri la grande porta se la grande porta è chiusa: dire "Non ha maniglie né serrature. Si apre soltanto con quello che va nei tre incavi.".
 
 # --- Gating ------------------------------------------------------------------
-Invece di vai ovest se il giocatore è nel corridoio principale e la grande porta è chiusa: dire "La Grande Porta è sigillata. I tre incavi alla sua base aspettano le loro chiavi.".
+Invece di vai ovest se il giocatore è nel corridoio principale e la grande porta è chiusa: dire "La Grande Porta è sigillata. Finché nei tre incavi alla sua base mancano le chiavi, di qui non passo.".

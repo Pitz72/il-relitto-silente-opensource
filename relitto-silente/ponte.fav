@@ -76,7 +76,7 @@ La descrizione delle punte è "Cinque punte luminose retrattili, disposte a ragg
 # --- La console e la mappa ----------------------------------------------------
 Invece di usa la postazione se l'energia è assente: dire "Appoggio la mano sulla depressione, ma la console resta morta e gelida. Manca l'energia: finché la nave non si sveglia, il Ponte è inerte.".
 Invece di usa la postazione se la proiezione è attiva: dire "La console è già sveglia: la mappa stellare brilla sopra di me.".
-Invece di usa la postazione: dire "Appoggio la mano guantata sulla depressione, e la console reagisce: non a chi sono, ma a quello che voglio. Un'ondata di energia silenziosa attraversa la sala, le postazioni si accendono, e la struttura centrale proietta sulla cupola una mappa stellare a tre dimensioni. La rotta è chiara, e il punto d'arrivo inconfondibile: il mio sole." e adesso la proiezione è attiva.
+Invece di usa la postazione: dire "Appoggio la mano guantata sulla depressione, e la console reagisce a quello che voglio, anche se non sono uno di loro. Un'ondata di energia silenziosa attraversa la sala, le postazioni si accendono, e la struttura centrale proietta sulla cupola una mappa stellare a tre dimensioni. La rotta è chiara, e il punto d'arrivo inconfondibile: il mio sole." e adesso la proiezione è attiva.
 Invece di tocca la postazione: dire "(Per svegliarla: USA LA POSTAZIONE.)".
 
 Invece di analizza la mappa stellare se la proiezione è spenta: dire "Non c'è nessuna mappa da analizzare: il Ponte è ancora inerte.".
@@ -86,11 +86,11 @@ Invece di analizza la mappa stellare: dire "Seguo la rotta all'indietro, partend
 # --- La porta circolare: tre punte --------------------------------------------
 Invece di tocca le punte se la porta circolare è aperta: dire "La porta è già aperta.".
 Invece di tocca le punte se la proiezione è spenta: dire "Il pannello della porta è morto: nessuna punta risponde finché il Ponte non ha energia e la console non è sveglia.".
-Invece di tocca le punte se il sistema è ignoto: dire "Le punte aspettano un numero preciso, e non so quale. Da qualche parte, sulla nave, ci sarà un indizio.".
+Invece di tocca le punte se il sistema è ignoto: dire "Devo premere un numero preciso di punte, e non so quale. Da qualche parte, sulla nave, ci sarà un indizio.".
 Invece di tocca le punte: dire "Ripenso alla culla della rotta, i tre soli, e appoggio la mano sul pannello: premo tre punte. Un clic armonioso, e la porta tonda si apre con un movimento senza attrito su un buio pieno." e adesso la porta circolare è aperta.
 Invece di premi le punte se la porta circolare è aperta: dire "La porta è già aperta.".
 Invece di premi le punte se la proiezione è spenta: dire "Il pannello della porta è morto: nessuna punta risponde finché il Ponte non ha energia e la console non è sveglia.".
-Invece di premi le punte se il sistema è ignoto: dire "Le punte aspettano un numero preciso, e non so quale. Da qualche parte, sulla nave, ci sarà un indizio.".
+Invece di premi le punte se il sistema è ignoto: dire "Devo premere un numero preciso di punte, e non so quale. Da qualche parte, sulla nave, ci sarà un indizio.".
 Invece di premi le punte: dire "Ripenso alla culla della rotta, i tre soli, e appoggio la mano sul pannello: premo tre punte. Un clic armonioso, e la porta tonda si apre con un movimento senza attrito su un buio pieno." e adesso la porta circolare è aperta.
 
 # --- Gating e l'ultimo avviso -------------------------------------------------
@@ -103,14 +103,14 @@ Invece di vai ovest se il giocatore è nel ponte di comando e l'aria è meno di 
 # ANTICAMERA [!]
 # ============================================================================
 L'anticamera è una stanza.
-La descrizione dell'anticamera è "Il passaggio si stringe. Le pareti non fanno più luce: qui è tutto scuro, di un buio che assorbe invece di mancare. I miei passi non fanno rumore, e non so se è il pavimento o se ho smesso di farne io. Davanti, a ovest, una soglia aperta.".
+La descrizione dell'anticamera è "Il passaggio si stringe. Le pareti non fanno più luce: qui è tutto scuro, di un buio denso che assorbe ogni riflesso. I miei passi non fanno rumore, e non so se è il pavimento o se ho smesso di farne io. Davanti, a ovest, una soglia aperta.".
 
 Il buio è una cosa.
 Il buio è nell'anticamera.
 Il buio è di scena.
 Il buio si chiama anche "soglia aperta".
 Il buio si chiama anche "soglia".
-La descrizione del buio è "Non è assenza di luce: è qualcosa che la beve. Le pareti si avvicinano verso il centro, come una strozzatura. Uno spazio fatto per essere attraversato, non visitato.".
+La descrizione del buio è "Il buio beve anche la luce del faro, che qui arriva a pochi passi. Le pareti si avvicinano verso il centro, come una strozzatura, e lasciano lo spazio appena per passare.".
 
 Invece di vai est se il giocatore è nell'anticamera: dire "Ho attraversato la soglia. Non torno indietro, adesso.".
 
@@ -132,7 +132,7 @@ L'anziano è nel santuario centrale.
 L'anziano è di scena.
 L'anziano si chiama anche "figura".
 L'anziano si chiama anche "ologramma".
-La descrizione dell'anziano è "Una proiezione di uno di loro, ma più vecchio del Navarca, con paramenti da cerimonia e un'espressione di calma profonda. Non minaccia: aspetta. (PARLA CON L'ANZIANO.)".
+La descrizione dell'anziano è "Una proiezione di uno di loro, ma più vecchio del Navarca, con paramenti da cerimonia e un'espressione di calma profonda. Tace, e lascia a me la prima parola. (PARLA CON L'ANZIANO.)".
 La descrizione dell'anziano se la fuga è iniziata è "Non c'è più. La sua luce è dentro il seme.".
 
 Invece di vai est se il giocatore è nel santuario centrale: dire "Non c'è più nessun indietro. C'è soltanto la figura luminosa, e quello che ha da dirmi.".

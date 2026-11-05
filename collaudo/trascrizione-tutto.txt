@@ -172,7 +172,7 @@ Un cavo guida di fabbricazione terrestre, di un modello che non si usa da un sec
 
 > segui la parete
 Metto la spalla contro le teche chiuse e mi tengo lì, dove il freddo tiene fermi i filamenti. Passo corto, il faro basso puntato sulle suole. Uno mi cerca all'altezza del fianco e trova solo vetro gelato. Adesso so dove sono: la parete mi porta verso il passaggio, a ovest.
-Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che mi arriva nei denti prima che nelle cuffie. Poi più niente.
+Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che mi arriva nei denti prima che nelle cuffie. Resto fermo ad ascoltare, ma non ne segue un altro.
 
 > ovest
 
@@ -232,7 +232,7 @@ Infilo la lastra in un alloggiamento del multiscanner: i processori si mettono a
 > sud
 
 --- La serra morente ---
-Una serra a cupola, vasta, con l'aria secca come carta. Felci scheletriche e funghi contorti pendono dalle pareti nella posa in cui sono morti, sotto uno strato di polvere che sembra neve grigia. Una vibrazione bassa attraversa la stanza, più nelle ossa che nell'aria. Al centro, sotto la cupola, qualcosa brilla di luce propria. Contro la base di una delle colonne spente che reggono la cupola, a mezzo metro da quella luce, è seduto un uomo in tuta. A nord si torna al corridoio; dietro i funghi, a ovest, si apre un passaggio più scuro.
+Una serra a cupola, vasta, con l'aria secca come carta. Felci scheletriche e funghi contorti pendono dalle pareti nella posa in cui sono morti, sotto uno strato di polvere che sembra neve grigia. Una vibrazione bassa attraversa la stanza, più nelle ossa che nell'aria. Al centro, sotto la cupola, pulsa piano una luce verde. Contro la base di una delle colonne spente che reggono la cupola, a mezzo metro da quella luce, è seduto un uomo in tuta. A nord si torna al corridoio; dietro i funghi, a ovest, si apre un passaggio più scuro.
 Puoi vedere qui: una teca.
 Uscite: Nord (Il corridoio principale), Ovest.
 Il faro ci passa sopra e va oltre, poi torna indietro da solo, come la mano di chi ha visto qualcosa prima di saperlo. Contro la colonna c'è un uomo.
@@ -240,7 +240,7 @@ Una tuta di un secolo e mezzo fa, di un modello che ho visto soltanto nei catalo
 Dentro non c'è mai nessuno, diceva Yusuf. Qualcuno è arrivato fin qui prima di me. Da solo. Come me.
 
 > usa la tavoletta sulla teca
-Inserisco la tavoletta nell'incavo: si adatta. I simboli si accendono uno dopo l'altro, con un clic armonioso, e la teca si dissolve in un pulviscolo di luce. Il seme resta a fluttuare libero davanti a me. La vibrazione cessa di colpo, e la serra diventa silenziosa del tutto.
+Inserisco la tavoletta nell'incavo: si adatta. I simboli si accendono uno dopo l'altro, con un clic armonioso, e le pareti della teca si coprono di crepe e si sbriciolano in una polvere fine, che si posa sul piedistallo. Il seme resta a fluttuare libero davanti a me. La vibrazione cessa di colpo, e la serra diventa silenziosa del tutto.
 
 > prendi il seme
 Chiudo le dita attorno al seme. È caldo, quasi febbrile, e una vibrazione costante mi risale il braccio. A mezzo metro da qui un uomo l'ha guardato pulsare fino all'ultimo, senza poterlo toccare. Adesso ce l'ho in mano io.
@@ -270,12 +270,12 @@ Preso: il cristallo.
 
 > usa il dispositivo medico sul cristallo
 Con una certa esitazione accendo il dispositivo medico: la punta di cristallo emette un ronzio appena udibile e una luce ambrata. La avvicino al cristallo opaco. Appena si toccano, la superficie lattiginosa diventa trasparente, e dentro una trama di filamenti luminosi comincia a pulsare. Adesso è tiepido, e vibra: sembra fatto per essere inserito in qualcosa.
-Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che mi arriva nei denti prima che nelle cuffie. Poi più niente.
+Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che mi arriva nei denti prima che nelle cuffie. Resto fermo ad ascoltare, ma non ne segue un altro.
 
 > est
 
 --- La serra morente ---
-La serra morta. Il campo di contenimento si è spento e il silenzio adesso è completo. Al centro, sul piedistallo, i resti della teca dissolta. Contro la colonna, a mezzo metro, l'uomo in tuta, il casco calato sul petto. A nord il corridoio; a ovest, dietro i funghi, il passaggio scuro.
+La serra morta. Il campo di contenimento si è spento e il silenzio adesso è completo. Al centro, sul piedistallo, la polvere della teca. Contro la colonna, l'uomo in tuta, il casco calato sul petto. A nord il corridoio; a ovest, dietro i funghi, il passaggio scuro.
 Puoi vedere qui: una teca.
 Uscite: Nord (Il corridoio principale), Ovest (L'arca biologica).
 
@@ -295,14 +295,14 @@ Uscite: Su (Il corridoio principale).
 
 > prendi il sintonizzatore
 Preso: il sintonizzatore.
-Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che mi arriva nei denti prima che nelle cuffie. Poi più niente.
+Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che mi arriva nei denti prima che nelle cuffie. Resto fermo ad ascoltare, ma non ne segue un altro.
 
 > sintonizza il generatore
 Il Sintonizzatore fischia. L'INGEGNERE CAPO: «La risonanza è instabile! Il cristallo non regge il carico! Evacuate il settore, subito!» Poi, più piano: «Non ci riesco. Se lascio il generatore adesso il campo crolla, e con lui tutta la Sezione Seme. Voi andate. Io resto.» Il Sintonizzatore resta agganciato più del dovuto, come se sotto ci fosse altro.
 
 > usa il cristallo sul generatore
 Inserisco il cristallo pulsante nel vano del generatore. Con un rombo che sale, i macchinari si svegliano: l'elettricità corre fra le bobine, i monitor si accendono su flussi stabili, diretti al Ponte e all'Archivio.
-Un brivido percorre lo scafo. Lontano, sistemi spenti da sempre tornano a respirare uno dopo l'altro. Per la prima volta, il relitto non è del tutto morto.
+Lo scafo mi vibra sotto i piedi, una volta sola. Lontano, dietro le pareti, sistemi spenti da sempre tornano a respirare uno dopo l'altro, e per la prima volta sento la nave lavorare.
 
 > su
 
@@ -363,14 +363,14 @@ Uscite: Sudovest (Il corridoio principale), Nord.
 Preso: il cilindro mnemonico.
 
 > analizza il cilindro mnemonico
-Infilo il cilindro nello scanner: un'altra registrazione, e la matrice si aggiorna. La voce è più chiara, più personale: «…il legame che ci teneva insieme si affievolisce. I cicli sono quasi compiuti. Il Grande Salto è riuscito, ma il nostro tempo finisce. Lasciamo questa eco… questo (intraducibile: seme-dell'anima)… Non la fine. La continuazione…» (Matrice di traduzione: 18%) Adesso la matrice legge davvero. E leggere, come ascoltare, costa fiato.
+Infilo il cilindro nello scanner: un'altra registrazione, e la matrice si aggiorna. La voce è più chiara, più personale: «…il legame che ci teneva insieme si affievolisce. I cicli sono quasi compiuti. Il Grande Salto è riuscito, ma il nostro tempo finisce. Lasciamo questa eco… questo (intraducibile: seme-dell'anima)… perché continui… anche dopo di noi…» (Matrice di traduzione: 18%) Adesso la matrice legge davvero. E leggere, come ascoltare, costa fiato.
 Nella cuffia il brusio cala fino quasi a sparire, come una sala piena che smette di parlare quando entro. Poi riprende.
 
 > sintonizza le alcove
 Il Sintonizzatore aggancia una frequenza. IL NAVARCA: «Questo sarà il mio ultimo ciclo di veglia. Ho chiesto di restare l'ultimo. Qualcuno deve spegnere le luci, quando tutti se ne sono andati. È… è un onore.» Il Sintonizzatore resta agganciato più del dovuto, come se sotto ci fosse altro.
 
 > sintonizza le alcove
-Il Sintonizzatore non si spegne: scende di frequenza, e dal fondo viene su un secondo strato. IL NAVARCA, e stavolta non parla all'equipaggio, parla a se stesso: «Mi domando se qualcuno verrà. Non per salvarci: è impossibile da prima che io nascessi. Solo per vedere. Per sapere che siamo stati qui. Se sei tu che ascolti, da qualunque tempo tu venga: ho tenuto le luci accese fino all'ultimo respiro. Non contro il buio. Perché tu trovassi la strada.»
+Il Sintonizzatore non si spegne: scende di frequenza, e dal fondo viene su un secondo strato. IL NAVARCA, e stavolta non parla all'equipaggio, parla a se stesso: «Mi domando se qualcuno verrà. È tardi per salvarci, lo era già prima che io nascessi. Verrà per vedere, magari. Per sapere che siamo stati qui. Se sei tu che ascolti, da qualunque tempo tu venga: ho tenuto le luci accese fino all'ultimo respiro. Non contro il buio. Perché tu trovassi la strada.»
 
 > nord
 
@@ -423,10 +423,10 @@ Libero il disco di pietra incastrato nel meccanismo del proiettore. Il proiettor
 Il Sintonizzatore aggancia una frequenza. LO SCRIBA: «L'ultima iscrizione è finita. Sulla Stele c'è tutto quello che ci hanno chiesto di ricordare, e ogni solco è dritto. Le mie dita non lo sono più. Non so se qualcuno la leggerà mai.»
 
 > traduci il globo olografico
-Rallentando i globi riesco a fermare qualche intestazione: «registro di chi nacque sotto il primo sole», «atlante delle acque perdute», «canti per chi resta». Soltanto i titoli. Ma bastano a misurare il vuoto: qui c'è la memoria intera di un popolo.
+Rallentando i globi riesco a fermare qualche intestazione: «registro di chi nacque sotto il primo sole», «atlante delle acque perdute», «canti per chi resta». Soltanto i titoli. Ma sono così tanti, e così diversi, che qui dentro dev'esserci tutto quello che ricordavano.
 
 > traduci la lastra incisa
-Affiorano poche parole, e fra queste un pronome che torna: «io… io che ho inciso…», «…l'ultima…». Non è la lingua impersonale degli archivi. Qui qualcuno parla in prima persona. Da solo.
+Affiorano poche parole, e fra queste un pronome che torna: «io… io che ho inciso…», «…l'ultima…». Non è la lingua impersonale degli archivi. Qui qualcuno parla in prima persona.
 
 > sintonizza la lastra incisa
 Il Sintonizzatore non trova una voce. Trova un suono: una punta contro la pietra, ostinata, che incide, si ferma, riprende. Si interrompe sempre allo stesso punto, a metà del segno, come una firma rimasta a metà.
@@ -481,7 +481,7 @@ Giro il disco di un terzo: il sole più grande adesso è a sinistra.
 Giro il disco di un terzo: il sole più grande adesso è in alto.
 
 > usa il disco sull'altare
-Appoggio il disco nell'incavo, con il sole più grande verso la tacca. Questa volta scende fino in fondo. Per un istante non succede niente, poi dall'interno della pietra arriva un colpo profondo, e una sezione dell'altare si ritira senza rumore. Nello scomparto, posata su un cuscino di luce che sembra solida, c'è la Stele del Ricordo.
+Appoggio il disco nell'incavo, con il sole più grande verso la tacca. Questa volta scende fino in fondo. Per un istante non succede niente, poi dall'interno della pietra arriva un colpo profondo, e una sezione dell'altare si ritira senza rumore. Nello scomparto, sollevata di un dito dal fondo senza niente che la regga, c'è la Stele del Ricordo.
 
 > prendi la stele
 Prendo la Stele del Ricordo dallo scomparto. È leggera, più di quanto mi aspettassi, e tiepida. La seconda chiave.
@@ -510,7 +510,7 @@ Puoi vedere qui: un generatore.
 Uscite: Su (Il corridoio principale).
 
 > sintonizza il generatore
-Sotto la voce dell'Ingegnere il Sintonizzatore aggancia un secondo strato: una voce più bassa, quasi un canto sottovoce. È la stessa che nella gola di mezzo non si lasciava spegnere. «Li ho scritti tutti, qui sul banco. Ogni nome di chi è salito sulle navi, e ogni nome di chi è rimasto quaggiù con me a tenere fermo il campo. Non per la storia: la storia non verrà. Perché siano detti ad alta voce ancora una volta, finché c'è una voce che li dice. Allora li dico. Uno per uno. Piano. Finché la voce regge.»
+Sotto la voce dell'Ingegnere il Sintonizzatore aggancia un secondo strato: una voce più bassa, quasi un canto sottovoce. È la stessa che nella gola di mezzo non si lasciava spegnere. «Li ho scritti tutti, qui sul banco. Ogni nome di chi è salito sulle navi, e ogni nome di chi è rimasto quaggiù con me a tenere fermo il campo. Dopo di noi non li leggerà nessuno. Vanno detti ad alta voce ancora una volta, finché c'è una voce che li dice. Allora li dico. Uno per uno. Piano. Finché la voce regge.»
 24. La cifra è rossa. La tuta fa da sola quello che le hanno insegnato: stacca i canali secondari, e sul visore compare la scritta che speravo di non leggere, PROTEZIONE VITALE. Niente ascolto, niente traduzione, finché non le do altra aria. Anche il faro scende al minimo, da solo.
 
 > ricarica la tuta
@@ -530,7 +530,7 @@ Uscite: Est (Il vestibolo delle gole), Nord (Il santuario del silenzio), Sud (La
 > sud
 
 --- La serra morente ---
-La serra morta. Il campo di contenimento si è spento e il silenzio adesso è completo. Al centro, sul piedistallo, i resti della teca dissolta. Contro la colonna, a mezzo metro, l'uomo in tuta, il casco calato sul petto. A nord il corridoio; a ovest, dietro i funghi, il passaggio scuro.
+La serra morta. Il campo di contenimento si è spento e il silenzio adesso è completo. Al centro, sul piedistallo, la polvere della teca. Contro la colonna, l'uomo in tuta, il casco calato sul petto. A nord il corridoio; a ovest, dietro i funghi, il passaggio scuro.
 Puoi vedere qui: una teca.
 Uscite: Nord (Il corridoio principale), Ovest (L'arca biologica).
 
@@ -552,12 +552,12 @@ Il Sintonizzatore aggancia una frequenza. L'UFFICIALE MEDICO: «I sistemi vitali
 > est
 
 --- La serra morente ---
-La serra morta. Il campo di contenimento si è spento e il silenzio adesso è completo. Al centro, sul piedistallo, i resti della teca dissolta. Contro la colonna, a mezzo metro, l'uomo in tuta, il casco calato sul petto. A nord il corridoio; a ovest, dietro i funghi, il passaggio scuro.
+La serra morta. Il campo di contenimento si è spento e il silenzio adesso è completo. Al centro, sul piedistallo, la polvere della teca. Contro la colonna, l'uomo in tuta, il casco calato sul petto. A nord il corridoio; a ovest, dietro i funghi, il passaggio scuro.
 Puoi vedere qui: una teca.
 Uscite: Nord (Il corridoio principale), Ovest (L'arca biologica).
 
 > completa la parola
-Mi chino. La parola si ferma all'inizio di una lettera, un graffio che parte e non torna, come il glifo dello Scriba. Con la taglierina al minimo lo proseguo: O. L. I. Non siamo soli. La mia grafia è storta accanto alla sua, ma la frase adesso arriva in fondo.
+Mi chino. La parola si ferma all'inizio di una lettera, in un graffio rimasto a metà, come il segno dello Scriba sulla lastra. Con la taglierina al minimo lo proseguo: O. L. I. Non siamo soli. La mia grafia è storta accanto alla sua, ma la frase adesso arriva in fondo.
 
 > traduci la placca
 La matrice non si accende nemmeno: è stampatello, la mia lingua. Nessun alieno, nessun codice. Un uomo che voleva farsi capire.
@@ -577,7 +577,7 @@ Inserisco la Stele del Ricordo nell'incavo rettangolare. Si adatta. Una linea di
 
 > usa il nucleo sulla grande porta
 Posiziono il Nucleo di Memoria nell'incavo a molte facce: una linea di luce ambrata chiude il circuito, e un ronzio profondo, armonico, riempie il corridoio.
-Le tre luci — verde, bianca e ambrata — pulsano all'unisono. La loro frequenza accelera, il ronzio diventa un gong risonante che vibra in tutta la nave. Il simbolo a stella brilla di luce accecante, e la Grande Porta, a ovest, non si apre: si dissolve in particelle di luce, come stelle che tornano al cielo.
+Le tre luci — verde, bianca e ambrata — pulsano all'unisono. La loro frequenza accelera, il ronzio diventa un gong risonante che vibra in tutta la nave. Il simbolo a stella si accende una punta dopo l'altra, e la Grande Porta, a ovest, si fa trasparente e sempre più sottile, finché al suo posto resta un varco aperto.
 
 > ovest
 
@@ -587,18 +587,18 @@ Puoi vedere qui: una postazione, una porta circolare, delle punte.
 Uscite: Est (Il corridoio principale), Ovest.
 
 > usa la postazione
-Appoggio la mano guantata sulla depressione, e la console reagisce: non a chi sono, ma a quello che voglio. Un'ondata di energia silenziosa attraversa la sala, le postazioni si accendono, e la struttura centrale proietta sulla cupola una mappa stellare a tre dimensioni. La rotta è chiara, e il punto d'arrivo inconfondibile: il mio sole.
+Appoggio la mano guantata sulla depressione, e la console reagisce a quello che voglio, anche se non sono uno di loro. Un'ondata di energia silenziosa attraversa la sala, le postazioni si accendono, e la struttura centrale proietta sulla cupola una mappa stellare a tre dimensioni. La rotta è chiara, e il punto d'arrivo inconfondibile: il mio sole.
 
 > analizza la mappa stellare
 La rotta la conosco: un sistema trino, tre soli. La loro culla.
 
 > sintonizza la struttura centrale
 Il Sintonizzatore aggancia una frequenza. L'UFFICIALE DI NAVIGAZIONE: «La rotta è confermata e sigillata nei cristalli. Fra quattro milioni e settecentomila cicli il sistema bersaglio sarà maturo. Noi non ci saremo.»
-Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che mi arriva nei denti prima che nelle cuffie. Poi più niente.
+Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che mi arriva nei denti prima che nelle cuffie. Resto fermo ad ascoltare, ma non ne segue un altro.
 Nella cuffia il brusio cala fino quasi a sparire, come una sala piena che smette di parlare quando entro. Poi riprende.
 
 > traduci la mappa stellare
-Leggo tutto. «Giardino: qui, se da qualche parte.» E proprio sopra il mio sole, in una grafia più piccola, aggiunta dopo, una riga che non è una rotta: «Non torneremo a vedere se è fiorito. Va bene così.»
+Leggo tutto. «Giardino: qui, se da qualche parte.» E proprio sopra il mio sole, in una grafia più piccola, aggiunta dopo, una riga senza numeri: «Non torneremo a vedere se è fiorito. Va bene così.»
 
 > usa la cella di riserva
 Sgancio la cella esausta dal fianco della tuta e innesto quella di riserva. La valvola sibila, e la cifra sul visore risale.
@@ -625,7 +625,7 @@ Uscite: Sud (L'alloggio dell'equipaggio).
 
 > parla con l'eco
 
-L'eco: «…perché non si muove… perché nessuno…» La domanda gira e ricomincia, uguale, come chi chiede e non aspetta più risposta.
+L'eco: «…perché non si muove… perché nessuno…» La domanda gira e ricomincia, uguale, con una pausa breve fra un giro e l'altro.
   1. Perché siete arrivati.
   2. Non lo so.
   3. [Resta in silenzio.]
@@ -633,7 +633,7 @@ L'eco: «…perché non si muove… perché nessuno…» La domanda gira e ricom
 
 > Perché siete arrivati.
 
-L'eco: La domanda gira ancora una volta. «…perché non si muove…» Poi, per la prima volta, non ricomincia. Resta il fruscio della registrazione, e basta. Non so se mi ha sentito. Non so nemmeno se una registrazione può sentire.
+L'eco: La domanda gira ancora una volta. «…perché non si muove…» Poi, per la prima volta, non ricomincia. Nella cuffia resta il fruscio della registrazione, che va avanti a vuoto. Non so se mi ha sentito. Non so nemmeno se una registrazione può sentire.
   1. Lascia stare.
 
 > Lascia stare.
@@ -672,7 +672,7 @@ Sul visore la tuta mi mette davanti un conto che non le ho chiesto: aria 49, e o
 > ovest
 
 --- L'anticamera ---
-Il passaggio si stringe. Le pareti non fanno più luce: qui è tutto scuro, di un buio che assorbe invece di mancare. I miei passi non fanno rumore, e non so se è il pavimento o se ho smesso di farne io. Davanti, a ovest, una soglia aperta.
+Il passaggio si stringe. Le pareti non fanno più luce: qui è tutto scuro, di un buio denso che assorbe ogni riflesso. I miei passi non fanno rumore, e non so se è il pavimento o se ho smesso di farne io. Davanti, a ovest, una soglia aperta.
 Uscite: Est (Il ponte di comando), Ovest.
 
 > ovest
@@ -744,7 +744,7 @@ Uscite: Su (La gola di mezzo), Ovest (Il vivaio), Est.
 > su
 
 --- La gola di mezzo ---
-La gola di mezzo trema e si stringe, e le venature si accendono tutte insieme di un verde malato, come per l'ultima volta. Sopra, il vestibolo. Sotto, il groviglio.
+La gola di mezzo trema e si stringe, e le venature si accendono tutte insieme di un verde malato, che va e viene a scatti. Sopra, il vestibolo. Sotto, il groviglio.
 Uscite: Su (Il vestibolo delle gole), Giù (La sala delle teche).
 Nella cuffia torna la voce dei nomi, una parola dopo l'altra, senza fretta. È l'Ingegnere. Sta ancora dicendo i nomi.
 
@@ -756,7 +756,7 @@ Puoi vedere qui: un risuonatore.
 Uscite: Est (La camera di compensazione), Giù (La gola di mezzo).
 Da qualche parte dietro di me qualcosa crolla, con un rumore che non arriva: lo sento nelle suole.
 Sotto di me, nella gola, la voce dei nomi tace a metà di un nome.
-28. La cifra è rossa. Adesso la tuta non mi protegge più da niente: mi tiene in vita, e basta.
+28. La cifra è rossa. Da qui alla Santa Maria la tuta lavora soltanto per tenermi in vita.
 
 > est
 

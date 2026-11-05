@@ -541,6 +541,15 @@ Si riempie in sessione, punto per punto. «—» vuol dire da discutere.
   già fra le antitesi), cinque luci di repertorio, nove frasi solenni, e i doppioni dei motivi (G6). Nessuna è in una
   battuta registrata. Si scrive con ogni frase prima e dopo, approvata dall’autore, poi le partite verosimili
   dell’aria (§12) devono dare gli stessi numeri.
+- **Blocco G, scritto il 5 novembre 2026** (approvato dall’autore: «Sì, approvo», cinquanta frasi). Su sua proposta, tre
+  sessioni parallele, una per gruppo di file, con le skill di prosa: le proposte, ogni stringa prima e dopo, sono in
+  `progettazione/stile-G/` (A, il Ponte e la porta; B, le traduzioni e la memoria; C, la serra, le voci e la fuga),
+  con il `README.md` che elenca i quattro ritocchi dell’armonizzazione e una voce in più (A-17, «Aspetta tre
+  chiavi.» della Grande Porta, con la regola del G6). La Grande Porta si apre in un varco, la teca si sbriciola in
+  polvere. Le partite da principiante danno la stessa aria (§12). Fuori dalle decisioni le sessioni hanno segnalato
+  otto frasi fatte («È come voler bere da una cascata», «crepe come ferite», «polvere digitale», «pulsa come un cuore
+  che ha ripreso a battere», «Con una certa esitazione», «Un’ondata di energia silenziosa», «Non un nome: non saprei
+  quale scrivere», «Il numero dev’essere la chiave»): da proporre all’autore.
 
 ## 10. Il calendario proposto
 

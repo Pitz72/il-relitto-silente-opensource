@@ -89,11 +89,11 @@ L'eco è di scena.
 L'eco si chiama anche "eco del piccolo".
 L'eco si chiama anche "piccolo".
 L'eco si chiama anche "voce giovane".
-La descrizione dell'eco è "Non c'è nessuno: c'è una voce giovane, impressa nella culla, che il Sintonizzatore tiene agganciata. Fa sempre la stessa domanda.".
+La descrizione dell'eco è "Soltanto una voce giovane, impressa nella culla, che il Sintonizzatore tiene agganciata. Fa sempre la stessa domanda.".
 
 Il dialogo dell'eco comincia con "domanda".
 
-L'eco al nodo "domanda" dice "«…perché non si muove… perché nessuno…» La domanda gira e ricomincia, uguale, come chi chiede e non aspetta più risposta.".
+L'eco al nodo "domanda" dice "«…perché non si muove… perché nessuno…» La domanda gira e ricomincia, uguale, con una pausa breve fra un giro e l'altro.".
 L'eco al nodo "domanda" dice "La voce c'è, ma la tuta tiene chiusi i canali secondari: PROTEZIONE VITALE. Con l'aria a [aria] non mi lascia ascoltare." se l'aria è meno di 30 e la fuga è lontana.
 L'eco al nodo "domanda" dice "La registrazione è ferma. La domanda non ricomincia più." se la risposta è vera.
 L'eco al nodo "domanda" dice "«…perché non si muove… perché nessuno…» Ricomincia, uguale. Le ho già detto che non lo so." se la risposta è incerta.
@@ -103,7 +103,7 @@ Al nodo "domanda" l'opzione "Non lo so." se la risposta è nessuna e l'aria è a
 Al nodo "domanda" l'opzione "[Resta in silenzio.]" se la risposta è nessuna e l'aria è almeno 30 conduce al nodo "taciuto" e adesso la risposta è taciuta e adesso aumenta le risonanze e adesso diminuisci l'aria di 6.
 Al nodo "domanda" l'opzione "Lascia stare." chiude il dialogo.
 
-L'eco al nodo "arrivati" dice "La domanda gira ancora una volta. «…perché non si muove…» Poi, per la prima volta, non ricomincia. Resta il fruscio della registrazione, e basta. Non so se mi ha sentito. Non so nemmeno se una registrazione può sentire.".
+L'eco al nodo "arrivati" dice "La domanda gira ancora una volta. «…perché non si muove…» Poi, per la prima volta, non ricomincia. Nella cuffia resta il fruscio della registrazione, che va avanti a vuoto. Non so se mi ha sentito. Non so nemmeno se una registrazione può sentire.".
 Al nodo "arrivati" l'opzione "Lascia stare." chiude il dialogo.
 
 L'eco al nodo "nonso" dice "La domanda ricomincia, uguale. «…perché non si muove… perché nessuno…» Non era una risposta che potesse fermarla.".

@@ -110,7 +110,7 @@ Metto la spalla contro le teche chiuse e mi tengo lì, dove il freddo tiene ferm
 Un locale basso e tiepido: il primo posto caldo da quando sono entrato. Banchi di semina in file ordinate, ognuno sotto la sua lampada spenta. Qui la semina era ancora sotto controllo: niente è scappato, niente è cresciuto storto. Al centro un germinatoio lavora ancora, a malapena. Sui banchi, colonne di simboli: le tabelle di chi seminava. A est si torna fra le teche.
 Puoi vedere qui: una tavoletta.
 Uscite: Est (La sala delle teche).
-Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che mi arriva nei denti prima che nelle cuffie. Poi più niente.
+Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che mi arriva nei denti prima che nelle cuffie. Resto fermo ad ascoltare, ma non ne segue un altro.
 
 > prendi la tavoletta
 Preso: la tavoletta.
@@ -147,7 +147,7 @@ Uscite: Est (Il vestibolo delle gole), Nord, Sud, Giù, Nordest, Ovest.
 > sud
 
 --- La serra morente ---
-Una serra a cupola, vasta, con l'aria secca come carta. Felci scheletriche e funghi contorti pendono dalle pareti nella posa in cui sono morti, sotto uno strato di polvere che sembra neve grigia. Una vibrazione bassa attraversa la stanza, più nelle ossa che nell'aria. Al centro, sotto la cupola, qualcosa brilla di luce propria. Contro la base di una delle colonne spente che reggono la cupola, a mezzo metro da quella luce, è seduto un uomo in tuta. A nord si torna al corridoio; dietro i funghi, a ovest, si apre un passaggio più scuro.
+Una serra a cupola, vasta, con l'aria secca come carta. Felci scheletriche e funghi contorti pendono dalle pareti nella posa in cui sono morti, sotto uno strato di polvere che sembra neve grigia. Una vibrazione bassa attraversa la stanza, più nelle ossa che nell'aria. Al centro, sotto la cupola, pulsa piano una luce verde. Contro la base di una delle colonne spente che reggono la cupola, a mezzo metro da quella luce, è seduto un uomo in tuta. A nord si torna al corridoio; dietro i funghi, a ovest, si apre un passaggio più scuro.
 Puoi vedere qui: una teca.
 Uscite: Nord (Il corridoio principale), Ovest.
 Il faro ci passa sopra e va oltre, poi torna indietro da solo, come la mano di chi ha visto qualcosa prima di saperlo. Contro la colonna c'è un uomo.
@@ -155,7 +155,7 @@ Una tuta di un secolo e mezzo fa, di un modello che ho visto soltanto nei catalo
 Qualcuno è arrivato fin qui prima di me. Da solo. Come me.
 
 > usa la tavoletta sulla teca
-Inserisco la tavoletta nell'incavo: si adatta. I simboli si accendono uno dopo l'altro, con un clic armonioso, e la teca si dissolve in un pulviscolo di luce. Il seme resta a fluttuare libero davanti a me. La vibrazione cessa di colpo, e la serra diventa silenziosa del tutto.
+Inserisco la tavoletta nell'incavo: si adatta. I simboli si accendono uno dopo l'altro, con un clic armonioso, e le pareti della teca si coprono di crepe e si sbriciolano in una polvere fine, che si posa sul piedistallo. Il seme resta a fluttuare libero davanti a me. La vibrazione cessa di colpo, e la serra diventa silenziosa del tutto.
 
 > prendi il seme
 Chiudo le dita attorno al seme. È caldo, quasi febbrile, e una vibrazione costante mi risale il braccio. A mezzo metro da qui un uomo l'ha guardato pulsare fino all'ultimo, senza poterlo toccare. Adesso ce l'ho in mano io.
@@ -179,7 +179,7 @@ Con una certa esitazione accendo il dispositivo medico: la punta di cristallo em
 > est
 
 --- La serra morente ---
-La serra morta. Il campo di contenimento si è spento e il silenzio adesso è completo. Al centro, sul piedistallo, i resti della teca dissolta. Contro la colonna, a mezzo metro, l'uomo in tuta, il casco calato sul petto. A nord il corridoio; a ovest, dietro i funghi, il passaggio scuro.
+La serra morta. Il campo di contenimento si è spento e il silenzio adesso è completo. Al centro, sul piedistallo, la polvere della teca. Contro la colonna, l'uomo in tuta, il casco calato sul petto. A nord il corridoio; a ovest, dietro i funghi, il passaggio scuro.
 Puoi vedere qui: una teca.
 Uscite: Nord (Il corridoio principale), Ovest (L'arca biologica).
 
@@ -202,7 +202,7 @@ Preso: il sintonizzatore.
 
 > usa il cristallo sul generatore
 Inserisco il cristallo pulsante nel vano del generatore. Con un rombo che sale, i macchinari si svegliano: l'elettricità corre fra le bobine, i monitor si accendono su flussi stabili, diretti al Ponte e all'Archivio.
-Un brivido percorre lo scafo. Lontano, sistemi spenti da sempre tornano a respirare uno dopo l'altro. Per la prima volta, il relitto non è del tutto morto.
+Lo scafo mi vibra sotto i piedi, una volta sola. Lontano, dietro le pareti, sistemi spenti da sempre tornano a respirare uno dopo l'altro, e per la prima volta sento la nave lavorare.
 
 > su
 
@@ -217,7 +217,7 @@ Uscite: Est (Il vestibolo delle gole), Nord, Sud (La serra morente), Giù (Il la
 Una sala circolare, il soffitto così alto che il faro non lo trova. Una luce bianca e fredda sale dai disegni geometrici del pavimento. Le pareti sono coperte di bassorilievi, da terra fino al buio: creature alte e sottili sotto un cielo a tre soli, semi di luce piantati su un mondo fertile, navi immense in partenza. Al centro, un blocco cilindrico di pietra nera. A sud si torna al corridoio; a ovest si apre un altro passaggio.
 Puoi vedere qui: un altare.
 Uscite: Sud (Il corridoio principale), Ovest.
-Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che mi arriva nei denti prima che nelle cuffie. Poi più niente.
+Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che mi arriva nei denti prima che nelle cuffie. Resto fermo ad ascoltare, ma non ne segue un altro.
 
 > ovest
 
@@ -240,7 +240,7 @@ Appena entro, l'ultimo pilastro smette di pulsare: una fascia alla base si accen
 > aspetta
 Il tempo passa.
 Una seconda fascia si accende sopra la prima. Sul visore la cifra scende di due punti.
-Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che mi arriva nei denti prima che nelle cuffie. Poi più niente.
+Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che mi arriva nei denti prima che nelle cuffie. Resto fermo ad ascoltare, ma non ne segue un altro.
 
 > aspetta
 Il tempo passa.
@@ -274,7 +274,7 @@ Nella cuffia il brusio cala fino quasi a sparire, come una sala piena che smette
 Giro il disco di un terzo: il sole più grande adesso è in alto.
 
 > usa il disco sull'altare
-Appoggio il disco nell'incavo, con il sole più grande verso la tacca. Questa volta scende fino in fondo. Per un istante non succede niente, poi dall'interno della pietra arriva un colpo profondo, e una sezione dell'altare si ritira senza rumore. Nello scomparto, posata su un cuscino di luce che sembra solida, c'è la Stele del Ricordo.
+Appoggio il disco nell'incavo, con il sole più grande verso la tacca. Questa volta scende fino in fondo. Per un istante non succede niente, poi dall'interno della pietra arriva un colpo profondo, e una sezione dell'altare si ritira senza rumore. Nello scomparto, sollevata di un dito dal fondo senza niente che la regga, c'è la Stele del Ricordo.
 
 > prendi la stele
 Prendo la Stele del Ricordo dallo scomparto. È leggera, più di quanto mi aspettassi, e tiepida. La seconda chiave.
@@ -295,7 +295,7 @@ Nella cuffia il brusio cala fino quasi a sparire, come una sala piena che smette
 
 > usa il nucleo sulla grande porta
 Posiziono il Nucleo di Memoria nell'incavo a molte facce: una linea di luce ambrata chiude il circuito, e un ronzio profondo, armonico, riempie il corridoio.
-Le tre luci — verde, bianca e ambrata — pulsano all'unisono. La loro frequenza accelera, il ronzio diventa un gong risonante che vibra in tutta la nave. Il simbolo a stella brilla di luce accecante, e la Grande Porta, a ovest, non si apre: si dissolve in particelle di luce, come stelle che tornano al cielo.
+Le tre luci — verde, bianca e ambrata — pulsano all'unisono. La loro frequenza accelera, il ronzio diventa un gong risonante che vibra in tutta la nave. Il simbolo a stella si accende una punta dopo l'altra, e la Grande Porta, a ovest, si fa trasparente e sempre più sottile, finché al suo posto resta un varco aperto.
 
 > ovest
 
@@ -305,7 +305,7 @@ Puoi vedere qui: una postazione, una porta circolare, delle punte.
 Uscite: Est (Il corridoio principale), Ovest.
 
 > usa la postazione
-Appoggio la mano guantata sulla depressione, e la console reagisce: non a chi sono, ma a quello che voglio. Un'ondata di energia silenziosa attraversa la sala, le postazioni si accendono, e la struttura centrale proietta sulla cupola una mappa stellare a tre dimensioni. La rotta è chiara, e il punto d'arrivo inconfondibile: il mio sole.
+Appoggio la mano guantata sulla depressione, e la console reagisce a quello che voglio, anche se non sono uno di loro. Un'ondata di energia silenziosa attraversa la sala, le postazioni si accendono, e la struttura centrale proietta sulla cupola una mappa stellare a tre dimensioni. La rotta è chiara, e il punto d'arrivo inconfondibile: il mio sole.
 
 > analizza la mappa stellare
 Seguo la rotta all'indietro, partendo da casa. Attraversa un'altra galassia, fino a un ammasso denso e luminoso. Il punto d'origine non lascia dubbi: un sistema trino, tre soli che girano l'uno intorno all'altro, spenti. La culla della loro civiltà.
@@ -317,7 +317,7 @@ Ripenso alla culla della rotta, i tre soli, e appoggio la mano sul pannello: pre
 > ovest
 
 --- L'anticamera ---
-Il passaggio si stringe. Le pareti non fanno più luce: qui è tutto scuro, di un buio che assorbe invece di mancare. I miei passi non fanno rumore, e non so se è il pavimento o se ho smesso di farne io. Davanti, a ovest, una soglia aperta.
+Il passaggio si stringe. Le pareti non fanno più luce: qui è tutto scuro, di un buio denso che assorbe ogni riflesso. I miei passi non fanno rumore, e non so se è il pavimento o se ho smesso di farne io. Davanti, a ovest, una soglia aperta.
 Uscite: Est (Il ponte di comando), Ovest.
 
 > ovest
@@ -382,7 +382,7 @@ Metto la spalla contro le teche chiuse e mi tengo lì, dove il freddo tiene ferm
 > su
 
 --- La gola di mezzo ---
-La gola di mezzo trema e si stringe, e le venature si accendono tutte insieme di un verde malato, come per l'ultima volta. Sopra, il vestibolo. Sotto, il groviglio.
+La gola di mezzo trema e si stringe, e le venature si accendono tutte insieme di un verde malato, che va e viene a scatti. Sopra, il vestibolo. Sotto, il groviglio.
 Uscite: Su (Il vestibolo delle gole), Giù (La sala delle teche).
 Le pareti si incrinano in lunghe linee verdi, come vene che si accendono per l'ultima volta.
 Nella cuffia entra una voce bassa, paziente, che dice nomi, una parola dopo l'altra, senza fretta.

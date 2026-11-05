@@ -2,8 +2,7 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 5 novembre 2026, dopo la scrittura dei blocchi dalla A alla F, la taratura dell’aria (F1) e le
-decisioni del blocco G (lo stile).
+Aggiornato l’ultima volta il 5 novembre 2026, dopo la scrittura dei blocchi dalla A alla G (con la taratura dell’aria, F1).
 Prima, il 3 novembre, a notte, l’autore aveva chiuso la sessione dopo la lettura integrale e la valutazione:
 «Dalla prossima sessione fare punto per tutto i tanti piccoli dettagli rilevati con
 una discussione e delle decisioni. Interverremo fortemente su tutto quello che allontana questo gioco da
@@ -20,9 +19,10 @@ lavoro li tocca (l’elenco è in fondo). Comincia dal punto 0 dell’ordine del
 documento 33 sono decisi (4 novembre 2026; le decisioni sono nel registro, §9; le schede delle voci nel documento
 34). **La scrittura** (documento 33, §2 e §10, punto 4) è finita per i blocchi dalla A alla F (5 novembre 2026),
 compresi il diario di William (F7) e la taratura dell’aria (F1, documento 33, §12: i costi restano, cambiano due
-avvisi). Anche **il blocco G, lo stile, è deciso** (5 novembre 2026; registro, §9, RN-G1–G6, con la nota «Blocco G
-deciso»). Si continua con **la scrittura del blocco G**, sul testo fermo, con le skill di scrittura (prosa-italiana,
-stop-slop, humanizer); dopo il G si rigiocano le partite verosimili dell’aria (§12), che devono dare gli stessi numeri. Prima del
+avvisi). Anche **il blocco G, lo stile, è scritto** (5 novembre 2026; registro, §9, RN-G1–G6, e le proposte in
+`progettazione/stile-G/`). Si continua con: le otto frasi fatte che le sessioni del G hanno segnalato fuori dalle
+decisioni (elenco nella nota «Blocco G, scritto» del §9 del documento 33: proporle all’autore, una per una), poi
+**il blocco H, le dipendenze** (documento 33, §8), e una beta sola. Prima del
 commit di ogni blocco, all’autore si mostra ogni frase prima e dopo, e si aspetta il suo sì. Poi le dipendenze
 (blocco H) e una beta sola. Ogni proposta all’autore va scritta per intera nel
 messaggio finale, dopo la casella della domanda: mai «la proposta è quella sopra».
@@ -149,6 +149,9 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   X: Y» su venticinque, tre «come chi» su sei, tre chiuse secche su sei; via cinque luci di repertorio e nove frasi
   solenni; i motivi ripetuti contati e misurati («mezzo metro», «parte e non torna», «Da solo.», l’«aspettare» dei
   meccanismi). Nessuna frase da riscrivere è in una battuta registrata.
+- **Il blocco G è scritto** (5 novembre 2026, approvato: cinquanta frasi): tre sessioni parallele, una per gruppo di
+  file, con le skill di prosa, poi l’armonizzazione e il collaudo qui (`progettazione/stile-G/`). L’aria delle partite
+  da principiante non cambia.
 - **La sessione** si è chiusa il 3 novembre 2026 con l’albero pulito e `main` uguale a `origin/main`.
 - **Il motore** è Favella1 1.6.1 (documento 29), pubblicata anche su GitHub, PyPI e favella.eu.
 - **La revisione totale** (documento 25): i 30 problemi (5 gravi, 10 medi, 15 lievi) sono tutti
