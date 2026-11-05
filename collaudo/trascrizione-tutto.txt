@@ -678,24 +678,24 @@ L'anziano: (La figura non muove le labbra, ma le parole mi si aprono dentro la t
 
 > C'era un uomo, prima di me.
 
-L'anziano: «Lo sentimmo arrivare. Camminava per la nave come cammini tu, contando. Cercò la chiave della teca, scese dove crescono le cose che non abbiamo saputo fermare, e tornò su senza. Lo ascoltammo fino all'ultimo fiato, a mezzo metro dal seme.» (Una pausa.) «Non potevamo rispondergli. La nave non aveva più forza per parlare. Sei stato tu a riaccendere la luce in cui ti parlo.»
+L'anziano: «Lo sentimmo arrivare. Camminava per la nave come cammini tu, contando. Cercò la chiave della teca, scese dove crescono le cose che abbiamo sbagliato noi, e tornò su senza. Lo ascoltammo fino all'ultimo fiato, a mezzo metro dal seme.» (Una pausa.) «Non potevamo rispondergli. La nave non aveva più forza per parlare. Sei stato tu a riaccendere la luce in cui ti parlo.»
   1. Avreste potuto aiutarlo?
   2. Gli ho lasciato un segno.
 
 > Gli ho lasciato un segno.
 
 L'anziano: «Lo so. Hai finito la sua frase: aveva ragione, e adesso è scritto. Non cambierà niente, forse. Ma l'hai fatto per la stessa ragione per cui lui incise tre tacche in una parete che nessuno avrebbe più letto.»
-  1. E la musica?
-  2. Allora cosa devo fare?
+  1. [Accendi il Sintonizzatore.]
+  2. [Guarda la cifra dell'aria.]
 
-> E la musica?
+> [Accendi il Sintonizzatore.]
 
-L'anziano: «La nostra lingua era un canto. Le tue macchine traducono le parole, e le parole ne erano la parte più piccola. Quello che resta, quando le parole finiscono, non si conserva: si compone. Si suona di nuovo, in un altro modo, con un'altra voce.»
-  1. Allora cosa devo fare?
+L'anziano: (Accendo il Sintonizzatore. Non aggancia parole: aggancia quello che c'è sotto la sua voce, il canto del primo momento, basso, che non si era mai fermato.) «Lo senti. Le tue macchine traducono le parole, e le parole erano la parte più piccola.»
+  1. [Guarda la cifra dell'aria.]
 
-> Allora cosa devo fare?
+> [Guarda la cifra dell'aria.]
 
-L'anziano: (La figura mi guarda, e per un istante sento il peso di un tempo che non si può contare.) «La nostra canzone è finita. Le ultime armonie si sciolgono adesso, in questo istante. A chi viene dopo abbiamo sempre chiesto una cosa sola: che la musica fosse suonata, con forza, fino all'ultima nota. Vivi. Sarà il suono più bello.»
+L'anziano: (Abbasso gli occhi sul visore: aria 53. Quando li rialzo, la figura guarda la stessa cifra.) «Allora è ora. La nostra canzone è finita da tempo; a te resta del fiato.» (Una pausa.) «Vivi.»
   1. [Chiudi gli occhi e lascia andare.]
 
 > [Chiudi gli occhi e lascia andare.]
@@ -712,7 +712,7 @@ L'anziano: (Poi arriva l'ultima voce. È la più rovinata di tutte. La matrice l
 (Fine della conversazione.)
 
 > prendi il seme
-Il sostegno lo lascia andare appena lo tocchi. Me lo infilo nella tasca sul petto della tuta, dove lo sento premere a ogni respiro.
+Il sostegno lo lascia andare appena lo tocco. Me lo infilo nella tasca sul petto della tuta, dove lo sento premere a ogni respiro.
 La nave trema. Sotto i miei piedi le linee del pavimento si spengono una dopo l'altra, e accanto al sostegno il pavimento si è aperto su una gola che scende. Sul visore, la cifra dell'aria ha cominciato a scendere da sola.
 
 > giù

@@ -457,7 +457,8 @@ const LETTI: [Pezzo; 4] = [Pezzo::A1, Pezzo::A2, Pezzo::A3, Pezzo::A4];
 /// Il letto di un nodo del colloquio (22, §5.3): la presenza, la tensione, il calore, lo scioglimento.
 fn letto_del_nodo(nodo: &str) -> Option<Pezzo> {
     match nodo {
-        "benvenuto" | "memoria" | "tracce" => Some(Pezzo::A1),
+        // «voci»: il risuonatore posato, le voci tornano nella nave (revisione narrativa, RN-C3)
+        "benvenuto" | "voci" | "memoria" | "tracce" => Some(Pezzo::A1),
         "prezzo" | "altro" | "aiuto" => Some(Pezzo::A2),
         "salto" | "piccolo" | "sangue" | "musica" => Some(Pezzo::A3),
         "congedo" | "dissolvenza" | "ultima voce" => Some(Pezzo::A4),

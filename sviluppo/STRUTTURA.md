@@ -66,7 +66,7 @@ python collaudo/trascrivi.py relitto-silente/relitto.fav collaudo/vivi.txt -o co
 python motore/favella.py esporta relitto-silente/relitto.fav
 ```
 
-Il collaudo a pulsanti (i 14 percorsi attraverso il ponte dell’app):
+Il collaudo a pulsanti (i 15 percorsi attraverso il ponte dell’app):
 
 ```bash
 python collaudo/pulsanti.py
@@ -180,7 +180,7 @@ git -C ../../../GitHub/FAVELLA1 archive v1.6.1 | tar -x -C <cartella vuota>
 - Esploratore: 23 stanze su 23, nessuna anomalia, nessuna eccezione del motore.
 - Il motore non è stato modificato.
 - Revisione (`progettazione/04-revisione.md`): dodici problemi di codice, cinque di storia e cinque di collaudo, fra cui un bug grave (il risuonatore posato non si riprendeva). Tutti corretti; quattro percorsi nuovi impediscono che tornino.
-- Collaudo di regressione: 14 percorsi su 14, più la prova di ripresa di ogni oggetto.
+- Collaudo di regressione: 15 percorsi su 15, più la prova di ripresa di ogni oggetto.
 
 ## Stato dell’app
 

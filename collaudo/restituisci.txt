@@ -1,0 +1,116 @@
+# Il risuonatore restituito (revisione narrativa, RN-C3 e C4): staccato nel
+# vestibolo, posato, ripreso dopo la Grande Porta e portato all'Anziano, che lo
+# vede posare ai suoi piedi. Le voci tornano nella nave: nella fuga, accanto alla
+# nicchia vuota, si sentono una per una. Con il seme: «Vivi», con la sua riga.
+#   python collaudo/regressioni.py collaudo/restituisci.txt
+# atteso: esito vinta
+# atteso: restituzione = fatta
+# atteso: finale «Rotta ripresa. Carico: nessuno.»
+# atteso: compare «Sul bordo del visore la cifra dell'aria smette di scendere.»
+# atteso: compare «Accanto alla nicchia vuota le voci si sentono una per una»
+# atteso: compare «Le voci le ho lasciate laggiù, ai piedi di chi le aveva.»
+# atteso: mai «Non puoi prender»
+
+# --- Atto I: la Santa Maria ---
+analizza la nave aliena
+accosta
+spara gli arpioni
+ovest
+prendi la tuta
+indossa la tuta
+apri il kit
+prendi la taglierina
+prendi la batteria
+prendi la cella di riserva
+fuori
+
+# --- Atto II: l'ingresso ---
+analizza lo scafo nero
+usa la taglierina sulla giuntura
+giù
+usa la batteria sul pannello
+apri la porta interna
+ovest
+stacca il risuonatore
+stacca il risuonatore
+stacca il risuonatore
+lascia il risuonatore
+
+# --- Atto III, ala della Vita: la tavoletta oltre le teche ---
+giù
+abbassa il faro
+giù
+segui la parete
+ovest
+prendi la tavoletta
+est
+segui la parete
+su
+su
+ovest
+sud
+usa la tavoletta sulla teca
+prendi il seme
+ovest
+prendi il dispositivo medico
+prendi il cristallo
+usa il dispositivo medico sul cristallo
+est
+nord
+
+# --- Ala Tecnica: l'energia ---
+giù
+prendi il sintonizzatore
+usa il cristallo sul generatore
+su
+
+# --- Ala della Memoria: il disco e il nucleo (con l'energia, la pazienza) ---
+nord
+ovest
+prendi il disco
+nord
+prendi il nucleo
+sud
+est
+gira il disco
+gira il disco
+usa il disco sull'altare
+prendi la stele
+sud
+
+# --- La Grande Porta ---
+usa il seme sulla grande porta
+usa la stele sulla grande porta
+usa il nucleo sulla grande porta
+
+# --- Il risuonatore, ripreso nel vestibolo ---
+est
+prendi il risuonatore
+ovest
+
+# --- Atto IV: il Ponte e l'Anziano ---
+ovest
+usa la postazione
+analizza la mappa stellare
+tocca le punte
+ovest
+ovest
+parla con l'anziano
+[Posa il risuonatore.]
+Chi eravate?
+E io che c'entro?
+[Guarda la cifra dell'aria.]
+[Chiudi gli occhi e lascia andare.]
+[Resta.]
+[Apri gli occhi.]
+
+# --- Atto V: la fuga, con il seme ---
+prendi il seme
+giù
+ovest
+segui la parete
+su
+su
+est
+su
+dentro

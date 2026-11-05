@@ -83,7 +83,7 @@ ovest
 parla con l'anziano
 Chi eravate?
 E io che c'entro?
-Allora cosa devo fare?
+[Guarda la cifra dell'aria.]
 [Chiudi gli occhi e lascia andare.]
 [Resta.]
 [Apri gli occhi.]

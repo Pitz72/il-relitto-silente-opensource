@@ -591,6 +591,8 @@ SEGNI_A_SORTE = {
 # Le battute dell'Anziano con la voce (progettazione/32-voci-lv-e-anziano.md, §3.5–3.7): le sue
 # parole, quelle fra «», come sono nel gioco (ponte.fav). Il suono le fa sentire solo se a
 # schermo ci sono proprio queste: la variante del benvenuto con le echi, per esempio, resta scritta.
+# Il congedo è cambiato con la revisione narrativa (documento 33, RN-C5): finché non è registrato di
+# nuovo resta scritto, e la sua presa di prima («AN-03-congedo-ascolto.mp3») non suona più.
 VOCI_ANZIANO = {
     "benvenuto": "Creatura di carbonio. Figlio delle stelle, forse. Benvenuto. So cosa cerchi: una "
                  "risposta. Ma io non sono che la memoria di una domanda. Sono quello che resta quando "
@@ -599,10 +601,6 @@ VOCI_ANZIANO = {
                     "verso cui andavamo. Quando la nave si fermò, chiese perché, e nessuno di noi ebbe "
                     "il coraggio di rispondergli. Glielo hai detto tu. Siete arrivati. Era vero, ed era "
                     "la sola cosa che avesse bisogno di sentire.",
-    "congedo-ascolto": "La nostra canzone è finita. Le ultime armonie si sciolgono adesso, in questo "
-                       "istante. A chi viene dopo abbiamo sempre chiesto una cosa sola: che la musica "
-                       "fosse suonata, con forza, fino all'ultima nota. Vivi. Sarà il suono più bello. "
-                       "Grazie di essere rimasto.",
 }
 
 

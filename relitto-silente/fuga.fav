@@ -88,7 +88,7 @@ Invece di ascolta le venature verdi: dire "Il brusio, e sotto il brusio un ritmo
 # VESTIBOLO, CAMERA, SCAFO, STIVA nella fuga
 # ============================================================================
 La descrizione del vestibolo delle gole se la fuga è iniziata e l'aria è al massimo 15 è "Vestibolo. La nicchia. Est.".
-La descrizione del vestibolo delle gole se la fuga è iniziata è "Il vestibolo trema. A ovest la gola larga è crollata: dove c'era il passaggio per il corridoio c'è un tappo di materia schiacciata. A est la porta interna è aperta sulla camera; sotto, la gola di mezzo.[se il risuonatore è incastrato] Dalla nicchia il brusio sale, uguale a sempre.[fine]".
+La descrizione del vestibolo delle gole se la fuga è iniziata è "Il vestibolo trema. A ovest la gola larga è crollata: dove c'era il passaggio per il corridoio c'è un tappo di materia schiacciata. A est la porta interna è aperta sulla camera; sotto, la gola di mezzo.[se il risuonatore è incastrato] Dalla nicchia il brusio sale, uguale a sempre.[fine][se la restituzione è fatta] Accanto alla nicchia vuota le voci si sentono una per una, e una ripete «Deve.», piano.[fine][se la restituzione è fatta e le pareti del corridoio è risuonata] È il tecnico di carico, ancora alle sue capsule.[fine][se il giocatore ha il risuonatore] Il brusio nella mano sale di colpo, e l'arnese tira verso le pareti, come se le voci volessero tornarci.[fine]".
 Invece di vai ovest se il giocatore è nel vestibolo delle gole e la fuga è iniziata: dire "La gola larga è crollata. Di là non c'è più niente.".
 
 La descrizione della camera di compensazione se la fuga è iniziata e l'aria è al massimo 15 è "Camera. Sopra, la luce gialla. Su.".

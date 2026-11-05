@@ -6,7 +6,7 @@
 # la porta circolare con le cinque punte. Prima di passare a ovest, se l'aria
 # è poca, la tuta avverte: è l'ultimo punto da cui si può ancora tornare.
 # Anticamera: il buio, il punto di non ritorno [!].
-# Santuario centrale: l'Anziano, che non sa e spera. Quattordici nodi; quelli nuovi
+# Santuario centrale: l'Anziano, che non sa e spera. Quindici nodi; quelli nuovi
 # si aprono secondo quello che hai fatto (L.V., Yusuf, il Piccolo, la musica,
 # i segni). Al congedo la figura si raccoglie nel seme che avevi dato alla
 # porta, e comincia la fuga (fuga.fav).
@@ -21,6 +21,12 @@ L'onestà è uno stato.
 L'onestà è taciuta.
 L'ascolto è uno stato.
 L'ascolto è mancato.
+# I gesti del colloquio (revisione narrativa, blocco C): il sonaglio mostrato,
+# le voci restituite (le leggono la fuga e i finali).
+Il gesto del sonaglio è uno stato.
+Il gesto del sonaglio è mancato.
+La restituzione è uno stato.
+La restituzione è mancata.
 
 # ============================================================================
 # PONTE DI COMANDO
@@ -130,10 +136,10 @@ La descrizione dell'anziano se la fuga è iniziata è "Non c'è più. La sua luc
 Invece di vai est se il giocatore è nel santuario centrale: dire "Non c'è più nessun indietro. C'è soltanto la figura luminosa, e quello che ha da dirmi.".
 
 # --- Il seme, tornato scuro (al congedo) -------------------------------------
-Invece di prendi il seme se il seme è nel santuario centrale: dire "Il sostegno lo lascia andare appena lo tocchi. Me lo infilo nella tasca sul petto della tuta, dove lo sento premere a ogni respiro." e adesso il seme è in inventario.
+Invece di prendi il seme se il seme è nel santuario centrale: dire "Il sostegno lo lascia andare appena lo tocco. Me lo infilo nella tasca sul petto della tuta, dove lo sento premere a ogni respiro." e adesso il seme è in inventario.
 
 # ============================================================================
-# L'ANZIANO — quattordici nodi (l'ultimo è l'ultima voce, U1)
+# L'ANZIANO — quindici nodi (l'ultimo è l'ultima voce, U1)
 # ============================================================================
 Il dialogo dell'anziano comincia con "benvenuto".
 
@@ -143,24 +149,34 @@ Al nodo "benvenuto" l'opzione "Chi eravate?" conduce al nodo "salto".
 Al nodo "benvenuto" l'opzione "Cosa ne è stato di voi?" conduce al nodo "memoria".
 Al nodo "benvenuto" l'opzione "C'era un uomo, prima di me." se le tracce è almeno 3 conduce al nodo "altro".
 Al nodo "benvenuto" l'opzione "Sono venuto per vendervi." se la promessa è carico conduce al nodo "prezzo".
+Al nodo "benvenuto" l'opzione "[Posa il risuonatore.]" se il giocatore ha il risuonatore conduce al nodo "voci" e adesso la restituzione è fatta e adesso il risuonatore è nel nulla.
 Al nodo "benvenuto" l'opzione "Resto ad ascoltare." conduce al nodo "silenzio".
+
+L'anziano al nodo "voci" dice "(Apro la mano e appoggio il risuonatore ai piedi del sostegno. Il brusio non resta nell'arnese: si alza, si allarga, entra nelle pareti, e per la prima volta le voci non si coprono. Le sento una per una: una che chiede qualcosa in fretta, una che conta, una che ride piano. Poi rientrano nella nave, e l'arnese resta lì, spento, un pezzo di pavimento come un altro. Sul bordo del visore la cifra dell'aria smette di scendere. La figura non dice niente.)".
+Al nodo "voci" l'opzione "Chi eravate?" conduce al nodo "salto".
+Al nodo "voci" l'opzione "Cosa ne è stato di voi?" conduce al nodo "memoria".
+Al nodo "voci" l'opzione "C'era un uomo, prima di me." se le tracce è almeno 3 conduce al nodo "altro".
+Al nodo "voci" l'opzione "Sono venuto per vendervi." se la promessa è carico conduce al nodo "prezzo".
+Al nodo "voci" l'opzione "Resto ad ascoltare." conduce al nodo "silenzio".
 
 L'anziano al nodo "silenzio" dice "(La figura tace. Per un tempo che non so misurare sento soltanto la nave: un ronzio lontano, il mio fiato nel casco, qualcosa che si assesta. Poi la voce riprende, come se non avesse mai smesso.) «Restare è già una risposta. Pochi la danno.»".
 Al nodo "silenzio" l'opzione "Chi eravate?" conduce al nodo "salto" e adesso l'ascolto è dato.
 Al nodo "silenzio" l'opzione "Cosa ne è stato di voi?" conduce al nodo "memoria" e adesso l'ascolto è dato.
 
-L'anziano al nodo "salto" dice "«Il nostro tempo era un cerchio che si chiudeva. Il grande fuoco del nostro cielo si riduceva a brace, e noi eravamo le ultime scintille. Ma la vita è una fiamma che non deve spegnersi del tutto. Così facemmo il Grande Salto: non per conquistare, ma per comporre. Intrecciammo le note di quello che eravamo nella trama silenziosa di mondi giovani, sperando che un giorno potesse cominciare una musica nuova, che non sapevamo immaginare.»".
+L'anziano al nodo "salto" dice "«Vivevamo sotto tre soli, e i tre soli si spegnevano. Mettemmo quello che eravamo in un canto e in un seme, e facemmo il Grande Salto. Il viaggio durò una vita sola. Poi arrivammo, e la nave si fermò.»".
+L'anziano al nodo "salto" dice "«La Stele dice che non piangemmo il nostro mondo.» (Una pausa.) «Piangemmo.»" se la stele è decifrato.
 Al nodo "salto" l'opzione "E io che c'entro?" conduce al nodo "sangue".
 Al nodo "salto" l'opzione "Cosa è rimasto di voi?" conduce al nodo "memoria".
-Al nodo "salto" l'opzione "Perché la nave si è fermata?" se la risposta non è nessuna conduce al nodo "piccolo".
+Al nodo "salto" l'opzione "[Mostra il sonaglio.]" se la risposta non è nessuna e il giocatore ha il sonaglio conduce al nodo "piccolo" e adesso il gesto del sonaglio è fatto.
+Al nodo "salto" l'opzione "Perché la nave si è fermata?" se la risposta non è nessuna e il giocatore non ha il sonaglio conduce al nodo "piccolo".
 
-L'anziano al nodo "memoria" dice "«Quasi niente, e quasi tutto. Gli archivi sono polvere, i corpi sono nelle capsule, i nomi si sono persi. Ma tu hai attraversato la nave, e hai visto. Hai letto, hai ascoltato, ti sei fermato dove un altro avrebbe solo preso. È questo che sopravvive, non i cristalli: qualcuno che ricorda.»".
-L'anziano al nodo "memoria" dice "«Quasi niente, e quasi tutto. Gli archivi sono polvere, i corpi sono nelle capsule, i nomi si sono persi. L'ultimo pilastro l'hai aperto con il fuoco: non te ne faccio una colpa, avevi fretta, come tutti i vivi. Ma hai attraversato la nave, e hai visto. È questo che sopravvive, non i cristalli: qualcuno che ricorda.»" se l'archivio è forzato.
-L'anziano al nodo "memoria" dice "«Quasi niente, e quasi tutto. Gli archivi sono polvere, i corpi sono nelle capsule, i nomi si sono persi. Hai aspettato che l'ultimo pilastro si svegliasse: ti ha salutato, e tu c'eri. Non succedeva da molto tempo. È questo che sopravvive, non i cristalli: qualcuno che ricorda.»" se l'archivio è salutato.
+L'anziano al nodo "memoria" dice "«Quasi niente. Gli archivi sono polvere, i corpi sono nelle capsule, i nomi si sono persi.[se gli echi è almeno 8] Le voci, almeno, le hai sentite tu, una per una.[fine]»".
+L'anziano al nodo "memoria" dice "«Quasi niente. La nostra memoria me l'hai portata tu, ma l'hai presa con il fuoco, e il fuoco ne ha bruciata una parte: dove cerco, a tratti, non trovo niente. Avevi fretta. I vivi ne hanno sempre.[se gli echi è almeno 8] Le voci, almeno, le hai sentite tu, una per una.[fine]»" se l'archivio è forzato.
+L'anziano al nodo "memoria" dice "«Quasi niente. La nostra memoria me l'hai portata tu, intera: hai aspettato che il pilastro ti salutasse. L'Archivista aveva posto per una cosa sola, e ha salvato la pioggia. Il rumore che faceva sui tetti di casa, sotto i tre soli.»" se l'archivio è salutato.
 Al nodo "memoria" l'opzione "E allora perché tutto questo?" conduce al nodo "sangue".
 Al nodo "memoria" l'opzione "Torno ad ascoltare." conduce al nodo "benvenuto".
 
-L'anziano al nodo "altro" dice "«Lo sentimmo arrivare. Camminava per la nave come cammini tu, contando. Cercò la chiave della teca, scese dove crescono le cose che non abbiamo saputo fermare, e tornò su senza. Lo ascoltammo fino all'ultimo fiato, a mezzo metro dal seme.» (Una pausa.) «Non potevamo rispondergli. La nave non aveva più forza per parlare. Sei stato tu a riaccendere la luce in cui ti parlo.»".
+L'anziano al nodo "altro" dice "«Lo sentimmo arrivare. Camminava per la nave come cammini tu, contando. Cercò la chiave della teca, scese dove crescono le cose che abbiamo sbagliato noi, e tornò su senza. Lo ascoltammo fino all'ultimo fiato, a mezzo metro dal seme.» (Una pausa.) «Non potevamo rispondergli. La nave non aveva più forza per parlare. Sei stato tu a riaccendere la luce in cui ti parlo.»".
 Al nodo "altro" l'opzione "Avreste potuto aiutarlo?" conduce al nodo "aiuto".
 Al nodo "altro" l'opzione "Gli ho lasciato un segno." se il segno non è assente conduce al nodo "tracce".
 
@@ -172,28 +188,28 @@ L'anziano al nodo "prezzo" dice "«Lo so.» (Nella voce non c'è rimprovero.) «
 Al nodo "prezzo" l'opzione "Mi serve per vivere." conduce al nodo "sangue" e adesso l'onestà è detta.
 Al nodo "prezzo" l'opzione "Non più." conduce al nodo "sangue" e adesso l'onestà è detta e adesso la promessa è nessuna.
 
-L'anziano al nodo "piccolo" dice "«Era l'unico nato durante il viaggio. Non vide mai i tre soli: gli raccontavamo del sole verso cui andavamo, e lui lo disegnava, ogni giorno, sulle pareti. Quando la nave si fermò, chiese perché. Nessuno di noi ebbe il coraggio di dirgli che arrivare voleva dire fermarsi, e che fermarsi voleva dire questo.»".
-L'anziano al nodo "piccolo" dice "«Era l'unico nato durante il viaggio. Non vide mai i tre soli: disegnava quello verso cui andavamo. Quando la nave si fermò, chiese perché, e nessuno di noi ebbe il coraggio di rispondergli.» (Una pausa lunga.) «Glielo hai detto tu. Siete arrivati. Era vero, ed era la sola cosa che avesse bisogno di sentire.»" se la risposta è vera.
-L'anziano al nodo "piccolo" dice "«Era l'unico nato durante il viaggio. Non vide mai i tre soli: disegnava quello verso cui andavamo. Quando la nave si fermò, chiese perché.» (Una pausa.) «Gli hai detto che non lo sapevi. Neanche noi lo sapevamo dire. Almeno tu l'hai detto.»" se la risposta è incerta.
-L'anziano al nodo "piccolo" dice "«Era l'unico nato durante il viaggio. Non vide mai i tre soli: disegnava quello verso cui andavamo. Quando la nave si fermò, chiese perché.» (Una pausa.) «Hai ascoltato senza rispondere, fino alla fine. Hai sentito anche cosa gli dicemmo noi: domani. È quello che facemmo, per tutto il tempo che restava.»" se la risposta è taciuta.
+L'anziano al nodo "piccolo" dice "[se il gesto del sonaglio è fatto](Gli mostro il sonaglio. La figura lo guarda a lungo, e quando riprende la voce è più bassa.) [fine]«Era l'unico nato durante il viaggio. Non vide mai i tre soli: gli raccontavamo del sole verso cui andavamo, e lui lo disegnava, ogni giorno, sulle pareti. Quando la nave si fermò, chiese perché. Nessuno di noi ebbe il coraggio di dirgli che arrivare voleva dire fermarsi, e che fermarsi voleva dire questo.»".
+L'anziano al nodo "piccolo" dice "[se il gesto del sonaglio è fatto](Gli mostro il sonaglio. La figura lo guarda a lungo, e quando riprende la voce è più bassa.) [fine]«Era l'unico nato durante il viaggio. Non vide mai i tre soli: disegnava quello verso cui andavamo. Quando la nave si fermò, chiese perché, e nessuno di noi ebbe il coraggio di rispondergli.» (Una pausa lunga.) «Glielo hai detto tu. Siete arrivati. Era vero, ed era la sola cosa che avesse bisogno di sentire.»" se la risposta è vera.
+L'anziano al nodo "piccolo" dice "[se il gesto del sonaglio è fatto](Gli mostro il sonaglio. La figura lo guarda a lungo, e quando riprende la voce è più bassa.) [fine]«Era l'unico nato durante il viaggio. Non vide mai i tre soli: disegnava quello verso cui andavamo. Quando la nave si fermò, chiese perché.» (Una pausa.) «Gli hai detto che non lo sapevi. Neanche noi lo sapevamo dire. Almeno tu l'hai detto.»" se la risposta è incerta.
+L'anziano al nodo "piccolo" dice "[se il gesto del sonaglio è fatto](Gli mostro il sonaglio. La figura lo guarda a lungo, e quando riprende la voce è più bassa.) [fine]«Era l'unico nato durante il viaggio. Non vide mai i tre soli: disegnava quello verso cui andavamo. Quando la nave si fermò, chiese perché.» (Una pausa.) «Hai ascoltato senza rispondere, fino alla fine. Hai sentito anche cosa gli dicemmo noi: domani. È quello che facemmo, per tutto il tempo che restava.»" se la risposta è taciuta.
 Al nodo "piccolo" l'opzione "E io che c'entro?" conduce al nodo "sangue".
 
 L'anziano al nodo "sangue" dice "«Abbiamo seminato in un mondo scelto perché la vita ci attecchisse. Se abbia attecchito, da qui non potevamo saperlo. Non lo sappiamo nemmeno adesso, che sei qui.» (Una pausa.) «Ma tu sei qui.»".
 Al nodo "sangue" l'opzione "Ho lasciato dei segni, là dietro." se le tacche è segnata oppure il bassorilievo è segnata oppure le capsule è segnata oppure il segno non è assente conduce al nodo "tracce".
-Al nodo "sangue" l'opzione "E la musica?" se le risonanze è almeno 4 conduce al nodo "musica".
-Al nodo "sangue" l'opzione "Allora cosa devo fare?" conduce al nodo "congedo".
+Al nodo "sangue" l'opzione "[Accendi il Sintonizzatore.]" se le risonanze è almeno 4 conduce al nodo "musica".
+Al nodo "sangue" l'opzione "[Guarda la cifra dell'aria.]" conduce al nodo "congedo".
 
 L'anziano al nodo "tracce" dice "«Lo so. Ho sentito la tua mano sulla pietra, goffa accanto alla nostra. Non cambierà niente: forse diventeranno polvere insieme alla nave. Ma li hai fatti lo stesso, per la stessa ragione per cui qualcuno, prima di te, incise tre tacche in una parete che nessuno avrebbe più letto.»".
 L'anziano al nodo "tracce" dice "«Lo so. Hai firmato accanto a lui, sulla sua placca: adesso lì non c'è più un uomo solo. Non cambierà niente, forse. Ma l'hai fatto per la stessa ragione per cui lui incise tre tacche in una parete che nessuno avrebbe più letto.»" se il segno è firma.
 L'anziano al nodo "tracce" dice "«Lo so. Hai finito la sua frase: aveva ragione, e adesso è scritto. Non cambierà niente, forse. Ma l'hai fatto per la stessa ragione per cui lui incise tre tacche in una parete che nessuno avrebbe più letto.»" se il segno è parola.
-Al nodo "tracce" l'opzione "E la musica?" se le risonanze è almeno 4 conduce al nodo "musica".
-Al nodo "tracce" l'opzione "Allora cosa devo fare?" conduce al nodo "congedo".
+Al nodo "tracce" l'opzione "[Accendi il Sintonizzatore.]" se le risonanze è almeno 4 conduce al nodo "musica".
+Al nodo "tracce" l'opzione "[Guarda la cifra dell'aria.]" conduce al nodo "congedo".
 
-L'anziano al nodo "musica" dice "«La nostra lingua era un canto. Le tue macchine traducono le parole, e le parole ne erano la parte più piccola. Quello che resta, quando le parole finiscono, non si conserva: si compone. Si suona di nuovo, in un altro modo, con un'altra voce.»".
-Al nodo "musica" l'opzione "Allora cosa devo fare?" conduce al nodo "congedo".
+L'anziano al nodo "musica" dice "(Accendo il Sintonizzatore. Non aggancia parole: aggancia quello che c'è sotto la sua voce, il canto del primo momento, basso, che non si era mai fermato.) «Lo senti. Le tue macchine traducono le parole, e le parole erano la parte più piccola.»".
+Al nodo "musica" l'opzione "[Guarda la cifra dell'aria.]" conduce al nodo "congedo".
 
-L'anziano al nodo "congedo" dice "(La figura mi guarda, e per un istante sento il peso di un tempo che non si può contare.) «La nostra canzone è finita. Le ultime armonie si sciolgono adesso, in questo istante. A chi viene dopo abbiamo sempre chiesto una cosa sola: che la musica fosse suonata, con forza, fino all'ultima nota. Vivi. Sarà il suono più bello.»".
-L'anziano al nodo "congedo" dice "(La figura mi guarda, e per un istante sento il peso di un tempo che non si può contare.) «La nostra canzone è finita. Le ultime armonie si sciolgono adesso, in questo istante. A chi viene dopo abbiamo sempre chiesto una cosa sola: che la musica fosse suonata, con forza, fino all'ultima nota. Vivi. Sarà il suono più bello.» (E poi, più piano:) «Grazie di essere rimasto.»" se l'ascolto è dato.
+L'anziano al nodo "congedo" dice "(Abbasso gli occhi sul visore: aria [aria]. Quando li rialzo, la figura guarda la stessa cifra.) «Allora è ora. La nostra canzone è finita da tempo; a te resta del fiato.» (Una pausa.) «Vivi.»".
+L'anziano al nodo "congedo" dice "(Abbasso gli occhi sul visore: aria [aria]. Quando li rialzo, la figura guarda la stessa cifra.) «Allora è ora. La nostra canzone è finita da tempo; a te resta del fiato.» (Una pausa.) «Vivi.» (E poi, più piano:) «Grazie di essere rimasto.»" se l'ascolto è dato.
 Al nodo "congedo" l'opzione "[Chiudi gli occhi e lascia andare.]" conduce al nodo "dissolvenza".
 
 L'anziano al nodo "dissolvenza" dice "(Chiudo gli occhi. Quando li riapro appena, la figura si sta raccogliendo: i bordi rientrano, la luce si stringe in un punto, e il punto scende piano sul sostegno al centro della stanza. Lì adesso c'è il seme che avevo dato alla porta. La luce ci entra dentro, e si spegne.)".

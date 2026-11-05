@@ -506,6 +506,14 @@ Si riempie in sessione, punto per punto. «—» vuol dire da discutere.
   dello Scriba). **Per il blocco D:** il Nucleo adesso contiene, dietro la registrazione dell’Archivista, «qualcosa
   che la matrice non sa aprire»: è la cosa sola che ha salvato, e la dice l’Anziano soltanto a chi ha avuto
   pazienza (D2).
+- **Blocco C, scritto il 5 novembre 2026.** `ponte.fav`: i nodi «salto» (due versioni), «memoria» (con il D2:
+  la pioggia dell’Archivista), «altro» (il filo della colpa del D1), «musica» e «congedo», i tre gesti del C2, il
+  nodo nuovo «voci» (C3) e due stati nuovi; `fuga.fav` (il vestibolo, C4); `finali.fav` («Vivi» e «Mani vuote»).
+  Restano come erano, perché buoni: il benvenuto, il silenzio, l’aiuto, il prezzo, il Piccolo (con il sonaglio
+  davanti, a parole uguali), il sangue (già scritto con l’A2), le tracce (A4), la dissolvenza e l’ultima voce. Il
+  congedo registrato non suona più (`VOCI_ANZIANO`): si registra con il resto. «La prima nota» resta senza righe
+  in più. **Per il blocco D:** il D2 è scritto qui; resta da decidere se la cosa salvata (la pioggia) si senta
+  anche altrove.
 
 ## 10. Il calendario proposto
 
