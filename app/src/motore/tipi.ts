@@ -209,6 +209,10 @@ export interface VoceCronaca {
   reperti: { cosa: string; nome: string }[];
   /** la placca esaminata: le iniziali di L.V. */
   iniziali: boolean;
+  /** il diario di William (revisione narrativa, RN-F7): gli appunti nuovi di questo turno */
+  appunti: { id: string; testo: string }[];
+  /** quello che resta in sospeso dopo il turno, nella sua voce */
+  sospesi: string[];
 }
 
 /** Il diario nel turno: la voce nuova, e quante voci ha la cronaca (ANNULLA la accorcia). */

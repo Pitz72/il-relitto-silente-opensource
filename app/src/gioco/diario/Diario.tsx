@@ -1,6 +1,7 @@
 // ============================================================================
 //  Il diario (06-app-desktop.md, §4.6; si apre con D, si chiude con D o Esc).
-//  La trascrizione della partita; il fascicolo di chi è passato prima; le voci
+//  La trascrizione della partita; gli appunti di William e quello che ha in
+//  sospeso (RN-F7); il fascicolo di chi è passato prima; le voci
 //  ascoltate, da rileggere; le traduzioni, ognuna nella lettura fatta con la
 //  matrice più avanti. Le pagine vengono dalla cronaca del ponte (pagine.ts);
 //  il testo è quello del gioco, vestito dalla grammatica tipografica, e i
@@ -94,6 +95,29 @@ export default function Diario({ forma, apertura, cronaca, verbi, pagina, scegli
         <TestoInerte>
           <div className="diario-colonna">
             {attuale === "trascrizione" && <Trascrizione apertura={apertura} cronaca={cronaca} verbi={verbi} forma={forma} />}
+            {attuale === "appunti" && (
+              <>
+                <h3 className="diario-titolo">Fin qui</h3>
+                {p.appunti.map((a) => (
+                  <article key={a.id} className="diario-appunto">
+                    <span className="diario-dove">
+                      {nomeDiLuogo(a.voce.nome_stanza)} · turno {a.voce.turno}
+                    </span>
+                    <p>{a.testo}</p>
+                  </article>
+                ))}
+              </>
+            )}
+            {attuale === "sospesi" && (
+              <>
+                <h3 className="diario-titolo">In sospeso</h3>
+                <ul className="diario-sospesi">
+                  {p.sospesi.map((s) => (
+                    <li key={s}>{s}</li>
+                  ))}
+                </ul>
+              </>
+            )}
             {attuale === "fascicolo" && (
               <>
                 <h3 className="diario-titolo">{p.fascicolo.iniziali ? "Fascicolo L.V." : "Qualcuno, prima di te"}</h3>

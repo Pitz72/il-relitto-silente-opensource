@@ -4,6 +4,9 @@
 //  React, niente motore. I segni li trova il ponte, dallo stato e dal comando;
 //  qui si raccolgono e si ordinano.
 //    trascrizione  tutta la partita, comando per comando
+//    appunti       il diario di William (RN-F7): la storia fin qui, una riga
+//                  quando succede qualcosa che conta, nella sua voce
+//    sospesi       quello che lo blocca e quello che non capisce, adesso
 //    fascicolo     chi è passato prima: le tracce di L.V. nell'ordine della sua
 //                  strada, mai con i posti vuoti (non si dice quante mancano);
 //                  si chiama «L.V.» solo dopo che la placca l'ha detto
@@ -13,7 +16,7 @@
 // ============================================================================
 import type { TracciaLV, VoceCronaca } from "../../motore/tipi";
 
-export type IdPagina = "trascrizione" | "fascicolo" | "voci" | "traduzioni";
+export type IdPagina = "trascrizione" | "appunti" | "sospesi" | "fascicolo" | "voci" | "traduzioni";
 
 /** Le tracce, nell'ordine della strada di L.V. (vita.fav: entrò dalla giuntura,
  *  segnò le tacche, perse il cavo guida fra le teche, morì nella serra). */
@@ -45,7 +48,15 @@ export interface Reperto {
   voce: VoceCronaca;
 }
 
+export interface Appunto {
+  id: string;
+  testo: string;
+  voce: VoceCronaca;
+}
+
 export interface Pagine {
+  appunti: Appunto[];
+  sospesi: string[];
   fascicolo: { iniziali: boolean; tracce: Traccia[] };
   voci: VoceCronaca[];
   traduzioni: { reperti: Reperto[]; iscrizioni: Lettura[] };
@@ -56,7 +67,10 @@ export function pagine(cronaca: readonly VoceCronaca[]): Pagine {
   const iscrizioni = new Map<string, Lettura>();
   const reperti: Reperto[] = [];
   let iniziali = false;
+  const appunti = new Map<string, Appunto>();
   for (const v of cronaca) {
+    // un appunto si scrive una volta sola: la prima
+    for (const a of v.appunti ?? []) if (!appunti.has(a.id)) appunti.set(a.id, { ...a, voce: v });
     for (const t of v.tracce) if (!trovate.has(t)) trovate.set(t, v);
     if (v.iniziali) iniziali = true;
     for (const r of v.reperti) reperti.push({ ...r, voce: v });
@@ -68,6 +82,9 @@ export function pagine(cronaca: readonly VoceCronaca[]): Pagine {
     }
   }
   return {
+    appunti: [...appunti.values()],
+    // in sospeso: com'è adesso, dopo l'ultimo turno
+    sospesi: cronaca.at(-1)?.sospesi ?? [],
     fascicolo: {
       iniziali,
       tracce: TRACCE.filter((t) => trovate.has(t.id)).map((t) => ({ ...t, voce: trovate.get(t.id)! })),
@@ -82,6 +99,8 @@ export function pagine(cronaca: readonly VoceCronaca[]): Pagine {
  *  loro meccanica entra nel gioco (come i contatori del visore, §4.3). */
 export function pagineAperte(p: Pagine): IdPagina[] {
   const out: IdPagina[] = ["trascrizione"];
+  if (p.appunti.length) out.push("appunti");
+  if (p.sospesi.length) out.push("sospesi");
   if (p.fascicolo.tracce.length) out.push("fascicolo");
   if (p.voci.length) out.push("voci");
   if (p.traduzioni.reperti.length || p.traduzioni.iscrizioni.length) out.push("traduzioni");
@@ -93,6 +112,10 @@ export function titoloPagina(id: IdPagina, p: Pagine): string {
   switch (id) {
     case "trascrizione":
       return "Trascrizione";
+    case "appunti":
+      return "Appunti";
+    case "sospesi":
+      return "In sospeso";
     case "fascicolo":
       return p.fascicolo.iniziali ? "L.V." : "Prima di te";
     case "voci":

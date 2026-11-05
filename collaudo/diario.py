@@ -13,7 +13,8 @@
 #   2. dopo un salvataggio e un caricamento, la cronaca ricostruita rigiocando
 #      è uguale a quella giocata, voce per voce (tranne il numero della voce);
 #   3. ANNULLA toglie dalla cronaca il turno disfatto;
-#   4. i segni del diario: nel percorso «tutto» le cinque tracce di L.V., le
+#   4. i segni del diario: nel percorso «tutto» le cinque tracce di L.V., gli
+#      appunti di William senza doppioni e le cose in sospeso (RN-F7), le
 #      voci, le iscrizioni tradotte, i reperti; le iniziali solo quando si
 #      esamina la placca; una traduzione chiusa dalla protezione vitale non è
 #      una lettura;
@@ -207,6 +208,15 @@ def main():
                 problemi.append("le iniziali risultano lette, ma «tutto» non esamina la placca")
             if not s["voci"] or not s["letture"] or not s["reperti"]:
                 problemi.append(f"mancano voci, letture o reperti: {s}")
+            # il diario di William (RN-F7): ogni appunto una volta sola; alla fine della
+            # partita in sospeso c'è soltanto il ritorno alla Santa Maria
+            ids = [x["id"] for v in voci for x in v.get("appunti", [])]
+            if len(ids) != len(set(ids)):
+                problemi.append(f"un appunto di William ripetuto: {ids}")
+            if not {"massa", "corridoio", "porta", "fuga"} <= set(ids):
+                problemi.append(f"mancano appunti di William: {ids}")
+            if voci and voci[-1].get("sospesi") != ["Tornare alla Santa Maria, adesso."]:
+                problemi.append(f"in sospeso, alla fine: {voci[-1].get('sospesi')}")
         riga = f"{nome} ({len(voci)} voci; caricamento con la cronaca {ms:.0f} ms)"
         if problemi:
             falliti += 1

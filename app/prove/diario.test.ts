@@ -24,6 +24,8 @@ function voce(v: Partial<VoceCronaca> = {}): VoceCronaca {
     lettura: null,
     reperti: [],
     iniziali: false,
+    appunti: [],
+    sospesi: [],
     ...v,
   };
 }
@@ -85,4 +87,22 @@ test("la preposizione della matrice", () => {
   assert.equal(allaMatrice(75), "al 75%");
   assert.equal(allaMatrice(100), "al 100%");
   assert.equal(allaMatrice(8), "all’8%");
+});
+
+test("gli appunti di William: ognuno una volta sola, la prima, nell'ordine in cui arrivano", () => {
+  const a = (id: string) => ({ id, testo: `Appunto ${id}.` });
+  const cronaca = [voce({ appunti: [a("massa")] }), voce(), voce({ appunti: [a("dentro"), a("brusio")] }), voce({ appunti: [a("massa")] })];
+  const p = pagine(cronaca);
+  assert.deepEqual(p.appunti.map((x) => x.id), ["massa", "dentro", "brusio"]);
+  assert.equal(p.appunti[0].voce, cronaca[0]);
+  assert.deepEqual(pagineAperte(p), ["trascrizione", "appunti"]);
+  assert.equal(titoloPagina("appunti", p), "Appunti");
+});
+
+test("in sospeso: com'è dopo l'ultimo turno, e la pagina c'è solo se c'è qualcosa", () => {
+  const p = pagine([voce({ sospesi: ["Tre tacche nel corridoio. Chi le ha fatte?"] }), voce({ sospesi: ["La porta grande."] })]);
+  assert.deepEqual(p.sospesi, ["La porta grande."]);
+  assert.deepEqual(pagineAperte(p), ["trascrizione", "sospesi"]);
+  assert.equal(titoloPagina("sospesi", p), "In sospeso");
+  assert.deepEqual(pagineAperte(pagine([voce({ sospesi: ["Qualcosa."] }), voce()])), ["trascrizione"]);
 });

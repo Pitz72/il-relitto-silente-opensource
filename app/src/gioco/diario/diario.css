@@ -113,6 +113,17 @@
   color: var(--tenue);
 }
 
+/* il diario di William (RN-F7): gli appunti, poi quello che resta in sospeso */
+.diario-appunto { margin: 0 0 1.1em; }
+.diario-appunto p { margin: .15em 0 0; }
+.diario-sospesi { margin: 0; padding: 0; list-style: none; }
+.diario-sospesi li {
+  margin: 0 0 .9em;
+  padding-left: 1.1em;
+  text-indent: -1.1em;
+}
+.diario-sospesi li::before { content: "—\00a0"; color: var(--tenue); }
+
 /* i suggerimenti del passato: accesi, ma non si premono */
 .s-suggerimento.inerte { cursor: text; }
 .s-suggerimento.inerte:hover { color: var(--accento-2); }

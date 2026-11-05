@@ -529,6 +529,9 @@ Si riempie in sessione, punto per punto. «—» vuol dire da discutere.
   (`echi.fav` 81 e 82, `equipaggio.fav` 92), F5 (`memoria.fav`, il bassorilievo; `vita.fav`, le capsule), F6
   (`echi.fav`: le quattro prime eco a due strati). Nel collaudo `prima-nota-in-stiva.txt`. Restano l’F7 (il diario)
   e l’F1 (la taratura).
+- **F7, il diario di William, scritto il 5 novembre 2026.** Due pagine nuove nel diario dell’app, «Appunti» e «In
+  sospeso», scritte dal ponte (`app/src/motore/ponte.py`, `APPUNTI` e `SOSPESI`: venti appunti e quattordici cose
+  in sospeso, con le righe del D3 e dell’F6; quella dell’F2 è l’appunto «matrice»). Resta l’F1.
 
 ## 10. Il calendario proposto
 

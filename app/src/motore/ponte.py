@@ -852,6 +852,133 @@ ISCRIZIONI = ("bassorilievo", "globo olografico", "lastra incisa", "mappa stella
 REPERTI = ("lastra dati", "cilindro mnemonico", "stele", "nucleo")
 
 
+# ---------------------------------------------------------------------------
+#  Il diario di William (revisione narrativa, RN-F7; progettazione/33, §8): gli
+#  appunti che detta alla tuta. Due pagine del diario dell'app: «Appunti», la
+#  storia fin qui, una riga quando succede qualcosa che conta; «In sospeso»,
+#  quello che lo blocca, detto da lui, e quello che ha notato e non capisce,
+#  come domande. Mai i gesti che contano (ascoltare, firmare, restituire le
+#  voci, restare): quelli restano di chi gioca. Le condizioni leggono lo stato
+#  del mondo; un appunto entra la prima volta che la sua condizione è vera.
+# ---------------------------------------------------------------------------
+def _vista(m, stanza):
+    return stanza == m.posizione_giocatore or stanza in (getattr(m, "stanze_visitate", ()) or ())
+
+
+def _var(m, nome):
+    return m.variabili.get(nome)
+
+
+def _num(m, nome):
+    return _intero(m.variabili.get(nome)) or 0
+
+
+APPUNTI = (
+    ("massa", lambda m: _var(m, "scansione") == "completa",
+     "Una massa nera, trecentoquaranta metri. Il computer di bordo non la trova in archivio."),
+    ("promessa", lambda m: _var(m, "promessa") == "carico",
+     "Ho detto a Yusuf che gli porto un pezzo da vendere."),
+    ("aggancio", lambda m: _var(m, "aggancio") == "fatto",
+     "Gli arpioni tengono. La Santa Maria è attaccata a quella cosa."),
+    ("dentro", lambda m: _vista(m, "vestibolo delle gole"),
+     "Sono dentro, da una giuntura dello scafo."),
+    ("brusio", lambda m: _var(m, "contatto") == "avvenuto",
+     "Dentro c’è un brusio: voci, tante, una sopra l’altra."),
+    ("risuonatore", lambda m: _prop(m, "risuonatore", "staccato") is not None,
+     "Ho staccato dalla nicchia l’arnese da cui viene il brusio. Vale un anno di stive vuote, "
+     "e finché lo porto beve la mia aria."),
+    ("nomi", lambda m: _var(m, "connessione") == "avvenuta",
+     "Nella gola di mezzo una voce ha detto dei nomi, uno dopo l’altro, e la tuta non è riuscita "
+     "a chiudere il canale."),
+    ("corridoio", lambda m: _vista(m, "corridoio principale"),
+     "Il corridoio è il cuore della nave. A ovest, una porta grande, senza maniglie."),
+    ("sintonizzatore", lambda m: "sintonizzatore" in _portati(m),
+     "Ho un Sintonizzatore: aggancia le voci rimaste nelle cose. Ogni voce costa aria."),
+    ("energia", lambda m: _var(m, "energia") == "ripristinata",
+     "Ho rimesso il cristallo nel generatore. La nave ha di nuovo corrente, poca."),
+    ("matrice", lambda m: _num(m, "traduzione") >= 18,
+     "La matrice comincia a leggere la loro lingua. Leggere, come ascoltare, costa fiato."),
+    ("uomo", lambda m: _var(m, "specchio") == "visto",
+     "Nella serra c’è un uomo, in una tuta come la mia. È arrivato prima di me."),
+    ("seme", lambda m: _prop(m, "teca", "svuotata") is not None,
+     "La teca si è aperta. Il seme è vivo."),
+    ("stele", lambda m: _prop(m, "stele", "decifrato") is not None,
+     "La Stele dice chi erano: tre soli che si spegnevano, un viaggio, una semina."),
+    ("forza", lambda m: _var(m, "archivio") == "forzato",
+     "L’archivio l’ho aperto con la taglierina. L’ultimo pilastro si è spento."),
+    ("pazienza", lambda m: _var(m, "archivio") == "salutato",
+     "L’ultimo pilastro si è acceso per intero, e mi ha lasciato il Nucleo."),
+    ("porta", lambda m: _prop(m, "grande porta", "aperta") is not None,
+     "La porta grande si è aperta sul Ponte."),
+    ("rotta", lambda m: _var(m, "proiezione") == "attiva",
+     "Sul Ponte, la mappa delle stelle. La rotta parte da tre soli e finisce sul mio."),
+    ("figura", lambda m: _vista(m, "santuario centrale"),
+     "In fondo alla nave c’è una figura di luce, e mi guarda."),
+    ("fuga", lambda m: _var(m, "fuga") == "iniziata",
+     "La nave trema. Ho l’aria che mi resta per tornare alla Santa Maria."),
+)
+_TESTO_APPUNTO = {nome: testo for nome, _, testo in APPUNTI}
+
+_INCAVI = ("Sono vuoti.", "Uno è pieno.", "Due sono pieni.")
+
+
+def _porta_grande(m):
+    return ("La porta grande ha tre incavi: uno a forma d’uovo, uno piatto, uno a molte facce. "
+            + _INCAVI[min(_num(m, "chiavi"), 2)])
+
+
+def _teca(m):
+    if _prop(m, "piante", "risuonata") is not None or _var(m, "diario") == "ascoltato":
+        return "La chiave della teca è giù, al vivaio, oltre il groviglio."
+    return "Il seme è chiuso in una teca, e la teca vuole una chiave che qui non c’è."
+
+
+def _strato(nome, chi):
+    return (lambda m: _prop(m, nome, "risuonata") is not None and _prop(m, nome, "celata") is not None,
+            f"Sotto la voce {chi} ce n’è un’altra. Che cosa dice?")
+
+
+# In sospeso: prima quello che blocca, poi le domande. Nella fuga, una cosa sola.
+SOSPESI = (
+    (lambda m: _var(m, "scansione") != "completa" and _var(m, "aggancio") == "lontano",
+     "La massa nera non so che cos’è. Per saperlo serve una scansione lunga."),
+    (lambda m: _vista(m, "corridoio principale") and _prop(m, "grande porta", "aperta") is None, _porta_grande),
+    (lambda m: _vista(m, "serra morente") and _prop(m, "teca", "sigillata") is not None
+     and "tavoletta" not in _portati(m), _teca),
+    (lambda m: _vista(m, "laboratorio di risonanza") and _var(m, "energia") != "ripristinata",
+     "Il generatore del laboratorio è spento: nel vano manca qualcosa."),
+    (lambda m: _vista(m, "arca della memoria") and _var(m, "energia") != "ripristinata"
+     and _var(m, "archivio") == "intatto",
+     "Il pilastro dell’archivio aspetta corrente, e il generatore è spento."),
+    (lambda m: _vista(m, "ponte di comando") and _var(m, "proiezione") == "attiva"
+     and _prop(m, "porta circolare", "aperta") is None,
+     "La porta tonda ha cinque punte. Quante ne vuole?"),
+    (lambda m: _intero(_var(m, "aria")) is not None and _intero(_var(m, "aria")) < 30,
+     "Sotto il trenta la tuta non mi lascia ascoltare né tradurre. Mi serve aria."),
+    (lambda m: _vista(m, "corridoio principale") and _var(m, "specchio") != "visto"
+     and _var(m, "solco") != "misurato",
+     "Tre tacche nel corridoio, alla base della parete. Chi le ha fatte?"),
+    (lambda m: _var(m, "datazione") == "nota" and _var(m, "specchio") != "visto",
+     "La giuntura era già stata tagliata, centocinquant’anni fa. Chi è entrato prima di me?"),
+    (lambda m: _vista(m, "nido") and _var(m, "proiezione") != "attiva",
+     "Nella cella del piccolo, cento soli disegnati: uno solo, mai tre. Quale sole?"),
+    _strato("piante", "dello xeno-botanico"),
+    _strato("alcove", "del Navarca"),
+    _strato("bassorilievo", "del Custode"),
+    _strato("generatore", "dell’ingegnere"),
+)
+
+
+def _appunti(m):
+    return [nome for nome, cond, _ in APPUNTI if cond(m)]
+
+
+def _sospesi(m):
+    if _var(m, "fuga") == "iniziata":
+        return ["Tornare alla Santa Maria, adesso."]
+    return [t(m) if callable(t) else t for cond, t in SOSPESI if cond(m)]
+
+
 def _diario_stati(m):
     v = m.variabili
     aria = _intero(v.get("aria"))
@@ -865,6 +992,7 @@ def _diario_stati(m):
         # le due regole che tengono spento il traduttore (traduci.fav)
         "protezione": aria is not None and aria < 30 and v.get("fuga") == "lontana",
         "proiezione": v.get("proiezione"),
+        "appunti": _appunti(m),
     }
 
 
@@ -902,6 +1030,11 @@ def _voce_di_cronaca(m, comando, analisi, prima, dopo, eventi):
                     if r not in prima["decifrati"]],
         # le iniziali di L.V. si leggono soltanto sulla placca (vita.fav)
         "iniziali": verbo in ("esamina", "leggi") and cosa == "placca",
+        # il diario di William (RN-F7): gli appunti nuovi di questo turno, e quello
+        # che resta in sospeso dopo il turno
+        "appunti": [{"id": a, "testo": _TESTO_APPUNTO[a]} for a in dopo["appunti"]
+                    if a not in prima["appunti"]],
+        "sospesi": _sospesi(m),
     }
 
 
