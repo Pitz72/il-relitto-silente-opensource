@@ -177,7 +177,7 @@ La descrizione delle capsule se le capsule è segnata è "Capsule di stasi, vetr
 Invece di analizza le capsule: dire "Punto lo scanner sulla capsula più vicina. Un bip lento.\nLETTURA: ‹FAUNA DEI TRE SOLI: GRANDE PASCOLATORE› — deceduto. Integrità genomica 0,02%. Provo con un'altra, e un'altra ancora: ‹FLORA DI XYLOS› — deceduto. ‹FORMA SILICEA: COSTRUTTORE› — deceduto.\nNon era una stiva: era un'arca. Lo scanner scrive «deceduto» su ogni capsula che inquadro, finché lo abbasso.".
 Invece di incidi le capsule se il giocatore non ha la taglierina: dire "Mi servirebbe qualcosa con cui incidere.".
 Invece di incidi le capsule se le capsule è segnata: dire "Il mio segno è già lì, sul vetro della capsula più vicina.".
-Invece di incidi le capsule: dire "Mi inginocchio davanti alla capsula più vicina e, con la taglierina al minimo, incido un segno sul vetro scuro. Non un nome: non saprei quale scrivere. Soltanto la prova che qualcuno è passato e si è fermato davanti a loro, morti nel sonno." e adesso le capsule è segnata.
+Invece di incidi le capsule: dire "Mi inginocchio davanti alla capsula più vicina e, con la taglierina al minimo, incido un segno sul vetro scuro. Un tratto corto. Dice soltanto che qualcuno è passato e si è fermato davanti a loro, morti nel sonno." e adesso le capsule è segnata.
 
 # --- Essenziali (energia, parte prima) ---------------------------------------
 Il dispositivo medico è una cosa.
@@ -193,8 +193,8 @@ Il cristallo è nell'arca biologica.
 Il cristallo è opaco.
 Il cristallo si chiama anche "cristallo dati".
 La descrizione del cristallo è "Un piccolo cristallo scuro, freddo e inerte. Un supporto di memoria addormentato: gli serve uno stimolo per svegliarsi.".
-La descrizione del cristallo se il cristallo è attivo è "Il cristallo è trasparente, adesso, e dentro una trama di filamenti luminosi pulsa come un cuore che ha ripreso a battere. È tiepido, e ha l'aria di un pezzo da montare in qualche macchina.".
-Invece di usa il dispositivo medico sul cristallo se il cristallo è opaco: dire "Con una certa esitazione accendo il dispositivo medico: la punta di cristallo emette un ronzio appena udibile e una luce ambrata. La avvicino al cristallo opaco. Appena si toccano, la superficie lattiginosa diventa trasparente, e dentro una trama di filamenti luminosi comincia a pulsare. Adesso è tiepido, e vibra: sembra fatto per essere inserito in qualcosa." e adesso il cristallo è attivo.
+La descrizione del cristallo se il cristallo è attivo è "Il cristallo è trasparente, adesso, e dentro una trama di filamenti luminosi si accende e si spegne, sempre con lo stesso ritmo. È tiepido, e ha l'aria di un pezzo da montare in qualche macchina.".
+Invece di usa il dispositivo medico sul cristallo se il cristallo è opaco: dire "Accendo il dispositivo medico: la punta di cristallo emette un ronzio appena udibile e una luce ambrata. La avvicino al cristallo opaco. Appena si toccano, la superficie lattiginosa diventa trasparente, e dentro una trama di filamenti luminosi comincia a pulsare. Adesso è tiepido, e vibra: sembra fatto per essere inserito in qualcosa." e adesso il cristallo è attivo.
 
 # ============================================================================
 # SALA DELLE TECHE (N4) — si arriva dalla Gola di mezzo

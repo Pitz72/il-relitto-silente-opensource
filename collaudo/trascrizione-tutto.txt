@@ -269,7 +269,7 @@ Preso: il dispositivo medico.
 Preso: il cristallo.
 
 > usa il dispositivo medico sul cristallo
-Con una certa esitazione accendo il dispositivo medico: la punta di cristallo emette un ronzio appena udibile e una luce ambrata. La avvicino al cristallo opaco. Appena si toccano, la superficie lattiginosa diventa trasparente, e dentro una trama di filamenti luminosi comincia a pulsare. Adesso è tiepido, e vibra: sembra fatto per essere inserito in qualcosa.
+Accendo il dispositivo medico: la punta di cristallo emette un ronzio appena udibile e una luce ambrata. La avvicino al cristallo opaco. Appena si toccano, la superficie lattiginosa diventa trasparente, e dentro una trama di filamenti luminosi comincia a pulsare. Adesso è tiepido, e vibra: sembra fatto per essere inserito in qualcosa.
 Da qualche parte nella nave qualcosa si assesta, con un gemito lungo e basso che mi arriva nei denti prima che nelle cuffie. Resto fermo ad ascoltare, ma non ne segue un altro.
 
 > est
@@ -587,7 +587,7 @@ Puoi vedere qui: una postazione, una porta circolare, delle punte.
 Uscite: Est (Il corridoio principale), Ovest.
 
 > usa la postazione
-Appoggio la mano guantata sulla depressione, e la console reagisce a quello che voglio, anche se non sono uno di loro. Un'ondata di energia silenziosa attraversa la sala, le postazioni si accendono, e la struttura centrale proietta sulla cupola una mappa stellare a tre dimensioni. La rotta è chiara, e il punto d'arrivo inconfondibile: il mio sole.
+Appoggio la mano guantata sulla depressione, e la console reagisce a quello che voglio, anche se non sono uno di loro. Le postazioni si accendono una dopo l'altra lungo la sala, senza un suono, e la struttura centrale proietta sulla cupola una mappa stellare a tre dimensioni. La rotta è chiara, e il punto d'arrivo inconfondibile: il mio sole.
 
 > analizza la mappa stellare
 La rotta la conosco: un sistema trino, tre soli. La loro culla.

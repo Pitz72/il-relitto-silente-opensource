@@ -71,12 +71,12 @@ Le punte è una cosa.
 Le punte è nel ponte di comando.
 Le punte si chiama anche "meccanismo".
 Le punte si chiama anche "punte luminose".
-La descrizione delle punte è "Cinque punte luminose retrattili, disposte a raggiera sul pannello della porta. Quante premerne? Il numero dev'essere la chiave.".
+La descrizione delle punte è "Cinque punte luminose retrattili, disposte a raggiera sul pannello della porta, tutte uguali: l'unica cosa che può cambiare è quante ne premo.".
 
 # --- La console e la mappa ----------------------------------------------------
 Invece di usa la postazione se l'energia è assente: dire "Appoggio la mano sulla depressione, ma la console resta morta e gelida. Manca l'energia: finché la nave non si sveglia, il Ponte è inerte.".
 Invece di usa la postazione se la proiezione è attiva: dire "La console è già sveglia: la mappa stellare brilla sopra di me.".
-Invece di usa la postazione: dire "Appoggio la mano guantata sulla depressione, e la console reagisce a quello che voglio, anche se non sono uno di loro. Un'ondata di energia silenziosa attraversa la sala, le postazioni si accendono, e la struttura centrale proietta sulla cupola una mappa stellare a tre dimensioni. La rotta è chiara, e il punto d'arrivo inconfondibile: il mio sole." e adesso la proiezione è attiva.
+Invece di usa la postazione: dire "Appoggio la mano guantata sulla depressione, e la console reagisce a quello che voglio, anche se non sono uno di loro. Le postazioni si accendono una dopo l'altra lungo la sala, senza un suono, e la struttura centrale proietta sulla cupola una mappa stellare a tre dimensioni. La rotta è chiara, e il punto d'arrivo inconfondibile: il mio sole." e adesso la proiezione è attiva.
 Invece di tocca la postazione: dire "(Per svegliarla: USA LA POSTAZIONE.)".
 
 Invece di analizza la mappa stellare se la proiezione è spenta: dire "Non c'è nessuna mappa da analizzare: il Ponte è ancora inerte.".

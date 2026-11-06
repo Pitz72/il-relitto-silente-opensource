@@ -550,6 +550,21 @@ Si riempie in sessione, punto per punto. «—» vuol dire da discutere.
   otto frasi fatte («È come voler bere da una cascata», «crepe come ferite», «polvere digitale», «pulsa come un cuore
   che ha ripreso a battere», «Con una certa esitazione», «Un’ondata di energia silenziosa», «Non un nome: non saprei
   quale scrivere», «Il numero dev’essere la chiave»): da proporre all’autore.
+- **Le otto frasi fatte, scritte il 6 novembre 2026** (approvate dall’autore una per una, poi «Sì, applica tutto»).
+  I globi sotto il 18% (`traduci.fav` 57): «…poi si scioglie di nuovo nel flusso, e dietro ne arrivano altri
+  cento.». I pilastri (`memoria.fav` 132): «Quasi tutti incrinati, e lungo le crepe il cristallo si è fatto
+  bianco.». L’analisi del pilastro (`memoria.fav` 136): «…di una civiltà che ha attraversato una galassia. Ne resta
+  una parola su centomila, e non so quale.»; prende il posto anche della frase del G5, «Di tutto questo non potrò
+  leggere quasi niente.». Il cristallo attivo (`vita.fav` 196): «…una trama di filamenti luminosi si accende e si
+  spegne, sempre con lo stesso ritmo.». Il dispositivo medico sul cristallo (`vita.fav` 197) comincia da «Accendo il
+  dispositivo medico:», senza «Con una certa esitazione». La console del Ponte (`ponte.fav` 79): «Le postazioni si
+  accendono una dopo l’altra lungo la sala, senza un suono, e la struttura centrale proietta…». Il segno sulla
+  capsula (`vita.fav` 180): «…incido un segno sul vetro scuro. Un tratto corto. Dice soltanto che qualcuno è passato
+  e si è fermato davanti a loro, morti nel sonno.»: via un’antitesi «non X: Y» fuori dalle otto del G1, e il nome
+  che non si capiva di chi fosse. Le punte (`ponte.fav` 74): «Cinque punte luminose retrattili, disposte a raggiera
+  sul pannello della porta, tutte uguali: l’unica cosa che può cambiare è quante ne premo.»: via «la chiave», che si
+  confondeva con le tre chiavi della Grande Porta. Nessuna è in una battuta registrata. Il blocco G è finito; viene
+  il blocco H.
 
 ## 10. Il calendario proposto
 
