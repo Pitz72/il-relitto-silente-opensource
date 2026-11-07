@@ -8,6 +8,8 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+## [0.2.5-beta.9] - 2026-11-07
+
 ### Per chi gioca
 
 - **L’Anziano parla.** La prima volta che lo incontri, prima delle parole, si sente il suo canto, la sua lingua; poi la sua voce, profonda e vicina, come dentro la testa. Dice con la sua voce tutto quello che dice.
