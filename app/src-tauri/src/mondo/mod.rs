@@ -418,8 +418,12 @@ pub struct Mondo {
     anello: Option<Anello>,
     /// le voci della nave (documento 35), registrate: al posto del filo, quando ci sono i file
     voci_nave: VociNave,
-    /// Yusuf (documento 35, §1): la sua voce è già passata dalla radio, ed esce asciutta
+    /// Yusuf e la scatola nera di L.V. (documento 35): la radio e il nastro ce l’hanno già nel file, ed escono
+    /// asciutti
     voci_radio: VociNave,
+    /// nel turno c’è il Sintonizzatore al lavoro: una risonanza può essere il secondo strato di un’eco (senza, è
+    /// la scatola nera o il Piccolo, che fanno salire le risonanze anche loro)
+    sintonia_nel_turno: bool,
     /// le battute che il ponte ha mandato in questo turno (l’evento «voci»), non ancora suonate
     voci_turno: Vec<Pezzo>,
     dopo_le_voci: DopoLeVoci,
@@ -563,6 +567,7 @@ impl Mondo {
             anello: None,
             voci_nave: VociNave::nuove(sr),
             voci_radio: VociNave::nuove(sr),
+            sintonia_nel_turno: false,
             voci_turno: Vec::with_capacity(16),
             dopo_le_voci: DopoLeVoci::default(),
             fondo: Fondo::nuovo(sr, seme ^ 0xF0),
@@ -1134,7 +1139,8 @@ impl Mondo {
                 l += al * kv;
                 r += ar * kv;
             }
-            // Yusuf: la radio ce l’ha già nel file; asciutto, sul cursore del parlato, come l’Anziano
+            // Yusuf e la scatola nera di L.V.: la radio e il nastro ce li hanno già nel file; asciutti, sul cursore
+            // del parlato, come l’Anziano
             let (yl, yr) = self.voci_radio.campione();
             let ky = vp * gp * s_filo * LIV_YUSUF;
             l += yl * ky;

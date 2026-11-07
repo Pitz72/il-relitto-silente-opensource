@@ -41,7 +41,7 @@ fn scanner(cosa: &str) -> &'static str {
     Box::leak(format!(r#"{{"evento": "attrezzo", "attrezzo": "multiscanner", "cosa": "{cosa}"}}"#).into_boxed_str())
 }
 
-const RIS: &str = r#"{"evento": "risonanza", "valore": 2}"#;
+const RIS: &str = r#"{"evento": "attrezzo", "attrezzo": "sintonizzatore", "cosa": "x"}, {"evento": "risonanza", "valore": 2}"#;
 
 fn scene() -> Vec<Scena> {
     let s = |titolo, stanza, risonate, eventi, battute, durata| Scena { titolo, stanza, risonate, resto: "", eventi, battute, durata };
@@ -90,6 +90,15 @@ fn scene() -> Vec<Scena> {
             eventi: "",
             battute: r#""YU-08-fuga-nessuno""#,
             durata: 9.0,
+        },
+        Scena {
+            titolo: "La scatola nera di L.V., nella serra",
+            stanza: "serra morente",
+            risonate: r#""piante""#,
+            resto: "",
+            eventi: r#"{"evento": "scatola_nera"}, {"evento": "risonanza", "valore": 3}"#,
+            battute: r#""LV-02-scatola-serra""#,
+            durata: 90.0,
         },
         Scena {
             titolo: "La fuga: accanto alla nicchia vuota, «Deve.»",

@@ -494,18 +494,22 @@ mod prove {
 
     #[test]
     fn il_secondo_strato_c_e_solo_se_la_cosa_ha_gia_risuonato() {
-        let ev = r#"{"evento": "risonanza", "valore": 2}"#;
+        let ev = r#"{"evento": "attrezzo", "attrezzo": "sintonizzatore", "cosa": "x"}, {"evento": "risonanza", "valore": 2}"#;
         // il Custode ha già parlato: la risonanza è il suo secondo strato
         let con = differenza("santuario del silenzio", r#""bassorilievo""#, ev, 14.0);
         assert!(rms_db(&con[(SR * 2.0) as usize..(SR * 7.0) as usize]) > -55.0, "il secondo strato non suona");
         // senza la prima volta, una risonanza qualunque (la scatola nera nella serra) non fa parlare l’eco
-        let senza = differenza("serra morente", "", ev, 10.0);
+        let risonanza = r#"{"evento": "risonanza", "valore": 2}"#;
+        let senza = differenza("serra morente", "", risonanza, 10.0);
         assert!(rms_db(&senza) < -80.0, "una risonanza che non è un’eco fa parlare la serra ({:.1} dB)", rms_db(&senza));
+        // e nemmeno dopo la prima volta, se non è il Sintonizzatore a lavorare (la scatola nera, il Piccolo)
+        let senza = differenza("serra morente", r#""piante""#, risonanza, 10.0);
+        assert!(rms_db(&senza) < -80.0, "la scatola nera fa parlare il secondo strato della serra ({:.1} dB)", rms_db(&senza));
     }
 
     #[test]
     fn la_lastra_incisa_graffia_e_si_ferma() {
-        let d = differenza("scriptorium", "", r#"{"evento": "risonanza", "valore": 3}"#, 9.0);
+        let d = differenza("scriptorium", "", r#"{"evento": "attrezzo", "attrezzo": "sintonizzatore", "cosa": "lastra incisa"}, {"evento": "risonanza", "valore": 3}"#, 9.0);
         // il graffio c’è, la punta si ferma, e riprende
         let graffio = &d[(SR * 1.5) as usize..(SR * 2.1) as usize];
         let pausa = &d[(SR * 2.4) as usize..(SR * 2.8) as usize];
@@ -724,6 +728,32 @@ mod prove {
         tx.send(turno(&format!(r#"{{"stati": {}, "eventi": [{{"evento": "dialogo_fine", "con": "yusuf"}}]}}"#, stati("plancia", "", "")))).unwrap();
         suona(&mut m, 0.5);
         assert!(!m.voci_radio.parla(), "Yusuf parla ancora dopo lo schiocco");
+    }
+
+    #[test]
+    fn la_scatola_nera_della_serra_non_e_il_secondo_strato_e_parla_dal_nastro() {
+        // le piante hanno già risuonato: la risonanza della scatola nera non deve far parlare lo xeno-botanico
+        let (mut m, tx) = mondo_in("serra morente", r#""piante""#);
+        m.voci_radio.con_biblioteca(biblioteca(&[(Pezzo::Lv02, 6.0)]));
+        m.voci_nave.con_biblioteca(biblioteca(&[(Pezzo::Nv05b, 6.0)]));
+        tx.send(turno(&format!(
+            r#"{{"stati": {}, "eventi": [{{"evento": "scatola_nera"}}, {{"evento": "risonanza", "valore": 3}}, {{"evento": "voci", "battute": ["LV-02-scatola-serra"]}}]}}"#,
+            stati("serra morente", r#""piante""#, "")
+        )))
+        .unwrap();
+        let mut inizio = None;
+        for i in 0..(4.0 * SR / 128.0) as usize {
+            let mut buf = vec![kira::Frame::ZERO; 128];
+            m.rendi(&mut buf, 1.0 / SR as f64);
+            assert!(!m.voci_nave.parla() && m.filo_g.v < 1e-4, "la scatola nera fa parlare l’eco della serra");
+            if inizio.is_none() && m.voci_radio.parla() {
+                inizio = Some(i as f32 * 128.0 / SR);
+            }
+        }
+        let inizio = inizio.expect("L.V. non parla");
+        assert!((inizio - 1.2).abs() < 0.05, "L.V. parla {inizio:.2} s dopo il cavo");
+        let voci = m.automazioni.iter().filter(|a| matches!(a.azione, Azione::Voce(_))).count();
+        assert_eq!(voci, 0, "nessun filo");
     }
 
     #[test]

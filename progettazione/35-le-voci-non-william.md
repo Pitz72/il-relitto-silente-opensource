@@ -13,6 +13,7 @@ soltanto le indicazioni fra parentesi quadre per la voce. Mai tagli dentro una b
 | Voce | Stato | Dove |
 |---|---|---|
 | L.V., il prologo | **fatta**: «Elio» (sintesi vocale di Google, generata dall’autore), dal 7 novembre come nastro vecchio che si rovina | l’intro |
+| L.V., la scatola nera della serra | **fatta** il 7 novembre (V4, §10): «Elio», sullo stesso nastro | vita.fav |
 | L’Anziano | **fatta**: tutte le 26 varianti, «Edoardo Straniero» (ElevenLabs), approvate il 2 e il 7 novembre | ponte.fav |
 | Yusuf | **fatta**: le 8 battute con la voce clonata dell’autore, approvate il 7 novembre; atto I dalla radio di plancia, la fuga su un canale instabile | santamaria.fav, fuga.fav |
 
@@ -263,4 +264,37 @@ fra le due battute; prima si toccavano.
 - **Gli effetti e i suoni d’ambiente** (l’autore, 7 novembre 2026): «ora teniamo buono questo environment sound ma
   credo che poi fx e suoni vadano rifatti, ma ci penseremo più in là». Restano come sono; se ne riparla dopo il blocco
   H e la beta.
-- **L.V. nella serra** (V4): da preparare.
+
+## 10. L.V. nella serra (V4, 7 novembre 2026)
+
+L’autore, all’inizio: «per LV ho scelto google perché il suo respiro sofferente è più realistico e con 11labs non
+siamo riusciti a replicarlo». La voce è «Elio», come nell’intro.
+
+**La presa.** Il copione sta in `consegne/Voce L.V. serra 2026-11-07/copione.txt`: le parole fra «» della scatola
+nera (`vita.fav`), identiche, con le pause e i respiri, e le indicazioni di recitazione (quelle dell’intro, adattate:
+la confessione, il cavo, «Matthew» detto piano, «mai sentimentale»). L’ho generata io da Google AI Studio, con
+l’account dell’autore già aperto (Gemini 3.8 Flash TTS, voce «Elio»; il salvataggio del file l’ha confermato lui).
+Le indicazioni vanno scritte come quelle dello strumento, fra < > (`<breath>`, `<short pause>`, `<long pause>`,
+`<whispers>`): fra parentesi quadre, nell’intro, il modello le aveva lette ad alta voce. Nessuna è stata letta.
+Whisper sente tutto, ma «al medico **ha** detto»: la voce mangiava la «o». Una seconda presa del solo secondo pezzo,
+con la virgola («al medico, ho detto»), due letture: la prima dice «ho» (0,99). «Matthew» lo pronuncia all’inglese
+(Whisper in inglese lo sente così).
+
+**Il montaggio** (`strumenti/intro/voce_lv.py --serra`, `audio/musica-ia/LV/LV-02-scatola-serra.mp3`, 1:25): i
+quattro pezzi che il testo cita, tagliati nei silenzi veri, respiri compresi; il secondo dalla seconda presa. Fra il
+primo e il secondo «Un buco.» (1,6 s), fra il secondo e il terzo «Un buco più lungo.» (3,2 s): il nastro tace, il
+fruscio scende di 12 dB, uno scatto ai due capi; fra il terzo e il quarto la pausa della presa. In fondo, «Poi la
+voce dice ancora qualcosa, troppo piano»: un sussurro di parole già dette («…se mi senti…»), 16 dB sotto e più cupo.
+Poi tutto passa dallo stesso nastro vecchio dell’intro (la catena è una funzione sola: l’intro esce identica).
+
+**Nel gioco.** Il ponte (`VOCI_LV`) manda la battuta con l’evento `voci`, se a schermo ci sono i quattro frammenti.
+Il motore la fa uscire asciutta, come Yusuf, 1,2 secondi dopo il testo; dell’evento «scatola_nera» resta soltanto lo
+scatto del cavo che si innesta. Il volume è quello della voce di L.V. nell’intro, circa −27 dBFS di valore efficace
+(la misura sulle parole qui non vale: il fruscio continuo del nastro la inganna).
+
+**Un errore trovato per strada.** La scatola nera fa salire le risonanze, e nella serra il motore la scambiava per il
+secondo strato dello xeno-botanico (con il filo sintetico, se le piante avevano già risuonato). Adesso il secondo
+strato suona soltanto quando nel turno c’è il Sintonizzatore al lavoro. Una prova nuova per tutte e due le cose.
+
+**L’ascolto**: `consegne/Voce L.V. serra 2026-11-07/Ascolto - la scatola nera della serra.mp3`, 1:35, reso dal motore
+del gioco, con la serra intorno.

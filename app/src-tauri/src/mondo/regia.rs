@@ -72,6 +72,7 @@ impl Mondo {
         self.modo_gioco = true;
         let ha = |nome: &str| t.eventi.iter().any(|e| e.evento == nome);
         let inizio = ha("inizio");
+        self.sintonia_nel_turno = t.eventi.iter().any(|e| e.evento == "attrezzo" && e.attrezzo.as_deref() == Some("sintonizzatore"));
         // le voci della nave che il ponte ha trovato a schermo (documento 35)
         self.voci_turno.clear();
         for e in t.eventi.iter().filter(|e| e.evento == "voci") {
@@ -198,7 +199,7 @@ impl Mondo {
     /// scanner, l’ultima voce, «Deve.» accanto alla nicchia, il «Dormi» del Navarca. In fila, dopo
     /// quelle che suonano già. Il giro del Piccolo no: lo fa l’anello, che segue il dialogo.
     fn registrazioni(&mut self) {
-        self.yusuf();
+        self.asciutte();
         self.voci_turno.retain(|p| !matches!(p, Pezzo::Nv08 | Pezzo::Nv08b));
         if !self.voci_turno.is_empty() && self.voci_nave.disponibili(&self.voci_turno) {
             let battute = std::mem::take(&mut self.voci_turno);
@@ -210,19 +211,19 @@ impl Mondo {
         self.voci_turno.clear();
     }
 
-    /// Le battute di Yusuf del turno: dalla radio di plancia nel dialogo, mezzo secondo dopo lo schiocco della
-    /// linea; nella fuga dal canale della Santa Maria che la tuta aggancia. Come per l’Anziano, una battuta nuova
-    /// prende il posto di quella che stava ancora parlando.
-    fn yusuf(&mut self) {
+    /// Le voci asciutte del turno. Yusuf: dalla radio di plancia nel dialogo, mezzo secondo dopo lo schiocco
+    /// della linea; nella fuga dal canale della Santa Maria che la tuta aggancia. La scatola nera di L.V.: dopo il
+    /// cavo innestato. Come per l’Anziano, una battuta nuova prende il posto di quella che stava ancora parlando.
+    fn asciutte(&mut self) {
         let mut yu = [Pezzo::Yu01; 4];
         let mut n = 0;
         for p in &self.voci_turno {
-            if p.yusuf() && n < yu.len() {
+            if p.asciutta() && n < yu.len() {
                 yu[n] = *p;
                 n += 1;
             }
         }
-        self.voci_turno.retain(|p| !p.yusuf());
+        self.voci_turno.retain(|p| !p.asciutta());
         if n == 0 || !self.voci_radio.disponibili(&yu[..n]) {
             return;
         }
@@ -1344,7 +1345,9 @@ impl Mondo {
                     self.eco_trovata(eco, false);
                 }
             }
-            "risonanza" => {
+            // senza il Sintonizzatore al lavoro la risonanza è un’altra cosa (la scatola nera nella serra, il
+            // Piccolo): niente secondo strato
+            "risonanza" if self.sintonia_nel_turno => {
                 let stanza = self.gioco.stanza.clone();
                 for eco in sintonia::echi_della_stanza(&stanza) {
                     if eco.forma == Forma::Graffio {
@@ -1429,6 +1432,11 @@ impl Mondo {
                 // la vibrazione «sale per il braccio fino ai denti»
                 self.re_tocco.verso(db(9.0), 0.3, sr);
                 self.dopo(3.0, Azione::Tocco(1.0, 1.0));
+            }
+            // la scatola nera di L.V. con la sua voce: soltanto il cavo che si innesta; la voce, sul nastro, viene dopo
+            "scatola_nera" if self.voci_turno.contains(&Pezzo::Lv02) && self.voci_radio.disponibili(&[Pezzo::Lv02]) => {
+                let c = colpi::scatto(&mut self.caso, sr);
+                self.suona(c, Bus::Casco, -24.0, 0.2, 0.0);
             }
             "radio" | "scatola_nera" => {
                 self.suona(colpi::squelch(sr), Bus::Altoparlante, -12.0, 0.0, 0.0);

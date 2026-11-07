@@ -685,6 +685,18 @@ VOCI_YUSUF = {
 }
 
 
+# La scatola nera di L.V. nella serra (vita.fav; documento 35, V4): «Elio» di Google, sul nastro vecchio dell'intro,
+# con i due buchi che il testo cita. Va con l'evento «voci»; il motore la fa uscire asciutta, come Yusuf.
+VOCI_LV = {
+    "LV-02-scatola-serra": (
+        "…acqua finita ieri. Il riscaldamento stanotte. Il numero dell'aria lo leggo, e me lo scordo…",
+        '…volevo andarmene. Ho firmato tutto, al medico ho detto quello che voleva sentirsi dire. Una mi aveva detto di restare. Le ho detto che aveva ragione, e poi sono partito…',
+        "…la chiave della teca non c'è. Dev'essere giù, dove crescono quelle cose. Ci sono sceso, e mi hanno preso il cavo, capisci? Sono tornato su a tentoni, con la mano sulla parete fredda, che lì non ti seguono…",
+        '…Matthew. Se mi senti: ci ho provato. Con te, dico. Non so se è servito…',
+    ),
+}
+
+
 def _frammenti(testo):
     """I frammenti fra «» di un testo, ognuno come la fila delle sue parole (minuscole, senza
     punteggiatura e senza le parentesi del traduttore)."""
@@ -698,7 +710,7 @@ def _frammenti(testo):
 
 
 _VOCI_NAVE_FRAMMENTI = sorted(((nome, tuple(_frammenti("".join(f"«{x}»" for x in frammenti))))
-                               for nome, frammenti in {**VOCI_NAVE, **VOCI_YUSUF}.items()), key=lambda v: -len(v[1]))
+                               for nome, frammenti in {**VOCI_NAVE, **VOCI_YUSUF, **VOCI_LV}.items()), key=lambda v: -len(v[1]))
 
 
 def _voci_nave(eventi):
@@ -909,7 +921,7 @@ def rel_voci_nave():
         if isinstance(t, str):
             for pezzo in re.split(r"\[se [^\]]*\]|\[altrimenti\]|\[fine\]", t):
                 trovate.update(_voci_nave([{"tipo": "testo", "testo": pezzo}]))
-    return _json({nome: nome in trovate for nome in {**VOCI_NAVE, **VOCI_YUSUF}})
+    return _json({nome: nome in trovate for nome in {**VOCI_NAVE, **VOCI_YUSUF, **VOCI_LV}})
 
 
 # ----------------------------------------------------------------------------

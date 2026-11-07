@@ -149,7 +149,7 @@ impl VociNave {
 
 /// La battuta intera, com’è: le sue dissolvenze ce le ha già.
 fn richiesta(p: Pezzo) -> Richiesta {
-    Richiesta { pezzo: p, da: 0.0, a: None, entra: 0.005, dopo: Dopo::Niente, incrocio: 0.0, esce: 0.0, livello: 0.0 }
+    Richiesta { pezzo: p, da: 0.0, a: None, entra: 0.005, dopo: Dopo::Niente, incrocio: 0.0, esce: 0.0, livello: p.livello_proprio() }
 }
 
 #[cfg(test)]

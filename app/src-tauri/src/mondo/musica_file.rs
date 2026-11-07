@@ -99,6 +99,8 @@ pub enum Pezzo {
     Yu06,
     Yu07,
     Yu08,
+    /// L.V. nella scatola nera della serra (documento 35, V4): «Elio» di Google, sul nastro vecchio dell’intro
+    Lv02,
     /// le voci della nave (documento 35): le echi, le registrazioni dello scanner, l’ultima voce.
     /// Una battuta per file, già lavorata (`strumenti/audio/voci_nave.py`): l’aggancio, il
     /// traduttore, i vuoti stanno nel file; il motore la mette in fila e la passa dalla cuffia
@@ -206,8 +208,11 @@ pub const VOCI_YU: [(Pezzo, &str); 8] = [
     (Pezzo::Yu08, "YU-08-fuga-nessuno.mp3"),
 ];
 
+/// La scatola nera di L.V. nella serra: il nome senza «.mp3» è quello che manda il ponte (`VOCI_LV`).
+pub const VOCI_LV: [(Pezzo, &str); 1] = [(Pezzo::Lv02, "LV-02-scatola-serra.mp3")];
+
 impl Pezzo {
-    pub const TUTTI: [Pezzo; 82] = [
+    pub const TUTTI: [Pezzo; 83] = [
         Pezzo::M1a,
         Pezzo::M1b,
         Pezzo::S2,
@@ -290,23 +295,40 @@ impl Pezzo {
         Pezzo::Yu06,
         Pezzo::Yu07,
         Pezzo::Yu08,
+        Pezzo::Lv02,
     ];
 
     /// Una voce registrata, che si porta al suo livello misurando le parole e non il silenzio fra
     /// l’una e l’altra (documento 35, §8): le voci della nave e Yusuf. L’Anziano no: il suo livello
-    /// è tarato dal 2 novembre sul valore efficace di tutto il file.
+    /// è tarato dal 2 novembre sul valore efficace di tutto il file. Nemmeno la scatola nera di L.V.:
+    /// il fruscio continuo del nastro inganna la misura sulle parole.
     pub fn parlato(self) -> bool {
         self.yusuf() || BATTUTE_NV.iter().any(|(p, _)| *p == self)
     }
 
-    /// Una battuta di Yusuf: suona dalla radio, asciutta, non nella cuffia.
+    /// Quanto suona sopra o sotto le altre voci del suo lettore, in dB. La scatola nera di L.V. (valore
+    /// efficace a −27, +6 del lettore di Yusuf, −7) sta a circa −28 dBFS, come la sua voce nell’intro.
+    pub fn livello_proprio(self) -> f32 {
+        match self {
+            Pezzo::Lv02 => -7.0,
+            _ => 0.0,
+        }
+    }
+
+    /// Una battuta di Yusuf.
     pub fn yusuf(self) -> bool {
         VOCI_YU.iter().any(|(p, _)| *p == self)
     }
 
+    /// Una voce che ha già nel file la sua radio o il suo nastro (Yusuf, la scatola nera di L.V.): esce
+    /// asciutta, non nella cuffia.
+    pub fn asciutta(self) -> bool {
+        self.yusuf() || self == Pezzo::Lv02
+    }
+
     /// La battuta delle voci della nave o di Yusuf dal nome che le dà il ponte (l’evento «voci»).
     pub fn della_battuta(nome: &str) -> Option<Pezzo> {
-        BATTUTE_NV.iter().chain(VOCI_YU.iter()).find(|(_, n)| n.strip_suffix(".mp3") == Some(nome)).map(|(p, _)| *p)
+        BATTUTE_NV.iter().chain(VOCI_YU.iter()).chain(VOCI_LV.iter()).find(|(_, n)| n.strip_suffix(".mp3") == Some(nome)).map(|(p, _)| *p)
     }
 
     /// (la cartella della scheda, il nome del file) come stanno in `audio/musica-ia/`.
@@ -319,6 +341,9 @@ impl Pezzo {
         }
         if let Some((_, n)) = VOCI_YU.iter().find(|(p, _)| *p == self) {
             return ("YU", n);
+        }
+        if let Some((_, n)) = VOCI_LV.iter().find(|(p, _)| *p == self) {
+            return ("LV", n);
         }
         match self {
             Pezzo::M1a => ("M1", "M1-01-bare-resonance.mp3"),
