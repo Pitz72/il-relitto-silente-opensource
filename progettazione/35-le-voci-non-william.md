@@ -297,4 +297,4 @@ secondo strato dello xeno-botanico (con il filo sintetico, se le piante avevano 
 strato suona soltanto quando nel turno c’è il Sintonizzatore al lavoro. Una prova nuova per tutte e due le cose.
 
 **L’ascolto**: `consegne/Voce L.V. serra 2026-11-07/Ascolto - la scatola nera della serra.mp3`, 1:35, reso dal motore
-del gioco, con la serra intorno.
+del gioco, con la serra intorno. **Approvato** dall’autore il 7 novembre 2026: «Va bene».

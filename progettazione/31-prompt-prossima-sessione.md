@@ -65,6 +65,8 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   contro le circa 5.900 parole di William nel Santa Maria); le altre voci (Yusuf è l’autore, l’Anziano, le echi,
   L.V., le traduzioni) circa 2.300; una voce di servizio con la sintesi per i suggerimenti, le percentuali, i
   referti dello scanner e i messaggi del motore, meno di 1.000. Niente è deciso oltre la prima persona.
+  **Rifatti il 7 novembre** (documento 33, RN-H4), dopo la revisione: Leonardo circa 13.950 parole, circa 1 ora e
+  40 – 1 ora e 50 di audio, 6–8 ore e mezza di sala; le altre voci sono tutte registrate (documento 35).
 - **L’intro ha le scene definitive** (29 ottobre, seconda sessione: l’autore ha chiesto di portarla «a livello
   top», con un tocco cinematografico, prima delle altre cose; documento 09, §12). La plancia intera a piena
   risoluzione con la vista fuori dal vivo nell’oblò, il cambio di fuoco vero, il radar a fosforo, il faro che cerca,
@@ -178,8 +180,8 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
    gioco** (commit `31f4c8a`), con la pausa fra una voce e l’altra che l’autore ha chiesto; L.V. è un nastro
    vecchio che si rovina (approvato); le pause fra le voci approvate («vanno bene»); poi **nel gioco** anche
    tutte le 26 battute dell’Anziano e le 8 di Yusuf (documento 35, §8), e L.V. nella scatola nera della serra
-   (§10; l’ascolto aspetta l’autore). Prossimi passi, in ordine: H4 (i conteggi), H6 (l’intestazione di
-   `relitto.fav`); poi una beta sola, la 0.2.5-beta.9 (H7).
+   (§10, approvata: «Va bene»). Fatti anche H2–H6 (documento 33, il registro). Resta la beta sola, la
+   0.2.5-beta.9 (H7), con la sua finestra delle novità.
 
 1. **Le sue note sulle beta, dalla 5 alla 8.** Prima cosa: chiedergli come gli sono sembrate nel gioco vero,
    con il suono, la prima persona e l’intro con la voce di L.V., e correggere quello che dice.
