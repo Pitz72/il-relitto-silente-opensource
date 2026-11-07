@@ -65,8 +65,9 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   contro le circa 5.900 parole di William nel Santa Maria); le altre voci (Yusuf è l’autore, l’Anziano, le echi,
   L.V., le traduzioni) circa 2.300; una voce di servizio con la sintesi per i suggerimenti, le percentuali, i
   referti dello scanner e i messaggi del motore, meno di 1.000. Niente è deciso oltre la prima persona.
-  **Rifatti il 7 novembre** (documento 33, RN-H4), dopo la revisione: Leonardo circa 13.950 parole, circa 1 ora e
-  40 – 1 ora e 50 di audio, 6–8 ore e mezza di sala; le altre voci sono tutte registrate (documento 35).
+  **Rifatti il 7 novembre** (documento 33, RN-H4), dopo la revisione, con lo stesso strumento sui due testi: il
+  racconto +4 %, e Leonardo legge anche le incisioni; alla misura del 29 ottobre circa 15.400 parole, 1 ora e 50 –
+  2 ore di audio, 6 ore e mezza – 9 ore e mezza di sala. Le altre voci sono tutte registrate (documento 35).
 - **L’intro ha le scene definitive** (29 ottobre, seconda sessione: l’autore ha chiesto di portarla «a livello
   top», con un tocco cinematografico, prima delle altre cose; documento 09, §12). La plancia intera a piena
   risoluzione con la vista fuori dal vivo nell’oblò, il cambio di fuoco vero, il radar a fosforo, il faro che cerca,
