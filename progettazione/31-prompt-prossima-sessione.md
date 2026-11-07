@@ -181,8 +181,11 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
    gioco** (commit `31f4c8a`), con la pausa fra una voce e l’altra che l’autore ha chiesto; L.V. è un nastro
    vecchio che si rovina (approvato); le pause fra le voci approvate («vanno bene»); poi **nel gioco** anche
    tutte le 26 battute dell’Anziano e le 8 di Yusuf (documento 35, §8), e L.V. nella scatola nera della serra
-   (§10, approvata: «Va bene»). Fatti anche H2–H6 (documento 33, il registro). Resta la beta sola, la
-   0.2.5-beta.9 (H7), con la sua finestra delle novità.
+   (§10, approvata: «Va bene»). Fatti anche H2–H6 (documento 33, il registro). **La beta 0.2.5-beta.9 è
+   pubblicata** (7 novembre, canale di prova): la revisione narrativa è chiusa. Poi: le sue note sulla beta.9; la
+   voce di servizio (documento 35, §11), i testi pronti in `doppiaggio/servizio/`, il file lo genera l’autore con
+   «Kira» di Google AI Studio, e io lo taglio e lo collego; effetti e suoni d’ambiente rifatti, più avanti, quando
+   ne riparla lui.
 
 1. **Le sue note sulle beta, dalla 5 alla 8.** Prima cosa: chiedergli come gli sono sembrate nel gioco vero,
    con il suono, la prima persona e l’intro con la voce di L.V., e correggere quello che dice.
