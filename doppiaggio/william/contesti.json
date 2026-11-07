@@ -1,0 +1,503 @@
+{
+ "_nota": "Le due righe di contesto di ogni blocco del copione di William (doppiaggio/william/copione.json), scritte a mano. La chiave è l'id del blocco: se strumenti/audio/copione_william.py cambia i blocchi, il PDF segnala quelli senza contesto.",
+ "SM-01": {
+  "titolo": "La plancia",
+  "contesto": "Il posto di William da vent’anni: una poltrona, schermi che conosce a memoria, il reattore che geme sotto i piedi. Lo descrive com’è prima, durante e dopo l’aggancio alla massa nera: voce di casa, stanca, senza enfasi."
+ },
+ "SM-02": {
+  "titolo": "Dall’oblò: la sagoma nera",
+  "contesto": "Fuori dall’oblò c’è una cosa troppo regolare per essere un sasso, che beve la luce e il radar. William la osserva, controlla la spia di prossimità e il margine dei suoi debiti: curiosità trattenuta, e il conto sempre in testa."
+ },
+ "SM-03": {
+  "titolo": "I comandi e gli arpioni",
+  "contesto": "La strumentazione di un recuperante: cloche, vettori, due arpioni magnetici per tenere ferma la preda. Quando li spara, i colpi li sente nelle ossa. Parla di attrezzi che conosce bene, con un mestiere asciutto."
+ },
+ "SM-04": {
+  "titolo": "La radio",
+  "contesto": "La radio a lungo raggio ha un solo canale che conti: Magazzino Quattro, cioè Yusuf. Dopo l’aggancio, fra un canale e l’altro, sale un fruscio di voci sovrapposte: il primo segno di quello che c’è nella nave."
+ },
+ "SM-05": {
+  "titolo": "La scansione lunga e l’accostamento",
+  "contesto": "Il computer di bordo, vecchio quanto lui, prova a capire la massa e si arrende (la voce di servizio legge i numeri e «materiale non in archivio»). Poi William porta la Santa Maria a cinquanta metri, a spinte corte."
+ },
+ "SM-06": {
+  "titolo": "Yusuf, alla radio",
+  "contesto": "Vent’anni di forniture a credito, sei settimane senza pagare. William chiama il Magazzino Quattro e Yusuf risponde (la sua voce è registrata). Le battute di William sono dette ad alta voce, al microfono: corte, di chi chiede e lo sa."
+ },
+ "SM-07": {
+  "titolo": "Yusuf: «E se dentro c’è qualcuno?»",
+  "contesto": "La fine della chiamata. Yusuf ride corto e taglia: dentro non c’è mai nessuno. Oppure, se William ha chiamato solo per sentire una voce, resta in linea qualche secondo, con il magazzino dietro, prima dello schiocco."
+ },
+ "SM-08": {
+  "titolo": "La cuccetta",
+  "contesto": "Lo spazio privato: una branda sola, un armadietto con una giacca buona mai messa, il registro di bordo di carta. William legge la prima pagina, scritta da altri, e le sue ultime righe. Intimo, quasi a mezza voce."
+ },
+ "SM-09": {
+  "titolo": "La sala macchine e il reattore",
+  "contesto": "Caldo, olio, ozono. Il reattore rattoppato «finché lavora, canta»: tiene un re basso che William, dopo anni, ascolta davvero per la prima volta. Se ha già sentito il sonaglio del Piccolo, riconosce la stessa nota."
+ },
+ "SM-10": {
+  "titolo": "L’amplificatore di firma",
+  "contesto": "Un attrezzo da recuperante, nella cassetta di ferraglia: serve a leggere un carico chiuso senza aprirlo. Oggi non c’è un carico. C’è una nave. Due righe secche, quasi tra sé."
+ },
+ "SM-11": {
+  "titolo": "La stiva vuota",
+  "contesto": "Sei settimane senza carico: il passo rimbomba fino alla paratia. Con la tuta addosso il respiro torna vicino, dentro il casco. È il punto da cui si esce e a cui, alla fine, si torna."
+ },
+ "SM-12": {
+  "titolo": "La stiva: ganci, rastrelliera, il lettore, il boccaporto",
+  "contesto": "I ganci vuoti (l’ultimo carico erano filtri per Callisto), la rastrelliera con l’attrezzatura, un vecchio lettore di ebook con un’avventura testuale italiana, il boccaporto con la sua spia. Inventario di un uomo solo."
+ },
+ "SM-13": {
+  "titolo": "L’attrezzatura",
+  "contesto": "La tuta rattoppata, il kit con la sigla TSC, la taglierina al plasma, la batteria d’emergenza, l’ultima cella d’aria. William le elenca come fa chi le ha usate cento volte e sa quanto vale ciascuna."
+ },
+ "SM-14": {
+  "titolo": "Il kit",
+  "contesto": "Fa scattare le chiusure della valigetta: dentro, nella gommapiuma, la taglierina e la batteria. Un gesto pratico, una riga sola."
+ },
+ "SM-15": {
+  "titolo": "Indossare la tuta",
+  "contesto": "La vestizione: strato su strato, ogni cosa verificata due volte, perché fuori non c’è nessuno a farlo per lui. Rituale, concentrato. Le altre righe sono risposte brevi a gesti fuori luogo."
+ },
+ "SM-16": {
+  "titolo": "Il faro del casco",
+  "contesto": "Il faro si alza e si abbassa con una ghiera. Sotto il 30% d’aria la tuta non glielo ridà (la voce di servizio dice «Protezione vitale»). Righe pratiche, alcune di pochi secondi: tono di lavoro."
+ },
+ "SM-17": {
+  "titolo": "La cella di riserva",
+  "contesto": "Innestare l’ultima cella d’aria, venticinque punti: la valvola sibila, la cifra risale. Se la tuta è ancora piena, William se la tiene. Prudenza da chi conta ogni respiro."
+ },
+ "SM-18": {
+  "titolo": "Il boccaporto: uscire",
+  "contesto": "Sulla soglia del vuoto. Senza tuta o senza le funi degli arpioni, William si ferma: il boccaporto, così, è l’ultima porta che si apre. Fermezza, nessun dramma."
+ },
+ "IN-01": {
+  "titolo": "Sullo scafo",
+  "contesto": "Fuori, nel vuoto, appeso al cavo di sicurezza, con i magneti degli stivali sullo scafo nero. Prima volta sulla massa: il respiro nel casco e lo spazio intorno. Dopo il taglio, l’apertura buia ai suoi piedi."
+ },
+ "IN-02": {
+  "titolo": "Lo scafo nero, le funi, il cavo",
+  "contesto": "Lo scafo è liscio e freddo in un modo che il guanto non dovrebbe lasciar passare; le funi tengono le due navi; il cavo è la strada di casa. Dopo che la nave si richiude, del cavo resta un metro: la voce si abbassa."
+ },
+ "IN-03": {
+  "titolo": "La giuntura",
+  "contesto": "Una linea sottilissima, una saldatura troppo precisa per essere umana, con un tratto dalla grana diversa. È il punto debole. Dopo il taglio, il lembo piegato verso l’interno."
+ },
+ "IN-04": {
+  "titolo": "Il punto debole e il taglio vecchio",
+  "contesto": "Il multiscanner non sa dire di che cosa sia fatto lo scafo, ma trova la giuntura, e su di lei un taglio già fatto e richiuso: centocinquant’anni fa qualcuno è entrato di qui. Prima scoperta, detta con calma."
+ },
+ "IN-05": {
+  "titolo": "Il taglio",
+  "contesto": "La taglierina sulla giuntura: nessuna scintilla, il materiale si ritira dal getto come carne, e il casco non filtra l’odore. Poi la discesa nel buio. Concentrato, fisico; le righe brevi sono tentativi a vuoto."
+ },
+ "IN-06": {
+  "titolo": "Entrare, tornare a bordo",
+  "contesto": "Le strade fra lo scafo e il boccaporto: rientrare lungo il cavo, oppure scoprire che di là non si passa più. Righe brevi, di orientamento; una sola ha peso, quella della parete che si è richiusa."
+ },
+ "IN-07": {
+  "titolo": "La camera di compensazione, e il varco che si chiude",
+  "contesto": "Una camera tonda, senza angoli, che sembra cresciuta. Sopra di lui il lembo si richiude senza muoversi e trancia il cavo: la strada di casa sparisce. È il primo momento di paura vera: trattenuta, non urlata."
+ },
+ "IN-08": {
+  "titolo": "L’incisione",
+  "contesto": "Sulla parete, una stella stilizzata da cui parte una linea che finisce in una spirale, come un seme che germoglia. William la guarda e la legge come una dichiarazione d’intenti."
+ },
+ "IN-09": {
+  "titolo": "Il pannello e la porta interna",
+  "contesto": "Una superficie liscia, morta, accanto a una porta senza maniglia. Il multiscanner trova un ingresso per corrente esterna: William ci attacca la batteria o la tuta (che paga in aria). Si accende una linea ambrata."
+ },
+ "IN-10": {
+  "titolo": "Aprire la porta interna",
+  "contesto": "Il guanto sulla linea ambrata, un sibilo, la porta si ritira nella parete: di là una sala bassa e un brusio. È la soglia della nave vera."
+ },
+ "IN-11": {
+  "titolo": "Il vestibolo delle gole, il primo contatto",
+  "contesto": "La prima vera sala, tre gole nel buio. Appena tocca la parete, il multiscanner impazzisce e nella cuffia entra un brusio di voci: il primo contatto con la nave. Stupore e allarme, ancora sotto controllo."
+ },
+ "IN-12": {
+  "titolo": "La nicchia, le gole, le venature",
+  "contesto": "Una nicchia scavata apposta, le tre gole (una crollata), una rete di venature spente che, al tocco, fa risalire il brusio e scendere l’aria. William impara che qui ascoltare costa fiato."
+ },
+ "IN-13": {
+  "titolo": "Il risuonatore",
+  "contesto": "Un attrezzo saldato alla nicchia, cresciuto con lei: contiene registrazioni a non finire e, finché lo porti, beve aria. Vale sei mesi di stive vuote. Staccarlo è il primo gesto da predatore: la tentazione si sente."
+ },
+ "IN-14": {
+  "titolo": "L’eco delle gole",
+  "contesto": "Con il Sintonizzatore il brusio si separa in fili: due voci restano, una che chiede di tenere il campo e una che dice che non tiene più (sono registrate). William fa da cornice: poche parole, ascolto teso."
+ },
+ "IN-15": {
+  "titolo": "La gola di mezzo",
+  "contesto": "Una gola che scende a scatti, venature verdi che si accendono al tocco come per indicare la strada. Il Sintonizzatore, da solo, aggancia una voce che legge nomi, e la tuta non riesce a chiudere il canale."
+ },
+ "CO-01": {
+  "titolo": "Il corridoio principale",
+  "contesto": "Il cuore del relitto: un corridoio immenso, pareti curve che fanno da sole una luce fredda. Da qui partono le ali della nave. Meraviglia contenuta, la prima volta; poi un passaggio noto."
+ },
+ "CO-02": {
+  "titolo": "Le pareti e le tre tacche",
+  "contesto": "Alla base della parete, tre tacche fatte con una punta da carotatore terrestre di un secolo e mezzo fa: qualcuno è passato prima di lui e ha segnato il posto. William ne incide una quarta. Un legame silenzioso."
+ },
+ "CO-03": {
+  "titolo": "La lastra dati e la Grande Porta",
+  "contesto": "Una lastra che somiglia all’onice, con circuiti sotto la superficie; e una porta enorme con tre incavi di forma diversa alla base. Sono le chiavi da trovare. Descrizione attenta, da tecnico."
+ },
+ "CO-04": {
+  "titolo": "Le tre chiavi nella porta",
+  "contesto": "Il seme, la Stele, il Nucleo: ogni chiave accende una linea di luce sulla porta (verde, bianca, ambrata). Alla terza la porta risponde. Gesti precisi, un crescendo trattenuto."
+ },
+ "CO-05": {
+  "titolo": "La porta sigillata",
+  "contesto": "Finché mancano le chiavi, di qui non si passa. Una riga di constatazione."
+ },
+ "VI-01": {
+  "titolo": "La serra morente, e l’uomo contro la colonna",
+  "contesto": "Una serra a cupola, tutta secca. Il faro passa, torna indietro da solo: contro la colonna c’è un uomo in tuta, di un secolo e mezzo fa. È L.V. Il momento più forte del gioco: lo shock arriva piano, in voce bassa."
+ },
+ "VI-02": {
+  "titolo": "Le piante e il cadavere",
+  "contesto": "Felci che si sbriciolano, e l’uomo seduto contro la colonna, seccato dall’aria. William lo guarda da vicino, lo analizza, non lo tocca più del necessario: rispetto e ribrezzo insieme, senza dirlo."
+ },
+ "VI-03": {
+  "titolo": "La placca",
+  "contesto": "Sulla placca dell’uomo, graffiato con il carotatore: «QUI PRIMA. IL SEME. NON SIAMO S—», la frase che si perde, e le iniziali L.V. William può firmare accanto o completare la parola. Lettura lenta, a voce bassa."
+ },
+ "VI-04": {
+  "titolo": "La scatola nera e la punta del carotatore",
+  "contesto": "La scatola nera di L.V., con la spia spenta e una presa uguale alla sua; la punta del carotatore ancora stretta nella destra. William non gli apre le dita. Pudore."
+ },
+ "VI-05": {
+  "titolo": "Ascoltare la scatola nera",
+  "contesto": "William presta corrente dalla sua tuta, l’aria scende, la spia si accende, e la voce di L.V. parla (registrata, non sua). Qui William dice solo il gesto e, dopo, che la spia è di nuovo spenta. Silenzio intorno."
+ },
+ "VI-06": {
+  "titolo": "La teca e il seme",
+  "contesto": "Al centro della serra, in un campo di stasi, un seme che pulsa di luce verde: l’unica cosa viva. L.V. è morto a mezzo metro da lui. William prova ad aprirla, la rompe o la apre con la sua chiave, e prende il seme."
+ },
+ "VI-07": {
+  "titolo": "L’arca biologica",
+  "contesto": "Una sala lunga e gelida di capsule criogeniche. Lo scanner legge «deceduto» su ogni capsula (la voce di servizio dice le letture): non era una stiva, era un’arca. William smette di inquadrarle."
+ },
+ "VI-08": {
+  "titolo": "Il dispositivo medico e il cristallo",
+  "contesto": "Un rigeneratore di tessuti intatto e un cristallo scuro e freddo, un supporto di memoria addormentato. Il dispositivo lo sveglia: dentro si accende una trama di luce che pulsa. Curiosità di mestiere."
+ },
+ "VI-09": {
+  "titolo": "La sala delle teche",
+  "contesto": "Il faro trova file di teche alte il doppio di lui, e un groviglio di filamenti pallidi che cerca calore e luce. Il pericolo è lento e vivo. Voce bassa, attenta a non disturbare."
+ },
+ "VI-10": {
+  "titolo": "Le teche, il groviglio, il cavo di L.V.",
+  "contesto": "Teche spaccate da dentro, teche ancora sigillate nella brina, il groviglio che si muove verso la luce. E un cavo spezzato, quello di L.V.: è passato di qui, a tentoni. William ricostruisce la sua strada."
+ },
+ "VI-11": {
+  "titolo": "Il groviglio sente il faro",
+  "contesto": "Con il faro al massimo il groviglio si protende, e al secondo turno lo afferra: William si strappa via e risale la gola a spinte di gomiti. Paura fisica, fiato corto."
+ },
+ "VI-12": {
+  "titolo": "Il nodo di fibre",
+  "contesto": "A est la strozzatura è chiusa da un nodo spesso come un tronco: dall’altra parte si sente aria che si muove. Di qui, per ora, non si passa."
+ },
+ "VI-13": {
+  "titolo": "Attraversare le teche",
+  "contesto": "La strada è al buio, con la mano sulla parete fredda delle teche chiuse, come aveva fatto L.V. Con troppa luce il groviglio gli si stringe davanti. Tensione lenta, passo dopo passo."
+ },
+ "VI-14": {
+  "titolo": "Il bengala",
+  "contesto": "L’unico bengala, lanciato in mezzo alla sala: luce rossa e calore, e il groviglio ci si ammassa intorno come a un sole. Tre turni di strada libera, poi si spegne. Azione rapida, poi il sollievo."
+ },
+ "VI-15": {
+  "titolo": "Il vivaio",
+  "contesto": "Il primo posto tiepido della nave: banchi di semina ordinati, un vassoio di germogli che respira piano, le tabelle di semina, e la tavoletta che apre la teca. Calma, quasi tenerezza per chi lavorava qui."
+ },
+ "TE-01": {
+  "titolo": "Il laboratorio di risonanza",
+  "contesto": "Il ventre della nave, elettricità statica che pizzica sotto il casco, macchinari spenti. Dopo il cristallo, tutto si sveglia e la corrente va al Ponte e all’Archivio. Due stati della stessa sala."
+ },
+ "TE-02": {
+  "titolo": "Il banco",
+  "contesto": "Un banco pieno di schemi e componenti: qualcuno calibrava qualcosa in fretta. Lo scanner legge appunti frenetici e, in basso, lontano dai calcoli, una lista di nomi. William si ferma lì."
+ },
+ "TE-03": {
+  "titolo": "Il generatore e il Sintonizzatore",
+  "contesto": "Il generatore di campo, tecnologia che William non sa capire, e un apparecchio portatile con due manopole: il Sintonizzatore di Frequenza, che ascolta gli echi impressi nella materia. Lo prende."
+ },
+ "TE-04": {
+  "titolo": "Il cristallo nel generatore",
+  "contesto": "Il cristallo freddo non va; quello sveglio sì: inserito nel generatore, i macchinari si alzano con un rombo e la nave riprende energia. Il momento in cui la nave torna a respirare."
+ },
+ "TE-05": {
+  "titolo": "La ricarica: quando non si può",
+  "contesto": "Ricaricare la tuta dal generatore si può una volta sola, e solo con la corrente. Righe brevi: il generatore morto, la presa che manca, la tuta ancora piena, la corrente che va tutta al Ponte."
+ },
+ "TE-06": {
+  "titolo": "La ricarica della tuta",
+  "contesto": "William attacca la tuta alla presa del generatore e la cifra dell’aria risale: una volta sola. Sollievo misurato, di chi sa che non ci sarà una seconda volta."
+ },
+ "EQ-01": {
+  "titolo": "L’alloggio dell’equipaggio e il Navarca",
+  "contesto": "Una stanza tonda con alcove a nido d’ape e un silenzio da chiesa vuota. In un’alcova, il Navarca conservato fino all’ultimo dettaglio: alto, sottile, la pelle traslucida. Il primo alieno visto da vicino: voce sospesa."
+ },
+ "EQ-02": {
+  "titolo": "Il nido del Piccolo",
+  "contesto": "Una cella più piccola, le pareti coperte da un sole solo, giallo, disegnato cento volte: il Sole, l’ultimo punto della rotta. Una culla consumata, un sonaglio a conchiglia. Tenerezza che stringe la gola."
+ },
+ "EQ-03": {
+  "titolo": "Il sonaglio",
+  "contesto": "William lo scuote: una nota sola, un re, lo stesso del reattore della Santa Maria. Due cose che non si conoscono tengono la stessa nota. Detto piano, con stupore."
+ },
+ "EQ-04": {
+  "titolo": "L’eco del Piccolo",
+  "contesto": "Dalla culla, il Sintonizzatore aggancia la voce di un bambino che ripete una domanda (registrata): perché la nave non si muove. William può rispondere (la frase è sua, ad alta voce), tacere o andarsene. Delicatezza."
+ },
+ "ME-01": {
+  "titolo": "Il santuario del silenzio",
+  "contesto": "Una sala circolare altissima, luce bianca dal pavimento, bassorilievi a tre soli: un epitaffio inciso per durare. L’altare e la Stele. Raccoglimento: la voce si fa più bassa, come in chiesa."
+ },
+ "ME-02": {
+  "titolo": "L’altare e il disco",
+  "contesto": "Il disco di pietra va nell’altare orientato come i tre soli: se è sbagliato si ferma a un dito, se è giusto scende e l’altare si apre sulla Stele. Un piccolo enigma risolto con le mani."
+ },
+ "ME-03": {
+  "titolo": "Lo scriptorium",
+  "contesto": "Una biblioteca senza libri: globi di testo alieno girano a mezz’aria, illeggibili e bellissimi. Un proiettore rotto, bloccato da un disco di pietra; una lastra incisa a mano. Meraviglia silenziosa."
+ },
+ "ME-04": {
+  "titolo": "Il disco",
+  "contesto": "Un disco di pietra nera con tre soli incisi, incastrato nel proiettore: William lo stacca e lo gira, finché il sole più grande non va al suo posto. Righe brevi che cambiano con l’orientamento."
+ },
+ "ME-05": {
+  "titolo": "L’arca della memoria",
+  "contesto": "Una caverna di cristallo nero, pilastri di dati spenti e incrinati: millenni di memoria persi. In fondo un ultimo pilastro, che con l’energia si sveglia una fascia alla volta. Peso della perdita."
+ },
+ "ME-06": {
+  "titolo": "Il terminale e il Nucleo",
+  "contesto": "Il terminale del pilastro, spento o acceso, che beve dalla tuta come il risuonatore; dentro c’è il Nucleo, un cristallo ambrato con un’ultima voce. Descrizioni tecniche, attente."
+ },
+ "ME-07": {
+  "titolo": "La forza: la taglierina sul terminale",
+  "contesto": "La strada veloce: la taglierina al massimo sul bypass. Il terminale sfrigola, il Nucleo esce, ma il pilastro si spegne e la memoria brucia con lui. Gesto brusco, conseguenza amara."
+ },
+ "ME-08": {
+  "titolo": "La pazienza: il pilastro che si sveglia",
+  "contesto": "La strada lenta: restare nell’arca mentre il pilastro si accende una fascia per turno, e ogni fascia costa aria. Alla quarta il terminale si sveglia e il Nucleo si offre. Attesa e fiato che scende."
+ },
+ "PO-01": {
+  "titolo": "Il Ponte di comando",
+  "contesto": "Una sala vasta sotto una cupola di cristallo nero, una struttura a stella spenta al centro. Con l’energia si alza la mappa stellare: una rotta attraverso il vuoto, fino a un sole giallo. Solennità vera, misurata."
+ },
+ "PO-02": {
+  "titolo": "La postazione, la porta tonda, le punte",
+  "contesto": "La postazione del comandante con una depressione a forma di mano; una porta tonda con cinque punte luminose: quante premerne è l’enigma. Osservazione precisa."
+ },
+ "PO-03": {
+  "titolo": "La console e la mappa",
+  "contesto": "William appoggia la mano: senza energia niente, con l’energia la console si sveglia per lui, anche se non è uno di loro, e la mappa si accende. Stupore di essere riconosciuto."
+ },
+ "PO-04": {
+  "titolo": "Le tre punte",
+  "contesto": "La porta tonda vuole un numero: tre, come i soli della rotta. William ci arriva e preme. Un clic armonioso, la porta si apre. Soddisfazione trattenuta."
+ },
+ "PO-05": {
+  "titolo": "L’ultimo avviso",
+  "contesto": "Prima dell’anticamera la tuta gli mette davanti il conto dell’aria: oltre quella porta il ritorno sarà lungo. William lo legge e decide. Una pausa prima del passo."
+ },
+ "PO-06": {
+  "titolo": "L’anticamera",
+  "contesto": "Un passaggio stretto e buio, che beve anche la luce del faro. I passi non fanno rumore. Varcata la soglia, non si torna indietro. Voce raccolta, quasi un sussurro."
+ },
+ "PO-07": {
+  "titolo": "Il santuario centrale e l’Anziano",
+  "contesto": "Una stanza piccola, linee luminose sul pavimento, un sostegno con il seme; e la proiezione di un vecchio della nave, in paramenti, che tace e lascia a William la prima parola. Soggezione."
+ },
+ "PO-08": {
+  "titolo": "Il seme, al congedo",
+  "contesto": "Dopo il congedo dell’Anziano il seme, tornato scuro, si stacca dal sostegno al primo tocco. William lo mette nella tasca sul petto, dove lo sente premere a ogni respiro."
+ },
+ "PO-09": {
+  "titolo": "L’Anziano: il benvenuto",
+  "contesto": "La voce dell’Anziano gli si apre dentro la testa (è registrata). William racconta come la sente, fra parentesi, e risponde ad alta voce, dentro il casco: domande brevi, con il rispetto di chi non sa dove si trova."
+ },
+ "PO-10": {
+  "titolo": "L’Anziano: le voci restituite",
+  "contesto": "Se William posa il risuonatore ai piedi del sostegno, il brusio non resta nell’arnese: si alza ed entra nelle pareti, e la nave per la prima volta tace in pace. Gesto e racconto, a voce bassa."
+ },
+ "PO-11": {
+  "titolo": "L’Anziano: il silenzio",
+  "contesto": "La figura tace a lungo; William sente solo la nave, il proprio fiato nel casco, qualcosa che si assesta. Poi la voce torna. Il racconto di un’attesa: tempo dilatato."
+ },
+ "PO-12": {
+  "titolo": "L’Anziano: il Grande Salto",
+  "contesto": "L’Anziano racconta il viaggio e il Grande Salto (la sua voce è registrata). William, fra una risposta e l’altra, chiede che cosa c’entri lui, che cosa sia rimasto di loro, perché la nave si sia fermata. Domande sincere, senza retorica."
+ },
+ "PO-13": {
+  "titolo": "L’Anziano: la memoria",
+  "contesto": "Che cosa resta di loro: quasi niente. William chiede perché tutto questo, oppure torna ad ascoltare. Le sue frasi sono poche e brevi, dette davvero, non recitate."
+ },
+ "PO-14": {
+  "titolo": "L’Anziano: l’uomo di prima",
+  "contesto": "William ha detto che prima di lui c’era un uomo; l’Anziano racconta come la nave lo ha ascoltato fino all’ultimo fiato, a mezzo metro dal seme (registrato). William chiede se potevano aiutarlo, o dice di avergli lasciato un segno."
+ },
+ "PO-15": {
+  "titolo": "L’Anziano: l’aiuto",
+  "contesto": "La risposta dell’Anziano su L.V. (registrata); a William restano le opzioni per proseguire. Ascolto, poche parole."
+ },
+ "PO-16": {
+  "titolo": "L’Anziano: il prezzo",
+  "contesto": "William ha ammesso di essere venuto per vendere. «Lo so», risponde l’Anziano, senza rimprovero: «Tu sei ancora qui.» William risponde in due parole: gli serve per vivere, oppure «non più». Una confessione, senza difese."
+ },
+ "PO-17": {
+  "titolo": "L’Anziano: il Piccolo",
+  "contesto": "William gli mostra il sonaglio; la figura lo guarda a lungo e la voce si abbassa. Si parla del Piccolo, l’unico nato durante il viaggio. Le righe di William sono gesti e pause: delicatezza estrema."
+ },
+ "PO-18": {
+  "titolo": "L’Anziano: il sangue e i segni",
+  "contesto": "Si parla della semina, e dei segni che restano. William dice di averne lasciati, là dietro: le tacche, la firma, la parola completata. Lo dice piano, quasi scusandosi."
+ },
+ "PO-19": {
+  "titolo": "L’Anziano: la musica",
+  "contesto": "William accende il Sintonizzatore: non aggancia parole, aggancia il canto che c’è sotto la voce dell’Anziano, quello del primo momento. Racconto lento, quasi musicale."
+ },
+ "PO-20": {
+  "titolo": "L’Anziano: il congedo",
+  "contesto": "William guarda la cifra dell’aria sul visore; quando alza gli occhi, la figura guarda la stessa cifra. È ora di andare. Pause lunghe fra le righe; l’emozione resta sotto."
+ },
+ "PO-21": {
+  "titolo": "L’Anziano: la dissolvenza e l’ultima voce",
+  "contesto": "William chiude gli occhi; quando li riapre la figura si raccoglie in un punto di luce che scende nel seme. Poi l’ultima voce della nave, piena di vuoti (registrata). La fine di un mondo, detta piano."
+ },
+ "FU-01": {
+  "titolo": "La fuga comincia",
+  "contesto": "Al congedo la nave trema, le linee del pavimento si spengono e accanto al sostegno si apre una gola. Si scende, e dietro qualcosa crolla. Da qui in poi l’aria cala in fretta: il respiro si accorcia."
+ },
+ "FU-02": {
+  "titolo": "La gola del ritorno",
+  "contesto": "Una gola ripida che trema; le venature si accendono una dopo l’altra davanti a lui, come a indicare la strada. Con poca aria le descrizioni si riducono a parole sole: «Gola. Buio. Il fruscio, in fondo. Ovest.»"
+ },
+ "FU-03": {
+  "titolo": "La sala delle teche, nella fuga",
+  "contesto": "Il campo è caduto, il groviglio è sveglio dappertutto. Le venature del Navarca segnano una strada di luce lungo le pareti. Si attraversa di corsa, ci si strappa via. Fiato corto, frasi spezzate."
+ },
+ "FU-04": {
+  "titolo": "La gola di mezzo e la voce dei nomi",
+  "contesto": "La gola si stringe, le venature verdi vanno e vengono. Nella cuffia torna la voce dei nomi: è l’Ingegnere, che li dice ancora. Fermarsi ad ascoltarla costa aria. Sfinimento e rispetto insieme."
+ },
+ "FU-05": {
+  "titolo": "Vestibolo, camera, scafo, stiva",
+  "contesto": "L’ultima corsa verso casa: il vestibolo che trema, la gola larga crollata, la camera con la luce gialla del boccaporto sopra, lo scafo, la stiva. Con poca aria: «Camera. Sopra, la luce gialla. Su.»"
+ },
+ "FI-01": {
+  "titolo": "Il ritorno a bordo e il risveglio",
+  "contesto": "Il portello si chiude, il casco via, l’aria della stiva che sa di olio e di casa. William crolla, dorme, si sveglia in plancia: fuori non c’è niente. Forse la massa non è mai esistita. Comune a tutti i finali in vita."
+ },
+ "FI-02": {
+  "titolo": "Finale: La prima nota",
+  "contesto": "William ha il seme e non il risuonatore, ha ascoltato a fondo la nave e ha riconosciuto la nota. Nel pugno il seme si accende di verde e batte a tempo con il re del reattore. Due cose che tengono la stessa nota: «Basta così.»"
+ },
+ "FI-03": {
+  "titolo": "Finale: Vivi",
+  "contesto": "Il seme nel pugno, che batte di luce verde. William lo posa sul ripiano davanti alla poltrona e riparte. Le righe che cambiano ricordano quello che ha fatto laggiù. «Il silenzio della plancia, per la prima volta, non mi basta.»"
+ },
+ "FI-04": {
+  "titolo": "Finale: La stiva piena",
+  "contesto": "Ha portato via il risuonatore, non il seme. Yusuf trova un compratore su Ganimede, il margine torna verde. Ma la notte, in stiva, il risuonatore continua a dire nomi. Il successo che pesa."
+ },
+ "FI-05": {
+  "titolo": "Finale: Doppio fondo",
+  "contesto": "Il seme e il risuonatore, tutti e due. Le voci le vende; il seme lo tiene nascosto, in una teca, e a nessuno dice che esiste. Una vita doppia, detta senza giudicarsi."
+ },
+ "FI-06": {
+  "titolo": "Finale: Mani vuote",
+  "contesto": "Né il seme né il risuonatore: lo scanner non ha registrazioni, il visore ha solo la cifra dell’aria consumata. Restano sei settimane di stiva vuota. «Per oggi, basta quella.» Rassegnazione quieta."
+ },
+ "FI-07": {
+  "titolo": "Finale: Due lettere (l’aria finisce)",
+  "contesto": "La cifra va a zero. William si siede, contro una parete o sullo scafo, e se ha la taglierina incide due lettere, il nome intero no. L’ultimo respiro, calmo. È l’unico finale in cui muore."
+ },
+ "EC-01": {
+  "titolo": "Il Sintonizzatore; le pareti del corridoio",
+  "contesto": "Come funziona: le voci restano impresse solo in certe cose. Nel corridoio, quattro voci dell’equipaggio una dopo l’altra (registrate); William dice l’aggancio, il coro, e quando la tuta glielo impedisce."
+ },
+ "EC-02": {
+  "titolo": "Le echi: le piante e le capsule",
+  "contesto": "Nella serra lo xeno-botanico, nell’arca l’ufficiale medico (registrati). William racconta l’aggancio della frequenza e, per le voci a due strati, che il Sintonizzatore resta agganciato più del dovuto."
+ },
+ "EC-03": {
+  "titolo": "Le echi: le alcove e la culla",
+  "contesto": "Nelle alcove il Navarca, che ha tenuto le luci accese fino all’ultimo; nella culla la domanda del Piccolo (registrati). William fa da cornice: aggancio, ascolto, il secondo strato."
+ },
+ "EC-04": {
+  "titolo": "Le echi: la struttura centrale e il globo",
+  "contesto": "Sul Ponte l’ufficiale di navigazione, nello scriptorium lo Scriba (registrati). Le righe di William sono brevi: cornici d’ascolto, residui statici, i canali chiusi dalla tuta."
+ },
+ "EC-05": {
+  "titolo": "L’eco della lastra incisa",
+  "contesto": "Qui il Sintonizzatore non trova una voce: trova un suono, una punta contro la pietra che incide, si ferma, riprende, sempre allo stesso punto. William lo descrive: è l’unica eco senza parole."
+ },
+ "EC-06": {
+  "titolo": "L’eco del bassorilievo",
+  "contesto": "Il Custode, e sotto di lui un secondo strato che si apre solo con la matrice più avanti (registrati). William dice l’aggancio, l’attesa, e quando la voce finisce davvero."
+ },
+ "EC-07": {
+  "titolo": "L’eco del generatore",
+  "contesto": "L’ingegnere capo, che resta al generatore mentre gli altri scappano; sotto, l’elenco dei nomi (registrati). William: il fischio dell’aggancio, «poi, più piano», il secondo strato."
+ },
+ "TR-01": {
+  "titolo": "La matrice: la lastra, il cilindro, la stele",
+  "contesto": "Il multiscanner costruisce la matrice di traduzione analizzando i reperti: a ogni registrazione capisce di più (la voce di servizio dice la percentuale). William racconta il lavoro dello scanner e il prezzo in aria."
+ },
+ "TR-02": {
+  "titolo": "La matrice: il Nucleo",
+  "contesto": "Nel Nucleo c’è l’ultima voce dell’Archivista (registrata) e, dietro, qualcosa che la matrice non sa aprire. William incornicia la registrazione: sobrio, quasi notarile."
+ },
+ "TR-03": {
+  "titolo": "Tradurre il bassorilievo",
+  "contesto": "Con la matrice bassa solo forme; più avanti parole isolate; al cento per cento la didascalia intera, che William legge ad alta voce (le parole fra «» sono sue). Lettura lenta, rispettosa, come un’epigrafe."
+ },
+ "TR-04": {
+  "titolo": "Tradurre i globi",
+  "contesto": "I globi girano troppo in fretta; rallentandoli affiorano intestazioni («atlante delle acque perdute»); al cento per cento si apre tutto, e un messaggio chiede di leggerne uno solo. William legge le citazioni lui."
+ },
+ "TR-05": {
+  "titolo": "Tradurre la lastra incisa",
+  "contesto": "La firma dello Scriba: prima la forma della scrittura, poi un pronome che torna, infine poche righe scritte come si parla, che William legge. È l’unico testo alieno in prima persona: voce intima."
+ },
+ "TR-06": {
+  "titolo": "Tradurre la mappa stellare",
+  "contesto": "Le annotazioni lungo la rotta: illeggibili, poi una parola ripetuta vicino all’arrivo, infine «giardino: qui, se da qualche parte» e un saluto. William legge le citazioni: commozione trattenuta."
+ },
+ "TR-07": {
+  "titolo": "Tradurre le tabelle di semina",
+  "contesto": "Quote di attecchimento, quasi tutte vicine allo zero; in fondo, il mondo bersaglio, e sotto, scritto in piedi, «Seminare comunque.». William legge la riga finale lentamente."
+ },
+ "TR-08": {
+  "titolo": "Tradurre il sostegno",
+  "contesto": "Una riga sola sul bordo del sostegno, che con la matrice si apre: «Per chi raccoglie.». Una dedica, letta piano."
+ },
+ "TR-09": {
+  "titolo": "Tradurre i disegni",
+  "contesto": "La matrice cerca un testo nei disegni del Piccolo e non lo trova: non c’è niente da tradurre, è un sole. Una riga, detta con un mezzo sorriso."
+ },
+ "AR-01": {
+  "titolo": "Il visore e la cifra dell’aria",
+  "contesto": "La cifra dell’aria sul bordo del visore, in verde, in ambra o in rosso. William la legge: dove c’è [aria] il gioco mette il numero del momento (appendice A). Tono asciutto, da controllo strumenti."
+ },
+ "AR-02": {
+  "titolo": "Le soglie dell’aria",
+  "contesto": "Ogni soglia si annuncia: l’ambra sotto il 60, l’avviso al 40, la protezione vitale sotto il 30, e nella fuga sotto il 15. William dice il numero e quello che succede: la preoccupazione cresce, senza panico."
+ },
+ "RE-01": {
+  "titolo": "Toccare, incidere, analizzare, ascoltare",
+  "contesto": "Le risposte di quando William tocca, analizza o ascolta qualcosa che non risponde: «Non succede niente». Righe brevi, ripetute in molti posti della nave: neutre, osservative."
+ },
+ "RE-02": {
+  "titolo": "La nave vive da sé",
+  "contesto": "Segni rari e casuali, una volta dentro: un gemito lungo e basso nelle pareti, il brusio che cala come una sala che smette di parlare, le pareti che si accendono per un battito. Inquietudine sottile."
+ },
+ "RE-03": {
+  "titolo": "La nave che si sveglia",
+  "contesto": "Le tre luci della Grande Porta che pulsano insieme fino al gong; la nave che riprende energia dopo il generatore; il primo momento in cui William legge i glifi senza accorgersene. Momenti di svolta."
+ }
+}

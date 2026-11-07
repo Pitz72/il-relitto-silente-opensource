@@ -185,8 +185,12 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
    pubblicata** (7 novembre, canale di prova): la revisione narrativa è chiusa. Poi: le sue note sulla beta.9. **La
    voce di servizio** (documento 35, §11) è **nel gioco** dal 7 novembre: «Kira» di Google AI Studio, generata
    dall’autore, tagliata nelle 41 parti (`strumenti/audio/taglia_servizio.py`), in fila con le voci della nave e
-   asciutta; l’ascolto (`consegne/Ascolto voce di servizio 2026-11-07/`) approvato: «capolavoro l’audio». Non
-   ancora in una beta. Effetti e
+   asciutta; l’ascolto (`consegne/Ascolto voce di servizio 2026-11-07/`) approvato: «capolavoro l’audio». Nella
+   **0.2.5-beta.10**. **Il copione di William** per Leonardo è pronto (7 novembre): `doppiaggio/william/`, un PDF di
+   111 pagine (125 blocchi con due righe di contesto ciascuno, 605 prese, circa 16.000 parole), fatto da
+   `strumenti/audio/copione_william.py` e `copione_pdf.py`; in fondo quattro punti aperti da decidere con l’autore
+   (la lettura di TSC-1972, la firma sul registro, chi dice la riga del registro nei finali, la frase delle fasce
+   del pilastro con una fascia sola). Effetti e
    suoni d’ambiente rifatti, più avanti, quando ne riparla lui.
 
 1. **Le sue note sulle beta, dalla 5 alla 8.** Prima cosa: chiedergli come gli sono sembrate nel gioco vero,
