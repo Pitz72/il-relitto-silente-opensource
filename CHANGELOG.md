@@ -8,6 +8,8 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+## [0.2.5-beta.10] - 2026-11-07
+
 ### Per chi gioca
 
 - **La tuta ha una voce.** Quando scatta la protezione vitale, quando sul visore si accende un avviso, quando lo scanner legge o la matrice di traduzione cresce, lo dice una voce di donna, calma e un po’ fredda, da dentro il casco. La stessa voce legge i suggerimenti fra parentesi. Non parla mai sopra le voci della nave; e se vai avanti, i suggerimenti rimasti indietro non li dice più.
