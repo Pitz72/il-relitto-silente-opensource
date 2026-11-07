@@ -174,6 +174,11 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
    `.fav` si cambiano per i punti che l’autore decide (un’eccezione al congelamento voluta da lui). Il racconto
    originale è la stella polare: William porta via soltanto il seme e lo condivide con una persona sola; Matthew
    è una dedica e non si spiega mai.
+   **Il 7 novembre, blocco H** (documento 35): le quindici voci della nave sono disegnate, approvate e **nel
+   gioco** (commit `31f4c8a`), con la pausa fra una voce e l’altra che l’autore ha chiesto; L.V. è un nastro
+   vecchio che si rovina (approvato); le battute di Yusuf (8) e le varianti dell’Anziano sono pronte ma **non
+   ancora collegate**. Prossimi passi, in ordine: collegare l’Anziano e Yusuf come le voci della nave; L.V. nella
+   serra (V4); H4 (i conteggi), H6 (l’intestazione di `relitto.fav`); poi una beta sola, la 0.2.5-beta.9 (H7).
 
 1. **Le sue note sulle beta, dalla 5 alla 8.** Prima cosa: chiedergli come gli sono sembrate nel gioco vero,
    con il suono, la prima persona e l’intro con la voce di L.V., e correggere quello che dice.
@@ -207,6 +212,9 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 4. **Il finale** (revisione 25, E2): una schermata vera per il finale, invece della casella che scorre.
    L’autore ha detto «una eventuale finale»: si propone, e decide lui.
 5. **Il resto**, dopo:
+   - **gli effetti e i suoni d’ambiente, rifatti** (l’autore, 7 novembre 2026: «ora teniamo buono questo
+     environment sound ma credo che poi fx e suoni vadano rifatti, ma ci penseremo più in là»): dopo il blocco H
+     e la beta, se ne riparla con lui (documento 35, §9);
    - la colonna sonora ufficiale: le sue sette idee e le decisioni da prendere stanno nel documento 28,
      §1, ancora valide;
    - il logo nel menu (E3), la regola delle immagini (E8), la copertina (D42–D44 del documento 24);
