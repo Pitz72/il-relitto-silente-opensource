@@ -702,7 +702,9 @@ VOCI_LV = {
 # dal manifest (strumenti/audio/voce_servizio.py, strumenti/audio/taglia_servizio.py; il collaudo controlla che
 # questa tabella e il manifest dicano le stesse cose). Il suono la fa sentire quando a schermo c'è proprio quel
 # testo: i suggerimenti con la loro parentesi intera, la matrice dall'inizio della parentesi, il resto com'è.
-# PROTEZIONE VITALE detta da William dopo un articolo («con la PROTEZIONE VITALE la tuta…») resta sua.
+# PROTEZIONE VITALE detta da William dopo un articolo («con la PROTEZIONE VITALE la tuta…») resta sua. La riga del
+# registro di bordo che chiude i finali (il tipo «registro») la dice il computer di bordo, con la stessa voce: arriva
+# dopo il tempo che serve a leggere il finale (`_dopo_registro`).
 VOCI_SERVIZIO = {
     'SV-01-protezione-vitale': ('protezione', 'PROTEZIONE VITALE'),
     'SV-02-canale-aperto-da-remoto': ('schermo', 'CANALE APERTO DA REMOTO'),
@@ -745,6 +747,10 @@ VOCI_SERVIZIO = {
     'SV-39-traducile': ('suggerimento', 'TRADUCILE.'),
     'SV-40-traducili': ('suggerimento', 'TRADUCILI.'),
     'SV-41-usala': ('suggerimento', 'USALA.'),
+    'SV-42-registro-magazzino-quattro': ('registro', 'Registro di bordo, TSC-1972. Operatore W. T. Eriksonn. Carico: un manufatto, origine non dichiarata. Destinazione: Magazzino Quattro.'),
+    'SV-43-registro-da-dichiarare': ('registro', "Registro di bordo, TSC-1972. Operatore W. T. Eriksonn. Carico: un manufatto. Nient'altro da dichiarare."),
+    'SV-44-registro-da-registrare': ('registro', 'Registro di bordo, TSC-1972. Operatore W. T. Eriksonn. Nessun evento da registrare.'),
+    'SV-45-registro-carico-nessuno': ('registro', 'Registro di bordo, TSC-1972. Operatore W. T. Eriksonn. Rotta ripresa. Carico: nessuno.'),
 }
 
 
@@ -801,6 +807,21 @@ def _servizio(testo):
 
 _VOCI_NAVE_FRAMMENTI = sorted(((nome, tuple(_frammenti("".join(f"«{x}»" for x in frammenti))))
                                for nome, frammenti in {**VOCI_NAVE, **VOCI_YUSUF, **VOCI_LV}.items()), key=lambda v: -len(v[1]))
+
+
+# Quante parole al secondo legge chi gioca: per far arrivare la riga del registro di bordo quando ci arriva lui.
+LETTURA_PAROLE_AL_SECONDO = 3.0
+
+
+def _dopo_registro(eventi):
+    """I secondi dopo i quali il computer di bordo dice la riga del registro: il tempo di leggere il finale che la
+    precede (fra 3 e 90 secondi); None se nel turno non c'è."""
+    for e in eventi:
+        t = e.get("testo")
+        if isinstance(t, str) and "Registro di bordo, TSC-1972." in t:
+            prima = t[:t.index("Registro di bordo, TSC-1972.")]
+            return round(min(90.0, max(3.0, len(re.findall(r"\w+", prima)) / LETTURA_PAROLE_AL_SECONDO)), 1)
+    return None
 
 
 def _voci_nave(eventi, servizio=True):
@@ -937,7 +958,10 @@ def _rileva(prima, dopo, comando, eventi):
     # le voci della nave a schermo
     battute = _voci_nave(eventi)
     if battute:
-        out.append({"evento": "voci", "battute": battute})
+        voci = {"evento": "voci", "battute": battute}
+        if any(VOCI_SERVIZIO.get(b, ("",))[0] == "registro" for b in battute):
+            voci["dopo"] = _dopo_registro(eventi)
+        out.append(voci)
     # il comando
     if comando and comando.get("verbo"):
         nome = _PER_COMANDO.get((comando["verbo"], comando.get("cosa")))
@@ -1009,6 +1033,9 @@ def rel_voci_nave():
             testi += testi_di_descrizione(t)
     testi += [r.risposta for r in m.regole]
     testi += [e.risposta for e in m.eventi] + [d.risposta for d in m.demoni]
+    # i finali: il messaggio della fine della partita (la riga del registro di bordo sta lì)
+    testi += [getattr(c, "messaggio", None) for d in list(m.demoni) + list(m.eventi)
+              for c in getattr(d, "conseguenze", ()) or ()]
     for n in m.dialogo_nodi.values():
         testi.append(n.battuta)
         testi.extend(t for _, t in n.battute_condizionali)

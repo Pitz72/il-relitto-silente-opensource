@@ -68,7 +68,7 @@ S = {
     "toc1": ParagraphStyle("toc1", fontName="Segno", fontSize=9, leading=11.5, leftIndent=16, textColor=GRIGIO_SCURO),
 }
 
-CHI = {"servizio": "voce di servizio", "registro": "registro di bordo", "etichetta": "", "breve": "registrazione"}
+CHI = {"servizio": "voce di servizio", "registro": "computer di bordo", "etichetta": "", "breve": "registrazione"}
 TIPI = {"descrizione": "Descrizione", "risposta": "Quando chi gioca scrive", "evento": "Quando succede",
         "demone": "Ogni tanto, da sé", "dopo": "Più tardi", "battuta": "Nel dialogo", "opzione": "Risposta nel dialogo",
         "finale": "Finale"}
@@ -283,7 +283,8 @@ def pagine_davanti(tot):
         "teatro.",
         "<b>I momenti forti</b> (l’uomo nella serra, il nido del Piccolo, l’Anziano, i finali) si dicono piano. "
         "L’emozione resta sotto, come nella vita di uno che vive solo da anni.",
-        "<b>Il suo nome non lo dice mai.</b> Lo dicono Yusuf e il registro di bordo.",
+        "<b>Il suo nome non lo dice mai.</b> Lo dice Yusuf, e lo legge il computer di bordo nella riga del "
+        "registro che chiude ogni finale. Sulle sue pagine del registro William firma con le iniziali, W. T.",
         "<b>Detto ad alta voce.</b> Le risposte nei dialoghi sono le sole frasi che William pronuncia davvero. A "
         "Yusuf parla alla radio, al microfono, come a uno che conosce da vent’anni e a cui deve dei soldi. "
         "All’Anziano parla dentro il casco, a una voce che gli si apre nella testa. Al Piccolo risponde come a un "
@@ -338,18 +339,17 @@ def pagine_davanti(tot):
 
     st.append(PageBreak())
     st += h1("Le pronunce", "pronunce")
-    st += [p("Le parole difficili che William dice. Quelle segnate «da decidere» le fissiamo con Simone prima della "
-             "prima sessione.")]
+    st += [p("Le parole difficili che William dice, come le ha fissate Simone.")]
     st.append(tabella([
         ["Parola", "Come si dice", "Dove"],
         ["Yusuf", "Iùsuf, con l’accento sulla prima.", "Atto I e i finali"],
         ["Santa Maria", "Come si scrive: è il nome della nave di William.", "dappertutto"],
-        ["TSC-1972", "Da decidere: «ti esse ci, diciannove settantadue» oppure «millenovecentosettantadue». È la "
-                     "sigla della Santa Maria, letta sul registro.", "SM: il registro di bordo"],
+        ["TSC-1972", "«ti esse ci, millenovecentosettantadue». È la sigla della Santa Maria, letta sulla prima "
+                     "pagina del registro.", "SM: il registro di bordo"],
         ["TSC", "«ti esse ci»: la sigla sul kit.", "SM: il kit"],
         ["14 marzo 2105", "«quattordici marzo duemilacentocinque».", "SM: il registro di bordo"],
-        ["W. T. Eriksonn", "Da decidere: è la firma di William sul suo registro («Settimana sei… W. T. Eriksonn.»). "
-                           "Se la legge, «vu ti Èrikson».", "SM: il registro di bordo"],
+        ["W. T.", "«vu ti»: la firma di William, le sue iniziali, in fondo alla sua ultima riga del registro "
+                  "(«Settimana sei. Stiva vuota. Nessun contatto. W. T.»).", "SM: il registro di bordo"],
         ["L.V.", "«elle vu», lettera per lettera: le iniziali dell’uomo nella serra.", "VI: la placca"],
         ["QUI PRIMA. IL SEME. NON SIAMO S—", "Graffiato sulla placca. La «S—» si interrompe: una esse che non "
                                              "diventa parola.", "VI: la placca"],
@@ -379,7 +379,7 @@ def pagine_davanti(tot):
         "<b>Gli a capo</b> dentro una presa sono un cambio di paragrafo: una pausa naturale, intorno a un secondo.",
         "<b>Le prese «uguale a»</b> non si registrano.",
         "<b>La consegna</b>: una cartella per capitolo (SM, IN, CO, VI, TE, EQ, ME, PO, FU, FI, EC, TR, AR, RE, "
-        "ARIA) e un foglio con le note di sessione (le prese da rifare, i dubbi).",
+        "ARIA, FASCE) e un foglio con le note di sessione (le prese da rifare, i dubbi).",
     ])
     st += [p("Il gioco in sala", "h2"),
            p("Le voci degli altri si possono ascoltare nel gioco (la beta, nel canale di prova) o nei file che Simone "
@@ -480,10 +480,11 @@ def appendici(prese_cifra):
            p(f"Le prese che usano la cifra: {', '.join(prese_cifra['aria'])}.", "piccolo"),
            Spacer(1, 8),
            p("Le fasce del pilastro", "h2"),
-           p("Una sola presa, nell’arca della memoria, dice quante fasce del pilastro sono accese: <font "
-             f"name='Segno-B' backColor='{EVIDENZA}'>[risveglio]</font> su quattro ({', '.join(prese_cifra['risveglio'])}). "
-             "Da registrare intera per due e per tre («ne sono accese due su quattro», «…tre su quattro»); con una "
-             "fascia sola la frase va prima corretta nel gioco (vedi i punti aperti).")]
+           p("Una sola presa, nell’arca della memoria, dice quante fasce del pilastro sono accese: «…una fascia alla "
+             f"volta: <font name='Segno-B' backColor='{EVIDENZA}'>[risveglio]</font> su quattro, per ora.» "
+             f"({', '.join(prese_cifra['risveglio'])}). Nella presa dici «due»; qui registri, sospese, «zero», «una», "
+             "«due» e «tre» (sono fasce: «una», non «uno»): <font name='Segno-B'>FASCE-0.wav</font> … "
+             "<font name='Segno-B'>FASCE-3.wav</font>.")]
     st += [PageBreak()]
     st += h1("Appendice B · Le voci che non sono tue", "altre")
     st += [p("Già registrate, compaiono nel copione in grigio. Non sono da leggere."),
@@ -498,21 +499,23 @@ def appendici(prese_cifra):
                ["La voce di servizio", "La tuta e il gioco: PROTEZIONE VITALE, le scritte del visore, le letture dello "
                                        "scanner, la matrice di traduzione, i suggerimenti fra parentesi", "Google, la voce "
                                                                                                          "«Kira»"],
-               ["Il registro di bordo", "La riga che chiude ogni finale («Registro di bordo, TSC-1972. Operatore W. T. "
-                                        "Eriksonn…»)", "da decidere (vedi i punti aperti)"],
+               ["Il computer di bordo", "La riga del registro che chiude ogni finale («Registro di bordo, TSC-1972. "
+                                        "Operatore W. T. Eriksonn…»), quando chi gioca ci arriva", "la voce di servizio, "
+                                                                                                  "come altoparlante "
+                                                                                                  "della plancia"],
                ["I messaggi del gioco", "Le risposte automatiche ai comandi che il gioco non capisce", "nessuna, per ora"],
            ], [3.4 * cm, 8.4 * cm, 4.7 * cm])]
     st += [PageBreak()]
-    st += h1("I punti aperti", "aperti")
-    st += [p("Da decidere con Simone prima della prima sessione:")]
+    st += h1("Le decisioni", "decisioni")
+    st += [p("Prese da Simone il 7 novembre 2026, dopo la prima versione di questo copione:")]
     st += punti([
-        "<b>La sigla TSC-1972</b>: come la legge William (le pronunce).",
-        "<b>La firma sul registro</b>: «Settimana sei. Stiva vuota. Nessun contatto. W. T. Eriksonn.» William il "
-        "suo nome non lo dice mai: se legge la sua riga, la firma va detta o lasciata alla pagina?",
-        "<b>Il registro di bordo alla fine dei finali</b>: chi dice la riga «Registro di bordo, TSC-1972…» (non è "
-        "William, che il suo nome non lo dice).",
-        "<b>Le fasce del pilastro</b>: con una fascia sola la frase «ne sono accese [risveglio] su quattro» non è "
-        "corretta; va riscritta nel gioco prima di registrarla.",
+        "<b>La sigla TSC-1972</b> si legge «ti esse ci, millenovecentosettantadue».",
+        "<b>La firma sul registro</b> sono le iniziali: «Settimana sei. Stiva vuota. Nessun contatto. W. T.» "
+        "William legge «vu ti», e il suo nome resta non detto.",
+        "<b>La riga del registro di bordo</b> che chiude i finali la legge il computer di bordo, con la voce di "
+        "servizio: non è di William.",
+        "<b>Le fasce del pilastro</b>: la frase è stata corretta nel gioco («…una fascia alla volta: [risveglio] su "
+        "quattro, per ora.»), e va bene con qualunque numero.",
     ])
     return st
 

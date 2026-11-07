@@ -426,6 +426,8 @@ pub struct Mondo {
     sintonia_nel_turno: bool,
     /// le battute che il ponte ha mandato in questo turno (l’evento «voci»), non ancora suonate
     voci_turno: Vec<Pezzo>,
+    /// fra quanti secondi entrano le voci rimaste nel turno (`VOCI_DOPO`, o quello che ha detto il ponte)
+    voci_ritardo: f32,
     dopo_le_voci: DopoLeVoci,
     fondo: Fondo,
     fondo_mul: Scorrevole,
@@ -569,6 +571,7 @@ impl Mondo {
             voci_radio: VociNave::nuove(sr),
             sintonia_nel_turno: false,
             voci_turno: Vec::with_capacity(16),
+            voci_ritardo: 0.0,
             dopo_le_voci: DopoLeVoci::default(),
             fondo: Fondo::nuovo(sr, seme ^ 0xF0),
             fondo_mul: Scorrevole::nuovo(1.0),

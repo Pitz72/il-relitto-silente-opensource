@@ -150,23 +150,29 @@ def indisturbato(mondo, percorso):
 
 
 def servizio_coerente():
-    """La voce di servizio (documento 35, §11): il manifest è quello dei testi del gioco di adesso, ogni parte è
-    tagliata e ha il suo file, e la tabella del ponte è quella del manifest."""
+    """La voce di servizio (documento 35, §11): il manifest è quello dei testi del gioco di adesso, ogni parte
+    tagliata ha il suo file, e la tabella del ponte è quella del manifest. Le parti ancora da generare
+    (servizio-nuove.txt) non sono un errore: si dicono, e intanto il motore le salta."""
     cartella = os.path.join(RADICE, "doppiaggio", "servizio")
     manifest = json.load(open(os.path.join(cartella, "manifest.json"), encoding="utf-8"))
     tagli = json.load(open(os.path.join(cartella, "tagli.json"), encoding="utf-8"))["parti"]
-    problemi, attese = [], {}
+    sys.path.insert(0, os.path.join(RADICE, "strumenti", "audio"))
+    import taglia_servizio                            # noqa: E402
+    gia = set()
+    nomi = {p["id"]: taglia_servizio.nome_file(i + 1, p["voce"], gia) for i, p in enumerate(manifest["parti"])}
+    problemi, attese, da_generare = [], {}, []
     for p in manifest["parti"]:
         t = tagli.get(p["id"])
+        attese[nomi[p["id"]]] = (p["tipo"], p["gioco"])
         if not t:
-            problemi.append(f"la parte «{p['voce']}» non è tagliata (strumenti/audio/taglia_servizio.py)")
+            da_generare.append(nomi[p["id"]])
             continue
-        attese[t["file"]] = (p["tipo"], p["gioco"])
+        if t["file"] != nomi[p["id"]]:
+            problemi.append(f"il file di «{p['voce']}» si chiama {t['file']}, il manifest dice {nomi[p['id']]}")
         if not os.path.isfile(os.path.join(RADICE, "audio", "musica-ia", "SV", t["file"] + ".mp3")):
             problemi.append(f"manca il file {t['file']}.mp3")
     if attese != ponte.VOCI_SERVIZIO:
         problemi.append("la tabella VOCI_SERVIZIO del ponte non è quella del manifest")
-    sys.path.insert(0, os.path.join(RADICE, "strumenti", "audio"))
     import voce_servizio                              # noqa: E402
     ora = {p["voce"] for p in voce_servizio.parti_di_servizio()}
     vecchie = {p["voce"] for p in manifest["parti"]}
@@ -174,7 +180,7 @@ def servizio_coerente():
         problemi.append(f"una parte nuova nel gioco, da generare: «{v}» (strumenti/audio/voce_servizio.py)")
     for v in sorted(vecchie - ora):
         problemi.append(f"una parte che il gioco non ha più: «{v}»")
-    return problemi
+    return problemi, da_generare
 
 
 def main():
@@ -243,11 +249,13 @@ def main():
         print(f"     non più nel gioco, frammento per frammento: {', '.join(perse)}")
     perse = perse_anziano + perse
 
-    servizio = servizio_coerente()
+    servizio, da_generare = servizio_coerente()
     print(f"[{'NO' if servizio else 'OK'}] la voce di servizio: il manifest, i file e la tabella del ponte "
-          f"({len(ponte.VOCI_SERVIZIO)} parti)")
+          f"({len(ponte.VOCI_SERVIZIO)} parti" + (f", {len(da_generare)} da generare" if da_generare else "") + ")")
     for p in servizio:
         print(f"     {p}")
+    if da_generare:
+        print(f"     da generare (doppiaggio/servizio/servizio-nuove.txt): {', '.join(da_generare)}")
 
     mondo = compila_mondo(STORIA)
     divergenze = [d for d in (indisturbato(mondo, os.path.join(QUI, f"{n}.txt")) for n in ponte.FINALI) if d]

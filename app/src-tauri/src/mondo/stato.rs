@@ -83,6 +83,9 @@ pub struct EventoGioco {
     /// le battute delle voci della nave («voci», documento 35), nell’ordine in cui stanno a
     /// schermo: il ponte le manda solo se ci sono proprio le parole registrate (`VOCI_NAVE`)
     pub battute: Vec<String>,
+    /// fra quanti secondi entrano quelle battute, se non subito: la riga del registro di bordo in fondo a un
+    /// finale arriva dopo il tempo di leggere il finale (il ponte, `_dopo_registro`)
+    pub dopo: Option<f32>,
 }
 
 impl EventoGioco {

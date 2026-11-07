@@ -47,3 +47,15 @@ riascoltare. Poi: l’impronta della presa e quella dell’elenco `SV/IMPRONTE.s
 `python collaudo/eventi.py`, che controlla il manifest, i file e la tabella `VOCI_SERVIZIO` del ponte (se le
 parti cambiano, la tabella si rifà dal manifest e da `tagli.json`). La prima presa, del 7 novembre 2026: 41 parti
 su 41 al primo colpo.
+
+## Le parti nuove
+
+Quando il gioco ha una parte di servizio nuova, `voce_servizio.py` la mette in fondo al manifest (i numeri delle
+altre non cambiano) e la scrive anche in **`servizio-nuove.txt`**: si genera soltanto quello, con Kira e la stessa
+descrizione, e si taglia con
+
+    python strumenti/audio/taglia_servizio.py audio/sorgenti/voce/servizio-kira-nuove-<data>.wav --nuove
+
+Le altre parti restano come sono. Il 7 novembre 2026: le quattro righe del registro di bordo che chiudono i finali,
+dette dal computer di bordo (documento 35, §11): lo strumento le passa da un altoparlante piccolo di plancia, non dal
+casco.

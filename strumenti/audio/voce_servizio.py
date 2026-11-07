@@ -10,7 +10,12 @@
 #     (le righe «ANALISI…», «LETTURA:», «IDENTIFICAZIONE…», «DATAZIONE…», «Lunghezza:…»);
 #   - le etichette dello scanner, ‹FLORA DI XYLOS›;
 #   - la matrice di traduzione con la sua percentuale («Matrice di traduzione: 18%»; quello che William aggiunge nella
-#     stessa parentesi resta suo).
+#     stessa parentesi resta suo);
+#   - la riga del registro di bordo che chiude i finali («Registro di bordo, TSC-1972. Operatore W. T. Eriksonn. …»):
+#     la dice il computer di bordo della Santa Maria, con la stessa voce (l'autore, 7 novembre 2026: «Lo legge la voce
+#     di servizio, la voce del computer»), perché William il suo nome non lo dice mai.
+# Le parti nuove, che non hanno ancora il loro file (doppiaggio/servizio/tagli.json), vanno anche in
+# servizio-nuove.txt: si genera soltanto quello, con la stessa voce e la stessa descrizione.
 # Il resto, compreso il numero dell'aria che William legge sul visore, è di William (Leonardo).
 #
 # Ne escono, in doppiaggio/servizio/:
@@ -37,7 +42,10 @@ sys.path.insert(0, os.path.join(RADICE, "app", "src", "motore"))
 MAIUSCOLA = "A-ZÀÈÉÌÒÙ"
 # I nomi che nel maiuscolo tornano con l'iniziale maiuscola.
 NOMI = {"YUSUF": "Yusuf", "XYLOS": "Xylos", "ANZIANO": "Anziano", "SANTA": "Santa", "MARIA": "Maria",
-        "TSC-1972": "TSC-1972", "AURORA-7": "Aurora 7"}
+        "TSC-1972": "TSC 1972", "AURORA-7": "Aurora 7"}
+# La riga del registro di bordo, in fondo ai finali.
+REGISTRO = re.compile(r"^Registro di bordo, TSC-1972\..*$")
+ORDINE = ["protezione", "schermo", "lettura", "etichetta", "matrice", "suggerimento", "registro"]
 # Dentro le letture dello scanner, le frasi che sono di William: restano a lui, e la lettura si divide lì.
 DI_WILLIAM = ["Provo con un'altra, e un'altra ancora:",
               "il calcolo parte, si ferma, riparte. Al terzo tentativo si arrende e scrive"]
@@ -93,6 +101,11 @@ def testi_del_gioco():
             out += [(f"descrizione di {nome}", x) for x in testi_di_descrizione(t)]
     out += [("regola", r.risposta) for r in m.regole]
     out += [("evento", e.risposta) for e in m.eventi] + [("ogni turno", d.risposta) for d in m.demoni]
+    # i testi dei finali: il messaggio della fine della partita
+    for d in list(m.demoni) + list(m.eventi):
+        for c in getattr(d, "conseguenze", ()) or ():
+            if type(c).__name__ == "ConseguenzaFinePartita" and isinstance(getattr(c, "messaggio", None), str):
+                out.append(("finale", c.messaggio))
     for chiave, n in m.dialogo_nodi.items():
         out.append((f"dialogo {chiave}", n.battuta))
         out += [(f"dialogo {chiave}", t) for _, t in n.battute_condizionali]
@@ -113,7 +126,9 @@ def parti_di_servizio():
             if not riga:
                 continue
             trovate = []
-            if LETTURA.match(riga):
+            if REGISTRO.match(riga):
+                trovate.append(("registro", riga))
+            elif LETTURA.match(riga):
                 pezzi = [riga]
                 for frase in DI_WILLIAM:
                     pezzi = [x for pezzo in pezzi for x in pezzo.split(frase)]
@@ -165,8 +180,8 @@ def parti_di_servizio():
                                    "gioco": originale, "tipo": tipo, "da": []}
                 if dove not in viste[voce]["da"]:
                     viste[voce]["da"].append(dove)
-    ordine = ["protezione", "schermo", "lettura", "etichetta", "matrice", "suggerimento"]
-    return sorted(viste.values(), key=lambda p: (ordine.index(p["tipo"]), p["voce"]))
+    # i tipi nuovi vanno in fondo: così le parti che hanno già un file non cambiano numero
+    return sorted(viste.values(), key=lambda p: (ORDINE.index(p["tipo"]), p["voce"]))
 
 
 def parole(t):
@@ -179,7 +194,7 @@ def main():
     # il passo di Kira nel Viaggiatore: circa 150 parole al minuto, più la pausa lunga fra le parti
     minuti = n / 150 + len(parti) * 1.2 / 60
     if "--stato" in sys.argv:
-        for tipo in ["protezione", "schermo", "lettura", "etichetta", "matrice", "suggerimento"]:
+        for tipo in ORDINE:
             q = [p for p in parti if p["tipo"] == tipo]
             print(f"{tipo:13} {len(q):3} parti, {sum(parole(p['voce']) for p in q):4} parole")
         print(f"in tutto: {len(parti)} parti, {n} parole, circa {minuti:.1f} minuti")
@@ -188,7 +203,7 @@ def main():
     quanti = max(1, -(-int(minuti * 10) // int(MAX_MINUTI * 10)))
     os.makedirs(USCITA, exist_ok=True)
     for vecchio in os.listdir(USCITA):
-        if vecchio.startswith("servizio") and vecchio.endswith(".txt"):
+        if vecchio.startswith("servizio") and vecchio.endswith(".txt") and vecchio != "servizio-nuove.txt":
             os.remove(os.path.join(USCITA, vecchio))
     blocchi = {}
     for k in range(quanti):
@@ -203,6 +218,14 @@ def main():
     for nome, q in blocchi.items():
         m = sum(parole(p["voce"]) for p in q) / 150 + len(q) * 1.2 / 60
         print(f"doppiaggio/servizio/{nome}.txt: {len(q)} parti, circa {m:.1f} minuti")
+    # le parti che non hanno ancora un file: da generare da sole
+    tagli = os.path.join(USCITA, "tagli.json")
+    fatte = set(json.load(open(tagli, encoding="utf-8"))["parti"]) if os.path.exists(tagli) else set()
+    nuove = [p for p in parti if p["id"] not in fatte]
+    if nuove and fatte:
+        with open(os.path.join(USCITA, "servizio-nuove.txt"), "w", encoding="utf-8", newline="\n") as f:
+            f.write("".join(p["voce"] + " <long pause>\n" for p in nuove))
+        print(f"doppiaggio/servizio/servizio-nuove.txt: {len(nuove)} parti nuove, da generare")
 
 
 if __name__ == "__main__":

@@ -1,11 +1,11 @@
 {
- "impronta_fav": "4ea40e05af031fee8d6fd9c87baea1e2c7d39a37a1f67fc4b46514c60eba583b",
+ "impronta_fav": "604900122ced8844ea019b96f2135bc050e5892018e1129b97d3d6204fbb2e32",
  "totali": {
   "prese": 605,
   "uguali": 130,
-  "parole": 16033,
+  "parole": 16031,
   "parlato": 23,
-  "citazione": 253,
+  "citazione": 252,
   "william": 582
  },
  "capitoli": [
@@ -1412,7 +1412,7 @@
           ],
           [
            "citazione",
-           "«Settimana sei. Stiva vuota. Nessun contatto. W. T. Eriksonn.»",
+           "«Settimana sei. Stiva vuota. Nessun contatto. W. T.»",
            ""
           ],
           [
@@ -1421,7 +1421,7 @@
            ""
           ]
          ],
-         "william": "Il registro della Santa Maria è di carta: i file si perdono, la carta resta dove la metto. La prima pagina non l'ho scritta io. In una grafia d'altri tempi: «TSC-1972. Prima registrazione autonoma: 14 marzo 2105.» Novantasei anni di nave, tre alla radiazione.\nLe ultime pagine sono mie e si somigliano tutte. L'ultima dice: «Settimana sei. Stiva vuota. Nessun contatto. W. T. Eriksonn.»\nFra le pagine, a tenere il segno, c'è la chiavetta della cassetta di ferraglia.",
+         "william": "Il registro della Santa Maria è di carta: i file si perdono, la carta resta dove la metto. La prima pagina non l'ho scritta io. In una grafia d'altri tempi: «TSC-1972. Prima registrazione autonoma: 14 marzo 2105.» Novantasei anni di nave, tre alla radiazione.\nLe ultime pagine sono mie e si somigliano tutte. L'ultima dice: «Settimana sei. Stiva vuota. Nessun contatto. W. T.»\nFra le pagine, a tenere il segno, c'è la chiavetta della cassetta di ferraglia.",
          "id": "SM-056"
         }
        ]
@@ -9793,11 +9793,11 @@
          "segmenti": [
           [
            "william",
-           "L'ultimo pilastro si sveglia dal basso, una fascia alla volta: ne sono accese [risveglio] su quattro. Il resto della corrente lo prende dalla mia tuta.",
+           "L'ultimo pilastro si sveglia dal basso, una fascia alla volta: [risveglio] su quattro, per ora. Il resto della corrente lo prende dalla mia tuta.",
            ""
           ]
          ],
-         "william": "L'ultimo pilastro si sveglia dal basso, una fascia alla volta: ne sono accese [risveglio] su quattro. Il resto della corrente lo prende dalla mia tuta.",
+         "william": "L'ultimo pilastro si sveglia dal basso, una fascia alla volta: [risveglio] su quattro, per ora. Il resto della corrente lo prende dalla mia tuta.",
          "id": "ME-039"
         }
        ]
@@ -17525,7 +17525,7 @@
        "tipo": "risposta",
        "soggetto": "tocca",
        "condizione": null,
-       "riga": "relitto.fav:93",
+       "riga": "relitto.fav:94",
        "pezzi": [
         {
          "condizione": "se l'ingresso è richiuso",
@@ -17558,7 +17558,7 @@
        "tipo": "risposta",
        "soggetto": "incidi",
        "condizione": "non ho la taglierina",
-       "riga": "relitto.fav:94",
+       "riga": "relitto.fav:95",
        "pezzi": [
         {
          "condizione": null,
@@ -17580,7 +17580,7 @@
        "tipo": "risposta",
        "soggetto": "analizza",
        "condizione": null,
-       "riga": "relitto.fav:95",
+       "riga": "relitto.fav:96",
        "pezzi": [
         {
          "condizione": "se la tuta è vestita",
@@ -17613,7 +17613,7 @@
        "tipo": "risposta",
        "soggetto": "ascolta",
        "condizione": null,
-       "riga": "relitto.fav:96",
+       "riga": "relitto.fav:97",
        "pezzi": [
         {
          "condizione": "se l'ingresso è richiuso",
@@ -17646,7 +17646,7 @@
        "tipo": "risposta",
        "soggetto": "incidi",
        "condizione": null,
-       "riga": "relitto.fav:97",
+       "riga": "relitto.fav:98",
        "pezzi": [
         {
          "condizione": null,
@@ -17680,7 +17680,7 @@
        "tipo": "demone",
        "soggetto": "ogni turno",
        "condizione": "l'ingresso è richiuso e la fuga è lontana e a caso, 1 volta su 36",
-       "riga": "relitto.fav:175",
+       "riga": "relitto.fav:176",
        "pezzi": [
         {
          "condizione": null,
@@ -17701,7 +17701,7 @@
        "tipo": "demone",
        "soggetto": "ogni turno",
        "condizione": "l'ingresso è richiuso e la fuga è lontana e a caso, 1 volta su 36",
-       "riga": "relitto.fav:176",
+       "riga": "relitto.fav:177",
        "pezzi": [
         {
          "condizione": null,
@@ -17722,7 +17722,7 @@
        "tipo": "demone",
        "soggetto": "ogni turno",
        "condizione": "l'ingresso è richiuso e la fuga è lontana e a caso, 1 volta su 36",
-       "riga": "relitto.fav:177",
+       "riga": "relitto.fav:178",
        "pezzi": [
         {
          "condizione": null,
@@ -17754,7 +17754,7 @@
        "tipo": "evento",
        "soggetto": "",
        "condizione": "le chiavi è almeno 3",
-       "riga": "relitto.fav:183",
+       "riga": "relitto.fav:184",
        "pezzi": [
         {
          "condizione": null,
@@ -17775,7 +17775,7 @@
        "tipo": "evento",
        "soggetto": "",
        "condizione": "l'energia è ripristinata",
-       "riga": "relitto.fav:184",
+       "riga": "relitto.fav:185",
        "pezzi": [
         {
          "condizione": null,
@@ -17796,7 +17796,7 @@
        "tipo": "evento",
        "soggetto": "",
        "condizione": "la traduzione è almeno 100",
-       "riga": "relitto.fav:185",
+       "riga": "relitto.fav:186",
        "pezzi": [
         {
          "condizione": null,

@@ -77,6 +77,7 @@ impl Mondo {
         // rimaste in fila dal turno di prima non servono più
         self.voci_turno.clear();
         self.voci_nave.scarta_servizio();
+        self.voci_ritardo = t.eventi.iter().filter(|e| e.evento == "voci").filter_map(|e| e.dopo).fold(VOCI_DOPO, f32::max);
         for e in t.eventi.iter().filter(|e| e.evento == "voci") {
             for b in &e.battute {
                 if let Some(p) = Pezzo::della_battuta(b) {
@@ -209,7 +210,7 @@ impl Mondo {
         self.voci_turno.retain(|p| !matches!(p, Pezzo::Nv08 | Pezzo::Nv08b));
         if !self.voci_turno.is_empty() && self.voci_nave.disponibili(&self.voci_turno) {
             let battute = std::mem::take(&mut self.voci_turno);
-            self.voci_nave.in_fila(&battute, VOCI_DOPO);
+            self.voci_nave.in_fila(&battute, self.voci_ritardo);
             // il fiato trattenuto è per le voci della nave, non per la tuta
             if battute.iter().any(|p| !p.servizio()) {
                 self.fiato.ascolto = true;

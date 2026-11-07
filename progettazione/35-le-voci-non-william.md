@@ -352,4 +352,25 @@ Il collaudo controlla che il manifest sia quello dei testi del gioco di adesso, 
 e che la tabella del ponte sia quella del manifest; se un testo di servizio cambia, lo dice. Nei 16 percorsi del
 collaudo la voce di servizio parla in 73 turni su 171 con le voci; 41 parti su 41 si trovano nei testi del gioco.
 L’ascolto per l’autore: `consegne/Ascolto voce di servizio 2026-11-07/` (`rendi_echi`, le cinque scene «La voce
-di servizio»). L’autore, ascoltato: «capolavoro l’audio».
+di servizio»). L’autore, ascoltato: «capolavoro l’audio». Nella 0.2.5-beta.10.
+
+**Il registro di bordo (7 novembre 2026).** Il copione di William (`doppiaggio/william/`) ha lasciato aperta la riga
+che chiude i finali («Registro di bordo, TSC-1972. Operatore W. T. Eriksonn. …»): William il suo nome non lo dice
+mai. L’autore: «Lo legge la voce di servizio, la voce del computer, qualcosa inventiamoci». Così:
+
+- **quattro parti nuove** (`SV-42`…`SV-45`, il tipo «registro»), una per riga: le due di «Vivi» e della «Prima
+  nota» sono la stessa; «Due lettere» non ha la riga. `voce_servizio.py` le trova nei messaggi dei finali e le
+  scrive anche in `doppiaggio/servizio/servizio-nuove.txt`, da generare da sole con Kira e la stessa descrizione;
+  la sigla si legge «TSC 1972», millenovecentosettantadue (l’autore);
+- **il computer di bordo**: la stessa voce, passata da un altoparlante piccolo e vecchio di plancia (banda 260 Hz –
+  5 kHz, un picco largo a 1,8 kHz, un filo di saturazione, quattro riflessioni corte della plancia, da −22 a −32
+  dB): `taglia_servizio.py --nuove` taglia soltanto le parti senza file e lascia le altre come sono;
+- **quando**: dopo il tempo che serve a leggere il finale che la precede, tre parole al secondo, fra 3 e 90 secondi
+  (il ponte, `_dopo_registro`, manda `dopo` con l’evento `voci`; il motore la mette in fila con quel ritardo). In
+  «Vivi», circa 44 secondi;
+- finché il file non c’è, il ponte la manda e il motore la salta; il collaudo degli eventi la dice «da generare».
+
+Con la stessa decisione l’autore ha fissato le altre tre domande del copione: TSC-1972 si legge
+«millenovecentosettantadue»; la firma di William sul suo registro sono le iniziali («… Nessun contatto. W. T.»,
+`santamaria.fav`); la frase delle fasce del pilastro è corretta («…una fascia alla volta: [risveglio] su quattro,
+per ora.», `memoria.fav`).

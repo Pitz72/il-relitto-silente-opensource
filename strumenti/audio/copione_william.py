@@ -10,7 +10,8 @@
 # Non è di William: il prologo e la scatola nera (L.V.), l’Anziano, Yusuf, le voci della nave (le loro battute e le
 # varianti brevi delle registrazioni), la voce di servizio (la tuta, lo scanner, la matrice, i suggerimenti), il
 # nome di chi parla davanti alle voci della nave («IL NAVARCA:»), la riga del registro di bordo che chiude i
-# finali (William il suo nome non lo dice mai), i messaggi del motore.
+# finali (la dice il computer di bordo, con la voce di servizio: William il suo nome non lo dice mai), i messaggi
+# del motore.
 #
 # Le frasi che cambiano con la partita («[se …]…[altrimenti]…[fine]») si dividono in pezzi: ogni pezzo è una presa,
 # e il gioco li monta. Le prese uguali si registrano una volta sola.

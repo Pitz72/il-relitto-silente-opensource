@@ -8,6 +8,10 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+### Cambiato
+
+- **Il copione di William e le sue quattro decisioni** (documento 35, §11). La firma di William sul suo registro di bordo sono le iniziali («Settimana sei. Stiva vuota. Nessun contatto. W. T.», `santamaria.fav`): il suo nome lo dicono soltanto Yusuf e la riga di registro dei finali. La frase delle fasce del pilastro è corretta («…una fascia alla volta: [risveglio] su quattro, per ora.», `memoria.fav`), che con una fascia sola diceva «ne sono accese 1». La riga del registro di bordo che chiude i finali la dirà il computer di bordo con la voce di servizio: quattro parti nuove (`SV-42`…`SV-45`) da generare (`doppiaggio/servizio/servizio-nuove.txt`), il ponte che le manda con un ritardo pari al tempo di leggere il finale (`dopo`, tre parole al secondo, fra 3 e 90 s), il motore che le mette in fila con quel ritardo, `taglia_servizio.py --nuove` con la catena del computer di bordo (un altoparlante piccolo di plancia). Una prova nuova in Rust; il collaudo degli eventi dice le parti da generare senza fallire. Il copione (`doppiaggio/william/`) ha le decisioni al posto dei punti aperti.
+
 ## [0.2.5-beta.10] - 2026-11-07
 
 ### Per chi gioca

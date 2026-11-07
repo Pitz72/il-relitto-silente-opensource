@@ -190,7 +190,10 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
    111 pagine (125 blocchi con due righe di contesto ciascuno, 605 prese, circa 16.000 parole), fatto da
    `strumenti/audio/copione_william.py` e `copione_pdf.py`; in fondo quattro punti aperti da decidere con l’autore
    (la lettura di TSC-1972, la firma sul registro, chi dice la riga del registro nei finali, la frase delle fasce
-   del pilastro con una fascia sola). Effetti e
+   del pilastro con una fascia sola). **Decisi** lo stesso giorno: «millenovecentosettantadue»; la firma «W. T.»;
+   la riga del registro la dice la voce di servizio come computer di bordo (quattro parti nuove, testi in
+   `doppiaggio/servizio/servizio-nuove.txt`: **le genera l’autore** con Kira, poi io le taglio con
+   `taglia_servizio.py --nuove`; il motore è già pronto, documento 35, §11); la frase delle fasce corretta. Effetti e
    suoni d’ambiente rifatti, più avanti, quando ne riparla lui.
 
 1. **Le sue note sulle beta, dalla 5 alla 8.** Prima cosa: chiedergli come gli sono sembrate nel gioco vero,

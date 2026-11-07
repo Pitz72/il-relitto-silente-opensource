@@ -14,6 +14,12 @@
 #
 #   python strumenti/audio/taglia_servizio.py audio/sorgenti/voce/servizio-kira-2026-11-07.wav
 #   python strumenti/audio/taglia_servizio.py <wav> --solo-tagli     senza la seconda trascrizione
+#   python strumenti/audio/taglia_servizio.py <wav> --nuove          la presa di servizio-nuove.txt: soltanto le parti
+#                                                                    che non hanno ancora un file; le altre restano
+#
+# La riga del registro di bordo (il tipo «registro») non è la tuta: è il computer di bordo della Santa Maria, vecchio
+# quanto la nave («ha la mia età e se la prende comoda»). La stessa voce, passata da un altoparlante piccolo di plancia:
+# banda stretta, un filo di saturazione, la plancia intorno. Sobrio, come tutto il resto.
 #
 # Ne escono audio/musica-ia/SV/SV-nn-*.mp3 (44,1 kHz, mono, 112 kbps) con IMPRONTE.sha256, e
 # doppiaggio/servizio/tagli.json: per ogni parte il file, l'inizio e la fine nella presa, la seconda trascrizione e
@@ -40,6 +46,7 @@ TESTA, CODA = 0.06, 0.18   # i secondi di silenzio che restano davanti e dietro 
 FINESTRA = 0.9        # quanto lontano da dove Whisper mette il confine si cerca il silenzio
 SOMIGLIANZA = 0.85    # sotto, la parte va riascoltata
 CASCO = {"protezione", "schermo", "lettura", "etichetta", "matrice"}
+COMPUTER = {"registro"}
 CIFRE = {"35": "trentacinque", "150": "centocinquant", "340": "trecentoquaranta", "100": "cento", "18": "diciotto",
          "4": "quattro", "75": "settantacinque"}
 
@@ -131,6 +138,25 @@ def casco(y):
     return out
 
 
+def computer(y):
+    """Il computer di bordo della Santa Maria: un altoparlante piccolo e vecchio in plancia. Banda 260 Hz – 5 kHz, un
+    picco largo a 1,8 kHz, un filo di saturazione, e la plancia: poche riflessioni brevi, basse."""
+    y = signal.sosfilt(signal.butter(2, 260, "highpass", fs=SR, output="sos"), y)
+    y = signal.sosfilt(signal.butter(3, 5000, "lowpass", fs=SR, output="sos"), y)
+    w0 = 2 * np.pi * 1800 / SR
+    a, al = 10 ** (2.0 / 40), np.sin(w0) / (2 * 0.8)
+    b = np.array([1 + al * a, -2 * np.cos(w0), 1 - al * a])
+    d = np.array([1 + al / a, -2 * np.cos(w0), 1 - al / a])
+    y = signal.lfilter(b / d[0], d / d[0], y)
+    y = y * (0.5 / max(1e-9, np.abs(y).max()))
+    y = np.tanh(1.6 * y) / np.tanh(1.6)
+    out = y.copy()
+    for ms, giu in ((11.0, -22), (19.0, -25), (31.0, -28), (47.0, -32)):
+        k = int(SR * ms / 1000)
+        out[k:] += y[:-k] * 10 ** (giu / 20)
+    return out
+
+
 def pulita(y):
     return signal.sosfilt(signal.butter(2, 70, "highpass", fs=SR, output="sos"), y)
 
@@ -141,6 +167,9 @@ def nome_file(n, voce, gia):
     parole = [p.translate(str.maketrans("àèéìòù", "aeeiou")) for p in parole]
     if parole[:3] == ["matrice", "di", "traduzione"]:
         coda = ["matrice", parole[3]] + (["completata"] if "decodifica" in parole else [])
+    elif parole[:3] == ["registro", "di", "bordo"]:
+        # la riga del registro: la testa è sempre la stessa, conta la fine
+        coda = ["registro"] + parole[-2:]
     else:
         coda = parole[:4]
         if "-".join(coda) in gia:
@@ -152,7 +181,15 @@ def nome_file(n, voce, gia):
 def main():
     presa = sys.argv[1]
     manifest = json.load(open(os.path.join(SERVIZIO, "manifest.json"), encoding="utf-8"))
-    parti = manifest["parti"]
+    tutte = manifest["parti"]
+    # i nomi dei file vengono dall'ordine del manifest: le parti nuove (in fondo) prendono i numeri dopo le altre
+    gia = set()
+    nomi = {q["id"]: nome_file(i + 1, q["voce"], gia) for i, q in enumerate(tutte)}
+    nuove = "--nuove" in sys.argv
+    vecchi = json.load(open(os.path.join(SERVIZIO, "tagli.json"), encoding="utf-8")) if nuove else None
+    parti = [q for q in tutte if not nuove or q["id"] not in vecchi["parti"]]
+    if not parti:
+        raise SystemExit("nessuna parte nuova da tagliare")
     tmp = os.path.join(os.environ.get("TEMP", "/tmp"), "taglia_servizio")
     os.makedirs(tmp, exist_ok=True)
     parole_json = os.path.join(tmp, "parole.json")
@@ -173,10 +210,11 @@ def main():
     bordi = [0.0] + [c for c, _, _ in tagli] + [durata]
 
     os.makedirs(USCITA, exist_ok=True)
-    for vecchio in os.listdir(USCITA):
-        if vecchio.startswith("SV-") and vecchio.endswith(".mp3"):
-            os.remove(os.path.join(USCITA, vecchio))
-    rapporto, impronte, gia = {}, [], set()
+    if not nuove:
+        for vecchio in os.listdir(USCITA):
+            if vecchio.startswith("SV-") and vecchio.endswith(".mp3"):
+                os.remove(os.path.join(USCITA, vecchio))
+    rapporto = dict(vecchi["parti"]) if nuove else {}
     for i, p in enumerate(parti):
         a, b = bordi[i], bordi[i + 1]
         # le parole: dal primo all'ultimo blocco sopra la soglia, dentro i bordi
@@ -187,20 +225,21 @@ def main():
         s = max(a, sopra[0] * 0.01 - TESTA)
         e = min(b, (sopra[-1] + 1) * 0.01 + CODA)
         y = x[int(s * SR):int(e * SR)].copy()
-        y = casco(y) if p["tipo"] in CASCO else pulita(y)
+        y = casco(y) if p["tipo"] in CASCO else computer(y) if p["tipo"] in COMPUTER else pulita(y)
         n_in, n_out = int(0.004 * SR), int(0.03 * SR)
         y[:n_in] *= np.linspace(0, 1, n_in)
         y[-n_out:] *= np.linspace(1, 0, n_out)
         y *= 0.89 / max(1e-9, np.abs(y).max())
-        nome = nome_file(i + 1, p["voce"], gia)
+        nome = nomi[p["id"]]
         f = os.path.join(USCITA, nome + ".mp3")
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-",
                         "-c:a", "libmp3lame", "-b:a", "112k", "-write_xing", "1", f],
                        input=np.clip(y, -1, 1).astype(np.float32).tobytes(), check=True)
-        impronte.append(f"{hashlib.sha256(open(f, 'rb').read()).hexdigest()}  {nome}.mp3")
         rapporto[p["id"]] = {"file": nome, "tipo": p["tipo"], "inizio": round(s, 2), "fine": round(e, 2),
-                             "durata": round(e - s, 2)}
+                             "durata": round(e - s, 2), "presa": os.path.basename(presa)}
         print(f"{nome:48} {s:7.2f}–{e:7.2f}  {e - s:5.2f} s  {p['tipo']}")
+    impronte = [f"{hashlib.sha256(open(os.path.join(USCITA, f), 'rb').read()).hexdigest()}  {f}"
+                for f in sorted(os.listdir(USCITA)) if f.startswith("SV-") and f.endswith(".mp3")]
     with open(os.path.join(USCITA, "IMPRONTE.sha256"), "w", encoding="utf-8", newline="\n") as fh:
         fh.write("\n".join(impronte) + "\n")
 
@@ -224,9 +263,10 @@ def main():
             if sim < SOMIGLIANZA:
                 da_sentire.append(r["file"])
         print(f"\n{len(parti)} parti; da riascoltare: {len(da_sentire)} {da_sentire}")
+    prese = (vecchi.get("prese") or [{"presa": vecchi["presa"], "sha256": vecchi["sha256"]}]) if nuove else []
+    prese.append({"presa": os.path.basename(presa), "sha256": impronta})
     with open(os.path.join(SERVIZIO, "tagli.json"), "w", encoding="utf-8", newline="\n") as fh:
-        json.dump({"presa": os.path.basename(presa), "sha256": impronta, "parti": rapporto}, fh, ensure_ascii=False,
-                  indent=1)
+        json.dump({"prese": prese, "parti": rapporto}, fh, ensure_ascii=False, indent=1)
         fh.write("\n")
 
 

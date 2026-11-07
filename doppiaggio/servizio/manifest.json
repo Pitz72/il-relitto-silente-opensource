@@ -42,7 +42,11 @@
    "ddb9c137bedd",
    "cf123dbc4aa0",
    "c31d9baadc8a",
-   "70036cdbc748"
+   "70036cdbc748",
+   "185a0a3488c1",
+   "624265ea4e8b",
+   "973d9016d675",
+   "781860443d79"
   ]
  },
  "parti": [
@@ -425,6 +429,42 @@
    "tipo": "suggerimento",
    "da": [
     "descrizione di postazione"
+   ]
+  },
+  {
+   "id": "185a0a3488c1",
+   "voce": "Registro di bordo, TSC 1972. Operatore W. T. Eriksonn. Carico: un manufatto, origine non dichiarata. Destinazione: Magazzino Quattro.",
+   "gioco": "Registro di bordo, TSC-1972. Operatore W. T. Eriksonn. Carico: un manufatto, origine non dichiarata. Destinazione: Magazzino Quattro.",
+   "tipo": "registro",
+   "da": [
+    "finale"
+   ]
+  },
+  {
+   "id": "624265ea4e8b",
+   "voce": "Registro di bordo, TSC 1972. Operatore W. T. Eriksonn. Carico: un manufatto. Nient’altro da dichiarare.",
+   "gioco": "Registro di bordo, TSC-1972. Operatore W. T. Eriksonn. Carico: un manufatto. Nient'altro da dichiarare.",
+   "tipo": "registro",
+   "da": [
+    "finale"
+   ]
+  },
+  {
+   "id": "973d9016d675",
+   "voce": "Registro di bordo, TSC 1972. Operatore W. T. Eriksonn. Nessun evento da registrare.",
+   "gioco": "Registro di bordo, TSC-1972. Operatore W. T. Eriksonn. Nessun evento da registrare.",
+   "tipo": "registro",
+   "da": [
+    "finale"
+   ]
+  },
+  {
+   "id": "781860443d79",
+   "voce": "Registro di bordo, TSC 1972. Operatore W. T. Eriksonn. Rotta ripresa. Carico: nessuno.",
+   "gioco": "Registro di bordo, TSC-1972. Operatore W. T. Eriksonn. Rotta ripresa. Carico: nessuno.",
+   "tipo": "registro",
+   "da": [
+    "finale"
    ]
   }
  ]

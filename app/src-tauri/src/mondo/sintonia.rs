@@ -802,6 +802,20 @@ mod prove {
     }
 
     #[test]
+    fn la_riga_del_registro_aspetta_il_tempo_di_leggere_il_finale() {
+        let (mut m, tx) = mondo_in("stiva", "");
+        m.voci_nave.con_biblioteca_servizio(biblioteca(&[(Pezzo::Sv01, 2.0)]));
+        tx.send(turno(&format!(
+            r#"{{"stati": {}, "eventi": [{{"evento": "voci", "battute": ["SV-01-protezione-vitale"], "dopo": 6.0}}]}}"#,
+            stati("stiva", "", "")
+        )))
+        .unwrap();
+        let t = tratti_delle_voci(&mut m, 10.0);
+        assert_eq!(t.len(), 1, "{t:?}");
+        assert!((t[0].0 - 6.0).abs() < 0.1, "entra a {:.2} s: doveva aspettare i sei secondi del ponte", t[0].0);
+    }
+
+    #[test]
     fn un_comando_nuovo_scarta_i_suggerimenti_rimasti_in_fila() {
         let (mut m, tx) = mondo_in("ponte di comando", "");
         m.voci_nave.con_biblioteca_servizio(biblioteca(&[(Pezzo::Sv19, 0.8), (Pezzo::Sv28, 2.4)]));
