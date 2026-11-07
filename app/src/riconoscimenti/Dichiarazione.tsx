@@ -17,7 +17,7 @@ export const TESTO_DICHIARAZIONE =
   "ma è il frutto di una progettazione metodica e accurata del suo autore. " +
   "La musica è stata generata con l’intelligenza artificiale (Lyria 3.5 di Google, Suno ed ElevenLabs), scelta e diretta dall’autore; " +
   "il tema dell’intro è «The Santa Maria Theme» di Alirio Bruni. " +
-  "La voce di L.V. e quella di servizio (la tuta, i suggerimenti) sono state generate con la sintesi vocale di Google, quelle dell’Anziano, di Yusuf (la voce dell’autore, clonata) e delle voci della nave con ElevenLabs; ogni altro suono del gioco è sintetizzato dal suo motore audio.";
+  "La voce di L.V. e quella di servizio (la tuta, i suggerimenti, il computer di bordo) sono state generate con la sintesi vocale di Google, quelle dell’Anziano, di Yusuf (la voce dell’autore, clonata) e delle voci della nave con ElevenLabs; ogni altro suono del gioco è sintetizzato dal suo motore audio.";
 /** L'ultima frase sta a sé, come un saluto (come nel Viaggiatore). */
 export const SALUTO = "Buon divertimento.";
 

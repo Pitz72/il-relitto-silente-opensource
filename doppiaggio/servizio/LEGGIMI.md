@@ -56,6 +56,6 @@ descrizione, e si taglia con
 
     python strumenti/audio/taglia_servizio.py audio/sorgenti/voce/servizio-kira-nuove-<data>.wav --nuove
 
-Le altre parti restano come sono. Il 7 novembre 2026: le quattro righe del registro di bordo che chiudono i finali,
+Le altre parti restano come sono. Quando sono tagliate tutte, `voce_servizio.py` toglie `servizio-nuove.txt`. Il 7 novembre 2026: le quattro righe del registro di bordo che chiudono i finali,
 dette dal computer di bordo (documento 35, §11): lo strumento le passa da un altoparlante piccolo di plancia, non dal
 casco.

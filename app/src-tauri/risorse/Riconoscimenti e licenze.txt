@@ -113,7 +113,7 @@ Ogni altro suono del gioco è sintetizzato nel suo motore audio, senza registraz
   di Simone Pizzi, da ElevenLabs, eleven_v4 (la voce dell’autore, clonata: Instant Voice Clone «Simone Pizzi») · CC BY-NC-SA 4.0 per quanto di spettanza dell’autore; i Termini di ElevenLabs prevalgono
 «Le voci della nave (quindici voci, ventisette battute)» — le echi del Sintonizzatore, le registrazioni dello scanner, l’ultima voce
   di Simone Pizzi, da ElevenLabs, Voice Design eleven_ttv_v3 (quindici voci disegnate: le anteprime scelte sono le prese) · CC BY-NC-SA 4.0 per quanto di spettanza dell’autore; i Termini di ElevenLabs prevalgono
-«La voce di servizio (quarantuno parti)» — la tuta (la protezione vitale, le scritte del visore, le letture dello scanner, la matrice di traduzione) e i suggerimenti
+«La voce di servizio (quarantacinque parti)» — la tuta (la protezione vitale, le scritte del visore, le letture dello scanner, la matrice di traduzione), i suggerimenti e il computer di bordo (la riga del registro che chiude i finali)
   di Simone Pizzi, da Google, sintesi vocale (la voce «Kira», Gemini 3.8 Flash TTS) · CC BY-NC-SA 4.0 per quanto di spettanza dell’autore; i Termini di Google prevalgono
 
 

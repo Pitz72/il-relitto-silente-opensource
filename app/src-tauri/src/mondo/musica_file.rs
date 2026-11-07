@@ -174,6 +174,10 @@ pub enum Pezzo {
     Sv39,
     Sv40,
     Sv41,
+    Sv42,
+    Sv43,
+    Sv44,
+    Sv45,
 }
 
 /// Le battute delle voci della nave e i loro file: il nome senza «.mp3» è quello che manda il
@@ -256,7 +260,7 @@ pub const VOCI_LV: [(Pezzo, &str); 1] = [(Pezzo::Lv02, "LV-02-scatola-serra.mp3"
 
 /// Le parti della voce di servizio e i loro file, nell’ordine del manifest (doppiaggio/servizio/): il nome senza
 /// «.mp3» è quello che manda il ponte (`VOCI_SERVIZIO`).
-pub const VOCI_SV: [(Pezzo, &str); 41] = [
+pub const VOCI_SV: [(Pezzo, &str); 45] = [
     (Pezzo::Sv01, "SV-01-protezione-vitale.mp3"),
     (Pezzo::Sv02, "SV-02-canale-aperto-da-remoto.mp3"),
     (Pezzo::Sv03, "SV-03-chiusura-rifiutata.mp3"),
@@ -298,10 +302,14 @@ pub const VOCI_SV: [(Pezzo, &str); 41] = [
     (Pezzo::Sv39, "SV-39-traducile.mp3"),
     (Pezzo::Sv40, "SV-40-traducili.mp3"),
     (Pezzo::Sv41, "SV-41-usala.mp3"),
+    (Pezzo::Sv42, "SV-42-registro-magazzino-quattro.mp3"),
+    (Pezzo::Sv43, "SV-43-registro-da-dichiarare.mp3"),
+    (Pezzo::Sv44, "SV-44-registro-da-registrare.mp3"),
+    (Pezzo::Sv45, "SV-45-registro-carico-nessuno.mp3"),
 ];
 
 impl Pezzo {
-    pub const TUTTI: [Pezzo; 124] = [
+    pub const TUTTI: [Pezzo; 128] = [
         Pezzo::M1a,
         Pezzo::M1b,
         Pezzo::S2,
@@ -426,6 +434,10 @@ impl Pezzo {
         Pezzo::Sv39,
         Pezzo::Sv40,
         Pezzo::Sv41,
+        Pezzo::Sv42,
+        Pezzo::Sv43,
+        Pezzo::Sv44,
+        Pezzo::Sv45,
     ];
 
     /// Una voce registrata, che si porta al suo livello misurando le parole e non il silenzio fra

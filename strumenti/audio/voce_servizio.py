@@ -222,10 +222,15 @@ def main():
     tagli = os.path.join(USCITA, "tagli.json")
     fatte = set(json.load(open(tagli, encoding="utf-8"))["parti"]) if os.path.exists(tagli) else set()
     nuove = [p for p in parti if p["id"] not in fatte]
+    da_generare = os.path.join(USCITA, "servizio-nuove.txt")
     if nuove and fatte:
-        with open(os.path.join(USCITA, "servizio-nuove.txt"), "w", encoding="utf-8", newline="\n") as f:
+        with open(da_generare, "w", encoding="utf-8", newline="\n") as f:
             f.write("".join(p["voce"] + " <long pause>\n" for p in nuove))
         print(f"doppiaggio/servizio/servizio-nuove.txt: {len(nuove)} parti nuove, da generare")
+    elif os.path.exists(da_generare):
+        # tutte tagliate: il file non ha più niente da chiedere
+        os.remove(da_generare)
+        print("doppiaggio/servizio/servizio-nuove.txt: nessuna parte da generare, tolto")
 
 
 if __name__ == "__main__":

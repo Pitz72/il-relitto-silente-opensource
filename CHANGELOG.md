@@ -8,6 +8,16 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+### Per chi gioca
+
+- **Alla fine, il computer di bordo.** Quando la storia finisce, dopo il tempo di leggerla, il vecchio computer della Santa Maria legge l’ultima riga del registro di bordo, dal piccolo altoparlante della plancia.
+- **La firma sul registro** di William sono le sue iniziali.
+- **La frase delle fasce del pilastro** si legge bene con qualunque numero di fasce accese.
+
+### Aggiunto
+
+- **Il computer di bordo** (documento 35, §11). Le quattro righe del registro di bordo, generate dall’autore con Kira il 7 novembre 2026 (una presa di 0:52), tagliate da `taglia_servizio.py --nuove` (la seconda trascrizione fra 0,98 e 0,99) con la catena del computer di bordo: `SV-42`…`SV-45`, nel motore `Sv42`…`Sv45`, fra le risorse dell’app, in `audio/LICENZE.md` (quarantacinque parti, due prese) e nei riconoscimenti. `rendi_echi` ha la scena del finale «Vivi» con la riga che entra dopo 44 s. `voce_servizio.py` toglie `servizio-nuove.txt` quando non c’è più niente da generare.
+
 ### Cambiato
 
 - **Il copione di William e le sue quattro decisioni** (documento 35, §11). La firma di William sul suo registro di bordo sono le iniziali («Settimana sei. Stiva vuota. Nessun contatto. W. T.», `santamaria.fav`): il suo nome lo dicono soltanto Yusuf e la riga di registro dei finali. La frase delle fasce del pilastro è corretta («…una fascia alla volta: [risveglio] su quattro, per ora.», `memoria.fav`), che con una fascia sola diceva «ne sono accese 1». La riga del registro di bordo che chiude i finali la dirà il computer di bordo con la voce di servizio: quattro parti nuove (`SV-42`…`SV-45`) da generare (`doppiaggio/servizio/servizio-nuove.txt`), il ponte che le manda con un ritardo pari al tempo di leggere il finale (`dopo`, tre parole al secondo, fra 3 e 90 s), il motore che le mette in fila con quel ritardo, `taglia_servizio.py --nuove` con la catena del computer di bordo (un altoparlante piccolo di plancia). Una prova nuova in Rust; il collaudo degli eventi dice le parti da generare senza fallire. Il copione (`doppiaggio/william/`) ha le decisioni al posto dei punti aperti.

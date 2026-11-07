@@ -185,7 +185,11 @@
       "../../audio/musica-ia/SV/SV-38-traducila.mp3": "musica/SV-38-traducila.mp3",
       "../../audio/musica-ia/SV/SV-39-traducile.mp3": "musica/SV-39-traducile.mp3",
       "../../audio/musica-ia/SV/SV-40-traducili.mp3": "musica/SV-40-traducili.mp3",
-      "../../audio/musica-ia/SV/SV-41-usala.mp3": "musica/SV-41-usala.mp3"
+      "../../audio/musica-ia/SV/SV-41-usala.mp3": "musica/SV-41-usala.mp3",
+      "../../audio/musica-ia/SV/SV-42-registro-magazzino-quattro.mp3": "musica/SV-42-registro-magazzino-quattro.mp3",
+      "../../audio/musica-ia/SV/SV-43-registro-da-dichiarare.mp3": "musica/SV-43-registro-da-dichiarare.mp3",
+      "../../audio/musica-ia/SV/SV-44-registro-da-registrare.mp3": "musica/SV-44-registro-da-registrare.mp3",
+      "../../audio/musica-ia/SV/SV-45-registro-carico-nessuno.mp3": "musica/SV-45-registro-carico-nessuno.mp3"
     },
     "linux": {
       "appimage": {

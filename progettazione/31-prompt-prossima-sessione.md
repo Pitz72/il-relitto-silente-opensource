@@ -2,8 +2,9 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 6 novembre 2026, dopo le otto frasi fatte del blocco G (i blocchi dalla A alla G sono
-scritti, con la taratura dell’aria, F1).
+Aggiornato l’ultima volta il 7 novembre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione dopo aver
+mandato le quattro righe del computer di bordo: «Ok per ora ci fermiamo». Prima, il 6 novembre, dopo le otto frasi
+fatte del blocco G (i blocchi dalla A alla G sono scritti, con la taratura dell’aria, F1).
 Prima, il 3 novembre, a notte, l’autore aveva chiuso la sessione dopo la lettura integrale e la valutazione:
 «Dalla prossima sessione fare punto per tutto i tanti piccoli dettagli rilevati con
 una discussione e delle decisioni. Interverremo fortemente su tutto quello che allontana questo gioco da
@@ -53,11 +54,12 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   più verosimile il fatto che ce la possano fare»; e «se così vincono sempre tutti, dove sta la sfida?»):
   `collaudo/verosimili.py`, con la fuga giocata da principianti veri.
 
-## Dove siamo (6 novembre 2026)
+## Dove siamo (7 novembre 2026)
 
-- **La versione** pubblicata è la **0.2.5-beta.8**, una pre-release nel canale di prova
-  (`aggiornamenti-prova`), del 30 ottobre: la voce di L.V. e il tema della Santa Maria nell’intro. Prima: la
-  beta.7 (29 ottobre, notte: le scene definitive dell’intro), la beta.6 (29 ottobre: William racconta in prima
+- **La versione** pubblicata è la **0.2.5-beta.10**, una pre-release nel canale di prova
+  (`aggiornamenti-prova`), del 7 novembre: la voce di servizio. Prima: la beta.9 (7 novembre: la revisione
+  narrativa e tutte le voci registrate), la beta.8 (30 ottobre: la voce di L.V. e il tema della Santa Maria
+  nell’intro), la beta.7 (29 ottobre, notte: le scene definitive dell’intro), la beta.6 (29 ottobre: William racconta in prima
   persona, in tutto il gioco), la beta.5 (27 ottobre, la prima con la finestra delle novità).
 - **La voce, più avanti.** Il 29 ottobre l’autore ha chiesto quanto lavoro sarebbe per **Leonardo Tomassetti**
   (il William del *Mistero della Santa Maria*) leggere il gioco. Divisione come nel Viaggiatore: Leonardo il
@@ -191,10 +193,14 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
    `strumenti/audio/copione_william.py` e `copione_pdf.py`; in fondo quattro punti aperti da decidere con l’autore
    (la lettura di TSC-1972, la firma sul registro, chi dice la riga del registro nei finali, la frase delle fasce
    del pilastro con una fascia sola). **Decisi** lo stesso giorno: «millenovecentosettantadue»; la firma «W. T.»;
-   la riga del registro la dice la voce di servizio come computer di bordo (quattro parti nuove, testi in
-   `doppiaggio/servizio/servizio-nuove.txt`: **le genera l’autore** con Kira, poi io le taglio con
-   `taglia_servizio.py --nuove`; il motore è già pronto, documento 35, §11); la frase delle fasce corretta. Effetti e
-   suoni d’ambiente rifatti, più avanti, quando ne riparla lui.
+   la riga del registro la dice la voce di servizio come computer di bordo (quattro parti nuove, `SV-42`…`SV-45`:
+   generate dall’autore con Kira, tagliate e **nel gioco** il 7 novembre, documento 35, §11; la riga entra dopo il
+   tempo di leggere il finale, 44 s in «Vivi»); la frase delle fasce corretta. **Non ancora in una beta** e non
+   ancora ascoltate da lui: l’ascolto è pronto in `consegne/Ascolto computer di bordo 2026-11-07/`. **La sessione
+   si è chiusa qui** (7 novembre, pomeriggio: «Ok per ora ci fermiamo»). **Alla prossima:** chiedergli le note
+   sulla beta.10; fargli sentire il computer di bordo (la consegna, già pronta); poi una beta con queste
+   correzioni (la firma «W. T.», le fasce, il computer di bordo). Effetti e suoni d’ambiente rifatti, più avanti,
+   quando ne riparla lui.
 
 1. **Le sue note sulle beta, dalla 5 alla 8.** Prima cosa: chiedergli come gli sono sembrate nel gioco vero,
    con il suono, la prima persona e l’intro con la voce di L.V., e correggere quello che dice.

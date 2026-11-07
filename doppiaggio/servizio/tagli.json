@@ -1,6 +1,14 @@
 {
- "presa": "servizio-kira-2026-11-07.wav",
- "sha256": "ee848d27695c6ec863963d9633c0faa119d5096e4cb7d80717cf33bab9163c6f",
+ "prese": [
+  {
+   "presa": "servizio-kira-2026-11-07.wav",
+   "sha256": "ee848d27695c6ec863963d9633c0faa119d5096e4cb7d80717cf33bab9163c6f"
+  },
+  {
+   "presa": "servizio-kira-nuove-2026-11-07.wav",
+   "sha256": "d59dfc1deb338b26c8813e743016e001034386e5b2d14496de5e7e5543940e0c"
+  }
+ ],
  "parti": {
   "d36d0f144e18": {
    "file": "SV-01-protezione-vitale",
@@ -370,6 +378,46 @@
    "durata": 0.65,
    "whisper": "Usala.",
    "somiglianza": 1.0
+  },
+  "185a0a3488c1": {
+   "file": "SV-42-registro-magazzino-quattro",
+   "tipo": "registro",
+   "inizio": 0.25,
+   "fine": 15.87,
+   "durata": 15.62,
+   "presa": "servizio-kira-nuove-2026-11-07.wav",
+   "whisper": "Registro di bordo, TSC 1972. Operatore W. T. Erickson. Carico, un manufatto. Origine non dichiarata. Destinazione, magazzino 4.",
+   "somiglianza": 0.99
+  },
+  "624265ea4e8b": {
+   "file": "SV-43-registro-da-dichiarare",
+   "tipo": "registro",
+   "inizio": 16.51,
+   "fine": 29.55,
+   "durata": 13.04,
+   "presa": "servizio-kira-nuove-2026-11-07.wav",
+   "whisper": "registro di bordo tsc 1972 operatore wt erickson carico un manufatto nient'altro da dichiarare",
+   "somiglianza": 0.99
+  },
+  "973d9016d675": {
+   "file": "SV-44-registro-da-registrare",
+   "tipo": "registro",
+   "inizio": 30.77,
+   "fine": 39.83,
+   "durata": 9.06,
+   "presa": "servizio-kira-nuove-2026-11-07.wav",
+   "whisper": "Registro di bordo TSC 1972. Operatore W.T. Erickson. Nessun evento da registrare.",
+   "somiglianza": 0.98
+  },
+  "781860443d79": {
+   "file": "SV-45-registro-carico-nessuno",
+   "tipo": "registro",
+   "inizio": 40.37,
+   "fine": 51.49,
+   "durata": 11.12,
+   "presa": "servizio-kira-nuove-2026-11-07.wav",
+   "whisper": "Registro di bordo TSC 1972. Operatore W.T. Erickson. Rotta ripresa. Carico nessuno.",
+   "somiglianza": 0.98
   }
  }
 }

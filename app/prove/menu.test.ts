@@ -82,7 +82,7 @@ test("l'elenco dei riconoscimenti ha un testo per ogni licenza che usa", () => {
     "La voce dell’Anziano (ventisei battute)",
     "La voce di Yusuf (otto battute)",
     "Le voci della nave (quindici voci, ventisette battute)",
-    "La voce di servizio (quarantuno parti)",
+    "La voce di servizio (quarantacinque parti)",
   ]);
   assert.ok(e.immagini.length);
   // i quattro del gioco, e Sora e Inter dei loghi d'apertura

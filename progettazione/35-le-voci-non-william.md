@@ -370,6 +370,17 @@ mai. L’autore: «Lo legge la voce di servizio, la voce del computer, qualcosa 
   «Vivi», circa 44 secondi;
 - finché il file non c’è, il ponte la manda e il motore la salta; il collaudo degli eventi la dice «da generare».
 
+**Il file, e nel gioco (7 novembre 2026, pomeriggio).** L’autore ha generato le quattro righe con Kira e la stessa
+descrizione, in una presa di 0:52 (`audio/sorgenti/voce/servizio-kira-nuove-2026-11-07.wav`).
+`taglia_servizio.py --nuove` le ha tagliate (Whisper: 56 parole su 60 allineate, la seconda trascrizione fra 0,98 e
+0,99, nessuna da riascoltare): `SV-42-registro-magazzino-quattro` (15,6 s, «Vivi» e «Prima nota»),
+`SV-43-registro-da-dichiarare` (13,0 s), `SV-44-registro-da-registrare` (9,1 s), `SV-45-registro-carico-nessuno`
+(11,1 s). Kira le legge lente, con pause da computer fra le voci del modulo; i respiri ai due capi restano. Nel
+motore sono `Sv42`…`Sv45`; `rendi_echi` ha la scena «Il computer di bordo»: il finale «Vivi», il suo silenzio, la
+sua musica, e la riga che entra dopo 44 s, esatta, circa 7 dB sopra la musica del finale (che non si abbassa).
+L’ascolto è in `consegne/Ascolto computer di bordo 2026-11-07/`, non ancora sentito dall’autore. Quando non c’è
+più niente da generare, `voce_servizio.py` toglie `servizio-nuove.txt`.
+
 Con la stessa decisione l’autore ha fissato le altre tre domande del copione: TSC-1972 si legge
 «millenovecentosettantadue»; la firma di William sul suo registro sono le iniziali («… Nessun contatto. W. T.»,
 `santamaria.fav`); la frase delle fasce del pilastro è corretta («…una fascia alla volta: [risveglio] su quattro,

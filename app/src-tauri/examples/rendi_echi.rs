@@ -130,6 +130,7 @@ fn scene() -> Vec<Scena> {
             battute: r#""SV-01-protezione-vitale""#,
             durata: 6.0,
         },
+        s("Il computer di bordo: la riga del registro alla fine di «Vivi»", "stiva", "", "", r#""SV-42-registro-magazzino-quattro""#, 64.0),
     ]
 }
 
@@ -192,11 +193,20 @@ fn main() -> Result<(), String> {
             tx.send(Comando::Solo(Some("senza filo".to_string()))).map_err(|e| e.to_string())?;
         }
         note.push_str(&format!("{}  {}  ({})\n", orario(t), s.titolo, s.stanza));
-        tx.send(turno(&stati(&s, ""), r#"{"evento": "inizio"}"#)).map_err(|e| e.to_string())?;
+        // il computer di bordo: il finale vero, con il suo silenzio e la sua musica, e la riga del registro dopo il
+        // tempo di leggerlo (il «dopo» del ponte, circa 44 s in «Vivi»)
+        let finale = s.titolo.starts_with("Il computer di bordo");
+        let (prima, poi) = if finale {
+            let st = |esito: &str| format!(r#"{{"stanza": "{}", "atto": 5, "tuta": true, "esito": "{esito}"}}"#, s.stanza);
+            (st("in_corso"), turno(&st("vinta"), &format!(r#"{{"evento": "finale", "finale": "vivi"}}{}"#, if senza_file { String::new() } else { format!(r#", {{"evento": "voci", "battute": [{}], "dopo": 44.0}}"#, s.battute) })))
+        } else {
+            (stati(&s, ""), turno(&stati(&s, ""), &eventi(s.eventi, s.battute, senza_file)))
+        };
+        tx.send(turno(&prima, r#"{"evento": "inizio"}"#)).map_err(|e| e.to_string())?;
         suona(&mut mondo, 5.0, &mut pcm);
         t += 5.0;
-        tx.send(turno(&stati(&s, ""), &eventi(s.eventi, s.battute, senza_file))).map_err(|e| e.to_string())?;
-        note.push_str(&format!("  {}  l’evento\n", orario(t)));
+        tx.send(poi).map_err(|e| e.to_string())?;
+        note.push_str(&format!("  {}  l’evento{}\n", orario(t), if finale { " (il finale «Vivi»; la riga del registro fra 44 s)" } else { "" }));
         if s.titolo.starts_with("Il Piccolo") {
             // l’anello gira; poi si parla con lui; poi si resta in silenzio; poi «Lascia stare»
             suona(&mut mondo, 10.0, &mut pcm);
