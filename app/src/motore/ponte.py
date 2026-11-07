@@ -697,38 +697,134 @@ VOCI_LV = {
 }
 
 
+# La voce di servizio (documento 35, §11; doppiaggio/servizio/): la tuta e il gioco che parlano a chi gioca, «Kira»
+# di Google. Per ogni parte (audio/musica-ia/SV, il nome del file senza «.mp3») il tipo e il testo com'è nel gioco,
+# dal manifest (strumenti/audio/voce_servizio.py, strumenti/audio/taglia_servizio.py; il collaudo controlla che
+# questa tabella e il manifest dicano le stesse cose). Il suono la fa sentire quando a schermo c'è proprio quel
+# testo: i suggerimenti con la loro parentesi intera, la matrice dall'inizio della parentesi, il resto com'è.
+# PROTEZIONE VITALE detta da William dopo un articolo («con la PROTEZIONE VITALE la tuta…») resta sua.
+VOCI_SERVIZIO = {
+    'SV-01-protezione-vitale': ('protezione', 'PROTEZIONE VITALE'),
+    'SV-02-canale-aperto-da-remoto': ('schermo', 'CANALE APERTO DA REMOTO'),
+    'SV-03-chiusura-rifiutata': ('schermo', 'CHIUSURA RIFIUTATA'),
+    'SV-04-materiale-non-in-archivio': ('schermo', 'MATERIALE NON IN ARCHIVIO'),
+    'SV-05-sotto-protezione-vitale': ('schermo', 'SOTTO 30, PROTEZIONE VITALE'),
+    'SV-06-analisi-biometrica-specie-homo': ('lettura', "ANALISI BIOMETRICA — specie: Homo sapiens. Età al decesso: trentacinque anni circa. Cause: anossia, ipotermia. Decesso stimato: centocinquant'anni fa, con lo stesso margine d'errore della giuntura."),
+    'SV-07-analisi-dell-archivio-centrale': ('lettura', "ANALISI DELL'ARCHIVIO CENTRALE — integrità dei dati stimata: 0,001%. Corruzione a cascata per degradazione entropica, perdita irreversibile."),
+    'SV-08-analisi-manifattura-origine-terrestre': ('lettura', "ANALISI MANIFATTURA — origine terrestre, centocinquant'anni circa, modello fuori produzione. IDENTIFICAZIONE MISSIONE — logo: AURORA-7. Esplorazione in solitaria, non documentata negli archivi pubblici."),
+    'SV-09-flora-di-xylos-deceduto': ('lettura', '‹FLORA DI XYLOS› — deceduto. ‹FORMA SILICEA: COSTRUTTORE› — deceduto.'),
+    'SV-10-lettura-fauna-dei-tre': ('lettura', 'LETTURA: ‹FAUNA DEI TRE SOLI: GRANDE PASCOLATORE› — deceduto. Integrità genomica 0,02%.'),
+    'SV-11-lunghezza-trecentoquaranta-metri-massa': ('lettura', 'Lunghezza: trecentoquaranta metri. Massa: stima incerta, il doppio della Santa Maria. Composizione:'),
+    'SV-12-matrice-cento-completata': ('matrice', 'MATRICE DI TRADUZIONE: 100% — DECODIFICA COMPLETATA'),
+    'SV-13-matrice-cento': ('matrice', 'Matrice di traduzione: 100%'),
+    'SV-14-matrice-diciotto': ('matrice', 'Matrice di traduzione: 18%'),
+    'SV-15-matrice-quattro': ('matrice', 'Matrice di traduzione: 4%'),
+    'SV-16-matrice-settantacinque': ('matrice', 'Matrice di traduzione: 75%'),
+    'SV-17-adesso-puoi-accostare': ('suggerimento', 'Adesso puoi ACCOSTARE.'),
+    'SV-18-analizza-lo-scafo-nero': ('suggerimento', 'ANALIZZA lo scafo nero.'),
+    'SV-19-analizzala': ('suggerimento', 'ANALIZZALA.'),
+    'SV-20-analizzale': ('suggerimento', 'ANALIZZALE.'),
+    'SV-21-analizzali': ('suggerimento', 'ANALIZZALI.'),
+    'SV-22-analizzalo': ('suggerimento', 'ANALIZZALO.'),
+    'SV-23-firma-la-placca-oppure': ('suggerimento', 'FIRMA LA PLACCA, oppure COMPLETA LA PAROLA.'),
+    'SV-24-firma-la-placca': ('suggerimento', 'FIRMA LA PLACCA.'),
+    'SV-25-parla-con-l-anziano': ('suggerimento', "PARLA CON L'ANZIANO."),
+    'SV-26-per-ascoltarla-ascolta-la': ('suggerimento', 'Per ascoltarla: ASCOLTA LA SCATOLA NERA.'),
+    'SV-27-per-ascoltarla-ascolta-la-tuta': ('suggerimento', 'Per ascoltarla: ASCOLTA LA SCATOLA NERA. La corrente gliela darebbe la tua tuta.'),
+    'SV-28-per-chiamare-yusuf-parla': ('suggerimento', 'Per chiamare Yusuf: PARLA CON YUSUF.'),
+    'SV-29-per-liberarlo-dalla-nicchia': ('suggerimento', 'Per liberarlo dalla nicchia: STACCA IL RISUONATORE.'),
+    'SV-30-per-portarti-vicino-alla': ('suggerimento', 'Per portarti vicino alla massa: ACCOSTA.'),
+    'SV-31-per-studiarla-meglio-analizzala': ('suggerimento', 'Per studiarla meglio: ANALIZZALA.'),
+    'SV-32-per-svegliarla-usa-la': ('suggerimento', 'Per svegliarla: USA LA POSTAZIONE.'),
+    'SV-33-prima-accosta': ('suggerimento', 'Prima ACCOSTA.'),
+    'SV-34-ricarica-la-tuta-se': ('suggerimento', 'RICARICA LA TUTA, se ti serve aria: una volta sola.'),
+    'SV-35-sintonizza-le-cose-delle': ('suggerimento', 'SINTONIZZA le cose delle stanze silenziose. Ascoltare costa aria.'),
+    'SV-36-staccalo': ('suggerimento', 'STACCALO.'),
+    'SV-37-suona-il-sonaglio-se': ('suggerimento', 'SUONA IL SONAGLIO, se vuoi ascoltarlo.'),
+    'SV-38-traducila': ('suggerimento', 'TRADUCILA.'),
+    'SV-39-traducile': ('suggerimento', 'TRADUCILE.'),
+    'SV-40-traducili': ('suggerimento', 'TRADUCILI.'),
+    'SV-41-usala': ('suggerimento', 'USALA.'),
+}
+
+
 def _frammenti(testo):
     """I frammenti fra «» di un testo, ognuno come la fila delle sue parole (minuscole, senza
     punteggiatura e senza le parentesi del traduttore)."""
+    return [parole for _, parole in _frammenti_dove(testo)]
+
+
+def _frammenti_dove(testo):
+    """Come `_frammenti`, con il punto del testo in cui ogni frammento comincia."""
     testo = testo.replace("’", "'")
     out = []
-    for f in re.findall(r"«([^»]*)»", testo):
-        parole = tuple(re.findall(r"\w+", re.sub(r"\([^)]*\)", " ", f).lower()))
+    for m in re.finditer(r"«([^»]*)»", testo):
+        parole = tuple(re.findall(r"\w+", re.sub(r"\([^)]*\)", " ", m.group(1)).lower()))
         if parole:
-            out.append(parole)
+            out.append((m.start(), parole))
     return out
+
+
+def _cerca_servizio():
+    out = []
+    for nome, (tipo, testo) in VOCI_SERVIZIO.items():
+        testo = testo.replace("’", "'")
+        if tipo == "suggerimento":
+            testo = "(" + testo + ")"
+        elif tipo == "matrice":
+            testo = "(" + testo
+        out.append((nome, tipo, testo))
+    return out
+
+
+_SERVIZIO_CERCA = _cerca_servizio()
+_ARTICOLO = re.compile(r"\b(?:la|della|alla|nella|dalla|sulla)\s+$", re.I)
+
+
+def _servizio(testo):
+    """Le parti della voce di servizio che un testo ha a schermo: (punto del testo, nome), in ordine; dove due si
+    sovrappongono vale la più lunga («SOTTO 30, PROTEZIONE VITALE» contiene «PROTEZIONE VITALE»)."""
+    testo = testo.replace("’", "'")
+    trovate = []
+    for nome, tipo, cerca in _SERVIZIO_CERCA:
+        i = testo.find(cerca)
+        while i >= 0:
+            if not (tipo == "protezione" and _ARTICOLO.search(testo[max(0, i - 12):i])):
+                trovate.append((i, i + len(cerca), nome))
+            i = testo.find(cerca, i + 1)
+    out = []
+    for a, b, nome in sorted(trovate, key=lambda x: -(x[1] - x[0])):
+        if all(b <= a2 or a >= b2 for a2, b2, _ in out):
+            out.append((a, b, nome))
+    return [(a, nome) for a, _, nome in sorted(out)]
 
 
 _VOCI_NAVE_FRAMMENTI = sorted(((nome, tuple(_frammenti("".join(f"«{x}»" for x in frammenti))))
                                for nome, frammenti in {**VOCI_NAVE, **VOCI_YUSUF, **VOCI_LV}.items()), key=lambda v: -len(v[1]))
 
 
-def _voci_nave(eventi):
-    """Le battute delle voci della nave che questo turno ha a schermo, nell'ordine in cui ci stanno."""
+def _voci_nave(eventi, servizio=True):
+    """Le battute delle voci della nave, di Yusuf, di L.V. e le parti della voce di servizio che questo turno ha
+    a schermo, nell'ordine in cui ci stanno."""
     out = []
     for e in eventi:
         if e.get("tipo") == "errore" or not isinstance(e.get("testo"), str):
             continue
-        fr = _frammenti(e["testo"])
+        dove = _frammenti_dove(e["testo"])
+        fr = [parole for _, parole in dove]
+        trovate = []
         i = 0
         while i < len(fr):
             for nome, att in _VOCI_NAVE_FRAMMENTI:
                 if tuple(fr[i:i + len(att)]) == att:
-                    out.append(nome)
+                    trovate.append((dove[i][0], nome))
                     i += len(att)
                     break
             else:
                 i += 1
+        if servizio:
+            trovate += _servizio(e["testo"])
+        out += [nome for _, nome in sorted(trovate, key=lambda x: x[0])]
     return out
 
 
@@ -920,8 +1016,10 @@ def rel_voci_nave():
     for t in testi:
         if isinstance(t, str):
             for pezzo in re.split(r"\[se [^\]]*\]|\[altrimenti\]|\[fine\]", t):
-                trovate.update(_voci_nave([{"tipo": "testo", "testo": pezzo}]))
-    return _json({nome: nome in trovate for nome in {**VOCI_NAVE, **VOCI_YUSUF, **VOCI_LV}})
+                # la matrice di traduzione ha il suo numero: 4, 18, 75 o 100 (traduci.fav)
+                for valore in ("4", "18", "75", "100") if "[traduzione]" in pezzo else ("",):
+                    trovate.update(_voci_nave([{"tipo": "testo", "testo": pezzo.replace("[traduzione]", valore)}]))
+    return _json({nome: nome in trovate for nome in {**VOCI_NAVE, **VOCI_YUSUF, **VOCI_LV, **VOCI_SERVIZIO}})
 
 
 # ----------------------------------------------------------------------------

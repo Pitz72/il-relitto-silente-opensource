@@ -8,6 +8,14 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+### Per chi gioca
+
+- **La tuta ha una voce.** Quando scatta la protezione vitale, quando sul visore si accende un avviso, quando lo scanner legge o la matrice di traduzione cresce, lo dice una voce di donna, calma e un po’ fredda, da dentro il casco. La stessa voce legge i suggerimenti fra parentesi. Non parla mai sopra le voci della nave; e se vai avanti, i suggerimenti rimasti indietro non li dice più.
+
+### Aggiunto
+
+- **La voce di servizio** (documento 35, §11). «Kira» di Google AI Studio (Gemini 3.8 Flash TTS), generata dall’autore il 7 novembre 2026 sui testi di `doppiaggio/servizio/`, in una presa sola di 2:39. `strumenti/audio/taglia_servizio.py` la divide nelle 41 parti: le parole di Whisper allineate al manifest, i tagli nei silenzi, la tuta appena dentro il casco e i suggerimenti puliti, una seconda trascrizione di ogni file (41 su 41); ne escono `audio/musica-ia/SV/` e `doppiaggio/servizio/tagli.json`. Il ponte trova le parti a schermo (`VOCI_SERVIZIO`) e le manda con l’evento `voci`, nell’ordine dello schermo insieme alle voci della nave. Il motore le mette nella stessa fila (`VociNave`, la pausa di 1,4 s), ma con un lettore suo, asciutto, sul cursore del parlato, fuori dalla cuffia che la protezione vitale chiude (`LIV_SERVIZIO`, le parole a circa −24 dBFS). Un comando nuovo scarta le parti rimaste in fila; la fila e quella di Yusuf si aspettano. Sei prove nuove in Rust; il collaudo degli eventi controlla il manifest, i file e la tabella del ponte; `rendi_echi` ha cinque scene della voce di servizio. Nei riconoscimenti e nella dichiarazione d’apertura c’è la voce di servizio.
+
 ## [0.2.5-beta.9] - 2026-11-07
 
 ### Per chi gioca

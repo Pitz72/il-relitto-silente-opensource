@@ -770,6 +770,55 @@ mod prove {
         assert!((t[0].0 - 1.2).abs() < 0.1, "la lastra entra dopo il lavoro dello scanner: {t:?}");
     }
 
+    // ---- la voce di servizio (documento 35, §11)
+
+    #[test]
+    fn la_matrice_di_traduzione_parla_dopo_la_registrazione() {
+        let (mut m, tx) = mondo_in("ponte di comando", "");
+        m.voci_nave.con_biblioteca(biblioteca(&[(Pezzo::Nv14, 9.1)]));
+        m.voci_nave.con_biblioteca_servizio(biblioteca(&[(Pezzo::Sv15, 2.9)]));
+        tx.send(turno(&format!(
+            r#"{{"stati": {}, "eventi": [{{"evento": "attrezzo", "attrezzo": "multiscanner", "cosa": "lastra dati"}}, {{"evento": "voci", "battute": ["NV-14-lastra", "SV-15-matrice-quattro"]}}]}}"#,
+            stati("ponte di comando", "", "")
+        )))
+        .unwrap();
+        let t = tratti_delle_voci(&mut m, 18.0);
+        assert_eq!(t.len(), 2, "la lastra e poi la matrice: {t:?}");
+        assert!((t[0].0 - 1.2).abs() < 0.1, "{t:?}");
+        assert!((t[1].0 - t[0].1 - PAUSA_FRA_VOCI).abs() < 0.06, "la matrice aspetta la fine della lastra e la pausa: {t:?}");
+    }
+
+    #[test]
+    fn senza_i_file_della_voce_di_servizio_le_voci_della_nave_parlano_lo_stesso() {
+        let (mut m, tx) = mondo_in("ponte di comando", "");
+        m.voci_nave.con_biblioteca(biblioteca(&[(Pezzo::Nv14, 9.1)]));
+        tx.send(turno(&format!(
+            r#"{{"stati": {}, "eventi": [{{"evento": "attrezzo", "attrezzo": "multiscanner", "cosa": "lastra dati"}}, {{"evento": "voci", "battute": ["NV-14-lastra", "SV-15-matrice-quattro"]}}]}}"#,
+            stati("ponte di comando", "", "")
+        )))
+        .unwrap();
+        let t = tratti_delle_voci(&mut m, 14.0);
+        assert_eq!(t.len(), 1, "la lastra sì, la matrice senza file no: {t:?}");
+    }
+
+    #[test]
+    fn un_comando_nuovo_scarta_i_suggerimenti_rimasti_in_fila() {
+        let (mut m, tx) = mondo_in("ponte di comando", "");
+        m.voci_nave.con_biblioteca_servizio(biblioteca(&[(Pezzo::Sv19, 0.8), (Pezzo::Sv28, 2.4)]));
+        tx.send(turno(&format!(
+            r#"{{"stati": {}, "eventi": [{{"evento": "voci", "battute": ["SV-19-analizzala", "SV-28-per-chiamare-yusuf-parla"]}}]}}"#,
+            stati("ponte di comando", "", "")
+        )))
+        .unwrap();
+        suona(&mut m, 1.5);
+        assert!(m.voci_nave.parla(), "«Analizzala.» non parla");
+        assert!(!m.fiato.ascolto, "la voce di servizio non fa trattenere il fiato");
+        // chi gioca è già andato avanti
+        tx.send(turno(&format!(r#"{{"stati": {}, "eventi": []}}"#, stati("ponte di comando", "", "")))).unwrap();
+        let t = tratti_delle_voci(&mut m, 6.0);
+        assert!(t.len() == 1 && t[0].1 < 1.0, "parla solo la fine di «Analizzala.»: {t:?}");
+    }
+
     #[test]
     fn il_filo_di_un_eco_e_in_programma_con_il_suo_profilo() {
         let (mut m, tx) = mondo_in("corridoio principale", "");

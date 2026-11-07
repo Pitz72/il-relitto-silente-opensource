@@ -131,6 +131,49 @@ pub enum Pezzo {
     Nv14b,
     Nv14c,
     Nv15,
+    /// la voce di servizio (documento 35, §11): la tuta e il gioco che parlano a chi gioca, «Kira» di Google;
+    /// una parte per file (`strumenti/audio/taglia_servizio.py`), in fila con le voci della nave, asciutta
+    Sv01,
+    Sv02,
+    Sv03,
+    Sv04,
+    Sv05,
+    Sv06,
+    Sv07,
+    Sv08,
+    Sv09,
+    Sv10,
+    Sv11,
+    Sv12,
+    Sv13,
+    Sv14,
+    Sv15,
+    Sv16,
+    Sv17,
+    Sv18,
+    Sv19,
+    Sv20,
+    Sv21,
+    Sv22,
+    Sv23,
+    Sv24,
+    Sv25,
+    Sv26,
+    Sv27,
+    Sv28,
+    Sv29,
+    Sv30,
+    Sv31,
+    Sv32,
+    Sv33,
+    Sv34,
+    Sv35,
+    Sv36,
+    Sv37,
+    Sv38,
+    Sv39,
+    Sv40,
+    Sv41,
 }
 
 /// Le battute delle voci della nave e i loro file: il nome senza «.mp3» è quello che manda il
@@ -211,8 +254,54 @@ pub const VOCI_YU: [(Pezzo, &str); 8] = [
 /// La scatola nera di L.V. nella serra: il nome senza «.mp3» è quello che manda il ponte (`VOCI_LV`).
 pub const VOCI_LV: [(Pezzo, &str); 1] = [(Pezzo::Lv02, "LV-02-scatola-serra.mp3")];
 
+/// Le parti della voce di servizio e i loro file, nell’ordine del manifest (doppiaggio/servizio/): il nome senza
+/// «.mp3» è quello che manda il ponte (`VOCI_SERVIZIO`).
+pub const VOCI_SV: [(Pezzo, &str); 41] = [
+    (Pezzo::Sv01, "SV-01-protezione-vitale.mp3"),
+    (Pezzo::Sv02, "SV-02-canale-aperto-da-remoto.mp3"),
+    (Pezzo::Sv03, "SV-03-chiusura-rifiutata.mp3"),
+    (Pezzo::Sv04, "SV-04-materiale-non-in-archivio.mp3"),
+    (Pezzo::Sv05, "SV-05-sotto-protezione-vitale.mp3"),
+    (Pezzo::Sv06, "SV-06-analisi-biometrica-specie-homo.mp3"),
+    (Pezzo::Sv07, "SV-07-analisi-dell-archivio-centrale.mp3"),
+    (Pezzo::Sv08, "SV-08-analisi-manifattura-origine-terrestre.mp3"),
+    (Pezzo::Sv09, "SV-09-flora-di-xylos-deceduto.mp3"),
+    (Pezzo::Sv10, "SV-10-lettura-fauna-dei-tre.mp3"),
+    (Pezzo::Sv11, "SV-11-lunghezza-trecentoquaranta-metri-massa.mp3"),
+    (Pezzo::Sv12, "SV-12-matrice-cento-completata.mp3"),
+    (Pezzo::Sv13, "SV-13-matrice-cento.mp3"),
+    (Pezzo::Sv14, "SV-14-matrice-diciotto.mp3"),
+    (Pezzo::Sv15, "SV-15-matrice-quattro.mp3"),
+    (Pezzo::Sv16, "SV-16-matrice-settantacinque.mp3"),
+    (Pezzo::Sv17, "SV-17-adesso-puoi-accostare.mp3"),
+    (Pezzo::Sv18, "SV-18-analizza-lo-scafo-nero.mp3"),
+    (Pezzo::Sv19, "SV-19-analizzala.mp3"),
+    (Pezzo::Sv20, "SV-20-analizzale.mp3"),
+    (Pezzo::Sv21, "SV-21-analizzali.mp3"),
+    (Pezzo::Sv22, "SV-22-analizzalo.mp3"),
+    (Pezzo::Sv23, "SV-23-firma-la-placca-oppure.mp3"),
+    (Pezzo::Sv24, "SV-24-firma-la-placca.mp3"),
+    (Pezzo::Sv25, "SV-25-parla-con-l-anziano.mp3"),
+    (Pezzo::Sv26, "SV-26-per-ascoltarla-ascolta-la.mp3"),
+    (Pezzo::Sv27, "SV-27-per-ascoltarla-ascolta-la-tuta.mp3"),
+    (Pezzo::Sv28, "SV-28-per-chiamare-yusuf-parla.mp3"),
+    (Pezzo::Sv29, "SV-29-per-liberarlo-dalla-nicchia.mp3"),
+    (Pezzo::Sv30, "SV-30-per-portarti-vicino-alla.mp3"),
+    (Pezzo::Sv31, "SV-31-per-studiarla-meglio-analizzala.mp3"),
+    (Pezzo::Sv32, "SV-32-per-svegliarla-usa-la.mp3"),
+    (Pezzo::Sv33, "SV-33-prima-accosta.mp3"),
+    (Pezzo::Sv34, "SV-34-ricarica-la-tuta-se.mp3"),
+    (Pezzo::Sv35, "SV-35-sintonizza-le-cose-delle.mp3"),
+    (Pezzo::Sv36, "SV-36-staccalo.mp3"),
+    (Pezzo::Sv37, "SV-37-suona-il-sonaglio-se.mp3"),
+    (Pezzo::Sv38, "SV-38-traducila.mp3"),
+    (Pezzo::Sv39, "SV-39-traducile.mp3"),
+    (Pezzo::Sv40, "SV-40-traducili.mp3"),
+    (Pezzo::Sv41, "SV-41-usala.mp3"),
+];
+
 impl Pezzo {
-    pub const TUTTI: [Pezzo; 83] = [
+    pub const TUTTI: [Pezzo; 124] = [
         Pezzo::M1a,
         Pezzo::M1b,
         Pezzo::S2,
@@ -296,14 +385,60 @@ impl Pezzo {
         Pezzo::Yu07,
         Pezzo::Yu08,
         Pezzo::Lv02,
+        Pezzo::Sv01,
+        Pezzo::Sv02,
+        Pezzo::Sv03,
+        Pezzo::Sv04,
+        Pezzo::Sv05,
+        Pezzo::Sv06,
+        Pezzo::Sv07,
+        Pezzo::Sv08,
+        Pezzo::Sv09,
+        Pezzo::Sv10,
+        Pezzo::Sv11,
+        Pezzo::Sv12,
+        Pezzo::Sv13,
+        Pezzo::Sv14,
+        Pezzo::Sv15,
+        Pezzo::Sv16,
+        Pezzo::Sv17,
+        Pezzo::Sv18,
+        Pezzo::Sv19,
+        Pezzo::Sv20,
+        Pezzo::Sv21,
+        Pezzo::Sv22,
+        Pezzo::Sv23,
+        Pezzo::Sv24,
+        Pezzo::Sv25,
+        Pezzo::Sv26,
+        Pezzo::Sv27,
+        Pezzo::Sv28,
+        Pezzo::Sv29,
+        Pezzo::Sv30,
+        Pezzo::Sv31,
+        Pezzo::Sv32,
+        Pezzo::Sv33,
+        Pezzo::Sv34,
+        Pezzo::Sv35,
+        Pezzo::Sv36,
+        Pezzo::Sv37,
+        Pezzo::Sv38,
+        Pezzo::Sv39,
+        Pezzo::Sv40,
+        Pezzo::Sv41,
     ];
 
     /// Una voce registrata, che si porta al suo livello misurando le parole e non il silenzio fra
-    /// l’una e l’altra (documento 35, §8): le voci della nave e Yusuf. L’Anziano no: il suo livello
+    /// l’una e l’altra (documento 35, §8): le voci della nave, Yusuf, la voce di servizio. L’Anziano no: il suo livello
     /// è tarato dal 2 novembre sul valore efficace di tutto il file. Nemmeno la scatola nera di L.V.:
     /// il fruscio continuo del nastro inganna la misura sulle parole.
     pub fn parlato(self) -> bool {
-        self.yusuf() || BATTUTE_NV.iter().any(|(p, _)| *p == self)
+        self.yusuf() || self.servizio() || BATTUTE_NV.iter().any(|(p, _)| *p == self)
+    }
+
+    /// Una parte della voce di servizio.
+    pub fn servizio(self) -> bool {
+        VOCI_SV.iter().any(|(p, _)| *p == self)
     }
 
     /// Quanto suona sopra o sotto le altre voci del suo lettore, in dB. La scatola nera di L.V. (valore
@@ -326,9 +461,10 @@ impl Pezzo {
         self.yusuf() || self == Pezzo::Lv02
     }
 
-    /// La battuta delle voci della nave o di Yusuf dal nome che le dà il ponte (l’evento «voci»).
+    /// La battuta delle voci della nave, di Yusuf, di L.V. o della voce di servizio dal nome che le dà il ponte
+    /// (l’evento «voci»).
     pub fn della_battuta(nome: &str) -> Option<Pezzo> {
-        BATTUTE_NV.iter().chain(VOCI_YU.iter()).chain(VOCI_LV.iter()).find(|(_, n)| n.strip_suffix(".mp3") == Some(nome)).map(|(p, _)| *p)
+        BATTUTE_NV.iter().chain(VOCI_YU.iter()).chain(VOCI_LV.iter()).chain(VOCI_SV.iter()).find(|(_, n)| n.strip_suffix(".mp3") == Some(nome)).map(|(p, _)| *p)
     }
 
     /// (la cartella della scheda, il nome del file) come stanno in `audio/musica-ia/`.
@@ -344,6 +480,9 @@ impl Pezzo {
         }
         if let Some((_, n)) = VOCI_LV.iter().find(|(p, _)| *p == self) {
             return ("LV", n);
+        }
+        if let Some((_, n)) = VOCI_SV.iter().find(|(p, _)| *p == self) {
+            return ("SV", n);
         }
         match self {
             Pezzo::M1a => ("M1", "M1-01-bare-resonance.mp3"),

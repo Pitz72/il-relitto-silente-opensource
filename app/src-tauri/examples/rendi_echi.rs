@@ -1,7 +1,8 @@
 //! Rende su file WAV le echi del Sintonizzatore (bibbia sonora, §5.3), una per una, nella
 //! loro stanza, con il mondo vero sotto. Dal 7 novembre 2026 parlano le voci della nave
 //! registrate (documento 35), che il ponte manda con l’evento «voci»: qui gli eventi sono gli
-//! stessi. Accanto scrive le note, con il punto in cui entra ogni voce.
+//! stessi; in fondo, la voce di servizio (documento 35, §11), da sola e in fila con le voci.
+//! Accanto scrive le note, con il punto in cui entra ogni voce.
 //!
 //!   cargo run --release --example rendi_echi -- <cartella d’uscita> [parola]
 //!
@@ -107,6 +108,26 @@ fn scene() -> Vec<Scena> {
             resto: r#", "fuga": "iniziata""#,
             eventi: "",
             battute: r#""NV-03c-carico-deve""#,
+            durata: 6.0,
+        },
+        s("La voce di servizio: un suggerimento (esamina la radio)", "plancia", "", "", r#""SV-28-per-chiamare-yusuf-parla""#, 6.0),
+        s(
+            "La voce di servizio: la scansione lunga della nave aliena",
+            "plancia",
+            "",
+            "",
+            r#""SV-11-lunghezza-trecentoquaranta-metri-massa", "SV-04-materiale-non-in-archivio", "SV-17-adesso-puoi-accostare""#,
+            18.0,
+        ),
+        s("La voce di servizio: il cadavere, la lettura dello scanner", "serra morente", "", scanner("cadavere"), r#""SV-06-analisi-biometrica-specie-homo""#, 19.0),
+        s("La voce di servizio: la lastra dati e la matrice di traduzione", "ponte di comando", "", scanner("lastra dati"), r#""NV-14-lastra", "SV-15-matrice-quattro""#, 19.0),
+        Scena {
+            titolo: "La voce di servizio: la protezione vitale (la tuta chiude i canali, ma non il suo)",
+            stanza: "corridoio principale",
+            risonate: "",
+            resto: r#", "protezione": true"#,
+            eventi: r#"{"evento": "protezione"}"#,
+            battute: r#""SV-01-protezione-vitale""#,
             durata: 6.0,
         },
     ]

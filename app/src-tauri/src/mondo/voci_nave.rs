@@ -10,6 +10,10 @@
 //!
 //! Il suono va nella cuffia (il canale `em` del mondo) e sul cursore del parlato: lo mescola
 //! `Mondo::rendi`. I file si decodificano fuori dal thread audio, come la musica (musica_file.rs).
+//!
+//! Nella stessa fila sta la **voce di servizio** (documento 35, §11): la tuta e il gioco che parlano a chi
+//! gioca, «Kira» di Google. Aspetta il suo turno come le altre, ma ha un lettore suo, perché esce asciutta e
+//! non dalla cuffia: la tuta non chiude il canale con cui parla (`campione_servizio`).
 
 use std::path::PathBuf;
 
@@ -28,6 +32,8 @@ const LIBERA_DOPO: f32 = 30.0;
 
 pub struct VociNave {
     lettore: Lettore,
+    /// la voce di servizio: in fila con le altre, con la sua uscita
+    servizio: Lettore,
     fila: Vec<Pezzo>,
     /// i secondi che mancano alla prossima battuta della fila (contano solo quando nessuno parla)
     attesa: f32,
@@ -39,11 +45,22 @@ pub struct VociNave {
 
 impl VociNave {
     pub fn nuove(sr: f32) -> Self {
-        VociNave { lettore: Lettore::nuovo(sr), fila: Vec::with_capacity(MAX_FILA), attesa: 0.0, parlava: false, muto_da: 0.0 }
+        VociNave {
+            lettore: Lettore::nuovo(sr),
+            servizio: Lettore::nuovo(sr),
+            fila: Vec::with_capacity(MAX_FILA),
+            attesa: 0.0,
+            parlava: false,
+            muto_da: 0.0,
+        }
     }
 
-    /// Dove stanno i file (la stessa cartella della musica).
-    pub fn con_cartella(&mut self, cartella: PathBuf) {
+    /// Dove stanno i file (la stessa cartella della musica). La voce di servizio ha la sua biblioteca, e
+    /// il suo thread di lavoro, solo se `con_servizio`.
+    pub fn con_cartella(&mut self, cartella: PathBuf, con_servizio: bool) {
+        if con_servizio {
+            self.servizio.biblioteca = Some(Biblioteca::nuova(cartella.clone()));
+        }
         self.lettore.biblioteca = Some(Biblioteca::nuova(cartella));
     }
 
@@ -52,19 +69,50 @@ impl VociNave {
         self.lettore.biblioteca = Some(b);
     }
 
+    /// Per le prove e i rendering: la biblioteca della voce di servizio.
+    pub fn con_biblioteca_servizio(&mut self, b: Biblioteca) {
+        self.servizio.biblioteca = Some(b);
+    }
+
+    fn di(&mut self, p: Pezzo) -> &mut Lettore {
+        if p.servizio() {
+            &mut self.servizio
+        } else {
+            &mut self.lettore
+        }
+    }
+
     /// Ci sono i file di tutte queste battute?
     pub fn disponibili(&self, battute: &[Pezzo]) -> bool {
-        !battute.is_empty() && self.lettore.disponibile(battute)
+        !battute.is_empty()
+            && battute.iter().all(|p| if p.servizio() { &self.servizio } else { &self.lettore }.disponibile(&[*p]))
     }
 
     /// Qualcuno parla, o una battuta aspetta il suo turno.
     pub fn occupate(&self) -> bool {
-        self.lettore.attivo() || !self.fila.is_empty()
+        self.parla() || !self.fila.is_empty()
     }
 
     /// In questo istante una voce suona (non conta la fila).
     pub fn parla(&self) -> bool {
-        self.lettore.attivo()
+        self.lettore.attivo() || self.servizio.attivo()
+    }
+
+    /// Una voce suona e non sta sfumando via, o sta per partire: chi aspetta deve aspettare lei.
+    pub fn viva(&self) -> bool {
+        self.lettore.vivo() || self.servizio.vivo()
+    }
+
+    /// Le voci della nave hanno qualcosa in fila o che suona (la voce di servizio non conta: il fiato
+    /// trattenuto e il brusio abbassato sono per loro).
+    pub fn nave_occupate(&self) -> bool {
+        self.lettore.attivo() || self.fila.iter().any(|p| !p.servizio())
+    }
+
+    /// Le parti della voce di servizio che aspettano ancora il loro turno non servono più: chi gioca è già
+    /// andato avanti (un comando nuovo). Quella che parla finisce la frase.
+    pub fn scarta_servizio(&mut self) {
+        self.fila.retain(|p| !p.servizio());
     }
 
     /// Mette in fila le battute. Se nessuno parla e la fila è vuota, la prima entra fra `ritardo`
@@ -75,7 +123,7 @@ impl VociNave {
         }
         for &p in battute {
             if self.fila.len() < MAX_FILA {
-                self.lettore.precarica(p);
+                self.di(p).precarica(p);
                 self.fila.push(p);
             }
         }
@@ -89,7 +137,7 @@ impl VociNave {
         self.attesa = ritardo;
         for &p in battute {
             if self.fila.len() < MAX_FILA {
-                self.lettore.precarica(p);
+                self.di(p).precarica(p);
                 self.fila.push(p);
             }
         }
@@ -97,26 +145,34 @@ impl VociNave {
 
     /// Fa partire una battuta adesso, fuori dalla fila (il giro dell’anello del Piccolo).
     pub fn subito(&mut self, p: Pezzo) {
-        self.lettore.avvia(richiesta(p));
+        self.di(p).avvia(richiesta(p));
         self.parlava = true;
     }
 
     /// Comincia a decodificare una battuta che servirà presto.
     pub fn precarica(&mut self, p: Pezzo) {
-        self.lettore.precarica(p);
+        self.di(p).precarica(p);
     }
 
     /// Tutto tace in `s` secondi, e la fila si svuota (una partita che si carica).
     pub fn tace(&mut self, s: f32) {
         self.fila.clear();
         self.lettore.tace(s);
+        self.servizio.tace(s);
     }
 
     /// Fa andare il tempo, una volta per blocco.
     pub fn passo(&mut self, dt: f32) {
+        self.passo_con(dt, false);
+    }
+
+    /// Come `passo`; con `altri` un’altra voce parla fuori da questa fila (Yusuf, la scatola nera): la fila
+    /// aspetta che finisca, e poi la pausa, come per le sue.
+    pub fn passo_con(&mut self, dt: f32, altri: bool) {
         self.lettore.passo(dt);
+        self.servizio.passo(dt);
         // quello che sta sfumando via non conta: la fila non lo aspetta
-        let parla = self.lettore.vivo();
+        let parla = self.lettore.vivo() || self.servizio.vivo() || altri;
         if self.parlava && !parla {
             // una voce è finita: la prossima aspetta la pausa
             self.attesa = PAUSA_FRA_VOCI;
@@ -126,7 +182,7 @@ impl VociNave {
             self.attesa -= dt;
             if self.attesa <= 0.0 {
                 let p = self.fila.remove(0);
-                self.lettore.avvia(richiesta(p));
+                self.di(p).avvia(richiesta(p));
                 self.parlava = true;
             }
         }
@@ -136,6 +192,7 @@ impl VociNave {
             self.muto_da += dt;
             if self.muto_da >= LIBERA_DOPO && self.muto_da - dt < LIBERA_DOPO {
                 self.lettore.tieni(&[]);
+                self.servizio.tieni(&[]);
             }
         }
     }
@@ -144,6 +201,12 @@ impl VociNave {
     #[inline]
     pub fn campione(&mut self) -> (f32, f32) {
         self.lettore.campione()
+    }
+
+    /// Un campione della voce di servizio, stereo, senza cursori né livelli.
+    #[inline]
+    pub fn campione_servizio(&mut self) -> (f32, f32) {
+        self.servizio.campione()
     }
 }
 
@@ -262,6 +325,83 @@ mod prove {
         assert!((fine - 2.5).abs() < 0.05, "la battuta nuova finisce a {fine:.2} s, e doveva durare intera");
     }
 
+    fn voci_e_servizio(nave: &[(Pezzo, f32)], servizio: &[(Pezzo, f32)]) -> VociNave {
+        let mut v = voci_con(nave);
+        let mut b = Biblioteca::nuova(PathBuf::from("non-esiste"));
+        for &(p, s) in servizio {
+            b.inserisci(p, battuta(s));
+        }
+        v.con_biblioteca_servizio(b);
+        v
+    }
+
+    /// Come `ascolta`, ma separa le due uscite: (la voce della nave, la voce di servizio) per ogni 10 ms.
+    fn ascolta_due(v: &mut VociNave, secondi: f32) -> (Vec<bool>, Vec<bool>) {
+        let blocco = (SR * 0.01) as usize;
+        (0..(secondi / 0.01) as usize)
+            .map(|_| {
+                v.passo(0.01);
+                let (mut a, mut b) = (0.0f32, 0.0f32);
+                for _ in 0..blocco {
+                    a += v.campione().0.powi(2);
+                    b += v.campione_servizio().0.powi(2);
+                }
+                (a > 1e-6, b > 1e-6)
+            })
+            .unzip()
+    }
+
+    #[test]
+    fn la_voce_di_servizio_sta_in_fila_ma_esce_per_conto_suo() {
+        // la registrazione dello scanner e, dopo, la matrice di traduzione: nell'ordine dello schermo, con la
+        // pausa, e la matrice esce dall'uscita della voce di servizio, non dalla cuffia
+        let mut v = voci_e_servizio(&[(Pezzo::Nv14, 2.0)], &[(Pezzo::Sv15, 1.0)]);
+        assert!(v.disponibili(&[Pezzo::Nv14, Pezzo::Sv15]));
+        v.in_fila(&[Pezzo::Nv14, Pezzo::Sv15], 1.2);
+        let (nave, servizio) = ascolta_due(&mut v, 7.0);
+        let (tn, ts) = (tratti(&nave), tratti(&servizio));
+        assert_eq!(tn.len(), 1, "{tn:?}");
+        assert_eq!(ts.len(), 1, "{ts:?}");
+        assert!((tn[0].0 - 1.2).abs() < 0.05);
+        let pausa = ts[0].0 - tn[0].1;
+        assert!((pausa - PAUSA_FRA_VOCI).abs() < 0.05, "la matrice entra {pausa:.2} s dopo la registrazione");
+        assert!(!v.occupate());
+    }
+
+    #[test]
+    fn le_parti_di_servizio_rimaste_in_fila_si_scartano() {
+        let mut v = voci_e_servizio(&[(Pezzo::Nv01, 1.0)], &[(Pezzo::Sv19, 1.0), (Pezzo::Sv28, 2.0)]);
+        v.in_fila(&[Pezzo::Sv19, Pezzo::Sv28], 0.5);
+        ascolta_due(&mut v, 1.0);
+        // un comando nuovo: «Analizzala.» sta parlando e finisce, «Per chiamare Yusuf…» non parte più
+        v.scarta_servizio();
+        v.in_fila(&[Pezzo::Nv01], 0.5);
+        assert!(!v.nave_occupate() || v.fila.iter().all(|p| !p.servizio()));
+        let (nave, servizio) = ascolta_due(&mut v, 6.0);
+        let (tn, ts) = (tratti(&nave), tratti(&servizio));
+        assert_eq!(ts.len(), 1, "la parte che parlava finisce, l'altra no: {ts:?}");
+        assert!(ts[0].1 > 0.4, "la parte che parlava non è stata tagliata: {ts:?}");
+        assert_eq!(tn.len(), 1, "{tn:?}");
+        assert!((tn[0].0 - ts[0].1 - PAUSA_FRA_VOCI).abs() < 0.05, "la voce nuova aspetta la fine e la pausa");
+    }
+
+    #[test]
+    fn la_fila_aspetta_una_voce_che_parla_fuori_da_lei() {
+        let mut v = voci_e_servizio(&[], &[(Pezzo::Sv28, 1.0)]);
+        v.in_fila(&[Pezzo::Sv28], 0.5);
+        let blocco = (SR * 0.01) as usize;
+        let mut sentita = Vec::new();
+        for k in 0..500 {
+            // un'altra voce (Yusuf) parla per i primi due secondi
+            v.passo_con(0.01, k < 200);
+            let e: f32 = (0..blocco).map(|_| v.campione_servizio().0.powi(2)).sum();
+            sentita.push(e > 1e-6);
+        }
+        let t = tratti(&sentita);
+        assert_eq!(t.len(), 1, "{t:?}");
+        assert!((t[0].0 - (2.0 + PAUSA_FRA_VOCI)).abs() < 0.05, "parte a {:.2} s: doveva aspettare Yusuf e la pausa", t[0].0);
+    }
+
     #[test]
     fn senza_file_non_c_e_niente_di_disponibile() {
         let v = voci_con(&[(Pezzo::Nv01, 1.0)]);
@@ -286,11 +426,14 @@ mod prove {
         assert_eq!(Pezzo::della_voce("tracce"), Some(Pezzo::An22));
         assert_eq!(Pezzo::della_voce("niente"), None);
         assert_eq!(Pezzo::della_battuta("YU-07-fuga-pezzo"), Some(Pezzo::Yu07));
+        assert_eq!(Pezzo::della_battuta("SV-01-protezione-vitale"), Some(Pezzo::Sv01));
+        assert_eq!(Pezzo::della_battuta("SV-41-usala"), Some(Pezzo::Sv41));
+        assert!(Pezzo::Sv12.servizio() && Pezzo::Sv12.parlato() && !Pezzo::Sv12.asciutta() && !Pezzo::Nv01.servizio());
         assert!(Pezzo::Yu03.yusuf() && Pezzo::Yu03.parlato() && !Pezzo::Nv01.yusuf() && !Pezzo::An10.parlato());
         // ogni battuta ha il suo file nella cartella, e la tabella le ha tutte
         let radice = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../audio/musica-ia");
-        use super::super::musica_file::{BATTUTE_NV, VOCI_AN, VOCI_YU};
-        for (p, nome) in BATTUTE_NV.iter().chain(VOCI_AN.iter()).chain(VOCI_YU.iter()) {
+        use super::super::musica_file::{BATTUTE_NV, VOCI_AN, VOCI_LV, VOCI_SV, VOCI_YU};
+        for (p, nome) in BATTUTE_NV.iter().chain(VOCI_AN.iter()).chain(VOCI_YU.iter()).chain(VOCI_LV.iter()).chain(VOCI_SV.iter()) {
             assert!(Pezzo::TUTTI.contains(p), "{nome} non è fra tutti i pezzi");
             let (sotto, f) = p.file();
             assert_eq!(f, *nome);

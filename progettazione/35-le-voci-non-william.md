@@ -320,3 +320,36 @@ generazione sola (AI Studio arriva a circa sei minuti, l’autore; lo strumento 
 
 Nel gioco andrà come Yusuf e la scatola nera: asciutta, sul cursore del parlato; la tuta un poco dentro il casco, i
 suggerimenti puliti. Si collega quando c’è il file.
+
+**Il file, e nel gioco (7 novembre 2026).** L’autore l’ha generato la mattina stessa: una presa sola, 2:39, WAV
+24 kHz mono (`audio/sorgenti/voce/servizio-kira-2026-11-07.wav`, fuori da git; l’impronta in `audio/LICENZE.md`).
+`strumenti/audio/taglia_servizio.py` la divide nelle 41 parti:
+
+- le parole con i tempi (Whisper large-v3, in locale) allineate a quelle del manifest: 255 su 256;
+- ogni confine nel silenzio più lungo vicino a dove Whisper lo mette, mai dentro una parte;
+- la tuta (la protezione, le scritte, le letture dello scanner, la matrice) appena dentro il casco, cioè una banda
+  140 Hz – 8,5 kHz e due riflessioni a 2,4 e 4,9 ms, a −19 e −23 dB; i suggerimenti puliti;
+- una seconda trascrizione di ogni file, confrontata con il testo per parole e per lettere: 41 su 41 (Whisper
+  scrive «a costa», «Prima a Costa», «Traduci le», che si pronunciano uguali).
+
+Ne escono `audio/musica-ia/SV/SV-01-protezione-vitale.mp3` … `SV-41-usala.mp3` (2:17, 1,9 MB) e
+`doppiaggio/servizio/tagli.json`. Nel gioco:
+
+- **il ponte** (`VOCI_SERVIZIO`, la tabella del manifest) trova le parti a schermo e le manda con l’evento `voci`,
+  insieme alle voci della nave e **nell’ordine dello schermo**: la lastra dati prima, la matrice dopo. I
+  suggerimenti contano con la loro parentesi intera, la matrice dall’inizio della parentesi; PROTEZIONE VITALE
+  detta da William dopo un articolo («con la PROTEZIONE VITALE la tuta…») resta sua;
+- **il motore** la mette nella stessa fila delle voci della nave (`VociNave`), con la stessa pausa di 1,4 s: non
+  parlano mai una sopra l’altra. Esce però da un lettore suo, asciutta, sul cursore del parlato, e non dalla
+  cuffia, che la protezione vitale chiude: è la tuta che la annuncia. Le parole a circa −24 dBFS,
+  11 dB sopra l’ambiente e un poco sotto Yusuf (`LIV_SERVIZIO`, +4 dB);
+- **un comando nuovo** scarta le parti rimaste in fila: chi gioca è già andato avanti. Quella che parla finisce la
+  frase;
+- **le due file si aspettano**: Yusuf e la scatola nera non entrano sopra la voce di servizio, e viceversa;
+- la voce di servizio non fa trattenere il fiato e non tiene giù il brusio, che sono per le voci della nave.
+
+Il collaudo controlla che il manifest sia quello dei testi del gioco di adesso, che ogni parte abbia il suo file
+e che la tabella del ponte sia quella del manifest; se un testo di servizio cambia, lo dice. Nei 16 percorsi del
+collaudo la voce di servizio parla in 73 turni su 171 con le voci; 41 parti su 41 si trovano nei testi del gioco.
+L’ascolto per l’autore: `consegne/Ascolto voce di servizio 2026-11-07/` (`rendi_echi`, le cinque scene «La voce
+di servizio»). L’autore, ascoltato: «capolavoro l’audio».

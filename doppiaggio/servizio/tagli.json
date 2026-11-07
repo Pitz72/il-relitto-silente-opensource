@@ -1,0 +1,375 @@
+{
+ "presa": "servizio-kira-2026-11-07.wav",
+ "sha256": "ee848d27695c6ec863963d9633c0faa119d5096e4cb7d80717cf33bab9163c6f",
+ "parti": {
+  "d36d0f144e18": {
+   "file": "SV-01-protezione-vitale",
+   "tipo": "protezione",
+   "inizio": 0.22,
+   "fine": 1.64,
+   "durata": 1.42,
+   "whisper": "protezione vitale.",
+   "somiglianza": 1.0
+  },
+  "40bc3cba378a": {
+   "file": "SV-02-canale-aperto-da-remoto",
+   "tipo": "schermo",
+   "inizio": 2.0,
+   "fine": 3.97,
+   "durata": 1.97,
+   "whisper": "Canale aperto da remoto.",
+   "somiglianza": 1.0
+  },
+  "f75b5d9ee9ce": {
+   "file": "SV-03-chiusura-rifiutata",
+   "tipo": "schermo",
+   "inizio": 4.48,
+   "fine": 5.91,
+   "durata": 1.43,
+   "whisper": "Chiusura rifiutata.",
+   "somiglianza": 1.0
+  },
+  "709f41354187": {
+   "file": "SV-04-materiale-non-in-archivio",
+   "tipo": "schermo",
+   "inizio": 6.45,
+   "fine": 8.32,
+   "durata": 1.87,
+   "whisper": "Materiale non in archivio.",
+   "somiglianza": 1.0
+  },
+  "43420b893935": {
+   "file": "SV-05-sotto-protezione-vitale",
+   "tipo": "schermo",
+   "inizio": 8.87,
+   "fine": 11.4,
+   "durata": 2.53,
+   "whisper": "Sotto 30. Protezione vitale.",
+   "somiglianza": 1.0
+  },
+  "fa194f423751": {
+   "file": "SV-06-analisi-biometrica-specie-homo",
+   "tipo": "lettura",
+   "inizio": 12.05,
+   "fine": 27.06,
+   "durata": 15.01,
+   "whisper": "Analisi biometrica. Specie Homo sapiens. Età al decesso 35 anni circa. Cause anossia ipotermia. Decesso stimato 150 anni fa, con lo stesso margine d'errore della giuntura.",
+   "somiglianza": 1.0
+  },
+  "b85eec4f9381": {
+   "file": "SV-07-analisi-dell-archivio-centrale",
+   "tipo": "lettura",
+   "inizio": 27.84,
+   "fine": 39.72,
+   "durata": 11.88,
+   "whisper": "Analisi dell'archivio centrale. Integrità dei dati stimata 0,001%. Corruzione a cascata per degradazione entropica. Perdita irreversibile.",
+   "somiglianza": 1.0
+  },
+  "1071bdb7fd0a": {
+   "file": "SV-08-analisi-manifattura-origine-terrestre",
+   "tipo": "lettura",
+   "inizio": 40.66,
+   "fine": 55.93,
+   "durata": 15.27,
+   "whisper": "Analisi manifattura. Origine terrestre. 150 anni circa. Modello fuori produzione. Identificazione missione. Logo Aurora 7. Esplorazione in solitaria. Non documentata negli archivi pubblici.",
+   "somiglianza": 1.0
+  },
+  "cf7ea2bb5c54": {
+   "file": "SV-09-flora-di-xylos-deceduto",
+   "tipo": "lettura",
+   "inizio": 56.3,
+   "fine": 62.09,
+   "durata": 5.79,
+   "whisper": "flora di xylos, deceduto, forma silicea, costruttore, deceduto.",
+   "somiglianza": 1.0
+  },
+  "51860cc96dd3": {
+   "file": "SV-10-lettura-fauna-dei-tre",
+   "tipo": "lettura",
+   "inizio": 62.67,
+   "fine": 70.75,
+   "durata": 8.08,
+   "whisper": "Lettura fauna dei tre soli. Grande pascolatore, deceduto. Integrità genomica 0,02%.",
+   "somiglianza": 1.0
+  },
+  "7fdb75049040": {
+   "file": "SV-11-lunghezza-trecentoquaranta-metri-massa",
+   "tipo": "lettura",
+   "inizio": 71.35,
+   "fine": 78.64,
+   "durata": 7.29,
+   "whisper": "lunghezza 340 metri massa stima incerta il doppio della santa maria composizione",
+   "somiglianza": 1.0
+  },
+  "59638cedb1b4": {
+   "file": "SV-12-matrice-cento-completata",
+   "tipo": "matrice",
+   "inizio": 79.15,
+   "fine": 83.29,
+   "durata": 4.14,
+   "whisper": "Matrice di traduzione. 100% decodifica completata.",
+   "somiglianza": 1.0
+  },
+  "5f34c60b192a": {
+   "file": "SV-13-matrice-cento",
+   "tipo": "matrice",
+   "inizio": 83.79,
+   "fine": 86.51,
+   "durata": 2.72,
+   "whisper": "Matrice di traduzione. 100%.",
+   "somiglianza": 1.0
+  },
+  "9beffb8c5e82": {
+   "file": "SV-14-matrice-diciotto",
+   "tipo": "matrice",
+   "inizio": 87.03,
+   "fine": 90.09,
+   "durata": 3.06,
+   "whisper": "Matrice di traduzione, 18%.",
+   "somiglianza": 1.0
+  },
+  "8a5f7db8db92": {
+   "file": "SV-15-matrice-quattro",
+   "tipo": "matrice",
+   "inizio": 90.59,
+   "fine": 93.48,
+   "durata": 2.89,
+   "whisper": "Matrice di traduzione 4%",
+   "somiglianza": 1.0
+  },
+  "2c5f798ee0df": {
+   "file": "SV-16-matrice-settantacinque",
+   "tipo": "matrice",
+   "inizio": 93.99,
+   "fine": 97.34,
+   "durata": 3.35,
+   "whisper": "Matrice di traduzione 75%.",
+   "somiglianza": 1.0
+  },
+  "70f929987041": {
+   "file": "SV-17-adesso-puoi-accostare",
+   "tipo": "suggerimento",
+   "inizio": 97.75,
+   "fine": 99.15,
+   "durata": 1.4,
+   "whisper": "Adesso puoi accostare.",
+   "somiglianza": 1.0
+  },
+  "17ec8adc016d": {
+   "file": "SV-18-analizza-lo-scafo-nero",
+   "tipo": "suggerimento",
+   "inizio": 99.64,
+   "fine": 101.09,
+   "durata": 1.45,
+   "whisper": "Analizza lo scafo nero.",
+   "somiglianza": 1.0
+  },
+  "d0e5a4e5438c": {
+   "file": "SV-19-analizzala",
+   "tipo": "suggerimento",
+   "inizio": 101.65,
+   "fine": 102.48,
+   "durata": 0.83,
+   "whisper": "Analizzala.",
+   "somiglianza": 1.0
+  },
+  "ed5cefb59951": {
+   "file": "SV-20-analizzale",
+   "tipo": "suggerimento",
+   "inizio": 102.89,
+   "fine": 103.75,
+   "durata": 0.86,
+   "whisper": "Analizzale.",
+   "somiglianza": 1.0
+  },
+  "30dd4457980d": {
+   "file": "SV-21-analizzali",
+   "tipo": "suggerimento",
+   "inizio": 104.26,
+   "fine": 105.14,
+   "durata": 0.88,
+   "whisper": "Analizzali.",
+   "somiglianza": 1.0
+  },
+  "2bfae0c60e64": {
+   "file": "SV-22-analizzalo",
+   "tipo": "suggerimento",
+   "inizio": 105.59,
+   "fine": 106.51,
+   "durata": 0.92,
+   "whisper": "Analizzalo.",
+   "somiglianza": 1.0
+  },
+  "7199ffa87ea1": {
+   "file": "SV-23-firma-la-placca-oppure",
+   "tipo": "suggerimento",
+   "inizio": 106.94,
+   "fine": 109.81,
+   "durata": 2.87,
+   "whisper": "Firma la placca oppure completa la parola.",
+   "somiglianza": 1.0
+  },
+  "397ac0bbcfec": {
+   "file": "SV-24-firma-la-placca",
+   "tipo": "suggerimento",
+   "inizio": 110.28,
+   "fine": 111.37,
+   "durata": 1.09,
+   "whisper": "Firma la placca.",
+   "somiglianza": 1.0
+  },
+  "cbc0dacb4580": {
+   "file": "SV-25-parla-con-l-anziano",
+   "tipo": "suggerimento",
+   "inizio": 111.96,
+   "fine": 113.21,
+   "durata": 1.25,
+   "whisper": "Parla con l'anziano.",
+   "somiglianza": 1.0
+  },
+  "ce31c3cfa86e": {
+   "file": "SV-26-per-ascoltarla-ascolta-la",
+   "tipo": "suggerimento",
+   "inizio": 113.65,
+   "fine": 116.21,
+   "durata": 2.56,
+   "whisper": "Per ascoltarla, ascolta la scatola nera.",
+   "somiglianza": 1.0
+  },
+  "eb89c3068503": {
+   "file": "SV-27-per-ascoltarla-ascolta-la-tuta",
+   "tipo": "suggerimento",
+   "inizio": 116.61,
+   "fine": 121.37,
+   "durata": 4.76,
+   "whisper": "Per ascoltarla, ascolta la scatola nera. La corrente gliela darebbe la tua tuta.",
+   "somiglianza": 1.0
+  },
+  "fc942823945a": {
+   "file": "SV-28-per-chiamare-yusuf-parla",
+   "tipo": "suggerimento",
+   "inizio": 122.02,
+   "fine": 124.39,
+   "durata": 2.37,
+   "whisper": "Per chiamare Yusuf, parla con Yusuf.",
+   "somiglianza": 1.0
+  },
+  "27997ff91226": {
+   "file": "SV-29-per-liberarlo-dalla-nicchia",
+   "tipo": "suggerimento",
+   "inizio": 124.87,
+   "fine": 127.66,
+   "durata": 2.79,
+   "whisper": "Per liberarlo dalla nicchia, stacca il risuonatore.",
+   "somiglianza": 1.0
+  },
+  "b70a1898d476": {
+   "file": "SV-30-per-portarti-vicino-alla",
+   "tipo": "suggerimento",
+   "inizio": 127.93,
+   "fine": 130.87,
+   "durata": 2.94,
+   "whisper": "per portarti vicino alla massa a costa.",
+   "somiglianza": 0.98
+  },
+  "9453c968b405": {
+   "file": "SV-31-per-studiarla-meglio-analizzala",
+   "tipo": "suggerimento",
+   "inizio": 131.85,
+   "fine": 134.16,
+   "durata": 2.31,
+   "whisper": "Per studiarla meglio, analizzala.",
+   "somiglianza": 1.0
+  },
+  "5e88107a12f9": {
+   "file": "SV-32-per-svegliarla-usa-la",
+   "tipo": "suggerimento",
+   "inizio": 134.98,
+   "fine": 137.74,
+   "durata": 2.76,
+   "whisper": "Per svegliarla, usa la postazione.",
+   "somiglianza": 1.0
+  },
+  "53d2dbced7f8": {
+   "file": "SV-33-prima-accosta",
+   "tipo": "suggerimento",
+   "inizio": 138.43,
+   "fine": 139.86,
+   "durata": 1.43,
+   "whisper": "Prima a Costa",
+   "somiglianza": 0.96
+  },
+  "2777de340957": {
+   "file": "SV-34-ricarica-la-tuta-se",
+   "tipo": "suggerimento",
+   "inizio": 140.48,
+   "fine": 144.17,
+   "durata": 3.69,
+   "whisper": "Ricarica la tuta se ti serve aria. Una volta sola.",
+   "somiglianza": 1.0
+  },
+  "00dd042c0017": {
+   "file": "SV-35-sintonizza-le-cose-delle",
+   "tipo": "suggerimento",
+   "inizio": 144.86,
+   "fine": 149.85,
+   "durata": 4.99,
+   "whisper": "Sintonizza le cose delle stanze silenziose. Ascoltare Costa Aria.",
+   "somiglianza": 1.0
+  },
+  "ff0400d5e26e": {
+   "file": "SV-36-staccalo",
+   "tipo": "suggerimento",
+   "inizio": 150.44,
+   "fine": 151.25,
+   "durata": 0.81,
+   "whisper": "Staccalo.",
+   "somiglianza": 1.0
+  },
+  "796eabf99934": {
+   "file": "SV-37-suona-il-sonaglio-se",
+   "tipo": "suggerimento",
+   "inizio": 151.77,
+   "fine": 154.03,
+   "durata": 2.26,
+   "whisper": "Suona il sonaglio se vuoi ascoltarlo.",
+   "somiglianza": 1.0
+  },
+  "ddb9c137bedd": {
+   "file": "SV-38-traducila",
+   "tipo": "suggerimento",
+   "inizio": 154.59,
+   "fine": 155.52,
+   "durata": 0.93,
+   "whisper": "Traducila.",
+   "somiglianza": 1.0
+  },
+  "cf123dbc4aa0": {
+   "file": "SV-39-traducile",
+   "tipo": "suggerimento",
+   "inizio": 155.88,
+   "fine": 156.87,
+   "durata": 0.99,
+   "whisper": "Traduci le",
+   "somiglianza": 1.0
+  },
+  "c31d9baadc8a": {
+   "file": "SV-40-traducili",
+   "tipo": "suggerimento",
+   "inizio": 157.35,
+   "fine": 158.18,
+   "durata": 0.83,
+   "whisper": "Traducili.",
+   "somiglianza": 1.0
+  },
+  "70036cdbc748": {
+   "file": "SV-41-usala",
+   "tipo": "suggerimento",
+   "inizio": 158.68,
+   "fine": 159.33,
+   "durata": 0.65,
+   "whisper": "Usala.",
+   "somiglianza": 1.0
+  }
+ }
+}

@@ -680,8 +680,8 @@ impl Mondo {
         // l'intro ha i suoi due file (la voce di L.V. e il tema), e un lettore suo
         self.intro.con_cartella(cartella.clone());
         // le voci della nave stanno nella stessa cartella, con un lettore loro
-        self.voci_nave.con_cartella(cartella.clone());
-        self.voci_radio.con_cartella(cartella.clone());
+        self.voci_nave.con_cartella(cartella.clone(), true);
+        self.voci_radio.con_cartella(cartella.clone(), false);
         self.musica.con_cartella(cartella);
     }
 
@@ -1145,6 +1145,12 @@ impl Mondo {
             let ky = vp * gp * s_filo * LIV_YUSUF;
             l += yl * ky;
             r += yr * ky;
+            // la voce di servizio (documento 35, §11): la tuta e il gioco, asciutta, sul cursore del parlato; la
+            // protezione vitale non la chiude, perché è lei che la annuncia
+            let (sl, sr_) = self.voci_nave.campione_servizio();
+            let ks = vp * gp * LIV_SERVIZIO;
+            l += sl * ks;
+            r += sr_ * ks;
             // l'intro: il suo sound design sta sul cursore degli effetti, il re e il tema su quello della
             // musica (il tema come i file di musica), la voce di L.V. su quello del parlato
             if self.intro.attiva() {
@@ -1221,6 +1227,9 @@ const LIV_VOCI_NAVE: f32 = 0.75;
 /// Yusuf sopra il livello delle parole a cui il lettore porta ogni battuta (−27 dBFS): +6 dB, le parole a circa
 /// −21 dBFS, come negli ascolti approvati (documento 35, §8)
 const LIV_YUSUF: f32 = 2.0;
+/// La voce di servizio sopra il livello delle parole a cui il lettore porta ogni parte (−27 dBFS): +4 dB, le parole
+/// a circa −23 dBFS, un poco sotto Yusuf: chiara, ma non davanti al mondo
+const LIV_SERVIZIO: f32 = 1.58;
 const LIV_CUORE: f32 = -10.0;
 const LIV_ACUFENE: f32 = -42.0;
 const LIV_PASSI: f32 = -24.0;

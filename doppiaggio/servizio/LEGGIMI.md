@@ -11,6 +11,7 @@ cambia, si rilancia lo strumento e si rigenera.
 |---|---|
 | `servizio.txt` | il testo da incollare in AI Studio: una parte per riga, con `<long pause>` fra l’una e l’altra (serve a tagliare l’audio dopo, nei punti giusti). Le parole in maiuscolo sono abbassate, perché la voce le leggerebbe come se urlasse; le percentuali sono in lettere |
 | `manifest.json` | per ogni parte: il suo codice, il testo per la voce, il testo com’è nel gioco, il tipo, da dove viene; nello stesso ordine del file da incollare |
+| `tagli.json` | dopo il taglio: per ogni parte il suo file in `audio/musica-ia/SV/`, dove sta nella presa, la seconda trascrizione e quanto somiglia al testo |
 
 Il file dura circa **2 minuti e mezzo**: sta in una generazione sola (AI Studio arriva a circa sei minuti). Se un giorno
 le parti crescessero oltre i cinque minuti, lo strumento le divide da solo in `servizio-a.txt`, `servizio-b.txt`…
@@ -34,3 +35,15 @@ La descrizione (in inglese, come nel Viaggiatore; il parlato resta italiano):
 
 Una voce femminile e fredda è voluta: si deve capire a orecchio, senza guardare lo schermo, se parla il mondo
 (William, le voci) o la macchina.
+
+## Dopo: il taglio
+
+    python strumenti/audio/taglia_servizio.py audio/sorgenti/voce/servizio-kira-<data>.wav
+
+La presa va prima in `audio/sorgenti/voce/` (fuori da git), con la data nel nome. Lo strumento la divide nelle
+parti nei silenzi (Whisper per sapere dove, mai dentro una parte), passa la tuta appena dentro il casco e lascia
+puliti i suggerimenti, scrive `audio/musica-ia/SV/` e `tagli.json`, e riascolta ogni file con Whisper: dice quali
+riascoltare. Poi: l’impronta della presa e quella dell’elenco `SV/IMPRONTE.sha256` in `audio/LICENZE.md`, e
+`python collaudo/eventi.py`, che controlla il manifest, i file e la tabella `VOCI_SERVIZIO` del ponte (se le
+parti cambiano, la tabella si rifà dal manifest e da `tagli.json`). La prima presa, del 7 novembre 2026: 41 parti
+su 41 al primo colpo.

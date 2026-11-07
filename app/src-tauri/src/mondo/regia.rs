@@ -73,8 +73,10 @@ impl Mondo {
         let ha = |nome: &str| t.eventi.iter().any(|e| e.evento == nome);
         let inizio = ha("inizio");
         self.sintonia_nel_turno = t.eventi.iter().any(|e| e.evento == "attrezzo" && e.attrezzo.as_deref() == Some("sintonizzatore"));
-        // le voci della nave che il ponte ha trovato a schermo (documento 35)
+        // le voci della nave che il ponte ha trovato a schermo (documento 35); le parti della voce di servizio
+        // rimaste in fila dal turno di prima non servono più
         self.voci_turno.clear();
+        self.voci_nave.scarta_servizio();
         for e in t.eventi.iter().filter(|e| e.evento == "voci") {
             for b in &e.battute {
                 if let Some(p) = Pezzo::della_battuta(b) {
@@ -84,6 +86,9 @@ impl Mondo {
                 }
             }
         }
+        // una parte di servizio senza il suo file si lascia: non deve tenere ferme le voci della nave
+        let voci = &self.voci_nave;
+        self.voci_turno.retain(|p| !p.servizio() || voci.disponibili(&[*p]));
         // «ripresa»: un ANNULLA che riporta la partita a uno stato di prima, anche dopo un
         // finale (revisione 25, G2). Per il suono vale come un caricamento.
         let carica = primo || inizio || ha("caricamento") || ha("ripresa");
@@ -196,7 +201,8 @@ impl Mondo {
     }
 
     /// Le voci della nave rimaste nel turno, che nessuna eco ha preso: le registrazioni dello
-    /// scanner, l’ultima voce, «Deve.» accanto alla nicchia, il «Dormi» del Navarca. In fila, dopo
+    /// scanner, l’ultima voce, «Deve.» accanto alla nicchia, il «Dormi» del Navarca; e la voce di
+    /// servizio (documento 35, §11), nell’ordine in cui le cose stanno a schermo. In fila, dopo
     /// quelle che suonano già. Il giro del Piccolo no: lo fa l’anello, che segue il dialogo.
     fn registrazioni(&mut self) {
         self.asciutte();
@@ -204,9 +210,12 @@ impl Mondo {
         if !self.voci_turno.is_empty() && self.voci_nave.disponibili(&self.voci_turno) {
             let battute = std::mem::take(&mut self.voci_turno);
             self.voci_nave.in_fila(&battute, VOCI_DOPO);
+            // il fiato trattenuto è per le voci della nave, non per la tuta
+            if battute.iter().any(|p| !p.servizio()) {
+                self.fiato.ascolto = true;
+                self.dopo_le_voci.ascolto = true;
+            }
             self.voci_turno = battute;
-            self.fiato.ascolto = true;
-            self.dopo_le_voci.ascolto = true;
         }
         self.voci_turno.clear();
     }
@@ -233,9 +242,12 @@ impl Mondo {
 
     /// Il tempo delle voci della nave; e quando tacciono, quello che le aspettava.
     pub(super) fn passo_voci_nave(&mut self, dt: f32) {
-        self.voci_radio.passo(dt);
-        self.voci_nave.passo(dt);
-        if self.voci_nave.occupate() || self.anello.is_some() {
+        // le due file non si parlano sopra: quella che ha un’altra voce in corso aspetta che finisca
+        let nave = self.voci_nave.viva();
+        self.voci_radio.passo_con(dt, nave);
+        let radio = self.voci_radio.viva();
+        self.voci_nave.passo_con(dt, radio);
+        if self.voci_nave.nave_occupate() || self.anello.is_some() {
             return;
         }
         let d = std::mem::take(&mut self.dopo_le_voci);
@@ -808,7 +820,9 @@ impl Mondo {
         let sr = self.sr;
         let fili = if secondo { eco.secondo } else { eco.primo };
         let fine = sintonia::durata_dei_fili(fili) + 1.2;
-        let registrate = eco.forma == Forma::Fili && self.voci_nave.disponibili(&self.voci_turno);
+        let registrate = eco.forma == Forma::Fili
+            && self.voci_turno.iter().any(|p| !p.servizio())
+            && self.voci_nave.disponibili(&self.voci_turno);
         if self.brusio_base > 0.0 {
             let giu = if secondo { -20.0 } else { -10.0 };
             self.brusio.guadagno.verso(self.brusio_base * db(giu), 0.8, sr);

@@ -16,7 +16,10 @@
 #      acceso, il reattore toccato, la radio, l'archivio forzato, la ripresa
 #      dopo un ANNULLA alla fine…);
 #   5. i segni a sorte che si riconoscono dal testo sono ancora nel gioco, e così
-#      le battute dell'Anziano con la voce (parola per parola);
+#      le battute dell'Anziano con la voce (parola per parola), quelle delle voci
+#      della nave, di Yusuf e di L.V., e le parti della voce di servizio; la voce di
+#      servizio ha un file per parte, e la tabella del ponte, il manifest e il gioco
+#      dicono le stesse cose;
 #   6. il ponte non cambia la partita: lo stesso percorso giocato dal ponte e
 #      giocato dal motore da solo arriva alla stessa impronta.
 
@@ -146,6 +149,34 @@ def indisturbato(mondo, percorso):
     return None
 
 
+def servizio_coerente():
+    """La voce di servizio (documento 35, §11): il manifest è quello dei testi del gioco di adesso, ogni parte è
+    tagliata e ha il suo file, e la tabella del ponte è quella del manifest."""
+    cartella = os.path.join(RADICE, "doppiaggio", "servizio")
+    manifest = json.load(open(os.path.join(cartella, "manifest.json"), encoding="utf-8"))
+    tagli = json.load(open(os.path.join(cartella, "tagli.json"), encoding="utf-8"))["parti"]
+    problemi, attese = [], {}
+    for p in manifest["parti"]:
+        t = tagli.get(p["id"])
+        if not t:
+            problemi.append(f"la parte «{p['voce']}» non è tagliata (strumenti/audio/taglia_servizio.py)")
+            continue
+        attese[t["file"]] = (p["tipo"], p["gioco"])
+        if not os.path.isfile(os.path.join(RADICE, "audio", "musica-ia", "SV", t["file"] + ".mp3")):
+            problemi.append(f"manca il file {t['file']}.mp3")
+    if attese != ponte.VOCI_SERVIZIO:
+        problemi.append("la tabella VOCI_SERVIZIO del ponte non è quella del manifest")
+    sys.path.insert(0, os.path.join(RADICE, "strumenti", "audio"))
+    import voce_servizio                              # noqa: E402
+    ora = {p["voce"] for p in voce_servizio.parti_di_servizio()}
+    vecchie = {p["voce"] for p in manifest["parti"]}
+    for v in sorted(ora - vecchie):
+        problemi.append(f"una parte nuova nel gioco, da generare: «{v}» (strumenti/audio/voce_servizio.py)")
+    for v in sorted(vecchie - ora):
+        problemi.append(f"una parte che il gioco non ha più: «{v}»")
+    return problemi
+
+
 def main():
     ap = argparse.ArgumentParser(description="Gli eventi che il ponte manda al suono.")
     ap.add_argument("-v", "--verboso", action="store_true")
@@ -203,11 +234,20 @@ def main():
     if perse:
         print(f"     non più nel gioco, parola per parola: {', '.join(perse)}")
 
+    perse_anziano = perse
     voci = json.loads(ponte.rel_voci_nave())
     perse = [n for n, c in voci.items() if not c]
-    print(f"[{'NO' if perse else 'OK'}] le battute delle voci della nave, di Yusuf e di L.V. nel gioco ({len(voci)})")
+    print(f"[{'NO' if perse else 'OK'}] le battute delle voci della nave, di Yusuf e di L.V. e le parti della voce "
+          f"di servizio nel gioco ({len(voci)})")
     if perse:
         print(f"     non più nel gioco, frammento per frammento: {', '.join(perse)}")
+    perse = perse_anziano + perse
+
+    servizio = servizio_coerente()
+    print(f"[{'NO' if servizio else 'OK'}] la voce di servizio: il manifest, i file e la tabella del ponte "
+          f"({len(ponte.VOCI_SERVIZIO)} parti)")
+    for p in servizio:
+        print(f"     {p}")
 
     mondo = compila_mondo(STORIA)
     divergenze = [d for d in (indisturbato(mondo, os.path.join(QUI, f"{n}.txt")) for n in ponte.FINALI) if d]
@@ -219,7 +259,7 @@ def main():
         print()
         for nome, n in sorted(conta.items()):
             print(f"  {n:5}  {nome}")
-    sbagli = falliti + bool(rami) + bool(mai or ignoti) + bool(persi) + bool(perse) + bool(divergenze)
+    sbagli = falliti + bool(rami) + bool(mai or ignoti) + bool(persi) + bool(perse) + bool(servizio) + bool(divergenze)
     print(f"\nPercorsi: {len(percorsi)}; falliti: {falliti}. Eventi diversi: {len(conta)}; "
           f"eventi in tutto: {sum(conta.values())}.")
     return 1 if sbagli else 0
