@@ -298,3 +298,25 @@ strato suona soltanto quando nel turno c’è il Sintonizzatore al lavoro. Una p
 
 **L’ascolto**: `consegne/Voce L.V. serra 2026-11-07/Ascolto - la scatola nera della serra.mp3`, 1:35, reso dal motore
 del gioco, con la serra intorno. **Approvato** dall’autore il 7 novembre 2026: «Va bene».
+
+## 11. La voce di servizio (7 novembre 2026)
+
+L’autore: «Io comunque farei la voce di servizio come abbiamo fatto con Il Viaggiatore, usando però una voce femminile
+da “interfaccia” che potrebbe anche essere la tuta che gli dice l’aria oltre alle altre parti di testo di “servizio”»;
+poi, sui crediti di ElevenLabs (circa 6.000–9.000, e un posto per le voci da liberare): «risparmiamoceli sti crediti».
+
+**Come nel Viaggiatore**: la voce «Kira» di Google AI Studio (Gemini 3.8 Flash TTS), con una descrizione sempre
+identica nel campo dello stile, generata dall’autore; i testi li prepara uno strumento dal gioco
+(`strumenti/audio/voce_servizio.py` → `doppiaggio/servizio/servizio.txt` e `manifest.json`, istruzioni in
+`doppiaggio/servizio/LEGGIMI.md`). Una parte per riga con `<long pause>`, i maiuscoli abbassati, le percentuali in
+lettere, le frasi con un numero variabile una per valore (la matrice: 4, 18, 75, 100).
+
+**Che cosa dice**: quello che sullo schermo ha già uno stile a parte (`grammatica.ts`): PROTEZIONE VITALE, le scritte
+dei display, le letture dello scanner (dentro le quali due frasi restano di William: «Provo con un’altra, e un’altra
+ancora:» e «il calcolo parte, si ferma, riparte. Al terzo tentativo si arrende e scrive»), la matrice di traduzione
+(quello che William aggiunge nella stessa parentesi resta suo) e i suggerimenti fra parentesi. Il numero dell’aria che
+William legge sul visore resta di William. In tutto 41 parti, circa 250 parole, circa 2 minuti e mezzo: una
+generazione sola (AI Studio arriva a circa sei minuti, l’autore; lo strumento divide i blocchi oltre i cinque).
+
+Nel gioco andrà come Yusuf e la scatola nera: asciutta, sul cursore del parlato; la tuta un poco dentro il casco, i
+suggerimenti puliti. Si collega quando c’è il file.

@@ -1,0 +1,431 @@
+{
+ "voce": "servizio",
+ "blocchi": {
+  "servizio": [
+   "d36d0f144e18",
+   "40bc3cba378a",
+   "f75b5d9ee9ce",
+   "709f41354187",
+   "43420b893935",
+   "fa194f423751",
+   "b85eec4f9381",
+   "1071bdb7fd0a",
+   "cf7ea2bb5c54",
+   "51860cc96dd3",
+   "7fdb75049040",
+   "59638cedb1b4",
+   "5f34c60b192a",
+   "9beffb8c5e82",
+   "8a5f7db8db92",
+   "2c5f798ee0df",
+   "70f929987041",
+   "17ec8adc016d",
+   "d0e5a4e5438c",
+   "ed5cefb59951",
+   "30dd4457980d",
+   "2bfae0c60e64",
+   "7199ffa87ea1",
+   "397ac0bbcfec",
+   "cbc0dacb4580",
+   "ce31c3cfa86e",
+   "eb89c3068503",
+   "fc942823945a",
+   "27997ff91226",
+   "b70a1898d476",
+   "9453c968b405",
+   "5e88107a12f9",
+   "53d2dbced7f8",
+   "2777de340957",
+   "00dd042c0017",
+   "ff0400d5e26e",
+   "796eabf99934",
+   "ddb9c137bedd",
+   "cf123dbc4aa0",
+   "c31d9baadc8a",
+   "70036cdbc748"
+  ]
+ },
+ "parti": [
+  {
+   "id": "d36d0f144e18",
+   "voce": "Protezione vitale.",
+   "gioco": "PROTEZIONE VITALE",
+   "tipo": "protezione",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda"
+   ]
+  },
+  {
+   "id": "40bc3cba378a",
+   "voce": "Canale aperto da remoto.",
+   "gioco": "CANALE APERTO DA REMOTO",
+   "tipo": "schermo",
+   "da": [
+    "ogni turno"
+   ]
+  },
+  {
+   "id": "f75b5d9ee9ce",
+   "voce": "Chiusura rifiutata.",
+   "gioco": "CHIUSURA RIFIUTATA",
+   "tipo": "schermo",
+   "da": [
+    "ogni turno"
+   ]
+  },
+  {
+   "id": "709f41354187",
+   "voce": "Materiale non in archivio.",
+   "gioco": "MATERIALE NON IN ARCHIVIO",
+   "tipo": "schermo",
+   "da": [
+    "regola"
+   ]
+  },
+  {
+   "id": "43420b893935",
+   "voce": "Sotto 30, protezione vitale.",
+   "gioco": "SOTTO 30, PROTEZIONE VITALE",
+   "tipo": "schermo",
+   "da": [
+    "ogni turno"
+   ]
+  },
+  {
+   "id": "fa194f423751",
+   "voce": "Analisi biometrica — specie: Homo sapiens. Età al decesso: trentacinque anni circa. Cause: anossia, ipotermia. Decesso stimato: centocinquant’anni fa, con lo stesso margine d’errore della giuntura.",
+   "gioco": "ANALISI BIOMETRICA — specie: Homo sapiens. Età al decesso: trentacinque anni circa. Cause: anossia, ipotermia. Decesso stimato: centocinquant'anni fa, con lo stesso margine d'errore della giuntura.",
+   "tipo": "lettura",
+   "da": [
+    "regola"
+   ]
+  },
+  {
+   "id": "b85eec4f9381",
+   "voce": "Analisi dell’archivio centrale — integrità dei dati stimata: 0,001 per cento. Corruzione a cascata per degradazione entropica, perdita irreversibile.",
+   "gioco": "ANALISI DELL'ARCHIVIO CENTRALE — integrità dei dati stimata: 0,001%. Corruzione a cascata per degradazione entropica, perdita irreversibile.",
+   "tipo": "lettura",
+   "da": [
+    "regola"
+   ]
+  },
+  {
+   "id": "1071bdb7fd0a",
+   "voce": "Analisi manifattura — origine terrestre, centocinquant’anni circa, modello fuori produzione. Identificazione missione — logo: Aurora 7. Esplorazione in solitaria, non documentata negli archivi pubblici.",
+   "gioco": "ANALISI MANIFATTURA — origine terrestre, centocinquant'anni circa, modello fuori produzione. IDENTIFICAZIONE MISSIONE — logo: AURORA-7. Esplorazione in solitaria, non documentata negli archivi pubblici.",
+   "tipo": "lettura",
+   "da": [
+    "regola"
+   ]
+  },
+  {
+   "id": "cf7ea2bb5c54",
+   "voce": "Flora di Xylos — deceduto. Forma silicea: costruttore — deceduto.",
+   "gioco": "‹FLORA DI XYLOS› — deceduto. ‹FORMA SILICEA: COSTRUTTORE› — deceduto.",
+   "tipo": "lettura",
+   "da": [
+    "regola"
+   ]
+  },
+  {
+   "id": "51860cc96dd3",
+   "voce": "Lettura: fauna dei tre soli: grande pascolatore — deceduto. Integrità genomica 0,02 per cento.",
+   "gioco": "LETTURA: ‹FAUNA DEI TRE SOLI: GRANDE PASCOLATORE› — deceduto. Integrità genomica 0,02%.",
+   "tipo": "lettura",
+   "da": [
+    "regola"
+   ]
+  },
+  {
+   "id": "7fdb75049040",
+   "voce": "Lunghezza: trecentoquaranta metri. Massa: stima incerta, il doppio della Santa Maria. Composizione:",
+   "gioco": "Lunghezza: trecentoquaranta metri. Massa: stima incerta, il doppio della Santa Maria. Composizione:",
+   "tipo": "lettura",
+   "da": [
+    "regola"
+   ]
+  },
+  {
+   "id": "59638cedb1b4",
+   "voce": "Matrice di traduzione: cento per cento — decodifica completata.",
+   "gioco": "MATRICE DI TRADUZIONE: 100% — DECODIFICA COMPLETATA",
+   "tipo": "matrice",
+   "da": [
+    "ogni turno"
+   ]
+  },
+  {
+   "id": "5f34c60b192a",
+   "voce": "Matrice di traduzione: cento per cento.",
+   "gioco": "Matrice di traduzione: 100%",
+   "tipo": "matrice",
+   "da": [
+    "regola"
+   ]
+  },
+  {
+   "id": "9beffb8c5e82",
+   "voce": "Matrice di traduzione: diciotto per cento.",
+   "gioco": "Matrice di traduzione: 18%",
+   "tipo": "matrice",
+   "da": [
+    "regola"
+   ]
+  },
+  {
+   "id": "8a5f7db8db92",
+   "voce": "Matrice di traduzione: quattro per cento.",
+   "gioco": "Matrice di traduzione: 4%",
+   "tipo": "matrice",
+   "da": [
+    "regola"
+   ]
+  },
+  {
+   "id": "2c5f798ee0df",
+   "voce": "Matrice di traduzione: settantacinque per cento.",
+   "gioco": "Matrice di traduzione: 75%",
+   "tipo": "matrice",
+   "da": [
+    "regola"
+   ]
+  },
+  {
+   "id": "70f929987041",
+   "voce": "Adesso puoi accostare.",
+   "gioco": "Adesso puoi ACCOSTARE.",
+   "tipo": "suggerimento",
+   "da": [
+    "regola"
+   ]
+  },
+  {
+   "id": "17ec8adc016d",
+   "voce": "Analizza lo scafo nero.",
+   "gioco": "ANALIZZA lo scafo nero.",
+   "tipo": "suggerimento",
+   "da": [
+    "descrizione di scafo nero"
+   ]
+  },
+  {
+   "id": "d0e5a4e5438c",
+   "voce": "Analizzala.",
+   "gioco": "ANALIZZALA.",
+   "tipo": "suggerimento",
+   "da": [
+    "descrizione di nave aliena",
+    "descrizione di lastra dati",
+    "descrizione di stele"
+   ]
+  },
+  {
+   "id": "ed5cefb59951",
+   "voce": "Analizzale.",
+   "gioco": "ANALIZZALE.",
+   "tipo": "suggerimento",
+   "da": [
+    "descrizione di capsule"
+   ]
+  },
+  {
+   "id": "30dd4457980d",
+   "voce": "Analizzali.",
+   "gioco": "ANALIZZALI.",
+   "tipo": "suggerimento",
+   "da": [
+    "descrizione di pilastro"
+   ]
+  },
+  {
+   "id": "2bfae0c60e64",
+   "voce": "Analizzalo.",
+   "gioco": "ANALIZZALO.",
+   "tipo": "suggerimento",
+   "da": [
+    "descrizione di banco",
+    "descrizione di cilindro mnemonico",
+    "descrizione di nucleo"
+   ]
+  },
+  {
+   "id": "7199ffa87ea1",
+   "voce": "Firma la placca, oppure completa la parola.",
+   "gioco": "FIRMA LA PLACCA, oppure COMPLETA LA PAROLA.",
+   "tipo": "suggerimento",
+   "da": [
+    "regola"
+   ]
+  },
+  {
+   "id": "397ac0bbcfec",
+   "voce": "Firma la placca.",
+   "gioco": "FIRMA LA PLACCA.",
+   "tipo": "suggerimento",
+   "da": [
+    "regola"
+   ]
+  },
+  {
+   "id": "cbc0dacb4580",
+   "voce": "Parla con l’Anziano.",
+   "gioco": "PARLA CON L'ANZIANO.",
+   "tipo": "suggerimento",
+   "da": [
+    "descrizione di santuario centrale",
+    "descrizione di anziano"
+   ]
+  },
+  {
+   "id": "ce31c3cfa86e",
+   "voce": "Per ascoltarla: ascolta la scatola nera.",
+   "gioco": "Per ascoltarla: ASCOLTA LA SCATOLA NERA.",
+   "tipo": "suggerimento",
+   "da": [
+    "regola"
+   ]
+  },
+  {
+   "id": "eb89c3068503",
+   "voce": "Per ascoltarla: ascolta la scatola nera. La corrente gliela darebbe la tua tuta.",
+   "gioco": "Per ascoltarla: ASCOLTA LA SCATOLA NERA. La corrente gliela darebbe la tua tuta.",
+   "tipo": "suggerimento",
+   "da": [
+    "regola"
+   ]
+  },
+  {
+   "id": "fc942823945a",
+   "voce": "Per chiamare Yusuf: parla con Yusuf.",
+   "gioco": "Per chiamare Yusuf: PARLA CON YUSUF.",
+   "tipo": "suggerimento",
+   "da": [
+    "descrizione di radio",
+    "regola"
+   ]
+  },
+  {
+   "id": "27997ff91226",
+   "voce": "Per liberarlo dalla nicchia: stacca il risuonatore.",
+   "gioco": "Per liberarlo dalla nicchia: STACCA IL RISUONATORE.",
+   "tipo": "suggerimento",
+   "da": [
+    "regola"
+   ]
+  },
+  {
+   "id": "b70a1898d476",
+   "voce": "Per portarti vicino alla massa: accosta.",
+   "gioco": "Per portarti vicino alla massa: ACCOSTA.",
+   "tipo": "suggerimento",
+   "da": [
+    "descrizione di comandi di manovra",
+    "regola"
+   ]
+  },
+  {
+   "id": "9453c968b405",
+   "voce": "Per studiarla meglio: analizzala.",
+   "gioco": "Per studiarla meglio: ANALIZZALA.",
+   "tipo": "suggerimento",
+   "da": [
+    "descrizione di mappa stellare"
+   ]
+  },
+  {
+   "id": "5e88107a12f9",
+   "voce": "Per svegliarla: usa la postazione.",
+   "gioco": "Per svegliarla: USA LA POSTAZIONE.",
+   "tipo": "suggerimento",
+   "da": [
+    "regola"
+   ]
+  },
+  {
+   "id": "53d2dbced7f8",
+   "voce": "Prima accosta.",
+   "gioco": "Prima ACCOSTA.",
+   "tipo": "suggerimento",
+   "da": [
+    "regola"
+   ]
+  },
+  {
+   "id": "2777de340957",
+   "voce": "Ricarica la tuta, se ti serve aria: una volta sola.",
+   "gioco": "RICARICA LA TUTA, se ti serve aria: una volta sola.",
+   "tipo": "suggerimento",
+   "da": [
+    "descrizione di generatore"
+   ]
+  },
+  {
+   "id": "00dd042c0017",
+   "voce": "Sintonizza le cose delle stanze silenziose. Ascoltare costa aria.",
+   "gioco": "SINTONIZZA le cose delle stanze silenziose. Ascoltare costa aria.",
+   "tipo": "suggerimento",
+   "da": [
+    "descrizione di sintonizzatore"
+   ]
+  },
+  {
+   "id": "ff0400d5e26e",
+   "voce": "Staccalo.",
+   "gioco": "STACCALO.",
+   "tipo": "suggerimento",
+   "da": [
+    "regola"
+   ]
+  },
+  {
+   "id": "796eabf99934",
+   "voce": "Suona il sonaglio, se vuoi ascoltarlo.",
+   "gioco": "SUONA IL SONAGLIO, se vuoi ascoltarlo.",
+   "tipo": "suggerimento",
+   "da": [
+    "regola"
+   ]
+  },
+  {
+   "id": "ddb9c137bedd",
+   "voce": "Traducila.",
+   "gioco": "TRADUCILA.",
+   "tipo": "suggerimento",
+   "da": [
+    "descrizione di lastra incisa",
+    "descrizione di sostegno"
+   ]
+  },
+  {
+   "id": "cf123dbc4aa0",
+   "voce": "Traducile.",
+   "gioco": "TRADUCILE.",
+   "tipo": "suggerimento",
+   "da": [
+    "descrizione di tabelle di semina"
+   ]
+  },
+  {
+   "id": "c31d9baadc8a",
+   "voce": "Traducili.",
+   "gioco": "TRADUCILI.",
+   "tipo": "suggerimento",
+   "da": [
+    "descrizione di bassorilievo",
+    "descrizione di globo olografico"
+   ]
+  },
+  {
+   "id": "70036cdbc748",
+   "voce": "Usala.",
+   "gioco": "USALA.",
+   "tipo": "suggerimento",
+   "da": [
+    "descrizione di postazione"
+   ]
+  }
+ ]
+}
