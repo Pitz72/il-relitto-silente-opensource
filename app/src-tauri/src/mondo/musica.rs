@@ -919,9 +919,6 @@ impl Musica {
         self.visitati = 0;
         self.t = 0.0;
         self.voce.tace(0.3);
-        for p in [Pezzo::AN1, Pezzo::AN2, Pezzo::AN3] {
-            self.voce.precarica(p);
-        }
         if self.file.disponibile(&LETTI) {
             self.esegui(Az::Tace(2.0));
             self.file.tieni(&[Pezzo::A1, Pezzo::A2, Pezzo::A3, Pezzo::A4, Pezzo::CA]);
@@ -1038,6 +1035,9 @@ impl Musica {
         self.voce.tace(1.5);
         self.esegui(Az::Tace(6.0));
         self.p(10.0, Az::Fine);
+        // le battute sono ventisei: finito il colloquio, quelle decodificate lasciano la memoria (quella che sta
+        // sfumando ha la sua copia)
+        self.voce.tieni(&[]);
     }
 
     // ---- il tempo
@@ -1962,8 +1962,9 @@ mod prove_file {
         for p in Pezzo::TUTTI {
             let pcm = b.pronto(p).unwrap_or_else(|| panic!("{p:?} non si decodifica"));
             println!("{p:?}: {:.1} s", pcm.durata());
-            // il canto e le battute dell’Anziano sono corti: il resto è musica lunga
-            let minimo = if matches!(p, Pezzo::CA | Pezzo::AN1 | Pezzo::AN2 | Pezzo::AN3) { 5.0 } else { 30.0 };
+            // il canto e le voci sono corti («Deve.» dura meno di un secondo): il resto è musica lunga
+            let voce = p == Pezzo::CA || p.parlato() || super::super::musica_file::VOCI_AN.iter().any(|(a, _)| *a == p);
+            let minimo = if voce { 0.5 } else { 30.0 };
             assert!(pcm.durata() > minimo, "{p:?} dura {} s", pcm.durata());
         }
         println!("decodificati in {:.1} s", t0.elapsed().as_secs_f32());

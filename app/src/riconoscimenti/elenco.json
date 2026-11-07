@@ -17,13 +17,23 @@
   },
   {
    "sigla": "AN",
-   "titolo": "La voce dell’Anziano (tre battute)",
+   "titolo": "La voce dell’Anziano (ventisei battute)",
    "autore": "Simone Pizzi",
    "fonte": "ElevenLabs, eleven_v4 (la voce disegnata «Edoardo Straniero»)",
    "url": null,
    "licenza": "CC BY-NC-SA 4.0 per quanto di spettanza dell’autore; i Termini di ElevenLabs prevalgono",
    "ridistribuibile": "sì",
-   "uso": "l’Anziano: il benvenuto, il Piccolo, il congedo"
+   "uso": "l’Anziano: tutte le sue battute"
+  },
+  {
+   "sigla": "YU",
+   "titolo": "La voce di Yusuf (otto battute)",
+   "autore": "Simone Pizzi",
+   "fonte": "ElevenLabs, eleven_v4 (la voce dell’autore, clonata: Instant Voice Clone «Simone Pizzi»)",
+   "url": null,
+   "licenza": "CC BY-NC-SA 4.0 per quanto di spettanza dell’autore; i Termini di ElevenLabs prevalgono",
+   "ridistribuibile": "sì",
+   "uso": "Yusuf: la radio di plancia, la chiamata nella fuga"
   },
   {
    "sigla": "NV",

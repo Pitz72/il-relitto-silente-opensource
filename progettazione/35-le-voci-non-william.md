@@ -16,8 +16,8 @@ soltanto le indicazioni fra parentesi quadre per la voce. Mai tagli dentro una b
 | L’Anziano | **fatta**: tutte le 26 varianti, «Edoardo Straniero» (ElevenLabs), approvate il 2 e il 7 novembre | ponte.fav |
 | Yusuf | **fatta**: le 8 battute con la voce clonata dell’autore, approvate il 7 novembre; atto I dalla radio di plancia, la fuga su un canale instabile | santamaria.fav, fuga.fav |
 
-Le battute dell’Anziano e di Yusuf sono pronte (`audio/musica-ia/AN/`, `audio/musica-ia/YU/`), non ancora collegate al
-gioco: si collegano con il blocco H.
+Le battute dell’Anziano e di Yusuf (`audio/musica-ia/AN/`, `audio/musica-ia/YU/`) sono nel gioco dal 7 novembre 2026,
+dopo le voci della nave (§8).
 
 ## 2. Che cosa manca (contato il 7 novembre 2026, le sole parole fra «»)
 
@@ -240,10 +240,27 @@ scene a più voci, il corridoio, le gole, il Piccolo e il Navarca, rese dal moto
 manda anche l’evento `voci`). Fra l’ingegnere capo e il tecnico di carico, nelle gole, 1,3 secondi di silenzio vero
 fra le due battute; prima si toccavano.
 
+**Approvato** dall’autore il 7 novembre 2026, dopo questo ascolto: le pause «vanno bene».
+
+**L’Anziano e Yusuf**, lo stesso giorno, dopo l’approvazione delle pause:
+- **l’Anziano**: le ventitré battute nuove e il congedo rifatto (`AN-03-congedo-ascolto.mp3` prende il posto della presa
+  del 2 novembre) vanno in `audio/musica-ia/AN/`. Il ponte (`VOCI_ANZIANO`) ha tutte e ventisei le varianti, e le
+  confronta parola per parola, senza la punteggiatura (il copione per la voce ne aveva una sua); il collaudo prova tutte
+  le combinazioni delle parti condizionali «[se …]» e le trova tutte. Il motore le suona come le prime tre; la battuta
+  che serve si carica quando serve, e a fine colloquio le battute lasciano la memoria;
+- **Yusuf**: le otto battute vanno con l’evento `voci` (`VOCI_YUSUF`; il conto sottovoce del credito sta fuori dalle
+  «», ma è nella presa). Il motore le fa uscire asciutte, sul cursore del parlato, perché la radio ce l’hanno già nel
+  file: nel dialogo mezzo secondo dopo lo schiocco della linea, nella fuga 1,2 secondi dopo il testo. Come per
+  l’Anziano, una battuta nuova prende il posto di quella che parlava ancora, subito, senza la pausa delle echi; quando
+  la linea si chiude, la voce se ne va con lei. Il livello, misurato nel motore: −21 dBFS sulle parole, come negli
+  ascolti approvati (−20,7 e −21,6);
+- **le prove**: tre nuove (una battuta che prende il posto dell’altra, i nomi e i file di tutte, Yusuf dalla radio), le
+  90 del motore passano, la prova lunga decodifica tutti gli 82 file; il collaudo trova le 26 battute dell’Anziano e le
+  35 delle voci della nave e di Yusuf.
+
 ## 9. Più avanti
 
 - **Gli effetti e i suoni d’ambiente** (l’autore, 7 novembre 2026): «ora teniamo buono questo environment sound ma
   credo che poi fx e suoni vadano rifatti, ma ci penseremo più in là». Restano come sono; se ne riparla dopo il blocco
   H e la beta.
-- **L’Anziano e Yusuf** nel gioco: le battute sono pronte (§1), si collegano come le voci della nave.
 - **L.V. nella serra** (V4): da preparare.

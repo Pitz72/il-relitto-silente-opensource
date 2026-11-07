@@ -205,7 +205,7 @@ def main():
 
     voci = json.loads(ponte.rel_voci_nave())
     perse = [n for n, c in voci.items() if not c]
-    print(f"[{'NO' if perse else 'OK'}] le battute delle voci della nave nel gioco ({len(voci)})")
+    print(f"[{'NO' if perse else 'OK'}] le battute delle voci della nave e di Yusuf nel gioco ({len(voci)})")
     if perse:
         print(f"     non più nel gioco, frammento per frammento: {', '.join(perse)}")
 

@@ -691,6 +691,42 @@ mod prove {
     }
 
     #[test]
+    fn yusuf_parla_dalla_radio_dopo_lo_schiocco_e_se_ne_va_con_la_linea() {
+        let (mut m, tx) = mondo_in("plancia", "");
+        m.voci_radio.con_biblioteca(biblioteca(&[(Pezzo::Yu01, 3.0), (Pezzo::Yu04, 4.0)]));
+        let dialogo = |n: &str| format!(r#", "dialogo": "yusuf", "nodo": "{n}""#);
+        tx.send(turno(&format!(
+            r#"{{"stati": {}, "eventi": [{{"evento": "dialogo", "con": "yusuf", "nodo": "apertura"}}, {{"evento": "voci", "battute": ["YU-01-apertura"]}}]}}"#,
+            stati("plancia", "", &dialogo("apertura"))
+        )))
+        .unwrap();
+        // quando comincia a parlare, e mai nella cuffia
+        let mut inizio = None;
+        for i in 0..(2.0 * SR / 128.0) as usize {
+            let mut buf = vec![kira::Frame::ZERO; 128];
+            m.rendi(&mut buf, 1.0 / SR as f64);
+            assert!(!m.voci_nave.parla(), "Yusuf non è un’eco");
+            if inizio.is_none() && m.voci_radio.parla() {
+                inizio = Some(i as f32 * 128.0 / SR);
+            }
+        }
+        let inizio = inizio.expect("Yusuf non parla");
+        assert!((inizio - 0.5).abs() < 0.05, "Yusuf parla {inizio:.2} s dopo lo schiocco");
+        // un nodo nuovo: la battuta nuova al posto di quella di prima, mezzo secondo dopo
+        tx.send(turno(&format!(
+            r#"{{"stati": {}, "eventi": [{{"evento": "nodo", "con": "yusuf", "nodo": "cosa"}}, {{"evento": "voci", "battute": ["YU-04-cosa"]}}]}}"#,
+            stati("plancia", "", &dialogo("cosa"))
+        )))
+        .unwrap();
+        suona(&mut m, 1.0);
+        assert!(m.voci_radio.parla(), "la battuta nuova non parla");
+        // la linea si chiude: la voce se ne va con lei
+        tx.send(turno(&format!(r#"{{"stati": {}, "eventi": [{{"evento": "dialogo_fine", "con": "yusuf"}}]}}"#, stati("plancia", "", "")))).unwrap();
+        suona(&mut m, 0.5);
+        assert!(!m.voci_radio.parla(), "Yusuf parla ancora dopo lo schiocco");
+    }
+
+    #[test]
     fn una_registrazione_dello_scanner_suona_da_sola() {
         let (mut m, tx) = mondo_in("ponte di comando", "");
         m.voci_nave.con_biblioteca(biblioteca(&[(Pezzo::Nv14, 9.1)]));

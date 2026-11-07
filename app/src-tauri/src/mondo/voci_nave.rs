@@ -81,6 +81,20 @@ impl VociNave {
         }
     }
 
+    /// Le battute prendono il posto di quello che suonava (una battuta di dialogo che lascia il posto alla
+    /// successiva): quello che c’era sfuma in `sfuma` secondi, e la prima nuova entra fra `ritardo`, senza pausa.
+    pub fn sostituisci(&mut self, battute: &[Pezzo], ritardo: f32, sfuma: f32) {
+        self.tace(sfuma);
+        self.parlava = false;
+        self.attesa = ritardo;
+        for &p in battute {
+            if self.fila.len() < MAX_FILA {
+                self.lettore.precarica(p);
+                self.fila.push(p);
+            }
+        }
+    }
+
     /// Fa partire una battuta adesso, fuori dalla fila (il giro dell’anello del Piccolo).
     pub fn subito(&mut self, p: Pezzo) {
         self.lettore.avvia(richiesta(p));
@@ -101,7 +115,8 @@ impl VociNave {
     /// Fa andare il tempo, una volta per blocco.
     pub fn passo(&mut self, dt: f32) {
         self.lettore.passo(dt);
-        let parla = self.lettore.attivo();
+        // quello che sta sfumando via non conta: la fila non lo aspetta
+        let parla = self.lettore.vivo();
         if self.parlava && !parla {
             // una voce è finita: la prossima aspetta la pausa
             self.attesa = PAUSA_FRA_VOCI;
@@ -225,6 +240,29 @@ mod prove {
     }
 
     #[test]
+    fn una_battuta_nuova_prende_il_posto_di_quella_che_parla() {
+        let mut v = voci_con(&[(Pezzo::Yu01, 4.0), (Pezzo::Yu04, 2.0)]);
+        v.sostituisci(&[Pezzo::Yu01], 0.5, 0.3);
+        let a = tratti(&ascolta(&mut v, 1.5));
+        assert_eq!(a.len(), 1, "{a:?}");
+        assert!((a[0].0 - 0.5).abs() < 0.05);
+        v.sostituisci(&[Pezzo::Yu04], 0.5, 0.3);
+        // il livello, ogni 10 ms: la prima sfuma in pochi decimi, la seconda entra dopo mezzo secondo, senza la
+        // pausa delle echi, e dura intera
+        let blocco = (SR * 0.01) as usize;
+        let livelli: Vec<f32> = (0..400)
+            .map(|_| {
+                v.passo(0.01);
+                (0..blocco).map(|_| v.campione().0.powi(2)).sum::<f32>()
+            })
+            .collect();
+        assert!(livelli[40] < livelli[0] * 1e-3, "la battuta di prima non sfuma: {} contro {}", livelli[40], livelli[0]);
+        assert!(livelli[55] > livelli[0] * 0.3, "la battuta nuova non è entrata a mezzo secondo");
+        let fine = livelli.iter().rposition(|&e| e > 1e-6).unwrap() as f32 * 0.01;
+        assert!((fine - 2.5).abs() < 0.05, "la battuta nuova finisce a {fine:.2} s, e doveva durare intera");
+    }
+
+    #[test]
     fn senza_file_non_c_e_niente_di_disponibile() {
         let v = voci_con(&[(Pezzo::Nv01, 1.0)]);
         assert!(v.disponibili(&[Pezzo::Nv01]));
@@ -241,11 +279,22 @@ mod prove {
         assert_eq!(Pezzo::della_battuta("NV-15-ultima-voce.mp3"), None);
         assert!(Pezzo::Nv12c.parlato() && !Pezzo::AN1.parlato());
         assert_eq!(Pezzo::Nv08b.file(), ("NV", "NV-08b-piccolo-mezza.mp3"));
+        // l'Anziano e Yusuf
+        assert_eq!(Pezzo::della_voce("benvenuto"), Some(Pezzo::AN1));
+        assert_eq!(Pezzo::della_voce("congedo-ascolto"), Some(Pezzo::AN3));
+        assert_eq!(Pezzo::della_voce("tracce-parola"), Some(Pezzo::An24));
+        assert_eq!(Pezzo::della_voce("tracce"), Some(Pezzo::An22));
+        assert_eq!(Pezzo::della_voce("niente"), None);
+        assert_eq!(Pezzo::della_battuta("YU-07-fuga-pezzo"), Some(Pezzo::Yu07));
+        assert!(Pezzo::Yu03.yusuf() && Pezzo::Yu03.parlato() && !Pezzo::Nv01.yusuf() && !Pezzo::An10.parlato());
         // ogni battuta ha il suo file nella cartella, e la tabella le ha tutte
-        let cartella = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../audio/musica-ia/NV");
-        for (p, nome) in super::super::musica_file::BATTUTE_NV {
-            assert!(Pezzo::TUTTI.contains(&p), "{nome} non è fra tutti i pezzi");
-            assert!(cartella.join(nome).is_file(), "manca il file {nome}");
+        let radice = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../audio/musica-ia");
+        use super::super::musica_file::{BATTUTE_NV, VOCI_AN, VOCI_YU};
+        for (p, nome) in BATTUTE_NV.iter().chain(VOCI_AN.iter()).chain(VOCI_YU.iter()) {
+            assert!(Pezzo::TUTTI.contains(p), "{nome} non è fra tutti i pezzi");
+            let (sotto, f) = p.file();
+            assert_eq!(f, *nome);
+            assert!(radice.join(sotto).join(nome).is_file(), "manca il file {nome}");
         }
     }
 

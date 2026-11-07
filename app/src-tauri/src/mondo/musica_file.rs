@@ -62,10 +62,43 @@ pub enum Pezzo {
     LV,
     /// l’Anziano (32, §3.6–3.7): il canto del primo contatto, la sua lingua prima delle parole
     CA,
-    /// l’Anziano: le tre battute con la voce (ElevenLabs, «Edoardo Straniero»), una per file
+    /// l’Anziano: le battute con la voce (ElevenLabs, «Edoardo Straniero»), una per file: le prime tre del 2
+    /// novembre 2026 (il congedo rifatto il 7), le altre ventitré del 7 novembre (documento 33, RN-H1)
     AN1,
     AN2,
     AN3,
+    An04,
+    An05,
+    An06,
+    An07,
+    An08,
+    An09,
+    An10,
+    An11,
+    An12,
+    An13,
+    An14,
+    An15,
+    An16,
+    An17,
+    An18,
+    An19,
+    An20,
+    An21,
+    An22,
+    An23,
+    An24,
+    An25,
+    An26,
+    /// Yusuf (documento 35, §1): le otto battute con la voce clonata dell’autore, già passate dalla radio
+    Yu01,
+    Yu02,
+    Yu03,
+    Yu04,
+    Yu05,
+    Yu06,
+    Yu07,
+    Yu08,
     /// le voci della nave (documento 35): le echi, le registrazioni dello scanner, l’ultima voce.
     /// Una battuta per file, già lavorata (`strumenti/audio/voci_nave.py`): l’aggancio, il
     /// traduttore, i vuoti stanno nel file; il motore la mette in fila e la passa dalla cuffia
@@ -130,8 +163,51 @@ pub const BATTUTE_NV: [(Pezzo, &str); 27] = [
     (Pezzo::Nv15, "NV-15-ultima-voce.mp3"),
 ];
 
+/// Le battute dell’Anziano con la voce e i loro file: il nome dopo «AN-nn-», senza «.mp3», è quello che manda il
+/// ponte (`VOCI_ANZIANO` in ponte.py).
+pub const VOCI_AN: [(Pezzo, &str); 26] = [
+    (Pezzo::AN1, "AN-01-benvenuto.mp3"),
+    (Pezzo::AN2, "AN-02-piccolo-vera.mp3"),
+    (Pezzo::AN3, "AN-03-congedo-ascolto.mp3"),
+    (Pezzo::An04, "AN-04-benvenuto-echi.mp3"),
+    (Pezzo::An05, "AN-05-benvenuto-risuonatore.mp3"),
+    (Pezzo::An06, "AN-06-benvenuto-risuonatore-echi.mp3"),
+    (Pezzo::An07, "AN-07-silenzio.mp3"),
+    (Pezzo::An08, "AN-08-salto.mp3"),
+    (Pezzo::An09, "AN-09-salto-stele.mp3"),
+    (Pezzo::An10, "AN-10-memoria.mp3"),
+    (Pezzo::An11, "AN-11-memoria-echi.mp3"),
+    (Pezzo::An12, "AN-12-memoria-forzato.mp3"),
+    (Pezzo::An13, "AN-13-memoria-forzato-echi.mp3"),
+    (Pezzo::An14, "AN-14-memoria-salutato.mp3"),
+    (Pezzo::An15, "AN-15-altro.mp3"),
+    (Pezzo::An16, "AN-16-aiuto.mp3"),
+    (Pezzo::An17, "AN-17-prezzo.mp3"),
+    (Pezzo::An18, "AN-18-piccolo.mp3"),
+    (Pezzo::An19, "AN-19-piccolo-incerta.mp3"),
+    (Pezzo::An20, "AN-20-piccolo-taciuta.mp3"),
+    (Pezzo::An21, "AN-21-sangue.mp3"),
+    (Pezzo::An22, "AN-22-tracce.mp3"),
+    (Pezzo::An23, "AN-23-tracce-firma.mp3"),
+    (Pezzo::An24, "AN-24-tracce-parola.mp3"),
+    (Pezzo::An25, "AN-25-musica.mp3"),
+    (Pezzo::An26, "AN-26-congedo.mp3"),
+];
+
+/// Le battute di Yusuf e i loro file: il nome senza «.mp3» è quello che manda il ponte (`VOCI_YUSUF`).
+pub const VOCI_YU: [(Pezzo, &str); 8] = [
+    (Pezzo::Yu01, "YU-01-apertura.mp3"),
+    (Pezzo::Yu02, "YU-02-apertura-pezzo.mp3"),
+    (Pezzo::Yu03, "YU-03-credito.mp3"),
+    (Pezzo::Yu04, "YU-04-cosa.mp3"),
+    (Pezzo::Yu05, "YU-05-qualcuno.mp3"),
+    (Pezzo::Yu06, "YU-06-voce.mp3"),
+    (Pezzo::Yu07, "YU-07-fuga-pezzo.mp3"),
+    (Pezzo::Yu08, "YU-08-fuga-nessuno.mp3"),
+];
+
 impl Pezzo {
-    pub const TUTTI: [Pezzo; 51] = [
+    pub const TUTTI: [Pezzo; 82] = [
         Pezzo::M1a,
         Pezzo::M1b,
         Pezzo::S2,
@@ -183,23 +259,66 @@ impl Pezzo {
         Pezzo::Nv14b,
         Pezzo::Nv14c,
         Pezzo::Nv15,
+        Pezzo::An04,
+        Pezzo::An05,
+        Pezzo::An06,
+        Pezzo::An07,
+        Pezzo::An08,
+        Pezzo::An09,
+        Pezzo::An10,
+        Pezzo::An11,
+        Pezzo::An12,
+        Pezzo::An13,
+        Pezzo::An14,
+        Pezzo::An15,
+        Pezzo::An16,
+        Pezzo::An17,
+        Pezzo::An18,
+        Pezzo::An19,
+        Pezzo::An20,
+        Pezzo::An21,
+        Pezzo::An22,
+        Pezzo::An23,
+        Pezzo::An24,
+        Pezzo::An25,
+        Pezzo::An26,
+        Pezzo::Yu01,
+        Pezzo::Yu02,
+        Pezzo::Yu03,
+        Pezzo::Yu04,
+        Pezzo::Yu05,
+        Pezzo::Yu06,
+        Pezzo::Yu07,
+        Pezzo::Yu08,
     ];
 
     /// Una voce registrata, che si porta al suo livello misurando le parole e non il silenzio fra
-    /// l’una e l’altra (documento 35, §8): le voci della nave.
+    /// l’una e l’altra (documento 35, §8): le voci della nave e Yusuf. L’Anziano no: il suo livello
+    /// è tarato dal 2 novembre sul valore efficace di tutto il file.
     pub fn parlato(self) -> bool {
-        BATTUTE_NV.iter().any(|(p, _)| *p == self)
+        self.yusuf() || BATTUTE_NV.iter().any(|(p, _)| *p == self)
     }
 
-    /// La battuta delle voci della nave dal nome che le dà il ponte.
+    /// Una battuta di Yusuf: suona dalla radio, asciutta, non nella cuffia.
+    pub fn yusuf(self) -> bool {
+        VOCI_YU.iter().any(|(p, _)| *p == self)
+    }
+
+    /// La battuta delle voci della nave o di Yusuf dal nome che le dà il ponte (l’evento «voci»).
     pub fn della_battuta(nome: &str) -> Option<Pezzo> {
-        BATTUTE_NV.iter().find(|(_, n)| n.strip_suffix(".mp3") == Some(nome)).map(|(p, _)| *p)
+        BATTUTE_NV.iter().chain(VOCI_YU.iter()).find(|(_, n)| n.strip_suffix(".mp3") == Some(nome)).map(|(p, _)| *p)
     }
 
     /// (la cartella della scheda, il nome del file) come stanno in `audio/musica-ia/`.
     pub fn file(self) -> (&'static str, &'static str) {
         if let Some((_, n)) = BATTUTE_NV.iter().find(|(p, _)| *p == self) {
             return ("NV", n);
+        }
+        if let Some((_, n)) = VOCI_AN.iter().find(|(p, _)| *p == self) {
+            return ("AN", n);
+        }
+        if let Some((_, n)) = VOCI_YU.iter().find(|(p, _)| *p == self) {
+            return ("YU", n);
         }
         match self {
             Pezzo::M1a => ("M1", "M1-01-bare-resonance.mp3"),
@@ -223,23 +342,15 @@ impl Pezzo {
             Pezzo::SM => ("SM", "SM-01-santa-maria.mp3"),
             Pezzo::LV => ("LV", "LV-01-la-traccia.mp3"),
             Pezzo::CA => ("AN", "AN-00-canto.mp3"),
-            Pezzo::AN1 => ("AN", "AN-01-benvenuto.mp3"),
-            Pezzo::AN2 => ("AN", "AN-02-piccolo-vera.mp3"),
-            Pezzo::AN3 => ("AN", "AN-03-congedo-ascolto.mp3"),
-            // le voci della nave: le trova la tabella, qui sopra
-            _ => ("NV", ""),
+            // le voci: le trovano le loro tabelle, qui sopra
+            _ => ("", ""),
         }
     }
 
     /// La battuta dell’Anziano con la voce, dal nome che le dà il ponte (`VOCI_ANZIANO` in
     /// ponte.py): il ponte lo manda solo se a schermo ci sono proprio quelle parole.
     pub fn della_voce(nome: &str) -> Option<Pezzo> {
-        match nome {
-            "benvenuto" => Some(Pezzo::AN1),
-            "piccolo-vera" => Some(Pezzo::AN2),
-            "congedo-ascolto" => Some(Pezzo::AN3),
-            _ => None,
-        }
+        VOCI_AN.iter().find(|(_, f)| f.get(6..).and_then(|r| r.strip_suffix(".mp3")) == Some(nome)).map(|(p, _)| *p)
     }
 }
 
@@ -595,6 +706,11 @@ impl Lettore {
     /// Un file che serviva non c’è o non si decodifica: si dice una volta sola.
     pub fn prendi_fallita(&mut self) -> bool {
         std::mem::take(&mut self.fallita)
+    }
+
+    /// Una voce suona senza sfumare via, o sta per partire.
+    pub fn vivo(&self) -> bool {
+        self.voci.iter().any(|v| !v.morente) || !self.attese.is_empty()
     }
 
     pub fn suona(&self, p: Pezzo) -> bool {

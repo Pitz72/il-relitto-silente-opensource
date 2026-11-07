@@ -176,8 +176,8 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
    è una dedica e non si spiega mai.
    **Il 7 novembre, blocco H** (documento 35): le quindici voci della nave sono disegnate, approvate e **nel
    gioco** (commit `31f4c8a`), con la pausa fra una voce e l’altra che l’autore ha chiesto; L.V. è un nastro
-   vecchio che si rovina (approvato); le battute di Yusuf (8) e le varianti dell’Anziano sono pronte ma **non
-   ancora collegate**. Prossimi passi, in ordine: collegare l’Anziano e Yusuf come le voci della nave; L.V. nella
+   vecchio che si rovina (approvato); le pause fra le voci approvate («vanno bene»); poi **nel gioco** anche
+   tutte le 26 battute dell’Anziano e le 8 di Yusuf (documento 35, §8). Prossimi passi, in ordine: L.V. nella
    serra (V4); H4 (i conteggi), H6 (l’intestazione di `relitto.fav`); poi una beta sola, la 0.2.5-beta.9 (H7).
 
 1. **Le sue note sulle beta, dalla 5 alla 8.** Prima cosa: chiedergli come gli sono sembrate nel gioco vero,

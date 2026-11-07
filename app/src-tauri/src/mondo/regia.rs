@@ -106,6 +106,7 @@ impl Mondo {
             self.fiato.ascolto = false;
             self.anello = None;
             self.voci_nave.tace(0.3);
+            self.voci_radio.tace(0.3);
             self.dopo_le_voci = super::DopoLeVoci::default();
             self.filo_g.verso(0.0, 0.3, sr);
             self.automazioni.clear();
@@ -197,6 +198,7 @@ impl Mondo {
     /// scanner, l’ultima voce, «Deve.» accanto alla nicchia, il «Dormi» del Navarca. In fila, dopo
     /// quelle che suonano già. Il giro del Piccolo no: lo fa l’anello, che segue il dialogo.
     fn registrazioni(&mut self) {
+        self.yusuf();
         self.voci_turno.retain(|p| !matches!(p, Pezzo::Nv08 | Pezzo::Nv08b));
         if !self.voci_turno.is_empty() && self.voci_nave.disponibili(&self.voci_turno) {
             let battute = std::mem::take(&mut self.voci_turno);
@@ -208,8 +210,29 @@ impl Mondo {
         self.voci_turno.clear();
     }
 
+    /// Le battute di Yusuf del turno: dalla radio di plancia nel dialogo, mezzo secondo dopo lo schiocco della
+    /// linea; nella fuga dal canale della Santa Maria che la tuta aggancia. Come per l’Anziano, una battuta nuova
+    /// prende il posto di quella che stava ancora parlando.
+    fn yusuf(&mut self) {
+        let mut yu = [Pezzo::Yu01; 4];
+        let mut n = 0;
+        for p in &self.voci_turno {
+            if p.yusuf() && n < yu.len() {
+                yu[n] = *p;
+                n += 1;
+            }
+        }
+        self.voci_turno.retain(|p| !p.yusuf());
+        if n == 0 || !self.voci_radio.disponibili(&yu[..n]) {
+            return;
+        }
+        let ritardo = if StatiGioco::e(&self.gioco.dialogo, "yusuf") { 0.5 } else { VOCI_DOPO };
+        self.voci_radio.sostituisci(&yu[..n], ritardo, 0.3);
+    }
+
     /// Il tempo delle voci della nave; e quando tacciono, quello che le aspettava.
     pub(super) fn passo_voci_nave(&mut self, dt: f32) {
+        self.voci_radio.passo(dt);
         self.voci_nave.passo(dt);
         if self.voci_nave.occupate() || self.anello.is_some() {
             return;
@@ -1302,7 +1325,8 @@ impl Mondo {
                     self.musica.anziano_esce();
                 }
                 if e.con.as_deref() == Some("yusuf") {
-                    // «La linea fa il suo schiocco»
+                    // «La linea fa il suo schiocco», e la voce se ne va con lei
+                    self.voci_radio.tace(0.15);
                     self.suona(colpi::squelch(sr), Bus::Altoparlante, -12.0, 0.0, 0.0);
                     let c = colpi::scatto(&mut self.caso, sr);
                     self.suona(c, Bus::Altoparlante, -14.0, 0.0, 0.1);

@@ -418,6 +418,8 @@ pub struct Mondo {
     anello: Option<Anello>,
     /// le voci della nave (documento 35), registrate: al posto del filo, quando ci sono i file
     voci_nave: VociNave,
+    /// Yusuf (documento 35, §1): la sua voce è già passata dalla radio, ed esce asciutta
+    voci_radio: VociNave,
     /// le battute che il ponte ha mandato in questo turno (l’evento «voci»), non ancora suonate
     voci_turno: Vec<Pezzo>,
     dopo_le_voci: DopoLeVoci,
@@ -560,6 +562,7 @@ impl Mondo {
             filo_shift: Scorrevole::nuovo(0.0),
             anello: None,
             voci_nave: VociNave::nuove(sr),
+            voci_radio: VociNave::nuove(sr),
             voci_turno: Vec::with_capacity(16),
             dopo_le_voci: DopoLeVoci::default(),
             fondo: Fondo::nuovo(sr, seme ^ 0xF0),
@@ -673,6 +676,7 @@ impl Mondo {
         self.intro.con_cartella(cartella.clone());
         // le voci della nave stanno nella stessa cartella, con un lettore loro
         self.voci_nave.con_cartella(cartella.clone());
+        self.voci_radio.con_cartella(cartella.clone());
         self.musica.con_cartella(cartella);
     }
 
@@ -1130,6 +1134,11 @@ impl Mondo {
                 l += al * kv;
                 r += ar * kv;
             }
+            // Yusuf: la radio ce l’ha già nel file; asciutto, sul cursore del parlato, come l’Anziano
+            let (yl, yr) = self.voci_radio.campione();
+            let ky = vp * gp * s_filo * LIV_YUSUF;
+            l += yl * ky;
+            r += yr * ky;
             // l'intro: il suo sound design sta sul cursore degli effetti, il re e il tema su quello della
             // musica (il tema come i file di musica), la voce di L.V. su quello del parlato
             if self.intro.attiva() {
@@ -1203,6 +1212,9 @@ const LIV_FILO: f32 = -12.0;
 /// ogni battuta: tarato perché escano dove usciva il filo (la mediana delle parole a −31 dBFS,
 /// documento 35, §8): −2,5 dB, perché il compressore della cuffia ne toglie una parte
 const LIV_VOCI_NAVE: f32 = 0.75;
+/// Yusuf sopra il livello delle parole a cui il lettore porta ogni battuta (−27 dBFS): +6 dB, le parole a circa
+/// −21 dBFS, come negli ascolti approvati (documento 35, §8)
+const LIV_YUSUF: f32 = 2.0;
 const LIV_CUORE: f32 = -10.0;
 const LIV_ACUFENE: f32 = -42.0;
 const LIV_PASSI: f32 = -24.0;

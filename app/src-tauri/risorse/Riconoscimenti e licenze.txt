@@ -107,8 +107,10 @@ Ogni altro suono del gioco è sintetizzato nel suo motore audio, senza registraz
 
 «La voce di L.V.» — l’intro: la voce di L.V.
   di Simone Pizzi, da Google, sintesi vocale (la voce «Elio») · CC BY-NC-SA 4.0 per quanto di spettanza dell’autore; i Termini di Google prevalgono
-«La voce dell’Anziano (tre battute)» — l’Anziano: il benvenuto, il Piccolo, il congedo
+«La voce dell’Anziano (ventisei battute)» — l’Anziano: tutte le sue battute
   di Simone Pizzi, da ElevenLabs, eleven_v4 (la voce disegnata «Edoardo Straniero») · CC BY-NC-SA 4.0 per quanto di spettanza dell’autore; i Termini di ElevenLabs prevalgono
+«La voce di Yusuf (otto battute)» — Yusuf: la radio di plancia, la chiamata nella fuga
+  di Simone Pizzi, da ElevenLabs, eleven_v4 (la voce dell’autore, clonata: Instant Voice Clone «Simone Pizzi») · CC BY-NC-SA 4.0 per quanto di spettanza dell’autore; i Termini di ElevenLabs prevalgono
 «Le voci della nave (quindici voci, ventisette battute)» — le echi del Sintonizzatore, le registrazioni dello scanner, l’ultima voce
   di Simone Pizzi, da ElevenLabs, Voice Design eleven_ttv_v3 (quindici voci disegnate: le anteprime scelte sono le prese) · CC BY-NC-SA 4.0 per quanto di spettanza dell’autore; i Termini di ElevenLabs prevalgono
 

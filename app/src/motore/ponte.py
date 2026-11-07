@@ -30,6 +30,7 @@ import contextlib
 import copy
 import hashlib
 import io
+import itertools
 import json
 import os
 import re
@@ -591,8 +592,9 @@ SEGNI_A_SORTE = {
 # Le battute dell'Anziano con la voce (progettazione/32-voci-lv-e-anziano.md, §3.5–3.7): le sue
 # parole, quelle fra «», come sono nel gioco (ponte.fav). Il suono le fa sentire solo se a
 # schermo ci sono proprio queste: la variante del benvenuto con le echi, per esempio, resta scritta.
-# Il congedo è cambiato con la revisione narrativa (documento 33, RN-C5): finché non è registrato di
-# nuovo resta scritto, e la sua presa di prima («AN-03-congedo-ascolto.mp3») non suona più.
+# Dal 7 novembre 2026 (documento 33, RN-H1) le varianti sono tutte registrate: ventisei, una per file
+# (audio/musica-ia/AN, il nome dopo «AN-nn-»); il congedo con l'ascolto è una presa nuova, sul testo rivisto.
+# Si confrontano le parole, non la punteggiatura (il copione per la voce ne aveva una sua).
 VOCI_ANZIANO = {
     "benvenuto": "Creatura di carbonio. Figlio delle stelle, forse. Benvenuto. So cosa cerchi: una "
                  "risposta. Ma io non sono che la memoria di una domanda. Sono quello che resta quando "
@@ -601,6 +603,30 @@ VOCI_ANZIANO = {
                     "verso cui andavamo. Quando la nave si fermò, chiese perché, e nessuno di noi ebbe "
                     "il coraggio di rispondergli. Glielo hai detto tu. Siete arrivati. Era vero, ed era "
                     "la sola cosa che avesse bisogno di sentire.",
+    'benvenuto-echi': "Creatura di carbonio. Figlio delle stelle, forse. Benvenuto. Hai ascoltato molte delle nostre voci. Ognuna ti è costata un po' del tuo fiato, e hai continuato. So cosa cerchi: una risposta. Ma io non sono che la memoria di una domanda. Sono quello che resta quando il cantastorie è svanito: l'ultima frase, scritta nella luce.",
+    'benvenuto-risuonatore': "Porti con te le nostre voci. Le sento, tutte insieme, nella tua mano. Benvenuto lo stesso. Io non sono che la memoria di una domanda: l'ultima frase, scritta nella luce.",
+    'benvenuto-risuonatore-echi': "Porti con te le nostre voci. Le sento, tutte insieme, nella tua mano. Benvenuto lo stesso. Prima di prenderle, molte le hai ascoltate una per una. Io non sono che la memoria di una domanda: l'ultima frase, scritta nella luce.",
+    'silenzio': 'Restare è già una risposta. Pochi la danno.',
+    'salto': 'Vivevamo sotto tre soli, e i tre soli si spegnevano. Mettemmo quello che eravamo in un canto e in un seme, e facemmo il Grande Salto. Il viaggio durò una vita sola. Poi arrivammo, e la nave si fermò.',
+    'salto-stele': 'La Stele dice che non piangemmo il nostro mondo. Piangemmo.',
+    'memoria': 'Quasi niente. Gli archivi sono polvere, i corpi sono nelle capsule, i nomi si sono persi.',
+    'memoria-echi': 'Quasi niente. Gli archivi sono polvere, i corpi sono nelle capsule, i nomi si sono persi. Le voci, almeno, le hai sentite tu, una per una.',
+    'memoria-forzato': "Quasi niente. La nostra memoria me l'hai portata tu, ma l'hai presa con il fuoco, e il fuoco ne ha bruciata una parte: dove cerco, a tratti, non trovo niente. Avevi fretta. I vivi ne hanno sempre.",
+    'memoria-forzato-echi': "Quasi niente. La nostra memoria me l'hai portata tu, ma l'hai presa con il fuoco, e il fuoco ne ha bruciata una parte: dove cerco, a tratti, non trovo niente. Avevi fretta. I vivi ne hanno sempre. Le voci, almeno, le hai sentite tu, una per una.",
+    'memoria-salutato': "Quasi niente. La nostra memoria me l'hai portata tu, intera: hai aspettato che il pilastro ti salutasse. L'Archivista aveva posto per una cosa sola, e ha salvato la pioggia. Il rumore che faceva sui tetti di casa, sotto i tre soli.",
+    'altro': "Lo sentimmo arrivare. Camminava per la nave come cammini tu, contando. Cercò la chiave della teca, scese dove crescono le cose che abbiamo sbagliato noi, e tornò su senza. Lo ascoltammo fino all'ultimo fiato, a mezzo metro dal seme. Non potevamo rispondergli. La nave non aveva più forza per parlare. Sei stato tu a riaccendere la luce in cui ti parlo.",
+    'aiuto': 'No. Potevamo solo ascoltarlo. È quello che abbiamo fatto, per tutto il tempo che gli è rimasto. Non è poco. Non è abbastanza.',
+    'prezzo': 'Lo so. Tu sei ancora qui.',
+    'piccolo': "Era l'unico nato durante il viaggio. Non vide mai i tre soli: gli raccontavamo del sole verso cui andavamo, e lui lo disegnava, ogni giorno, sulle pareti. Quando la nave si fermò, chiese perché. Nessuno di noi ebbe il coraggio di dirgli che arrivare voleva dire fermarsi, e che fermarsi voleva dire questo.",
+    'piccolo-incerta': "Era l'unico nato durante il viaggio. Non vide mai i tre soli: disegnava quello verso cui andavamo. Quando la nave si fermò, chiese perché. Gli hai detto che non lo sapevi. Neanche noi lo sapevamo dire. Almeno tu l'hai detto.",
+    'piccolo-taciuta': "Era l'unico nato durante il viaggio. Non vide mai i tre soli: disegnava quello verso cui andavamo. Quando la nave si fermò, chiese perché. Hai ascoltato senza rispondere, fino alla fine. Hai sentito anche cosa gli dicemmo noi: domani. È quello che facemmo, per tutto il tempo che restava.",
+    'sangue': 'Abbiamo seminato in un mondo scelto perché la vita ci attecchisse. Se abbia attecchito, da qui non potevamo saperlo. Non lo sappiamo nemmeno adesso, che sei qui. Ma tu sei qui.',
+    'tracce': 'Lo so. Ho sentito la tua mano sulla pietra, goffa accanto alla nostra. Non cambierà niente: forse diventeranno polvere insieme alla nave. Ma li hai fatti lo stesso, per la stessa ragione per cui qualcuno, prima di te, incise tre tacche in una parete che nessuno avrebbe più letto.',
+    'tracce-firma': "Lo so. Hai firmato accanto a lui, sulla sua placca: adesso lì non c'è più un uomo solo. Non cambierà niente, forse. Ma l'hai fatto per la stessa ragione per cui lui incise tre tacche in una parete che nessuno avrebbe più letto.",
+    'tracce-parola': "Lo so. Hai finito la sua frase: aveva ragione, e adesso è scritto. Non cambierà niente, forse. Ma l'hai fatto per la stessa ragione per cui lui incise tre tacche in una parete che nessuno avrebbe più letto.",
+    'musica': 'Lo senti. Le tue macchine traducono le parole, e le parole erano la parte più piccola.',
+    'congedo': 'Allora è ora. La nostra canzone è finita da tempo; a te resta del fiato. Vivi.',
+    'congedo-ascolto': 'Allora è ora. La nostra canzone è finita da tempo; a te resta del fiato. Vivi. Grazie di essere rimasto.',
 }
 
 
@@ -641,6 +667,24 @@ VOCI_NAVE = {
 }
 
 
+# Le battute di Yusuf (documento 35, §1; strumenti/audio/voce_yusuf.py): la voce clonata dell'autore, già passata
+# dalla radio di plancia (atto I) o dal canale instabile della fuga. Vanno con l'evento «voci», come le voci della
+# nave; il motore le fa uscire asciutte, non nella cuffia. Il conto sottovoce del credito sta fuori dalle «».
+VOCI_YUSUF = {
+    "YU-01-apertura": ("Magazzino Quattro.", "William. Se è per il credito, la risposta è quella di martedì."),
+    "YU-02-apertura-pezzo": ("Magazzino Quattro.", "Ce l'hai il mio pezzo? No. E allora cosa chiami a fare, William."),
+    "YU-03-credito": ("Sei settimane, William. Ti ho mandato i filtri, le guarnizioni e la cella buona, e da te non è "
+                      "arrivato niente.", "No. Portami qualcosa da vendere, e ne riparliamo."),
+    "YU-04-cosa": ("Una cosa.", "Tagliane un pezzo. Uno solo, pulito, e portamelo. Se è roba che l'archivio non "
+                   "conosce, il compratore lo trovo io. E in fretta."),
+    "YU-05-qualcuno": ("Dentro una cosa così?", "Allora non è roba mia, William. E nemmeno tua.",
+                       "Ma dentro non c'è mai nessuno."),
+    "YU-06-voce": ("Allora sei messo peggio di quanto pensassi.",),
+    "YU-07-fuga-pezzo": ("William. Ce l'hai, il mio pezzo?", "William?"),
+    "YU-08-fuga-nessuno": ("William.", "Niente. Volevo sapere se c'eri."),
+}
+
+
 def _frammenti(testo):
     """I frammenti fra «» di un testo, ognuno come la fila delle sue parole (minuscole, senza
     punteggiatura e senza le parentesi del traduttore)."""
@@ -654,7 +698,7 @@ def _frammenti(testo):
 
 
 _VOCI_NAVE_FRAMMENTI = sorted(((nome, tuple(_frammenti("".join(f"«{x}»" for x in frammenti))))
-                               for nome, frammenti in VOCI_NAVE.items()), key=lambda v: -len(v[1]))
+                               for nome, frammenti in {**VOCI_NAVE, **VOCI_YUSUF}.items()), key=lambda v: -len(v[1]))
 
 
 def _voci_nave(eventi):
@@ -683,12 +727,20 @@ def _parole_dette(testo):
     return " ".join(" ".join(p.split()) for p in re.findall(r"«([^»]*)»", testo))
 
 
+def _parole(testo):
+    """Le parole di un testo, minuscole, senza punteggiatura."""
+    return tuple(re.findall(r"\w+", testo.replace("’", "'").lower()))
+
+
+_VOCI_ANZIANO_PAROLE = {nome: _parole(parole) for nome, parole in VOCI_ANZIANO.items()}
+
+
 def _voce_anziano(eventi):
     """La battuta dell'Anziano con la voce, se in questo turno è a schermo."""
     for e in eventi:
         if e["tipo"] == "dialogo" and (e.get("dati") or {}).get("personaggio") == "anziano":
-            dette = _parole_dette(e["testo"])
-            for nome, parole in VOCI_ANZIANO.items():
+            dette = _parole(_parole_dette(e["testo"]))
+            for nome, parole in _VOCI_ANZIANO_PAROLE.items():
                 if dette == parole:
                     return nome
     return None
@@ -823,9 +875,16 @@ def rel_voci_anziano():
     for n in _base.dialogo_nodi.values():
         battute.append(n.battuta)
         battute.extend(testo for _, testo in n.battute_condizionali)
-    # le parti condizionali dentro la battuta («[se …]…[fine]») qui non ci sono
-    dette = {_parole_dette(re.sub(r"\[se [^\]]*\].*?\[fine\]", "", b, flags=re.S)) for b in battute}
-    return _json({nome: parole in dette for nome, parole in VOCI_ANZIANO.items()})
+    # tutte le combinazioni delle parti condizionali («[se …]…[fine]»): una battuta registrata può dirne qualcuna
+    dette = set()
+    for b in battute:
+        parti = re.split(r"(\[se [^\]]*\].*?\[fine\])", b, flags=re.S)
+        cond = [i for i, x in enumerate(parti) if x.startswith("[se ")]
+        for scelta in itertools.product((False, True), repeat=len(cond)):
+            testo = "".join(re.sub(r"^\[se [^\]]*\]|\[fine\]$", "", x) if i in cond and scelta[cond.index(i)]
+                            else ("" if i in cond else x) for i, x in enumerate(parti))
+            dette.add(_parole(_parole_dette(testo)))
+    return _json({nome: parole in dette for nome, parole in _VOCI_ANZIANO_PAROLE.items()})
 
 
 def rel_voci_nave():
@@ -848,9 +907,9 @@ def rel_voci_nave():
     trovate = set()
     for t in testi:
         if isinstance(t, str):
-            for pezzo in re.split(r"\[se [^\]]*\]|\[fine\]", t):
+            for pezzo in re.split(r"\[se [^\]]*\]|\[altrimenti\]|\[fine\]", t):
                 trovate.update(_voci_nave([{"tipo": "testo", "testo": pezzo}]))
-    return _json({nome: nome in trovate for nome in VOCI_NAVE})
+    return _json({nome: nome in trovate for nome in {**VOCI_NAVE, **VOCI_YUSUF}})
 
 
 # ----------------------------------------------------------------------------
