@@ -5,12 +5,15 @@
 #   python strumenti/intro/voce_lv.py <il file .wav dell'autore> <il nome della copia>
 #   (per esempio: lv-gemini-elio-2026-10-30)
 #
-# La catena, leggera apposta («non rendiamo l'effetto pacchiano»):
-#   - la banda di una radio buona, non di un telefono: passa-alto a 170 Hz, passa-basso a 5,4 kHz,
-#     tutti e due dolci (12 dB per ottava), e un poco di presenza a 2 kHz (+2,5 dB);
-#   - il casco: due riflessioni vicinissime (3,1 e 5,7 ms), sotto di 17 e 21 dB;
-#   - la trasmittente: una saturazione appena (tanh), e un compressore lento che alza i respiri;
-#   - niente rumore: la statica la fa il motore audio (il nastro dell'intro), con i suoi buchi.
+# La catena (rifatta il 7 novembre 2026, su indicazione dell'autore: «LV non lo ascolta William dal casco, è
+# una registrazione che non ascolterà nessuno, si perde. Deve sembrare una cosa più sporca, come un vecchio
+# nastro che si sta deteriorando»; prima era la trasmittente leggera del 30 ottobre, con il casco):
+#   - la banda di un nastro vecchio: passa-alto a 180 Hz, passa-basso a 3,8 kHz, una gobba a 1,2 kHz (+2 dB);
+#   - il trascinamento: una deriva lenta (fino allo 0,3 %) e un tremolio a 6,5 Hz, come ritardo variabile;
+#   - la saturazione dell'ossido (tanh), le cadute (ogni 3–7 s, 80–250 ms, da −8 a −16 dB e più cupe), un
+#     fruscio basso (−50 dB) e qualche crepitio; poi il compressore lento che alza i respiri;
+#   - le parole restano tutte: nell'intro, mentre L.V. parla, il testo non c'è. La statica, con i suoi buchi, la
+#     fa ancora il motore audio (il nastro dell'intro).
 # Ne escono:
 #   audio/musica-ia/LV/LV-01-la-traccia.mp3   la voce lavorata, intera (44,1 kHz, mono, 112 kbps)
 #   app/src/intro/voce.ts                     il suo inviluppo, 40 valori al secondo, per il nastro
@@ -53,17 +56,47 @@ def biquad_picco(f0, guadagno_db, q, fs):
     return np.array(b) / d[0], np.array(d) / d[0]
 
 
-y = signal.sosfilt(signal.butter(2, 170, "highpass", fs=SR, output="sos"), x)
-y = signal.sosfilt(signal.butter(2, 5400, "lowpass", fs=SR, output="sos"), y)
-b, a = biquad_picco(2000, 2.5, 0.9, SR)
+rng = np.random.default_rng(1972)  # lo stesso nastro a ogni giro
+t = np.arange(len(x)) / SR
+
+
+def lento(hz):
+    """Un rumore lento, fra −1 e 1, che cambia al ritmo di «hz»."""
+    r = signal.sosfiltfilt(signal.butter(2, hz, "lowpass", fs=SR, output="sos"), rng.standard_normal(len(x)))
+    return r / max(1e-9, np.abs(r).max())
+
+
+# la banda di un nastro vecchio: gli acuti se ne sono andati, il basso è magro, una gobba di medi
+y = signal.sosfilt(signal.butter(2, 180, "highpass", fs=SR, output="sos"), x)
+y = signal.sosfilt(signal.butter(2, 3800, "lowpass", fs=SR, output="sos"), y)
+b, a = biquad_picco(1200, 2.0, 0.8, SR)
 y = signal.lfilter(b, a, y)
-# il casco
-for ms, giu in ((3.1, -17), (5.7, -21)):
-    k = int(SR * ms / 1000)
-    y[k:] += y[:-k] * 10 ** (giu / 20)
-# la trasmittente: il picco a −6 dBFS, poi una saturazione appena
+# il trascinamento che non tiene più il passo: una deriva lenta (0,3 % al massimo) e un tremolio veloce,
+# come ritardo variabile intorno a 2 ms (i tempi di VOCE non si spostano)
+ritardo = 2.0 + 0.8 * np.sin(2 * np.pi * 0.55 * t) + 0.3 * lento(0.3) + 0.02 * np.sin(2 * np.pi * 6.5 * t)
+y = np.interp(np.arange(len(y)) - ritardo * SR / 1000, np.arange(len(y)), y)
+# il nastro: il picco a −6 dBFS, poi la saturazione dell'ossido
 y *= 0.5 / max(1e-9, np.abs(y).max())
-y = np.tanh(1.5 * y) / np.tanh(1.5)
+y = np.tanh(2.2 * y) / np.tanh(2.2)
+# le cadute dell'ossido: ogni 3–7 s il suono si abbassa di 8–16 dB e si fa più cupo, per 80–250 ms;
+# la parola resta (non sono buchi: i buchi li fa la statica del motore)
+cupo = signal.sosfilt(signal.butter(2, 1600, "lowpass", fs=SR, output="sos"), y)
+caduta = np.zeros(len(y))
+pos = rng.uniform(1.0, 3.0)
+while pos < len(y) / SR - 0.5:
+    lung, giu = rng.uniform(0.08, 0.25), rng.uniform(8, 16)
+    i0, i1 = int(pos * SR), int((pos + lung) * SR)
+    forma = np.sin(np.linspace(0, np.pi, i1 - i0)) ** 0.5
+    caduta[i0:i1] = np.maximum(caduta[i0:i1], forma * giu)
+    pos += lung + rng.uniform(3.0, 7.0)
+mix = np.clip(caduta / 12, 0, 1)
+y = (y * (1 - mix) + cupo * mix) * 10 ** (-caduta / 20)
+# il fruscio del nastro, basso, e qualche crepitio del supporto rovinato
+fruscio = signal.sosfilt(signal.butter(2, [2000, 9000], "bandpass", fs=SR, output="sos"), rng.standard_normal(len(y)))
+y += fruscio / np.sqrt(np.mean(fruscio ** 2)) * 10 ** (-50 / 20) * (1 + 0.3 * lento(0.2))
+for _ in range(int(len(y) / SR / 6)):
+    i = int(rng.uniform(0, len(y) - 400))
+    y[i:i + 400] += rng.standard_normal(400) * np.exp(-np.arange(400) / 60) * 10 ** (rng.uniform(-34, -28) / 20)
 # il compressore: 2,5:1 sopra −30 dBFS di valore efficace, lento, con un poco di guadagno dopo
 e = np.sqrt(signal.lfilter([0.002], [1, -0.998], y * y)) + 1e-9
 liv = 20 * np.log10(e)

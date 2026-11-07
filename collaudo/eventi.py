@@ -48,7 +48,7 @@ ORDINE_VIVI = ("scansione_lunga", "accostamento", "arpioni", "vestizione", "kit"
 
 # Gli eventi che scattano per passaggio di stato, per comando o per segno a sorte,
 # più quelli che il ponte ricava da sé (stanza, aria, soglie, contatori, dialogo).
-DERIVATI = ("inizio", "stanza", "boccaporto", "rientro", "discesa", "groviglio_prende", "casco_tolto",
+DERIVATI = ("inizio", "stanza", "boccaporto", "rientro", "discesa", "groviglio_prende", "casco_tolto", "voci",
             "dialogo", "dialogo_fine", "nodo", "chiave", "eco", "risonanza", "traccia", "taglio",
             "risuonata", "matrice", "traduzione_completa", "aria", "ambra", "ipossia", "protezione",
             "protezione_fine", "protezione_fuga", "attrezzo", "finale", "ripresa")
@@ -202,6 +202,12 @@ def main():
     print(f"[{'NO' if perse else 'OK'}] le battute dell'Anziano con la voce nel gioco ({len(voci)})")
     if perse:
         print(f"     non più nel gioco, parola per parola: {', '.join(perse)}")
+
+    voci = json.loads(ponte.rel_voci_nave())
+    perse = [n for n, c in voci.items() if not c]
+    print(f"[{'NO' if perse else 'OK'}] le battute delle voci della nave nel gioco ({len(voci)})")
+    if perse:
+        print(f"     non più nel gioco, frammento per frammento: {', '.join(perse)}")
 
     mondo = compila_mondo(STORIA)
     divergenze = [d for d in (indisturbato(mondo, os.path.join(QUI, f"{n}.txt")) for n in ponte.FINALI) if d]

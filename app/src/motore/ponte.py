@@ -604,6 +604,78 @@ VOCI_ANZIANO = {
 }
 
 
+# Le voci della nave (progettazione/35-le-voci-non-william.md): le echi, le registrazioni dello scanner, l'ultima
+# voce. Per ogni battuta registrata (audio/musica-ia/NV, il nome del file senza «.mp3») le sue parole fra «», un
+# frammento per coppia di «», come sono nel gioco. Il suono la fa sentire solo se a schermo ci sono proprio questi
+# frammenti, in fila e interi: le varianti più corte (la lastra letta con la matrice già avanti, per esempio)
+# restano scritte. Quello che il traduttore non dice, «(intraducibile: …)», non conta: al suo posto c'è un tic.
+# Il giro del Piccolo e la sua metà li fa suonare il motore, che segue il dialogo; qui servono al collaudo.
+VOCI_NAVE = {
+    'NV-01-senza-ruolo': ('Io non volevo salire. Hanno letto il mio nome, e sono salito. A casa ho lasciato la finestra aperta. Me ne ricordo adesso, che hanno chiuso la porta.',),
+    'NV-02-capitano': ('Rotta impostata. Lasciamo il sistema trino. I motori reggeranno quanto basta: non serve che reggano il ritorno.',),
+    'NV-03-carico': ('Il Seme è sigillato. Ho controllato ogni capsula tre volte. Se tutto il resto fallisse, questo deve arrivare. Deve.',),
+    'NV-03b-carico-gole': ('…non tiene più…',),
+    'NV-03c-carico-deve': ('Deve.',),
+    'NV-04-bordo': ('Porta esterna sigillata, protocollo del silenzio attivato.', 'La musica ha trovato la sua ultima casa. Che continui, oltre il freddo, oltre il buio.'),
+    'NV-05-botanico': ("Stanno morendo tutte. Il filtro dell'aria è collassato, non c'è più acqua. Ho chiuso il Seme nella teca, ma la chiave è rimasta giù, al vivaio, e giù non si passa più. Quelli delle teche cercano il sole che gli avevamo promesso. Vanno dove c'è caldo. Vanno dove c'è luce.",),
+    'NV-05b-botanico-profondo': ("Uno. Ne ho salvato uno. Quelli delle teche li ho rovinati io: volevo qualcosa di verde da far vedere all'arrivo, e ho forzato la crescita, senza terra, senza sole. Sono cresciuti lo stesso, e non sanno smettere. Sono miei.",),
+    'NV-06-medico': ('I sistemi vitali sono spenti. Sono morti tutti nel sonno. Il freddo… il freddo è stato misericordioso.',),
+    'NV-07-navarca': ("Questo sarà il mio ultimo ciclo di veglia. Ho chiesto di restare l'ultimo. Qualcuno deve spegnere le luci, quando tutti se ne sono andati. È… è un onore.",),
+    'NV-07b-navarca-profondo': ("Mi domando se qualcuno verrà. È tardi per salvarci, lo era già prima che io nascessi. Verrà per vedere, magari. Per sapere che siamo stati qui. Se sei tu che ascolti, da qualunque tempo tu venga: ho tenuto le luci accese fino all'ultimo respiro. Non contro il buio. Perché tu trovassi la strada.",),
+    'NV-07c-navarca-dormi': ('Dormi. Domani te lo dico.',),
+    'NV-08-piccolo': ('…perché non si muove… perché nessuno…',),
+    'NV-08b-piccolo-mezza': ('…perché non si muove…',),
+    'NV-09-navigazione': ('La rotta è confermata e sigillata nei cristalli. Fra quattro milioni e settecentomila cicli il sistema bersaglio sarà maturo. Noi non ci saremo.',),
+    'NV-10-scriba': ("L'ultima iscrizione è finita. Sulla Stele c'è tutto quello che ci hanno chiesto di ricordare, e ogni solco è dritto. Le mie dita non lo sono più. Non so se qualcuno la leggerà mai.",),
+    'NV-11-custode': ('Il silenzio non è assenza. È la forma che prende la memoria quando le parole finiscono. Ci ho messo tutta la vita a impararlo. Soltanto adesso capisco che era vero.',),
+    'NV-11b-custode-profondo': ("L'ultima riga del fregio l'ho incisa io. Di notte, da solo, quando nella sala non c'era più nessuno. Ho insegnato il silenzio per tutta la vita, e quella notte non lo reggevo. Ho scritto che qualcuno avrebbe letto. Non ci credevo. Non ci credo nemmeno adesso.",),
+    'NV-12-ingegnere': ('La risonanza è instabile! Il cristallo non regge il carico! Evacuate il settore, subito!', 'Non ci riesco. Se lascio il generatore adesso il campo crolla, e con lui tutta la Sezione Seme. Voi andate. Io resto.'),
+    'NV-12b-ingegnere-profondo': ("Li ho scritti tutti, qui sul banco. Ogni nome di chi è salito sulle navi, e ogni nome di chi è rimasto quaggiù con me a tenere fermo il campo. Dopo di noi non li leggerà nessuno. Vanno detti ad alta voce ancora una volta, finché c'è una voce che li dice. Allora li dico. Uno per uno. Piano. Finché la voce regge.",),
+    'NV-12c-ingegnere-gole': ('…il campo, tenetelo…',),
+    'NV-13-archivista': ("Registro dell'Archivista, ciclo… non ha più importanza. Le matrici si sfaldano più in fretta di quanto riesca a copiarle. In questo cristallo c'è posto per una cosa sola. Ho scelto. Fine della registrazione.",),
+    'NV-13b-archivista-breve': ("In questo cristallo c'è posto per una cosa sola. Ho scelto. Fine della registrazione.",),
+    'NV-14-lastra': ('…giorno del Grande Salto… (intraducibile: canto-radice)… le tre lune danzano fredde… il Viaggio è il nostro (intraducibile: dovere-gioia)… presto vedremo nuove stelle…',),
+    'NV-14b-cilindro': ("…il legame che ci teneva insieme si affievolisce. I cicli sono quasi compiuti. Il Grande Salto è riuscito, ma il nostro tempo finisce. Lasciamo questa eco… questo (intraducibile: seme-dell'anima)… perché continui… anche dopo di noi…",),
+    'NV-14c-stele': ("Quando i tre soli sanguinarono, sapemmo che il tempo era cenere. Non piangemmo il nostro mondo, perché il mondo è un'idea, e le idee non muoiono. Lo affidammo al Grande Vuoto, perché un seme nuovo potesse attecchire in una terra non ancora scritta. Il nostro corpo è polvere, ma il nostro ricordo è una stella.",),
+    'NV-15-ultima-voce': ('…non… prendere…', '…comporre…', 'Musica.', 'Vivi.'),
+}
+
+
+def _frammenti(testo):
+    """I frammenti fra «» di un testo, ognuno come la fila delle sue parole (minuscole, senza
+    punteggiatura e senza le parentesi del traduttore)."""
+    testo = testo.replace("’", "'")
+    out = []
+    for f in re.findall(r"«([^»]*)»", testo):
+        parole = tuple(re.findall(r"\w+", re.sub(r"\([^)]*\)", " ", f).lower()))
+        if parole:
+            out.append(parole)
+    return out
+
+
+_VOCI_NAVE_FRAMMENTI = sorted(((nome, tuple(_frammenti("".join(f"«{x}»" for x in frammenti))))
+                               for nome, frammenti in VOCI_NAVE.items()), key=lambda v: -len(v[1]))
+
+
+def _voci_nave(eventi):
+    """Le battute delle voci della nave che questo turno ha a schermo, nell'ordine in cui ci stanno."""
+    out = []
+    for e in eventi:
+        if e.get("tipo") == "errore" or not isinstance(e.get("testo"), str):
+            continue
+        fr = _frammenti(e["testo"])
+        i = 0
+        while i < len(fr):
+            for nome, att in _VOCI_NAVE_FRAMMENTI:
+                if tuple(fr[i:i + len(att)]) == att:
+                    out.append(nome)
+                    i += len(att)
+                    break
+            else:
+                i += 1
+    return out
+
+
 def _parole_dette(testo):
     """Le parole fra «» di una battuta, in fila: quello che il personaggio dice davvero (le
     parentesi sono il racconto di William)."""
@@ -702,6 +774,10 @@ def _rileva(prima, dopo, comando, eventi):
     if (a0 is not None and a1 is not None and a0 >= 30 > a1 and dopo["fuga"] == "iniziata"
             and prima["fuga"] == "iniziata"):
         out.append({"evento": "protezione_fuga"})
+    # le voci della nave a schermo
+    battute = _voci_nave(eventi)
+    if battute:
+        out.append({"evento": "voci", "battute": battute})
     # il comando
     if comando and comando.get("verbo"):
         nome = _PER_COMANDO.get((comando["verbo"], comando.get("cosa")))
@@ -750,6 +826,31 @@ def rel_voci_anziano():
     # le parti condizionali dentro la battuta («[se …]…[fine]») qui non ci sono
     dette = {_parole_dette(re.sub(r"\[se [^\]]*\].*?\[fine\]", "", b, flags=re.S)) for b in battute}
     return _json({nome: parole in dette for nome, parole in VOCI_ANZIANO.items()})
+
+
+def rel_voci_nave():
+    """Per il collaudo: ogni battuta delle voci della nave deve essere ancora, frammento per
+    frammento, in un testo del gioco (se no la voce non partirebbe più). I testi sono quelli che il
+    compilatore controlla (le descrizioni, le regole, gli eventi, i demoni, le battute), senza le
+    parti condizionali «[se …]», che a schermo arrivano o non arrivano intere."""
+    from strutture import testi_di_descrizione
+    m = _base
+    testi = []
+    for ent in list(m.stanze.values()) + list(m.oggetti.values()):
+        testi += testi_di_descrizione(ent.descrizione)
+        for _, t in ent.descrizioni_condizionali:
+            testi += testi_di_descrizione(t)
+    testi += [r.risposta for r in m.regole]
+    testi += [e.risposta for e in m.eventi] + [d.risposta for d in m.demoni]
+    for n in m.dialogo_nodi.values():
+        testi.append(n.battuta)
+        testi.extend(t for _, t in n.battute_condizionali)
+    trovate = set()
+    for t in testi:
+        if isinstance(t, str):
+            for pezzo in re.split(r"\[se [^\]]*\]|\[fine\]", t):
+                trovate.update(_voci_nave([{"tipo": "testo", "testo": pezzo}]))
+    return _json({nome: nome in trovate for nome in VOCI_NAVE})
 
 
 # ----------------------------------------------------------------------------

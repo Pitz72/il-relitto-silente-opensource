@@ -25,7 +25,7 @@ use super::sintonia::{self, voce, Eco, Forma, Profilo, GIRO_DELL_ANELLO};
 use super::stato::{EventoGioco, StatiGioco, TurnoSuono};
 use super::voce::Voce;
 use super::{
-    Ambiente, Anello, Azione, Brano, Evento, Mondo, Nave, LIV_BRUSIO, LIV_FILO, LIV_GEMITO, LIV_PASSI, LIV_POMPE, LIV_RE,
+    Ambiente, Anello, Azione, Brano, Chiusura, Evento, Mondo, Nave, LIV_BRUSIO, LIV_FILO, LIV_GEMITO, LIV_PASSI, LIV_POMPE, LIV_RE,
     LIV_RE_OSSA, LIV_RE_RAMPA, LIV_VENTILAZIONE, LIV_VENTOLA,
 };
 
@@ -36,7 +36,7 @@ const ACCORDO: [f32; 4] = [103.826, 155.563, 207.652, 311.127];
 /// Tutti gli eventi che il ponte può mandare (collaudo/eventi.py, la tabella), più il
 /// caricamento: la regia li conosce tutti, quelli che suonano e quelli che per il suono
 /// sono solo stato. La prova delle partite controlla che non ne arrivi uno sconosciuto.
-pub const EVENTI_NOTI: [&str; 86] = [
+pub const EVENTI_NOTI: [&str; 87] = [
     "accostamento", "altare", "ambra", "archivio_forzato", "archivio_saluta", "aria", "arpioni", "assestamento",
     "attrezzo", "bengala_acceso", "bengala_spento", "boccaporto", "brusio_cala", "caricamento", "casco_tolto",
     "cassetta", "cella", "chiave", "connessione", "crollo", "dialogo", "dialogo_fine", "discesa", "disco_liberato",
@@ -49,7 +49,15 @@ pub const EVENTI_NOTI: [&str; 86] = [
     "risuonatore_toccato", "scansione_lunga", "scatola_nera", "seme_lasciato", "seme_preso", "seme_spento",
     "sistema", "sonaglio", "stanza", "tacche", "taglio", "teca_serra", "terminale", "traccia",
     "traduzione_completa", "varco_richiuso", "venature_spente", "venature_verdi", "vestizione", "voce_dei_nomi",
+    "voci",
 ];
+
+/// Quando entra la prima voce della nave di un’eco, dopo l’evento: dove entrava il filo sintetico
+/// (1,2 s, e 0,4 di salita), come nell’ascolto approvato (documento 35, §7).
+const VOCI_DOPO_ECO: f32 = 1.6;
+/// Quando entra una registrazione che non è un’eco (lo scanner, l’ultima voce, «Deve.»): dopo il
+/// lavoro dell’attrezzo o i passi.
+const VOCI_DOPO: f32 = 1.2;
 
 impl Mondo {
     // --------------------------------------------------------------------------------
@@ -64,6 +72,17 @@ impl Mondo {
         self.modo_gioco = true;
         let ha = |nome: &str| t.eventi.iter().any(|e| e.evento == nome);
         let inizio = ha("inizio");
+        // le voci della nave che il ponte ha trovato a schermo (documento 35)
+        self.voci_turno.clear();
+        for e in t.eventi.iter().filter(|e| e.evento == "voci") {
+            for b in &e.battute {
+                if let Some(p) = Pezzo::della_battuta(b) {
+                    if self.voci_turno.len() < self.voci_turno.capacity() {
+                        self.voci_turno.push(p);
+                    }
+                }
+            }
+        }
         // «ripresa»: un ANNULLA che riporta la partita a uno stato di prima, anche dopo un
         // finale (revisione 25, G2). Per il suono vale come un caricamento.
         let carica = primo || inizio || ha("caricamento") || ha("ripresa");
@@ -86,6 +105,8 @@ impl Mondo {
             self.re_tocco.verso(1.0, 0.5, sr);
             self.fiato.ascolto = false;
             self.anello = None;
+            self.voci_nave.tace(0.3);
+            self.dopo_le_voci = super::DopoLeVoci::default();
             self.filo_g.verso(0.0, 0.3, sr);
             self.automazioni.clear();
             self.ingresso = Scorrevole::nuovo(0.0);
@@ -162,11 +183,48 @@ impl Mondo {
         self.musica_del_turno(&prima, carica);
 
         if carica {
+            self.voci_turno.clear();
             return;
         }
         let taglio = ha("taglio");
         for e in &t.eventi {
             self.evento_gioco(e, &prima, taglio);
+        }
+        self.registrazioni();
+    }
+
+    /// Le voci della nave rimaste nel turno, che nessuna eco ha preso: le registrazioni dello
+    /// scanner, l’ultima voce, «Deve.» accanto alla nicchia, il «Dormi» del Navarca. In fila, dopo
+    /// quelle che suonano già. Il giro del Piccolo no: lo fa l’anello, che segue il dialogo.
+    fn registrazioni(&mut self) {
+        self.voci_turno.retain(|p| !matches!(p, Pezzo::Nv08 | Pezzo::Nv08b));
+        if !self.voci_turno.is_empty() && self.voci_nave.disponibili(&self.voci_turno) {
+            let battute = std::mem::take(&mut self.voci_turno);
+            self.voci_nave.in_fila(&battute, VOCI_DOPO);
+            self.voci_turno = battute;
+            self.fiato.ascolto = true;
+            self.dopo_le_voci.ascolto = true;
+        }
+        self.voci_turno.clear();
+    }
+
+    /// Il tempo delle voci della nave; e quando tacciono, quello che le aspettava.
+    pub(super) fn passo_voci_nave(&mut self, dt: f32) {
+        self.voci_nave.passo(dt);
+        if self.voci_nave.occupate() || self.anello.is_some() {
+            return;
+        }
+        let d = std::mem::take(&mut self.dopo_le_voci);
+        if d.brusio && self.brusio_base > 0.0 {
+            self.dopo(1.0, Azione::Brusio(self.brusio_base, 2.5));
+        }
+        if d.ascolto {
+            self.dopo(1.0, Azione::Ascolto(false));
+        }
+        if d.fruscio {
+            // «Resta il fruscio della registrazione»
+            let c = colpi::fruscio_registrazione(self.sr);
+            self.suona_in(super::Canale::Voci, c, Bus::Em, -30.0, 0.0, 0.3);
         }
     }
 
@@ -534,8 +592,19 @@ impl Mondo {
         // il canale della radio, finché si parla con Yusuf; la voce, finché parla l’eco
         let yusuf = StatiGioco::e(&g.dialogo, "yusuf") && !muto;
         self.canale.g.verso(if yusuf { db(-14.0) } else { 0.0 }, 0.3, sr);
-        // il Piccolo, mentre si parla con lui: il suo anello non si ferma (§5.3)
-        if StatiGioco::e(&g.dialogo, "eco") && !muto {
+        // il Piccolo, mentre si parla con lui: il suo anello non si ferma (§5.3); ma se si resta in
+        // silenzio, o gli si dice che sono arrivati, la domanda smette di girare (equipaggio.fav)
+        let chiude = match g.nodo.as_deref() {
+            Some("taciuto") => Some(Chiusura::Subito),
+            Some("arrivati") => Some(Chiusura::UnGiroAncora),
+            _ => None,
+        };
+        if StatiGioco::e(&g.dialogo, "eco") && !muto && chiude.is_some() {
+            if let Some(a) = self.anello.as_mut() {
+                a.in_dialogo = false;
+                a.chiudi = a.chiudi.or(chiude);
+            }
+        } else if StatiGioco::e(&g.dialogo, "eco") && !muto {
             match self.anello.as_mut() {
                 Some(a) => a.in_dialogo = true,
                 None => {
@@ -708,30 +777,48 @@ impl Mondo {
     /// piano con il ritmo di una frase, e il flusso passa per lo spostamento di frequenza.
     /// La ricerca (il fruscio di sintonia) l’ha già fatta l’attrezzo. Il secondo strato è lo
     /// stesso filo, più grave e più nudo, senza il coro intorno: il brusio sparisce.
+    ///
+    /// Se il ponte ha mandato le battute registrate di questa eco (documento 35) e i file ci sono,
+    /// al posto del filo parlano loro, in fila; il brusio e il fiato tornano quando hanno finito.
     fn eco_trovata(&mut self, eco: &'static Eco, secondo: bool) {
         let sr = self.sr;
         let fili = if secondo { eco.secondo } else { eco.primo };
         let fine = sintonia::durata_dei_fili(fili) + 1.2;
+        let registrate = eco.forma == Forma::Fili && self.voci_nave.disponibili(&self.voci_turno);
         if self.brusio_base > 0.0 {
             let giu = if secondo { -20.0 } else { -10.0 };
             self.brusio.guadagno.verso(self.brusio_base * db(giu), 0.8, sr);
-            self.dopo(fine + 1.0, Azione::Brusio(self.brusio_base, 2.5));
+            if registrate {
+                self.dopo_le_voci.brusio = true;
+            } else {
+                self.dopo(fine + 1.0, Azione::Brusio(self.brusio_base, 2.5));
+            }
         }
         if secondo {
             // «la frequenza scende sotto la soglia di prima»
             let c = colpi::sintonia_giu(sr);
             self.suona_in(super::Canale::Voci, c, Bus::Em, -26.0, 0.0, 0.0);
         }
+        self.fiato.ascolto = true;
         match (eco.forma, fili.first()) {
-            (Forma::Anello, Some(f)) => self.avvia_anello(f.voce),
+            (Forma::Anello, Some(f)) => {
+                self.avvia_anello(f.voce);
+                self.dopo(fine + 1.0, Azione::Ascolto(false));
+            }
+            _ if registrate => {
+                let battute = std::mem::take(&mut self.voci_turno);
+                self.voci_nave.in_fila(&battute, VOCI_DOPO_ECO);
+                self.voci_turno = battute;
+                self.voci_turno.clear();
+                self.dopo_le_voci.ascolto = true;
+            }
             _ => {
                 for f in fili {
                     self.filo_per(f.voce, f.durata, 1.2 + f.dopo, LIV_FILO);
                 }
+                self.dopo(fine + 1.0, Azione::Ascolto(false));
             }
         }
-        self.fiato.ascolto = true;
-        self.dopo(fine + 1.0, Azione::Ascolto(false));
     }
 
     /// La lastra incisa (§5.3): non una voce, «una punta contro la pietra, ostinata, che
@@ -749,13 +836,21 @@ impl Mondo {
     /// L’anello del Piccolo: la voce giovane che «gira su se stessa», quattro secondi che
     /// ricominciano uguali, cinque giri o finché si parla con lei (§5.3).
     fn avvia_anello(&mut self, voce: Profilo) {
+        // con il file, il giro è la voce registrata del Piccolo (documento 35)
+        let registrato = self.voci_nave.disponibili(&[Pezzo::Nv08, Pezzo::Nv08b]);
+        if registrato {
+            self.voci_nave.precarica(Pezzo::Nv08);
+            self.voci_nave.precarica(Pezzo::Nv08b);
+        }
         self.anello = Some(Anello {
             voce,
             seme: 0x91C0,
-            prossimo: 1.2,
+            prossimo: if registrato { VOCI_DOPO_ECO } else { 1.2 },
             // cinque giri: il quinto finisce prima che ne cominci un sesto
             restano: 1.2 + 5.0 * GIRO_DELL_ANELLO - 0.5,
             in_dialogo: StatiGioco::e(&self.gioco.dialogo, "eco"),
+            registrato,
+            chiudi: None,
         });
     }
 
@@ -768,7 +863,31 @@ impl Mondo {
             self.anello = Some(a);
             return;
         }
-        if a.restano > 0.0 || a.in_dialogo {
+        match a.chiudi {
+            // «taciuto»: il giro che suonava è finito, e non ricomincia
+            Some(Chiusura::Subito) => {
+                self.ferma_anello();
+                return;
+            }
+            // «arrivati»: un giro ancora, a metà («…perché non si muove…»), e basta
+            Some(Chiusura::UnGiroAncora) => {
+                if a.registrato {
+                    self.voci_nave.subito(Pezzo::Nv08b);
+                    self.ferma_anello();
+                } else {
+                    a.chiudi = Some(Chiusura::Subito);
+                    self.giro_del_filo(&mut a);
+                    self.anello = Some(a);
+                }
+                return;
+            }
+            None => {}
+        }
+        if a.registrato && (a.restano > 0.0 || a.in_dialogo) {
+            self.voci_nave.subito(Pezzo::Nv08);
+            a.prossimo += GIRO_DELL_ANELLO;
+            self.anello = Some(a);
+        } else if a.restano > 0.0 || a.in_dialogo {
             let sr = self.sr;
             let v = a.voce;
             self.filo = Voce::nuova(sr, a.seme, v.f0, v.scala, v.ritmo, v.soffio);
@@ -783,9 +902,26 @@ impl Mondo {
         }
     }
 
-    /// L’anello smette: «Resta il fruscio della registrazione».
+    /// Un giro del filo sintetico, da capo, identico (senza i file).
+    fn giro_del_filo(&mut self, a: &mut Anello) {
+        let sr = self.sr;
+        let v = a.voce;
+        self.filo = Voce::nuova(sr, a.seme, v.f0, v.scala, v.ritmo, v.soffio);
+        self.filo.carattere(v.intonazione, v.tremito, v.soffio);
+        self.spostatore.azzera_fase();
+        self.filo_shift.verso(v.shift, 0.0, sr);
+        self.filo_g.verso(db(LIV_FILO + v.livello), 0.1, sr);
+        a.prossimo += GIRO_DELL_ANELLO;
+    }
+
+    /// L’anello smette: «Resta il fruscio della registrazione». Il giro registrato non si taglia:
+    /// finisce, e il fruscio viene dopo l’ultima voce (anche dopo il «Dormi» del Navarca).
     fn ferma_anello(&mut self) {
-        if self.anello.take().is_some() {
+        if let Some(a) = self.anello.take() {
+            if a.registrato {
+                self.dopo_le_voci.fruscio = true;
+                return;
+            }
             let sr = self.sr;
             self.filo_g.verso(0.0, 0.5, sr);
             let c = colpi::fruscio_registrazione(sr);

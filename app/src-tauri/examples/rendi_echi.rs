@@ -1,11 +1,14 @@
 //! Rende su file WAV le echi del Sintonizzatore (bibbia sonora, §5.3), una per una, nella
-//! loro stanza, con il mondo vero sotto: il filo spostato di frequenza, il secondo strato,
-//! l’anello del Piccolo, il graffio della lastra. Accanto scrive le note.
+//! loro stanza, con il mondo vero sotto. Dal 7 novembre 2026 parlano le voci della nave
+//! registrate (documento 35), che il ponte manda con l’evento «voci»: qui gli eventi sono gli
+//! stessi. Accanto scrive le note, con il punto in cui entra ogni voce.
 //!
-//!   cargo run --release --example rendi_echi -- <cartella d’uscita>
+//!   cargo run --release --example rendi_echi -- <cartella d’uscita> [parola]
 //!
-//! Con la variabile SOLO_FILO impostata, resta solo il filo (senza il brusio e il mondo): per
-//! guardarne lo spettro.
+//! Con una parola rende soltanto le scene il cui titolo la contiene (per esempio «voci», per le
+//! scene a più voci). Con SENZA_FILE le echi hanno il filo sintetico di prima. Con SOLO_FILO
+//! resta solo il canale delle echi (il filo o le voci, senza il brusio e il mondo): per misurarle.
+//! Con SENZA_FILO il contrario: il mondo e il brusio senza le echi.
 
 mod comune;
 
@@ -20,41 +23,83 @@ struct Scena {
     stanza: &'static str,
     /// le cose già risuonate prima
     risonate: &'static str,
-    /// lo stato in più (il dialogo)
+    /// lo stato in più (il dialogo, la fuga)
     resto: &'static str,
     /// gli eventi del turno
     eventi: &'static str,
+    /// le battute che il ponte manda con quegli eventi (i nomi fra virgolette, separati da virgole)
+    battute: &'static str,
     /// i secondi dopo l’evento
     durata: f32,
 }
 
+fn eco(cosa: &str) -> &'static str {
+    Box::leak(format!(r#"{{"evento": "eco", "valore": 1}}, {{"evento": "risuonata", "cosa": "{cosa}"}}"#).into_boxed_str())
+}
+
+fn scanner(cosa: &str) -> &'static str {
+    Box::leak(format!(r#"{{"evento": "attrezzo", "attrezzo": "multiscanner", "cosa": "{cosa}"}}"#).into_boxed_str())
+}
+
+const RIS: &str = r#"{"evento": "risonanza", "valore": 2}"#;
+
 fn scene() -> Vec<Scena> {
-    let eco = |cosa: &'static str| -> &'static str { Box::leak(format!(r#"{{"evento": "eco", "valore": 1}}, {{"evento": "risuonata", "cosa": "{cosa}"}}"#).into_boxed_str()) };
-    let ris = r#"{"evento": "risonanza", "valore": 2}"#;
+    let s = |titolo, stanza, risonate, eventi, battute, durata| Scena { titolo, stanza, risonate, resto: "", eventi, battute, durata };
     vec![
-        Scena { titolo: "L’Ingegnere (il generatore): urgente, poi più piano", stanza: "laboratorio di risonanza", risonate: "", resto: "", eventi: eco("generatore"), durata: 16.0 },
-        Scena { titolo: "L’Ingegnere, il secondo strato: quasi un canto sottovoce", stanza: "laboratorio di risonanza", risonate: r#""generatore""#, resto: "", eventi: ris, durata: 14.0 },
-        Scena { titolo: "Le pareti del corridoio: quattro fili, il Capitano più lento", stanza: "corridoio principale", risonate: "", resto: "", eventi: eco("pareti del corridoio"), durata: 24.0 },
-        Scena { titolo: "Le gole: uno urgente, uno basso che risponde", stanza: "vestibolo delle gole", risonate: "", resto: "", eventi: eco("gole"), durata: 14.0 },
-        Scena { titolo: "Lo Xeno-botanico (le piante): una voce media, stanca", stanza: "serra morente", risonate: "", resto: "", eventi: eco("piante"), durata: 14.0 },
-        Scena { titolo: "Lo Xeno-botanico, il secondo strato: più fermo", stanza: "serra morente", risonate: r#""piante""#, resto: "", eventi: ris, durata: 14.0 },
-        Scena { titolo: "L’Ufficiale medico (le capsule): piana, quasi senza intonazione", stanza: "arca biologica", risonate: "", resto: "", eventi: eco("capsule"), durata: 14.0 },
-        Scena { titolo: "Il Navarca (le alcove): vecchia, lenta", stanza: "alloggio dell'equipaggio", risonate: "", resto: "", eventi: eco("alcove"), durata: 14.0 },
-        Scena { titolo: "Il Navarca, il secondo strato: a se stesso, più vicino", stanza: "alloggio dell'equipaggio", risonate: r#""alcove""#, resto: "", eventi: ris, durata: 14.0 },
-        Scena { titolo: "Il Piccolo (la culla): l’anello di quattro secondi, e poi il fruscio", stanza: "nido", risonate: "", resto: "", eventi: eco("culla"), durata: 32.0 },
-        Scena { titolo: "Lo Scriba (il globo olografico): piana", stanza: "scriptorium", risonate: "", resto: "", eventi: eco("globo olografico"), durata: 14.0 },
-        Scena { titolo: "La lastra incisa: una punta contro la pietra", stanza: "scriptorium", risonate: "", resto: "", eventi: ris, durata: 12.0 },
-        Scena { titolo: "L’Ufficiale di navigazione (la struttura centrale): precisa", stanza: "ponte di comando", risonate: "", resto: "", eventi: eco("struttura centrale"), durata: 14.0 },
-        Scena { titolo: "Il Custode (il bassorilievo): grave", stanza: "santuario del silenzio", risonate: "", resto: "", eventi: eco("bassorilievo"), durata: 14.0 },
-        Scena { titolo: "Il Custode, il secondo strato: non trema più", stanza: "santuario del silenzio", risonate: r#""bassorilievo""#, resto: "", eventi: ris, durata: 14.0 },
+        s("Le pareti del corridoio: quattro voci, una dopo l’altra", "corridoio principale", "", eco("pareti del corridoio"), r#""NV-01-senza-ruolo", "NV-02-capitano", "NV-03-carico", "NV-04-bordo""#, 50.0),
+        s("Le gole: l’ingegnere capo, e il tecnico di carico che risponde", "vestibolo delle gole", "", eco("gole"), r#""NV-12c-ingegnere-gole", "NV-03b-carico-gole""#, 12.0),
+        Scena {
+            titolo: "Il Piccolo (la culla): la domanda gira; resto in silenzio, e dopo l’ultimo giro parla il Navarca",
+            stanza: "nido",
+            risonate: "",
+            resto: "",
+            eventi: eco("culla"),
+            battute: r#""NV-08-piccolo""#,
+            durata: 0.0,
+        },
+        s("Lo Xeno-botanico (le piante)", "serra morente", "", eco("piante"), r#""NV-05-botanico""#, 24.0),
+        s("Lo Xeno-botanico, il secondo strato", "serra morente", r#""piante""#, RIS, r#""NV-05b-botanico-profondo""#, 22.0),
+        s("L’Ufficiale medico (le capsule)", "arca biologica", "", eco("capsule"), r#""NV-06-medico""#, 14.0),
+        s("Il Navarca (le alcove)", "alloggio dell'equipaggio", "", eco("alcove"), r#""NV-07-navarca""#, 18.0),
+        s("Il Navarca, il secondo strato", "alloggio dell'equipaggio", r#""alcove""#, RIS, r#""NV-07b-navarca-profondo""#, 30.0),
+        s("Lo Scriba (il globo olografico)", "scriptorium", "", eco("globo olografico"), r#""NV-10-scriba""#, 22.0),
+        s("L’Ufficiale di navigazione (la struttura centrale)", "ponte di comando", "", eco("struttura centrale"), r#""NV-09-navigazione""#, 15.0),
+        s("Il Custode (il bassorilievo)", "santuario del silenzio", "", eco("bassorilievo"), r#""NV-11-custode""#, 22.0),
+        s("Il Custode, il secondo strato", "santuario del silenzio", r#""bassorilievo""#, RIS, r#""NV-11b-custode-profondo""#, 32.0),
+        s("L’Ingegnere capo (il generatore)", "laboratorio di risonanza", "", eco("generatore"), r#""NV-12-ingegnere""#, 25.0),
+        s("L’Ingegnere capo, il secondo strato", "laboratorio di risonanza", r#""generatore""#, RIS, r#""NV-12b-ingegnere-profondo""#, 34.0),
+        s("Lo scanner: la lastra dati, al 4 %", "ponte di comando", "", scanner("lastra dati"), r#""NV-14-lastra""#, 14.0),
+        s("Lo scanner: il cilindro, al 18 %", "ponte di comando", "", scanner("cilindro mnemonico"), r#""NV-14b-cilindro""#, 20.0),
+        s("Lo scanner: la stele, al 75 %", "ponte di comando", "", scanner("stele"), r#""NV-14c-stele""#, 26.0),
+        s("Lo scanner: il nucleo, l’Archivista", "ponte di comando", "", scanner("nucleo"), r#""NV-13-archivista""#, 27.0),
+        s("L’ultima voce", "santuario del silenzio", "", "", r#""NV-15-ultima-voce""#, 16.0),
+        Scena {
+            titolo: "La fuga: accanto alla nicchia vuota, «Deve.»",
+            stanza: "vestibolo delle gole",
+            risonate: "",
+            resto: r#", "fuga": "iniziata""#,
+            eventi: "",
+            battute: r#""NV-03c-carico-deve""#,
+            durata: 6.0,
+        },
     ]
 }
 
 fn stati(s: &Scena, resto: &str) -> String {
     format!(
-        r#"{{"stanza": "{}", "atto": 3, "tuta": true, "aria": 80, "contatto": "avvenuto", "porta_interna": "aperta", "risonate": [{}] {}, "esito": "in_corso"}}"#,
-        s.stanza, s.risonate, resto
+        r#"{{"stanza": "{}", "atto": 3, "tuta": true, "aria": 80, "contatto": "avvenuto", "porta_interna": "aperta", "risonate": [{}] {} {}, "esito": "in_corso"}}"#,
+        s.stanza, s.risonate, s.resto, resto
     )
+}
+
+/// Gli eventi del turno, con le battute come le manda il ponte (l’evento «voci»).
+fn eventi(eventi: &str, battute: &str, senza_file: bool) -> String {
+    let voci = if battute.is_empty() || senza_file { String::new() } else { format!(r#"{{"evento": "voci", "battute": [{battute}]}}"#) };
+    match (eventi.is_empty(), voci.is_empty()) {
+        (true, _) => voci,
+        (false, true) => eventi.to_string(),
+        (false, false) => format!("{eventi}, {voci}"),
+    }
 }
 
 fn turno(stati: &str, eventi: &str) -> Comando {
@@ -77,35 +122,52 @@ fn suona(m: &mut Mondo, secondi: f32, pcm: &mut Vec<i16>) {
 
 fn main() -> Result<(), String> {
     let uscita = PathBuf::from(std::env::args().nth(1).unwrap_or_else(|| "rendering".into()));
+    let filtro = std::env::args().nth(2);
     std::fs::create_dir_all(&uscita).map_err(|e| e.to_string())?;
     let solo = std::env::var("SOLO_FILO").is_ok();
+    let senza = std::env::var("SENZA_FILO").is_ok();
+    let senza_file = std::env::var("SENZA_FILE").is_ok();
     let mut pcm: Vec<i16> = Vec::new();
-    let mut note = String::from("Le echi del Sintonizzatore (bibbia sonora, §5.3), ognuna nella sua stanza\n\n");
+    let mut note = String::from("Le echi del Sintonizzatore e le voci della nave (documento 35), ognuna nella sua stanza\n\n");
     let mut t = 0.0f32;
     for s in scene() {
+        if filtro.as_deref().is_some_and(|f| !s.titolo.contains(f)) {
+            continue;
+        }
         let (mut mondo, tx, _) = Mondo::nuovo(SR, 17);
+        if !senza_file {
+            mondo.cartella_musica(std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../audio/musica-ia"));
+        }
         if solo {
             tx.send(Comando::Solo(Some("filo".to_string()))).map_err(|e| e.to_string())?;
+        } else if senza {
+            tx.send(Comando::Solo(Some("senza filo".to_string()))).map_err(|e| e.to_string())?;
         }
         note.push_str(&format!("{}  {}  ({})\n", orario(t), s.titolo, s.stanza));
         tx.send(turno(&stati(&s, ""), r#"{"evento": "inizio"}"#)).map_err(|e| e.to_string())?;
         suona(&mut mondo, 5.0, &mut pcm);
         t += 5.0;
-        tx.send(turno(&stati(&s, s.resto), s.eventi)).map_err(|e| e.to_string())?;
-        note.push_str(&format!("  {}  l’eco\n", orario(t)));
-        // il Piccolo: dopo l’anello, si parla con lui
+        tx.send(turno(&stati(&s, ""), &eventi(s.eventi, s.battute, senza_file))).map_err(|e| e.to_string())?;
+        note.push_str(&format!("  {}  l’evento\n", orario(t)));
         if s.titolo.starts_with("Il Piccolo") {
-            suona(&mut mondo, 24.0, &mut pcm);
-            t += 24.0;
-            let dialogo = r#", "dialogo": "eco", "nodo": "domanda""#;
-            tx.send(turno(&stati(&s, dialogo), r#"{"evento": "dialogo", "con": "eco", "nodo": "domanda"}"#)).map_err(|e| e.to_string())?;
-            note.push_str(&format!("  {}  «parla con l’eco»: l’anello continua\n", orario(t)));
+            // l’anello gira; poi si parla con lui; poi si resta in silenzio; poi «Lascia stare»
             suona(&mut mondo, 10.0, &mut pcm);
             t += 10.0;
+            let nodo = |n: &str| format!(r#", "dialogo": "eco", "nodo": "{n}""#);
+            tx.send(turno(&stati(&s, &nodo("domanda")), &eventi(r#"{"evento": "dialogo", "con": "eco", "nodo": "domanda"}"#, r#""NV-08-piccolo""#, senza_file)))
+                .map_err(|e| e.to_string())?;
+            note.push_str(&format!("  {}  «parla con l’eco»: la domanda continua a girare\n", orario(t)));
+            suona(&mut mondo, 9.0, &mut pcm);
+            t += 9.0;
+            tx.send(turno(&stati(&s, &nodo("taciuto")), &eventi(r#"{"evento": "nodo", "con": "eco", "nodo": "taciuto"}"#, r#""NV-07c-navarca-dormi""#, senza_file)))
+                .map_err(|e| e.to_string())?;
+            note.push_str(&format!("  {}  «resta in silenzio»: l’ultimo giro, poi il Navarca\n", orario(t)));
+            suona(&mut mondo, 12.0, &mut pcm);
+            t += 12.0;
             tx.send(turno(&stati(&s, ""), r#"{"evento": "dialogo_fine", "con": "eco"}"#)).map_err(|e| e.to_string())?;
-            note.push_str(&format!("  {}  «Lascia stare»: l’anello smette, resta il fruscio\n", orario(t)));
-            suona(&mut mondo, 8.0, &mut pcm);
-            t += 8.0;
+            note.push_str(&format!("  {}  «Lascia stare»\n", orario(t)));
+            suona(&mut mondo, 3.0, &mut pcm);
+            t += 3.0;
         } else {
             suona(&mut mondo, s.durata, &mut pcm);
             t += s.durata;
@@ -115,7 +177,7 @@ fn main() -> Result<(), String> {
         t += 1.5;
         note.push('\n');
     }
-    let nome = if solo { "echi-filo" } else { "echi" };
+    let nome = if solo { "echi-filo" } else if senza { "echi-senza-filo" } else { "echi" };
     scrivi_wav(&uscita.join(format!("{nome}.wav")), &pcm).map_err(|e| e.to_string())?;
     std::fs::write(uscita.join(format!("{nome}.txt")), note).map_err(|e| e.to_string())?;
     println!("{nome}.wav: {}", orario(t));

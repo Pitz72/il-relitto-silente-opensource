@@ -80,6 +80,9 @@ pub struct EventoGioco {
     /// la battuta dell’Anziano con la voce («dialogo», «nodo»): il ponte la manda solo se a schermo
     /// ci sono proprio le parole registrate (`VOCI_ANZIANO` in ponte.py)
     pub voce: Option<String>,
+    /// le battute delle voci della nave («voci», documento 35), nell’ordine in cui stanno a
+    /// schermo: il ponte le manda solo se ci sono proprio le parole registrate (`VOCI_NAVE`)
+    pub battute: Vec<String>,
 }
 
 impl EventoGioco {

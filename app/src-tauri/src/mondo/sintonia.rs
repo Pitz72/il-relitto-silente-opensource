@@ -565,6 +565,145 @@ mod prove {
         assert!(m.anello.is_none(), "l’anello non smette quando il dialogo finisce");
     }
 
+    // ---- le voci della nave, registrate (documento 35)
+
+    use super::super::musica_file::{Biblioteca, Pcm, Pezzo};
+    use super::super::voci_nave::PAUSA_FRA_VOCI;
+
+    /// Una biblioteca con battute finte: un tono lungo quanto la battuta vera (all’incirca).
+    fn biblioteca(battute: &[(Pezzo, f32)]) -> Biblioteca {
+        let mut b = Biblioteca::nuova(std::path::PathBuf::from("non-esiste"));
+        for &(p, s) in battute {
+            b.inserisci(p, Pcm::da_frame_con(SR, (0..(s * SR) as usize).map(|n| {
+                let v = 0.3 * (n as f32 * 0.05).sin();
+                (v, v)
+            }), true));
+        }
+        b
+    }
+
+    /// Fa suonare il mondo e dice quando parlava una voce della nave: (inizio, fine) in secondi.
+    fn tratti_delle_voci(m: &mut Mondo, secondi: f32) -> Vec<(f32, f32)> {
+        let mut out = Vec::new();
+        let mut da: Option<f32> = None;
+        let blocco = 128usize;
+        let passi = (secondi * SR / blocco as f32) as usize;
+        for i in 0..passi {
+            let mut buf = vec![kira::Frame::ZERO; blocco];
+            m.rendi(&mut buf, 1.0 / SR as f64);
+            let t = i as f32 * blocco as f32 / SR;
+            match (m.voci_nave.parla(), da) {
+                (true, None) => da = Some(t),
+                (false, Some(a)) => {
+                    out.push((a, t));
+                    da = None;
+                }
+                _ => {}
+            }
+        }
+        if let Some(a) = da {
+            out.push((a, secondi));
+        }
+        out
+    }
+
+    #[test]
+    fn le_voci_del_corridoio_prendono_il_posto_del_filo_e_hanno_la_loro_pausa() {
+        let (mut m, tx) = mondo_in("corridoio principale", "");
+        m.voci_nave.con_biblioteca(biblioteca(&[(Pezzo::Nv01, 3.0), (Pezzo::Nv02, 2.0), (Pezzo::Nv03, 2.5), (Pezzo::Nv04, 2.0)]));
+        let base = m.brusio_base;
+        tx.send(turno(&format!(
+            r#"{{"stati": {}, "eventi": [{{"evento": "risuonata", "cosa": "pareti del corridoio"}}, {{"evento": "voci", "battute": ["NV-01-senza-ruolo", "NV-02-capitano", "NV-03-carico", "NV-04-bordo"]}}]}}"#,
+            stati("corridoio principale", "", "")
+        )))
+        .unwrap();
+        suona(&mut m, 0.05);
+        let fili = m.automazioni.iter().filter(|a| matches!(a.azione, Azione::Voce(_))).count();
+        assert_eq!(fili, 0, "con le voci registrate il filo non parla");
+        let t = tratti_delle_voci(&mut m, 18.0);
+        assert_eq!(t.len(), 4, "quattro voci, in fila: {t:?}");
+        assert!((t[0].0 - 1.6).abs() < 0.1, "la prima entra dove entrava il filo: {t:?}");
+        for k in 1..4 {
+            let pausa = t[k].0 - t[k - 1].1;
+            assert!((pausa - PAUSA_FRA_VOCI).abs() < 0.06, "fra la voce {k} e la precedente {pausa:.2} s di pausa");
+        }
+        assert!(m.filo_g.v < 1e-4, "il filo non deve parlare");
+        // finite le voci, il brusio torna su
+        suona(&mut m, 4.0);
+        if base > 0.0 {
+            assert!((m.brusio.guadagno.meta() - base).abs() < 1e-6, "il brusio non torna dopo le voci");
+        }
+    }
+
+    #[test]
+    fn senza_i_file_l_eco_ha_ancora_il_suo_filo() {
+        let (mut m, tx) = mondo_in("corridoio principale", "");
+        tx.send(turno(&format!(
+            r#"{{"stati": {}, "eventi": [{{"evento": "risuonata", "cosa": "pareti del corridoio"}}, {{"evento": "voci", "battute": ["NV-01-senza-ruolo", "NV-02-capitano", "NV-03-carico", "NV-04-bordo"]}}]}}"#,
+            stati("corridoio principale", "", "")
+        )))
+        .unwrap();
+        suona(&mut m, 0.05);
+        let fili = m.automazioni.iter().filter(|a| matches!(a.azione, Azione::Voce(_))).count();
+        assert_eq!(fili, 4, "senza i file restano i quattro fili");
+    }
+
+    /// Il dialogo con il Piccolo, a un nodo, con le battute che il ponte manda.
+    fn nodo_del_piccolo(tx: &std::sync::mpsc::Sender<Comando>, nodo: &str, evento: &str, battute: &str) {
+        let dialogo = format!(r#", "dialogo": "eco", "nodo": "{nodo}""#);
+        tx.send(turno(&format!(
+            r#"{{"stati": {}, "eventi": [{{"evento": "{evento}", "con": "eco", "nodo": "{nodo}"}}, {{"evento": "voci", "battute": [{battute}]}}]}}"#,
+            stati("nido", "", &dialogo)
+        )))
+        .unwrap();
+    }
+
+    #[test]
+    fn se_resto_in_silenzio_il_giro_finisce_e_dopo_la_pausa_parla_il_navarca() {
+        let (mut m, tx) = mondo_in("nido", "");
+        m.voci_nave.con_biblioteca(biblioteca(&[(Pezzo::Nv08, 3.26), (Pezzo::Nv08b, 1.4), (Pezzo::Nv07c, 2.62)]));
+        nodo_del_piccolo(&tx, "domanda", "dialogo", r#""NV-08-piccolo""#);
+        let giri = tratti_delle_voci(&mut m, 9.5);
+        assert!(giri.len() >= 2, "la domanda gira: {giri:?}");
+        assert!(m.anello.is_some_and(|a| a.registrato), "l’anello è la voce registrata");
+        nodo_del_piccolo(&tx, "taciuto", "nodo", r#""NV-07c-navarca-dormi""#);
+        let t = tratti_delle_voci(&mut m, 12.0);
+        let ultimo = *t.last().expect("nessuna voce dopo il silenzio");
+        assert!((ultimo.1 - ultimo.0 - 2.62).abs() < 0.1, "l’ultima voce deve essere il «Dormi»: {t:?}");
+        let giro = t[t.len() - 2];
+        assert!((giro.1 - giro.0 - 3.26).abs() < 0.1 || giro.0 < 0.05, "prima del «Dormi» un giro intero: {t:?}");
+        let pausa = ultimo.0 - giro.1;
+        assert!((pausa - PAUSA_FRA_VOCI).abs() < 0.06, "il «Dormi» entra {pausa:.2} s dopo la fine del giro");
+        assert!(m.anello.is_none(), "dopo il silenzio la domanda non gira più");
+    }
+
+    #[test]
+    fn se_gli_dico_che_siamo_arrivati_la_domanda_gira_a_meta_e_non_ricomincia() {
+        let (mut m, tx) = mondo_in("nido", "");
+        m.voci_nave.con_biblioteca(biblioteca(&[(Pezzo::Nv08, 3.26), (Pezzo::Nv08b, 1.4), (Pezzo::Nv07c, 2.62)]));
+        nodo_del_piccolo(&tx, "domanda", "dialogo", r#""NV-08-piccolo""#);
+        tratti_delle_voci(&mut m, 6.0);
+        nodo_del_piccolo(&tx, "arrivati", "nodo", r#""NV-08b-piccolo-mezza""#);
+        let t = tratti_delle_voci(&mut m, 12.0);
+        let ultimo = *t.last().expect("nessuna voce");
+        assert!((ultimo.1 - ultimo.0 - 1.4).abs() < 0.1, "l’ultimo giro è a metà: {t:?}");
+        assert!(m.anello.is_none());
+    }
+
+    #[test]
+    fn una_registrazione_dello_scanner_suona_da_sola() {
+        let (mut m, tx) = mondo_in("ponte di comando", "");
+        m.voci_nave.con_biblioteca(biblioteca(&[(Pezzo::Nv14, 9.1)]));
+        tx.send(turno(&format!(
+            r#"{{"stati": {}, "eventi": [{{"evento": "attrezzo", "attrezzo": "multiscanner", "cosa": "lastra dati"}}, {{"evento": "voci", "battute": ["NV-14-lastra"]}}]}}"#,
+            stati("ponte di comando", "", "")
+        )))
+        .unwrap();
+        let t = tratti_delle_voci(&mut m, 12.0);
+        assert_eq!(t.len(), 1, "{t:?}");
+        assert!((t[0].0 - 1.2).abs() < 0.1, "la lastra entra dopo il lavoro dello scanner: {t:?}");
+    }
+
     #[test]
     fn il_filo_di_un_eco_e_in_programma_con_il_suo_profilo() {
         let (mut m, tx) = mondo_in("corridoio principale", "");

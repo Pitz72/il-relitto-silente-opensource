@@ -109,6 +109,8 @@ Ogni altro suono del gioco è sintetizzato nel suo motore audio, senza registraz
   di Simone Pizzi, da Google, sintesi vocale (la voce «Elio») · CC BY-NC-SA 4.0 per quanto di spettanza dell’autore; i Termini di Google prevalgono
 «La voce dell’Anziano (tre battute)» — l’Anziano: il benvenuto, il Piccolo, il congedo
   di Simone Pizzi, da ElevenLabs, eleven_v4 (la voce disegnata «Edoardo Straniero») · CC BY-NC-SA 4.0 per quanto di spettanza dell’autore; i Termini di ElevenLabs prevalgono
+«Le voci della nave (quindici voci, ventisette battute)» — le echi del Sintonizzatore, le registrazioni dello scanner, l’ultima voce
+  di Simone Pizzi, da ElevenLabs, Voice Design eleven_ttv_v3 (quindici voci disegnate: le anteprime scelte sono le prese) · CC BY-NC-SA 4.0 per quanto di spettanza dell’autore; i Termini di ElevenLabs prevalgono
 
 
 LE IMMAGINI

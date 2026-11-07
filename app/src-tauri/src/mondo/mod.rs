@@ -31,6 +31,7 @@ pub mod riverbero;
 pub mod stanze;
 pub mod stato;
 pub mod voce;
+pub mod voci_nave;
 
 use std::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 use std::sync::mpsc::{channel, Receiver, Sender};
@@ -55,6 +56,8 @@ use riverbero::Riverbero;
 use sintonia::{Profilo, Spostatore};
 use stanze::{Specie, Stanza};
 use voce::Voce;
+use voci_nave::VociNave;
+use musica_file::Pezzo;
 
 pub use interfaccia::Gesto;
 pub use livelli::Livelli;
@@ -157,7 +160,8 @@ pub enum Comando {
     /// il volume generale, in dB
     Volume(f32),
     /// per le misure: suona solo uno strato («re», «ventilazione», «pompe», «ventola»,
-    /// «fiato», «brusio», «voci», «segnali», «fruscio», «stanza», «musica», «filo»); `None` li riaccende
+    /// «fiato», «brusio», «voci», «segnali», «fruscio», «stanza», «musica», «filo»), o tutti
+    /// tranne uno («senza filo»); `None` li riaccende
     Solo(Option<String>),
     /// sfuma tutto e chiude
     Ferma,
@@ -183,6 +187,7 @@ const S_FILO: u32 = 2048;
 fn maschera(solo: Option<&str>) -> u32 {
     match solo {
         None => u32::MAX,
+        Some(s) if s.starts_with("senza ") => !maschera(Some(&s["senza ".len()..])),
         Some("re") => S_RE,
         Some("ventilazione") => S_VENTILAZIONE,
         Some("pompe") => S_POMPE,
@@ -281,6 +286,28 @@ struct Anello {
     restano: f32,
     /// finché si parla con l’eco, l’anello non si ferma
     in_dialogo: bool,
+    /// il giro è la voce registrata (documento 35), non il filo
+    registrato: bool,
+    /// come finisce, quando il dialogo lo dice: «taciuto» e «arrivati»
+    chiudi: Option<Chiusura>,
+}
+
+/// Come si chiude l’anello del Piccolo nel dialogo (equipaggio.fav).
+#[derive(Clone, Copy, Debug, PartialEq)]
+enum Chiusura {
+    /// «taciuto»: il giro che suona finisce, e non ne comincia un altro
+    Subito,
+    /// «arrivati»: «La domanda gira ancora una volta», a metà, e poi non ricomincia
+    UnGiroAncora,
+}
+
+/// Quello che aspetta la fine delle voci della nave: il brusio che torna, il fiato che riprende,
+/// il fruscio della registrazione.
+#[derive(Clone, Copy, Default)]
+struct DopoLeVoci {
+    brusio: bool,
+    ascolto: bool,
+    fruscio: bool,
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -389,6 +416,11 @@ pub struct Mondo {
     filo_shift: Scorrevole,
     /// l’anello del Piccolo: quattro secondi che ricominciano uguali
     anello: Option<Anello>,
+    /// le voci della nave (documento 35), registrate: al posto del filo, quando ci sono i file
+    voci_nave: VociNave,
+    /// le battute che il ponte ha mandato in questo turno (l’evento «voci»), non ancora suonate
+    voci_turno: Vec<Pezzo>,
+    dopo_le_voci: DopoLeVoci,
     fondo: Fondo,
     fondo_mul: Scorrevole,
     ronzio: Ronzio,
@@ -527,6 +559,9 @@ impl Mondo {
             spostatore: Spostatore::nuovo(sr),
             filo_shift: Scorrevole::nuovo(0.0),
             anello: None,
+            voci_nave: VociNave::nuove(sr),
+            voci_turno: Vec::with_capacity(16),
+            dopo_le_voci: DopoLeVoci::default(),
             fondo: Fondo::nuovo(sr, seme ^ 0xF0),
             fondo_mul: Scorrevole::nuovo(1.0),
             ronzio: Ronzio::nuovo(sr, seme ^ 0x2A),
@@ -636,6 +671,8 @@ impl Mondo {
     pub fn cartella_musica(&mut self, cartella: std::path::PathBuf) {
         // l'intro ha i suoi due file (la voce di L.V. e il tema), e un lettore suo
         self.intro.con_cartella(cartella.clone());
+        // le voci della nave stanno nella stessa cartella, con un lettore loro
+        self.voci_nave.con_cartella(cartella.clone());
         self.musica.con_cartella(cartella);
     }
 
@@ -760,6 +797,7 @@ impl Mondo {
         self.musica.passo(dt);
         self.intro.passo(dt);
         self.passo_anello(dt);
+        self.passo_voci_nave(dt);
         for i in 0..PIOGGE {
             if self.piogge[i].passo(dt, &mut self.caso) {
                 let p = self.piogge[i];
@@ -964,6 +1002,12 @@ impl Mondo {
                 em.0 += v * 0.9;
                 em.1 += v;
             }
+            // le voci della nave, registrate (documento 35): nella cuffia come il filo, sul
+            // cursore del parlato
+            let (nl, nr) = self.voci_nave.campione();
+            let kn = gp * s_filo * lv.filo * LIV_VOCI_NAVE;
+            em.0 += nl * kn * 0.9;
+            em.1 += nr * kn;
             alt += self.canale.campione() * gv * lv.radio;
 
             // i colpi
@@ -1155,6 +1199,10 @@ const LIV_BRUSIO: f32 = -10.0;
 const LIV_RADIO: f32 = -9.0;
 const LIV_GEMITO: f32 = -18.0;
 const LIV_FILO: f32 = -12.0;
+/// Le voci della nave nella cuffia (lineare), sopra il livello delle parole a cui il lettore porta
+/// ogni battuta: tarato perché escano dove usciva il filo (la mediana delle parole a −31 dBFS,
+/// documento 35, §8): −2,5 dB, perché il compressore della cuffia ne toglie una parte
+const LIV_VOCI_NAVE: f32 = 0.75;
 const LIV_CUORE: f32 = -10.0;
 const LIV_ACUFENE: f32 = -42.0;
 const LIV_PASSI: f32 = -24.0;

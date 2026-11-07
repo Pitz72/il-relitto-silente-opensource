@@ -66,10 +66,72 @@ pub enum Pezzo {
     AN1,
     AN2,
     AN3,
+    /// le voci della nave (documento 35): le echi, le registrazioni dello scanner, l’ultima voce.
+    /// Una battuta per file, già lavorata (`strumenti/audio/voci_nave.py`): l’aggancio, il
+    /// traduttore, i vuoti stanno nel file; il motore la mette in fila e la passa dalla cuffia
+    Nv01,
+    Nv02,
+    Nv03,
+    Nv03b,
+    Nv03c,
+    Nv04,
+    Nv05,
+    Nv05b,
+    Nv06,
+    Nv07,
+    Nv07b,
+    Nv07c,
+    Nv08,
+    Nv08b,
+    Nv09,
+    Nv10,
+    Nv11,
+    Nv11b,
+    Nv12,
+    Nv12b,
+    Nv12c,
+    Nv13,
+    Nv13b,
+    Nv14,
+    Nv14b,
+    Nv14c,
+    Nv15,
 }
 
+/// Le battute delle voci della nave e i loro file: il nome senza «.mp3» è quello che manda il
+/// ponte (`VOCI_NAVE` in ponte.py).
+pub const BATTUTE_NV: [(Pezzo, &str); 27] = [
+    (Pezzo::Nv01, "NV-01-senza-ruolo.mp3"),
+    (Pezzo::Nv02, "NV-02-capitano.mp3"),
+    (Pezzo::Nv03, "NV-03-carico.mp3"),
+    (Pezzo::Nv03b, "NV-03b-carico-gole.mp3"),
+    (Pezzo::Nv03c, "NV-03c-carico-deve.mp3"),
+    (Pezzo::Nv04, "NV-04-bordo.mp3"),
+    (Pezzo::Nv05, "NV-05-botanico.mp3"),
+    (Pezzo::Nv05b, "NV-05b-botanico-profondo.mp3"),
+    (Pezzo::Nv06, "NV-06-medico.mp3"),
+    (Pezzo::Nv07, "NV-07-navarca.mp3"),
+    (Pezzo::Nv07b, "NV-07b-navarca-profondo.mp3"),
+    (Pezzo::Nv07c, "NV-07c-navarca-dormi.mp3"),
+    (Pezzo::Nv08, "NV-08-piccolo.mp3"),
+    (Pezzo::Nv08b, "NV-08b-piccolo-mezza.mp3"),
+    (Pezzo::Nv09, "NV-09-navigazione.mp3"),
+    (Pezzo::Nv10, "NV-10-scriba.mp3"),
+    (Pezzo::Nv11, "NV-11-custode.mp3"),
+    (Pezzo::Nv11b, "NV-11b-custode-profondo.mp3"),
+    (Pezzo::Nv12, "NV-12-ingegnere.mp3"),
+    (Pezzo::Nv12b, "NV-12b-ingegnere-profondo.mp3"),
+    (Pezzo::Nv12c, "NV-12c-ingegnere-gole.mp3"),
+    (Pezzo::Nv13, "NV-13-archivista.mp3"),
+    (Pezzo::Nv13b, "NV-13b-archivista-breve.mp3"),
+    (Pezzo::Nv14, "NV-14-lastra.mp3"),
+    (Pezzo::Nv14b, "NV-14b-cilindro.mp3"),
+    (Pezzo::Nv14c, "NV-14c-stele.mp3"),
+    (Pezzo::Nv15, "NV-15-ultima-voce.mp3"),
+];
+
 impl Pezzo {
-    pub const TUTTI: [Pezzo; 24] = [
+    pub const TUTTI: [Pezzo; 51] = [
         Pezzo::M1a,
         Pezzo::M1b,
         Pezzo::S2,
@@ -94,10 +156,51 @@ impl Pezzo {
         Pezzo::AN1,
         Pezzo::AN2,
         Pezzo::AN3,
+        Pezzo::Nv01,
+        Pezzo::Nv02,
+        Pezzo::Nv03,
+        Pezzo::Nv03b,
+        Pezzo::Nv03c,
+        Pezzo::Nv04,
+        Pezzo::Nv05,
+        Pezzo::Nv05b,
+        Pezzo::Nv06,
+        Pezzo::Nv07,
+        Pezzo::Nv07b,
+        Pezzo::Nv07c,
+        Pezzo::Nv08,
+        Pezzo::Nv08b,
+        Pezzo::Nv09,
+        Pezzo::Nv10,
+        Pezzo::Nv11,
+        Pezzo::Nv11b,
+        Pezzo::Nv12,
+        Pezzo::Nv12b,
+        Pezzo::Nv12c,
+        Pezzo::Nv13,
+        Pezzo::Nv13b,
+        Pezzo::Nv14,
+        Pezzo::Nv14b,
+        Pezzo::Nv14c,
+        Pezzo::Nv15,
     ];
+
+    /// Una voce registrata, che si porta al suo livello misurando le parole e non il silenzio fra
+    /// l’una e l’altra (documento 35, §8): le voci della nave.
+    pub fn parlato(self) -> bool {
+        BATTUTE_NV.iter().any(|(p, _)| *p == self)
+    }
+
+    /// La battuta delle voci della nave dal nome che le dà il ponte.
+    pub fn della_battuta(nome: &str) -> Option<Pezzo> {
+        BATTUTE_NV.iter().find(|(_, n)| n.strip_suffix(".mp3") == Some(nome)).map(|(p, _)| *p)
+    }
 
     /// (la cartella della scheda, il nome del file) come stanno in `audio/musica-ia/`.
     pub fn file(self) -> (&'static str, &'static str) {
+        if let Some((_, n)) = BATTUTE_NV.iter().find(|(p, _)| *p == self) {
+            return ("NV", n);
+        }
         match self {
             Pezzo::M1a => ("M1", "M1-01-bare-resonance.mp3"),
             Pezzo::M1b => ("M1", "M1-02-resonant-void.mp3"),
@@ -123,6 +226,8 @@ impl Pezzo {
             Pezzo::AN1 => ("AN", "AN-01-benvenuto.mp3"),
             Pezzo::AN2 => ("AN", "AN-02-piccolo-vera.mp3"),
             Pezzo::AN3 => ("AN", "AN-03-congedo-ascolto.mp3"),
+            // le voci della nave: le trova la tabella, qui sopra
+            _ => ("NV", ""),
         }
     }
 
@@ -153,6 +258,13 @@ pub struct Pcm {
 impl Pcm {
     /// Da frame in virgola mobile (L, R), alla frequenza `sr`.
     pub fn da_frame(sr: f32, frame: impl Iterator<Item = (f32, f32)>) -> Pcm {
+        Self::da_frame_con(sr, frame, false)
+    }
+
+    /// Come `da_frame`; con `parlato` il livello si misura sulle parole: la mediana dei pezzi di
+    /// 50 ms che stanno entro 30 dB dal più forte (i silenzi e i vuoti di una battuta non contano,
+    /// come nell’ascolto approvato, documento 35, §7).
+    pub fn da_frame_con(sr: f32, frame: impl Iterator<Item = (f32, f32)>, parlato: bool) -> Pcm {
         let mut campioni = Vec::new();
         let mut energia = 0.0f64;
         let mut n = 0usize;
@@ -163,11 +275,17 @@ impl Pcm {
             campioni.push((r.clamp(-1.0, 1.0) * 32767.0) as i16);
         }
         let rms_db = 10.0 * ((energia / n.max(1) as f64) + 1e-12).log10() as f32;
-        Pcm { sr, campioni, norma: db(OBIETTIVO_DB - rms_db) }
+        let livello = if parlato { livello_del_parlato(sr, &campioni).unwrap_or(rms_db) } else { rms_db };
+        Pcm { sr, campioni, norma: db(OBIETTIVO_DB - livello) }
     }
 
     pub fn frame(&self) -> usize {
         self.campioni.len() / 2
+    }
+
+    /// Il guadagno che porta il pezzo al suo livello (lineare).
+    pub fn norma(&self) -> f32 {
+        self.norma
     }
 
     pub fn durata(&self) -> f32 {
@@ -189,6 +307,26 @@ impl Pcm {
     }
 }
 
+/// Il livello delle parole di una battuta, in dB: la mediana del valore efficace dei pezzi di
+/// 50 ms che stanno entro 30 dB dal pezzo più forte.
+fn livello_del_parlato(sr: f32, campioni: &[i16]) -> Option<f32> {
+    let passo = ((sr * 0.05) as usize).max(1) * 2;
+    let mut pezzi: Vec<f32> = campioni
+        .chunks_exact(passo)
+        .map(|c| {
+            let e: f64 = c.iter().map(|&v| (v as f64 / 32768.0).powi(2)).sum::<f64>() / c.len() as f64;
+            10.0 * (e + 1e-20).log10() as f32
+        })
+        .collect();
+    let forte = pezzi.iter().cloned().fold(f32::MIN, f32::max);
+    pezzi.retain(|&d| d > forte - 30.0);
+    if pezzi.is_empty() {
+        return None;
+    }
+    pezzi.sort_by(|a, b| a.total_cmp(b));
+    Some(pezzi[pezzi.len() / 2])
+}
+
 /// Dove comincia l'audio: dopo il tag ID3v2 in testa, se c'è. I file di Flow Music portano la
 /// copertina dentro il tag (fino a 1,3 MB) e il decoder non la attraversa: si salta noi.
 fn inizio_audio(dati: &[u8]) -> usize {
@@ -200,12 +338,12 @@ fn inizio_audio(dati: &[u8]) -> usize {
     (10 + dimensione + piede).min(dati.len())
 }
 
-fn decodifica(percorso: &Path) -> Option<Pcm> {
+fn decodifica(percorso: &Path, parlato: bool) -> Option<Pcm> {
     let dati = std::fs::read(percorso).ok()?;
     let da = inizio_audio(&dati);
     let d = StaticSoundData::from_cursor(std::io::Cursor::new(dati[da..].to_vec())).ok()?;
     let sr = d.sample_rate as f32;
-    Some(Pcm::da_frame(sr, d.frames.iter().map(|f| (f.left, f.right))))
+    Some(Pcm::da_frame_con(sr, d.frames.iter().map(|f| (f.left, f.right)), parlato))
 }
 
 // -------------------------------------------------------------------------------------
@@ -257,7 +395,7 @@ impl Biblioteca {
                 for lavoro in coda {
                     match lavoro {
                         Lavoro::Decodifica(p) => {
-                            let pcm = dove.get(&p).and_then(|f| decodifica(f)).map(Arc::new);
+                            let pcm = dove.get(&p).and_then(|f| decodifica(f, p.parlato())).map(Arc::new);
                             if tx.send((p, pcm)).is_err() {
                                 break;
                             }
@@ -626,7 +764,7 @@ impl Lettore {
 /// Per la prova a mano (`examples/prova_decodifica.rs`): quanti frame, a che frequenza, e il livello.
 pub fn prova_decodifica(percorso: &Path) -> Result<String, String> {
     let t0 = std::time::Instant::now();
-    let p = decodifica(percorso).ok_or("non si decodifica")?;
+    let p = decodifica(percorso, false).ok_or("non si decodifica")?;
     Ok(format!("{} frame a {} Hz, {:.1} s, norma {:+.1} dB, in {:.2} s", p.frame(), p.sr, p.durata(), 20.0 * p.norma.log10(), t0.elapsed().as_secs_f32()))
 }
 
