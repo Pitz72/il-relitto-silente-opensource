@@ -4,7 +4,7 @@
 # documenti), a mano dalla scheda Actions, e prima di ogni rilascio (rilascio.yml le chiama: un tag
 # su un commit rotto non diventa un installer). Sono le stesse che si lanciano in locale:
 #
-#   il motore audio e l'app   cargo test, le 16 partite rese dal motore audio, i riconoscimenti,
+#   il motore audio e l'app   cargo test, le 17 partite rese dal motore audio, i riconoscimenti,
 #                             le versioni (su Windows, la piattaforma provata)
 #   il gioco                  le prove in node e i collaudi in Python e in node: regressioni,
 #                             pulsanti, menu, eventi, diario, scritti, salvataggi, tipografia
@@ -59,7 +59,7 @@ jobs:
       - name: cargo test
         working-directory: app/src-tauri
         run: cargo test --lib --release
-      - name: Le 16 partite nel motore audio
+      - name: Le 17 partite nel motore audio
         env:
           # in locale si chiede di stare 5 volte dentro il tempo reale; qui la macchina è condivisa e
           # compilata senza LTO, e ci arriva a fatica: basta che il suono resti dentro il tempo reale
@@ -89,7 +89,7 @@ jobs:
         run: |
           npm ci
           npm run prove
-      - name: Le regressioni (i 16 percorsi, con le riprese)
+      - name: Le regressioni (i 17 percorsi, con le riprese)
         run: python collaudo/regressioni.py --riprese
       - name: I pulsanti
         run: python collaudo/pulsanti.py

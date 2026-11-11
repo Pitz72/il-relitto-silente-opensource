@@ -22,7 +22,13 @@
 #      servizio ha un file per parte, e la tabella del ponte, il manifest e il gioco
 #      dicono le stesse cose;
 #   6. il ponte non cambia la partita: lo stesso percorso giocato dal ponte e
-#      giocato dal motore da solo arriva alla stessa impronta.
+#      giocato dal motore da solo arriva alla stessa impronta;
+#   7. il congedo dell'Anziano non si disfa (revisione 37, G3): per il gioco la
+#      fuga comincia al gesto «[Chiudi gli occhi e lascia andare.]», per lo
+#      schermo e per il suono quando il colloquio finisce; a occhi chiusi non
+#      c'è il pulsante che chiude la conversazione, e chi la chiude scrivendo
+#      trova la stanza della fuga; chi parla all'Anziano nella fuga ha una
+#      frase di racconto, e il seme resta dov'è.
 
 import argparse
 import collections
@@ -172,6 +178,81 @@ def ramo(nome, percorso, fino, comandi, attesi, conta):
     return f"{nome}: non scattano {', '.join(mancanti)} (scattano {', '.join(visti)})" if mancanti else None
 
 
+# La frase di chi guarda l'Anziano nella fuga (ponte.fav): è anche quella di chi gli parla.
+NON_C_E_PIU = "Non c'è più. La sua luce è dentro il seme."
+
+
+def congedo():
+    """Il congedo dell'Anziano, sul percorso di «Vivi» (revisione 37, G3)."""
+    problemi = []
+    comandi = json.loads(ponte.rel_percorso(os.path.join(QUI, "vivi.txt")))["comandi"]
+    gesto = comandi.index("[Chiudi gli occhi e lascia andare.]")
+
+    def fino(n):
+        turno = json.loads(ponte.rel_avvia(1))
+        for cmd in comandi[:n]:
+            turno = json.loads(ponte.rel_comando(cmd))
+        return turno
+
+    def nomi(turno):
+        return [e["evento"] for e in turno["suono"]["eventi"]]
+
+    def nella_fuga():
+        m = ponte._mondo
+        return (m.variabili.get("fuga") == "iniziata" and m.oggetti["seme"].posizione == "santuario centrale"
+                and "scuro" in m.oggetti["seme"].proprieta and "desto" in m.oggetti["groviglio"].proprieta)
+
+    # a occhi chiusi: per il gioco la fuga c'è già, per chi gioca non ancora; e non c'è il pulsante per uscire
+    fino(gesto)
+    for cmd in comandi[gesto:gesto + 2]:
+        t = json.loads(ponte.rel_comando(cmd))
+        if not nella_fuga():
+            problemi.append(f"dopo «{cmd}» per il gioco la fuga non è cominciata")
+        if t["stato"]["nodo"] not in ponte.NODI_SENZA_USCITA:
+            problemi.append(f"dopo «{cmd}» il nodo è «{t['stato']['nodo']}», non uno di quelli senza uscita")
+        if t["stato"]["fuga"] != "lontana" or t["stato"]["atto"] == 5 or t["suono"]["stati"]["fuga"] != "lontana":
+            problemi.append(f"dopo «{cmd}» lo schermo o il suono sono già nella fuga")
+        if t["suono"]["stati"]["seme"] != "vivente" or t["suono"]["stati"]["groviglio"] != "quieto":
+            problemi.append(f"dopo «{cmd}» per il suono il seme o il groviglio sono già cambiati")
+        if {"fuga", "seme_spento", "groviglio_desto"} & set(nomi(t)):
+            problemi.append(f"dopo «{cmd}» il suono della fuga è già partito")
+        if any(s["comando"] == "esci" for s in t["pulsanti"]["scelte"]):
+            problemi.append(f"dopo «{cmd}» c'è ancora il pulsante che chiude la conversazione")
+        if any(a["id"] == "fuga" for a in ((t.get("cronaca") or {}).get("nuova") or {}).get("appunti", [])):
+            problemi.append(f"dopo «{cmd}» il diario ha già l'appunto della fuga")
+    # gli occhi aperti: tutto insieme, come prima
+    t = json.loads(ponte.rel_comando(comandi[gesto + 2]))
+    if not {"seme_spento", "fuga", "groviglio_desto", "dialogo_fine"} <= set(nomi(t)):
+        problemi.append(f"«{comandi[gesto + 2]}» non manda insieme la fuga e la fine del dialogo ({', '.join(nomi(t))})")
+    if t["stato"]["fuga"] != "iniziata" or t["stato"]["atto"] != 5:
+        problemi.append(f"dopo «{comandi[gesto + 2]}» lo schermo non è nella fuga")
+
+    # chi chiude la conversazione scrivendo, dall'uno e dall'altro nodo: la stanza è quella della fuga
+    for n, dove in ((gesto + 1, "alla dissolvenza"), (gesto + 2, "all'ultima voce")):
+        fino(n)
+        t = json.loads(ponte.rel_comando("esci"))
+        if ponte._mondo.in_dialogo() or not nella_fuga():
+            problemi.append(f"«esci» {dove}: il congedo si è disfatto")
+        if not {"fuga", "dialogo_fine"} <= set(nomi(t)) or t["stato"]["fuga"] != "iniziata":
+            problemi.append(f"«esci» {dove}: per lo schermo o per il suono la fuga non è cominciata")
+        t = json.loads(ponte.rel_comando("guarda"))
+        visto = " ".join(e["testo"] for e in t["eventi"])
+        if "galleggia la figura" in visto or "un seme" not in visto:
+            problemi.append(f"«esci» {dove}: la stanza non è quella della fuga")
+
+    # chi gli parla nella fuga: una frase di racconto, nessun colloquio, il seme in tasca
+    fino(comandi.index("prendi il seme", gesto) + 1)
+    t = json.loads(ponte.rel_comando("parla con l'anziano"))
+    testi = [(e["tipo"], e["testo"]) for e in t["eventi"]]
+    if ("testo", NON_C_E_PIU) not in testi or any(tipo in ("dialogo", "sistema", "opzione") for tipo, _ in testi):
+        problemi.append(f"parlare all'Anziano nella fuga non dà la frase di racconto ({testi[:3]})")
+    if t["stato"]["dialogo"] or {"dialogo", "nodo"} & set(nomi(t)):
+        problemi.append("parlare all'Anziano nella fuga riapre il colloquio")
+    if "seme" not in t["stato"]["inventario"]:
+        problemi.append("parlare all'Anziano nella fuga toglie il seme di tasca")
+    return problemi
+
+
 def indisturbato(mondo, percorso):
     """Lo stesso percorso giocato dal motore da solo e dal ponte: stessa impronta."""
     dati = json.loads(ponte.rel_percorso(percorso))
@@ -303,6 +384,11 @@ def main():
     if da_generare:
         print(f"     da generare (doppiaggio/servizio/servizio-nuove.txt): {', '.join(da_generare)}")
 
+    addio = congedo()
+    print(f"[{'NO' if addio else 'OK'}] il congedo dell'Anziano non si disfa (a occhi chiusi, chiudendo, parlandogli nella fuga)")
+    for p in addio:
+        print(f"     {p}")
+
     mondo = compila_mondo(STORIA)
     divergenze = [d for d in (indisturbato(mondo, os.path.join(QUI, f"{n}.txt")) for n in ponte.FINALI) if d]
     print(f"[{'NO' if divergenze else 'OK'}] il ponte non cambia la partita (i sei finali)")
@@ -313,7 +399,7 @@ def main():
         print()
         for nome, n in sorted(conta.items()):
             print(f"  {n:5}  {nome}")
-    sbagli = falliti + bool(frasi) + bool(rami) + bool(mai or ignoti) + bool(persi) + bool(perse) + bool(servizio) + bool(divergenze)
+    sbagli = falliti + bool(frasi) + bool(rami) + bool(mai or ignoti) + bool(persi) + bool(perse) + bool(servizio) + bool(addio) + bool(divergenze)
     print(f"\nPercorsi: {len(percorsi)}; falliti: {falliti}. Eventi diversi: {len(conta)}; "
           f"eventi in tutto: {sum(conta.values())}.")
     return 1 if sbagli else 0

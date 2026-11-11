@@ -225,14 +225,56 @@ def rel_comando(comando):
         return _json({"ok": False, "errore": f"{type(e).__name__}: {e}", "ripristinata": True})
 
 
+_SI_CHIUDE = "(La conversazione si chiude.)"
+
+
+def _eventi(eventi):
+    """Gli eventi di testo del motore, come dizionari. Una battuta che è tutta fra parentesi e non ha
+    risposte non è una conversazione: è racconto di William (chi parla all'Anziano nella fuga, quando non c'è
+    più: ponte.fav; revisione 37, G3). Resta il testo, senza il nome di chi parla, senza le parentesi e senza
+    la riga del motore «(La conversazione si chiude.)»."""
+    lista = [e.come_dizionario() for e in eventi]
+    out = []
+    salta = False
+    for e, poi in zip(lista, lista[1:] + [None]):
+        if salta:
+            salta = False
+            continue
+        if e["tipo"] == "dialogo" and poi is not None and poi["tipo"] == "sistema" and poi["testo"] == _SI_CHIUDE:
+            battuta = e["testo"].partition(": ")[2].strip()
+            if battuta.startswith("(") and battuta.endswith(")") and battuta.count("(") == 1 and battuta.count(")") == 1:
+                racconto = {"tipo": "testo", "testo": battuta[1:-1]}
+                if e.get("stacco"):
+                    racconto["stacco"] = True
+                out.append(racconto)
+                salta = True
+                continue
+        out.append(e)
+    return out
+
+
+# Dopo il congedo la conversazione con l'Anziano non si chiude più da un pulsante: restano i due gesti,
+# «[Resta.]» e «[Apri gli occhi.]», e l'ultima voce non si salta per un clic sbagliato (l'autore, 11 novembre
+# 2026; revisione 37, G3). Nei comandi scritti «esci» resta: porta alla stanza della fuga.
+NODI_SENZA_USCITA = ("dissolvenza", "ultima voce")
+
+
+def _pulsanti(m):
+    """I pulsanti del motore, senza «Chiudi la conversazione» dove la storia non la vuole."""
+    p = pulsanti(m)
+    if m.dialogo_attivo == "anziano" and m.nodo_dialogo in NODI_SENZA_USCITA:
+        p = dict(p, scelte=[s for s in p["scelte"] if s.get("comando") != "esci"])
+    return p
+
+
 def _turno(eventi, t0, t1, prima, comando, extra=None, ripresa=False):
     global _ultimi
-    p = pulsanti(_mondo)
+    p = _pulsanti(_mondo)
     _ultimi = p
     t2 = time.perf_counter()
     stato = _stato()
     dopo = _suono_stati()
-    lista = [e.come_dizionario() for e in eventi]
+    lista = _eventi(eventi)
     suono = {"stati": dopo, "eventi": _rileva(prima, dopo, comando, lista)}
     if ripresa:
         suono["eventi"].insert(0, {"evento": "ripresa", "stanza": dopo["stanza"]})
@@ -355,8 +397,21 @@ def _portati(m):
     return set(m.oggetti_portati()) | set(m.inventario)
 
 
+def _congedo_in_corso(m):
+    """Fra «[Chiudi gli occhi e lascia andare.]» e la fine del colloquio con l'Anziano. Per il gioco la fuga
+    è già cominciata (ponte.fav: la figura se ne va a quel gesto, e chi chiude la conversazione a occhi chiusi
+    non la ritrova; revisione 37, G3). Ma William ha gli occhi chiusi: per lo schermo, il suono e il diario la
+    fuga comincia quando li apre, o quando la conversazione finisce, come è sempre stato."""
+    return m.dialogo_attivo == "anziano" and m.variabili.get("fuga") == "iniziata"
+
+
+def _fuga(m):
+    """La fuga com'è per chi gioca: «lontana» finché William tiene gli occhi chiusi."""
+    return "lontana" if _congedo_in_corso(m) else m.variabili.get("fuga")
+
+
 def _atto(m):
-    if m.variabili.get("fuga") == "iniziata":
+    if _fuga(m) == "iniziata":
         return 5
     viste = set(getattr(m, "stanze_visitate", ()) or ()) | {m.posizione_giocatore}
     return max([_ATTO_DI.get(s, 1) for s in viste] or [1])
@@ -397,16 +452,16 @@ def _stato():
         "risonanze": _intero(v.get("risonanze")),
         "chiavi": _intero(v.get("chiavi")),
         "tracce": _intero(v.get("tracce")),
-        "fuga": v.get("fuga"),
+        "fuga": _fuga(m),
         "ingresso": v.get("ingresso"),
         "contatto": v.get("contatto"),
         "energia": v.get("energia"),
         "tuta": bool(tuta is not None and "vestita" in tuta.proprieta),
         # la stessa soglia del gioco (aria.fav): sotto 30, prima della fuga
-        "protezione": aria is not None and aria < 30 and v.get("fuga") == "lontana",
+        "protezione": aria is not None and aria < 30 and _fuga(m) == "lontana",
         # i contatori compaiono quando la loro meccanica entra nel gioco (06, §4.3)
         "mostra": {
-            "aria": bool(tuta is not None and "vestita" in tuta.proprieta) or v.get("fuga") == "iniziata",
+            "aria": bool(tuta is not None and "vestita" in tuta.proprieta) or _fuga(m) == "iniziata",
             "matrice": (_intero(v.get("traduzione")) or 0) > 0,
             "voci": "sintonizzatore" in portati or (v.get("echi") or 0) > 0,
             "chiavi": "corridoio principale" in visitate,
@@ -450,13 +505,16 @@ def _suono_stati():
     portati = _portati(m)
     aria = _intero(v.get("aria"))
     giuntura = m.oggetti.get("giuntura")
+    # a occhi chiusi il congedo non ha ancora cambiato niente: la fuga, il seme e il groviglio (le tre cose
+    # che il gesto del congedo tocca, ponte.fav) restano com'erano fino alla fine del colloquio
+    congedo = _congedo_in_corso(m)
     return {
         "stanza": m.posizione_giocatore,
         "atto": _atto(m),
         "tuta": _prop(m, "tuta", "vestita") == "vestita",
         "aria": aria,
-        "protezione": aria is not None and aria < 30 and v.get("fuga") == "lontana",
-        "fuga": v.get("fuga"),
+        "protezione": aria is not None and aria < 30 and _fuga(m) == "lontana",
+        "fuga": _fuga(m),
         "ingresso": v.get("ingresso"),
         "contatto": v.get("contatto"),
         "connessione": v.get("connessione"),
@@ -467,9 +525,9 @@ def _suono_stati():
         "faro": _prop(m, "faro del casco", "pieno", "basso") if "faro del casco" in portati else None,
         "bengala": _prop(m, "bengala", "acceso", "spento"),
         "minaccia": v.get("minaccia"),
-        "groviglio": _prop(m, "groviglio", "quieto", "desto"),
+        "groviglio": "quieto" if congedo else _prop(m, "groviglio", "quieto", "desto"),
         "teca": _prop(m, "teca", "sigillata", "svuotata"),
-        "seme": _prop(m, "seme", "vivente", "scuro"),
+        "seme": "vivente" if congedo else _prop(m, "seme", "vivente", "scuro"),
         "seme_con_te": "seme" in portati,
         "risuonatore": _prop(m, "risuonatore", "incastrato", "staccato"),
         "risuonatore_con_te": "risuonatore" in portati,
@@ -1093,7 +1151,7 @@ def _voci(p):
 
 def offerti(p=None):
     """Tutti i comandi che i pulsanti offrono adesso: [(comando, gruppo, etichetta)]."""
-    return [(v["comando"], v["gruppo"], v["etichetta"]) for v in _voci(p or pulsanti(_mondo))]
+    return [(v["comando"], v["gruppo"], v["etichetta"]) for v in _voci(p or _pulsanti(_mondo))]
 
 
 def _analizza(comando):
@@ -1101,7 +1159,7 @@ def _analizza(comando):
     riconosce fra quelli offerti prima del turno; uno scritto (il campo delle
     build di sviluppo) si scompone come fa il motore, in silenzio."""
     chiave = _norm(comando)
-    p = _ultimi if _ultimi is not None else pulsanti(_mondo)
+    p = _ultimi if _ultimi is not None else _pulsanti(_mondo)
     for v in _voci(p):
         if _norm(v["comando"]) == chiave:
             analisi = {"testo": comando, "verbo": v.get("verbo"), "cosa": v.get("cosa"),
@@ -1214,7 +1272,7 @@ APPUNTI = (
      "Sul Ponte, la mappa delle stelle. La rotta parte da tre soli e finisce sul mio."),
     ("figura", lambda m: _vista(m, "santuario centrale"),
      "In fondo alla nave c’è una figura di luce, e mi guarda."),
-    ("fuga", lambda m: _var(m, "fuga") == "iniziata",
+    ("fuga", lambda m: _fuga(m) == "iniziata",
      "La nave trema. Ho l’aria che mi resta per tornare alla Santa Maria."),
 )
 _TESTO_APPUNTO = {nome: testo for nome, _, testo in APPUNTI}
@@ -1274,7 +1332,7 @@ def _appunti(m):
 
 
 def _sospesi(m):
-    if _var(m, "fuga") == "iniziata":
+    if _fuga(m) == "iniziata":
         return ["Tornare alla Santa Maria, adesso."]
     return [t(m) if callable(t) else t for cond, t in SOSPESI if cond(m)]
 
@@ -1290,7 +1348,7 @@ def _diario_stati(m):
         "traduzione": _intero(v.get("traduzione")) or 0,
         "aria": aria,
         # le due regole che tengono spento il traduttore (traduci.fav)
-        "protezione": aria is not None and aria < 30 and v.get("fuga") == "lontana",
+        "protezione": aria is not None and aria < 30 and _fuga(m) == "lontana",
         "proiezione": v.get("proiezione"),
         "appunti": _appunti(m),
     }
@@ -1316,7 +1374,7 @@ def _voce_di_cronaca(m, comando, analisi, prima, dopo, eventi):
         "chiave": _chiave,
         # come lo si legge: una scelta del dialogo con le sue parole
         "comando": analisi.get("etichetta") or comando,
-        "eventi": [e.come_dizionario() for e in eventi],
+        "eventi": _eventi(eventi),
         "differenza": a1 - a0 if a0 is not None and a1 is not None and a1 != a0 else None,
         "stanza": m.posizione_giocatore,
         "nome_stanza": stanza.nome_visualizzato if stanza is not None else None,
@@ -1370,7 +1428,7 @@ def _ricostruisci_cronaca(seme, comandi):
                 break
             # le scelte (un dialogo, una conferma) si leggono con le loro parole
             scelte = m.in_dialogo() or getattr(m, "_in_conferma", None) or getattr(m, "_ambiguita", None)
-            _ultimi = pulsanti(m) if scelte else _NESSUN_PULSANTE
+            _ultimi = _pulsanti(m) if scelte else _NESSUN_PULSANTE
             prima = _diario_stati(m)
             analisi = _analizza(c)
             with raccogli_uscita(m) as uscita:
@@ -1580,7 +1638,7 @@ def rel_pulsante_per(comando, candidati=None):
     """`candidati`: None (i pulsanti del motore) o il testo JSON di una lista di
     comandi (quelli del modello d'azione)."""
     t0 = time.perf_counter()
-    p = pulsanti(_mondo)
+    p = _pulsanti(_mondo)
     voci = offerti(p)
     if candidati is not None:
         ammessi = json.loads(candidati) if isinstance(candidati, str) else list(candidati)

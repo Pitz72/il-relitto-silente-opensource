@@ -300,7 +300,13 @@ def dividi(blocco):
 
 
 def chiave(t):
-    return " ".join(t.replace("’", "'").split())
+    """Due prese sono la stessa se dicono le stesse parole: non contano gli spazi, gli apostrofi, e le parentesi
+    che chiudono tutta la frase (il racconto dentro un dialogo: «(Non c'è più. La sua luce è dentro il seme.)»
+    è la frase di chi guarda l'Anziano nella fuga, detta anche a chi gli parla; revisione 37, G3)."""
+    k = " ".join(t.replace("’", "'").split())
+    if k.startswith("(") and k.endswith(")") and k.count("(") == 1 and k.count(")") == 1:
+        k = k[1:-1].strip()
+    return k
 
 
 def leggi_capitolo(nome):

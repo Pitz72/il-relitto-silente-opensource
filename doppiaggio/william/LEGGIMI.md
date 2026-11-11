@@ -27,3 +27,8 @@ hanno più il loro contesto. Le sigle delle prese sono anche i nomi dei file che
 
 La prima versione, del 7 novembre 2026, sul gioco 0.2.5-beta.10: 125 blocchi, 605 prese da registrare (più 130
 uguali), circa 16.000 parole, 111 pagine. I punti aperti sono in fondo al PDF.
+
+Rifatto l’11 novembre 2026, dopo la correzione del congedo dell’Anziano (revisione 37, G3): la frase «Non c’è più.
+La sua luce è dentro il seme.» la dice anche chi parla all’Anziano nella fuga, ed è la stessa presa. Lo strumento
+riconosce ora come una presa sola una frase scritta con e senza le parentesi (così anche «Una pausa.»): 604 prese
+da registrare (più 132 uguali), 111 pagine. Le sigle delle prese del Ponte dopo `PO-038` sono salite di uno.

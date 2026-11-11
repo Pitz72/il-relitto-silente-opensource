@@ -27,9 +27,10 @@ La chiamata di Yusuf è attesa.
 "calcia" è come strappa.
 
 # --- L'inizio: la nave cambia forma ------------------------------------------
-# L'ultima voce (U1) e l'apertura dei varchi sono nell'ultimo nodo del dialogo
-# (ponte.fav), perché succedano nell'istante del congedo. Qui, al primo turno,
-# la nave comincia a tremare.
+# L'apertura dei varchi sta sul gesto del congedo, «[Chiudi gli occhi e lascia
+# andare.]» (ponte.fav), perché succeda nell'istante in cui la figura se ne va,
+# anche per chi chiude la conversazione subito dopo; l'ultima voce (U1) è
+# l'ultimo nodo del dialogo. Qui, al primo turno, la nave comincia a tremare.
 Quando la fuga è iniziata diventa vera: dire "La nave trema. Sotto i miei piedi le linee del pavimento si spengono una dopo l'altra, e accanto al sostegno il pavimento si è aperto su una gola che scende. Sul visore, la cifra dell'aria ha cominciato a scendere da sola." e adesso la camera di compensazione collega su a lo scafo e adesso la sala delle teche collega est a la gola del ritorno e adesso il vestibolo delle gole non collega più ovest.
 
 # Dal santuario si scende con uno spostamento diretto: l'apertura nel pavimento

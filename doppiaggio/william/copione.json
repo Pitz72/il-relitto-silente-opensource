@@ -1,12 +1,12 @@
 {
- "impronta_fav": "604900122ced8844ea019b96f2135bc050e5892018e1129b97d3d6204fbb2e32",
+ "impronta_fav": "59ab934f77a450a60c101b0ca8810b0a61b2a2a58536117b6e3e3010319af406",
  "totali": {
-  "prese": 605,
-  "uguali": 130,
-  "parole": 16031,
+  "prese": 604,
+  "uguali": 132,
+  "parole": 16029,
   "parlato": 23,
   "citazione": 252,
-  "william": 582
+  "william": 581
  },
  "capitoli": [
   {
@@ -11235,10 +11235,32 @@
       },
       {
        "id": "PO-039",
+       "tipo": "battuta",
+       "soggetto": "L'anziano · benvenuto",
+       "condizione": "la fuga è iniziata",
+       "riga": "ponte.fav:152",
+       "pezzi": [
+        {
+         "condizione": null,
+         "segmenti": [
+          [
+           "william",
+           "(Non c'è più. La sua luce è dentro il seme.)",
+           ""
+          ]
+         ],
+         "william": "(Non c'è più. La sua luce è dentro il seme.)",
+         "uguale": "PO-034",
+         "id": "PO-039"
+        }
+       ]
+      },
+      {
+       "id": "PO-040",
        "tipo": "opzione",
        "soggetto": "nodo benvenuto",
-       "condizione": null,
-       "riga": "ponte.fav:150",
+       "condizione": "la fuga è lontana",
+       "riga": "ponte.fav:153",
        "pezzi": [
         {
          "condizione": null,
@@ -11250,16 +11272,16 @@
           ]
          ],
          "william": "Chi eravate?",
-         "id": "PO-039"
+         "id": "PO-040"
         }
        ]
       },
       {
-       "id": "PO-040",
+       "id": "PO-041",
        "tipo": "opzione",
        "soggetto": "nodo benvenuto",
-       "condizione": null,
-       "riga": "ponte.fav:151",
+       "condizione": "la fuga è lontana",
+       "riga": "ponte.fav:154",
        "pezzi": [
         {
          "condizione": null,
@@ -11271,16 +11293,16 @@
           ]
          ],
          "william": "Cosa ne è stato di voi?",
-         "id": "PO-040"
+         "id": "PO-041"
         }
        ]
       },
       {
-       "id": "PO-041",
+       "id": "PO-042",
        "tipo": "opzione",
        "soggetto": "nodo benvenuto",
-       "condizione": "le tracce è almeno 3",
-       "riga": "ponte.fav:152",
+       "condizione": "le tracce è almeno 3 e la fuga è lontana",
+       "riga": "ponte.fav:155",
        "pezzi": [
         {
          "condizione": null,
@@ -11292,16 +11314,16 @@
           ]
          ],
          "william": "C'era un uomo, prima di me.",
-         "id": "PO-041"
+         "id": "PO-042"
         }
        ]
       },
       {
-       "id": "PO-042",
+       "id": "PO-043",
        "tipo": "opzione",
        "soggetto": "nodo benvenuto",
-       "condizione": "la promessa è carico",
-       "riga": "ponte.fav:153",
+       "condizione": "la promessa è carico e la fuga è lontana",
+       "riga": "ponte.fav:156",
        "pezzi": [
         {
          "condizione": null,
@@ -11313,16 +11335,16 @@
           ]
          ],
          "william": "Sono venuto per vendervi.",
-         "id": "PO-042"
+         "id": "PO-043"
         }
        ]
       },
       {
-       "id": "PO-043",
+       "id": "PO-044",
        "tipo": "opzione",
        "soggetto": "nodo benvenuto",
-       "condizione": null,
-       "riga": "ponte.fav:155",
+       "condizione": "la fuga è lontana",
+       "riga": "ponte.fav:158",
        "pezzi": [
         {
          "condizione": null,
@@ -11334,7 +11356,7 @@
           ]
          ],
          "william": "Resto ad ascoltare.",
-         "id": "PO-043"
+         "id": "PO-044"
         }
        ]
       }
@@ -11349,11 +11371,11 @@
      "note": [],
      "prese": [
       {
-       "id": "PO-044",
+       "id": "PO-045",
        "tipo": "battuta",
        "soggetto": "L'anziano · voci",
        "condizione": null,
-       "riga": "ponte.fav:157",
+       "riga": "ponte.fav:160",
        "pezzi": [
         {
          "condizione": null,
@@ -11365,16 +11387,16 @@
           ]
          ],
          "william": "(Apro la mano e appoggio il risuonatore ai piedi del sostegno. Il brusio non resta nell'arnese: si alza, si allarga, entra nelle pareti, e per la prima volta le voci non si coprono. Le sento una per una: una che chiede qualcosa in fretta, una che conta, una che ride piano. Poi rientrano nella nave, e l'arnese resta lì, spento, un pezzo di pavimento come un altro. Sul bordo del visore la cifra dell'aria smette di scendere. La figura non dice niente.)",
-         "id": "PO-044"
+         "id": "PO-045"
         }
        ]
       },
       {
-       "id": "PO-045",
+       "id": "PO-046",
        "tipo": "opzione",
        "soggetto": "nodo voci",
        "condizione": null,
-       "riga": "ponte.fav:158",
+       "riga": "ponte.fav:161",
        "pezzi": [
         {
          "condizione": null,
@@ -11386,17 +11408,17 @@
           ]
          ],
          "william": "Chi eravate?",
-         "uguale": "PO-039",
-         "id": "PO-045"
+         "uguale": "PO-040",
+         "id": "PO-046"
         }
        ]
       },
       {
-       "id": "PO-046",
+       "id": "PO-047",
        "tipo": "opzione",
        "soggetto": "nodo voci",
        "condizione": null,
-       "riga": "ponte.fav:159",
+       "riga": "ponte.fav:162",
        "pezzi": [
         {
          "condizione": null,
@@ -11408,17 +11430,17 @@
           ]
          ],
          "william": "Cosa ne è stato di voi?",
-         "uguale": "PO-040",
-         "id": "PO-046"
+         "uguale": "PO-041",
+         "id": "PO-047"
         }
        ]
       },
       {
-       "id": "PO-047",
+       "id": "PO-048",
        "tipo": "opzione",
        "soggetto": "nodo voci",
        "condizione": "le tracce è almeno 3",
-       "riga": "ponte.fav:160",
+       "riga": "ponte.fav:163",
        "pezzi": [
         {
          "condizione": null,
@@ -11430,17 +11452,17 @@
           ]
          ],
          "william": "C'era un uomo, prima di me.",
-         "uguale": "PO-041",
-         "id": "PO-047"
+         "uguale": "PO-042",
+         "id": "PO-048"
         }
        ]
       },
       {
-       "id": "PO-048",
+       "id": "PO-049",
        "tipo": "opzione",
        "soggetto": "nodo voci",
        "condizione": "la promessa è carico",
-       "riga": "ponte.fav:161",
+       "riga": "ponte.fav:164",
        "pezzi": [
         {
          "condizione": null,
@@ -11452,17 +11474,17 @@
           ]
          ],
          "william": "Sono venuto per vendervi.",
-         "uguale": "PO-042",
-         "id": "PO-048"
+         "uguale": "PO-043",
+         "id": "PO-049"
         }
        ]
       },
       {
-       "id": "PO-049",
+       "id": "PO-050",
        "tipo": "opzione",
        "soggetto": "nodo voci",
        "condizione": null,
-       "riga": "ponte.fav:162",
+       "riga": "ponte.fav:165",
        "pezzi": [
         {
          "condizione": null,
@@ -11474,8 +11496,8 @@
           ]
          ],
          "william": "Resto ad ascoltare.",
-         "uguale": "PO-043",
-         "id": "PO-049"
+         "uguale": "PO-044",
+         "id": "PO-050"
         }
        ]
       }
@@ -11490,11 +11512,11 @@
      "note": [],
      "prese": [
       {
-       "id": "PO-050",
+       "id": "PO-051",
        "tipo": "battuta",
        "soggetto": "L'anziano · silenzio",
        "condizione": null,
-       "riga": "ponte.fav:164",
+       "riga": "ponte.fav:167",
        "pezzi": [
         {
          "condizione": null,
@@ -11511,16 +11533,16 @@
           ]
          ],
          "william": "(La figura tace. Per un tempo che non so misurare sento soltanto la nave: un ronzio lontano, il mio fiato nel casco, qualcosa che si assesta. Poi la voce riprende, come se non avesse mai smesso.)",
-         "id": "PO-050"
+         "id": "PO-051"
         }
        ]
       },
       {
-       "id": "PO-051",
+       "id": "PO-052",
        "tipo": "opzione",
        "soggetto": "nodo silenzio",
        "condizione": null,
-       "riga": "ponte.fav:165",
+       "riga": "ponte.fav:168",
        "pezzi": [
         {
          "condizione": null,
@@ -11532,17 +11554,17 @@
           ]
          ],
          "william": "Chi eravate?",
-         "uguale": "PO-039",
-         "id": "PO-051"
+         "uguale": "PO-040",
+         "id": "PO-052"
         }
        ]
       },
       {
-       "id": "PO-052",
+       "id": "PO-053",
        "tipo": "opzione",
        "soggetto": "nodo silenzio",
        "condizione": null,
-       "riga": "ponte.fav:166",
+       "riga": "ponte.fav:169",
        "pezzi": [
         {
          "condizione": null,
@@ -11554,8 +11576,8 @@
           ]
          ],
          "william": "Cosa ne è stato di voi?",
-         "uguale": "PO-040",
-         "id": "PO-052"
+         "uguale": "PO-041",
+         "id": "PO-053"
         }
        ]
       }
@@ -11570,11 +11592,11 @@
      "note": [],
      "prese": [
       {
-       "id": "PO-053",
+       "id": "PO-054",
        "tipo": "battuta",
        "soggetto": "L'anziano · salto",
        "condizione": "la stele è decifrato",
-       "riga": "ponte.fav:169",
+       "riga": "ponte.fav:172",
        "pezzi": [
         {
          "condizione": null,
@@ -11596,16 +11618,17 @@
           ]
          ],
          "william": "(Una pausa.)",
-         "id": "PO-053"
+         "uguale": "SM-038",
+         "id": "PO-054"
         }
        ]
       },
       {
-       "id": "PO-054",
+       "id": "PO-055",
        "tipo": "opzione",
        "soggetto": "nodo salto",
        "condizione": null,
-       "riga": "ponte.fav:170",
+       "riga": "ponte.fav:173",
        "pezzi": [
         {
          "condizione": null,
@@ -11617,16 +11640,16 @@
           ]
          ],
          "william": "E io che c'entro?",
-         "id": "PO-054"
+         "id": "PO-055"
         }
        ]
       },
       {
-       "id": "PO-055",
+       "id": "PO-056",
        "tipo": "opzione",
        "soggetto": "nodo salto",
        "condizione": null,
-       "riga": "ponte.fav:171",
+       "riga": "ponte.fav:174",
        "pezzi": [
         {
          "condizione": null,
@@ -11638,16 +11661,16 @@
           ]
          ],
          "william": "Cosa è rimasto di voi?",
-         "id": "PO-055"
+         "id": "PO-056"
         }
        ]
       },
       {
-       "id": "PO-056",
+       "id": "PO-057",
        "tipo": "opzione",
        "soggetto": "nodo salto",
        "condizione": "la risposta non è nessuna e non ho il sonaglio",
-       "riga": "ponte.fav:173",
+       "riga": "ponte.fav:176",
        "pezzi": [
         {
          "condizione": null,
@@ -11659,7 +11682,7 @@
           ]
          ],
          "william": "Perché la nave si è fermata?",
-         "id": "PO-056"
+         "id": "PO-057"
         }
        ]
       }
@@ -11674,11 +11697,11 @@
      "note": [],
      "prese": [
       {
-       "id": "PO-057",
+       "id": "PO-058",
        "tipo": "battuta",
        "soggetto": "L'anziano · memoria",
        "condizione": null,
-       "riga": "ponte.fav:175",
+       "riga": "ponte.fav:178",
        "pezzi": [
         {
          "condizione": null,
@@ -11701,7 +11724,7 @@
           ]
          ],
          "william": "Le voci, almeno, le hai sentite tu, una per una.",
-         "id": "PO-057"
+         "id": "PO-058"
         },
         {
          "condizione": null,
@@ -11717,11 +11740,11 @@
        ]
       },
       {
-       "id": "PO-058",
+       "id": "PO-059",
        "tipo": "battuta",
        "soggetto": "L'anziano · memoria",
        "condizione": "l'archivio è forzato",
-       "riga": "ponte.fav:176",
+       "riga": "ponte.fav:179",
        "pezzi": [
         {
          "condizione": null,
@@ -11744,8 +11767,8 @@
           ]
          ],
          "william": "Le voci, almeno, le hai sentite tu, una per una.",
-         "uguale": "PO-057",
-         "id": "PO-058"
+         "uguale": "PO-058",
+         "id": "PO-059"
         },
         {
          "condizione": null,
@@ -11761,11 +11784,11 @@
        ]
       },
       {
-       "id": "PO-059",
+       "id": "PO-060",
        "tipo": "opzione",
        "soggetto": "nodo memoria",
        "condizione": null,
-       "riga": "ponte.fav:178",
+       "riga": "ponte.fav:181",
        "pezzi": [
         {
          "condizione": null,
@@ -11777,16 +11800,16 @@
           ]
          ],
          "william": "E allora perché tutto questo?",
-         "id": "PO-059"
+         "id": "PO-060"
         }
        ]
       },
       {
-       "id": "PO-060",
+       "id": "PO-061",
        "tipo": "opzione",
        "soggetto": "nodo memoria",
        "condizione": null,
-       "riga": "ponte.fav:179",
+       "riga": "ponte.fav:182",
        "pezzi": [
         {
          "condizione": null,
@@ -11798,7 +11821,7 @@
           ]
          ],
          "william": "Torno ad ascoltare.",
-         "id": "PO-060"
+         "id": "PO-061"
         }
        ]
       }
@@ -11813,11 +11836,11 @@
      "note": [],
      "prese": [
       {
-       "id": "PO-061",
+       "id": "PO-062",
        "tipo": "battuta",
        "soggetto": "L'anziano · altro",
        "condizione": null,
-       "riga": "ponte.fav:181",
+       "riga": "ponte.fav:184",
        "pezzi": [
         {
          "condizione": null,
@@ -11839,17 +11862,17 @@
           ]
          ],
          "william": "(Una pausa.)",
-         "uguale": "PO-053",
-         "id": "PO-061"
+         "uguale": "SM-038",
+         "id": "PO-062"
         }
        ]
       },
       {
-       "id": "PO-062",
+       "id": "PO-063",
        "tipo": "opzione",
        "soggetto": "nodo altro",
        "condizione": null,
-       "riga": "ponte.fav:182",
+       "riga": "ponte.fav:185",
        "pezzi": [
         {
          "condizione": null,
@@ -11861,16 +11884,16 @@
           ]
          ],
          "william": "Avreste potuto aiutarlo?",
-         "id": "PO-062"
+         "id": "PO-063"
         }
        ]
       },
       {
-       "id": "PO-063",
+       "id": "PO-064",
        "tipo": "opzione",
        "soggetto": "nodo altro",
        "condizione": "il segno non è assente",
-       "riga": "ponte.fav:183",
+       "riga": "ponte.fav:186",
        "pezzi": [
         {
          "condizione": null,
@@ -11882,7 +11905,7 @@
           ]
          ],
          "william": "Gli ho lasciato un segno.",
-         "id": "PO-063"
+         "id": "PO-064"
         }
        ]
       }
@@ -11897,11 +11920,11 @@
      "note": [],
      "prese": [
       {
-       "id": "PO-064",
+       "id": "PO-065",
        "tipo": "opzione",
        "soggetto": "nodo aiuto",
        "condizione": null,
-       "riga": "ponte.fav:186",
+       "riga": "ponte.fav:189",
        "pezzi": [
         {
          "condizione": null,
@@ -11913,17 +11936,17 @@
           ]
          ],
          "william": "E io che c'entro?",
-         "uguale": "PO-054",
-         "id": "PO-064"
+         "uguale": "PO-055",
+         "id": "PO-065"
         }
        ]
       },
       {
-       "id": "PO-065",
+       "id": "PO-066",
        "tipo": "opzione",
        "soggetto": "nodo aiuto",
        "condizione": "il segno non è assente",
-       "riga": "ponte.fav:187",
+       "riga": "ponte.fav:190",
        "pezzi": [
         {
          "condizione": null,
@@ -11935,8 +11958,8 @@
           ]
          ],
          "william": "Gli ho lasciato un segno.",
-         "uguale": "PO-063",
-         "id": "PO-065"
+         "uguale": "PO-064",
+         "id": "PO-066"
         }
        ]
       }
@@ -11951,11 +11974,11 @@
      "note": [],
      "prese": [
       {
-       "id": "PO-066",
+       "id": "PO-067",
        "tipo": "battuta",
        "soggetto": "L'anziano · prezzo",
        "condizione": null,
-       "riga": "ponte.fav:189",
+       "riga": "ponte.fav:192",
        "pezzi": [
         {
          "condizione": null,
@@ -11977,16 +12000,16 @@
           ]
          ],
          "william": "(Nella voce non c'è rimprovero.)",
-         "id": "PO-066"
+         "id": "PO-067"
         }
        ]
       },
       {
-       "id": "PO-067",
+       "id": "PO-068",
        "tipo": "opzione",
        "soggetto": "nodo prezzo",
        "condizione": null,
-       "riga": "ponte.fav:190",
+       "riga": "ponte.fav:193",
        "pezzi": [
         {
          "condizione": null,
@@ -11998,16 +12021,16 @@
           ]
          ],
          "william": "Mi serve per vivere.",
-         "id": "PO-067"
+         "id": "PO-068"
         }
        ]
       },
       {
-       "id": "PO-068",
+       "id": "PO-069",
        "tipo": "opzione",
        "soggetto": "nodo prezzo",
        "condizione": null,
-       "riga": "ponte.fav:191",
+       "riga": "ponte.fav:194",
        "pezzi": [
         {
          "condizione": null,
@@ -12019,7 +12042,7 @@
           ]
          ],
          "william": "Non più.",
-         "id": "PO-068"
+         "id": "PO-069"
         }
        ]
       }
@@ -12034,11 +12057,11 @@
      "note": [],
      "prese": [
       {
-       "id": "PO-069",
+       "id": "PO-070",
        "tipo": "battuta",
        "soggetto": "L'anziano · piccolo",
        "condizione": null,
-       "riga": "ponte.fav:193",
+       "riga": "ponte.fav:196",
        "pezzi": [
         {
          "condizione": "se il gesto del sonaglio è fatto",
@@ -12050,7 +12073,7 @@
           ]
          ],
          "william": "(Gli mostro il sonaglio. La figura lo guarda a lungo, e quando riprende la voce è più bassa.)",
-         "id": "PO-069"
+         "id": "PO-070"
         },
         {
          "condizione": null,
@@ -12066,11 +12089,11 @@
        ]
       },
       {
-       "id": "PO-070",
+       "id": "PO-071",
        "tipo": "battuta",
        "soggetto": "L'anziano · piccolo",
        "condizione": "la risposta è vera",
-       "riga": "ponte.fav:194",
+       "riga": "ponte.fav:197",
        "pezzi": [
         {
          "condizione": "se il gesto del sonaglio è fatto",
@@ -12082,8 +12105,8 @@
           ]
          ],
          "william": "(Gli mostro il sonaglio. La figura lo guarda a lungo, e quando riprende la voce è più bassa.)",
-         "uguale": "PO-069",
-         "id": "PO-070a"
+         "uguale": "PO-070",
+         "id": "PO-071a"
         },
         {
          "condizione": null,
@@ -12105,16 +12128,16 @@
           ]
          ],
          "william": "(Una pausa lunga.)",
-         "id": "PO-070b"
+         "id": "PO-071b"
         }
        ]
       },
       {
-       "id": "PO-071",
+       "id": "PO-072",
        "tipo": "battuta",
        "soggetto": "L'anziano · piccolo",
        "condizione": "la risposta è incerta",
-       "riga": "ponte.fav:195",
+       "riga": "ponte.fav:198",
        "pezzi": [
         {
          "condizione": "se il gesto del sonaglio è fatto",
@@ -12126,8 +12149,8 @@
           ]
          ],
          "william": "(Gli mostro il sonaglio. La figura lo guarda a lungo, e quando riprende la voce è più bassa.)",
-         "uguale": "PO-069",
-         "id": "PO-071a"
+         "uguale": "PO-070",
+         "id": "PO-072a"
         },
         {
          "condizione": null,
@@ -12149,17 +12172,17 @@
           ]
          ],
          "william": "(Una pausa.)",
-         "uguale": "PO-053",
-         "id": "PO-071b"
+         "uguale": "SM-038",
+         "id": "PO-072b"
         }
        ]
       },
       {
-       "id": "PO-072",
+       "id": "PO-073",
        "tipo": "battuta",
        "soggetto": "L'anziano · piccolo",
        "condizione": "la risposta è taciuta",
-       "riga": "ponte.fav:196",
+       "riga": "ponte.fav:199",
        "pezzi": [
         {
          "condizione": "se il gesto del sonaglio è fatto",
@@ -12171,8 +12194,8 @@
           ]
          ],
          "william": "(Gli mostro il sonaglio. La figura lo guarda a lungo, e quando riprende la voce è più bassa.)",
-         "uguale": "PO-069",
-         "id": "PO-072a"
+         "uguale": "PO-070",
+         "id": "PO-073a"
         },
         {
          "condizione": null,
@@ -12194,17 +12217,17 @@
           ]
          ],
          "william": "(Una pausa.)",
-         "uguale": "PO-053",
-         "id": "PO-072b"
+         "uguale": "SM-038",
+         "id": "PO-073b"
         }
        ]
       },
       {
-       "id": "PO-073",
+       "id": "PO-074",
        "tipo": "opzione",
        "soggetto": "nodo piccolo",
        "condizione": null,
-       "riga": "ponte.fav:197",
+       "riga": "ponte.fav:200",
        "pezzi": [
         {
          "condizione": null,
@@ -12216,8 +12239,8 @@
           ]
          ],
          "william": "E io che c'entro?",
-         "uguale": "PO-054",
-         "id": "PO-073"
+         "uguale": "PO-055",
+         "id": "PO-074"
         }
        ]
       }
@@ -12232,11 +12255,11 @@
      "note": [],
      "prese": [
       {
-       "id": "PO-074",
+       "id": "PO-075",
        "tipo": "battuta",
        "soggetto": "L'anziano · sangue",
        "condizione": null,
-       "riga": "ponte.fav:199",
+       "riga": "ponte.fav:202",
        "pezzi": [
         {
          "condizione": null,
@@ -12258,17 +12281,17 @@
           ]
          ],
          "william": "(Una pausa.)",
-         "uguale": "PO-053",
-         "id": "PO-074"
+         "uguale": "SM-038",
+         "id": "PO-075"
         }
        ]
       },
       {
-       "id": "PO-075",
+       "id": "PO-076",
        "tipo": "opzione",
        "soggetto": "nodo sangue",
        "condizione": "le tacche è segnata oppure il bassorilievo è segnata oppure le capsule è segnata oppure il segno non è assente",
-       "riga": "ponte.fav:200",
+       "riga": "ponte.fav:203",
        "pezzi": [
         {
          "condizione": null,
@@ -12280,7 +12303,7 @@
           ]
          ],
          "william": "Ho lasciato dei segni, là dietro.",
-         "id": "PO-075"
+         "id": "PO-076"
         }
        ]
       }
@@ -12295,11 +12318,11 @@
      "note": [],
      "prese": [
       {
-       "id": "PO-076",
+       "id": "PO-077",
        "tipo": "battuta",
        "soggetto": "L'anziano · musica",
        "condizione": null,
-       "riga": "ponte.fav:210",
+       "riga": "ponte.fav:213",
        "pezzi": [
         {
          "condizione": null,
@@ -12316,7 +12339,7 @@
           ]
          ],
          "william": "(Accendo il Sintonizzatore. Non aggancia parole: aggancia quello che c'è sotto la sua voce, il canto del primo momento, basso, che non si era mai fermato.)",
-         "id": "PO-076"
+         "id": "PO-077"
         }
        ]
       }
@@ -12331,11 +12354,11 @@
      "note": [],
      "prese": [
       {
-       "id": "PO-077",
+       "id": "PO-078",
        "tipo": "battuta",
        "soggetto": "L'anziano · congedo",
        "condizione": null,
-       "riga": "ponte.fav:213",
+       "riga": "ponte.fav:216",
        "pezzi": [
         {
          "condizione": null,
@@ -12362,16 +12385,16 @@
           ]
          ],
          "william": "(Abbasso gli occhi sul visore: aria [aria]. Quando li rialzo, la figura guarda la stessa cifra.)  (Una pausa.)",
-         "id": "PO-077"
+         "id": "PO-078"
         }
        ]
       },
       {
-       "id": "PO-078",
+       "id": "PO-079",
        "tipo": "battuta",
        "soggetto": "L'anziano · congedo",
        "condizione": "l'ascolto è dato",
-       "riga": "ponte.fav:214",
+       "riga": "ponte.fav:217",
        "pezzi": [
         {
          "condizione": null,
@@ -12408,7 +12431,7 @@
           ]
          ],
          "william": "(Abbasso gli occhi sul visore: aria [aria]. Quando li rialzo, la figura guarda la stessa cifra.)  (Una pausa.)  (E poi, più piano:)",
-         "id": "PO-078"
+         "id": "PO-079"
         }
        ]
       }
@@ -12423,11 +12446,11 @@
      "note": [],
      "prese": [
       {
-       "id": "PO-079",
+       "id": "PO-080",
        "tipo": "battuta",
        "soggetto": "L'anziano · dissolvenza",
        "condizione": null,
-       "riga": "ponte.fav:217",
+       "riga": "ponte.fav:223",
        "pezzi": [
         {
          "condizione": null,
@@ -12439,7 +12462,7 @@
           ]
          ],
          "william": "(Chiudo gli occhi. Quando li riapro appena, la figura si sta raccogliendo: i bordi rientrano, la luce si stringe in un punto, e il punto scende piano sul sostegno al centro della stanza. Lì adesso c'è il seme che avevo dato alla porta. La luce ci entra dentro, e si spegne.)",
-         "id": "PO-079"
+         "id": "PO-080"
         }
        ]
       }
@@ -12459,9 +12482,10 @@
      "sezione": "LA FUGA",
      "sotto": "L'inizio: la nave cambia forma",
      "note": [
-      "L'ultima voce (U1) e l'apertura dei varchi sono nell'ultimo nodo del dialogo",
-      "(ponte.fav), perché succedano nell'istante del congedo. Qui, al primo turno,",
-      "la nave comincia a tremare."
+      "L'apertura dei varchi sta sul gesto del congedo, «[Chiudi gli occhi e lascia",
+      "andare.]» (ponte.fav), perché succeda nell'istante in cui la figura se ne va,",
+      "anche per chi chiude la conversazione subito dopo; l'ultima voce (U1) è",
+      "l'ultimo nodo del dialogo. Qui, al primo turno, la nave comincia a tremare."
      ],
      "prese": [
       {
@@ -12469,7 +12493,7 @@
        "tipo": "evento",
        "soggetto": "",
        "condizione": "la fuga è iniziata",
-       "riga": "fuga.fav:33",
+       "riga": "fuga.fav:34",
        "pezzi": [
         {
          "condizione": null,
@@ -12490,7 +12514,7 @@
        "tipo": "risposta",
        "soggetto": "vai giù",
        "condizione": "sono nel santuario centrale e la fuga è iniziata",
-       "riga": "fuga.fav:37",
+       "riga": "fuga.fav:38",
        "pezzi": [
         {
          "condizione": null,
@@ -12547,7 +12571,7 @@
        "tipo": "risposta",
        "soggetto": "entra il buio",
        "condizione": "sono nel santuario centrale e la fuga è iniziata",
-       "riga": "fuga.fav:38",
+       "riga": "fuga.fav:39",
        "pezzi": [
         {
          "condizione": null,
@@ -12608,7 +12632,7 @@
        "tipo": "demone",
        "soggetto": "ogni turno",
        "condizione": "la fuga è iniziata e l'aria è sopra 15 e a caso, 1 volta su 4",
-       "riga": "fuga.fav:41",
+       "riga": "fuga.fav:42",
        "pezzi": [
         {
          "condizione": null,
@@ -12629,7 +12653,7 @@
        "tipo": "demone",
        "soggetto": "ogni turno",
        "condizione": "la fuga è iniziata e l'aria è sopra 15 e a caso, 1 volta su 4",
-       "riga": "fuga.fav:42",
+       "riga": "fuga.fav:43",
        "pezzi": [
         {
          "condizione": null,
@@ -12659,7 +12683,7 @@
        "tipo": "descrizione",
        "soggetto": "la gola del ritorno",
        "condizione": null,
-       "riga": "fuga.fav:48",
+       "riga": "fuga.fav:49",
        "pezzi": [
         {
          "condizione": null,
@@ -12680,7 +12704,7 @@
        "tipo": "descrizione",
        "soggetto": "la gola del ritorno",
        "condizione": "l'aria è al massimo 15",
-       "riga": "fuga.fav:49",
+       "riga": "fuga.fav:50",
        "pezzi": [
         {
          "condizione": null,
@@ -12701,7 +12725,7 @@
        "tipo": "descrizione",
        "soggetto": "la gola del ritorno",
        "condizione": "le alcove è svelata",
-       "riga": "fuga.fav:50",
+       "riga": "fuga.fav:51",
        "pezzi": [
         {
          "condizione": null,
@@ -12722,7 +12746,7 @@
        "tipo": "descrizione",
        "soggetto": "le venature del ritorno",
        "condizione": null,
-       "riga": "fuga.fav:57",
+       "riga": "fuga.fav:58",
        "pezzi": [
         {
          "condizione": "intera: se le alcove è svelata",
@@ -12755,7 +12779,7 @@
        "tipo": "risposta",
        "soggetto": "vai su",
        "condizione": "sono nella gola del ritorno",
-       "riga": "fuga.fav:59",
+       "riga": "fuga.fav:60",
        "pezzi": [
         {
          "condizione": null,
@@ -12785,7 +12809,7 @@
        "tipo": "descrizione",
        "soggetto": "la sala delle teche",
        "condizione": "la fuga è iniziata e l'aria è al massimo 15",
-       "riga": "fuga.fav:64",
+       "riga": "fuga.fav:65",
        "pezzi": [
         {
          "condizione": null,
@@ -12806,7 +12830,7 @@
        "tipo": "descrizione",
        "soggetto": "la sala delle teche",
        "condizione": "la fuga è iniziata e le alcove è svelata",
-       "riga": "fuga.fav:65",
+       "riga": "fuga.fav:66",
        "pezzi": [
         {
          "condizione": null,
@@ -12827,7 +12851,7 @@
        "tipo": "descrizione",
        "soggetto": "la sala delle teche",
        "condizione": "la fuga è iniziata e il bengala è acceso",
-       "riga": "fuga.fav:66",
+       "riga": "fuga.fav:67",
        "pezzi": [
         {
          "condizione": null,
@@ -12848,7 +12872,7 @@
        "tipo": "descrizione",
        "soggetto": "la sala delle teche",
        "condizione": "la fuga è iniziata",
-       "riga": "fuga.fav:67",
+       "riga": "fuga.fav:68",
        "pezzi": [
         {
          "condizione": null,
@@ -12869,7 +12893,7 @@
        "tipo": "risposta",
        "soggetto": "vai su",
        "condizione": "sono nella sala delle teche e la fuga è iniziata e la sponda è lontana e le alcove non è svelata e il bengala è spento e l'appoggio è libero",
-       "riga": "fuga.fav:70",
+       "riga": "fuga.fav:71",
        "pezzi": [
         {
          "condizione": null,
@@ -12914,7 +12938,7 @@
        "tipo": "risposta",
        "soggetto": "strappa il groviglio",
        "condizione": "sono nella sala delle teche e la fuga è iniziata",
-       "riga": "fuga.fav:71",
+       "riga": "fuga.fav:72",
        "pezzi": [
         {
          "condizione": null,
@@ -12935,7 +12959,7 @@
        "tipo": "risposta",
        "soggetto": "taglia il groviglio",
        "condizione": "sono nella sala delle teche e la fuga è iniziata e ho la taglierina",
-       "riga": "fuga.fav:72",
+       "riga": "fuga.fav:73",
        "pezzi": [
         {
          "condizione": null,
@@ -12956,7 +12980,7 @@
        "tipo": "risposta",
        "soggetto": "strappa il groviglio",
        "condizione": null,
-       "riga": "fuga.fav:73",
+       "riga": "fuga.fav:74",
        "pezzi": [
         {
          "condizione": null,
@@ -12977,7 +13001,7 @@
        "tipo": "risposta",
        "soggetto": "strappa",
        "condizione": null,
-       "riga": "fuga.fav:74",
+       "riga": "fuga.fav:75",
        "pezzi": [
         {
          "condizione": null,
@@ -13007,7 +13031,7 @@
        "tipo": "descrizione",
        "soggetto": "la gola di mezzo",
        "condizione": "la fuga è iniziata e l'aria è al massimo 15",
-       "riga": "fuga.fav:79",
+       "riga": "fuga.fav:80",
        "pezzi": [
         {
          "condizione": null,
@@ -13028,7 +13052,7 @@
        "tipo": "descrizione",
        "soggetto": "la gola di mezzo",
        "condizione": "la fuga è iniziata",
-       "riga": "fuga.fav:80",
+       "riga": "fuga.fav:81",
        "pezzi": [
         {
          "condizione": null,
@@ -13049,7 +13073,7 @@
        "tipo": "evento",
        "soggetto": "",
        "condizione": "sono nella gola di mezzo e la fuga è iniziata e la voce dei nomi è attesa",
-       "riga": "fuga.fav:82",
+       "riga": "fuga.fav:83",
        "pezzi": [
         {
          "condizione": "intera: se la connessione è avvenuta; se il generatore è svelata",
@@ -13106,7 +13130,7 @@
        "tipo": "evento",
        "soggetto": "",
        "condizione": "sono nel vestibolo delle gole e la fuga è iniziata e la voce dei nomi è udita",
-       "riga": "fuga.fav:84",
+       "riga": "fuga.fav:85",
        "pezzi": [
         {
          "condizione": null,
@@ -13127,7 +13151,7 @@
        "tipo": "risposta",
        "soggetto": "ascolta le venature verdi",
        "condizione": "la fuga è iniziata",
-       "riga": "fuga.fav:89",
+       "riga": "fuga.fav:90",
        "pezzi": [
         {
          "condizione": null,
@@ -13148,7 +13172,7 @@
        "tipo": "risposta",
        "soggetto": "ascolta le venature verdi",
        "condizione": null,
-       "riga": "fuga.fav:90",
+       "riga": "fuga.fav:91",
        "pezzi": [
         {
          "condizione": null,
@@ -13178,7 +13202,7 @@
        "tipo": "descrizione",
        "soggetto": "vestibolo delle gole",
        "condizione": "la fuga è iniziata e l'aria è al massimo 15",
-       "riga": "fuga.fav:95",
+       "riga": "fuga.fav:96",
        "pezzi": [
         {
          "condizione": null,
@@ -13199,7 +13223,7 @@
        "tipo": "descrizione",
        "soggetto": "vestibolo delle gole",
        "condizione": "la fuga è iniziata",
-       "riga": "fuga.fav:96",
+       "riga": "fuga.fav:97",
        "pezzi": [
         {
          "condizione": null,
@@ -13278,7 +13302,7 @@
        "tipo": "risposta",
        "soggetto": "vai ovest",
        "condizione": "sono nel vestibolo delle gole e la fuga è iniziata",
-       "riga": "fuga.fav:97",
+       "riga": "fuga.fav:98",
        "pezzi": [
         {
          "condizione": null,
@@ -13299,7 +13323,7 @@
        "tipo": "descrizione",
        "soggetto": "la camera di compensazione",
        "condizione": "la fuga è iniziata e l'aria è al massimo 15",
-       "riga": "fuga.fav:99",
+       "riga": "fuga.fav:100",
        "pezzi": [
         {
          "condizione": null,
@@ -13320,7 +13344,7 @@
        "tipo": "descrizione",
        "soggetto": "la camera di compensazione",
        "condizione": "la fuga è iniziata",
-       "riga": "fuga.fav:100",
+       "riga": "fuga.fav:101",
        "pezzi": [
         {
          "condizione": null,
@@ -13341,7 +13365,7 @@
        "tipo": "descrizione",
        "soggetto": "lo scafo",
        "condizione": "la fuga è iniziata e l'aria è al massimo 15",
-       "riga": "fuga.fav:102",
+       "riga": "fuga.fav:103",
        "pezzi": [
         {
          "condizione": null,
@@ -13362,7 +13386,7 @@
        "tipo": "descrizione",
        "soggetto": "lo scafo",
        "condizione": "la fuga è iniziata",
-       "riga": "fuga.fav:103",
+       "riga": "fuga.fav:104",
        "pezzi": [
         {
          "condizione": null,
@@ -13383,7 +13407,7 @@
        "tipo": "evento",
        "soggetto": "",
        "condizione": "sono sullo scafo e la fuga è iniziata e la chiamata di Yusuf è attesa",
-       "riga": "fuga.fav:107",
+       "riga": "fuga.fav:108",
        "pezzi": [
         {
          "condizione": null,
@@ -13470,7 +13494,7 @@
        "tipo": "descrizione",
        "soggetto": "la stiva",
        "condizione": "la fuga è iniziata",
-       "riga": "fuga.fav:109",
+       "riga": "fuga.fav:110",
        "pezzi": [
         {
          "condizione": null,
