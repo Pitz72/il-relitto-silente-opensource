@@ -22,6 +22,10 @@ documenti di `progettazione/`.
 
 - **Il copione di William e le sue quattro decisioni** (documento 35, §11). La firma di William sul suo registro di bordo sono le iniziali («Settimana sei. Stiva vuota. Nessun contatto. W. T.», `santamaria.fav`): il suo nome lo dicono soltanto Yusuf e la riga di registro dei finali. La frase delle fasce del pilastro è corretta («…una fascia alla volta: [risveglio] su quattro, per ora.», `memoria.fav`), che con una fascia sola diceva «ne sono accese 1». La riga del registro di bordo che chiude i finali la dirà il computer di bordo con la voce di servizio: quattro parti nuove (`SV-42`…`SV-45`) da generare (`doppiaggio/servizio/servizio-nuove.txt`), il ponte che le manda con un ritardo pari al tempo di leggere il finale (`dopo`, tre parole al secondo, fra 3 e 90 s), il motore che le mette in fila con quel ritardo, `taglia_servizio.py --nuove` con la catena del computer di bordo (un altoparlante piccolo di plancia). Una prova nuova in Rust; il collaudo degli eventi dice le parti da generare senza fallire. Il copione (`doppiaggio/william/`) ha le decisioni al posto dei punti aperti.
 
+### Corretto
+
+- **Le prove su GitHub di nuovo verdi** (trovato l’11 novembre 2026, documento 36, §4). Dal 7 novembre `collaudo/eventi.py` importava `strumenti/audio/taglia_servizio.py` soltanto per i nomi dei file della voce di servizio, e lo strumento vuole numpy e scipy, che la macchina delle prove non ha: gli eventi del suono cadevano, e i collaudi dopo (il diario, i comandi scritti, i salvataggi, la tipografia) non partivano. `nome_file` sta adesso in `voce_servizio.py`, che usa soltanto la libreria standard; `taglia_servizio.py` la prende da lì. Provato in un ambiente con il solo lark, come su GitHub.
+
 ## [0.2.5-beta.10] - 2026-11-07
 
 ### Per chi gioca

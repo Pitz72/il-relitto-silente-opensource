@@ -36,6 +36,8 @@ import sys
 import numpy as np
 from scipy import signal
 
+from voce_servizio import nome_file   # i nomi dei file: li usa anche il collaudo degli eventi, senza numpy
+
 QUI = os.path.dirname(os.path.abspath(__file__))
 RADICE = os.path.normpath(os.path.join(QUI, "..", ".."))
 SERVIZIO = os.path.join(RADICE, "doppiaggio", "servizio")
@@ -159,23 +161,6 @@ def computer(y):
 
 def pulita(y):
     return signal.sosfilt(signal.butter(2, 70, "highpass", fs=SR, output="sos"), y)
-
-
-def nome_file(n, voce, gia):
-    """«SV-nn-» e le prime parole; la matrice con il suo numero; se il nome c'è già, anche l'ultima parola."""
-    parole = re.findall(r"[a-zà-ÿ]+", voce.lower().replace("’", " "))
-    parole = [p.translate(str.maketrans("àèéìòù", "aeeiou")) for p in parole]
-    if parole[:3] == ["matrice", "di", "traduzione"]:
-        coda = ["matrice", parole[3]] + (["completata"] if "decodifica" in parole else [])
-    elif parole[:3] == ["registro", "di", "bordo"]:
-        # la riga del registro: la testa è sempre la stessa, conta la fine
-        coda = ["registro"] + parole[-2:]
-    else:
-        coda = parole[:4]
-        if "-".join(coda) in gia:
-            coda.append(parole[-1])
-    gia.add("-".join(coda))
-    return f"SV-{n:02d}-" + "-".join(coda)
 
 
 def main():

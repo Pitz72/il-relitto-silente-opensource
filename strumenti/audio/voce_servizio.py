@@ -188,6 +188,25 @@ def parole(t):
     return len(re.findall(r"\w[\w’]*", t))
 
 
+def nome_file(n, voce, gia):
+    """Il nome del file di una parte: «SV-nn-» e le prime parole; la matrice con il suo numero; se il nome c'è già,
+    anche l'ultima parola. Sta qui, e non in taglia_servizio.py, perché lo usa anche il collaudo degli eventi, che
+    gira senza numpy né scipy."""
+    pp = re.findall(r"[a-zà-ÿ]+", voce.lower().replace("’", " "))
+    pp = [p.translate(str.maketrans("àèéìòù", "aeeiou")) for p in pp]
+    if pp[:3] == ["matrice", "di", "traduzione"]:
+        coda = ["matrice", pp[3]] + (["completata"] if "decodifica" in pp else [])
+    elif pp[:3] == ["registro", "di", "bordo"]:
+        # la riga del registro: la testa è sempre la stessa, conta la fine
+        coda = ["registro"] + pp[-2:]
+    else:
+        coda = pp[:4]
+        if "-".join(coda) in gia:
+            coda.append(pp[-1])
+    gia.add("-".join(coda))
+    return f"SV-{n:02d}-" + "-".join(coda)
+
+
 def main():
     parti = parti_di_servizio()
     n = sum(parole(p["voce"]) for p in parti)

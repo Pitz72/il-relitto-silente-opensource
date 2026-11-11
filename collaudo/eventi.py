@@ -157,9 +157,9 @@ def servizio_coerente():
     manifest = json.load(open(os.path.join(cartella, "manifest.json"), encoding="utf-8"))
     tagli = json.load(open(os.path.join(cartella, "tagli.json"), encoding="utf-8"))["parti"]
     sys.path.insert(0, os.path.join(RADICE, "strumenti", "audio"))
-    import taglia_servizio                            # noqa: E402
+    import voce_servizio                              # noqa: E402  (non taglia_servizio: vuole numpy e scipy)
     gia = set()
-    nomi = {p["id"]: taglia_servizio.nome_file(i + 1, p["voce"], gia) for i, p in enumerate(manifest["parti"])}
+    nomi = {p["id"]: voce_servizio.nome_file(i + 1, p["voce"], gia) for i, p in enumerate(manifest["parti"])}
     problemi, attese, da_generare = [], {}, []
     for p in manifest["parti"]:
         t = tagli.get(p["id"])
@@ -173,7 +173,6 @@ def servizio_coerente():
             problemi.append(f"manca il file {t['file']}.mp3")
     if attese != ponte.VOCI_SERVIZIO:
         problemi.append("la tabella VOCI_SERVIZIO del ponte non è quella del manifest")
-    import voce_servizio                              # noqa: E402
     ora = {p["voce"] for p in voce_servizio.parti_di_servizio()}
     vecchie = {p["voce"] for p in manifest["parti"]}
     for v in sorted(ora - vecchie):
