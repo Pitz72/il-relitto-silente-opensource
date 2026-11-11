@@ -4,6 +4,12 @@
    parte sotto, e il nero dell'intro (--buio) si apre su di lui.
    Contrasti sul nero: apparecchio #9FA9A6 8,3:1 · voce di L.V. #DCE6E2 16:1 ·
    sottotitoli dei suoni #B8C2BF 10:1 · titolo #ECF0EE 17:1.
+
+   Ogni regola sta sotto .intro (revisione 37, G1). Questo foglio resta nella
+   pagina anche quando l'intro è finita, e il gioco ha un suo .palco: due regole
+   senza .intro davanti (.palco e .palco > *) spostavano fuori dallo schermo
+   «diario» e «menu» e toglievano i fili al ramo, dopo ogni «Nuova partita».
+   La prova prove/stili.test.ts non lascia tornare una regola senza .intro.
    ========================================================================== */
 .intro {
   --serif: "Newsreader", Georgia, "Times New Roman", serif;
@@ -28,7 +34,7 @@
 }
 .intro.in-corso { cursor: none; }
 
-.palco {
+.intro .palco {
   position: relative;
   container-type: size;
   aspect-ratio: 16 / 9;
@@ -36,64 +42,64 @@
   background: rgba(0, 0, 0, var(--buio));
   overflow: hidden;
 }
-.palco > * { position: absolute; }
-.palco canvas { inset: 0; width: 100%; height: 100%; display: block; }
+.intro .palco > * { position: absolute; }
+.intro .palco canvas { inset: 0; width: 100%; height: 100%; display: block; }
 
-.palco canvas.plancia { visibility: hidden; }
+.intro .palco canvas.plancia { visibility: hidden; }
 
 /* la grana sopra la plancia (l'oblò e il cielo hanno la loro, nel motore): la scelta «Grana» della
    scheda Grafica, mossa, ferma o niente */
-.grana-intro { inset: 0; opacity: 0; mix-blend-mode: overlay; pointer-events: none; background-repeat: repeat; }
+.intro .grana-intro { inset: 0; opacity: 0; mix-blend-mode: overlay; pointer-events: none; background-repeat: repeat; }
 
 /* i testi */
-.blocco { opacity: 0; visibility: hidden; text-align: center; left: 20cqw; width: 60cqw; }
-.blocco.lv { font-family: var(--serif); font-style: italic; font-weight: 300; font-size: 1.77cqw; line-height: 1.42; color: var(--voce); }
-.blocco.apparecchio { font-family: var(--mono); font-size: 1.02cqw; letter-spacing: .2em; text-transform: uppercase; color: var(--tenue); line-height: 1.7; }
-.blocco.apparecchio .cursore { color: var(--verde); opacity: 0; margin-left: .05em; letter-spacing: 0; }
-.blocco.apparecchio .resto { visibility: hidden; }
-.blocco.scena-A { top: 52%; }
-.blocco.scena-A.sotto { top: 57.5%; }
-.blocco.scena-B { left: 60cqw; width: 33cqw; top: 19%; text-align: left; }
-.blocco.scena-B.sotto { top: 29%; }
-.blocco.scena-F { top: 39%; }
+.intro .blocco { opacity: 0; visibility: hidden; text-align: center; left: 20cqw; width: 60cqw; }
+.intro .blocco.lv { font-family: var(--serif); font-style: italic; font-weight: 300; font-size: 1.77cqw; line-height: 1.42; color: var(--voce); }
+.intro .blocco.apparecchio { font-family: var(--mono); font-size: 1.02cqw; letter-spacing: .2em; text-transform: uppercase; color: var(--tenue); line-height: 1.7; }
+.intro .blocco.apparecchio .cursore { color: var(--verde); opacity: 0; margin-left: .05em; letter-spacing: 0; }
+.intro .blocco.apparecchio .resto { visibility: hidden; }
+.intro .blocco.scena-A { top: 52%; }
+.intro .blocco.scena-A.sotto { top: 57.5%; }
+.intro .blocco.scena-B { left: 60cqw; width: 33cqw; top: 19%; text-align: left; }
+.intro .blocco.scena-B.sotto { top: 29%; }
+.intro .blocco.scena-F { top: 39%; }
 
 /* la telecamera di bordo (H): la scritta in alto a sinistra, con la spia della registrazione, come
    sotto la lente del gioco */
-.didascalia { left: 2.6cqw; top: 2.2cqw; opacity: 0; visibility: hidden; font-family: var(--mono); font-size: max(12px, .82cqw); letter-spacing: .2em; text-transform: uppercase; color: rgba(240, 232, 214, .88); text-shadow: 0 0 .4em rgba(0, 0, 0, .8); }
-.didascalia .rec { display: inline-block; width: .62em; height: .62em; margin-right: .8em; vertical-align: .02em; border-radius: 50%; background: #ff5247; box-shadow: 0 0 .5em rgba(255, 82, 71, .7); animation: rec-intro 2.2s steps(1) infinite; }
+.intro .didascalia { left: 2.6cqw; top: 2.2cqw; opacity: 0; visibility: hidden; font-family: var(--mono); font-size: max(12px, .82cqw); letter-spacing: .2em; text-transform: uppercase; color: rgba(240, 232, 214, .88); text-shadow: 0 0 .4em rgba(0, 0, 0, .8); }
+.intro .didascalia .rec { display: inline-block; width: .62em; height: .62em; margin-right: .8em; vertical-align: .02em; border-radius: 50%; background: #ff5247; box-shadow: 0 0 .5em rgba(255, 82, 71, .7); animation: rec-intro 2.2s steps(1) infinite; }
 @keyframes rec-intro { 55% { opacity: .18; } }
 
 /* le bande del formato, sopra a tutto il quadro */
-.banda { left: 0; right: 0; height: 12.8%; background: #000; }
-.banda.su { top: 0; }
-.banda.giu { bottom: 0; }
+.intro .banda { left: 0; right: 0; height: 12.8%; background: #000; }
+.intro .banda.su { top: 0; }
+.intro .banda.giu { bottom: 0; }
 
-.suono { left: 10cqw; right: 10cqw; bottom: 2.3%; text-align: center; font-family: var(--serif); font-style: italic; font-size: max(13px, 1.15cqw); color: var(--didascalia); opacity: 0; }
-.salta { right: 2.4cqw; bottom: 4.2%; font-family: var(--mono); font-size: max(12px, .78cqw); letter-spacing: .14em; color: var(--tenue); opacity: 0; }
-.preparazione { inset: 0; display: grid; place-items: center; font-family: var(--mono); font-size: 13px; letter-spacing: .18em; text-transform: uppercase; color: var(--tenue); }
-.preparazione.errore { color: #ff8a80; white-space: pre-wrap; text-transform: none; letter-spacing: 0; padding: 24px; }
-.solo-lettori { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.intro .suono { left: 10cqw; right: 10cqw; bottom: 2.3%; text-align: center; font-family: var(--serif); font-style: italic; font-size: max(13px, 1.15cqw); color: var(--didascalia); opacity: 0; }
+.intro .salta { right: 2.4cqw; bottom: 4.2%; font-family: var(--mono); font-size: max(12px, .78cqw); letter-spacing: .14em; color: var(--tenue); opacity: 0; }
+.intro .preparazione { inset: 0; display: grid; place-items: center; font-family: var(--mono); font-size: 13px; letter-spacing: .18em; text-transform: uppercase; color: var(--tenue); }
+.intro .preparazione.errore { color: #ff8a80; white-space: pre-wrap; text-transform: none; letter-spacing: 0; padding: 24px; }
+.intro .solo-lettori { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* la barra di revisione dell'animatic */
-.revisione { position: relative; width: min(100vw, 1600px); box-sizing: border-box; padding: 10px 16px 12px; display: flex; flex-direction: column; gap: 8px; font-family: var(--mono); font-size: 12px; color: #e6eae8; background: #0b0f10; border-top: 1px solid #1e2626; cursor: default; }
-.revisione .comandi { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
-.revisione button { background: transparent; color: #e6eae8; border: 1px solid #2b3536; border-radius: 999px; padding: 6px 14px; min-height: 32px; font: inherit; cursor: pointer; }
-.revisione button:hover { border-color: var(--verde); }
-.revisione button:focus-visible, .revisione input:focus-visible { outline: 2px solid var(--verde); outline-offset: 2px; }
-.revisione label { display: flex; align-items: center; gap: 6px; color: var(--tenue); cursor: pointer; }
-.revisione input[type="checkbox"] { accent-color: #8bf0a2; width: 16px; height: 16px; }
-.revisione .tempo { min-width: 15ch; }
-.revisione .scena { color: var(--verde); }
-.revisione .misura { margin-left: auto; color: var(--tenue); }
-.linea { position: relative; height: 34px; }
-.linea input[type="range"] { position: absolute; inset: 0; width: 100%; margin: 0; opacity: 0; cursor: pointer; }
-.linea .segmento { position: absolute; top: 0; height: 14px; border-radius: 2px; font-size: 10px; line-height: 14px; padding-left: 4px; color: #060708; overflow: hidden; pointer-events: none; }
-.linea .testo { position: absolute; top: 17px; height: 5px; background: #dce6e2; opacity: .55; border-radius: 2px; pointer-events: none; }
-.linea .testina { position: absolute; top: -2px; bottom: -2px; width: 2px; background: #fff; pointer-events: none; }
-.linea:focus-within .testina { box-shadow: 0 0 0 2px #8bf0a2; }
-.linea .ora { position: absolute; top: 24px; font-size: 10px; color: var(--tenue); transform: translateX(-50%); pointer-events: none; }
+.intro .revisione { position: relative; width: min(100vw, 1600px); box-sizing: border-box; padding: 10px 16px 12px; display: flex; flex-direction: column; gap: 8px; font-family: var(--mono); font-size: 12px; color: #e6eae8; background: #0b0f10; border-top: 1px solid #1e2626; cursor: default; }
+.intro .revisione .comandi { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.intro .revisione button { background: transparent; color: #e6eae8; border: 1px solid #2b3536; border-radius: 999px; padding: 6px 14px; min-height: 32px; font: inherit; cursor: pointer; }
+.intro .revisione button:hover { border-color: var(--verde); }
+.intro .revisione button:focus-visible, .intro .revisione input:focus-visible { outline: 2px solid var(--verde); outline-offset: 2px; }
+.intro .revisione label { display: flex; align-items: center; gap: 6px; color: var(--tenue); cursor: pointer; }
+.intro .revisione input[type="checkbox"] { accent-color: #8bf0a2; width: 16px; height: 16px; }
+.intro .revisione .tempo { min-width: 15ch; }
+.intro .revisione .scena { color: var(--verde); }
+.intro .revisione .misura { margin-left: auto; color: var(--tenue); }
+.intro .linea { position: relative; height: 34px; }
+.intro .linea input[type="range"] { position: absolute; inset: 0; width: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.intro .linea .segmento { position: absolute; top: 0; height: 14px; border-radius: 2px; font-size: 10px; line-height: 14px; padding-left: 4px; color: #060708; overflow: hidden; pointer-events: none; }
+.intro .linea .testo { position: absolute; top: 17px; height: 5px; background: #dce6e2; opacity: .55; border-radius: 2px; pointer-events: none; }
+.intro .linea .testina { position: absolute; top: -2px; bottom: -2px; width: 2px; background: #fff; pointer-events: none; }
+.intro .linea:focus-within .testina { box-shadow: 0 0 0 2px #8bf0a2; }
+.intro .linea .ora { position: absolute; top: 24px; font-size: 10px; color: var(--tenue); transform: translateX(-50%); pointer-events: none; }
 
 @media (prefers-reduced-motion: reduce) {
-  .revisione button, .revisione input { transition: none; }
-  .didascalia .rec { animation: none; }
+  .intro .revisione button, .intro .revisione input { transition: none; }
+  .intro .didascalia .rec { animation: none; }
 }

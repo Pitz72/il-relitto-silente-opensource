@@ -42,6 +42,10 @@ const VERIFICA = `(() => {
     // fuori dalla finestra (non dentro un contenitore che scorre: quello lo taglia e va bene)
     if (v.r.right > W + 1 || v.r.bottom > H + 1 || v.r.left < -1 || v.r.top < -1) { if (v.x1 > W || v.y1 > H || v.x0 < 0 || v.y0 < 0) fuori.push(k + " «" + testo.slice(0, 16) + "» " + [v.r.left, v.r.top, v.r.right, v.r.bottom].map(Math.round).join(",")); }
   }
+  // «diario» e «menu» ci sono sempre, dentro la finestra: se un contenitore li taglia il giro qui sopra
+  // li salta come non visibili, e il 14 ottobre 2026 sono finiti a sinistra dello schermo senza che
+  // nessuna misura lo dicesse (revisione 37, G1)
+  for (const c of document.querySelectorAll(".gioco .comandi-app button")) { const r = c.getBoundingClientRect(); if (r.width && (r.left < -1 || r.top < -1 || r.right > W + 1 || r.bottom > H + 1)) fuori.push("comandi-app «" + c.textContent.trim().slice(0, 16) + "» " + [r.left, r.top, r.right, r.bottom].map(Math.round).join(",")); }
   const b = [...document.querySelectorAll(".ramo .baccello:not(.misura)")].filter((x) => x.style.visibility !== "hidden" && getComputedStyle(x).opacity !== "0").map((x) => ({ t: x.textContent.trim().slice(0, 14), r: x.getBoundingClientRect() }));
   const sovr = [];
   for (let i = 0; i < b.length; i++) for (let j = i + 1; j < b.length; j++) { const a = b[i].r, c = b[j].r; if (a.left < c.right - 2 && c.left < a.right - 2 && a.top < c.bottom - 2 && c.top < a.bottom - 2) sovr.push(b[i].t + " / " + b[j].t); }

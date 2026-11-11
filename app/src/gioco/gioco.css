@@ -21,6 +21,12 @@
 }
 [data-testo="grande"] .palco { --corpo: max(19px, 1.32cqw); }
 
+/* l'esplorazione tiene insieme ciò che il dialogo e i pannelli nascondono al lettore di schermo: non è
+   un riquadro. Resta nel flusso, alta zero, e i suoi figli (l'atto, «diario» e «menu», la lamina, il
+   ramo, il visore) si misurano sul palco. Detto qui perché nessuna regola di un'altra schermata la
+   sposti (revisione 37, G1: lo faceva il foglio dell'intro) */
+.palco > .esplorazione { position: static; }
+
 .palco .atto {
   position: absolute;
   left: 4.4cqw;

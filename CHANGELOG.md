@@ -10,6 +10,7 @@ documenti di `progettazione/`.
 
 ### Per chi gioca
 
+- **«Diario» e «menu» restano al loro posto.** Dopo una «Nuova partita» i due pulsanti in alto finivano fuori dallo schermo, e il ramo perdeva i suoi fili: con il solo mouse non si arrivava più alla pausa, ai salvataggi e alle opzioni.
 - **Alla fine, il computer di bordo.** Quando la storia finisce, dopo il tempo di leggerla, il vecchio computer della Santa Maria legge l’ultima riga del registro di bordo, dal piccolo altoparlante della plancia.
 - **La firma sul registro** di William sono le sue iniziali.
 - **La frase delle fasce del pilastro** si legge bene con qualunque numero di fasce accese.
@@ -25,6 +26,7 @@ documenti di `progettazione/`.
 
 ### Corretto
 
+- **«Diario» e «menu» fuori dallo schermo dopo l’intro** (revisione 37, G1; in tutte le beta, dalla 1 alla 10). Due regole di `intro.css` senza `.intro` davanti (`.palco` e `.palco > *`) valevano anche per il palco del gioco: il foglio dell’intro resta nella pagina dopo la prima «Nuova partita», e da lì `.esplorazione` diventava un riquadro di zero per zero. A 1280 × 720 «diario» e «menu» stavano a −675 px, il ramo e i suoi fili misuravano 0 × 0, la scritta dell’atto andava su tre righe. Ora ogni regola dell’intro sta sotto `.intro`, e `gioco.css` dice dove sta `.esplorazione`. La prova nuova `app/prove/stili.test.ts` (cinque prove: il foglio dell’intro vale solo dentro l’intro, il palco del gioco lo tocca solo il gioco, nessuna schermata caricata a parte ha regole per tutta la pagina) cade sul foglio di prima; `strumenti/misure/testi.mjs` conta fuori dalla finestra anche «diario» e «menu» quando un contenitore li taglia. Visto nel browser dello sviluppo, nel percorso vero (l’intro e poi il gioco): i due pulsanti a 540 px, il ramo 1280 × 720, l’atto su una riga, l’intro com’era. Non ancora guardato nell’eseguibile.
 - **Le prove su GitHub di nuovo verdi** (trovato l’11 novembre 2026, documento 36, §4). Dal 7 novembre `collaudo/eventi.py` importava `strumenti/audio/taglia_servizio.py` soltanto per i nomi dei file della voce di servizio, e lo strumento vuole numpy e scipy, che la macchina delle prove non ha: gli eventi del suono cadevano, e i collaudi dopo (il diario, i comandi scritti, i salvataggi, la tipografia) non partivano. `nome_file` sta adesso in `voce_servizio.py`, che usa soltanto la libreria standard; `taglia_servizio.py` la prende da lì. Provato in un ambiente con il solo lark, come su GitHub.
 - **L’ascolto del computer di bordo, finale per finale.** `rendi_echi` metteva nel finale «Vivi» la riga della «Stiva piena» (`SV-42`), con un ritardo scritto a mano; il gioco invece ha sempre mandato la riga giusta. Adesso rende i cinque finali che hanno la riga (la prima nota, Vivi, la stiva piena, doppio fondo, mani vuote), ognuno con la sua riga e con il ritardo che il ponte calcola sul suo testo (51,7, 44,3, 30,3, 24,3 e 26,0 secondi, dai percorsi del collaudo): `rendi_echi <cartella> "Il computer di bordo"`. Whisper ritrova le cinque righe nei punti attesi. L’ascolto è in `consegne/Ascolto computer di bordo 2026-11-11/`.
 
