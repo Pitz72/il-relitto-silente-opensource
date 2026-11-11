@@ -64,9 +64,11 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   «Nuova partita» spariscono dallo schermo «diario» e «menu» (il foglio di stile dell’intro vale per tutta la
   pagina; in tutte le beta); «La prima nota» riconosciuta in stiva è registrata come «Vivi» (una riga del ponte);
   il congedo dell’Anziano si può disfare, e nella fuga gli si può riparlare da capo (tocca `ponte.fav`: decide
-  lui). **Niente è corretto**: le correzioni le sceglie l’autore, lotto per lotto (documento 37, §8). Lo stesso
-  giorno l’autore ha detto che la musica di Alirio Bruni è un dono al progetto, con libertà d’uso: va scritto nei
-  registri delle licenze (37, L26).
+  lui). Le correzioni le sceglie l’autore, lotto per lotto (documento 37, §8; il registro è il §9). **G1 e G2 sono
+  corrette** lo stesso giorno («Sì, correggile»; commit `d5ca287` e `39f6f4a`), ognuna con la sua prova: non
+  sono ancora in una beta, e G1 nell’eseguibile va ancora guardata (una partita nuova: «diario» e «menu» in alto).
+  Lo stesso giorno l’autore ha detto che la musica di Alirio Bruni è un dono al progetto, con libertà d’uso: va
+  scritto nei registri delle licenze (37, L26).
 - **11 novembre 2026: il punto della situazione** (documento 36, chiesto dall’autore: tutto quello che è fatto e
   tutto quello che resta). Trovato rileggendo: **le prove su GitHub sono rosse** dai commit `34c936d` e `222f881`
   (7 novembre). `collaudo/eventi.py` importa `strumenti/audio/taglia_servizio.py`, che importa numpy, e `prove.yml`
@@ -223,11 +225,11 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
    suona finto, è fra gli effetti da rifare più avanti (punto 5).
    **La prima sessione dell’11 novembre si è chiusa qui** («fai una verifica finale generale e salva… Poi torno»):
    tutto su GitHub, prove verdi. **La seconda è la revisione globale** (documento 37; vedi «Dove siamo»).
-   **Alla prossima:** prima di tutto chiedergli quali correzioni del documento 37 fare, cominciando dalle tre gravi
-   (G1 e G2 sono piccole e non toccano i `.fav`; G3 è una sua decisione sul testo); insieme, le sue note sulle beta
-   (dalla 5 alla 10) e quello che resta nell’intro (la M7 del documento 37 può esserne una parte); poi la beta 11
-   (la firma «W. T.», le fasce, il computer di bordo, le correzioni scelte, più le sue note). Effetti e suoni
-   d’ambiente rifatti, più avanti, quando ne riparla lui.
+   **Alla prossima:** prima di tutto G3, il congedo dell’Anziano, che è una sua decisione sul testo (la proposta va
+   scritta per intero), e quali altre correzioni del documento 37 fare (G1 e G2 sono fatte); insieme, le sue note
+   sulle beta (dalla 5 alla 10) e quello che resta nell’intro (la M7 del documento 37 può esserne una parte); poi la
+   beta 11 (la firma «W. T.», le fasce, il computer di bordo, G1 e G2, le altre correzioni scelte, più le sue
+   note). Effetti e suoni d’ambiente rifatti, più avanti, quando ne riparla lui.
 
 1. **Le sue note sulle beta, dalla 5 alla 10.** Prima cosa: chiedergli come gli sono sembrate nel gioco vero,
    con il suono, la prima persona, l’intro con la voce di L.V. e le voci registrate, e correggere quello che dice.
