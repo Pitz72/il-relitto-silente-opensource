@@ -204,7 +204,7 @@ L’autore, dopo la revisione globale: «ci sono momenti che potrebbero richiede
 | 9.a | **L’apparizione dell’Anziano** (dell’autore) | i punti della figura nascono sulle linee del pavimento, salgono girando intorno al sostegno e la chiudono dalla base alla testa, sul canto del primo contatto; le volte dopo, due secondi | **fatta e approvata** (§9.2) |
 | 9.b | **La mappa stellare** (dell’autore) | le postazioni e la struttura a stella si accendono, la luce sale sulla cupola e le stelle affiorano al loro posto: due galassie e il vuoto in mezzo; la rotta si traccia piano dai tre soli fino al nostro, che si accende per ultimo; poi tutto rientra nella lente del visore, dove resta. Venti secondi scarsi, una volta sola | **fatta e approvata** (§9.4) |
 | 9.c | **La dissolvenza dell’Anziano** | lo stesso movimento al contrario: al gesto «[Chiudi gli occhi e lascia andare.]» i punti si stringono in un punto di luce, che scende sul sostegno e diventa il seme | **fatta e approvata** (§9.3) |
-| 9.d | **La nave che si sveglia** | quando torna l’energia una luce parte dal generatore e corre una volta in tutte le vene dello schermo, e la stanza cambia colore dietro di lei | da fare |
+| 9.d | **La nave che si sveglia** | quando torna l’energia lo schermo si spegne; la lente guizza con gli archi; poi una luce parte dal generatore e attraversa piano tutto lo schermo: dove passa le vene si accendono e gli strumenti tornano uno dopo l’altro; per ultime le parole. Dieci secondi e mezzo, una volta sola | **fatta e approvata** (§9.5) |
 
 Scartate: la Grande Porta e il primo passo sullo scafo, che hanno già la soglia dell’atto, con la sua musica e il suo cartello.
 
@@ -252,4 +252,20 @@ Fatta l’11 novembre 2026 (`app/src/gioco/momenti/`). Ci sono volute due versio
 - **Un clic o un tasto** la mandano al rientro. Con il movimento ridotto o con «Apparizioni» spento non c’è, e la lente mostra comunque la mappa.
 - **Le prove**: `app/prove/mappa.test.ts` (la carta dice quello che dice la storia; i tempi restano lenti). Nel browser dello sviluppo, a 1280 × 720, nessun fotogramma oltre i 40 millisecondi.
 - **Non ancora**: vista nell’eseguibile; un suono suo (oggi suona soltanto l’evento `postazione` della regia, che è breve).
+
+### 9.5 Registro: la nave che si sveglia
+
+Fatta l’11 novembre 2026 (`app/src/gioco/momenti/tempiRisveglio.ts` e `Risveglio.tsx`), con le regole uscite dalla mappa (§9.4). L’autore l’ha guardata nel browser dello sviluppo: «Sì, va bene».
+
+- **Quando.** Nel laboratorio di risonanza, al comando che mette il cristallo nel generatore (l’evento sonoro `energia`): «Con un rombo che sale, i macchinari si svegliano: l’elettricità corre fra le bobine, i monitor si accendono […] Lo scafo mi vibra sotto i piedi, una volta sola. Lontano, dietro le pareti, sistemi spenti da sempre tornano a respirare uno dopo l’altro, e per la prima volta sento la nave lavorare.»
+- **Senza velo.** La mappa copre il gioco; qui è l’interfaccia stessa che si spegne e si riaccende, perché è lei la nave. In meno di un secondo tutto va al buio (gli strumenti restano a un ventesimo, la lamina a zero) e restano le vene, appena visibili.
+- **Gli archi.** La lente mostra il generatore: guizza quattro volte, ogni volta un poco di più, con una luce intorno; mai un lampo pieno.
+- **L’onda.** Al brivido dello scafo la lente si accende del tutto e una luce parte dal suo centro: una fascia larga e tenue che attraversa lo schermo in 5,2 secondi, sempre alla stessa velocità. Dove passa le vene si accendono, con un chiarore che si posa in tre secondi e mezzo, e ogni sistema torna quando la luce lo raggiunge: l’aria e le chiavi, la mappa delle stanze, «diario» e «menu», i fili e i baccelli da destra a sinistra, l’atto. Appena accesi gli strumenti sono un poco più chiari, e poi si posano. La luce della stanza torna quando l’onda arriva al suo centro.
+- **Le parole per ultime**: la lamina torna a nove secondi, in dissolvenza.
+- **I tempi sono quelli del suono**, che c’era già (`mondo/regia.rs`): il rombo che sale, i quattro archi (1,2, 1,7, 2,3 e 2,6 secondi), il brivido dello scafo (3,4), i tre respiri dei sistemi (4,5, 5,6 e 7,0) mentre la luce attraversa lo schermo. Una prova legge il sorgente Rust: se il suono cambia, la prova si ferma.
+- **Com’è fatta.** Ogni sistema ha la sua animazione (Web Animations), creata ferma; un orologio solo le muove tutte, insieme all’onda che le vene leggono. I sistemi si raccolgono a ogni fotogramma: il ramo ridisegna i baccelli un istante dopo il turno, e quelli nuovi restavano accesi nel buio. Alla fine le animazioni si tolgono, e lo schermo resta com’era.
+- **Un clic o un tasto** portano alle parole. Con il movimento ridotto o con «Apparizioni» spento non c’è; con «Vene vive» spento le vene restano ferme.
+- **Scartato**: il tremito dello schermo al brivido dello scafo. Lo dice già il suono, e chi gioca con la lente d’ingrandimento lo patirebbe.
+- **Le prove**: `app/prove/risveglio.test.ts`, sette. Nel browser dello sviluppo, a 1280 × 720, nessun fotogramma oltre i 40 millisecondi.
+- **Non ancora** vista nell’eseguibile: lì c’è il suono, e l’accordo fra i due si giudica soltanto lì.
 

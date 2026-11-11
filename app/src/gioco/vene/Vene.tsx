@@ -3,7 +3,8 @@
 //  Al primo contatto nel vestibolo («per farsi sentire beve dalla tua stessa
 //  batteria») le venature entrano dai bordi e crescono, in cinque secondi,
 //  intorno al testo e agli strumenti senza attraversarli mai. Con l'energia
-//  ripristinata si accendono del tutto. Nella protezione vitale si spengono;
+//  ripristinata si accendono del tutto: la prima volta lo fanno dietro una luce
+//  che parte dal generatore (momenti/Risveglio.tsx; documento 30, §9.d). Nella protezione vitale si spengono;
 //  nella fuga si lacerano e lampeggiano; nell'ipossia sbiadiscono.
 //  Con il movimento ridotto sono ferme e compaiono in dissolvenza.
 // ============================================================================
@@ -11,6 +12,7 @@ import { useEffect, useRef } from "react";
 import { mescola, tavolozza, type Clima } from "../../stile/atmosfere";
 import { Venature, type Atmosfera, type Zona } from "./venature";
 import { cicloA, FOTOGRAMMI } from "../ritmo";
+import { onda } from "../momenti/tempiRisveglio";
 
 interface Props {
   clima: Clima;
@@ -110,6 +112,11 @@ export default function Vene({ clima, energia, ridotto, crescita, inPausa = fals
     const atm = atmosferaDelleVene(clima);
     const disegna = (t: number) => {
       const dpr = prepara();
+      // la nave che si sveglia: la luce le percorre una volta, partendo dal generatore
+      if (onda.attiva) {
+        vene.current.disegnaOnda(g, atm, dpr, { colori: coloriA(p, t) }, onda);
+        return;
+      }
       const quanta = inizio.current === null ? 1 : Math.min(1, (t - inizio.current) / DURATA);
       const k = quanta * quanta * (3 - 2 * quanta);
       if (quanta >= 1) inizio.current = null;

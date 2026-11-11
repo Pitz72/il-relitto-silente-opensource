@@ -33,6 +33,20 @@ export interface Tinta {
   luce?: number;
 }
 
+/** L'onda di luce del risveglio della nave (momenti/tempiRisveglio.ts): parte dal generatore e si allarga. */
+export interface OndaDiLuce {
+  x: number;
+  y: number;
+  /** dove è arrivato il fronte, e quanto corre al secondo */
+  raggio: number;
+  velocita: number;
+  /** quanto si vedono le vene dove la luce non è ancora arrivata (1 = accese) */
+  buio: number;
+}
+
+/** Dietro il fronte la luce resta un momento sulle vene, e si posa: da quanti secondi è passata, e quanta ne resta. */
+const POSA: [number, number, number][] = Array.from({ length: 10 }, (_, n) => [n * 0.36, (n + 1) * 0.36, 0.7 * Math.exp(-(n * 0.36) / 1.1)]);
+
 const COLORI: Record<Atmosfera, [string, string]> = {
   contatto: ["#5FD4DC", "#8BF0A2"],
   relitto: ["#5FD4DC", "#8BF0A2"],
@@ -191,6 +205,72 @@ export class Venature {
     g.beginPath();
     g.arc(x, y, 9, 0, 7);
     g.fill();
+  }
+
+  /** Il risveglio della nave (documento 30, §9.d): le vene quasi spente dove la luce non è ancora arrivata,
+   *  accese dove è passata; e subito dietro il fronte un chiarore che si posa. Niente luci che scorrono. */
+  disegnaOnda(g: CanvasRenderingContext2D, atm: Atmosfera, dpr: number, tinta: Tinta, o: OndaDiLuce) {
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g.clearRect(0, 0, this.W, this.H);
+    const [c1, c2] = tinta.colori ?? COLORI[atm];
+    g.lineCap = "round";
+    g.lineJoin = "round";
+    const R = o.raggio;
+    /** Il tratto delle vene (di una profondità, o di tutte) che sta fra due distanze dal generatore. */
+    const tratto = (prof: number | null, da: number, a: number) => {
+      g.beginPath();
+      let qualcosa = false;
+      for (const v of this.vene) {
+        if (prof !== null && v.prof !== prof) continue;
+        let aperto = false;
+        for (let i = 0; i < v.pts.length; i++) {
+          const d = Math.hypot(v.pts[i][0] - o.x, v.pts[i][1] - o.y);
+          if (d >= da && d < a) {
+            if (!aperto) {
+              // dal punto prima: il pezzo a cavallo del confine non resta vuoto
+              const q = v.pts[i > 0 ? i - 1 : 0];
+              g.moveTo(q[0], q[1]);
+              aperto = true;
+            }
+            g.lineTo(v.pts[i][0], v.pts[i][1]);
+            qualcosa = true;
+          } else aperto = false;
+        }
+      }
+      return qualcosa;
+    };
+    g.strokeStyle = c1;
+    for (const [da, a, luce] of [
+      [R, Infinity, o.buio],
+      [-1, R, 1],
+    ]) {
+      for (let prof = 0; prof < 3; prof++) {
+        if (!tratto(prof, da, a)) continue;
+        const larg = [1.7, 1.05, 0.7][prof];
+        for (const [alfa, spess] of [
+          [0.07, 5],
+          [0.42, 1],
+        ]) {
+          g.globalAlpha = alfa * luce;
+          g.lineWidth = larg * spess;
+          g.stroke();
+        }
+      }
+    }
+    if (R > 0) {
+      g.strokeStyle = c2;
+      for (const [da, a, alfa] of POSA) {
+        const fuori = R - da * o.velocita;
+        if (fuori <= 0 || !tratto(null, Math.max(0, R - a * o.velocita), fuori)) continue;
+        g.globalAlpha = alfa * 0.2;
+        g.lineWidth = 7;
+        g.stroke();
+        g.globalAlpha = alfa;
+        g.lineWidth = 1.9;
+        g.stroke();
+      }
+    }
+    g.globalAlpha = 1;
   }
 
   /** Il modo economico: le venature ferme dipinte una volta, a ogni fotogramma

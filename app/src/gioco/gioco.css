@@ -27,7 +27,7 @@
    sposti (revisione 37, G1: lo faceva il foglio dell'intro) */
 .palco > .esplorazione { position: static; }
 
-/* un momento con un'animazione sua (la mappa stellare): una tela sopra tutto il gioco, sotto i pannelli.
+/* un momento con un'animazione sua (la mappa stellare, la nave che si sveglia): una tela sopra tutto il gioco, sotto i pannelli.
    Se nello stesso istante comincia un atto, il suo cartello sta sopra la tela: è il titolo, mentre scende il buio */
 .palco > .momento { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 22; }
 .palco > .momento ~ .cartello-atto { z-index: 23; }
