@@ -401,7 +401,7 @@ Il respiro si condensa sul vetro: il suono del fiato non cambia, cambia l’imma
 |---|---|---|---|
 | il fondo | cuffia | — | «al buio e muta»: il fondo del corridoio, più chiuso |
 
-- **La postazione:** «Un’ondata di energia silenziosa attraversa la sala». È silenziosa, quindi non si sente niente. Per un attimo il mix si svuota (il fondo −6 dB) mentre la luce riempie lo schermo.
+- **La postazione:** «Le postazioni si accendono una dopo l’altra lungo la sala, senza un suono». Senza un suono, quindi non si sente niente: il mix si svuota (il fondo −6 dB). Poi la mappa stellare nasce sulla cupola, e ha il suo suono (12 novembre 2026; l’autore: «andrebbe sonorizzato in modo delicato anche l’animazione della rotta, quando si crea l’immagine, il viaggio»; documento 30, §9.4): sottovoce, sui tempi dell’animazione. L’accordo delle creature (il sol diesis con la sua quinta, su due ottave) che entra una nota alla volta mentre l’immagine si forma; le tre note del clic armonioso (§5.5), lente, una per ognuno dei tre soli; una nota sola che scende dal sol diesis al re lungo la rotta, da sinistra a destra, più sottile nel vuoto; arrivata sul nostro sole resta, e si perde. Niente che brilla o tintinna. Il fondo torna quando la carta rientra; al turno dopo le note sfumano.
 - **La porta tonda:** tre scatti e «Un clic armonioso» (§5.5); poi la porta si apre «senza attrito», cioè in silenzio.
 
 #### 3.21 Anticamera
@@ -503,7 +503,7 @@ Ogni evento ha il suo testo nel gioco. La colonna «Strade» dice come arriva; l
 | **Il seme preso** | prendi il seme | «una vibrazione costante ti risale il braccio»: il battito del seme nelle ossa, finché il seme è vivo | ossa |
 | **Il terminale forzato** | la taglierina sul terminale | §3.14 | cuffia |
 | **L’archivio che saluta** | l’arca con l’energia | §3.14; lo scomparto che si apre «piano, come una mano» | cuffia |
-| **La postazione** | usa la postazione | §3.20: il silenzio | — |
+| **La postazione** | usa la postazione | §3.20: il silenzio, poi il suono della mappa stellare che nasce | cuffia |
 | **La porta tonda** | premi le punte | §3.20 e §5.5 | cuffia |
 | **Il sonaglio** | suona il sonaglio | §5.4 | cuffia |
 | **Le echi** | sintonizza | §5.3 | voci |

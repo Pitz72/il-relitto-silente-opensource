@@ -714,6 +714,79 @@ impl Glissato {
     }
 }
 
+/// Da 0 a 1 senza spigoli (3x² − 2x³): le note tenute affiorano e si perdono così.
+#[inline]
+fn liscio(x: f32) -> f32 {
+    let x = x.clamp(0.0, 1.0);
+    x * x * (3.0 - 2.0 * x)
+}
+
+/// Una nota tenuta che affiora e si perde: una sinusoide con un filo di seconda armonica e una compagna
+/// appena scordata, più piano, che la fa respirare con un battimento lento. La luce della mappa stellare.
+#[derive(Clone, Copy)]
+pub struct Alone {
+    fase: f32,
+    fase2: f32,
+    f: f32,
+    /// di quanti hertz è scordata la compagna
+    scarto: f32,
+    durata: f32,
+    sale: f32,
+    cala: f32,
+    t: f32,
+    dt: f32,
+    g: f32,
+}
+
+impl Alone {
+    #[inline]
+    fn campione(&mut self) -> Option<f32> {
+        if self.t >= self.durata {
+            return None;
+        }
+        let inv = liscio(self.t / self.sale) * liscio((self.durata - self.t) / self.cala);
+        self.fase = (self.fase + TAU * self.f * self.dt) % TAU;
+        self.fase2 = (self.fase2 + TAU * (self.f + self.scarto) * self.dt) % TAU;
+        let s = self.fase.sin() + 0.1 * (2.0 * self.fase).sin() + 0.25 * self.fase2.sin();
+        self.t += self.dt;
+        Some(s * inv * self.g)
+    }
+}
+
+/// Il viaggio sulla mappa stellare: una nota sola che scivola da un’altezza all’altra seguendo il tratto
+/// della rotta (lento alla partenza e all’arrivo, come lo disegna la mappa), più sottile nel vuoto di
+/// mezzo; arrivata, resta sull’ultima altezza e si perde.
+#[derive(Clone, Copy)]
+pub struct Viaggio {
+    fase: f32,
+    f0: f32,
+    f1: f32,
+    /// quanto dura il tratto, e quanto la nota resta dopo l’arrivo
+    corsa: f32,
+    coda: f32,
+    t: f32,
+    dt: f32,
+    g: f32,
+}
+
+impl Viaggio {
+    #[inline]
+    fn campione(&mut self) -> Option<f32> {
+        let durata = self.corsa + self.coda;
+        if self.t >= durata {
+            return None;
+        }
+        let x = (self.t / self.corsa).min(1.0);
+        let f = self.f0 * (self.f1 / self.f0).powf(liscio(x));
+        self.fase = (self.fase + TAU * f * self.dt) % TAU;
+        let vuoto = 0.45 + 0.55 * (2.0 * x - 1.0) * (2.0 * x - 1.0);
+        let inv = liscio(self.t / 0.9) * liscio((durata - self.t) / self.coda.max(0.05)) * vuoto;
+        let s = self.fase.sin() + 0.1 * (2.0 * self.fase).sin();
+        self.t += self.dt;
+        Some(s * inv * self.g)
+    }
+}
+
 #[derive(Clone, Copy)]
 pub enum Corpo {
     Modale(Modale),
@@ -726,6 +799,8 @@ pub enum Corpo {
     Sonaglio(Sonaglio),
     Glissato(Glissato),
     Strofinato(Strofinato),
+    Alone(Alone),
+    Viaggio(Viaggio),
 }
 
 impl Corpo {
@@ -784,6 +859,14 @@ impl Corpo {
                 }
                 Corpo::Strofinato(st)
             }
+            Corpo::Alone(mut a) => {
+                a.g *= k;
+                Corpo::Alone(a)
+            }
+            Corpo::Viaggio(mut v) => {
+                v.g *= k;
+                Corpo::Viaggio(v)
+            }
         }
     }
 }
@@ -802,8 +885,15 @@ pub enum Canale {
 pub struct Colpo {
     pub bus: Bus,
     pub canale: Canale,
+    /// il colpo è di un momento con un’animazione sua (la mappa stellare): al turno dopo sfuma con gli altri
+    pub momento: bool,
     gl: f32,
     gr: f32,
+    /// il posto che si sposta mentre il colpo suona: di quanto cambiano i due guadagni a ogni campione, e
+    /// per quanti campioni
+    dl: f32,
+    dr: f32,
+    corsa: u32,
     ritardo: u32,
     corpo: Corpo,
 }
@@ -812,7 +902,25 @@ impl Colpo {
     pub fn nuovo(corpo: Corpo, bus: Bus, guadagno_db: f32, p: f32, ritardo: f32, sr: f32) -> Self {
         let (pl, pr) = pan(p);
         let g = db(guadagno_db) * std::f32::consts::SQRT_2;
-        Colpo { bus, canale: Canale::Effetti, gl: g * pl, gr: g * pr, ritardo: campioni(ritardo, sr), corpo }
+        Colpo { bus, canale: Canale::Effetti, momento: false, gl: g * pl, gr: g * pr, dl: 0.0, dr: 0.0, corsa: 0, ritardo: campioni(ritardo, sr), corpo }
+    }
+
+    /// Il colpo è di un momento con un’animazione sua.
+    pub fn del_momento(mut self) -> Self {
+        self.momento = true;
+        self
+    }
+
+    /// Mentre suona il colpo si sposta, dal suo posto fino a `p`, in `secondi`.
+    pub fn che_va(mut self, p: f32, secondi: f32, sr: f32) -> Self {
+        // il posto è a potenza costante: il guadagno si ritrova dai due lati
+        let g = (self.gl * self.gl + self.gr * self.gr).sqrt();
+        let (pl, pr) = pan(p);
+        let n = campioni(secondi, sr).max(1);
+        self.dl = (g * pl - self.gl) / n as f32;
+        self.dr = (g * pr - self.gr) / n as f32;
+        self.corsa = n;
+        self
     }
 
     pub fn nel_canale(mut self, c: Canale) -> Self {
@@ -827,6 +935,11 @@ impl Colpo {
             self.ritardo -= 1;
             return Some((0.0, 0.0));
         }
+        if self.corsa > 0 {
+            self.gl += self.dl;
+            self.gr += self.dr;
+            self.corsa -= 1;
+        }
         let y = match &mut self.corpo {
             Corpo::Modale(m) => m.campione(caso),
             Corpo::Tonfo(t) => t.campione(caso),
@@ -838,6 +951,8 @@ impl Colpo {
             Corpo::Sonaglio(s) => s.campione(caso),
             Corpo::Glissato(g) => g.campione(),
             Corpo::Strofinato(st) => st.campione(caso),
+            Corpo::Alone(a) => a.campione(),
+            Corpo::Viaggio(v) => v.campione(),
         }?;
         Some((y * self.gl, y * self.gr))
     }
@@ -1375,6 +1490,16 @@ pub fn strofinato(durata: f32, caso: &mut Caso, sr: f32) -> Corpo {
     Corpo::Strofinato(Strofinato::nuovo(durata, caso, sr))
 }
 
+/// Una nota tenuta che affiora in `sale` secondi e si perde in `cala`: la luce della mappa stellare.
+pub fn alone(f: f32, durata: f32, sale: f32, cala: f32, sr: f32) -> Corpo {
+    Corpo::Alone(Alone { fase: 0.0, fase2: 0.0, f, scarto: 0.17, durata, sale: sale.max(0.01), cala: cala.max(0.01), t: 0.0, dt: 1.0 / sr, g: 1.0 / 1.35 })
+}
+
+/// Il viaggio della rotta: da `f0` a `f1` in `corsa` secondi, poi `coda` secondi sull’arrivo.
+pub fn viaggio(f0: f32, f1: f32, corsa: f32, coda: f32, sr: f32) -> Corpo {
+    Corpo::Viaggio(Viaggio { fase: 0.0, f0, f1, corsa: corsa.max(0.1), coda, t: 0.0, dt: 1.0 / sr, g: 1.0 / 1.1 })
+}
+
 /// La dissoluzione: lo stesso tam-tam smontato in granelli acuti.
 pub fn granelli_acuti(caso: &mut Caso, sr: f32) -> Corpo {
     let e = Eccitatore::impulso(0.2).con_crepitio(caso.tra(500.0, 800.0), caso.tra(1.6, 2.4), sr);
@@ -1440,6 +1565,8 @@ mod prove {
             gong(&mut caso, sr),
             sonaglio(&mut caso, sr),
             granelli_acuti(&mut caso, sr),
+            alone(207.65, 3.0, 1.0, 1.0, sr),
+            viaggio(415.3, 293.66, 2.0, 0.8, sr),
             salita(207.0, 415.0, 1.5, 0.6, sr),
             gancio(&mut caso, sr),
             strofinato(4.0, &mut caso, sr),

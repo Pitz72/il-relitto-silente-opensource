@@ -3,7 +3,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { AMMASSO, CIELO, DURATA, LORO, NOSTRA, rotta, SOLE, SOLI, TEMPI } from "../src/gioco/momenti/mappa.ts";
+import { AMMASSO, CIELO, DURATA, LORO, NOSTRA, POSTAZIONI, rotta, SOLE, SOLI, TEMPI } from "../src/gioco/momenti/mappa.ts";
 
 const dista = (a: { x: number; y: number }, b: { x: number; y: number }) => Math.hypot(a.x - b.x, a.y - b.y);
 
@@ -65,6 +65,27 @@ test("i tempi vanno in ordine, ed è lenta apposta", () => {
   assert.ok(TEMPI.cielo[1] - TEMPI.cielo[0] >= 2.5, "la luce sale piano sulla cupola");
   assert.ok(DURATA - TEMPI.ritiro >= 2, "il velo si alza quando la mappa è già nella lente");
   assert.ok(DURATA >= 15 && DURATA <= 22);
+});
+
+test("il suono segue l'animazione: nel motore audio i tempi sono gli stessi", () => {
+  const rust = readFileSync(new URL("../src-tauri/src/mondo/regia.rs", import.meta.url), "utf8");
+  const numeri = (nome: string) => {
+    const m = new RegExp(`const ${nome}: [^=]+ = [\\[(]?([0-9., ]+)[\\])]?;`).exec(rust);
+    assert.ok(m, `${nome} c'è ancora in mondo/regia.rs`);
+    return m[1].split(",").map(Number);
+  };
+  assert.deepEqual(numeri("MAPPA_STELLA"), [TEMPI.stella[0]], "la prima nota quando la struttura si accende");
+  assert.deepEqual(numeri("MAPPA_CIELO"), [TEMPI.cielo[0]], "l'accordo cresce mentre la luce sale sulla cupola");
+  assert.deepEqual(numeri("MAPPA_SOLI"), [...TEMPI.soli], "una nota per sole");
+  assert.deepEqual(numeri("MAPPA_ROTTA"), [...TEMPI.rotta], "la nota del viaggio parte e arriva con la rotta");
+  assert.deepEqual(numeri("MAPPA_RITIRO"), [TEMPI.ritiro], "il fondo torna quando la carta rientra");
+  assert.equal(TEMPI.sole, TEMPI.rotta[1], "la nota arriva sul nostro sole quando si accende");
+  // le postazioni non suonano, perché lo dice il testo: la prima nota viene dopo l'ultima
+  const fav = readFileSync(new URL("../../relitto-silente/ponte.fav", import.meta.url), "utf8");
+  assert.match(fav, /Le postazioni si accendono una dopo l.altra lungo la sala, senza un suono/);
+  const ultima = TEMPI.postazioni[0] + (POSTAZIONI.length - 1) * TEMPI.postazioni[1];
+  assert.ok(numeri("MAPPA_STELLA")[0] >= ultima, "la prima nota non viene prima dell'ultima postazione");
+  assert.match(rust, /"postazione" => \{[\s\S]*?self\.mappa_stellare\(\);/, "l'evento «postazione» suona la mappa");
 });
 
 test("il disegno non pesa: meno di quattromila punti, sempre gli stessi", () => {

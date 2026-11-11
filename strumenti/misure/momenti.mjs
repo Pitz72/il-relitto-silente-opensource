@@ -2,10 +2,11 @@
 //  I momenti con un'animazione loro (documento 30, §9) nell'eseguibile vero, per
 //  guardarli con il suono e misurarli mentre qualcuno li guarda.
 //    python strumenti/misure/salvataggi_momenti.py <cartella>
-//    node strumenti/misure/momenti.mjs app/src-tauri/target/release/il-relitto-silente.exe <cartella>
+//    node strumenti/misure/momenti.mjs app/src-tauri/target/release/il-relitto-silente.exe <cartella> [posto]
 //  Apre l'eseguibile con i quattro salvataggi di quella cartella (RELITTO_SALVATAGGI:
 //  quelli di chi gioca non si toccano), salta i loghi e la dichiarazione, carica il
-//  posto 1 (il laboratorio di risonanza, davanti alla nave che si sveglia) e resta a
+//  posto 1 (il laboratorio di risonanza, davanti alla nave che si sveglia; o il posto
+//  dato per terzo: 2 la mappa stellare, 3 l'Anziano che appare, 4 il suo congedo) e resta a
 //  guardare: per ogni momento (la tela .momento) e per ogni colloquio, quanto dura e
 //  come scorrono i fotogrammi (il più lento, quanti oltre 34 e oltre 50 millisecondi).
 //  Gli altri momenti si raggiungono dal gioco: «menu», «Carica», i posti 2, 3 e 4.
@@ -14,7 +15,7 @@
 // ============================================================================
 import { spawn } from "node:child_process";
 
-const [exe, salvataggi] = process.argv.slice(2);
+const [exe, salvataggi, posto = "1"] = process.argv.slice(2);
 const PORTA = 9351;
 const attendi = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -93,9 +94,9 @@ try {
   rapporto.opzioni = await valuta(`localStorage.getItem("relitto.opzioni")`);
   rapporto.ridotto = await valuta(`matchMedia("(prefers-reduced-motion: reduce)").matches`);
   await valuta(`document.querySelector(".menu-voci button[data-voce='carica']").click()`);
-  await finche(`[...document.querySelectorAll(".posti .posto")].some((b) => b.querySelector(".nome-posto")?.textContent === "posto 1" && !b.disabled)`, "il posto 1");
+  await finche(`[...document.querySelectorAll(".posti .posto")].some((b) => b.querySelector(".nome-posto")?.textContent === "posto ${posto}" && !b.disabled)`, `il posto ${posto}`);
   await attendi(300);
-  await valuta(`[...document.querySelectorAll(".posti .posto")].find((b) => b.querySelector(".nome-posto")?.textContent === "posto 1").click()`);
+  await valuta(`[...document.querySelectorAll(".posti .posto")].find((b) => b.querySelector(".nome-posto")?.textContent === "posto ${posto}").click()`);
   await finche(`!!document.querySelector(".gioco .lamina")`, "il gioco dopo il caricamento");
   await attendi(600);
   rapporto.arrivo = await valuta(`(document.querySelector(".lamina")?.textContent ?? "").trim().replace(/\\s+/g, " ").slice(0, 90)`);

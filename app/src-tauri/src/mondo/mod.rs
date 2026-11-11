@@ -431,6 +431,9 @@ pub struct Mondo {
     dopo_le_voci: DopoLeVoci,
     fondo: Fondo,
     fondo_mul: Scorrevole,
+    /// i colpi di un momento con un’animazione sua (la mappa stellare): interi finché il momento dura, e al
+    /// turno dopo sfumano
+    momento_g: Scorrevole,
     ronzio: Ronzio,
     ronzio_forma: Option<FormaRonzio>,
     groviglio: Groviglio,
@@ -575,6 +578,7 @@ impl Mondo {
             dopo_le_voci: DopoLeVoci::default(),
             fondo: Fondo::nuovo(sr, seme ^ 0xF0),
             fondo_mul: Scorrevole::nuovo(1.0),
+            momento_g: Scorrevole::nuovo(1.0),
             ronzio: Ronzio::nuovo(sr, seme ^ 0x2A),
             ronzio_forma: None,
             groviglio: Groviglio::nuovo(sr, seme ^ 0x6206),
@@ -669,6 +673,20 @@ impl Mondo {
     fn suona_in(&mut self, canale: Canale, corpo: Corpo, bus: Bus, guadagno_db: f32, p: f32, ritardo: f32) {
         if self.colpi.len() < MAX_COLPI {
             self.colpi.push(Colpo::nuovo(corpo, bus, guadagno_db, p, ritardo, self.sr).nel_canale(canale));
+        }
+    }
+
+    /// Un colpo di un momento con un’animazione sua (la mappa stellare): nella stanza; al turno dopo sfuma.
+    fn suona_momento(&mut self, corpo: Corpo, guadagno_db: f32, p: f32, ritardo: f32) {
+        if self.colpi.len() < MAX_COLPI {
+            self.colpi.push(Colpo::nuovo(corpo, Bus::Esterno, guadagno_db, p, ritardo, self.sr).del_momento());
+        }
+    }
+
+    /// Lo stesso, ma mentre suona si sposta da `p` a `verso` in `secondi`.
+    fn suona_momento_che_va(&mut self, corpo: Corpo, guadagno_db: f32, p: f32, verso: f32, secondi: f32, ritardo: f32) {
+        if self.colpi.len() < MAX_COLPI {
+            self.colpi.push(Colpo::nuovo(corpo, Bus::Esterno, guadagno_db, p, ritardo, self.sr).che_va(verso, secondi, self.sr).del_momento());
         }
     }
 
@@ -875,6 +893,10 @@ impl Mondo {
         }
         let dtf = dt as f32;
         self.passo_blocco(out.len() as f32 * dtf);
+        // i colpi di un momento sfumato del tutto non servono più
+        if self.momento_g.meta() == 0.0 && self.momento_g.v < 1e-4 {
+            self.colpi.retain(|c| !c.momento);
+        }
         // il mix d’autore: i livelli seguono i loro dB, un blocco alla volta
         let meta = self.livelli.lineari();
         self.lv.verso(&meta, 0.3);
@@ -1023,10 +1045,12 @@ impl Mondo {
             alt += self.canale.campione() * gv * lv.radio;
 
             // i colpi
+            let mg = self.momento_g.passo();
             let mut k = 0;
             while k < self.colpi.len() {
                 let bus = self.colpi[k].bus;
                 let canale = self.colpi[k].canale;
+                let del_momento = self.colpi[k].momento;
                 match self.colpi[k].campione(&mut self.caso) {
                     Some((l, r)) => {
                         let s = if bus == Bus::Casco { s_segnali } else { s_voci };
@@ -1041,6 +1065,7 @@ impl Mondo {
                                 Canale::Voci => gv * lv.colpi_voci,
                             }
                         };
+                        let c = if del_momento { c * mg } else { c };
                         let (l, r) = (l * s * c, r * s * c);
                         match bus {
                             Bus::Esterno => {

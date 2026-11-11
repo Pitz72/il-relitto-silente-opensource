@@ -52,6 +52,15 @@ pub const EVENTI_NOTI: [&str; 87] = [
     "voci",
 ];
 
+/// I tempi della nascita della mappa stellare, in secondi dall’evento: quelli dell’animazione
+/// (`app/src/gioco/momenti/mappa.ts`, `TEMPI`). Il suono la segue, e una prova (`app/prove/mappa.test.ts`)
+/// tiene uguali i numeri. La struttura si accende, la luce sale sulla cupola, i tre soli, la rotta, il rientro.
+const MAPPA_STELLA: f32 = 1.9;
+const MAPPA_CIELO: f32 = 2.8;
+const MAPPA_SOLI: [f32; 3] = [8.0, 8.7, 9.4];
+const MAPPA_ROTTA: (f32, f32) = (10.9, 15.1);
+const MAPPA_RITIRO: f32 = 17.5;
+
 /// Quando entra la prima voce della nave di un’eco, dopo l’evento: dove entrava il filo sintetico
 /// (1,2 s, e 0,4 di salita), come nell’ascolto approvato (documento 35, §7).
 const VOCI_DOPO_ECO: f32 = 1.6;
@@ -72,6 +81,13 @@ impl Mondo {
         self.modo_gioco = true;
         let ha = |nome: &str| t.eventi.iter().any(|e| e.evento == nome);
         let inizio = ha("inizio");
+        // un momento che suona ancora (la mappa stellare) se ne va con il turno che viene dopo: chi gioca è
+        // andato avanti. Con lui torna il fondo, che per il momento si era abbassato
+        if self.colpi.iter().any(|c| c.momento) {
+            self.momento_g.verso(0.0, 0.8, sr);
+            self.automazioni.retain(|a| !matches!(a.azione, Azione::Fondo(..)));
+            self.fondo_mul.verso(1.0, 1.5, sr);
+        }
         self.sintonia_nel_turno = t.eventi.iter().any(|e| e.evento == "attrezzo" && e.attrezzo.as_deref() == Some("sintonizzatore"));
         // le voci della nave che il ponte ha trovato a schermo (documento 35); le parti della voce di servizio
         // rimaste in fila dal turno di prima non servono più
@@ -199,6 +215,60 @@ impl Mondo {
             self.evento_gioco(e, &prima, taglio);
         }
         self.registrazioni();
+    }
+
+    /// La nascita della mappa stellare (documento 30, §9.4; l’autore, 11 novembre 2026: «andrebbe sonorizzato
+    /// in modo delicato […] quando si crea l’immagine, il viaggio»). Niente che brilla o tintinna: poche note
+    /// tenute, piano, e il silenzio fra l’una e l’altra.
+    /// - **le postazioni**: niente, come dice il testo;
+    /// - **l’immagine**: l’accordo delle creature (il sol diesis con la sua quinta, su due ottave), una nota
+    ///   alla volta dal basso, mentre la struttura si accende e la luce sale sulla cupola;
+    /// - **i tre soli**: le tre note del clic armonioso, lente, una per sole, a sinistra dove sta l’ammasso;
+    /// - **il viaggio**: una nota sola che parte dal loro sol diesis e scende attraverso il vuoto, da
+    ///   sinistra a destra, fino al re (la nota della Santa Maria: casa); a ogni segnavia lascia un punto,
+    ///   un’ottava sopra;
+    /// - **il nostro sole**: la nota del viaggio, arrivata, resta e si perde piano; intorno le affiorano la sua
+    ///   quinta e la sua ottava sotto.
+    fn mappa_stellare(&mut self) {
+        let sr = self.sr;
+        // se un momento di prima suonava ancora, il suo posto lo prende questo
+        self.colpi.retain(|c| !c.momento);
+        self.momento_g = Scorrevole::nuovo(1.0);
+
+        // l’immagine: l’accordo tace prima che il viaggio parta
+        let fine = MAPPA_ROTTA.0 - 0.3;
+        let entrate = [MAPPA_STELLA, MAPPA_CIELO, MAPPA_CIELO + 1.2, MAPPA_CIELO + 2.4];
+        let livelli = [-32.0, -34.0, -35.0, -38.0];
+        let posti = [-0.15, 0.2, -0.3, 0.3];
+        for (k, f) in ACCORDO.into_iter().enumerate() {
+            let c = colpi::alone(f, fine - entrate[k], 2.6, 2.4, sr);
+            self.suona_momento(c, livelli[k], posti[k], entrate[k]);
+        }
+
+        // i tre soli
+        for (k, f) in CLIC_ARMONIOSO.into_iter().enumerate() {
+            self.suona_momento(colpi::nota(f, 3.2, sr), -30.0, -0.5 + 0.08 * k as f32, MAPPA_SOLI[k]);
+        }
+
+        // il viaggio: dal loro sol diesis al re di casa
+        let (parte, arriva) = MAPPA_ROTTA;
+        let corsa = arriva - parte;
+        let (sol, re) = (CLIC_ARMONIOSO[0], 4.0 * super::re::RE as f32);
+        let (da, a) = (-0.5, 0.45);
+        // arrivata, la nota resta: è lei il nostro sole, e si perde in più di quattro secondi
+        self.suona_momento_che_va(colpi::viaggio(sol, re, corsa, 4.4, sr), -30.5, da, a, corsa, parte);
+        // i sei segnavia: la mappa li segna quando il tratto ci arriva (il tratto va piano all’inizio e alla
+        // fine: 3x² − 2x³, e qui serve x)
+        for n in 1..=6 {
+            let u = n as f32 / 7.0;
+            let x = 0.5 - ((1.0 - 2.0 * u).asin() / 3.0).sin();
+            let f = 2.0 * sol * (re / sol).powf(u);
+            self.suona_momento(colpi::nota(f, 1.4, sr), -40.0, da + (a - da) * x, parte + corsa * x);
+        }
+
+        // il nostro sole: intorno alla nota arrivata affiorano la sua quinta e la sua ottava sotto
+        self.suona_momento(colpi::alone(re * 1.5, 3.8, 0.7, 3.0, sr), -34.0, a - 0.1, arriva + 0.3);
+        self.suona_momento(colpi::alone(re * 0.5, 4.4, 0.8, 3.4, sr), -31.0, 0.2, arriva);
     }
 
     /// Le voci della nave rimaste nel turno, che nessuna eco ha preso: le registrazioni dello
@@ -1257,9 +1327,11 @@ impl Mondo {
                 self.suona(c, Bus::Esterno, -14.0, -0.3, 0.9);
             }
             "postazione" => {
-                // «Un’ondata di energia silenziosa»: è silenziosa, quindi il mix si svuota
+                // «Le postazioni si accendono una dopo l’altra lungo la sala, senza un suono»: il mix si
+                // svuota, e resta vuoto finché la carta sta sulla cupola
                 self.fondo_mul.verso(db(-6.0), 0.4, sr);
-                self.dopo(2.2, Azione::Fondo(1.0, 2.0));
+                self.dopo(MAPPA_RITIRO - 0.5, Azione::Fondo(1.0, 2.5));
+                self.mappa_stellare();
             }
             "sistema" => {
                 for k in 0..3 {
@@ -1838,5 +1910,82 @@ mod prove {
         tx.send(Comando::Solo(Some("fiato".to_string()))).unwrap();
         let fiato = livello(&mut m, 12.0);
         assert!(fiato > -70.0, "dopo annulla il fiato dovrebbe sentirsi: {fiato:.1} dB");
+    }
+
+    /// Il Ponte con l’energia, in tuta: dove la postazione si usa.
+    const PONTE: &str = r#""stanza": "ponte di comando", "tuta": true, "aria": 92, "fuga": "lontana", "porta_interna": "aperta",
+        "energia": "ripristinata", "contatto": "avvenuto", "atto": 3, "esito": "in_corso""#;
+
+    /// Sul Ponte, con i colpi soltanto: il suono della mappa senza il resto del mondo.
+    fn sul_ponte(seme: u64) -> (Mondo, std::sync::mpsc::Sender<Comando>) {
+        let (mut m, tx, _) = Mondo::nuovo(48000.0, seme);
+        tx.send(turno(&format!(r#"{{"stati": {{{PONTE}}}, "eventi": [{{"evento": "caricamento"}}]}}"#))).unwrap();
+        livello(&mut m, 4.0);
+        tx.send(Comando::Solo(Some("voci".to_string()))).unwrap();
+        livello(&mut m, 2.0);
+        (m, tx)
+    }
+
+    fn usa_la_postazione(tx: &std::sync::mpsc::Sender<Comando>) {
+        tx.send(turno(&format!(r#"{{"stati": {{{PONTE}}}, "eventi": [{{"evento": "postazione"}}]}}"#))).unwrap();
+    }
+
+    #[test]
+    fn la_mappa_stellare_suona_piano_sui_tempi_dell_animazione() {
+        use super::{MAPPA_RITIRO, MAPPA_ROTTA, MAPPA_STELLA};
+        for seme in [3, 7, 19] {
+            let (mut m, tx) = sul_ponte(seme);
+            usa_la_postazione(&tx);
+            // «Le postazioni si accendono una dopo l’altra lungo la sala, senza un suono»
+            let postazioni = livello(&mut m, MAPPA_STELLA - 0.1);
+            assert!(m.colpi.iter().any(|c| c.momento), "la mappa ha le sue note");
+            // l’immagine che si forma e i tre soli, fino a che la rotta parte
+            let immagine = livello(&mut m, MAPPA_ROTTA.0 - MAPPA_STELLA);
+            // il viaggio
+            let viaggio = livello(&mut m, MAPPA_ROTTA.1 - MAPPA_ROTTA.0);
+            // il nostro sole, fino al rientro
+            let mut buf = vec![kira::Frame::ZERO; 256];
+            let (mut somma, mut n, mut picco) = (0.0f64, 0usize, 0.0f32);
+            for _ in 0..((MAPPA_RITIRO - MAPPA_ROTTA.1) * 48000.0 / 256.0) as usize {
+                m.rendi(&mut buf, 1.0 / 48000.0);
+                for f in &buf {
+                    somma += (f.left * f.left + f.right * f.right) as f64 * 0.5;
+                    picco = picco.max(f.left.abs()).max(f.right.abs());
+                    n += 1;
+                }
+            }
+            let casa = 10.0 * ((somma / n as f64) + 1e-12).log10() as f32;
+            println!("seme {seme}: postazioni {postazioni:.1}, immagine {immagine:.1}, viaggio {viaggio:.1}, casa {casa:.1} dB; picco {picco:.3}");
+            assert!(postazioni < immagine - 12.0, "le postazioni tacciono: {postazioni:.1} contro {immagine:.1} dB");
+            // sottovoce: si sente, e resta lontana dai colpi veri (il clic armonioso, il gong)
+            for (che, liv) in [("l’immagine", immagine), ("il viaggio", viaggio), ("il nostro sole", casa)] {
+                assert!(liv > -50.0 && liv < -28.0, "{che} dovrebbe stare sottovoce: {liv:.1} dB");
+            }
+            assert!(picco < 0.12, "nessun picco: {picco:.3}");
+            // finita la mappa non resta niente
+            livello(&mut m, 4.0);
+            assert!(!m.colpi.iter().any(|c| c.momento), "le note della mappa finiscono da sole");
+        }
+    }
+
+    #[test]
+    fn la_mappa_stellare_se_ne_va_con_il_turno_dopo() {
+        let (mut m, tx) = sul_ponte(7);
+        usa_la_postazione(&tx);
+        livello(&mut m, 4.0);
+        let accordo = livello(&mut m, 2.0);
+        // chi gioca va avanti a metà: le note sfumano, e il fondo torna
+        tx.send(turno(&format!(r#"{{"stati": {{{PONTE}}}, "eventi": [{{"evento": "sistema"}}]}}"#))).unwrap();
+        livello(&mut m, 2.5);
+        assert!(!m.colpi.iter().any(|c| c.momento), "al turno dopo le note della mappa se ne vanno");
+        assert_eq!(m.fondo_mul.meta(), 1.0, "e il fondo torna");
+        assert!(!m.automazioni.iter().any(|a| matches!(a.azione, Azione::Fondo(..))));
+        let dopo = livello(&mut m, 3.0);
+        assert!(dopo < accordo - 20.0, "dopo: {dopo:.1} dB, con l’accordo {accordo:.1} dB");
+        // e una mappa nuova (un caricamento, poi di nuovo la postazione) suona intera
+        usa_la_postazione(&tx);
+        livello(&mut m, 4.0);
+        let di_nuovo = livello(&mut m, 2.0);
+        assert!((di_nuovo - accordo).abs() < 3.0, "la seconda volta: {di_nuovo:.1} contro {accordo:.1} dB");
     }
 }
