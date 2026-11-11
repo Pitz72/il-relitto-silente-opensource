@@ -89,7 +89,7 @@ test("le scansioni cambiano con lo stato che le cambia, e la chiave lo dice", ()
   cambia("vestibolo delle gole", { risuonatore: "incastrato" }, { risuonatore: "staccato" });
   cambia("serra morente", { teca: "sigillata" }, { teca: "svuotata" });
   cambia("arca della memoria", { archivio: "intatto" }, { archivio: "forzato" });
-  cambia("ponte di comando", {}, { proiezione: "attiva" });
+  cambia("ponte di comando", {}, { porta_circolare: "aperta" });
   cambia("corridoio principale", {}, { grande_porta: "aperta" });
   cambia("sala delle teche", {}, { bengala: "acceso" });
   cambia("santuario centrale", {}, { fuga: "iniziata" });

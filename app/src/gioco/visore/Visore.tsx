@@ -17,6 +17,7 @@ import type { Turno } from "../../motore/tipi";
 import { statoAria, type Clima } from "../../stile/atmosfere";
 import { generatore, glifo } from "../../intro/glifi";
 import { costellazione } from "./mappa";
+import MappaNellaLente, { haLaMappa } from "./scansioni/MappaNellaLente";
 import Scansione, { haScansione } from "./scansioni/Scansione";
 import type { StatiSuono } from "../../motore/tipi";
 import "./visore.css";
@@ -93,6 +94,9 @@ function Lente({ stanza, nome, stati, clima, ridotto }: { stanza: string; nome: 
             {!ridotto && <div key={`canale:${stanza}`} className="cambio-canale" aria-hidden="true" />}
             <div className="monitor" aria-hidden="true" />
           </>
+        ) : haLaMappa(stanza, stati) ? (
+          // sul Ponte, da quando la proiezione è accesa: l'ultimo fotogramma della mappa stellare
+          <MappaNellaLente clima={clima} ridotto={ridotto} />
         ) : !diBordo && haScansione(stanza) ? (
           <Scansione stanza={stanza} stati={stati} clima={clima} ridotto={ridotto} />
         ) : (

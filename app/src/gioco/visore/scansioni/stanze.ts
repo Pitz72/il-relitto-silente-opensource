@@ -843,11 +843,12 @@ function nido(s: Stati): Strato[] {
   return sc.strati;
 }
 
-/** Il ponte di comando: la cupola di cristallo nero, la stella al centro, le postazioni, la porta tonda. */
+/** Il ponte di comando: la cupola di cristallo nero, la stella al centro, le postazioni, la porta tonda.
+ *  È la sala con la proiezione spenta: da quando è accesa la lente non mostra più questa scansione, ma
+ *  l'ultimo fotogramma della mappa stellare (MappaNellaLente.tsx; documento 30, §9.b). */
 function ponte(s: Stati): Strato[] {
   const sc = new Scena(cam({ beccheggio: 0.24, cy: 170 }), 1616, [7, 13]);
   const cz = 10, R = 10;
-  const accesa = s.proiezione === "attiva";
   sc.nuvola("vena", disco(0, 0, cz, R), 1100, { forza: 0.55 });
   sc.nuvola("vena", cilindro(0, cz, R, 0, 3, -0.4, PI + 0.4), 900, { forza: 0.5 });
   sc.nuvola("vena", cupola(0, 3, cz, R, 8), 1500, { forza: 0.35 });
@@ -869,8 +870,7 @@ function ponte(s: Stati): Strato[] {
     const d: V3 = [Math.cos(a) * Math.cos(e), Math.sin(e), Math.sin(a) * Math.cos(e)];
     return segmento([c[0] + d[0] * 0.3, c[1] + d[1] * 0.3, c[2] + d[2] * 0.3], [c[0] + d[0] * 2, c[1] + d[1] * 2, c[2] + d[2] * 2], 3);
   });
-  sc.linee("vena", [anello(PI / 2, 0), anello(PI / 5, 0.6), anello(-PI / 4, -0.9), ...punte], { forza: accesa ? 0.95 : 0.45, spessore: accesa ? 1.1 : 0.8 });
-  if (accesa) sc.alone(c, 2.4, "vena", 0.5);
+  sc.linee("vena", [anello(PI / 2, 0), anello(PI / 5, 0.6), anello(-PI / 4, -0.9), ...punte], { forza: 0.45, spessore: 0.8 });
   // le postazioni intorno; quella del comandante, più grande, con l'impronta di una mano
   for (let k = 0; k < 7; k++) {
     const a = FRONTE + (k - 3) * 0.62;
@@ -893,14 +893,6 @@ function ponte(s: Stati): Strato[] {
       const a = PI / 2 + (k / 5) * PI * 2;
       return segmento([p[0] + Math.cos(a) * 0.26, p[1] + Math.sin(a) * 0.26, p[2]], [p[0] + Math.cos(a) * 0.9, p[1] + Math.sin(a) * 0.9, p[2]], 3);
     }), { forza: 0.9, spessore: 1.4 });
-  }
-  if (accesa) {
-    // sulla cupola la mappa stellare a tre dimensioni: una rotta attraverso il vuoto, e in fondo il tuo sole
-    const stellaSu = (u: number, v: number): V3 => cupola(0, 3, cz, R - 0.3, 7.6)(u, 0.15 + v * 0.85);
-    sc.nuvola("brina", stellaSu, 520, { forza: 1 });
-    const rotta = Array.from({ length: 24 }, (_, i) => cupola(0, 3, cz, R - 0.4, 7.4)(0.16 + i * 0.011, 0.22 + Math.sin((i / 23) * PI) * 0.6));
-    sc.linea("vivo", rotta, { forza: 0.9, spessore: 1, tratteggio: "3 2" });
-    sc.alone(rotta[rotta.length - 1], 0.5, "caldo", 1);
   }
   return sc.strati;
 }
@@ -1104,10 +1096,11 @@ export const STANZE: Readonly<Record<string, DefStanza>> = {
   },
   "ponte di comando": {
     descrizione: (s) =>
-      `la sala vasta e tonda sotto la cupola di cristallo nero; al centro la struttura a stella${s.proiezione === "attiva" ? " accesa, e sulla cupola la mappa stellare con la rotta" : ", spenta"}; intorno le postazioni, e dietro la più grande la porta tonda${s.porta_circolare === "aperta" ? " aperta" : ""}`,
-    chiave: (s) => k(s.proiezione, s.porta_circolare),
+      `la sala vasta e tonda sotto la cupola di cristallo nero; al centro la struttura a stella, spenta; intorno le postazioni, e dietro la più grande la porta tonda${s.porta_circolare === "aperta" ? " aperta" : ""}`,
+    chiave: (s) => k(s.porta_circolare),
     disegna: ponte,
-    varianti: { spento: {}, proiezione: { proiezione: "attiva" }, "porta aperta": { proiezione: "attiva", porta_circolare: "aperta" } },
+    // con la proiezione accesa la lente mostra la mappa stellare, non questa scansione (MappaNellaLente.tsx)
+    varianti: { spento: {}, "porta aperta": { porta_circolare: "aperta" } },
   },
   anticamera: {
     descrizione: () => "il passaggio che si stringe in un buio che beve la luce; davanti, la soglia aperta",

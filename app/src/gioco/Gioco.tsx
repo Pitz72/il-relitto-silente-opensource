@@ -28,6 +28,7 @@ import { accesiDa, attrezzoDelVerbo, bersagli, COMANDO_TITOLI, NESSUNA, type Azi
 import type { Filo } from "./ramo/geometria";
 import Visore, { CartelloAtto, useCartelloAtto } from "./visore/Visore";
 import Dialogo from "./dialogo/Dialogo";
+import MappaStellare from "./momenti/MappaStellare";
 import RigaComando from "./scritti/RigaComando";
 import { AIUTO_DELL_APP, interpreta, type ComandoApp } from "./scritti/comandiApp";
 import Diario from "./diario/Diario";
@@ -314,6 +315,11 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
     }
   }, []);
 
+  // I momenti con un'animazione loro, che coprono il palco (documento 30, §9): la mappa stellare, quando la
+  // proiezione del Ponte si accende. Solo con «Apparizioni» acceso, e non con il movimento ridotto.
+  const [momento, setMomento] = useState<"mappa" | null>(null);
+  const momentiAccesi = opzioni.apparizioni && !ridotto;
+
   // ---- un comando ------------------------------------------------------------
   const gioca = useCallback(
     (comando: string, comeSiLegge?: string) => {
@@ -339,6 +345,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
       // D16: quanto costa un tipo di azione lo si sa dopo averla provata
       if (differenza && t.comando?.verbo) costi.set(t.comando.verbo, differenza);
       setTurno(t);
+      if (momentiAccesi && t.suono.eventi.some((e) => e.evento === "postazione")) setMomento("mappa");
       setSelezione(NESSUNA);
       setAltri(null);
       setDiario((d) => [
@@ -357,8 +364,19 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
         alFinale?.(finale.finale, rigaDelRegistro(t.eventi));
       }
     },
-    [opzioni.nomiToccabili, scritti, salvaNel, alFinale, mostraAvviso],
+    [opzioni.nomiToccabili, scritti, salvaNel, alFinale, mostraAvviso, momentiAccesi],
   );
+
+  // solo nello sviluppo: sul Ponte, con la mappa accesa, un clic sulla lente del visore la fa nascere di nuovo
+  const mappaAccesa = turno?.stato.stanza === "ponte di comando" && turno.suono.stati.proiezione === "attiva";
+  useEffect(() => {
+    if (!import.meta.env.DEV || !mappaAccesa || !momentiAccesi) return;
+    const rivedi = (e: MouseEvent) => {
+      if (e.target instanceof Element && e.target.closest(".visore .lente")) setMomento("mappa");
+    };
+    addEventListener("click", rivedi);
+    return () => removeEventListener("click", rivedi);
+  }, [mappaAccesa, momentiAccesi]);
 
   // cambiando modo a metà partita lo stato è lo stesso: il turno di adesso si ricompone
   const modoPrima = useRef(scritti);
@@ -709,6 +727,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
           </div>
         )}
         {clima?.ipossia && <div className="ipossia-velo" aria-hidden="true" />}
+        {momento === "mappa" && <MappaStellare onFine={() => setMomento(null)} />}
         {cartello !== null && turno && <CartelloAtto atto={cartello} titolo={turno.stato.titolo_atto} acciaio={forma === "acciaio"} chiudi={chiudiCartello} />}
 
         {pannello === "pausa" && (
