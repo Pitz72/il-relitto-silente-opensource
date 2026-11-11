@@ -25,6 +25,7 @@ documenti di `progettazione/`.
 ### Corretto
 
 - **Le prove su GitHub di nuovo verdi** (trovato l’11 novembre 2026, documento 36, §4). Dal 7 novembre `collaudo/eventi.py` importava `strumenti/audio/taglia_servizio.py` soltanto per i nomi dei file della voce di servizio, e lo strumento vuole numpy e scipy, che la macchina delle prove non ha: gli eventi del suono cadevano, e i collaudi dopo (il diario, i comandi scritti, i salvataggi, la tipografia) non partivano. `nome_file` sta adesso in `voce_servizio.py`, che usa soltanto la libreria standard; `taglia_servizio.py` la prende da lì. Provato in un ambiente con il solo lark, come su GitHub.
+- **L’ascolto del computer di bordo, finale per finale.** `rendi_echi` metteva nel finale «Vivi» la riga della «Stiva piena» (`SV-42`), con un ritardo scritto a mano; il gioco invece ha sempre mandato la riga giusta. Adesso rende i cinque finali che hanno la riga (la prima nota, Vivi, la stiva piena, doppio fondo, mani vuote), ognuno con la sua riga e con il ritardo che il ponte calcola sul suo testo (51,7, 44,3, 30,3, 24,3 e 26,0 secondi, dai percorsi del collaudo): `rendi_echi <cartella> "Il computer di bordo"`. Whisper ritrova le cinque righe nei punti attesi. L’ascolto è in `consegne/Ascolto computer di bordo 2026-11-11/`.
 
 ## [0.2.5-beta.10] - 2026-11-07
 

@@ -32,6 +32,8 @@ struct Scena {
     battute: &'static str,
     /// i secondi dopo l’evento
     durata: f32,
+    /// per le scene del computer di bordo: il finale e il «dopo» che il ponte manda con la riga del registro
+    finale: Option<(&'static str, f32)>,
 }
 
 fn eco(cosa: &str) -> &'static str {
@@ -44,8 +46,13 @@ fn scanner(cosa: &str) -> &'static str {
 
 const RIS: &str = r#"{"evento": "attrezzo", "attrezzo": "sintonizzatore", "cosa": "x"}, {"evento": "risonanza", "valore": 2}"#;
 
+fn computer(titolo: &'static str, finale: &'static str, battute: &'static str, dopo: f32) -> Scena {
+    // venti secondi dopo la riga: la riga e la coda della musica
+    Scena { titolo, stanza: "stiva", risonate: "", resto: "", eventi: "", battute, durata: dopo + 20.0, finale: Some((finale, dopo)) }
+}
+
 fn scene() -> Vec<Scena> {
-    let s = |titolo, stanza, risonate, eventi, battute, durata| Scena { titolo, stanza, risonate, resto: "", eventi, battute, durata };
+    let s = |titolo, stanza, risonate, eventi, battute, durata| Scena { titolo, stanza, risonate, resto: "", eventi, battute, durata, finale: None };
     vec![
         s("Le pareti del corridoio: quattro voci, una dopo l’altra", "corridoio principale", "", eco("pareti del corridoio"), r#""NV-01-senza-ruolo", "NV-02-capitano", "NV-03-carico", "NV-04-bordo""#, 50.0),
         s("Le gole: l’ingegnere capo, e il tecnico di carico che risponde", "vestibolo delle gole", "", eco("gole"), r#""NV-12c-ingegnere-gole", "NV-03b-carico-gole""#, 12.0),
@@ -57,6 +64,7 @@ fn scene() -> Vec<Scena> {
             eventi: eco("culla"),
             battute: r#""NV-08-piccolo""#,
             durata: 0.0,
+            finale: None,
         },
         s("Lo Xeno-botanico (le piante)", "serra morente", "", eco("piante"), r#""NV-05-botanico""#, 24.0),
         s("Lo Xeno-botanico, il secondo strato", "serra morente", r#""piante""#, RIS, r#""NV-05b-botanico-profondo""#, 22.0),
@@ -82,6 +90,7 @@ fn scene() -> Vec<Scena> {
             eventi: r#"{"evento": "dialogo", "con": "yusuf", "nodo": "apertura"}"#,
             battute: r#""YU-01-apertura""#,
             durata: 8.0,
+            finale: None,
         },
         Scena {
             titolo: "Yusuf, nella fuga: il canale della Santa Maria",
@@ -91,6 +100,7 @@ fn scene() -> Vec<Scena> {
             eventi: "",
             battute: r#""YU-08-fuga-nessuno""#,
             durata: 9.0,
+            finale: None,
         },
         Scena {
             titolo: "La scatola nera di L.V., nella serra",
@@ -100,6 +110,7 @@ fn scene() -> Vec<Scena> {
             eventi: r#"{"evento": "scatola_nera"}, {"evento": "risonanza", "valore": 3}"#,
             battute: r#""LV-02-scatola-serra""#,
             durata: 90.0,
+            finale: None,
         },
         Scena {
             titolo: "La fuga: accanto alla nicchia vuota, «Deve.»",
@@ -109,6 +120,7 @@ fn scene() -> Vec<Scena> {
             eventi: "",
             battute: r#""NV-03c-carico-deve""#,
             durata: 6.0,
+            finale: None,
         },
         s("La voce di servizio: un suggerimento (esamina la radio)", "plancia", "", "", r#""SV-28-per-chiamare-yusuf-parla""#, 6.0),
         s(
@@ -129,8 +141,15 @@ fn scene() -> Vec<Scena> {
             eventi: r#"{"evento": "protezione"}"#,
             battute: r#""SV-01-protezione-vitale""#,
             durata: 6.0,
+            finale: None,
         },
-        s("Il computer di bordo: la riga del registro alla fine di «Vivi»", "stiva", "", "", r#""SV-42-registro-magazzino-quattro""#, 64.0),
+        // il computer di bordo: ogni finale con la sua riga del registro e il «dopo» che il ponte calcola sul suo
+        // testo (i percorsi del collaudo, 11 novembre 2026); «Due lettere» non ha la riga
+        computer("Il computer di bordo: «La prima nota»", "prima-nota", r#""SV-45-registro-carico-nessuno""#, 51.7),
+        computer("Il computer di bordo: «Vivi»", "vivi", r#""SV-45-registro-carico-nessuno""#, 44.3),
+        computer("Il computer di bordo: «La stiva piena»", "stiva-piena", r#""SV-42-registro-magazzino-quattro""#, 30.3),
+        computer("Il computer di bordo: «Doppio fondo»", "doppio-fondo", r#""SV-43-registro-da-dichiarare""#, 24.3),
+        computer("Il computer di bordo: «Mani vuote»", "mani-vuote", r#""SV-44-registro-da-registrare""#, 26.0),
     ]
 }
 
@@ -194,11 +213,10 @@ fn main() -> Result<(), String> {
         }
         note.push_str(&format!("{}  {}  ({})\n", orario(t), s.titolo, s.stanza));
         // il computer di bordo: il finale vero, con il suo silenzio e la sua musica, e la riga del registro dopo il
-        // tempo di leggerlo (il «dopo» del ponte, circa 44 s in «Vivi»)
-        let finale = s.titolo.starts_with("Il computer di bordo");
-        let (prima, poi) = if finale {
+        // tempo di leggerlo (il «dopo» del ponte)
+        let (prima, poi) = if let Some((nome, dopo)) = s.finale {
             let st = |esito: &str| format!(r#"{{"stanza": "{}", "atto": 5, "tuta": true, "esito": "{esito}"}}"#, s.stanza);
-            (st("in_corso"), turno(&st("vinta"), &format!(r#"{{"evento": "finale", "finale": "vivi"}}{}"#, if senza_file { String::new() } else { format!(r#", {{"evento": "voci", "battute": [{}], "dopo": 44.0}}"#, s.battute) })))
+            (st("in_corso"), turno(&st("vinta"), &format!(r#"{{"evento": "finale", "finale": "{nome}"}}{}"#, if senza_file { String::new() } else { format!(r#", {{"evento": "voci", "battute": [{}], "dopo": {dopo:.1}}}"#, s.battute) })))
         } else {
             (stati(&s, ""), turno(&stati(&s, ""), &eventi(s.eventi, s.battute, senza_file)))
         };
@@ -206,7 +224,7 @@ fn main() -> Result<(), String> {
         suona(&mut mondo, 5.0, &mut pcm);
         t += 5.0;
         tx.send(poi).map_err(|e| e.to_string())?;
-        note.push_str(&format!("  {}  l’evento{}\n", orario(t), if finale { " (il finale «Vivi»; la riga del registro fra 44 s)" } else { "" }));
+        note.push_str(&format!("  {}  l’evento{}\n", orario(t), match s.finale { Some((_, dopo)) => format!(" (il finale; la riga del registro fra {dopo:.0} s)"), None => String::new() }));
         if s.titolo.starts_with("Il Piccolo") {
             // l’anello gira; poi si parla con lui; poi si resta in silenzio; poi «Lascia stare»
             suona(&mut mondo, 10.0, &mut pcm);
