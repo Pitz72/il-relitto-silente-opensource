@@ -205,7 +205,14 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
    ancora ascoltate da lui: l’ascolto è pronto in `consegne/Ascolto computer di bordo 2026-11-07/`.
    *11 novembre:* quell’ascolto metteva in «Vivi» la riga della «Stiva piena» (solo l’ascolto: il gioco è giusto);
    rifatto con i cinque finali, ognuno con la sua riga e il suo ritardo (`consegne/Ascolto computer di bordo
-   2026-11-11/`, 5:09), e fatto suonare all’autore («riproduci tu le situazioni»). **La sessione
+   2026-11-11/`, 5:09), e fatto suonare all’autore («riproduci tu le situazioni»). **Approvato:** «voce computer
+   perfetta». Ha chiesto se il respiro sintetizzato che si sente è quello di William: sì, il fiato nel casco del
+   motore audio; nell’ascolto dura qualche secondo in più che nel gioco, perché `rendi_echi` non manda il casco tolto
+   (nel gioco, al rientro in stiva, il colpo d’aria e il fiato che finisce). Rifare l’ascolto: «No». Se il respiro gli
+   suona finto, è fra gli effetti da rifare più avanti (punto 5).
+   **La sessione dell’11 novembre si è chiusa qui** («fai una verifica finale generale e salva… Poi torno»): tutto su
+   GitHub, prove verdi. **Alla prossima:** le sue note sulle beta (dalla 5 alla 10) e quello che resta nell’intro;
+   poi la beta 11 (la firma «W. T.», le fasce, il computer di bordo, più le sue note). **La sessione
    si è chiusa qui** (7 novembre, pomeriggio: «Ok per ora ci fermiamo»). **Alla prossima:** chiedergli le note
    sulla beta.10; fargli sentire il computer di bordo (la consegna, già pronta); poi una beta con queste
    correzioni (la firma «W. T.», le fasce, il computer di bordo). Effetti e suoni d’ambiente rifatti, più avanti,

@@ -130,6 +130,8 @@ L’ordine è quello che hai deciso il 27 ottobre e il 3 novembre (prompt 31).
    persona, l’intro, la voce di L.V., la revisione narrativa, le voci, la voce di servizio. Insieme, che cosa resta da
    fare nell’intro.
 2. **L’ascolto del computer di bordo**: la consegna è pronta, 49 secondi del finale «Vivi» con la riga del registro.
+   *Fatto l’11 novembre*, rifatto con i cinque finali (quello del 7 aveva in «Vivi» la riga della «Stiva piena»):
+   «voce computer perfetta».
 3. **La correzione delle prove** (§4).
 4. **La beta 11**, con la firma, le fasce, il computer di bordo e quello che diranno le tue note.
 
