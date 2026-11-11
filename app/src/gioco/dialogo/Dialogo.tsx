@@ -7,12 +7,13 @@
 //  sequel (il comunicatore del Magazzino Quattro); le altre viste definitive
 //  sono della fase 5.
 // ============================================================================
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { cicloA, FOTOGRAMMI } from "../ritmo";
 import type { Forma } from "../../stile/atmosfere";
 import type { SceltaModello } from "../../azione/modello";
 import type { Blocco, Segmento } from "../lamina/grammatica";
 import { generatore } from "../../intro/glifi";
+import { DURATA, type Arrivo } from "./apparizione";
 import "./dialogo.css";
 
 interface Props {
@@ -27,23 +28,58 @@ interface Props {
   scegli: (s: SceltaModello) => void;
   /** la modalità a solo testo: al posto dei semi c'è la riga di comando (le risposte stanno nel testo) */
   riga?: ReactNode;
+  /** come compare la figura quando il colloquio si apre (oggi solo l'Anziano): la prima volta della partita
+   *  l'apparizione intera, le altre quella breve; niente se si riprende un colloquio a metà */
+  arrivo?: Arrivo;
 }
 
 const CHI: Record<string, string> = { anziano: "l’Anziano", yusuf: "Yusuf", eco: "l’eco" };
 
-export default function Dialogo({ personaggio, blocchi, detto, scelte, forma, ridotto, scegli, riga }: Props) {
+export default function Dialogo({ personaggio, blocchi, detto, scelte, forma, ridotto, scegli, riga, arrivo }: Props) {
   const primoSeme = useRef<HTMLButtonElement>(null);
   const chiave = blocchi.map((b) => b.sorgente).join("|");
-  // il fuoco sul primo seme a ogni battuta nuova
+  // L'apparizione si decide quando il colloquio si apre, e non cambia con le battute. Le parole compaiono
+  // soltanto ad apparizione finita, in dissolvenza (l'autore, 11 novembre 2026): prima c'è solo la figura
+  // che si forma. Al primo incontro finisce quando, nel suono, il canto lascia il posto alla sua voce. Un
+  // clic o un tasto la chiudono subito.
+  const arrivoIniziale = useRef<Arrivo>(personaggio === "anziano" && !ridotto ? (arrivo ?? null) : null).current;
+  // l'apparizione in corso: quale, e quante ne sono partite (nello sviluppo la si può rivedere)
+  const [apparizione, setApparizione] = useState<{ tipo: "primo" | "ritorno"; n: number } | null>(arrivoIniziale ? { tipo: arrivoIniziale, n: 1 } : null);
+  const [formata, setFormata] = useState(arrivoIniziale === null);
+  const [salta, setSalta] = useState(0);
   useEffect(() => {
-    primoSeme.current?.focus({ preventScroll: true });
-  }, [chiave]);
+    if (formata || !apparizione) return;
+    const subito = () => {
+      setSalta((n) => n + 1);
+      setFormata(true);
+    };
+    addEventListener("keydown", subito);
+    addEventListener("pointerdown", subito);
+    // se il disegno non gira (la finestra nascosta, la tela che non parte) le parole arrivano lo stesso
+    const comunque = setTimeout(() => setFormata(true), (DURATA[apparizione.tipo] + 2.5) * 1000);
+    return () => {
+      removeEventListener("keydown", subito);
+      removeEventListener("pointerdown", subito);
+      clearTimeout(comunque);
+    };
+  }, [formata, apparizione]);
+  // solo nello sviluppo: un clic sulla figura la fa apparire di nuovo, con le parole che aspettano
+  const rivedi = import.meta.env.DEV && personaggio === "anziano" && !ridotto
+    ? (tipo: "primo" | "ritorno") => {
+        setFormata(false);
+        setApparizione((a) => ({ tipo, n: (a?.n ?? 0) + 1 }));
+      }
+    : undefined;
+  // il fuoco sul primo seme a ogni battuta nuova (e quando le parole arrivano)
+  useEffect(() => {
+    if (formata) primoSeme.current?.focus({ preventScroll: true });
+  }, [chiave, formata]);
   const battute = blocchi.filter((b) => b.tipo === "dialogo");
   const narrazione = blocchi.filter((b) => b.tipo === "paragrafo");
   return (
     <section className={`dialogo dialogo-${personaggio}`} data-forma={forma} aria-label={`Dialogo con ${CHI[personaggio] ?? personaggio}`}>
-      <Vista personaggio={personaggio} ridotto={ridotto} />
-      <div className="sinistra">
+      <Vista personaggio={personaggio} ridotto={ridotto} apparizione={apparizione} salta={salta} allaFine={() => setFormata(true)} rivedi={rivedi} />
+      <div className={`sinistra${formata ? "" : " attesa"}`} inert={!formata}>
       <div className="parole">
         <div className="chi">{CHI[personaggio] ?? personaggio}</div>
         {detto && <div className="detto">› {detto}</div>}
@@ -119,8 +155,34 @@ const FIGURA = (() => {
   return p;
 })();
 
-function Vista({ personaggio, ridotto }: { personaggio: string; ridotto: boolean }) {
+interface DatiVista {
+  personaggio: string;
+  ridotto: boolean;
+  /** l'apparizione da far partire (un numero nuovo la fa ripartire) */
+  apparizione?: { tipo: "primo" | "ritorno"; n: number } | null;
+  /** un clic o un tasto: la figura è subito intera */
+  salta?: number;
+  /** l'apparizione è finita: adesso le parole */
+  allaFine?: () => void;
+  /** solo nello sviluppo: rivederla */
+  rivedi?: (tipo: "primo" | "ritorno") => void;
+}
+
+function Vista({ personaggio, ridotto, apparizione: chiesta = null, salta = 0, allaFine, rivedi }: DatiVista) {
   const ref = useRef<HTMLCanvasElement>(null);
+  // l'apparizione in corso: di che tipo, e da quale fotogramma è cominciata (lo dice il primo disegno)
+  const apparizione = useRef<{ tipo: "primo" | "ritorno"; da: number | null } | null>(null);
+  const fine = useRef(allaFine);
+  fine.current = allaFine;
+  const numero = chiesta?.n ?? 0;
+  const tipo = chiesta?.tipo ?? null;
+  useEffect(() => {
+    apparizione.current = tipo ? { tipo, da: null } : null;
+  }, [numero, tipo]);
+  // un clic o un tasto: la figura è subito intera
+  useEffect(() => {
+    if (salta) apparizione.current = null;
+  }, [salta]);
   useEffect(() => {
     const cv = ref.current;
     if (!cv) return;
@@ -139,8 +201,20 @@ function Vista({ personaggio, ridotto }: { personaggio: string; ridotto: boolean
       }
       g.setTransform(s, 0, 0, s, 0, 0);
       g.clearRect(0, 0, w, h);
-      if (personaggio === "anziano") anziano(g, w, h, t);
-      else if (personaggio === "eco") eco(g, w, h, t, c1, c2);
+      if (personaggio === "anziano") {
+        const a = apparizione.current;
+        let s: number | null = null;
+        if (a) {
+          if (a.da === null) a.da = t;
+          s = (t - a.da) / 1000;
+          if (s >= DURATA[a.tipo]) {
+            apparizione.current = null;
+            s = null;
+            fine.current?.();
+          }
+        }
+        anziano(g, w, h, t, a && s !== null ? { tipo: a.tipo, s } : null);
+      } else if (personaggio === "eco") eco(g, w, h, t, c1, c2);
       else comunicatore(g, w, h, t, c2);
     };
     disegna(ridotto ? 0 : performance.now());
@@ -155,48 +229,181 @@ function Vista({ personaggio, ridotto }: { personaggio: string; ridotto: boolean
           <img src={`${import.meta.env.BASE_URL}viste/yusuf.webp`} alt="" draggable={false} />
         </div>
       )}
-      <canvas ref={ref} role="img" aria-label={etichetta} />
+      {/* nello sviluppo un clic sulla figura la fa apparire di nuovo, per guardarla */}
+      <canvas
+        ref={ref}
+        role="img"
+        aria-label={etichetta}
+        onClick={rivedi ? (e) => rivedi(e.shiftKey ? "ritorno" : "primo") : undefined}
+      />
       {personaggio === "yusuf" && <div className="canale">canale · magazzino quattro</div>}
     </div>
   );
 }
 
-function anziano(g: CanvasRenderingContext2D, w: number, h: number, t: number) {
+const blocca = (x: number) => (x < 0 ? 0 : x > 1 ? 1 : x);
+/** Da 0 a 1, morbido ai due capi. */
+const morbido = (x: number) => {
+  const c = blocca(x);
+  return c * c * (3 - 2 * c);
+};
+/** Parte piano, corre, arriva piano. */
+const cubica = (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - (-2 * x + 2) ** 3 / 2);
+
+/** I tre cerchi del pavimento (su una vista larga 600). */
+const ANELLI = [60, 120, 190];
+/** Quanti giri fa un punto intorno al sostegno mentre sale. */
+const GIRI = 1.25;
+/** Quando la figura si è chiusa un'onda si allarga sul pavimento, per nove decimi. */
+const ONDA_DA = 3.7;
+const ONDA_DURA = 0.9;
+
+/**
+ * L'Anziano. Senza apparizione è la figura di sempre: i punti al loro posto, i bordi che si sfanno.
+ *
+ * Il primo incontro (`primo`, 4,6 s). Il pavimento si traccia: i tre cerchi, uno dopo l'altro, e i raggi dal
+ * centro. Il sostegno sale. Poi i punti nascono sulle linee del pavimento, salgono girando intorno al sostegno
+ * e si chiudono nella figura, dalla base alla testa: ognuno ha la sua scia. Quando la testa è chiusa l'alone
+ * si accende e un'onda si allarga sul pavimento. Tutto succede mentre nel suono canta il primo contatto.
+ *
+ * Le altre volte (`ritorno`, 2 s) i punti rientrano da poco lontano, dal basso verso l'alto.
+ */
+function anziano(g: CanvasRenderingContext2D, w: number, h: number, t: number, ap: { tipo: "primo" | "ritorno"; s: number } | null = null) {
+  const primo = ap?.tipo === "primo" ? ap.s : null;
+  const ritorno = ap?.tipo === "ritorno" ? ap.s : null;
+  const cx = w * 0.5;
+  const fy = h * 0.9;
+  const k = w / 600;
   // il pavimento: la geometria stellare del Ponte, ridotta a qualcosa di intimo
   g.save();
-  g.translate(w * 0.5, h * 0.9);
+  g.translate(cx, fy);
   g.scale(1, 0.28);
-  g.strokeStyle = "rgba(95,212,220,.22)";
+  // mentre i punti nascono le linee sono più vive
+  const vive = primo === null ? 0 : morbido(primo / 0.5) * (1 - morbido((primo - 2.8) / 1.1));
+  g.strokeStyle = `rgba(95,212,220,${0.22 + 0.3 * vive})`;
   g.lineWidth = 1;
-  for (const rr of [60, 120, 190]) {
+  ANELLI.forEach((rr, n) => {
+    const f = primo === null ? 1 : cubica(blocca((primo - n * 0.14) / 0.85));
+    if (f <= 0) return;
     g.beginPath();
-    g.arc(0, 0, (rr * w) / 600, 0, 7);
+    g.arc(0, 0, rr * k, -Math.PI / 2, -Math.PI / 2 + f * 2 * Math.PI);
     g.stroke();
-  }
-  for (let k = 0; k < 10; k++) {
-    const a = (k / 10) * 6.28 + t / 30000;
+  });
+  for (let n = 0; n < 10; n++) {
+    const f = primo === null ? 1 : cubica(blocca((primo - 0.25 - n * 0.035) / 0.6));
+    if (f <= 0) continue;
+    const a = (n / 10) * 6.28 + t / 30000;
     g.beginPath();
     g.moveTo(0, 0);
-    g.lineTo((Math.cos(a) * 200 * w) / 600, (Math.sin(a) * 200 * w) / 600);
+    g.lineTo(Math.cos(a) * 200 * k * f, Math.sin(a) * 200 * k * f);
+    g.stroke();
+  }
+  if (primo !== null && primo > ONDA_DA && primo < ONDA_DA + ONDA_DURA) {
+    const f = (primo - ONDA_DA) / ONDA_DURA;
+    g.strokeStyle = `rgba(244,235,208,${0.5 * (1 - f)})`;
+    g.lineWidth = 1.5;
+    g.beginPath();
+    g.arc(0, 0, (30 + 210 * (1 - (1 - f) ** 3)) * k, 0, 7);
     g.stroke();
   }
   g.restore();
+  // il sostegno, che sale dal pavimento
+  const su = primo === null ? 1 : cubica(blocca((primo - 0.2) / 0.8));
   g.fillStyle = "rgba(160,200,200,.10)";
-  g.fillRect(w * 0.5 - 3, h * 0.62, 6, h * 0.28);
+  g.fillRect(cx - 3, fy - h * 0.28 * su, 6, h * 0.28 * su);
   const H = h * 0.66;
-  const cx = w * 0.5;
   const top = h * 0.06;
+  // una colonna di luce sale lungo il sostegno insieme alla figura, e si spegne quando è chiusa: è la forma
+  // grande, quella che si legge anche da lontano (i punti da soli sono fini)
+  if (primo !== null && primo > 0.9 && primo < 4.5) {
+    const fronte = blocca((primo - 1.4) / 2.3); // dove è arrivata la figura: 0 alla base, 1 alla testa
+    const cima = fy - (fy - top) * (0.25 + 0.75 * fronte);
+    const forza = 0.13 * morbido((primo - 0.9) / 1.1) * (1 - morbido((primo - 3.6) / 0.9));
+    g.save();
+    g.translate(cx, (cima + fy) / 2);
+    g.scale(H * 0.2, (fy - cima) / 2);
+    const colonna = g.createRadialGradient(0, 0, 0, 0, 0, 1);
+    colonna.addColorStop(0, `rgba(175,230,226,${forza})`);
+    colonna.addColorStop(1, "rgba(175,230,226,0)");
+    g.fillStyle = colonna;
+    g.fillRect(-1, -1, 2, 2);
+    g.restore();
+  }
+  // dove sta un punto in volo, a `p` del suo viaggio: dal pavimento, girando intorno al sostegno, al suo posto
+  let px = 0;
+  let py = 0;
+  const volo = (q: (typeof FIGURA)[number], p: number) => {
+    const e = cubica(p);
+    const angolo = (q.v >= 0 ? 0 : Math.PI) + (1 - e) * (q.d * 6.283 + GIRI * 6.283);
+    const r0 = ANELLI[Math.min(2, Math.floor(q.z * 3))] * k;
+    const r = r0 + (Math.abs(q.v) * H * 0.24 - r0) * e + Math.sin(Math.PI * e) * w * 0.025;
+    px = cx + r * Math.cos(angolo);
+    py = fy + (top + q.u * H - fy) * e ** 0.85 + r * Math.sin(angolo) * 0.28 * (1 - e);
+  };
   for (const q of FIGURA) {
     const bordo = Math.abs(q.v) > 0.3 || q.u > 0.7;
-    const deriva = bordo ? (t / 5000 + q.d) % 1 : 0;
+    const alfa = 0.18 + q.z * 0.55;
+    const colore = q.z > 0.82 ? "#F4EBD0" : "#AFE6E2";
+    // quanto il punto è fermo al suo posto: i bordi cominciano a sfarsi dopo l'arrivo
+    let posato = 1;
+    if (primo !== null) {
+      // dalla base (u = 1) alla testa (u = 0)
+      const parte = 0.4 + (1 - q.u) * 1.75 + ((q.z * 7.13) % 1) * 0.2;
+      const dura = 1.3 + ((q.d * 3.71) % 1) * 0.25;
+      const p = (primo - parte) / dura;
+      if (p <= 0) continue;
+      if (p < 1) {
+        const nasce = Math.min(1, p / 0.12);
+        g.fillStyle = colore;
+        volo(q, p);
+        // in volo il punto è più grande e più vivo, e si porta dietro la scia
+        g.globalAlpha = Math.min(1, alfa * (2.2 - 1.2 * p) + 0.12) * nasce;
+        g.fillRect(px, py, 2.3 - 0.9 * p, 2.3 - 0.9 * p);
+        if (p > 0.06) {
+          volo(q, p - 0.035);
+          g.globalAlpha = (alfa * 0.6 + 0.05) * nasce;
+          g.fillRect(px, py, 1.6, 1.6);
+        }
+        if (p > 0.1) {
+          volo(q, p - 0.07);
+          g.globalAlpha = alfa * 0.3 * nasce;
+          g.fillRect(px, py, 1.3, 1.3);
+        }
+        continue;
+      }
+      posato = blocca((primo - parte - dura) / 0.6);
+    } else if (ritorno !== null) {
+      const parte = (1 - q.u) * 0.5;
+      const dura = 1 + ((q.d * 3.71) % 1) * 0.4;
+      const p = (ritorno - parte) / dura;
+      if (p <= 0) continue;
+      if (p < 1) {
+        const manca = (1 - p) ** 3;
+        g.fillStyle = colore;
+        g.globalAlpha = alfa * (1 - manca);
+        g.fillRect(cx + q.v * H * 0.24 + (q.v >= 0 ? 1 : -1) * (30 + q.z * 60) * k * manca, top + q.u * H + (20 + q.d * 30) * k * manca, 1.4, 1.4);
+        continue;
+      }
+      posato = blocca((ritorno - parte - dura) / 0.6);
+    }
+    const deriva = bordo ? ((t / 5000 + q.d) % 1) * posato : 0;
     const x = cx + q.v * H * 0.24 + (bordo ? Math.sign(q.v) * deriva * 26 : 0) + Math.sin(t / 900 + q.z * 9) * 0.6;
     const y = top + q.u * H - (bordo ? deriva * 14 : 0);
-    g.globalAlpha = (0.18 + q.z * 0.55) * (bordo ? 1 - deriva : 1);
-    g.fillStyle = q.z > 0.82 ? "#F4EBD0" : "#AFE6E2";
+    g.globalAlpha = alfa * (bordo ? 1 - deriva : 1);
+    g.fillStyle = colore;
     g.fillRect(x, y, 1.4, 1.4);
   }
+  // l'alone: si accende quando la testa è chiusa, un poco di più, e si posa
+  const calore =
+    primo !== null
+      ? primo < 3.9
+        ? morbido((primo - 3) / 0.9) * 1.7
+        : 1 + 0.7 * (1 - morbido((primo - 3.9) / 0.7))
+      : ritorno !== null
+        ? morbido(ritorno / 1.6)
+        : 1;
   const al = g.createRadialGradient(cx, top + H * 0.35, 0, cx, top + H * 0.35, H * 0.55);
-  al.addColorStop(0, "rgba(244,235,208,.10)");
+  al.addColorStop(0, `rgba(244,235,208,${0.1 * calore})`);
   al.addColorStop(1, "rgba(244,235,208,0)");
   g.globalAlpha = 1;
   g.fillStyle = al;

@@ -104,4 +104,18 @@ export function useSonde({ prova, turno, modello, motoreRef, passi, finaleRef, g
       },
     };
   }, [gioca, comincia]);
+
+  // Solo nello sviluppo: `?gioco&percorso=vivi.txt&fino=66` apre il gioco a quel passo del percorso, per
+  // guardare un momento preciso senza giocarci fino (l'apparizione dell'Anziano, per esempio).
+  const aperto = useRef(false);
+  useEffect(() => {
+    if (!import.meta.env.DEV || aperto.current || !turno) return;
+    const q = new URLSearchParams(location.search);
+    const nome = q.get("percorso");
+    if (!nome) return;
+    aperto.current = true;
+    const sonda = (window as unknown as { __gioco?: { percorso: (nome: string, fino?: number) => string } }).__gioco;
+    // dopo il primo disegno del gioco: la figura che compare deve partire a schermo fermo
+    setTimeout(() => sonda?.percorso(nome, Number(q.get("fino")) || Infinity), 600);
+  }, [turno]);
 }

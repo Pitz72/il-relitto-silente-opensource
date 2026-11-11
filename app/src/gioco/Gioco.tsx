@@ -592,6 +592,15 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
   // il bordo del visore respira al ritmo del fiato, che accelera quando l'aria scende
   const respiro = aria === null ? 4.4 : aria >= 60 ? 4.4 : aria >= 30 ? 3.4 : aria > 15 ? 2.2 : 6.4;
   const inDialogo = modello?.fase === "dialogo" && !!turno?.stato.dialogo;
+  // L'apparizione dell'Anziano: quando il colloquio si apre in questo turno (non riprendendo una partita a
+  // metà colloquio). La prima volta della partita è quella intera; lo dice la cronaca, che segue anche i
+  // caricamenti e gli «annulla»: nessuna voce di prima ha una sua battuta.
+  const arrivo = useMemo(() => {
+    if (!turno || turno.stato.dialogo !== "anziano" || !turno.suono.eventi.some((e) => e.evento === "dialogo")) return null;
+    const questa = turno.cronaca?.nuova?.chiave;
+    const gia = cronaca.some((v) => v.chiave !== questa && v.eventi.some((e) => e.tipo === "dialogo" && e.dati?.personaggio === "anziano"));
+    return gia ? "ritorno" : "primo";
+  }, [turno, cronaca]);
   // la conferma che chiede il motore (fase «conferma»): Sì e No dai suoi pulsanti
   const domandaDelMotore: Domanda | null =
     !scritti && modello?.fase === "conferma" && turno
@@ -680,6 +689,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
             forma={forma}
             ridotto={ridotto}
             scegli={scegli}
+            arrivo={opzioni.apparizioni ? arrivo : null}
             riga={
               scritti ? (
                 <RigaComando inDialogo invia={inviaScritto} completa={() => setCompleta((n) => n + 1)} storia={storiaScritti.current} bloccata={!!pannello || !!domanda || cartello !== null} chiave={turno} />

@@ -257,9 +257,9 @@ const SCHEDE_OPZIONI: readonly [SchedaOpzioni, string][] = [["gioco", "Gioco"], 
 
 /** Che cosa fa ogni livello della grafica, in una riga. */
 const SPIEGA_QUALITA: Record<Qualita, string> = {
-  piena: "Tutto acceso: la grana che si muove, le vene vive, la luce della stanza, il segnale sui fili, i riflessi del casco, la sfocatura dietro i pannelli.",
+  piena: "Tutto acceso: la grana che si muove, le vene vive, la luce della stanza, il segnale sui fili, i riflessi del casco, la sfocatura dietro i pannelli, le apparizioni.",
   leggera: "Per i computer meno potenti: la grana ferma, niente luce della stanza né sfocatura; il resto acceso.",
-  essenziale: "Il minimo: niente grana, vene ferme, niente luci, segnali, riflessi e sfocature. Restano i colori e le forme.",
+  essenziale: "Il minimo: niente grana, vene ferme, niente luci, segnali, riflessi, sfocature e apparizioni. Restano i colori e le forme.",
 };
 
 export function PannelloOpzioni({ forma, opzioni, cambia, chiudi }: { forma: Forma; opzioni: Opzioni; cambia: (c: Partial<Opzioni>) => void; chiudi: () => void }) {
@@ -398,6 +398,7 @@ export function PannelloOpzioni({ forma, opzioni, cambia, chiudi }: { forma: For
             {riga("Segnale sui fili", "segnaleFili", [[true, "sì"], [false, "no"]], "Ogni tanto una luce corre lungo il filo delle azioni.")}
             {riga("Riflessi sul vetro", "riflessi", [[true, "sì"], [false, "no"]], "Con la tuta: il riflesso del casco, e il fiato che appanna il vetro quando l’aria è poca.")}
             {riga("Sfocatura dietro i pannelli", "sfocatura", [[true, "sì"], [false, "no"]], "Con un pannello aperto, come questo, il gioco dietro si sfoca.")}
+            {riga("Apparizioni", "apparizioni", [[true, "sì"], [false, "no"]], "I momenti che hanno un’animazione loro: l’Anziano che prende forma, punto per punto, prima di parlare. Senza, la figura c’è subito.")}
           </>
         )}
         {scheda === "audio" && (

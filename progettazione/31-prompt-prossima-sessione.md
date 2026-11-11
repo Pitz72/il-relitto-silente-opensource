@@ -239,6 +239,11 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 1. **Le sue note sulle beta, dalla 5 alla 10.** Prima cosa: chiedergli come gli sono sembrate nel gioco vero,
    con il suono, la prima persona, l’intro con la voce di L.V. e le voci registrate, e correggere quello che dice.
 2. **Il resto dell’interfaccia** (documento 30):
+   - **i momenti con un’animazione loro** (30, §9; l’11 novembre l’autore ha chiesto un’analisi e una proposta
+     di miglioramenti estetici): **l’apparizione dell’Anziano è fatta e approvata** («l’animazione è bellissima»,
+     e con le parole che compaiono solo alla fine: «perfetto così»); restano la mappa stellare (sua idea), la
+     dissolvenza dell’Anziano nel seme e la nave che si sveglia quando torna l’energia. Nello stesso paragrafo
+     la lista per l’interfaccia e l’estetica dell’intro;
    - i momenti 2.6–2.9: il cartello d’atto, l’ingresso nella protezione vitale, le crepe della fuga,
      l’ipossia;
    - il lotto 3, le rifiniture;

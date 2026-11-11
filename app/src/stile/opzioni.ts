@@ -50,16 +50,19 @@ export interface Opzioni {
   veneVive: boolean;
   /** il gioco sfocato dietro i pannelli */
   sfocatura: boolean;
+  /** i momenti con un'animazione loro: l'Anziano che prende forma (no: la figura c'è subito) */
+  apparizioni: boolean;
 }
 
 export type Qualita = "piena" | "leggera" | "essenziale";
-type Effetti = Pick<Opzioni, "grana" | "riflessi" | "luceStanza" | "segnaleFili" | "veneVive" | "sfocatura">;
+type Effetti = Pick<Opzioni, "grana" | "riflessi" | "luceStanza" | "segnaleFili" | "veneVive" | "sfocatura" | "apparizioni">;
 
 /** I tre livelli della grafica: ognuno è una scelta di effetti, che poi si cambiano uno per uno. */
 export const QUALITA: Readonly<Record<Qualita, Effetti>> = {
-  piena: { grana: "mossa", riflessi: true, luceStanza: true, segnaleFili: true, veneVive: true, sfocatura: true },
-  leggera: { grana: "ferma", riflessi: true, luceStanza: false, segnaleFili: true, veneVive: true, sfocatura: false },
-  essenziale: { grana: "no", riflessi: false, luceStanza: false, segnaleFili: false, veneVive: false, sfocatura: false },
+  piena: { grana: "mossa", riflessi: true, luceStanza: true, segnaleFili: true, veneVive: true, sfocatura: true, apparizioni: true },
+  // le apparizioni durano pochi secondi e non costano a gioco fermo: restano anche nel livello leggero
+  leggera: { grana: "ferma", riflessi: true, luceStanza: false, segnaleFili: true, veneVive: true, sfocatura: false, apparizioni: true },
+  essenziale: { grana: "no", riflessi: false, luceStanza: false, segnaleFili: false, veneVive: false, sfocatura: false, apparizioni: false },
 };
 
 /** Il livello che corrisponde agli effetti scelti, o null se sono stati scelti uno per uno. */

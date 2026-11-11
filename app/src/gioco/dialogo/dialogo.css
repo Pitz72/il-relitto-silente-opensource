@@ -62,7 +62,9 @@
   color: var(--tenue);
 }
 /* a sinistra le parole, e sotto, uno per riga, i semi delle risposte */
-.dialogo .sinistra { position: absolute; left: 5cqw; top: 5cqw; width: 45cqw; bottom: 3.6cqw; display: flex; flex-direction: column; gap: 2.2cqw; }
+.dialogo .sinistra { position: absolute; left: 5cqw; top: 5cqw; width: 45cqw; bottom: 3.6cqw; display: flex; flex-direction: column; gap: 2.2cqw; transition: opacity 1s ease-out; }
+/* le parole aspettano la fine dell'apparizione dell'Anziano, e arrivano in dissolvenza (Dialogo.tsx) */
+.dialogo .sinistra.attesa { opacity: 0; }
 .dialogo .parole { flex: 1; min-height: 0; overflow-y: auto; }
 .dialogo .chi { font-style: italic; font-size: max(17px, 1.3cqw); color: var(--accento); margin-bottom: 1cqw; }
 .dialogo[data-forma="acciaio"] .chi { font-style: normal; font-family: var(--mono); font-size: max(12px, .8cqw); letter-spacing: .24em; text-transform: uppercase; }

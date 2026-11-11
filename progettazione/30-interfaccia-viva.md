@@ -189,3 +189,42 @@ Due cose imparate misurando:
   «animazioni» e «varianti» del 19 ottobre (revisione 25, M10): la frase «spenti uno alla volta non cambiava
   niente» viene da lì. Le misure prima e dopo di M10, a eseguibili interi, restano buone.
 
+---
+
+## 9. I momenti con un’animazione loro (11 novembre 2026)
+
+L’autore, dopo la revisione globale: «ci sono momenti che potrebbero richiedere un’animazione speciale giusto per introdurli? Io ad esempio farei un’animazione di creazione della mappa stellare olografica e cercherei un modo per far apparire l’Anziano in modo molto molto stiloso. Ce ne potrebbero essere un altro o due?» Ha chiesto anche che cosa migliorerei nell’interfaccia e nell’estetica della cinematica d’apertura.
+
+### 9.1 La proposta
+
+**I momenti**, quattro:
+
+| | Momento | Come | Stato |
+|---|---|---|---|
+| 9.a | **L’apparizione dell’Anziano** (dell’autore) | i punti della figura nascono sulle linee del pavimento, salgono girando intorno al sostegno e la chiudono dalla base alla testa, sul canto del primo contatto; le volte dopo, due secondi | **fatta e approvata** (§9.2) |
+| 9.b | **La mappa stellare** (dell’autore) | la struttura a stella al centro si accende, i punti salgono sulla cupola e riempiono il palco dietro il testo, la rotta si traccia dai tre soli fino al nostro, che si accende per ultimo; poi tutto si ritira nella lente del visore. Sei–otto secondi, una volta sola | da fare |
+| 9.c | **La dissolvenza dell’Anziano** | lo stesso movimento al contrario: al gesto «[Chiudi gli occhi e lascia andare.]» i punti scendono in un punto solo sul sostegno, e il punto diventa il seme | da fare |
+| 9.d | **La nave che si sveglia** | quando torna l’energia una luce parte dal generatore e corre una volta in tutte le vene dello schermo, e la stanza cambia colore dietro di lei | da fare |
+
+Scartate: la Grande Porta e il primo passo sullo scafo, che hanno già la soglia dell’atto, con la sua musica e il suo cartello.
+
+**L’interfaccia**, in ordine di effetto: i quattro momenti del lotto 2 mai fatti (2.6–2.9: il cartello d’atto, la protezione vitale, le crepe della fuga, l’ipossia); la Santa Maria che lavora (il radar al posto della riga di testo, la lancetta del margine: lotto 3); una schermata per il finale (revisione 25, E2); il menu con il marchio del gioco (E3); per chi vede poco, «diario» e «menu» più grandi, «Testo: grande» anche su pulsanti e dialogo, il pulsante sotto il mouse più evidente (revisione 37, L8 e L9).
+
+**La cinematica d’apertura**, solo l’estetica: portare al livello delle altre le tre scene rimaste com’erano (B, E, F: documento 09, §12); il relitto come materia dove passa il faro (un rilievo appena leggibile, una vena verde spenta); la Santa Maria illuminata (le luci di posizione, il bagliore dei motori, il bordo acceso dal faro); un cielo più ricco (la Via Lattea delle copertine, stelle di temperature diverse su più piani); una fotografia sola per tutte le scene. Per l’autore, che vede poco: luce e forme grandi prima del dettaglio fine. Prima di toccarla va guardata scena per scena, mostrandogli i fotogrammi.
+
+Le regole del §2 valgono tutte: sobrio, dentro quello che William vede, niente che si muova accanto al testo mentre lo si legge, fermo con il movimento ridotto, spegnibile dalla scheda «Grafica».
+
+### 9.2 Registro: l’apparizione dell’Anziano
+
+Fatta l’11 novembre 2026 sulla figura di punti che c’era già (`app/src/gioco/dialogo/Dialogo.tsx`, la funzione `anziano`; i tempi in `dialogo/apparizione.ts`). L’autore l’ha guardata nel browser dello sviluppo: «l’animazione è bellissima ma il testo deve apparire solo ad animazione finita, con una dissolvenza»; corretto, «perfetto così».
+
+- **Il primo incontro**, 4,6 secondi: il pavimento si traccia (i tre cerchi uno dopo l’altro, i raggi dal centro), il sostegno sale; i 3.200 punti nascono sulle linee del pavimento, salgono a spirale intorno al sostegno, ognuno con la sua scia, e chiudono la figura dalla base alla testa; una colonna di luce sale con loro (la forma grande, quella che si legge anche da lontano); quando la testa è chiusa l’alone si accende e un’onda si allarga sul pavimento.
+- **I tempi sono quelli del suono**: finisce quando il canto del primo contatto lascia il posto alla voce (`CANTO_VOCE`, 4,6 s, in `mondo/musica.rs`). La prova `app/prove/apparizione.test.ts` tiene uguali i due numeri.
+- **Le parole dopo** (decisione dell’autore): le battute e le risposte compaiono soltanto ad apparizione finita, in una dissolvenza di un secondo. Un clic o un tasto la chiudono subito; se il disegno non gira (la finestra nascosta) le parole arrivano comunque dopo qualche secondo.
+- **Le volte dopo**, due secondi: i punti rientrano da poco lontano, dal basso verso l’alto.
+- **Quando**: se il colloquio si apre in quel turno (non riprendendo una partita a metà colloquio); il primo incontro lo dice la cronaca, che segue i caricamenti e gli «annulla» (`Gioco.tsx`, `arrivo`).
+- **Le scelte di chi gioca**: con il movimento ridotto la figura c’è subito; nella scheda «Grafica» l’interruttore «Apparizioni» (acceso nei livelli pieno e leggero, spento nell’essenziale).
+- **Quanto costa**: misurato nel browser dello sviluppo a 1280 × 720, nessun fotogramma perso nei 4,6 secondi (276 fotogrammi, al più 16,9 ms l’uno). A gioco fermo non costa niente: dopo, il disegno è quello di prima.
+- **Per guardarla** nello sviluppo: `?gioco&percorso=vivi.txt&fino=66`; un clic sulla figura la fa apparire di nuovo.
+- **Non ancora** vista né ascoltata nell’eseguibile, con il canto.
+
