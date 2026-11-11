@@ -64,9 +64,14 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   «Nuova partita» spariscono dallo schermo «diario» e «menu» (il foglio di stile dell’intro vale per tutta la
   pagina; in tutte le beta); «La prima nota» riconosciuta in stiva è registrata come «Vivi» (una riga del ponte);
   il congedo dell’Anziano si può disfare, e nella fuga gli si può riparlare da capo (tocca `ponte.fav`: decide
-  lui). Le correzioni le sceglie l’autore, lotto per lotto (documento 37, §8; il registro è il §9). **G1 e G2 sono
-  corrette** lo stesso giorno («Sì, correggile»; commit `d5ca287` e `39f6f4a`), ognuna con la sua prova: non
-  sono ancora in una beta, e G1 nell’eseguibile va ancora guardata (una partita nuova: «diario» e «menu» in alto).
+  lui). Le correzioni le sceglie l’autore, lotto per lotto (documento 37, §8; il registro è il §9). **Le tre
+  gravi sono corrette** lo stesso giorno, ognuna con la sua prova: G1 e G2 («Sì, correggile»; commit `d5ca287` e
+  `39f6f4a`) e G3 (`2a089d7`), con la proposta che l’autore ha approvato («Procedi»): nessuna frase cambiata né
+  aggiunta in `ponte.fav`; la fuga comincia al gesto «[Chiudi gli occhi e lascia andare.]», e il ponte tiene lo
+  schermo e il suono com’erano fino a che William apre gli occhi; chi parla all’Anziano nella fuga legge «Non c’è
+  più. La sua luce è dentro il seme.»; a occhi chiusi il pulsante «Chiudi la conversazione» non c’è. I percorsi del
+  collaudo sono 17. Non sono ancora in una beta, e nell’eseguibile vanno ancora guardate (una partita nuova:
+  «diario» e «menu» in alto; il congedo dell’Anziano).
   Lo stesso giorno l’autore ha detto che la musica di Alirio Bruni è un dono al progetto, con libertà d’uso: va
   scritto nei registri delle licenze (37, L26).
 - **11 novembre 2026: il punto della situazione** (documento 36, chiesto dall’autore: tutto quello che è fatto e
@@ -225,10 +230,10 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
    suona finto, è fra gli effetti da rifare più avanti (punto 5).
    **La prima sessione dell’11 novembre si è chiusa qui** («fai una verifica finale generale e salva… Poi torno»):
    tutto su GitHub, prove verdi. **La seconda è la revisione globale** (documento 37; vedi «Dove siamo»).
-   **Alla prossima:** prima di tutto G3, il congedo dell’Anziano, che è una sua decisione sul testo (la proposta va
-   scritta per intero), e quali altre correzioni del documento 37 fare (G1 e G2 sono fatte); insieme, le sue note
+   **Alla prossima:** prima di tutto chiedergli quali altre correzioni del documento 37 fare (le tre gravi sono
+   fatte; nella stessa scena del congedo resta M24, che vuole una frase nuova, da proporgli per intero); insieme, le sue note
    sulle beta (dalla 5 alla 10) e quello che resta nell’intro (la M7 del documento 37 può esserne una parte); poi la
-   beta 11 (la firma «W. T.», le fasce, il computer di bordo, G1 e G2, le altre correzioni scelte, più le sue
+   beta 11 (la firma «W. T.», le fasce, il computer di bordo, le tre gravi del documento 37, le altre correzioni scelte, più le sue
    note). Effetti e suoni d’ambiente rifatti, più avanti, quando ne riparla lui.
 
 1. **Le sue note sulle beta, dalla 5 alla 10.** Prima cosa: chiedergli come gli sono sembrate nel gioco vero,
