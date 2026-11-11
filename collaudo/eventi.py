@@ -8,8 +8,9 @@
 # Che cosa controlla:
 #   1. a ogni turno di ogni percorso il ponte manda tutti gli stati del suono,
 #      e gli eventi hanno la loro forma;
-#   2. ogni percorso che finisce la partita manda l'evento «finale» giusto (il
-#      nome del percorso, se è uno dei sei finali);
+#   2. ogni percorso che finisce la partita manda l'evento «finale» giusto: quello
+#      che dice il testo del gioco (la frase del suo finale), e il nome del
+#      percorso, se è uno dei sei finali;
 #   3. in «Vivi» gli eventi principali arrivano nell'ordine della storia;
 #   4. ogni evento della tabella del ponte scatta almeno una volta: sui percorsi,
 #      o sui rami scritti qui per quelli che nessun percorso tocca (il bengala
@@ -49,6 +50,41 @@ ORDINE_VIVI = ("scansione_lunga", "accostamento", "arpioni", "vestizione", "kit"
                "porta_interna", "primo_contatto", "teca_serra", "seme_preso", "grande_porta",
                "postazione", "porta_tonda", "dialogo", "fuga", "groviglio_desto", "casco_tolto", "finale")
 
+# Il finale letto dal testo che il gioco scrive (finali.fav), e non dalla regola del ponte: una frase
+# per finale. «La prima nota» è «Vivi» con una frase in più, e si cerca per prima. Così una regola del
+# ponte rimasta indietro non passa (revisione 37, G2: dal 5 novembre il percorso prima-nota-in-stiva
+# mandava «vivi», e questa prova accettava qualunque finale dai percorsi che non portano il nome di uno).
+SEGNO_DEL_FINALE = (
+    ("prima-nota", "Due cose che non si sono mai conosciute"),
+    ("vivi", "Rotta ripresa. Carico: nessuno."),
+    ("stiva-piena", "Destinazione: Magazzino Quattro."),
+    ("doppio-fondo", "Nient'altro da dichiarare."),
+    ("mani-vuote", "Nessun evento da registrare."),
+)
+
+
+def finale_dal_testo(testo, esito):
+    """Il finale che il gioco ha scritto: la morte è «Due lettere», gli altri hanno la loro frase."""
+    if esito == "persa":
+        return "due-lettere"
+    testo = testo.replace("’", "'")
+    return next((nome for nome, segno in SEGNO_DEL_FINALE if segno in testo), None)
+
+
+def segni_dei_finali():
+    """Le frasi qui sopra sono ancora in finali.fav, ognuna nei finali che deve riconoscere."""
+    with open(os.path.join(RADICE, "relitto-silente", "finali.fav"), encoding="utf-8") as f:
+        regole = [r for r in f.read().splitlines() if ": vinci " in r]
+    problemi = []
+    for nome, segno in SEGNO_DEL_FINALE:
+        quante = sum(segno in r for r in regole)
+        # la riga del registro di «Vivi» chiude anche «La prima nota»
+        attese = 2 if nome == "vivi" else 1
+        if quante != attese:
+            problemi.append(f"la frase di «{nome}» («{segno}») è in {quante} finali di finali.fav, attesi {attese}")
+    return problemi
+
+
 # Gli eventi che scattano per passaggio di stato, per comando o per segno a sorte,
 # più quelli che il ponte ricava da sé (stanza, aria, soglie, contatori, dialogo).
 DERIVATI = ("inizio", "stanza", "boccaporto", "rientro", "discesa", "groviglio_prende", "casco_tolto", "voci",
@@ -81,7 +117,8 @@ def _nomi_della_tabella():
 
 
 def gioca(percorso, conta):
-    """Gioca un percorso dal ponte; restituisce (problemi, eventi in ordine, finale)."""
+    """Gioca un percorso dal ponte; restituisce (problemi, eventi in ordine, finale, esito, il testo
+    dell'ultimo turno)."""
     problemi, ordine, finale = [], [], None
     chiavi = None
     dati = json.loads(ponte.rel_percorso(percorso))
@@ -104,7 +141,8 @@ def gioca(percorso, conta):
             ordine.append(e["evento"])
             if e["evento"] == "finale":
                 finale = e.get("finale")
-    return problemi, ordine, finale, turno["esito"]
+    testo = " ".join(str(e.get("testo", "")) for e in turno["eventi"] if isinstance(e, dict))
+    return problemi, ordine, finale, turno["esito"], testo
 
 
 def sottosequenza(attesa, ordine):
@@ -195,11 +233,15 @@ def main():
     percorsi = sorted(f for f in glob.glob(os.path.join(QUI, "*.txt")) if leggi_attese(f))
     for percorso in percorsi:
         nome = os.path.basename(percorso)[:-4]
-        problemi, ordine, finale, esito_partita = gioca(percorso, conta)
+        problemi, ordine, finale, esito_partita, testo = gioca(percorso, conta)
         if esito_partita != "in_corso":
-            atteso = nome if nome in ponte.FINALI else finale
-            if finale != atteso or finale not in ponte.FINALI:
-                problemi.append(f"il finale riconosciuto è «{finale}», atteso «{atteso}»")
+            scritto = finale_dal_testo(testo, esito_partita)
+            if scritto is None:
+                problemi.append("il testo della fine non ha la frase di nessuno dei sei finali")
+            elif finale != scritto:
+                problemi.append(f"il ponte riconosce «{finale}», ma il testo del gioco è quello di «{scritto}»")
+            if finale not in ponte.FINALI or (nome in ponte.FINALI and finale != nome):
+                problemi.append(f"il finale riconosciuto è «{finale}», atteso «{nome if nome in ponte.FINALI else scritto}»")
         if nome == "vivi":
             mancanti = sottosequenza(ORDINE_VIVI, ordine)
             if mancanti:
@@ -212,6 +254,11 @@ def main():
                 print(f"     {p}")
         else:
             print(f"[OK] {riga}")
+
+    frasi = segni_dei_finali()
+    print(f"[{'NO' if frasi else 'OK'}] le frasi che dicono il finale, in finali.fav ({len(SEGNO_DEL_FINALE)})")
+    for p in frasi:
+        print(f"     {p}")
 
     rami = [r for r in (ramo(*x, conta) for x in RAMI) if r]
     print(f"[{'NO' if rami else 'OK'}] i rami ({len(RAMI)}): {', '.join(x[0] for x in RAMI)}")
@@ -266,7 +313,7 @@ def main():
         print()
         for nome, n in sorted(conta.items()):
             print(f"  {n:5}  {nome}")
-    sbagli = falliti + bool(rami) + bool(mai or ignoti) + bool(persi) + bool(perse) + bool(servizio) + bool(divergenze)
+    sbagli = falliti + bool(frasi) + bool(rami) + bool(mai or ignoti) + bool(persi) + bool(perse) + bool(servizio) + bool(divergenze)
     print(f"\nPercorsi: {len(percorsi)}; falliti: {falliti}. Eventi diversi: {len(conta)}; "
           f"eventi in tutto: {sum(conta.values())}.")
     return 1 if sbagli else 0

@@ -892,7 +892,10 @@ def _finale(m):
     if seme and risuonatore:
         return "doppio-fondo"
     if seme:
-        if (m.variabili.get("risonanze") or 0) >= 6 and m.variabili.get("nota") == "riconosciuta":
+        # la nota riconosciuta in sala macchine, oppure il sonaglio suonato e il re riconosciuto
+        # tornando in stiva (finali.fav, RN-F3: «la nota è riconosciuta oppure la nota è sonaglio»;
+        # revisione 37, G2: qui era rimasta la sola prima metà, e quel finale si registrava come «Vivi»)
+        if (m.variabili.get("risonanze") or 0) >= 6 and m.variabili.get("nota") in ("riconosciuta", "sonaglio"):
             return "prima-nota"
         return "vivi"
     return "stiva-piena" if risuonatore else "mani-vuote"
