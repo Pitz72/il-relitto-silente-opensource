@@ -2,7 +2,8 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta l’11 novembre 2026, dopo la revisione globale (documento 37).
+Aggiornato l’ultima volta l’11 novembre 2026, a notte, dopo i quattro momenti con un’animazione loro
+(documento 30, §9) guardati nell’eseguibile. Prima, lo stesso giorno, dopo la revisione globale (documento 37).
 Prima, il 7 novembre, nel pomeriggio, quando l’autore ha chiuso la sessione dopo aver
 mandato le quattro righe del computer di bordo: «Ok per ora ci fermiamo». Prima, il 6 novembre, dopo le otto frasi
 fatte del blocco G (i blocchi dalla A alla G sono scritti, con la taratura dell’aria, F1).
@@ -31,6 +32,8 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 
 ## Le regole fisse dell’autore
 
+- **I pezzi dello schermo si chiamano per quello che si vede**, mai con i nomi del codice (11 novembre: «mi dici
+  lente ma io non la vedo la lente»): «l’ovale in alto a destra», non «la lente».
 - **È ipovedente.** Faccio io ogni passo, dall’inizio alla fine: niente passi manuali, niente comandi da
   scrivere a mano, niente pagine di impostazioni da navigare. Per chiavi, password e token preparo uno
   script e gli lascio un solo comando, poi verifico io. Risposte brevi. Le decisioni una per volta, con
@@ -242,7 +245,7 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
    - **i momenti con un’animazione loro** (30, §9; l’11 novembre l’autore ha chiesto un’analisi e una proposta
      di miglioramenti estetici): **l’apparizione dell’Anziano è fatta e approvata** («l’animazione è bellissima»,
      e con le parole che compaiono solo alla fine: «perfetto così»), **e anche la sua dissolvenza nel seme**
-     («Sì, va bene»); **e la nascita della mappa stellare** (sua idea; rifatta lenta, senza scie e con due galassie: «animazione meravigliosa»), che poi resta nella lente del visore («lavoro eccellente»); **e la nave che si sveglia** quando torna l’energia («Sì, va bene»; 30, §9.5). I quattro momenti sono fatti; nessuno è stato visto nell’eseguibile, dove hanno il loro suono: è la prima cosa da guardare insieme. Nello stesso paragrafo
+     («Sì, va bene»); **e la nascita della mappa stellare** (sua idea; rifatta lenta, senza scie e con due galassie: «animazione meravigliosa»), che poi resta nella lente del visore («lavoro eccellente»); **e la nave che si sveglia** quando torna l’energia («Sì, va bene»; 30, §9.5). I quattro momenti sono fatti, e **l’autore li ha guardati nell’eseguibile, con il suono**, la sera dell’11 novembre (30, §9.6): «trovo che questo gioco abbia una componente emotiva importante». Un appunto solo: la nascita della mappa stellare va sonorizzata «in modo delicato» (quando si crea l’immagine, e il viaggio). Non sono in una beta. Nello stesso paragrafo
      la lista per l’interfaccia e l’estetica dell’intro;
    - i momenti 2.6–2.9: il cartello d’atto, l’ingresso nella protezione vitale, le crepe della fuga,
      l’ipossia;
@@ -273,6 +276,11 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 4. **Il finale** (revisione 25, E2): una schermata vera per il finale, invece della casella che scorre.
    L’autore ha detto «una eventuale finale»: si propone, e decide lui.
 5. **Il resto**, dopo:
+   - **la canzone dei titoli di coda, rifatta con ElevenLabs** (l’autore, 11 novembre 2026, a notte: «sarebbe
+     meraviglioso se rifacessimo la canzone dei titoli di coda con 11labs e il suo connettore magari come se
+     fosse una loro canzone, un inno alla vita scritto dagli alieni stessi, con una lingua inventata»). Il
+     documento 32, §3.8, la teneva rimandata per i crediti; oggi i titoli hanno «Voice in the Deep» di Lyria.
+     Da proporgli subito dopo il suono della mappa: la lingua, il testo, i crediti che servono;
    - **gli effetti e i suoni d’ambiente, rifatti** (l’autore, 7 novembre 2026: «ora teniamo buono questo
      environment sound ma credo che poi fx e suoni vadano rifatti, ma ci penseremo più in là»): dopo il blocco H
      e la beta, se ne riparla con lui (documento 35, §9);

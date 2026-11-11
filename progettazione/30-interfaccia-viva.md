@@ -226,7 +226,7 @@ Fatta l’11 novembre 2026 sulla figura di punti che c’era già (`app/src/gioc
 - **Le scelte di chi gioca**: con il movimento ridotto la figura c’è subito; nella scheda «Grafica» l’interruttore «Apparizioni» (acceso nei livelli pieno e leggero, spento nell’essenziale).
 - **Quanto costa**: misurato nel browser dello sviluppo a 1280 × 720, nessun fotogramma perso nei 4,6 secondi (276 fotogrammi, al più 16,9 ms l’uno). A gioco fermo non costa niente: dopo, il disegno è quello di prima.
 - **Per guardarla** nello sviluppo: `?gioco&percorso=vivi.txt&fino=66`; un clic sulla figura la fa apparire di nuovo.
-- **Non ancora** vista né ascoltata nell’eseguibile, con il canto.
+- **Vista e ascoltata** dall’autore nell’eseguibile, con il canto, la sera dell’11 novembre 2026 (§9.6).
 
 ### 9.3 Registro: la dissolvenza dell’Anziano
 
@@ -237,7 +237,7 @@ Fatta l’11 novembre 2026, dopo l’apparizione, sulla stessa figura (`Dialogo.
 - **La figura**: i bordi smettono di sfarsi; i punti partono dalla testa e dall’orlo per primi e girando si stringono in un punto all’altezza del petto, ognuno con la sua scia; la luce raccolta cresce con i punti che arrivano, scende piano in cima al sostegno, dove compare il seme, ci entra e si spegne. L’alone se ne va con la figura.
 - **Le parole dopo**, come nell’apparizione; un clic o un tasto la chiudono subito. Parte nello stesso disegno in cui il nodo diventa «dissolvenza» (lo stato derivato nel componente), così il testo nuovo non si vede prima del tempo.
 - **Dopo, la figura non c’è più**: nei nodi «dissolvenza» e «ultima voce» sul sostegno resta soltanto il seme, piccolo e scuro, anche senza animazioni (il movimento ridotto, «Apparizioni» spento, una partita ripresa a metà colloquio). Prima la figura restava a schermo.
-- **Non ancora** vista nell’eseguibile.
+- **Vista** dall’autore nell’eseguibile la sera dell’11 novembre 2026 (§9.6).
 
 ### 9.4 Registro: la nascita della mappa stellare
 
@@ -251,7 +251,7 @@ Fatta l’11 novembre 2026 (`app/src/gioco/momenti/`). Ci sono volute due versio
 - **Nella lente** (dell’autore: «dovresti sostituire l’immagine statica con il frame finale dell’animazione»; poi: «lavoro eccellente»). Sul Ponte, da quando la proiezione è accesa, la lente tiene l’ultimo fotogramma, fermo, disegnato dallo stesso codice (`disegnaMappa.ts`, da `visore/scansioni/MappaNellaLente.tsx`): è dove l’animazione, finendo, riporta la carta. I punti e le righe sono più grossi, perché lì è piccola. La scansione del Ponte resta soltanto per la sala spenta.
 - **Un clic o un tasto** la mandano al rientro. Con il movimento ridotto o con «Apparizioni» spento non c’è, e la lente mostra comunque la mappa.
 - **Le prove**: `app/prove/mappa.test.ts` (la carta dice quello che dice la storia; i tempi restano lenti). Nel browser dello sviluppo, a 1280 × 720, nessun fotogramma oltre i 40 millisecondi.
-- **Non ancora**: vista nell’eseguibile; un suono suo (oggi suona soltanto l’evento `postazione` della regia, che è breve).
+- **Vista** dall’autore nell’eseguibile la sera dell’11 novembre 2026 (§9.6). **Non ancora**: un suono suo (oggi suona soltanto l’evento `postazione` della regia, che è breve). È il suo unico appunto dopo averla vista: «andrebbe sonorizzato in modo delicato anche l’animazione della rotta, quando si crea l’immagine, il viaggio».
 
 ### 9.5 Registro: la nave che si sveglia
 
@@ -267,5 +267,15 @@ Fatta l’11 novembre 2026 (`app/src/gioco/momenti/tempiRisveglio.ts` e `Risvegl
 - **Un clic o un tasto** portano alle parole. Con il movimento ridotto o con «Apparizioni» spento non c’è; con «Vene vive» spento le vene restano ferme.
 - **Scartato**: il tremito dello schermo al brivido dello scafo. Lo dice già il suono, e chi gioca con la lente d’ingrandimento lo patirebbe.
 - **Le prove**: `app/prove/risveglio.test.ts`, sette. Nel browser dello sviluppo, a 1280 × 720, nessun fotogramma oltre i 40 millisecondi.
-- **Non ancora** vista nell’eseguibile: lì c’è il suono, e l’accordo fra i due si giudica soltanto lì.
+- **Vista** dall’autore nell’eseguibile, con il suono, la sera dell’11 novembre 2026 (§9.6).
+
+### 9.6 Registro: i quattro momenti nell’eseguibile
+
+La sera dell’11 novembre 2026 l’autore li ha guardati nell’eseguibile vero, costruito dal commit `9ce8aba`, con il suono.
+
+- **Come.** Quattro salvataggi di prova, uno subito prima di ogni momento (`strumenti/misure/salvataggi_momenti.py`: il posto 1 prima di «usa il cristallo sul generatore», il 2 prima di «usa la postazione», il 3 prima di «parla con l’anziano», il 4 prima di «[Chiudi gli occhi e lascia andare.]»), in una cartella a parte: i suoi salvataggi non si toccano. `strumenti/misure/momenti.mjs` apre l’eseguibile, salta i loghi e la dichiarazione, carica il posto 1 e resta a guardare; agli altri posti ci va lui, da «menu» e «Carica».
+- **Le misure**, a 1920 × 1080, mentre guardava: la nave che si sveglia, 10,6 secondi, 636 fotogrammi, il più lento di 17 millisecondi; la mappa stellare, 19,6 secondi, 1.176 fotogrammi, il più lento di 17 millisecondi (il passo dello schermo: nessun fotogramma perso); i tre colloqui con l’Anziano (145, 29 e 39 secondi), nessun fotogramma oltre i 50 millisecondi, due fra 34 e 50 in uno solo.
+- **Il giudizio**: «ho visto i quattro elementi animati e trovo che questo gioco abbia una componente emotiva importante».
+- **Un appunto solo**: «andrebbe sonorizzato in modo delicato anche l’animazione della rotta, quando si crea l’immagine, il viaggio». La mappa è l’unico dei quattro momenti senza un suono suo.
+- **Una cosa da ricordare parlando con lui.** Gli avevo scritto «alla fine guarda la lente», e non ha capito che cosa dovesse fare: «lente» è un nome del codice. I pezzi dello schermo si chiamano per quello che si vede: «l’ovale in alto a destra, sopra la scritta MULTISCANNER».
 
