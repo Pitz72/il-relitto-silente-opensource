@@ -398,7 +398,7 @@ export function PannelloOpzioni({ forma, opzioni, cambia, chiudi }: { forma: For
             {riga("Segnale sui fili", "segnaleFili", [[true, "sì"], [false, "no"]], "Ogni tanto una luce corre lungo il filo delle azioni.")}
             {riga("Riflessi sul vetro", "riflessi", [[true, "sì"], [false, "no"]], "Con la tuta: il riflesso del casco, e il fiato che appanna il vetro quando l’aria è poca.")}
             {riga("Sfocatura dietro i pannelli", "sfocatura", [[true, "sì"], [false, "no"]], "Con un pannello aperto, come questo, il gioco dietro si sfoca.")}
-            {riga("Apparizioni", "apparizioni", [[true, "sì"], [false, "no"]], "I momenti che hanno un’animazione loro: l’Anziano che prende forma, punto per punto, prima di parlare. Senza, la figura c’è subito.")}
+            {riga("Apparizioni", "apparizioni", [[true, "sì"], [false, "no"]], "I momenti della storia che hanno un’animazione loro, lenta: durano da pochi secondi a una ventina, e un clic li salta. Senza, tutto compare subito.")}
           </>
         )}
         {scheda === "audio" && (
