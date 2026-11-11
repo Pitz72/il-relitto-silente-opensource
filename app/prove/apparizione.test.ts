@@ -17,6 +17,18 @@ test("le volte dopo l'apparizione è breve", () => {
   assert.ok(DURATA.ritorno > 0 && DURATA.ritorno <= DURATA.primo / 2);
 });
 
+test("la dissolvenza è un gesto lento, ma non tiene ferme le parole più di sette secondi", () => {
+  assert.ok(DURATA.dissolvenza > DURATA.primo && DURATA.dissolvenza <= 7);
+});
+
+test("i nodi senza la figura sono quelli della storia", () => {
+  const fav = readFileSync(new URL("../../relitto-silente/ponte.fav", import.meta.url), "utf8");
+  const componente = readFileSync(new URL("../src/gioco/dialogo/Dialogo.tsx", import.meta.url), "utf8");
+  const nodi = /const SENZA_FIGURA = \[([^\]]+)\]/.exec(componente);
+  assert.ok(nodi, "Dialogo.tsx dice in quali nodi l'Anziano non c'è più");
+  for (const n of nodi[1].split(",").map((x) => x.trim().replace(/"/g, ""))) assert.ok(fav.includes(`al nodo "${n}" dice`), `il nodo «${n}» c'è ancora in ponte.fav`);
+});
+
 test("le apparizioni sono un effetto della scheda Grafica: accese di base, spente nel livello essenziale", () => {
   assert.equal(OPZIONI_DI_BASE.apparizioni, true);
   assert.equal(QUALITA.piena.apparizioni, true);

@@ -203,7 +203,7 @@ L’autore, dopo la revisione globale: «ci sono momenti che potrebbero richiede
 |---|---|---|---|
 | 9.a | **L’apparizione dell’Anziano** (dell’autore) | i punti della figura nascono sulle linee del pavimento, salgono girando intorno al sostegno e la chiudono dalla base alla testa, sul canto del primo contatto; le volte dopo, due secondi | **fatta e approvata** (§9.2) |
 | 9.b | **La mappa stellare** (dell’autore) | la struttura a stella al centro si accende, i punti salgono sulla cupola e riempiono il palco dietro il testo, la rotta si traccia dai tre soli fino al nostro, che si accende per ultimo; poi tutto si ritira nella lente del visore. Sei–otto secondi, una volta sola | da fare |
-| 9.c | **La dissolvenza dell’Anziano** | lo stesso movimento al contrario: al gesto «[Chiudi gli occhi e lascia andare.]» i punti scendono in un punto solo sul sostegno, e il punto diventa il seme | da fare |
+| 9.c | **La dissolvenza dell’Anziano** | lo stesso movimento al contrario: al gesto «[Chiudi gli occhi e lascia andare.]» i punti si stringono in un punto di luce, che scende sul sostegno e diventa il seme | **fatta e approvata** (§9.3) |
 | 9.d | **La nave che si sveglia** | quando torna l’energia una luce parte dal generatore e corre una volta in tutte le vene dello schermo, e la stanza cambia colore dietro di lei | da fare |
 
 Scartate: la Grande Porta e il primo passo sullo scafo, che hanno già la soglia dell’atto, con la sua musica e il suo cartello.
@@ -227,4 +227,15 @@ Fatta l’11 novembre 2026 sulla figura di punti che c’era già (`app/src/gioc
 - **Quanto costa**: misurato nel browser dello sviluppo a 1280 × 720, nessun fotogramma perso nei 4,6 secondi (276 fotogrammi, al più 16,9 ms l’uno). A gioco fermo non costa niente: dopo, il disegno è quello di prima.
 - **Per guardarla** nello sviluppo: `?gioco&percorso=vivi.txt&fino=66`; un clic sulla figura la fa apparire di nuovo.
 - **Non ancora** vista né ascoltata nell’eseguibile, con il canto.
+
+### 9.3 Registro: la dissolvenza dell’Anziano
+
+Fatta l’11 novembre 2026, dopo l’apparizione, sulla stessa figura (`Dialogo.tsx`: `dissolvenza`, `andato`, `seme`, `pavimento`). L’autore l’ha guardata nel browser dello sviluppo: «Sì, va bene».
+
+- **Segue il testo del nodo, riga per riga**, in 6,8 secondi: «Chiudo gli occhi. Quando li riapro appena, la figura si sta raccogliendo: i bordi rientrano, la luce si stringe in un punto, e il punto scende piano sul sostegno al centro della stanza. Lì adesso c’è il seme che avevo dato alla porta. La luce ci entra dentro, e si spegne.»
+- **Gli occhi**: un velo su tutto il colloquio (`.palpebre` in `dialogo.css`), sopra la figura e sotto le parole. Si chiude in tre decimi e mezzo, resta chiuso un momento, si riapre appena; poi resta socchiuso fino alla fine del colloquio. Dentro la tela si vedeva il bordo del riquadro: per questo è un elemento a sé.
+- **La figura**: i bordi smettono di sfarsi; i punti partono dalla testa e dall’orlo per primi e girando si stringono in un punto all’altezza del petto, ognuno con la sua scia; la luce raccolta cresce con i punti che arrivano, scende piano in cima al sostegno, dove compare il seme, ci entra e si spegne. L’alone se ne va con la figura.
+- **Le parole dopo**, come nell’apparizione; un clic o un tasto la chiudono subito. Parte nello stesso disegno in cui il nodo diventa «dissolvenza» (lo stato derivato nel componente), così il testo nuovo non si vede prima del tempo.
+- **Dopo, la figura non c’è più**: nei nodi «dissolvenza» e «ultima voce» sul sostegno resta soltanto il seme, piccolo e scuro, anche senza animazioni (il movimento ridotto, «Apparizioni» spento, una partita ripresa a metà colloquio). Prima la figura restava a schermo.
+- **Non ancora** vista nell’eseguibile.
 

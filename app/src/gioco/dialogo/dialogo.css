@@ -64,7 +64,7 @@
 /* a sinistra le parole, e sotto, uno per riga, i semi delle risposte */
 .dialogo .sinistra { position: absolute; left: 5cqw; top: 5cqw; width: 45cqw; bottom: 3.6cqw; display: flex; flex-direction: column; gap: 2.2cqw; transition: opacity 1s ease-out; }
 /* le parole aspettano la fine dell'apparizione dell'Anziano, e arrivano in dissolvenza (Dialogo.tsx) */
-.dialogo .sinistra.attesa { opacity: 0; }
+.dialogo .sinistra.attesa { opacity: 0; transition: none; }
 .dialogo .parole { flex: 1; min-height: 0; overflow-y: auto; }
 .dialogo .chi { font-style: italic; font-size: max(17px, 1.3cqw); color: var(--accento); margin-bottom: 1cqw; }
 .dialogo[data-forma="acciaio"] .chi { font-style: normal; font-family: var(--mono); font-size: max(12px, .8cqw); letter-spacing: .24em; text-transform: uppercase; }
@@ -99,4 +99,14 @@
 .dialogo[data-forma="acciaio"] .semi button { border-radius: .2em; font-family: var(--mono); font-size: max(13px, .9cqw); background: linear-gradient(var(--lamina-1), var(--lamina-2)); box-shadow: none; border-color: var(--bordo); }
 .dialogo[data-forma="acciaio"] .semi button:hover { border-color: var(--accento-2); }
 [data-movimento="ridotto"] .dialogo { animation: none; }
+/* Il congedo dell'Anziano: gli occhi di William. Un velo su tutto il colloquio, sopra la figura e sotto le
+   parole: al gesto si chiudono, restano chiusi un momento e si riaprono appena; poi restano socchiusi. */
+.dialogo .palpebre { position: absolute; inset: 0; background: #020404; opacity: .12; pointer-events: none; }
+.dialogo .palpebre.battito { animation: palpebre 1.4s linear both; }
+@keyframes palpebre {
+  0% { opacity: 0; animation-timing-function: ease-in; }
+  25% { opacity: .85; }
+  57% { opacity: .85; animation-timing-function: ease-out; }
+  100% { opacity: .12; }
+}
 .dialogo .s-parlato { font-style: normal; }

@@ -690,6 +690,8 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
             ridotto={ridotto}
             scegli={scegli}
             arrivo={opzioni.apparizioni ? arrivo : null}
+            nodo={turno.stato.nodo}
+            momenti={opzioni.apparizioni}
             riga={
               scritti ? (
                 <RigaComando inDialogo invia={inviaScritto} completa={() => setCompleta((n) => n + 1)} storia={storiaScritti.current} bloccata={!!pannello || !!domanda || cartello !== null} chiave={turno} />

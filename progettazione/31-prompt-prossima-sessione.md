@@ -241,8 +241,8 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 2. **Il resto dell’interfaccia** (documento 30):
    - **i momenti con un’animazione loro** (30, §9; l’11 novembre l’autore ha chiesto un’analisi e una proposta
      di miglioramenti estetici): **l’apparizione dell’Anziano è fatta e approvata** («l’animazione è bellissima»,
-     e con le parole che compaiono solo alla fine: «perfetto così»); restano la mappa stellare (sua idea), la
-     dissolvenza dell’Anziano nel seme e la nave che si sveglia quando torna l’energia. Nello stesso paragrafo
+     e con le parole che compaiono solo alla fine: «perfetto così»), **e anche la sua dissolvenza nel seme**
+     («Sì, va bene»); restano la mappa stellare (sua idea) e la nave che si sveglia quando torna l’energia. Nello stesso paragrafo
      la lista per l’interfaccia e l’estetica dell’intro;
    - i momenti 2.6–2.9: il cartello d’atto, l’ingresso nella protezione vitale, le crepe della fuga,
      l’ipossia;
