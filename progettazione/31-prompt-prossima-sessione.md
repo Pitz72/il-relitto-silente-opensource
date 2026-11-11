@@ -202,7 +202,10 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
    la riga del registro la dice la voce di servizio come computer di bordo (quattro parti nuove, `SV-42`…`SV-45`:
    generate dall’autore con Kira, tagliate e **nel gioco** il 7 novembre, documento 35, §11; la riga entra dopo il
    tempo di leggere il finale, 44 s in «Vivi»); la frase delle fasce corretta. **Non ancora in una beta** e non
-   ancora ascoltate da lui: l’ascolto è pronto in `consegne/Ascolto computer di bordo 2026-11-07/`. **La sessione
+   ancora ascoltate da lui: l’ascolto è pronto in `consegne/Ascolto computer di bordo 2026-11-07/`.
+   *11 novembre:* quell’ascolto metteva in «Vivi» la riga della «Stiva piena» (solo l’ascolto: il gioco è giusto);
+   rifatto con i cinque finali, ognuno con la sua riga e il suo ritardo (`consegne/Ascolto computer di bordo
+   2026-11-11/`, 5:09), e fatto suonare all’autore («riproduci tu le situazioni»). **La sessione
    si è chiusa qui** (7 novembre, pomeriggio: «Ok per ora ci fermiamo»). **Alla prossima:** chiedergli le note
    sulla beta.10; fargli sentire il computer di bordo (la consegna, già pronta); poi una beta con queste
    correzioni (la firma «W. T.», le fasce, il computer di bordo). Effetti e suoni d’ambiente rifatti, più avanti,
