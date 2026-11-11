@@ -59,7 +59,9 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 - **11 novembre 2026: il punto della situazione** (documento 36, chiesto dall’autore: tutto quello che è fatto e
   tutto quello che resta). Trovato rileggendo: **le prove su GitHub sono rosse** dai commit `34c936d` e `222f881`
   (7 novembre). `collaudo/eventi.py` importa `strumenti/audio/taglia_servizio.py`, che importa numpy, e `prove.yml`
-  non lo installa. Si corregge prima della beta 11, perché `rilascio.yml` fa le prove prima di costruire.
+  non lo installa. **Corretto lo stesso giorno** (`b62dbaf`, «Sì, correggile»): `nome_file` sta in
+  `voce_servizio.py`, che usa soltanto la libreria standard; le prove su GitHub sono di nuovo verdi, e la beta 11 si
+  può costruire.
 - **La versione** pubblicata è la **0.2.5-beta.10**, una pre-release nel canale di prova
   (`aggiornamenti-prova`), del 7 novembre: la voce di servizio. Prima: la beta.9 (7 novembre: la revisione
   narrativa e tutte le voci registrate), la beta.8 (30 ottobre: la voce di L.V. e il tema della Santa Maria

@@ -116,6 +116,10 @@ Conta per una ragione pratica: il flusso di rilascio fa le prove prima di costru
 stessa pagina GitHub avvisa di due cambiamenti suoi (le azioni su Node 20 a riposo, il passaggio a Ubuntu 26): per
 ora sono avvisi, non errori.
 
+**Corretto lo stesso giorno**, alla tua risposta «Sì, correggile» (commit `b62dbaf`): la prova adesso prende i nomi
+dei file da uno strumento leggero. Provata prima sul mio computer in un ambiente come quello di GitHub, poi su GitHub:
+tutte le prove sono di nuovo verdi.
+
 ## 5. Che cosa resta da fare, in ordine
 
 L’ordine è quello che hai deciso il 27 ottobre e il 3 novembre (prompt 31).
