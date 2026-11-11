@@ -2,7 +2,8 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 7 novembre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione dopo aver
+Aggiornato l’ultima volta l’11 novembre 2026, dopo la revisione globale (documento 37).
+Prima, il 7 novembre, nel pomeriggio, quando l’autore ha chiuso la sessione dopo aver
 mandato le quattro righe del computer di bordo: «Ok per ora ci fermiamo». Prima, il 6 novembre, dopo le otto frasi
 fatte del blocco G (i blocchi dalla A alla G sono scritti, con la taratura dell’aria, F1).
 Prima, il 3 novembre, a notte, l’autore aveva chiuso la sessione dopo la lettura integrale e la valutazione:
@@ -49,13 +50,23 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   La copia del motore in `motore/` non si corregge mai a mano: si rifà da un tag di Favella1.
 - **Il nome del motore è «Favella1».** La musica è fantascienza, mai giallo. Il gioco è da scrivania:
   niente impaginazioni da telefono, nessun testo sotto i 12 px.
-- Le prove su GitHub (`prove.yml`) devono restare verdi.
+- Le prove su GitHub (`prove.yml`) devono restare verdi. A fine sessione guardo l’esito dell’ultimo flusso
+  (`gh run list`): non si chiude con le prove rosse (revisione 37, M20: dal 7 all’11 novembre lo erano, e
+  nessuno lo sapeva).
 - **Il bilanciamento si misura su molte partite verosimili**, mai su una sola (5 novembre: «la combinazione che rende
   più verosimile il fatto che ce la possano fare»; e «se così vincono sempre tutti, dove sta la sfida?»):
   `collaudo/verosimili.py`, con la fuga giocata da principianti veri.
 
-## Dove siamo (7 novembre 2026)
+## Dove siamo (11 novembre 2026)
 
+- **11 novembre 2026, seconda sessione: la revisione globale** (documento 37, chiesta dall’autore: «criticità
+  gravissime, gravi, medie e lievi»). Nessuna gravissima; **3 gravi**, 26 medie, 40 lievi. Le gravi: dopo una
+  «Nuova partita» spariscono dallo schermo «diario» e «menu» (il foglio di stile dell’intro vale per tutta la
+  pagina; in tutte le beta); «La prima nota» riconosciuta in stiva è registrata come «Vivi» (una riga del ponte);
+  il congedo dell’Anziano si può disfare, e nella fuga gli si può riparlare da capo (tocca `ponte.fav`: decide
+  lui). **Niente è corretto**: le correzioni le sceglie l’autore, lotto per lotto (documento 37, §8). Lo stesso
+  giorno l’autore ha detto che la musica di Alirio Bruni è un dono al progetto, con libertà d’uso: va scritto nei
+  registri delle licenze (37, L26).
 - **11 novembre 2026: il punto della situazione** (documento 36, chiesto dall’autore: tutto quello che è fatto e
   tutto quello che resta). Trovato rileggendo: **le prove su GitHub sono rosse** dai commit `34c936d` e `222f881`
   (7 novembre). `collaudo/eventi.py` importa `strumenti/audio/taglia_servizio.py`, che importa numpy, e `prove.yml`
@@ -210,16 +221,16 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
    motore audio; nell’ascolto dura qualche secondo in più che nel gioco, perché `rendi_echi` non manda il casco tolto
    (nel gioco, al rientro in stiva, il colpo d’aria e il fiato che finisce). Rifare l’ascolto: «No». Se il respiro gli
    suona finto, è fra gli effetti da rifare più avanti (punto 5).
-   **La sessione dell’11 novembre si è chiusa qui** («fai una verifica finale generale e salva… Poi torno»): tutto su
-   GitHub, prove verdi. **Alla prossima:** le sue note sulle beta (dalla 5 alla 10) e quello che resta nell’intro;
-   poi la beta 11 (la firma «W. T.», le fasce, il computer di bordo, più le sue note). **La sessione
-   si è chiusa qui** (7 novembre, pomeriggio: «Ok per ora ci fermiamo»). **Alla prossima:** chiedergli le note
-   sulla beta.10; fargli sentire il computer di bordo (la consegna, già pronta); poi una beta con queste
-   correzioni (la firma «W. T.», le fasce, il computer di bordo). Effetti e suoni d’ambiente rifatti, più avanti,
-   quando ne riparla lui.
+   **La prima sessione dell’11 novembre si è chiusa qui** («fai una verifica finale generale e salva… Poi torno»):
+   tutto su GitHub, prove verdi. **La seconda è la revisione globale** (documento 37; vedi «Dove siamo»).
+   **Alla prossima:** prima di tutto chiedergli quali correzioni del documento 37 fare, cominciando dalle tre gravi
+   (G1 e G2 sono piccole e non toccano i `.fav`; G3 è una sua decisione sul testo); insieme, le sue note sulle beta
+   (dalla 5 alla 10) e quello che resta nell’intro (la M7 del documento 37 può esserne una parte); poi la beta 11
+   (la firma «W. T.», le fasce, il computer di bordo, le correzioni scelte, più le sue note). Effetti e suoni
+   d’ambiente rifatti, più avanti, quando ne riparla lui.
 
-1. **Le sue note sulle beta, dalla 5 alla 8.** Prima cosa: chiedergli come gli sono sembrate nel gioco vero,
-   con il suono, la prima persona e l’intro con la voce di L.V., e correggere quello che dice.
+1. **Le sue note sulle beta, dalla 5 alla 10.** Prima cosa: chiedergli come gli sono sembrate nel gioco vero,
+   con il suono, la prima persona, l’intro con la voce di L.V. e le voci registrate, e correggere quello che dice.
 2. **Il resto dell’interfaccia** (documento 30):
    - i momenti 2.6–2.9: il cartello d’atto, l’ingresso nella protezione vitale, le crepe della fuga,
      l’ipossia;
@@ -275,6 +286,7 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 | `progettazione/28-prompt-prossima-sessione.md` | il prompt di prima; il §1 tiene i dettagli della colonna sonora |
 | `progettazione/09-intro-storyboard.md`, `22-musica-con-lyria.md` | l’intro e la sua musica |
 | `progettazione/36-punto-della-situazione.md` | il punto della situazione dell’11 novembre 2026: che cosa è fatto, che cosa resta, che cosa aspetta l’autore |
+| `progettazione/37-revisione-globale.md` | la revisione globale dell’11 novembre 2026: 3 gravi, 26 medie, 40 lievi; il §8 è l’ordine consigliato, il §9 il registro delle correzioni |
 | `progettazione/33-revisione-narrativa.md` | la revisione narrativa: i 37 punti, il metodo, il registro delle decisioni, il calendario |
 | `progettazione/34-schede-personaggi.md` | le schede delle voci della nave (blocco B della revisione narrativa) |
 | `progettazione/32-voci-lv-e-anziano.md` | le voci di L.V. e dell’Anziano con ElevenLabs v4: l’analisi e le decisioni |

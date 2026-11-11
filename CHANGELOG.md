@@ -16,6 +16,7 @@ documenti di `progettazione/`.
 
 ### Aggiunto
 
+- **La revisione globale** (11 novembre 2026; `progettazione/37-revisione-globale.md`): le criticità per gravità (nessuna gravissima, 3 gravi, 26 medie, 40 lievi), con il modo in cui ogni voce è stata verificata e l’ordine consigliato. Non corregge niente del gioco. Nel prompt 31, la regola di guardare l’esito delle prove su GitHub a fine sessione.
 - **Il computer di bordo** (documento 35, §11). Le quattro righe del registro di bordo, generate dall’autore con Kira il 7 novembre 2026 (una presa di 0:52), tagliate da `taglia_servizio.py --nuove` (la seconda trascrizione fra 0,98 e 0,99) con la catena del computer di bordo: `SV-42`…`SV-45`, nel motore `Sv42`…`Sv45`, fra le risorse dell’app, in `audio/LICENZE.md` (quarantacinque parti, due prese) e nei riconoscimenti. `rendi_echi` ha la scena del finale «Vivi» con la riga che entra dopo 44 s. `voce_servizio.py` toglie `servizio-nuove.txt` quando non c’è più niente da generare.
 
 ### Cambiato
