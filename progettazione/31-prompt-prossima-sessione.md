@@ -72,8 +72,10 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   titoli di coda. Domani ti dico cosa ne faremo». **Nel gioco non è cambiato niente**: i titoli hanno ancora
   «Voice in the Deep». **La prossima sessione comincia da qui: chiedergli che cosa farne**, e non proporre
   di metterla nei titoli. Dei suoi 7.000 crediti ElevenLabs il connettore ne ha segnati 2.670. Prima di
-  chiudere ha chiesto lo stile, il testo e il titolo per provarla lui in Suno V6 (32, §3.11, in fondo): se
-  porta un file, va misurato e scritto nel registro della musica.
+  chiudere ha chiesto lo stile, il testo e il titolo per provarla lui in Suno V6 (32, §3.11, in fondo), e
+  l’ha portata subito (4:03, `CT-03-havela-suno.mp3`, accanto all’altra; misurata, nel registro): «dura più
+  di 4 minuti ma poi quando saranno finiti i titoli la sfumiamo. Anche questa, che è bellissima, tienila da
+  parte, domani decideremo il futuro di questi brani». **Le versioni da parte sono due**, e decide lui.
 - **11 novembre 2026, seconda sessione: la revisione globale** (documento 37, chiesta dall’autore: «criticità
   gravissime, gravi, medie e lievi»). Nessuna gravissima; **3 gravi**, 26 medie, 40 lievi. Le gravi: dopo una
   «Nuova partita» spariscono dallo schermo «diario» e «menu» (il foglio di stile dell’intro vale per tutta la
@@ -294,7 +296,8 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
      documento 32, §3.8, la teneva rimandata per i crediti; oggi i titoli hanno «Voice in the Deep» di Lyria.
      **Generata il 12 novembre: «Havela»** (32, §3.11), nella lingua «morbida» scelta da lui. Gli piace
      («il brano è molto bello»), ma **non va al posto di «Voice in the Deep»**: è tenuta da parte, fuori dal
-     gioco, e che cosa farne lo dice lui («Domani ti dico cosa ne faremo»);
+     gioco, e che cosa farne lo dice lui («Domani ti dico cosa ne faremo»). C’è anche la sua versione di
+     Suno V6, di 4:03, «bellissima», da parte anche lei («domani decideremo il futuro di questi brani»);
    - **gli effetti e i suoni d’ambiente, rifatti** (l’autore, 7 novembre 2026: «ora teniamo buono questo
      environment sound ma credo che poi fx e suoni vadano rifatti, ma ci penseremo più in là»): dopo il blocco H
      e la beta, se ne riparla con lui (documento 35, §9);

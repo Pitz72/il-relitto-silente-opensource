@@ -632,6 +632,21 @@ tonde diventano seconde voci), e `[End]` in fondo. Lo stile:
 Da escludere, se Suno lo chiede a parte: *drums, percussion, guitar, piano, pop, autotune, gregorian chant,
 tribal*. Se ne tiene una, il file e il prompt usato vanno nel registro della musica.
 
+**La versione di Suno** (12 novembre, nella notte). L’autore l’ha generata con lo stile e il testo qui sopra e
+l’ha portata subito: «dura più di 4 minuti ma poi quando saranno finiti i titoli la sfumiamo. Anche questa, che è bellissima, tienila da parte, domani decideremo il futuro di questi brani».
+Il file: `audio/musica-ia/CT/originali/CT-03-havela-suno.mp3`, fuori da git (nei suoi Download si chiama
+`request_31144_audio_b9848288ee144f0a9235a0d4937617c2.mp3`, ed è rimasto lì). Le misure:
+
+- 243,2 secondi (4:03), MP3 a 183 kbps, 48 kHz, stereo; −14,8 LUFS con 7,6 LU di escursione, picco reale
+  −1,2 dBFS: respira più di quella di ElevenLabs (3,9 LU);
+- sta intorno al sol (do, re, si, sol e mi: sol maggiore), nemmeno questa sul sol diesis;
+- comincia subito, senza silenzio; due passaggi piano, a 64–70 e a 98–112 secondi; piena da 120 a 190;
+- si assottiglia da 192 secondi e resta piano fino a 227; poi un’ultima onda grave (228–238) e la fine a 242;
+- nei tag ha il titolo e il testo, non il nome del servizio: che sia Suno V6 lo dice l’autore.
+
+Dura un minuto più dei titoli di oggi (2:58): se entra lì, la sua idea è sfumarla quando i titoli finiscono.
+**Tutte e due le versioni sono da parte**; che cosa farne lo decide lui.
+
 ## 4. L’ordine proposto
 
 1. **L.V., la voce.** L’autore approva la descrizione (§2.3); tre anteprime sul prologo; sceglie lui; si salva.
