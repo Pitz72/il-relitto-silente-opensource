@@ -2,7 +2,9 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta l’11 novembre 2026, a notte, dopo i quattro momenti con un’animazione loro
+Aggiornato l’ultima volta il 12 novembre 2026, nella notte, quando l’autore ha chiuso la sessione dopo aver
+ascoltato «Havela», l’inno degli alieni (documento 32, §3.11): «Domani ti dico cosa ne faremo. Per oggi ci
+fermiamo qui». Prima, l’11 novembre, a notte, dopo i quattro momenti con un’animazione loro
 (documento 30, §9) guardati nell’eseguibile. Prima, lo stesso giorno, dopo la revisione globale (documento 37).
 Prima, il 7 novembre, nel pomeriggio, quando l’autore ha chiuso la sessione dopo aver
 mandato le quattro righe del computer di bordo: «Ok per ora ci fermiamo». Prima, il 6 novembre, dopo le otto frasi
@@ -60,8 +62,18 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   più verosimile il fatto che ce la possano fare»; e «se così vincono sempre tutti, dove sta la sfida?»):
   `collaudo/verosimili.py`, con la fuga giocata da principianti veri.
 
-## Dove siamo (11 novembre 2026)
+## Dove siamo (12 novembre 2026)
 
+- **12 novembre 2026, nella notte: «Havela», l’inno degli alieni** (documento 32, §3.11). L’idea è
+  dell’autore (11 novembre): la canzone dei titoli di coda rifatta con ElevenLabs come un inno alla vita
+  scritto dagli alieni, in una lingua inventata. Ha scelto «la morbida» fra due lingue, e ha chiesto una
+  versione sola, senza prove. È generata (2:58, `audio/musica-ia/CT/originali/CT-02-havela.mp3`, fuori da
+  git), e lui l’ha ascoltata: «il brano è molto bello. Tienilo ma non sostituirlo a quello che c’è ora nei
+  titoli di coda. Domani ti dico cosa ne faremo». **Nel gioco non è cambiato niente**: i titoli hanno ancora
+  «Voice in the Deep». **La prossima sessione comincia da qui: chiedergli che cosa farne**, e non proporre
+  di metterla nei titoli. Dei suoi 7.000 crediti ElevenLabs il connettore ne ha segnati 2.670. Prima di
+  chiudere ha chiesto lo stile, il testo e il titolo per provarla lui in Suno V6 (32, §3.11, in fondo): se
+  porta un file, va misurato e scritto nel registro della musica.
 - **11 novembre 2026, seconda sessione: la revisione globale** (documento 37, chiesta dall’autore: «criticità
   gravissime, gravi, medie e lievi»). Nessuna gravissima; **3 gravi**, 26 medie, 40 lievi. Le gravi: dopo una
   «Nuova partita» spariscono dallo schermo «diario» e «menu» (il foglio di stile dell’intro vale per tutta la
@@ -280,7 +292,9 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
      meraviglioso se rifacessimo la canzone dei titoli di coda con 11labs e il suo connettore magari come se
      fosse una loro canzone, un inno alla vita scritto dagli alieni stessi, con una lingua inventata»). Il
      documento 32, §3.8, la teneva rimandata per i crediti; oggi i titoli hanno «Voice in the Deep» di Lyria.
-     Da proporgli subito dopo il suono della mappa: la lingua, il testo, i crediti che servono;
+     **Generata il 12 novembre: «Havela»** (32, §3.11), nella lingua «morbida» scelta da lui. Gli piace
+     («il brano è molto bello»), ma **non va al posto di «Voice in the Deep»**: è tenuta da parte, fuori dal
+     gioco, e che cosa farne lo dice lui («Domani ti dico cosa ne faremo»);
    - **gli effetti e i suoni d’ambiente, rifatti** (l’autore, 7 novembre 2026: «ora teniamo buono questo
      environment sound ma credo che poi fx e suoni vadano rifatti, ma ci penseremo più in là»): dopo il blocco H
      e la beta, se ne riparla con lui (documento 35, §9);

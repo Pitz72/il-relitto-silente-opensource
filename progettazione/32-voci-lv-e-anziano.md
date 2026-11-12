@@ -435,6 +435,10 @@ risentita da sola: «la
 canzone è meravigliosa, degna di un grande film di fantascienza evocativa e riflessiva. Approvato.» Resta nei
 titoli di coda; la prova con ElevenLabs, se un giorno si fa, è soltanto un confronto.
 
+**Aggiornamento del 12 novembre 2026.** Quella prova non si è fatta. Con i crediti nuovi l’autore ha chiesto
+un’altra canzone, l’inno degli alieni nella loro lingua: è il §3.11. Il nodo di questa prova resta nel suo
+spazio ElevenLabs, non generato.
+
 ### 3.9 Gli effetti sonori con ElevenLabs (idea, 2 novembre 2026)
 
 L’autore: «appuntiamoci anche che possiamo rifare tutto il reparto sound fx con 11labs, vedo che si possono fare
@@ -478,6 +482,155 @@ subito, con quello che c’è). Che cosa c’è nel gioco:
 
 Restano senza voce le altre 28 battute dell’Anziano (circa 780 parole: intorno ai 4.700 crediti per una presa):
 quando ci sono i crediti, si generano con la stessa voce e si aggiungono a `VOCI_ANZIANO` e ai pezzi `AN`.
+
+### 3.11 L’inno degli alieni, «Havela» (12 novembre 2026)
+
+L’autore, la notte dell’11 novembre, dopo aver guardato nell’eseguibile i quattro momenti animati: «sarebbe meraviglioso se rifacessimo la canzone dei titoli di coda con 11labs e il suo connettore magari come se fosse una loro canzone, un inno alla vita scritto dagli alieni stessi, con una lingua inventata».
+
+**Che cosa dice già il gioco.** Il canto c’è nella storia, e l’inno è quello: «Mettemmo quello che eravamo in un
+canto e in un seme, e facemmo il Grande Salto»; al congedo, «La nostra canzone è finita da tempo; a te resta del
+fiato. […] Vivi.»; con il Sintonizzatore, «le parole erano la parte più piccola»; sul fregio, «Vedemmo i tre soli
+sanguinare e non maledicemmo il cielo. Piantammo dove non avremmo raccolto. Salimmo sapendo di non arrivare. Non
+fu una fuga: fu una semina.» e «giardino: qui, se da qualche parte.» Il testo dell’inno è fatto soltanto di
+queste frasi.
+
+**La lingua.** Proposte due, con la stessa frase: «la morbida» (vocali e consonanti dolci) e «la dura»
+(consonanti secche, da rito). L’autore: «la morbida va bene». Le sue regole:
+
+- soltanto sillabe aperte; le consonanti sono l, m, n, r, s, v, h, e la t nel numero;
+- le parole piene hanno tre sillabe, come i tre soli;
+- «seme» e «canto» sono quasi la stessa parola (*selana*, *selano*), e «la semina» viene dal seme (*selanave*);
+- i verbi al passato, «noi», finiscono in *-ane* (*lovane*, piantammo); il comando è *havela*, «vivi», ed è
+  l’ultima parola dell’inno;
+- non ci sono congiunzioni: le frasi stanno una accanto all’altra.
+
+| Loro | Italiano | | Loro | Italiano |
+|---|---|---|---|---|
+| tire | tre | | sivane | vedemmo |
+| nime | uno, uno solo | | hurane | maledicemmo |
+| oruma | sole | | lovane | piantammo |
+| selana | seme | | homane | raccogliemmo |
+| selano | canto | | alane | salimmo |
+| selanave | semina | | revane | arrivammo |
+| menuri | giardino | | rosime | che sanguina |
+| ulame | cielo | | lemora | resta |
+| ahena | fiato | | veluna | finita |
+| sohura | fuga | | havela | vivi |
+| nahemo, nahema | noi, nostro | | na | non |
+| isena | a te | | eno | qui |
+
+**Il testo.** Nella prova mostrata all’autore la prima riga diceva «tre soli, tre semi»; nel gioco il seme è uno
+solo, e l’inno dice «un seme».
+
+| | Loro | Italiano |
+|---|---|---|
+| Strofa | Tire oruma, nime selana. | Tre soli, un seme solo. |
+| | Sivane oruma rosime, | Vedemmo i soli sanguinare, |
+| | na hurane ulame. | non maledicemmo il cielo. |
+| | Lovane, lovane. | Piantammo, piantammo. |
+| Ritornello | Nahemo selano, | Noi siamo un canto, |
+| | nahemo selana. | noi siamo un seme. |
+| | Havela, menuri, | Vivi, giardino, |
+| | havela. | vivi. |
+| Strofa | Lovane, na homane. | Piantammo, e non raccogliemmo. |
+| | Alane, na revane. | Salimmo, e non arrivammo. |
+| | Na sohura, na sohura: | Non fu una fuga, non fu una fuga: |
+| | selanave. | fu una semina. |
+| Ritornello | (uguale) | |
+| Congedo | Selano nahema veluna, | Il nostro canto è finito, |
+| | isena lemora ahena. | a te resta il fiato. |
+| | Menuri eno. | Il giardino è qui. |
+| | Havela. | Vivi. |
+
+**La generazione.** L’autore aveva 7.000 crediti; una versione intera ne chiedeva 4.450 di preventivo, quindi una
+sola, e senza la prova di trenta secondi che avevo proposto: «falla direttamente tu senza test e via». Dal
+connettore, `eleven_music_v2_5`, `duration_seconds` 178 (come «Voice in the Deep», perché il nastro dei titoli va
+con l’orologio della canzone), `lyrics_type` `custom`, una versione. Alla partenza il connettore ha segnato 2.670
+crediti, meno del preventivo; il saldo da qui non si legge. La descrizione, esatta:
+
+> A cinematic science-fiction end-credits song, slow (about 60 BPM), spacious and luminous: the song of life of an ancient, gentle people from very far away, tender like a lullaby and solemn like an anthem. Sung in an invented language, pronounced like Italian with pure open vowels and soft consonants, every syllable clear and unhurried. One calm, warm, low androgynous voice sings the verses alone, close and breathy; a small mixed choir joins softly in the choruses, in unison and open fifths, and grows warmer and brighter the second time. Under everything, from the first second to the last, a deep analog drone on an open fifth (G-sharp and D-sharp); a slow, wide analog pad; long crystalline glass tones, like a struck singing bowl, in the intro and in the outro; low strings with long bows from the second verse. A simple, memorable major pentatonic melody. No drums, no beat, no percussion, no guitar, no piano, no pop production, no autotune, no vocoder. Not gregorian, not church music, not tribal or ethnic; never suspense, never mystery, never horror. Huge, dark, long reverb. After the second chorus everything thins out; around 2:40 the solo voice sings the last word alone, then the drone fades into complete silence.
+
+Il testo dato al modello, esatto (i nomi delle sezioni fra quadre e le indicazioni fra graffe non si cantano):
+
+```
+[Intro]
+{instrumental: deep drone, slow glass tones}
+
+[Verse 1]
+{solo voice}
+Tire oruma, nime selana.
+Sivane oruma rosime,
+na hurane ulame.
+Lovane, lovane.
+
+[Chorus]
+{the choir joins softly}
+Nahemo selano,
+nahemo selana.
+Havela, menuri,
+havela.
+
+[Verse 2]
+{solo voice, low strings enter}
+Lovane, na homane.
+Alane, na revane.
+Na sohura, na sohura:
+selanave.
+
+[Chorus]
+{full choir, warm and bright}
+Nahemo selano,
+nahemo selana.
+Havela, menuri,
+havela.
+
+[Outro]
+{solo voice, almost alone}
+Selano nahema veluna,
+isena lemora ahena.
+Menuri eno.
+{voice alone}
+Havela.
+{the drone fades to silence}
+```
+
+**Il file.** `audio/musica-ia/CT/originali/CT-02-havela.mp3`, fuori da git come tutti gli `originali/`
+(l’impronta è nel registro della musica). Nello spazio ElevenLabs dell’autore è il nodo «Inno dei titoli di coda:
+Havela». Le misure:
+
+- 178,0 secondi, MP3 a 192 kbps, 48 kHz, stereo; −13,5 LUFS, con 3,9 LU di escursione (più forte e più uniforme
+  di «Voice in the Deep», che sta a −16,0 con 10,4); picco reale −0,9 dBFS;
+- **non è sul sol diesis** chiesto: sta sul la con il mi (la quinta vuota di la; il 45 e il 17 per cento
+  dell’energia), poi il do e il si. La tonalità scritta non è garantita, come per il canto (§3.7);
+- parte dal silenzio ed è piena da 8 secondi; la voce entra a 18; i ritornelli cominciano a 54 e a 119 secondi;
+  il congedo va da 146 a 168;
+- **resta piena fino a 170 secondi**, poi sfuma in cinque (silenzio a 175): il bordone lungo alla fine non c’è, e
+  l’ultima parola cantata da una voce sola non è verificata. Se un giorno entra nei titoli, `ARRIVO_S` in
+  `Titoli.tsx` (oggi 160,5) va ritarato a orecchio su questo file;
+- Whisper non conosce la lingua, ma in maori (che ha le sillabe aperte) sente le sillabe scritte: «Si vane oru
+  maro si me» per «Sivane oruma rosime», «selana», «sela nave». In italiano inventa («Grazie per la visione!»).
+
+**Il giudizio dell’autore** (12 novembre, nella notte, dopo averla ascoltata): «il brano è molto bello. Tienilo ma non sostituirlo a quello che c’è ora nei titoli di coda. Domani ti dico cosa ne faremo. Per oggi ci fermiamo qui». Quindi nei titoli di
+coda resta «Voice in the Deep»; «Havela» è da parte e non è nel gioco, né nei riconoscimenti né nella
+Dichiarazione sull’IA. Che cosa farne lo dice lui. Se entra nel gioco: la copia di lavoro in git con i suoi tag,
+il registro della musica, i riconoscimenti, la Dichiarazione, e le prove.
+
+**La stessa canzone per Suno.** Prima di chiudere, l’autore: «sono curioso di sapere come verrebbe in Suno V6.
+Scrivimi il prompt sonoro e il testo del brano e il titolo, cosi ci provo io manualmente». Il titolo è «Havela».
+Il testo è lo stesso, con le indicazioni fra quadre invece che fra graffe (in Suno le quadre non si cantano, e le
+tonde diventano seconde voci), e `[End]` in fondo. Lo stile:
+
+> Cinematic science-fiction end-credits hymn, slow 60 BPM, spacious and luminous, tender like a lullaby and solemn
+> like an anthem. Sung in an invented language with Italian pronunciation, pure open vowels, every syllable clear.
+> A calm, warm, low androgynous solo voice, close and breathy, sings the verses; a small mixed choir joins softly
+> in the choruses, in unison and open fifths. Deep analog drone on G-sharp, slow wide analog pad, long crystalline
+> glass tones like a singing bowl, low strings with long bows from the second verse. Simple major pentatonic
+> melody. No drums, no beat, no guitar, no piano, no pop production, no autotune. Not gregorian, not church music,
+> not tribal. Awe and vastness, never suspense, mystery or horror. Huge dark reverb. Ends with the solo voice
+> alone on the last word, then the drone fades to silence.
+
+Da escludere, se Suno lo chiede a parte: *drums, percussion, guitar, piano, pop, autotune, gregorian chant,
+tribal*. Se ne tiene una, il file e il prompt usato vanno nel registro della musica.
 
 ## 4. L’ordine proposto
 
