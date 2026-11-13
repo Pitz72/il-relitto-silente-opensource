@@ -88,10 +88,22 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   preparavo: «credo che la Santa Maria abbia gravi problemi di coerenza. Sto pensando se possa valere la pena
   rifarla in Blender con MCP di Claude Code. Se secondo te può valere la pena fermiamoci un attimo e ci
   ritorniamo con il modello». Gli ho detto di sì: i due still (`prua.webp`, `poppa.webp`) sono due navi
-  diverse nei particolari, e sono immagini piatte con la luce già dentro. **Blender non è installato** su
-  questa macchina, e il suo collegamento MCP non c’è. Alla prossima: la sua decisione su come fare il modello
-  (vedi sotto, l’ordine del lavoro, punto 3); poi, sul modello, le finestre d’ambra, i fanali, la spinta dei
-  reattori; poi il faro e la fotografia unica.
+  diverse nei particolari, e sono immagini piatte con la luce già dentro. **Blender 5.2.4 LTS è installato**
+  («Sì, prepara tu»; `%LOCALAPPDATA%\Programs\Blender\5.2.4\`, il pacchetto ufficiale, firma verificata) e
+  **provato**: disegna senza finestra, con la scheda video. **Il collegamento MCP non c’è**: il controllo di
+  sicurezza della sessione non mi ha lasciato eseguire né registrare `mcp-for-blender` (codice di terzi), e
+  non si aggira; i tre comandi che può lanciare lui sono nel documento 09, §14. Non serve per lavorare:
+  Blender si guida con script del progetto.
+- **La nave va progettata, e la scheda c’è già.** L’autore: «Non lo so quale è l’immagine vera della Santa
+  Maria […] Forse potrebbe essere ideale progettarla proprio, disegnare delle schematiche». Nel progetto del
+  seguito ci sono la scheda canonica dello scafo (`05B_SchedaNaveEsterno.md`, ratificata da lui il 31 agosto
+  2026), la tavola approvata (`turnaround_approvato_2026-09-01.png`) e la mappa degli interni
+  (`05_MappaNaveSantaMaria.md`). Manca la geometria, e **i due giochi non raccontano la stessa pianta** (nel
+  Relitto la sala macchine è sotto la stiva; nel seguito è sullo stesso ponte). La proposta, nel documento
+  09, §14: la scheda unica con le contraddizioni da sciogliere, poi le schematiche, poi il modello fatto da
+  script. **Alla prossima: la sua risposta**, e se il progetto della nave sta in questo repository o in un
+  posto comune ai due giochi; poi, sul modello, le finestre d’ambra, i fanali, la spinta dei reattori; poi il
+  faro e la fotografia unica.
 - **12 novembre 2026, nella notte: «Havela», l’inno degli alieni** (documento 32, §3.11). L’idea è
   dell’autore (11 novembre): la canzone dei titoli di coda rifatta con ElevenLabs come un inno alla vita
   scritto dagli alieni, in una lingua inventata. Ha scelto «la morbida» fra due lingue, e ha chiesto una
@@ -295,10 +307,11 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
    - due decisioni sue: E7, la cornice sugli schermi 16:10; E4, la modalità scritta.
 3. **L’intro, perfezionata**:
    - **l’estetica, con Fable 5.2** (documento 09, §14; cominciata il 13 novembre): ~~il cielo~~, fatto;
-     **la Santa Maria nella luce**, ferma finché non c’è il modello in Blender (l’idea è dell’autore; serve
-     Blender installato e il suo collegamento MCP a Claude Code; il modello deve essere la stessa nave degli
-     still canonici: scafo grigio consumato, strisce arancioni, TSC-1972 · SANTA MARIA, i pannelli sui
-     fianchi, quattro reattori a poppa, il faro; dal modello si rendono le due riprese dell’intro, da davanti
+     **la Santa Maria nella luce**, ferma finché non c’è il modello in Blender (l’idea è dell’autore;
+     Blender c’è, il collegamento MCP no e non serve; prima il progetto della nave: la scheda unica dai due
+     giochi, le schematiche, poi il modello fatto da script, vedi 09, §14; il modello deve essere la nave
+     della scheda 05B del seguito: scafo grigio consumato, strisce arancioni, TSC-1972 · SANTA MARIA, i pannelli sui
+     fianchi, quattro scarichi a poppa, il faro; dal modello si rendono le due riprese dell’intro, da davanti
      di tre quarti per B e da poppa per E, con la luce dello scafo, delle finestre e dei reattori in immagini
      separate, perché il motore dell’intro le animi; prima di sostituire gli still, il confronto accanto a
      quelli di oggi, e decide lui); poi **il faro** (un cono di luce calda nella polvere, che si perde prima
