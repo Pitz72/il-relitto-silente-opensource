@@ -1,8 +1,11 @@
 # 39 — Le schematiche della Santa Maria
 
 13 novembre 2026. Secondo passo del progetto della nave (documento 38). L’autore ha approvato le otto proposte
-del documento 38, §6 («Sì, tutte»); queste tavole le mettono in misura. Sono una **prima stesura, da
-approvare**: quando l’autore le ha viste e corrette, dalle stesse misure si costruisce il modello in Blender.
+del documento 38, §6 («Sì, tutte»); queste tavole le mettono in misura. Erano una prima stesura, da approvare.
+
+> **Approvate il 13 novembre 2026.** L’autore le ha guardate e ha risposto: «Sì vanno benissimo». Valgono
+> anche le parti inventate qui (più sotto). Dalle stesse misure si costruisce il modello in Blender: è il
+> terzo passo, non ancora cominciato. Sulle tavole resta la scritta «da approvare» finché non si ridisegnano.
 
 ## Le tavole
 

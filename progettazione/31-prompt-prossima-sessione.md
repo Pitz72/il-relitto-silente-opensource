@@ -115,10 +115,16 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   `strumenti/nave/schematiche.py` a partire da `strumenti/nave/misure.py`, l’unica tabella delle misure, la
   stessa che costruirà il modello. Il documento 39 dice che cosa viene dalle decisioni, che cosa dai testi e
   che cosa è inventato lì (il passaggio di servizio lungo il fianco destro, i locali senza nome, la forma del
-  muso, dove stanno faro, radar, antenna e arpioni, la pedana del portello d’uscita). **Alla prossima: che
-  cosa dice delle tavole**, e se il progetto della nave sta in questo repository o in un posto comune ai due
-  giochi; poi il modello in Blender dalle stesse misure; poi, sul modello, l’oblò d’ambra, i fanali, la
-  spinta dei reattori; poi il faro e la fotografia unica.
+  muso, dove stanno faro, radar, antenna e arpioni, la pedana del portello d’uscita). **Le tavole sono
+  approvate**, con le parti inventate («Sì vanno benissimo ma facciamo una pausa», 13 novembre): la sessione
+  si è fermata qui. **Alla prossima: il terzo passo, il modello in Blender** (5.2.4 LTS, senza finestra, con
+  script del progetto in `strumenti/nave/`, a partire da `misure.py`): prima lo scafo e le sue parti, poi la
+  superficie sulla scheda 05B del seguito (le toppe, il fasciame, le staffe), poi le due riprese dell’intro
+  (da davanti di tre quarti per B, da poppa per E) con le luci separate (lo scafo, l’oblò d’ambra, i fanali,
+  la spinta dei quattro scarichi), messe accanto agli still di oggi perché decida lui; poi il faro e la
+  fotografia unica. Da chiedergli quando capita: se il progetto della nave sta in questo repository o in un
+  posto comune ai due giochi (per ora è qui); e il cielo nuovo dell’intro, che non ha ancora visto
+  nell’eseguibile.
 - **12 novembre 2026, nella notte: «Havela», l’inno degli alieni** (documento 32, §3.11). L’idea è
   dell’autore (11 novembre): la canzone dei titoli di coda rifatta con ElevenLabs come un inno alla vita
   scritto dagli alieni, in una lingua inventata. Ha scelto «la morbida» fra due lingue, e ha chiesto una
