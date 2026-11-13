@@ -108,10 +108,17 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   vetrato; N3 la poppa dello still, quattro scarichi in due coppie, e dentro il reattore con i due motori; N4
   un’uscita sola, a poppa sul fianco destro; N5 la nave affiancata al relitto sul fianco destro; N6 l’oblò
   piccolo della cuccetta resta; N7 il corridoio c’è, e il Relitto non lo nomina; N8 80 × 13 × 12 metri). Le
-  proposte non chiedono di cambiare il testo di nessuno dei due giochi. **Alla prossima: le sue decisioni
-  sulle otto voci**, e se il progetto della nave sta in questo repository o in un posto comune ai due giochi;
-  poi le schematiche, poi il modello; poi, sul modello, l’oblò d’ambra, i fanali, la spinta dei reattori; poi
-  il faro e la fotografia unica.
+  proposte non chiedono di cambiare il testo di nessuno dei due giochi. **Le ha approvate tutte** («Sì,
+  tutte», 13 novembre): valgono come canone della nave per i due giochi. **Il secondo passo è cominciato: le
+  schematiche, prima stesura** (`39-schematiche-della-santa-maria.md`; tre tavole in
+  `progettazione/39-schematiche/`: fuori, dentro, sotto e di traverso), disegnate da
+  `strumenti/nave/schematiche.py` a partire da `strumenti/nave/misure.py`, l’unica tabella delle misure, la
+  stessa che costruirà il modello. Il documento 39 dice che cosa viene dalle decisioni, che cosa dai testi e
+  che cosa è inventato lì (il passaggio di servizio lungo il fianco destro, i locali senza nome, la forma del
+  muso, dove stanno faro, radar, antenna e arpioni, la pedana del portello d’uscita). **Alla prossima: che
+  cosa dice delle tavole**, e se il progetto della nave sta in questo repository o in un posto comune ai due
+  giochi; poi il modello in Blender dalle stesse misure; poi, sul modello, l’oblò d’ambra, i fanali, la
+  spinta dei reattori; poi il faro e la fotografia unica.
 - **12 novembre 2026, nella notte: «Havela», l’inno degli alieni** (documento 32, §3.11). L’idea è
   dell’autore (11 novembre): la canzone dei titoli di coda rifatta con ElevenLabs come un inno alla vita
   scritto dagli alieni, in una lingua inventata. Ha scelto «la morbida» fra due lingue, e ha chiesto una
@@ -382,7 +389,8 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 | `progettazione/09-intro-storyboard.md`, `22-musica-con-lyria.md` | l’intro e la sua musica |
 | `progettazione/36-punto-della-situazione.md` | il punto della situazione dell’11 novembre 2026: che cosa è fatto, che cosa resta, che cosa aspetta l’autore |
 | `progettazione/37-revisione-globale.md` | la revisione globale dell’11 novembre 2026: 3 gravi, 26 medie, 40 lievi; il §8 è l’ordine consigliato, il §9 il registro delle correzioni |
-| `progettazione/38-la-santa-maria.md`, `38-la-santa-maria-schizzo.png` | il progetto della nave, primo passo: la scheda unica dai due giochi, le otto contraddizioni con le proposte, lo schizzo (`strumenti/nave/schizzo.py`) |
+| `progettazione/38-la-santa-maria.md`, `38-la-santa-maria-schizzo.png` | il progetto della nave, primo passo: la scheda unica dai due giochi, le otto decisioni (13 novembre 2026), lo schizzo (`strumenti/nave/schizzo.py`) |
+| `progettazione/39-schematiche-della-santa-maria.md`, `39-schematiche/` | il secondo passo: le tre tavole e da dove viene ogni misura; `strumenti/nave/misure.py` è la tabella, `schematiche.py` le disegna |
 | `progettazione/33-revisione-narrativa.md` | la revisione narrativa: i 37 punti, il metodo, il registro delle decisioni, il calendario |
 | `progettazione/34-schede-personaggi.md` | le schede delle voci della nave (blocco B della revisione narrativa) |
 | `progettazione/32-voci-lv-e-anziano.md` | le voci di L.V. e dell’Anziano con ElevenLabs v4: l’analisi e le decisioni |

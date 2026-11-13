@@ -150,6 +150,10 @@ spina, in un’altra di lato; in una cabina e archivio stanno sullo stesso fianc
 
 ## 6. Le contraddizioni da sciogliere
 
+> **Decise il 13 novembre 2026.** L’autore ha letto le otto proposte e ha risposto: «Sì, tutte». Da qui in
+> avanti le otto voci valgono come canone della nave, per tutti e due i giochi. Le schematiche (documento 39)
+> partono da qui.
+
 Sono quelle che cambiano il disegno. Per ognuna: che cosa dicono le fonti, e che cosa propongo. Ho cercato, dove
 si può, la lettura in cui **hanno ragione tutti e due i giochi**.
 
@@ -226,8 +230,8 @@ torna tutto, senza cambiare il testo.
 Nel Relitto c’è, «grande quanto una mano», e serve (è il lato da cui la massa non si vede). Nel seguito la
 cabina non ha finestre dichiarate, e l’immagine non ne mostra.
 
-**Propongo: c’è.** Sul fianco sinistro, piccolo com’è scritto. L’immagine della cabina guarda tre pareti: può
-stare sulla quarta.
+**Propongo: c’è.** Sul fianco sinistro, piccolo com’è scritto: nella parete della branda, che è quella dello
+scafo, dove l’immagine ha la rete e la mensola.
 
 ### N7 · Il corridoio
 
@@ -271,11 +275,12 @@ anni», detto da un recuperante.
 
 ## 8. Dopo
 
-1. **Le decisioni dell’autore** sulle otto voci del §6, e dove sta il progetto della nave: in questo repository,
-   o in un posto comune ai due giochi.
+1. ~~Le decisioni dell’autore sulle otto voci del §6~~: prese il 13 novembre 2026 («Sì, tutte»). Resta da
+   dire dove sta il progetto della nave: in questo repository, o in un posto comune ai due giochi.
 2. **Le schematiche**: fianco, pianta, fronte, poppa, sezioni, con le stanze dentro lo scafo e le misure;
    disegnate da uno strumento a partire da una tabella di misure (`strumenti/nave/`), la stessa che poi
-   costruisce il modello.
+   costruisce il modello. **La prima stesura è fatta** lo stesso giorno: documento 39, tre tavole, da
+   approvare.
 3. **Il modello in Blender** (5.2.4 LTS, guidato da script del progetto), e da lì le due riprese dell’intro con
    le luci separate: lo scafo, l’oblò d’ambra, i fanali, la spinta dei quattro scarichi.
 4. Solo alla fine, e solo se l’autore lo vuole: le frasi dei documenti del seguito che le decisioni hanno
