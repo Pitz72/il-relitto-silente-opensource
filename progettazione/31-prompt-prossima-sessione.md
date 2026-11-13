@@ -101,9 +101,17 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   (`05_MappaNaveSantaMaria.md`). Manca la geometria, e **i due giochi non raccontano la stessa pianta** (nel
   Relitto la sala macchine è sotto la stiva; nel seguito è sullo stesso ponte). La proposta, nel documento
   09, §14: la scheda unica con le contraddizioni da sciogliere, poi le schematiche, poi il modello fatto da
-  script. **Alla prossima: la sua risposta**, e se il progetto della nave sta in questo repository o in un
-  posto comune ai due giochi; poi, sul modello, le finestre d’ambra, i fanali, la spinta dei reattori; poi il
-  faro e la fotografia unica.
+  script. L’autore: «Sì, comincia». **Il primo passo è fatto: la scheda unica** (`38-la-santa-maria.md`, con lo
+  schizzo `38-la-santa-maria-schizzo.png`, disegnato da `strumenti/nave/schizzo.py`): quello su cui i due
+  giochi sono d’accordo, la nave in ognuno dei due, le immagini, e **otto contraddizioni, ognuna con una
+  proposta** (N1 un ponte solo, con la sala macchine più in basso; N2 un solo oblò tondo a prua, niente muso
+  vetrato; N3 la poppa dello still, quattro scarichi in due coppie, e dentro il reattore con i due motori; N4
+  un’uscita sola, a poppa sul fianco destro; N5 la nave affiancata al relitto sul fianco destro; N6 l’oblò
+  piccolo della cuccetta resta; N7 il corridoio c’è, e il Relitto non lo nomina; N8 80 × 13 × 12 metri). Le
+  proposte non chiedono di cambiare il testo di nessuno dei due giochi. **Alla prossima: le sue decisioni
+  sulle otto voci**, e se il progetto della nave sta in questo repository o in un posto comune ai due giochi;
+  poi le schematiche, poi il modello; poi, sul modello, l’oblò d’ambra, i fanali, la spinta dei reattori; poi
+  il faro e la fotografia unica.
 - **12 novembre 2026, nella notte: «Havela», l’inno degli alieni** (documento 32, §3.11). L’idea è
   dell’autore (11 novembre): la canzone dei titoli di coda rifatta con ElevenLabs come un inno alla vita
   scritto dagli alieni, in una lingua inventata. Ha scelto «la morbida» fra due lingue, e ha chiesto una
@@ -374,6 +382,7 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 | `progettazione/09-intro-storyboard.md`, `22-musica-con-lyria.md` | l’intro e la sua musica |
 | `progettazione/36-punto-della-situazione.md` | il punto della situazione dell’11 novembre 2026: che cosa è fatto, che cosa resta, che cosa aspetta l’autore |
 | `progettazione/37-revisione-globale.md` | la revisione globale dell’11 novembre 2026: 3 gravi, 26 medie, 40 lievi; il §8 è l’ordine consigliato, il §9 il registro delle correzioni |
+| `progettazione/38-la-santa-maria.md`, `38-la-santa-maria-schizzo.png` | il progetto della nave, primo passo: la scheda unica dai due giochi, le otto contraddizioni con le proposte, lo schizzo (`strumenti/nave/schizzo.py`) |
 | `progettazione/33-revisione-narrativa.md` | la revisione narrativa: i 37 punti, il metodo, il registro delle decisioni, il calendario |
 | `progettazione/34-schede-personaggi.md` | le schede delle voci della nave (blocco B della revisione narrativa) |
 | `progettazione/32-voci-lv-e-anziano.md` | le voci di L.V. e dell’Anziano con ElevenLabs v4: l’analisi e le decisioni |
