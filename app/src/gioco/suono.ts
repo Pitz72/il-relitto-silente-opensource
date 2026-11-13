@@ -52,6 +52,10 @@ export const titoliSuono = () => manda({ tipo: "musica", valore: "titoli" });
 /** Tutta la musica sfuma in tanti secondi: la fine dei titoli, nel nero insieme alla canzone. */
 export const sfumaSuono = (secondi: number) => manda({ tipo: "sfuma", valore: secondi });
 
+/** L'inno degli alieni, «Havela» (mondo/musica.rs, `inno`): `true` lo fa partire dal colloquio con l'Anziano (il letto
+ *  sfuma), `false` lo interrompe (il letto torna). Quando l'inno finisce da solo, il letto torna da sé. */
+export const innoSuono = (si: boolean) => manda({ tipo: "inno", valore: si });
+
 /** Un tocco su un pulsante: il motore sceglie la voce (acciaio, membrana, strappo) dallo
  *  stato. Nello sviluppo i gesti si segnano in `window.__tocchi`, per vederli senza Tauri. */
 export function suonaTocco(g: Gesto): Promise<void> {

@@ -12,7 +12,7 @@
     "prebuild": "node scripts/sincronizza.mjs",
     "build": "tsc --noEmit && vite build",
     "anteprima": "vite preview",
-    "prove": "node --test prove/azione.test.ts prove/intro.test.ts prove/atmosfere.test.ts prove/grammatica.test.ts prove/ramo.test.ts prove/visore.test.ts prove/diario.test.ts prove/menu.test.ts prove/tocco.test.ts prove/scritti.test.ts prove/stili.test.ts prove/apparizione.test.ts prove/mappa.test.ts prove/risveglio.test.ts",
+    "prove": "node --test prove/azione.test.ts prove/intro.test.ts prove/atmosfere.test.ts prove/grammatica.test.ts prove/ramo.test.ts prove/visore.test.ts prove/diario.test.ts prove/menu.test.ts prove/tocco.test.ts prove/scritti.test.ts prove/stili.test.ts prove/apparizione.test.ts prove/mappa.test.ts prove/risveglio.test.ts prove/inno.test.ts",
     "tauri": "tauri"
   },
   "dependencies": {

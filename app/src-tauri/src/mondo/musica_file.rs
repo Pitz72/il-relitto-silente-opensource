@@ -56,6 +56,8 @@ pub enum Pezzo {
     T2,
     /// i titoli di coda: la canzone «Voice in the Deep» (22, §5.9)
     CT,
+    /// «Havela», l’inno degli alieni (32, §3.11): ElevenLabs, in una lingua inventata; si ascolta dal colloquio con l’Anziano
+    HV,
     /// l’intro (09, §13): «The Santa Maria Theme» di Alirio Bruni, dal Mistero della Santa Maria
     SM,
     /// l’intro: la voce di L.V., tutta la traccia in un file, che si suona a pezzi
@@ -309,7 +311,7 @@ pub const VOCI_SV: [(Pezzo, &str); 45] = [
 ];
 
 impl Pezzo {
-    pub const TUTTI: [Pezzo; 128] = [
+    pub const TUTTI: [Pezzo; 129] = [
         Pezzo::M1a,
         Pezzo::M1b,
         Pezzo::S2,
@@ -328,6 +330,7 @@ impl Pezzo {
         Pezzo::T1,
         Pezzo::T2,
         Pezzo::CT,
+        Pezzo::HV,
         Pezzo::SM,
         Pezzo::LV,
         Pezzo::CA,
@@ -515,6 +518,7 @@ impl Pezzo {
             Pezzo::T1 => ("T", "T-01-hull-of-the-ancient.mp3"),
             Pezzo::T2 => ("T", "T-02-held-by-the-dark.mp3"),
             Pezzo::CT => ("CT", "CT-01-voice-in-the-deep.mp3"),
+            Pezzo::HV => ("CT", "CT-02-havela.mp3"),
             Pezzo::SM => ("SM", "SM-01-santa-maria.mp3"),
             Pezzo::LV => ("LV", "LV-01-la-traccia.mp3"),
             Pezzo::CA => ("AN", "AN-00-canto.mp3"),

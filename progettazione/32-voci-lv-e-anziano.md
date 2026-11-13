@@ -666,3 +666,42 @@ Dura un minuto più dei titoli di oggi (2:58): se entra lì, la sua idea è sfum
 | D-V3 | Il canto prima delle parole, al primo contatto con l’Anziano | **Deciso** il 2 novembre: sì, il canto di ElevenLabs, una volta per partita (§3.7, §3.10). |
 | D-V4 | La descrizione della voce dell’Anziano | **Decisa** il 2 novembre: la bozza rivista del §3.4; scelta la terza anteprima, «Edoardo Straniero». |
 | D-V5 | L’Anziano con la voce subito, o con la versione doppiata? | **Deciso** il 2 novembre: subito, con le tre battute approvate; le altre quando ci sono i crediti (§3.10). |
+
+### 3.12 «Ascolta il canto»: l'inno nel gioco (13 novembre 2026)
+
+La mattina del 13 novembre l'autore ha deciso che cosa farne dei due inni: «dei due inni che abbiamo creato voglio che nel
+gioco ci sia un momento di ascolto e il brano scelto è quello che dura di meno». Il più corto è quello di ElevenLabs
+(178,0 s, contro 243,2 di Suno): **entra «Havela» di ElevenLabs**; la versione di Suno resta da parte. I titoli di
+coda non cambiano.
+
+**Dove.** Ha scelto «dentro la partita», con le parole e la traduzione. Il posto che il testo prepara già è il nodo
+«musica» del colloquio con l'Anziano: «aggancia […] il canto del primo momento, basso, che non si era mai fermato.»
+L'autore: «noi abbiamo già la musica sotto la voce dell'Anziano, non voglio togliere quella che c'è. Poi sì, è giusto
+che il giocatore possa interrompere», e ha approvato il comando «Ascolta il canto».
+
+**Come è fatto.**
+- **Il comando**, sotto le parole dell'Anziano, solo al nodo «musica» (`Dialogo.tsx`): è un controllo dell'app e non una
+  risposta della storia, così i `.fav` restano congelati. Chi non lo preme non sente niente di diverso.
+- **L'ascolto** (`Inno.tsx`, `testoInno.ts`): il dialogo si scurisce, in alto «Havela», poi le strofe una alla volta,
+  ogni riga nella loro lingua e sotto l'italiano. Un clic, un tasto qualunque o «Smetti di ascoltare» lo chiudono; a
+  schermo intero nessun tasto arriva al gioco. Al ritorno il fuoco è sul comando.
+- **Il suono** (`Musica::inno`, comando `inno`): il letto dell'Anziano sfuma in tre secondi mentre l'inno entra; finito
+  l'inno, o interrotto, il letto del nodo (il terzo) torna. Non suonano insieme: i letti stanno sul re, e il bordone
+  dell'inno è su sol♯ e re♯, a un semitono. L'inno si decodifica già quando si arriva al nodo «musica» (circa 30 MB,
+  liberati con gli altri pezzi), così non c'è attesa. Passa dal cursore «Musica».
+- **I tempi** delle strofe sono misurati sul file (la voce entra a 18 s, i ritornelli a 55 e a 119,5, il congedo a
+  148; dopo 170 sfuma); dentro ogni strofa, le righe sono a orecchio. Ogni riga resta a schermo fino alla fine della
+  strofa, quindi qualche secondo di scarto non si vede. Se l'orecchio dell'autore dice altro, i numeri stanno in
+  `testoInno.ts`.
+- **Le scelte che restano**: il livello dell'inno (oggi come «Voice in the Deep», 0 dB sopra il lettore), che si
+  decide ascoltandolo nell'eseguibile; se «Havela» entri anche nei titoli di coda (no, per ora).
+
+**Il testo mostrato** è quello del §3.11, con la traduzione accanto. Dice che «havela» vuol dire «vivi»: l'autore ne
+era avvertito.
+
+**Registro e prove.** Il file è `audio/musica-ia/CT/CT-02-havela.mp3` (in git e nel pacchetto), scheda `HV` del registro
+della musica; il riconoscimento dice «ElevenLabs Music», uso «Ascolta il canto». Prove: tre nel motore (`inno` in
+`musica.rs`: prende il posto del letto e il letto torna; l'interruzione; senza colloquio o senza file non parte) e
+`app/prove/inno.test.ts` (i numeri uguali nel motore e nell'app, il file nel pacchetto, le strofe, il testo). Guardato
+nel browser dello sviluppo (`?gioco&percorso=prima-nota.txt&fino=128`): il comando, l'ascolto, l'interruzione con un tasto;
+il suono no, perché fuori da Tauri tace. **Non ascoltato nell'eseguibile e non in una beta.**

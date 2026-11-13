@@ -14,6 +14,7 @@ import type { SceltaModello } from "../../azione/modello";
 import type { Blocco, Segmento } from "../lamina/grammatica";
 import { generatore } from "../../intro/glifi";
 import { DURATA, type Arrivo, type Momento } from "./apparizione";
+import Inno from "./Inno";
 import "./dialogo.css";
 
 interface Props {
@@ -44,6 +45,9 @@ const CHI: Record<string, string> = { anziano: "l’Anziano", yusuf: "Yusuf", ec
 
 export default function Dialogo({ personaggio, blocchi, detto, scelte, forma, ridotto, scegli, riga, arrivo, nodo = null, momenti = true }: Props) {
   const primoSeme = useRef<HTMLButtonElement>(null);
+  const tastoAscolta = useRef<HTMLButtonElement>(null);
+  // «Ascolta il canto»: al nodo «musica» chi vuole ascolta l'inno degli alieni per intero (Inno.tsx)
+  const [ascolto, setAscolto] = useState(false);
   const chiave = blocchi.map((b) => b.sorgente).join("|");
   // L'apparizione si decide quando il colloquio si apre, e non cambia con le battute. Le parole compaiono
   // soltanto ad apparizione finita, in dissolvenza (l'autore, 11 novembre 2026): prima c'è solo la figura
@@ -111,6 +115,13 @@ export default function Dialogo({ personaggio, blocchi, detto, scelte, forma, ri
           ))}
         </div>
       </div>
+      {personaggio === "anziano" && nodo === "musica" && (
+        <div className="ascolta">
+          <button ref={tastoAscolta} type="button" onClick={() => setAscolto(true)}>
+            Ascolta il canto
+          </button>
+        </div>
+      )}
       {riga ?? (
       <nav className="semi" aria-label="Le risposte">
         {scelte.map((s, i) => (
@@ -122,6 +133,15 @@ export default function Dialogo({ personaggio, blocchi, detto, scelte, forma, ri
       </nav>
       )}
       </div>
+      {ascolto && (
+        <Inno
+          ridotto={ridotto}
+          finito={() => {
+            setAscolto(false);
+            setTimeout(() => tastoAscolta.current?.focus({ preventScroll: true }), 0);
+          }}
+        />
+      )}
     </section>
   );
 }

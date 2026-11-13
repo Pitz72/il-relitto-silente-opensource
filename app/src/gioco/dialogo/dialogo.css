@@ -110,3 +110,59 @@
   100% { opacity: .12; }
 }
 .dialogo .s-parlato { font-style: normal; }
+
+/* «Ascolta il canto» (documento 32, §3.11): al nodo «musica», sotto le parole dell'Anziano */
+.dialogo .ascolta { flex: none; }
+.dialogo .ascolta button {
+  display: inline-flex;
+  font-size: max(16px, 1.15cqw);
+  color: var(--testo);
+  padding: .65em 1.4em;
+  min-height: 40px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--accento) 55%, transparent);
+  background: color-mix(in srgb, var(--lamina-1) 80%, transparent);
+  box-shadow: 0 0 1.6cqw var(--alone);
+  transition: border-color .3s, box-shadow .3s;
+}
+.dialogo .ascolta button:hover { border-color: var(--accento-2); box-shadow: 0 0 2.4cqw color-mix(in srgb, var(--accento-2) 30%, transparent); }
+.dialogo .ascolta button::before { content: "♪"; margin-right: .7em; color: var(--accento); }
+
+/* l'ascolto: tutto il dialogo si scurisce, e restano le parole del canto, grandi e al centro */
+.inno {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5cqw 8cqw 3.6cqw;
+  background: radial-gradient(ellipse at 50% 45%, color-mix(in srgb, var(--fondo-1) 96%, var(--vena) 4%), var(--fondo-2) 75%);
+  cursor: pointer;
+  animation: inno-entra 2.4s ease-out both;
+}
+@keyframes inno-entra { from { opacity: 0; } to { opacity: 1; } }
+.inno[data-ridotto="si"] { animation: none; }
+.inno-testata { text-align: center; }
+.inno-titolo { font-style: italic; font-size: max(30px, 3cqw); color: var(--accento); letter-spacing: .04em; }
+.inno-nota { font-family: var(--mono); font-size: max(13px, .85cqw); letter-spacing: .14em; color: var(--tenue); margin-top: .7cqw; }
+.inno-righe { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; }
+.inno-strofa { display: flex; flex-direction: column; align-items: center; gap: 1.8cqw; text-align: center; animation: inno-strofa 1.6s ease-out both; }
+@keyframes inno-strofa { from { opacity: 0; } to { opacity: 1; } }
+.inno[data-ridotto="si"] .inno-strofa { animation: none; }
+.inno-riga { margin: 0; display: flex; flex-direction: column; gap: .4cqw; animation: inno-riga 2.2s ease-out both; }
+@keyframes inno-riga { from { opacity: 0; transform: translateY(.6cqw); } to { opacity: 1; transform: none; } }
+.inno[data-ridotto="si"] .inno-riga { animation: none; }
+.inno-loro { font-style: italic; font-size: max(24px, 2.7cqw); color: var(--testo); line-height: 1.3; }
+.inno-it { font-size: max(18px, 1.7cqw); color: var(--tenue); line-height: 1.4; }
+.inno-smetti {
+  font-size: max(15px, 1cqw);
+  color: var(--tenue);
+  padding: .55em 1.3em;
+  min-height: 40px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--vena) 30%, transparent);
+  background: color-mix(in srgb, var(--lamina-1) 70%, transparent);
+}
+.inno-smetti:hover, .inno-smetti:focus-visible { color: var(--testo); border-color: var(--accento-2); }

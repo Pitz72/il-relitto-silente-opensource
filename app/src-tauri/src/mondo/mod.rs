@@ -147,6 +147,8 @@ pub enum Comando {
     Musica(Brano),
     /// tutta la musica sfuma in tanti secondi (la fine dei titoli di coda, nel nero)
     Sfuma(f32),
+    /// l'inno degli alieni, dal colloquio con l'Anziano: `true` «Ascolta il canto», `false` lo interrompe
+    Inno(bool),
     // ---- il prototipo dei tre ambienti (la pagina di prova, i rendering)
     Ambiente(Ambiente),
     /// la cifra dell’aria, da 0 a 100
@@ -747,6 +749,7 @@ impl Mondo {
             }
             Comando::Musica(b) => self.musica.avvia(b),
             Comando::Sfuma(s) => self.musica.sfuma(s),
+            Comando::Inno(si) => self.musica.inno(si),
             Comando::Ambiente(a) => self.prototipo(a),
             Comando::Aria(v) => self.aria_prototipo(v),
             Comando::Nave(n) => {

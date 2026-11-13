@@ -193,7 +193,7 @@ USO_MUSICA = {
     "A1": "l'Anziano: il primo letto", "A2": "l'Anziano: il secondo letto", "A3": "l'Anziano: il terzo letto",
     "A4": "l'Anziano: il quarto letto", "C1": "il finale «Vivi»", "C2": "il finale «La prima nota»",
     "C3": "il finale «La stiva piena»", "C4": "il finale «Doppio fondo»", "C5": "il finale «Due lettere»",
-    "T": "il tema", "CT": "i titoli di coda", "SM": "l'intro", "AN": "l'Anziano: il canto del primo contatto",
+    "T": "il tema", "CT": "i titoli di coda", "HV": "«Ascolta il canto», dal colloquio con l'Anziano", "SM": "l'intro", "AN": "l'Anziano: il canto del primo contatto",
 }
 # Chi ha fatto un brano, se non è l'autore del gioco.
 AUTORI_MUSICA = {"SM": "Alirio Bruni"}

@@ -64,6 +64,15 @@ const CANTO_LETTO: f32 = 4.0;
 const CANTO_VOCE: f32 = 4.6;
 /// Una battuta comincia poco dopo il suo testo.
 const VOCE_DOPO: f32 = 0.4;
+/// «Havela», l'inno degli alieni (32, §3.11), che si ascolta dal nodo «musica» del colloquio con l'Anziano
+/// (la pagina offre «Ascolta il canto»). Quanto dura il file, in secondi: la pagina fa scorrere le parole su
+/// questo tempo (la prova `app/prove/inno.test.ts` tiene uguali i due numeri).
+pub const INNO_DURATA: f32 = 178.0;
+/// L'inno entra piano, mentre il letto dell'Anziano sfuma, e quando lo si interrompe se ne va in due secondi.
+const INNO_ENTRA: f32 = 3.0;
+const INNO_FINE: f32 = 2.0;
+/// Il livello dell'inno sopra quello del lettore: come la canzone dei titoli di coda.
+const LIVELLO_INNO: f32 = 0.0;
 
 const MAX_PROGRAMMA: usize = 256;
 const MAX_COLPI_MUSICA: usize = 32;
@@ -545,6 +554,8 @@ pub struct Musica {
     voce: Lettore,
     /// il canto del primo contatto si sente una volta sola
     canto_sentito: bool,
+    /// l'inno degli alieni suona (il letto dell'Anziano è sfumato, e tornerà quando l'inno finisce o lo si interrompe)
+    inno: bool,
 }
 
 impl Musica {
@@ -572,6 +583,7 @@ impl Musica {
             in_file: false,
             voce: Lettore::nuovo(sr),
             canto_sentito: false,
+            inno: false,
         }
     }
 
@@ -625,6 +637,7 @@ impl Musica {
     /// Tutta la musica sfuma in `s` secondi, quella dei file e quella sintetizzata, e poi tace:
     /// la fine lenta dei titoli di coda, che va nel nero insieme alla canzone.
     pub fn sfuma(&mut self, s: f32) {
+        self.inno = false;
         self.azzera_programma();
         self.brano = Brano::Silenzio;
         self.file.tace(s);
@@ -642,6 +655,7 @@ impl Musica {
     /// Un brano nuovo: il vecchio sfuma sotto di lui. Se ci sono i file del brano suonano quelli;
     /// se no (o se uno non si decodifica) suona il brano sintetizzato.
     pub fn avvia(&mut self, brano: Brano) {
+        self.inno = false;
         self.azzera_programma();
         self.brano = brano;
         self.visitati = 0;
@@ -914,6 +928,7 @@ impl Musica {
     /// `canto`: il dialogo si apre (non un caricamento nel mezzo), e al primo contatto, una volta
     /// sola, prima delle parole si sente il canto, la sua lingua (32, §3.3 e §3.7).
     pub fn anziano_entra(&mut self, nodo: &str, voce: Option<Pezzo>, canto: bool) {
+        self.inno = false;
         self.azzera_programma();
         self.brano = Brano::Anziano;
         self.visitati = 0;
@@ -933,6 +948,7 @@ impl Musica {
             for l in LETTI {
                 self.file.precarica(l);
             }
+            self.prepara_inno(nodo);
             self.in_file = true;
             let letto = Az::Letto(letto_del_nodo(nodo).unwrap_or(Pezzo::A1));
             if canta {
@@ -965,7 +981,9 @@ impl Musica {
             return;
         }
         self.voce.tace(0.3);
+        self.inno = false;
         if self.in_file {
+            self.prepara_inno(nodo);
             self.letto_del_nodo(nodo);
             self.dice(voce, VOCE_DOPO);
             return;
@@ -996,6 +1014,34 @@ impl Musica {
             self.p(8.0, Az::Letto(Pezzo::A1));
         } else if let Some(p) = letto_del_nodo(nodo) {
             self.esegui(Az::Letto(p));
+        }
+    }
+
+    /// Al nodo «musica» l'inno si decodifica già, perché «Ascolta il canto» lo trovi pronto (sono circa 30 MB,
+    /// che si lasciano andare con gli altri pezzi quando il colloquio finisce).
+    fn prepara_inno(&mut self, nodo: &str) {
+        if nodo == "musica" && self.file.disponibile(&[Pezzo::HV]) {
+            self.file.precarica(Pezzo::HV);
+        }
+    }
+
+    /// «Ascolta il canto» (`si`) o l'interruzione di chi ascolta (`!si`). Il letto dell'Anziano non si toglie: sfuma
+    /// mentre l'inno suona (i letti stanno sul re, l'inno ha il suo bordone su sol♯ e re♯: insieme batterebbero),
+    /// e torna quando l'inno finisce o lo si ferma. Funziona solo dentro il colloquio, con i file.
+    pub fn inno(&mut self, si: bool) {
+        if si {
+            if self.brano != Brano::Anziano || !self.in_file || self.inno || !self.file.disponibile(&[Pezzo::HV]) {
+                return;
+            }
+            self.azzera_programma();
+            self.esegui(Az::Tace(INNO_ENTRA));
+            let r = Richiesta { pezzo: Pezzo::HV, da: 0.0, a: None, entra: INNO_ENTRA, dopo: Dopo::Niente, incrocio: 0.0, esce: INNO_FINE * 3.0, livello: LIVELLO_INNO };
+            self.file.avvia(r);
+            self.inno = true;
+        } else if self.inno {
+            self.inno = false;
+            self.file.tace(INNO_FINE);
+            self.esegui(Az::Letto(letto_del_nodo("musica").unwrap_or(Pezzo::A3)));
         }
     }
 
@@ -1031,6 +1077,7 @@ impl Musica {
         if self.brano != Brano::Anziano {
             return;
         }
+        self.inno = false;
         self.azzera_programma();
         self.voce.tace(1.5);
         self.esegui(Az::Tace(6.0));
@@ -1130,6 +1177,11 @@ impl Musica {
             // i file del brano sono finiti
             self.brano = Brano::Silenzio;
             self.in_file = false;
+        }
+        // l'inno è arrivato in fondo (o non si è potuto decodificare): il letto dell'Anziano ritorna
+        if self.inno && !self.file.vivo() {
+            self.inno = false;
+            self.esegui(Az::Letto(letto_del_nodo("musica").unwrap_or(Pezzo::A3)));
         }
         self.t += dt as f64;
         while self.prossimo < self.programma.len() && self.programma[self.prossimo].0 <= self.t {
@@ -1834,6 +1886,64 @@ mod prove_file {
         rendi(&mut m, 12.0);
         assert!(!m.lettore().attivo());
         assert_eq!(m.brano(), Brano::Silenzio);
+    }
+
+    /// Il colloquio con l'Anziano, fermo al nodo «musica», con l'inno in biblioteca (dodici secondi di una nota sola).
+    fn colloquio_all_inno() -> Musica {
+        let mut m = con_pezzi(&[(Pezzo::A1, 200.0, 80.0), (Pezzo::A2, 300.0, 80.0), (Pezzo::A3, 400.0, 80.0), (Pezzo::A4, 500.0, 80.0)]);
+        m.anziano_entra("benvenuto", None, false);
+        // entrando il colloquio lascia andare quello che non serve ai suoi letti: l'inno si decodifica al nodo «musica»
+        // (nel gioco `precarica`, qui lo si mette in biblioteca dopo)
+        m.lettore().biblioteca.as_mut().unwrap().inserisci(Pezzo::HV, seno_a(700.0, 0.3, 12.0));
+        rendi(&mut m, 6.0);
+        m.anziano_nodo("musica", None);
+        let x = rendi(&mut m, 12.0);
+        assert!(goertzel(sec(&x, 7.0, 11.5), 400.0) > 1e-6, "al nodo «musica» non suona il suo letto");
+        m
+    }
+
+    #[test]
+    fn l_inno_prende_il_posto_del_letto_e_a_fine_inno_il_letto_ritorna() {
+        let mut m = colloquio_all_inno();
+        m.inno(true);
+        let y = rendi(&mut m, 32.0);
+        // il letto sfuma e l'inno entra: mai insieme (i letti sono sul re, l'inno sul sol diesis: batterebbero)
+        assert!(goertzel(sec(&y, 3.5, 5.5), 700.0) > 1e-6, "l'inno non suona");
+        assert!(goertzel(sec(&y, 3.5, 5.5), 400.0) < 1e-8, "il letto suona insieme all'inno");
+        // l'inno finisce da solo, e il letto dell'Anziano torna
+        assert!(goertzel(sec(&y, 24.0, 30.0), 400.0) > 1e-6, "finito l'inno il letto non torna");
+        assert!(goertzel(sec(&y, 24.0, 30.0), 700.0) < 1e-8, "l'inno non è finito");
+        assert_eq!(m.brano(), Brano::Anziano);
+    }
+
+    #[test]
+    fn chi_interrompe_l_inno_riavere_il_letto() {
+        let mut m = colloquio_all_inno();
+        m.inno(true);
+        rendi(&mut m, 6.0);
+        m.inno(false);
+        let z = rendi(&mut m, 12.0);
+        assert!(goertzel(sec(&z, 3.0, 6.0), 700.0) < 1e-8, "l'inno non si è fermato");
+        assert!(goertzel(sec(&z, 8.0, 11.5), 400.0) > 1e-6, "interrotto l'inno il letto non torna");
+        // fermarlo di nuovo non cambia niente
+        m.inno(false);
+        let w = rendi(&mut m, 4.0);
+        assert!(rms_db(&w) > -45.0);
+    }
+
+    #[test]
+    fn senza_il_colloquio_o_senza_il_file_l_inno_non_parte() {
+        // fuori dal colloquio
+        let mut m = con_pezzi(&[(Pezzo::HV, 700.0, 12.0)]);
+        m.inno(true);
+        assert!(!m.lettore().attivo());
+        // dentro il colloquio, ma senza il file dell'inno
+        let mut m = con_pezzi(&[(Pezzo::A1, 200.0, 80.0), (Pezzo::A2, 300.0, 80.0), (Pezzo::A3, 400.0, 80.0), (Pezzo::A4, 500.0, 80.0)]);
+        m.anziano_entra("musica", None, false);
+        rendi(&mut m, 10.0);
+        m.inno(true);
+        let x = rendi(&mut m, 6.0);
+        assert!(goertzel(sec(&x, 1.0, 5.0), 400.0) > 1e-6, "senza l'inno il letto deve restare");
     }
 
     /// Fa suonare `secondi`: il mono dei file e quello della voce dell’Anziano.
