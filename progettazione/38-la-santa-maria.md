@@ -6,6 +6,11 @@ Maria abbia gravi problemi di coerenza» e «Non lo so quale è l’immagine ver
 tutto con generatori di immagine non c’è mai stata una coerenza tra navi e tra nave e interno. Forse potrebbe
 essere ideale progettarla proprio, disegnare delle schematiche».
 
+> **Una nave sola, per tutti i progetti.** L’autore, il 13 novembre 2026, chiudendo la sessione: «la nave che
+> stiamo lavorando sarà la nave in tutti i progetti». La Santa Maria di questo documento e del 39 è il canone
+> ovunque compaia: nel Relitto Silente, nel *Mistero della Santa Maria*, nel cortometraggio, in quello che
+> verrà. Il progetto della nave sta qui, e gli altri progetti la prendono da qui.
+
 Questo documento **non decide niente**. Mette in fila quello che i due giochi e le immagini approvate dicono
 della nave come oggetto (§2–§5), elenca le contraddizioni che contano per disegnarla, ognuna con una proposta
 (§6), e dice che cosa nessuno ha mai scritto (§7). Le decisioni sono dell’autore. Lo schizzo
@@ -275,8 +280,8 @@ anni», detto da un recuperante.
 
 ## 8. Dopo
 
-1. ~~Le decisioni dell’autore sulle otto voci del §6~~: prese il 13 novembre 2026 («Sì, tutte»). Resta da
-   dire dove sta il progetto della nave: in questo repository, o in un posto comune ai due giochi.
+1. ~~Le decisioni dell’autore sulle otto voci del §6~~: prese il 13 novembre 2026 («Sì, tutte»). E la nave
+   vale per tutti i progetti (vedi in cima): il progetto resta in questo repository.
 2. **Le schematiche**: fianco, pianta, fronte, poppa, sezioni, con le stanze dentro lo scafo e le misure;
    disegnate da uno strumento a partire da una tabella di misure (`strumenti/nave/`), la stessa che poi
    costruisce il modello. **La prima stesura è fatta** lo stesso giorno: documento 39, tre tavole, da

@@ -81,7 +81,8 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   com’era sono in `consegne/Cinematica 2026-11-13 - com'è oggi/`). **Fatto il cielo**: la Via Lattea fredda
   delle copertine, le stelle con grandezze vere, il fondo blu notte che stacca il fuso nero, il bagliore solo
   dalle luci; calcolato una volta sola, e un fotogramma dello spazio costa da tre a cinque volte meno.
-  **Non l’ha ancora visto nell’eseguibile**; non è in una beta. Il punto «il relitto come materia» è
+  **Approvato dalle immagini** a fine sessione («è molto buono e quindi va bene»); nell’eseguibile non l’ha
+  ancora visto, e non è in una beta. Il punto «il relitto come materia» è
   ritirato (il testo lo vuole nero assoluto).
 - **La Santa Maria è ferma, in attesa di un modello.** L’autore ha chiesto la spinta dei reattori di poppa
   («se si può metterei un effetto di propulsione dai reattori che si vedono dietro») e poi, mentre la
@@ -122,9 +123,12 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   superficie sulla scheda 05B del seguito (le toppe, il fasciame, le staffe), poi le due riprese dell’intro
   (da davanti di tre quarti per B, da poppa per E) con le luci separate (lo scafo, l’oblò d’ambra, i fanali,
   la spinta dei quattro scarichi), messe accanto agli still di oggi perché decida lui; poi il faro e la
-  fotografia unica. Da chiedergli quando capita: se il progetto della nave sta in questo repository o in un
-  posto comune ai due giochi (per ora è qui); e il cielo nuovo dell’intro, che non ha ancora visto
-  nell’eseguibile.
+  fotografia unica. Chiudendo la sessione ha deciso due cose. **Il cielo nuovo è approvato**, dalle immagini:
+  «Il cielo non l’ho visto nel gioco ma dalle immagini è molto buono e quindi va bene» (non è ancora in una
+  beta). E **«la nave che stiamo lavorando sarà la nave in tutti i progetti»**: la Santa Maria dei documenti
+  38 e 39 è il canone ovunque compaia (questo gioco, il *Mistero della Santa Maria*, il cortometraggio, quello
+  che verrà). Il progetto resta in questo repository finché non dice altro; gli altri progetti la prendono da
+  qui. «Salva tutto e ci vediamo in una prossima sessione».
 - **12 novembre 2026, nella notte: «Havela», l’inno degli alieni** (documento 32, §3.11). L’idea è
   dell’autore (11 novembre): la canzone dei titoli di coda rifatta con ElevenLabs come un inno alla vita
   scritto dagli alieni, in una lingua inventata. Ha scelto «la morbida» fra due lingue, e ha chiesto una
