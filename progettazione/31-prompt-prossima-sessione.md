@@ -162,7 +162,7 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   non lo installa. **Corretto lo stesso giorno** (`b62dbaf`, «Sì, correggile»): `nome_file` sta in
   `voce_servizio.py`, che usa soltanto la libreria standard; le prove su GitHub sono di nuovo verdi, e la beta 11 si
   può costruire.
-- **La versione** pubblicata è la **0.2.5-beta.10**, una pre-release nel canale di prova
+- **La versione** pubblicata è la **0.2.5-beta.11** (13 novembre 2026: i quattro momenti animati, il suono della mappa, il cielo dell’intro, il computer di bordo, le correzioni della revisione 37 e «Ascolta il canto»), una pre-release nel canale di prova
   (`aggiornamenti-prova`), del 7 novembre: la voce di servizio. Prima: la beta.9 (7 novembre: la revisione
   narrativa e tutte le voci registrate), la beta.8 (30 ottobre: la voce di L.V. e il tema della Santa Maria
   nell’intro), la beta.7 (29 ottobre, notte: le scene definitive dell’intro), la beta.6 (29 ottobre: William racconta in prima
@@ -294,7 +294,7 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
    voce di servizio** (documento 35, §11) è **nel gioco** dal 7 novembre: «Kira» di Google AI Studio, generata
    dall’autore, tagliata nelle 41 parti (`strumenti/audio/taglia_servizio.py`), in fila con le voci della nave e
    asciutta; l’ascolto (`consegne/Ascolto voce di servizio 2026-11-07/`) approvato: «capolavoro l’audio». Nella
-   **0.2.5-beta.10**, pubblicata il 7 novembre nel canale di prova. **Il copione di William** per Leonardo è pronto (7 novembre): `doppiaggio/william/`, un PDF di
+   **0.2.5-beta.11**, pubblicata il 13 novembre nel canale di prova (la beta.10 è del 7). **Il copione di William** per Leonardo è pronto (7 novembre): `doppiaggio/william/`, un PDF di
    111 pagine (125 blocchi con due righe di contesto ciascuno, 605 prese, circa 16.000 parole), fatto da
    `strumenti/audio/copione_william.py` e `copione_pdf.py`; in fondo quattro punti aperti da decidere con l’autore
    (la lettura di TSC-1972, la firma sul registro, chi dice la riga del registro nei finali, la frase delle fasce
