@@ -2,7 +2,9 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 12 novembre 2026, nella notte, quando l’autore ha chiuso la sessione dopo aver
+Aggiornato l’ultima volta il 13 novembre 2026, in mattinata, dopo le prime prese di Leonardo e il primo passo
+sull’estetica della cinematica (il cielo), con la Santa Maria ferma in attesa di un modello in Blender.
+Prima, il 12 novembre 2026, nella notte, quando l’autore ha chiuso la sessione dopo aver
 ascoltato «Havela», l’inno degli alieni (documento 32, §3.11): «Domani ti dico cosa ne faremo. Per oggi ci
 fermiamo qui». Prima, l’11 novembre, a notte, dopo i quattro momenti con un’animazione loro
 (documento 30, §9) guardati nell’eseguibile. Prima, lo stesso giorno, dopo la revisione globale (documento 37).
@@ -62,8 +64,34 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   più verosimile il fatto che ce la possano fare»; e «se così vincono sempre tutti, dove sta la sfida?»):
   `collaudo/verosimili.py`, con la fuga giocata da principianti veri.
 
-## Dove siamo (12 novembre 2026)
+## Dove siamo (13 novembre 2026)
 
+- **13 novembre 2026, mattina: le prime prese di Leonardo.** Sono arrivate `sm-001.wav`…`sm-004.wav`, le
+  quattro descrizioni della plancia. Controllate: il testo è quello del copione, parola per parola (Whisper
+  scrive «cucetta», ma l’autore ha ascoltato: «cuccetta va bene»; con le doppie Whisper sbaglia, non si
+  segnala più); circa due parole al secondo; la stanza fra −75 e −80 dBFS; un secondo di silenzio prima e
+  dopo. Due note tecniche, scritte in un messaggio che l’autore gira a Leonardo: i picchi troppo alti
+  (SM-002 a −0,9 dBFS, SM-003 e SM-004 toccano lo zero; il copione chiede mai sopra −3) e 16 bit invece di 24.
+  Le quattro prese non si rifanno. Stanno in `doppiaggio/william/consegne/` (fuori da git: le 604 prese
+  peseranno circa 1,5 GB). **Non sono ancora nel gioco.**
+- **13 novembre 2026: l’estetica della cinematica d’apertura, cominciata** (documento 09, §14). L’autore:
+  «ora se non erro dovevamo far lavorare Fable 5.2 alla cinematica»; e il confine: tempi e sceneggiatura non
+  cambiano, «se non per tua decisione tecnica»; quello che restava da fare nell’intro dal 30 ottobre
+  riguarda «i testi o i titoli di testa», e si vedrà dopo. Guardata scena per scena (i fotogrammi di
+  com’era sono in `consegne/Cinematica 2026-11-13 - com'è oggi/`). **Fatto il cielo**: la Via Lattea fredda
+  delle copertine, le stelle con grandezze vere, il fondo blu notte che stacca il fuso nero, il bagliore solo
+  dalle luci; calcolato una volta sola, e un fotogramma dello spazio costa da tre a cinque volte meno.
+  **Non l’ha ancora visto nell’eseguibile**; non è in una beta. Il punto «il relitto come materia» è
+  ritirato (il testo lo vuole nero assoluto).
+- **La Santa Maria è ferma, in attesa di un modello.** L’autore ha chiesto la spinta dei reattori di poppa
+  («se si può metterei un effetto di propulsione dai reattori che si vedono dietro») e poi, mentre la
+  preparavo: «credo che la Santa Maria abbia gravi problemi di coerenza. Sto pensando se possa valere la pena
+  rifarla in Blender con MCP di Claude Code. Se secondo te può valere la pena fermiamoci un attimo e ci
+  ritorniamo con il modello». Gli ho detto di sì: i due still (`prua.webp`, `poppa.webp`) sono due navi
+  diverse nei particolari, e sono immagini piatte con la luce già dentro. **Blender non è installato** su
+  questa macchina, e il suo collegamento MCP non c’è. Alla prossima: la sua decisione su come fare il modello
+  (vedi sotto, l’ordine del lavoro, punto 3); poi, sul modello, le finestre d’ambra, i fanali, la spinta dei
+  reattori; poi il faro e la fotografia unica.
 - **12 novembre 2026, nella notte: «Havela», l’inno degli alieni** (documento 32, §3.11). L’idea è
   dell’autore (11 novembre): la canzone dei titoli di coda rifatta con ElevenLabs come un inno alla vita
   scritto dagli alieni, in una lingua inventata. Ha scelto «la morbida» fra due lingue, e ha chiesto una
@@ -266,6 +294,15 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
    - il lotto 3, le rifiniture;
    - due decisioni sue: E7, la cornice sugli schermi 16:10; E4, la modalità scritta.
 3. **L’intro, perfezionata**:
+   - **l’estetica, con Fable 5.2** (documento 09, §14; cominciata il 13 novembre): ~~il cielo~~, fatto;
+     **la Santa Maria nella luce**, ferma finché non c’è il modello in Blender (l’idea è dell’autore; serve
+     Blender installato e il suo collegamento MCP a Claude Code; il modello deve essere la stessa nave degli
+     still canonici: scafo grigio consumato, strisce arancioni, TSC-1972 · SANTA MARIA, i pannelli sui
+     fianchi, quattro reattori a poppa, il faro; dal modello si rendono le due riprese dell’intro, da davanti
+     di tre quarti per B e da poppa per E, con la luce dello scafo, delle finestre e dei reattori in immagini
+     separate, perché il motore dell’intro le animi; prima di sostituire gli still, il confronto accanto a
+     quelli di oggi, e decide lui); poi **il faro** (un cono di luce calda nella polvere, che si perde prima
+     del nero) e **una fotografia sola** per tutte le scene;
    - ~~le scene definitive~~: fatte il 29 ottobre (documento 09, §12). Prima cosa, le sue note quando la vede
      nel gioco, con il suono: gli aggiustamenti, i titoli di testa «o altro»;
    - ~~la musica~~: il tema della Santa Maria e la voce di L.V. (§13) prendono il posto di `I-B`, `I-E` e `I-G`

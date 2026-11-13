@@ -453,3 +453,41 @@ La notte del 29 ottobre l'autore ha provato una cosa: ha chiesto il testo di L.V
 **Dopo il primo ascolto (30 ottobre 2026).** L'autore: «nella statica si sente una piccola interruzione ogni tanto, come se fosse un file in loop. Dobbiamo rendere tutto omogeneo»; «quando c'è la voce di LV i suoi testi non devono esserci, solo la scritta della scatola nera»; il tema è «The Santa Maria Theme» di Alirio Bruni, e non è musica generata. Fatto: i buchi della traccia non ci sono più (né nel suono né nel nastro che si vede in A), e il fruscio non respira più: è un fondo continuo (una prova controlla che in finestre di 0,2 secondi non vari più di un decibel). Quando la voce si sente (il suono c'è e il parlato non è a zero) i testi di L.V. non compaiono e il lettore di schermo non li legge; restano la scritta della scatola nera, all'inizio, e «Fine della traccia». Nella revisione nel browser, dove il suono non c'è, i testi ci sono, e una casella («con la voce di L.V.») li toglie. La regola di lettura resta nei tempi, che la voce comunque supera. L'autore ha chiesto anche di rivedere il testo di L.V. («il discorso del contare») e, se serve, di rifare l'audio: la revisione proposta è nel prompt 31.
 
 **Il testo rivisto e la voce «Elio» (30 ottobre 2026, notte).** L'autore ha approvato il testo di L.V. rivisto (CHANGELOG, «Il testo di L.V., rivisto») e ha rigenerato la voce con un'altra voce di Google, «Elio» («funziona meglio»). Il modello ha letto ad alta voce due indicazioni, «lunga pausa» e «molta pausa»: le ha trovate Whisper (faster-whisper large-v3, in locale, parola per parola, a 13,9 e a 47,9 secondi del file), e cadono fra un blocco e l'altro, quindi i pezzi le lasciano fuori senza tagliare niente dentro. I tagli (`VOCE` in `scaletta.ts`) vengono dalla trascrizione e dall'inviluppo: ogni pezzo comincia con il respiro che precede la frase e finisce con quelli che la seguono. La regola dei tempi è cambiata di un punto: un blocco non comincia finché il pezzo di prima suona, respiri compresi (prima i respiri dopo l'ultima parola potevano finire sotto il pezzo dopo; l'ha trovato la prova della voce). L'intro dura 3:02,12, la scena nera 60 secondi. Il cuore della cosa viva, in F, batte tre decimi dopo la fine di «La vedo pulsare» (`pulsare` fra i momenti), e la spia con lui. Whisper ha riascoltato l'intro resa con il motore (con la statica e il tema): ci sono tutte le frasi, e nessuna delle due indicazioni.
+
+## 14. L’estetica, rifatta: il cielo (13 novembre 2026)
+
+L’11 novembre l’autore aveva chiesto «come può Fable 5.2 migliorare la cinematica di apertura? non parlo di ordine e timing, ma di estetica» (la proposta è nel documento 30, §9.1); il 13 l’ha fatta cominciare: «ora se non erro dovevamo far lavorare Fable 5.2 alla cinematica». E ha messo il confine: «La cinematica nell’insieme non cambia come tempi o sceneggiatura se non per tua decisione tecnica». Il resto di quello che aveva in mente il 30 ottobre («c’è ancora da fare nell’intro») riguarda «i testi o i titoli di testa», e si vedrà dopo.
+
+**Guardata scena per scena, prima di toccarla.** I fotogrammi di com’era sono in `consegne/Cinematica 2026-11-13 - com'è oggi/` (fuori da git). La scena nera, la console con l’oblò, il titolo e la plancia erano a posto. Deboli erano il margine (B) e la scala (E, F): la Via Lattea era una nuvola grigio-marrone, le stelle tutte uguali, il cielo così vicino al nero che il fuso non se ne staccava; e la Santa Maria sembrava incollata sopra.
+
+**L’ordine deciso**: il cielo; la Santa Maria nella luce; il faro; una fotografia sola. **Un punto della proposta è ritirato**: la superficie del relitto che affiora dove passa il faro, con una vena verde. Il testo dice «niente saldature, niente portelli, niente luci», «così nero che contro il cielo sembra un taglio», e in D il faro «non trova niente»: il relitto resta nero assoluto, ed è il cielo intorno a farne una cosa.
+
+**La fotografia** (vale per tutte le scene dello spazio): il cielo è freddo, e non è nero; il nero è solo del fuso; il caldo è solo della Santa Maria (le strisce arancioni, l’ambra dei fanali, il faro); il verde è solo della cosa viva.
+
+**Il cielo, fatto** (`app/src/intro/scala.ts`):
+
+- **La Via Lattea delle copertine**: blu acciaio ai margini, bianco freddo nelle nubi di stelle, appena avorio nel nucleo. Ha una fascia, una grande fenditura di polvere che segue il piano e serpeggia, filamenti che se ne staccano, la grana delle stelle che non si distinguono, e un alone largo.
+- **Il fondo è un blu notte** (intorno a 10, 14, 22 su 255, dove prima era 9, 11, 14 e quasi neutro): il fuso, che è 0, 0, 0, adesso si vede anche lontano dalla Via Lattea.
+- **Le stelle** hanno le grandezze di un cielo vero (il numero di quelle più luminose di una certa soglia cala come l’inverso della soglia): moltissime deboli, poche forti, pochissime grandi, con un alone stretto e uno largo. Prima una su dieci era al massimo. I colori: poche arancio, qualcuna avorio, le altre bianche fredde o azzurre. La polvere di stelle dentro la fascia è più luminosa.
+- **Il bagliore nasce solo dalle luci** (una soglia al primo passo): il fondo del cielo, più chiaro, non schiarisce il nero del fuso. Dentro il fuso si misura 0, 0, 0 fino al bordo.
+- **Calcolato una volta sola.** La Via Lattea e il fondo si calcolano quando l’intro si prepara, in una tessitura per quadro che copre tutto quello che il quadro può vedere (l’obiettivo più largo: quello dell’inizio); a ogni fotogramma la si legge soltanto. Le stelle restano punti, nitide a ogni ingrandimento. La tessitura è a 16 bit quando la scheda lo permette (altrimenti a 8, con la radice), si ferma a 1.920 punti di larghezza sugli schermi più grandi, e per l’oblò è un quadrato con i livelli rimpiccioliti, perché da lontano non brulichi. Si rifà se cambia la misura della finestra o la qualità.
+
+**Quanto costa** (`node strumenti/intro/costo.mjs`: 240 fotogrammi per quadro a 1920 × 1080, su una GeForce RTX 2070; millisecondi per fotogramma):
+
+| Quadro | Prima | Dopo |
+|---|---|---|
+| il margine (B) | 16,5 | 3,0 |
+| la scala (E), all’inizio | 18,5 | 5,8 |
+| la scala, a metà | 18,8 | 5,0 |
+| la scala, alla fine (F, G) | 18,9 | 4,7 |
+| l’oblò della plancia, con il faro (D) | 20,4 | 6,9 |
+| il margine, a qualità ridotta | 5,3 | 2,4 |
+| la scala alla fine, a qualità ridotta | 6,2 | 3,1 |
+
+Il cielo ricalcolato a ogni fotogramma era la parte più pesante dell’intro: a 1920 × 1080 un fotogramma dello spazio costava più dei 16,7 millisecondi che ha a disposizione.
+
+**Gli attrezzi** (`strumenti/intro/`): `fotografa.mjs` fotografa l’intro ai secondi dati, dalla revisione nel browser di sviluppo, con Edge senza finestra e la scheda video vera; `costo.mjs` misura i quadri; `cdp_edge.mjs` è la parte in comune.
+
+**Le prove**: quelle dell’app (122, verdi); il cielo è stato guardato in tutte le scene (B, C, D, E, F, G, H), a qualità piena.
+
+**La Santa Maria, ferma.** Il passo dopo era metterla nella luce (le finestre della plancia d’ambra, i fanali, la spinta dei reattori di poppa, che l’autore ha chiesto il 13: «se si può metterei un effetto di propulsione dai reattori che si vedono dietro»). Mentre lo preparavo l’autore ha scritto: «credo che la Santa Maria abbia gravi problemi di coerenza. Sto pensando se possa valere la pena rifarla in Blender con MCP di Claude Code». Ha ragione: i due still (`prua.webp`, `poppa.webp`) sono due navi diverse nei particolari, e sono immagini piatte, con la luce già dentro. Dipingerci sopra luci e reattori, in punti misurati a mano su immagini che poi si buttano, sarebbe lavoro perso. **La nave aspetta il modello**; restano da fare, dopo, il faro e la fotografia. Non ancora visto dall’autore nell’eseguibile; non in una beta.

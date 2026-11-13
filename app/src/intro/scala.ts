@@ -1,8 +1,9 @@
 // ============================================================================
 //  Il motore della scala: lo spazio dell'intro in WebGL2, con shader propri.
-//  È il motore della prova di look (progettazione/09-prova-di-look.html), lo
-//  stesso codice portato in un modulo: la scena E è già al livello finale, e
-//  qui disegna anche il margine (B). La Santa Maria è uno still canonico
+//  Nasce dal motore della prova di look (progettazione/09-prova-di-look.html),
+//  portato in un modulo; qui disegna anche il margine (B). Dal 13 novembre 2026
+//  il cielo è rifatto (documento 09, §14): freddo come nelle copertine, e
+//  calcolato una volta sola per quadro. La Santa Maria è uno still canonico
 //  scontornato, su un piano nello spazio (2,5D); il fuso, le stelle, la Via
 //  Lattea, la polvere, il fascio del faro e la luce sono calcolati.
 //
@@ -149,7 +150,8 @@ export function colpisceIlFuso(da: V3, dir: V3): boolean {
 }
 
 // ============================================================================
-//  Gli shader (identici alla prova di look)
+//  Gli shader (dalla prova di look; il cielo, le stelle e il bagliore rifatti
+//  il 13 novembre 2026)
 // ============================================================================
 const TESTA = `#version 300 es
 precision highp float;
@@ -172,37 +174,75 @@ float rumore(vec3 x){
 }
 float fbm(vec3 x, int ottave){ float v = 0.0, a = 0.5; for (int k = 0; k < 8; k++){ if (k >= ottave) break; v += a * rumore(x); x = x * 2.03 + vec3(1.7, 9.2, 3.1); a *= 0.5; } return v; }`;
 
-const FS_CIELO = TESTA + VISTA + RUMORE + `
+// Il cielo si calcola una volta sola per quadro (il «forno»), in una tessitura che copre tutto quello che
+// il quadro può vedere; a ogni fotogramma la si legge soltanto (FS_CIELO). Così la Via Lattea può essere
+// ricca quanto serve senza pesare sui fotogrammi (documento 09, §14).
+// La fotografia: il cielo è freddo (blu acciaio, come nelle copertine), e non è nero: nero è solo il fuso.
+const FS_FORNO = TESTA + VISTA + RUMORE + `
 in vec2 uv; out vec4 o;
 uniform vec3 uPolo, uCentroGal;
 uniform int uOttave;
+uniform float uCod;
+// il rumore piegato: creste sottili, per le fenditure di polvere
+float creste(vec3 x, int ottave){ float v = 0.0, a = 0.5; for (int k = 0; k < 7; k++){ if (k >= ottave) break; v += a * (1.0 - abs(2.0 * rumore(x) - 1.0)); x = x * 2.07 + vec3(4.1, 2.3, 7.9); a *= 0.5; } return v; }
 void main(){
   vec3 d = vista(uv);
   vec3 x = normalize(uCentroGal - uPolo * dot(uCentroGal, uPolo));
   vec3 y = cross(uPolo, x);
-  float lon = atan(dot(d, y), dot(d, x));
-  float lat = asin(clamp(dot(d, uPolo), -1.0, 1.0));
-  float nucleo = exp(-pow(lon / 0.9, 2.0));
-  float larghezza = 0.075 + 0.085 * nucleo;
-  float sfrangia = (fbm(d * 7.0 + 2.0, 3) - 0.5) * 0.6;
+  // le coordinate della galassia: g.z è il seno della latitudine
+  vec3 g = vec3(dot(d, x), dot(d, y), dot(d, uPolo));
+  float lon = atan(g.y, g.x);
+  float lat = asin(clamp(g.z, -1.0, 1.0));
+  float nucleo = exp(-pow(lon / 0.85, 2.0));
+  // i dettagli corrono lungo il piano della galassia: lo spazio del rumore è schiacciato in latitudine
+  vec3 ga = vec3(g.xy, g.z * 1.55);
+  vec3 w = vec3(fbm(ga * 4.0 + 3.1, 4), fbm(ga * 4.0 + 7.7, 4), fbm(ga * 4.0 + 1.3, 4)) - 0.5;
+  float larghezza = 0.066 + 0.088 * nucleo;
+  float sfrangia = (fbm(ga * 5.0 + 2.0, 3) - 0.5) * 0.8;
   float banda = exp(-pow(lat / (larghezza * (1.0 + sfrangia)), 2.0));
+  float alone = exp(-pow(lat / 0.30, 2.0));
   vec3 o3 = vec3(0.0);
-  if (banda > 0.002) {
-    vec3 q = d * 9.0;
-    vec3 w = vec3(fbm(q + 3.1, 3), fbm(q + 7.7, 3), fbm(q + 1.3, 3));
-    float nubi = fbm(d * 16.0 + w * 1.2, uOttave);
-    float nubiFini = fbm(d * 44.0 + w * 2.0 + 9.0, uOttave);
-    float luce = banda * (0.10 + 1.35 * pow(nubi, 2.6)) * (0.55 + 0.9 * nubiFini * nubiFini);
-    float fenditura = smoothstep(0.40, 0.70, fbm(d * 10.0 + w * 1.8 + 11.0, uOttave)) * exp(-pow((lat + 0.012) / (larghezza * 0.42), 2.0));
-    float filamenti = smoothstep(0.52, 0.80, fbm(d * 30.0 + w * 2.6 + 4.0, uOttave));
-    luce *= (1.0 - 0.93 * fenditura) * (1.0 - 0.55 * filamenti * banda);
-    vec3 bianco = vec3(0.86, 0.89, 1.0), caldo = vec3(1.0, 0.84, 0.66), ruggine = vec3(0.55, 0.36, 0.26);
-    vec3 tinta = mix(bianco, caldo, nucleo * 0.85);
-    tinta = mix(tinta, ruggine, clamp(fenditura * 0.5 + filamenti * 0.25, 0.0, 1.0) * 0.5);
-    o3 = tinta * luce * (0.020 + 0.060 * nucleo);
+  if (banda > 0.0015) {
+    // le nubi di stelle, grandi e fini, e la grana delle stelle che non si distinguono
+    float nubi = fbm(ga * 7.5 + w * 2.4, uOttave);
+    float fini = fbm(d * 36.0 + w * 3.2 + 9.0, uOttave);
+    float grana = fbm(d * 170.0 + 5.0, 3);
+    float luce = banda * (0.08 + 1.85 * pow(nubi, 2.6)) * (0.42 + 1.25 * fini * fini) * (0.70 + 0.60 * grana);
+    // la grande fenditura: segue il piano e serpeggia, rotta in tratti; i filamenti se ne staccano
+    float serpe = (fbm(vec3(lon * 1.7, 2.7, 9.1), 3) - 0.5) * 0.12 * (0.6 + 0.8 * nucleo);
+    float solco = exp(-pow((lat - serpe) / (larghezza * 0.34), 2.0));
+    float fenditura = solco * smoothstep(0.50, 0.70, creste(ga * 5.2 + w * 1.6 + 11.0, uOttave));
+    float filamenti = smoothstep(0.60, 0.84, creste(ga * 12.5 + w * 2.8 + 4.0, uOttave)) * banda;
+    float buio = clamp(0.96 * fenditura + 0.62 * filamenti, 0.0, 0.975);
+    luce *= 1.0 - buio;
+    // il colore: blu acciaio ai margini, bianco freddo nelle nubi, appena avorio nel nucleo
+    vec3 acciaio = vec3(0.34, 0.50, 1.0), chiaro = vec3(0.64, 0.77, 1.0), avorio = vec3(0.98, 0.93, 0.88);
+    vec3 tinta = mix(acciaio, chiaro, smoothstep(0.25, 0.80, nubi));
+    tinta = mix(tinta, avorio, 0.55 * nucleo * smoothstep(0.35, 0.85, nubi));
+    // la polvere arrossa appena la luce ai bordi delle fenditure
+    tinta = mix(tinta, vec3(0.82, 0.66, 0.60), 0.35 * smoothstep(0.15, 0.6, buio) * (1.0 - smoothstep(0.6, 0.97, buio)));
+    o3 = tinta * luce * (0.050 + 0.095 * nucleo);
   }
-  o3 += vec3(0.0016, 0.0021, 0.0032) * (0.8 + 0.4 * fbm(d * 3.0, 3));
+  // l'alone largo della galassia, e il fondo: un blu notte, che lascia al fuso il nero
+  float largo = fbm(d * 2.6 + 1.0, 4);
+  o3 += vec3(0.26, 0.42, 0.86) * 0.0046 * alone * (0.55 + 0.9 * largo);
+  o3 += vec3(0.0019, 0.0033, 0.0068) * (0.72 + 0.56 * largo);
+  if (uCod > 0.5) o3 = sqrt(clamp(o3 * 6.0, 0.0, 1.0));
   o = vec4(o3, 1.0);
+}`;
+// Il cielo di un fotogramma: la tessitura del forno, letta nella direzione di ogni punto.
+const FS_CIELO = TESTA + VISTA + `
+in vec2 uv; out vec4 o;
+uniform sampler2D uForno;
+uniform vec3 uRifDestra, uRifSu, uRifAvanti;
+uniform vec2 uRifTan;
+uniform float uCod;
+void main(){
+  vec3 d = vista(uv);
+  vec3 c = vec3(dot(d, uRifDestra), dot(d, uRifSu), dot(d, uRifAvanti));
+  vec3 t = texture(uForno, clamp(c.xy / max(c.z, 1e-4) / uRifTan * 0.5 + 0.5, 0.0, 1.0)).rgb;
+  if (uCod > 0.5) t = t * t / 6.0;
+  o = vec4(t, 1.0);
 }`;
 
 const VS_STELLE = TESTA + `
@@ -213,7 +253,7 @@ void main(){
   vec3 c = vec3(dot(aDir, uDestra), dot(aDir, uSu), dot(aDir, uAvanti));
   if (c.z <= 0.0) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); gl_PointSize = 0.0; return; }
   gl_Position = vec4(c.xy / c.z / uTan * uSca + uOff, 0.0, 1.0);
-  dim = clamp(1.6 + sqrt(aCol.a) * 6.0, 1.5, 9.0) * uScala;
+  dim = clamp(1.5 + pow(aCol.a, 0.45) * 5.5, 1.5, 18.0) * uScala;
   gl_PointSize = dim;
   col = aCol;
 }`;
@@ -221,9 +261,10 @@ const FS_STELLE = TESTA + `
 in vec4 col; in float dim; out vec4 o;
 void main(){
   vec2 p = gl_PointCoord * 2.0 - 1.0;
-  float r2 = dot(p, p) * dim * dim * 0.25;
-  float psf = exp(-r2 / 0.9) + 0.05 * exp(-r2 / 9.0) * smoothstep(0.3, 1.0, col.a);
-  o = vec4(col.rgb * col.a * psf, 1.0);
+  float rr = dot(p, p), r2 = rr * dim * dim * 0.25;
+  // il punto, e per le stelle forti un alone: stretto e poi largo, che finisce prima del bordo
+  float psf = exp(-r2 / 0.85) + smoothstep(0.12, 1.2, col.a) * (0.07 * exp(-r2 / 7.0) + 0.012 * exp(-r2 / 42.0));
+  o = vec4(col.rgb * col.a * psf * smoothstep(1.0, 0.55, rr), 1.0);
 }`;
 
 const FS_FUSO = TESTA + VISTA + `
@@ -356,13 +397,15 @@ in float lum; out vec4 o;
 void main(){ vec2 p = gl_PointCoord * 2.0 - 1.0; float r = dot(p, p);
   o = vec4(vec3(1.0, 0.62, 0.22) * lum * (exp(-r * 18.0) * 1.0 + exp(-r * 4.0) * 0.08), 1.0); }`;
 
+// Il bagliore nasce solo dalle luci (uSoglia, al primo passo): il fondo del cielo non deve schiarire il
+// nero del fuso.
 const FS_GIU = TESTA + `
-in vec2 uv; out vec4 o; uniform sampler2D uTex; uniform vec2 uTexel;
+in vec2 uv; out vec4 o; uniform sampler2D uTex; uniform vec2 uTexel; uniform float uSoglia;
 void main(){
   vec3 c = texture(uTex, uv).rgb * 0.5;
   c += texture(uTex, uv + uTexel * vec2(-1, -1)).rgb * 0.125; c += texture(uTex, uv + uTexel * vec2(1, -1)).rgb * 0.125;
   c += texture(uTex, uv + uTexel * vec2(-1, 1)).rgb * 0.125;  c += texture(uTex, uv + uTexel * vec2(1, 1)).rgb * 0.125;
-  o = vec4(c, 1.0);
+  o = vec4(max(c - uSoglia, 0.0), 1.0);
 }`;
 const FS_SU = TESTA + `
 in vec2 uv; out vec4 o; uniform sampler2D uTex; uniform vec2 uTexel;
@@ -415,6 +458,10 @@ interface Cielo {
   polo: V3;
   centro: V3;
   stelle: { vao: WebGLVertexArrayObject; n: number };
+  /** il riferimento del quadro: la direzione in cui guarda, e i suoi assi */
+  rif: { destra: V3; su: V3; avanti: V3 };
+  /** la Via Lattea e il fondo, calcolati una volta (per una misura della tela) */
+  forno: (Bersaglio & { tan: [number, number]; ridotta: boolean; per: string }) | null;
 }
 
 /** Un generatore deterministico: la stessa notte a ogni avvio. */
@@ -486,6 +533,7 @@ export class Scala {
     this.gl = gl;
     this.hdr = !!gl.getExtension("EXT_color_buffer_float");
     this.formato = this.hdr ? { interno: gl.RGBA16F, tipo: gl.HALF_FLOAT } : { interno: gl.RGBA8, tipo: gl.UNSIGNED_BYTE };
+    this.P.forno = this.programma(VS_PIENO, FS_FORNO);
     this.P.cielo = this.programma(VS_PIENO, FS_CIELO);
     this.P.stelle = this.programma(VS_STELLE, FS_STELLE);
     this.P.fuso = this.programma(VS_PIENO, FS_FUSO);
@@ -502,7 +550,7 @@ export class Scala {
     const buf = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buf);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
-    for (const nome of ["cielo", "fuso", "fascio", "giu", "su", "finale", "nave"]) {
+    for (const nome of ["forno", "cielo", "fuso", "fascio", "giu", "su", "finale", "nave"]) {
       const loc = gl.getAttribLocation(this.P[nome].p, "a");
       if (loc >= 0) {
         gl.enableVertexAttribArray(loc);
@@ -657,9 +705,10 @@ export class Scala {
     const tang = norm(somma(per(destra, Math.cos(ang)), per(su, Math.sin(ang))));
     const polo = norm(croce(d0, tang));
     const r = generatore(1972), dati: number[] = [];
+    // le temperature: poche arancio, qualcuna avorio, le più bianche fredde o azzurre
     const colore = () => {
       const temp = r();
-      return temp < 0.12 ? [1.0, 0.72, 0.48] : temp < 0.4 ? [1.0, 0.9, 0.78] : temp < 0.85 ? [0.95, 0.97, 1.0] : [0.72, 0.82, 1.0];
+      return temp < 0.07 ? [1.0, 0.66, 0.40] : temp < 0.24 ? [1.0, 0.88, 0.74] : temp < 0.70 ? [0.90, 0.95, 1.0] : [0.62, 0.76, 1.0];
     };
     const direzione = (): V3 => {
       const z = r() * 2 - 1, f = r() * Math.PI * 2, s = Math.sqrt(1 - z * z);
@@ -671,7 +720,8 @@ export class Scala {
       do d = direzione();
       while (r() > 0.22 + 0.78 * Math.exp(-((latitudine(d) / 0.2) ** 2)));
       const c = colore();
-      dati.push(d[0], d[1], d[2], c[0], c[1], c[2], 0.01 + r() ** 9 * 2.6);
+      // le grandezze come in un cielo vero: moltissime deboli, poche forti, pochissime grandi
+      dati.push(d[0], d[1], d[2], c[0], c[1], c[2], Math.min(7, 0.02 / Math.max(r(), 1e-4)));
     }
     for (let i = 0; i < 140000; i++) {
       let d: V3;
@@ -683,7 +733,7 @@ export class Scala {
         if (r() < Math.exp(-((lat / 0.09) ** 2)) * nubi ** 2.4) break;
       }
       const c = colore();
-      dati.push(d[0], d[1], d[2], c[0], c[1], c[2], 0.004 + r() ** 3 * 0.05);
+      dati.push(d[0], d[1], d[2], c[0], c[1], c[2], 0.008 + r() ** 3 * 0.10);
     }
     const vao = gl.createVertexArray()!;
     gl.bindVertexArray(vao);
@@ -695,9 +745,55 @@ export class Scala {
     gl.vertexAttribPointer(lD, 3, gl.FLOAT, false, 28, 0);
     gl.enableVertexAttribArray(lC);
     gl.vertexAttribPointer(lC, 4, gl.FLOAT, false, 28, 12);
-    const cielo = { polo, centro: d0, stelle: { vao, n: dati.length / 7 } };
+    const cielo: Cielo = { polo, centro: d0, stelle: { vao, n: dati.length / 7 }, rif: { destra, su, avanti }, forno: null };
     this.cieli.set(chiave, cielo);
     return cielo;
+  }
+
+  /** Il forno: la Via Lattea e il fondo del cielo di un quadro, calcolati una volta in una tessitura
+   *  che copre tutto quello che il quadro può vedere (l'obiettivo più largo, che è quello dell'inizio).
+   *  Si rifà solo se cambia la misura della tela o la qualità. */
+  private inforna(q: Quadro, cielo: Cielo, w: number, h: number, ridotta: boolean): NonNullable<Cielo["forno"]> {
+    const quadrata = q === "plancia";
+    const per = `${w}x${h}`;
+    if (cielo.forno && cielo.forno.per === per && cielo.forno.ridotta === ridotta) return cielo.forno;
+    const gl = this.gl, P = this.P.forno;
+    if (cielo.forno) {
+      gl.deleteTexture(cielo.forno.tex);
+      gl.deleteFramebuffer(cielo.forno.fb);
+    }
+    // l'oblò è quadrato, e la camera della plancia gli si accosta: più punti di quanti ne ha lo schermo.
+    // Sugli schermi molto grandi il forno si ferma a 1.920 punti: le nubi sono morbide, e la memoria no
+    const lato = Math.min(1536, Math.round(h * 1.5));
+    const k = Math.min(1, 1920 / w);
+    const W = quadrata ? lato : Math.round(w * k), H = quadrata ? lato : Math.round(h * k);
+    const tanX = Math.tan(inquadratura(q, 0).fov / 2) * 1.01, tanY = quadrata ? tanX : (tanX * H) / W;
+    const b = this.bersaglio(W, H);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, b.fb);
+    gl.viewport(0, 0, W, H);
+    gl.disable(gl.BLEND);
+    gl.disable(gl.SCISSOR_TEST);
+    gl.useProgram(P.p);
+    gl.uniform3fv(P.u.uDestra, cielo.rif.destra);
+    gl.uniform3fv(P.u.uSu, cielo.rif.su);
+    gl.uniform3fv(P.u.uAvanti, cielo.rif.avanti);
+    gl.uniform2f(P.u.uTan, tanX, tanY);
+    gl.uniform2f(P.u.uSca, 1, 1);
+    gl.uniform2f(P.u.uOff, 0, 0);
+    gl.uniform3fv(P.u.uPolo, cielo.polo);
+    gl.uniform3fv(P.u.uCentroGal, cielo.centro);
+    gl.uniform1i(P.u.uOttave, ridotta ? 4 : 6);
+    gl.uniform1f(P.u.uCod, this.hdr ? 0 : 1);
+    gl.bindVertexArray(this.vaoPieno);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    // rimpicciolita (nell'oblò, da lontano) non deve brulicare
+    if (quadrata) {
+      gl.bindTexture(gl.TEXTURE_2D, b.tex);
+      gl.generateMipmap(gl.TEXTURE_2D);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+    }
+    cielo.forno = { ...b, tan: [tanX, tanY], ridotta, per };
+    return cielo.forno;
   }
 
   /** La polvere intorno alla rotta, e un velo più fitto dove passa il fascio. */
@@ -791,6 +887,7 @@ export class Scala {
     const cam = inquadratura(q, t, opz.faro ?? 0, opz.faroGradi ?? 0);
     const FARO = faroDi(q, cam.faroGradi ?? 0);
     const cielo = this.cielo(q);
+    const forno = this.inforna(q, cielo, B.w, B.h, ridotta);
     const aspetto = B.w / B.h;
     const avanti = cam.avanti, destra = norm(croce(avanti, [0, 1, 0])), su = croce(destra, avanti);
     const ot: Ottica = opz.ottica ?? { sca: [1, 1], off: [0, 0] };
@@ -824,9 +921,14 @@ export class Scala {
     // 1. il cielo
     gl.useProgram(P.cielo.p);
     vista(P.cielo);
-    gl.uniform3fv(P.cielo.u.uPolo, cielo.polo);
-    gl.uniform3fv(P.cielo.u.uCentroGal, cielo.centro);
-    gl.uniform1i(P.cielo.u.uOttave, ridotta ? 4 : 6);
+    gl.uniform3fv(P.cielo.u.uRifDestra, cielo.rif.destra);
+    gl.uniform3fv(P.cielo.u.uRifSu, cielo.rif.su);
+    gl.uniform3fv(P.cielo.u.uRifAvanti, cielo.rif.avanti);
+    gl.uniform2f(P.cielo.u.uRifTan, forno.tan[0], forno.tan[1]);
+    gl.uniform1f(P.cielo.u.uCod, this.hdr ? 0 : 1);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, forno.tex);
+    gl.uniform1i(P.cielo.u.uForno, 0);
     gl.bindVertexArray(this.vaoPieno);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
@@ -933,6 +1035,7 @@ export class Scala {
     let prima = sorgente;
     gl.useProgram(P.giu.p);
     for (const b of B.catena) {
+      gl.uniform1f(P.giu.u.uSoglia, b === B.catena[0] ? 0.02 : 0);
       gl.bindFramebuffer(gl.FRAMEBUFFER, b.fb);
       gl.viewport(0, 0, b.w, b.h);
       gl.activeTexture(gl.TEXTURE0);
