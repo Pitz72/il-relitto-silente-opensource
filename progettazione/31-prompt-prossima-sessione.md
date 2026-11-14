@@ -71,6 +71,16 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 
 ## Dove siamo (14 novembre 2026)
 
+- **14 novembre 2026, sera: il registro di bordo di William e il messaggio di Yusuf, in pausa.** L’autore vuole
+  nell’intro, dove oggi in B c’è «Ho firmato tutte le carte… Ho insistito io» (che andrà più avanti), un registro
+  di bordo detto da William; **il posto e il montaggio li decide lui: non toccare la scaletta finché non lo dice**.
+  Il testo è scritto e quasi approvato (sua correzione: «il giorno che smetterà, mi preoccuperò»); due versioni,
+  A (detto a voce) e B (scritto sul registro di carta del gioco e detto ad alta voce, chiude con «Settimana sei.
+  Stiva vuota. Nessun contatto. W. T.»): **la scelta fra A e B è ancora sua**. Lo registrerà Leonardo; l’autore
+  torna quando Leonardo gli ha mandato la presa. Corretto il cognome nei titoli di testa: «Eriksonn» (7c2f928).
+  Il messaggio di Yusuf (segreteria, voce clonata dell’autore, 34,5 s) è fatto e approvato, **da tenere da parte**
+  finché non decide dove va: documento 35, §12. Nel libro e nel gioco Yusuf dice «William», mai «Will».
+
 - **14 novembre 2026, nella notte: il modello della Santa Maria, cominciato** (documento 40). L’autore:
   «continuiamo il lavoro?». Fatti in una sessione **la forma** (lo scafo e 160 pezzi, costruiti in Blender da
   `strumenti/nave/modello.py` a partire da `misure.py`: 80 × 13 × 12 metri misurati sul modello, una pelle
