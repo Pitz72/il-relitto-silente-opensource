@@ -123,8 +123,12 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   un colore e uno scioglimento nuovi e senza il suono delle lettere; tutto nel formato largo, loghi compresi;
   una pellicola unica su loghi e intro. **Fatte tutte**, con le prove; l’intro dura 3:24. **Non le ha ancora
   viste né sentite**: il filmato nuovo è `consegne/Filmato intro 2026-11-14/Il Relitto Silente - intro con i
-  titoli di testa.mp4`. **Alla prossima: il suo giudizio sul filmato nuovo**; una cosa da decidere con lui (il credito di Leonardo, che compare mentre parla L.V.); poi la
-  beta 12, con il suo sì. **Il titolo del libro è deciso: «Dal Registro della Santa Maria», dappertutto**
+  titoli di testa.mp4`. **Il suo giudizio sul filmato nuovo, lo stesso giorno: «L’intro è quasi perfetta […] Per il resto per ora è
+  perfetta».** Tre correzioni, fatte (documento 09, §16.9): i loghi passano anche subito prima dell’intro; allo
+  spegnimento dei reattori nessun suono («meglio non mettere niente»: se trova suoni di scandaglio o di eco radar
+  li porta lui); i glifi del titolo si sciolgono in silenzio. Il credito di Leonardo non l’ha toccato: resta.
+  **La beta 12 è pubblicata** (su sua richiesta, senza rifare il filmato). **Alla prossima: le sue note sulla
+  beta 12 giocata**; poi il resto di questo prompt. **Il titolo del libro è deciso: «Dal Registro della Santa Maria», dappertutto**
   (menu, titoli di coda, riconoscimenti, copertine: «Una storia tratta dal libro *Dal Registro della Santa
   Maria*»; la copertina dell’anteprima su GitHub va ricaricata a mano dalle impostazioni del repository, se
   la vuole aggiornata). Il filmato si rifà in un quarto d’ora (`strumenti/intro/LEGGIMI.md`).
@@ -226,7 +230,7 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   non lo installa. **Corretto lo stesso giorno** (`b62dbaf`, «Sì, correggile»): `nome_file` sta in
   `voce_servizio.py`, che usa soltanto la libreria standard; le prove su GitHub sono di nuovo verdi, e la beta 11 si
   può costruire.
-- **La versione** pubblicata è la **0.2.5-beta.11** (13 novembre 2026: i quattro momenti animati, il suono della mappa, il cielo dell’intro, il computer di bordo, le correzioni della revisione 37 e «Ascolta il canto»), una pre-release nel canale di prova
+- **La versione** pubblicata è la **0.2.5-beta.12** (14 novembre 2026: la cinematica d’apertura rifatta, cioè la nave vera, i titoli di testa, la pellicola, i loghi nel formato largo e di nuovo prima dell’intro, il titolo nuovo, il faro frontale; e il titolo del libro «Dal Registro della Santa Maria»), una pre-release nel canale di prova. Prima, la **0.2.5-beta.11** (13 novembre 2026: i quattro momenti animati, il suono della mappa, il cielo dell’intro, il computer di bordo, le correzioni della revisione 37 e «Ascolta il canto»), una pre-release nel canale di prova
   (`aggiornamenti-prova`), del 7 novembre: la voce di servizio. Prima: la beta.9 (7 novembre: la revisione
   narrativa e tutte le voci registrate), la beta.8 (30 ottobre: la voce di L.V. e il tema della Santa Maria
   nell’intro), la beta.7 (29 ottobre, notte: le scene definitive dell’intro), la beta.6 (29 ottobre: William racconta in prima
