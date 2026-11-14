@@ -78,9 +78,9 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   fianco, le griglie della sala macchine, i pioli dall’uscita al dorso. **Sono proposte**: l’elenco è nel
   documento 40. I due fogli (`progettazione/40-modello/foglio-1-la-forma.jpg`, `foglio-2-la-superficie.jpg`)
   gli sono stati mandati durante il lavoro; **le sue note non ci sono ancora**. Quello che non va, detto nel
-  documento: la sagoma è quella semplice delle tavole (di lontano, un tubo: gli still di oggi hanno casse e
-  sovrastrutture che qui non ci sono, e aggiungerne è una sua scelta, da portare nella tabella e nelle tavole);
-  la luce delle viste è da studio. **Alla prossima**: prima le sue note sui due fogli; poi le due riprese
+  documento: la sagoma è semplice, come vuole la scheda 05B («I pannelli solari sono la sola cosa che rompe la
+  sagoma»), ma di lontano è un tubo, e gli still di oggi hanno casse e sovrastrutture che qui non ci sono (se
+  gli sembra nuda: altri particolari piccoli sulla pelle, non volumi nuovi); la luce delle viste è da studio. **Alla prossima**: prima le sue note sui due fogli; poi le due riprese
   dell’intro con le luci separate, accanto agli still di oggi. Nel gioco non è cambiato niente.
 - **13 novembre 2026, mattina: le prime prese di Leonardo.** Sono arrivate `sm-001.wav`…`sm-004.wav`, le
   quattro descrizioni della plancia. Controllate: il testo è quello del copione, parola per parola (Whisper

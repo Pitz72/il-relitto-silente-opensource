@@ -107,9 +107,11 @@ Nessun testo e nessuna tavola lo dice: sono proposte, e l’autore le conferma o
 
 ## Che cosa non va ancora
 
-- **La sagoma è quella semplice delle tavole.** È giusta nelle misure, ma di lontano è un tubo: gli still di
-  oggi (`prua.webp`, `poppa.webp`) hanno casse, sovrastrutture e tubi che qui non ci sono. Aggiungerne è una
-  scelta dell’autore: ogni volume in più va nella tabella e nelle tavole, non solo nel modello.
+- **La sagoma è semplice, e la scheda la vuole così**: «I pannelli solari sono la sola cosa che rompe la
+  sagoma» (05B, «La sagoma»), «una nave che nessuno ha progettato per essere guardata». Di lontano però è un
+  tubo, e gli still di oggi (`prua.webp`, `poppa.webp`) hanno casse, sovrastrutture e tubi che la scheda non
+  prevede e che qui non ci sono. Se all’autore sembra nuda, la strada sono altri particolari piccoli sulla pelle
+  (casse basse, tubi, portelli), non volumi nuovi; un volume nuovo andrebbe prima nella tabella e nelle tavole.
 - **La luce delle viste è da studio** (un sole da dietro la macchina e una schiarita), su fondo scuro: serve a
   leggere la nave, e non è la fotografia dell’intro.
 - **La tessitura regge il campo lungo e i tre quarti**, non il dettaglio da vicino: per una scena sul fasciame
