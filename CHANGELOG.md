@@ -8,6 +8,10 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+### Aggiunto
+
+- **Il modello della Santa Maria in Blender: la forma e una prima superficie** (documento 40; 14 novembre 2026, terzo passo del progetto della nave, dopo la scheda unica e le schematiche approvate). `strumenti/nave/modello.py` costruisce in Blender, senza finestra, lo scafo e i suoi pezzi dalla tabella `misure.py`, la stessa delle tavole: misurato sul modello, 80 × 13 × 12 metri, una pelle chiusa. `superficie.py` dipinge la tessitura dello scafo sulla scheda 05B del seguito (ventiquattro corsi di lamiere con giunte e rivetti, le toppe di metalli diversi, la fascia scura in basso con la matricola a stencil, le fasce arancioni intorno ai due portelli, colature, graffi, crateri), e `pelle.py` dice dove cade ogni suo punto. I particolari non scritti in nessuna tavola (le botole e i corrimano del dorso, i condotti, le griglie della sala macchine, i pioli dall’uscita al dorso) sono proposte, elencate nel documento. Due fogli in `progettazione/40-modello/` (`foglio.py`); il file di Blender, la tessitura e le viste intere si rifanno con tre comandi e restano fuori da git. L’autore non ha ancora dato le sue note; nel gioco non cambia niente.
+
 ## [0.2.5-beta.11] - 2026-11-13
 
 ### Per chi gioca

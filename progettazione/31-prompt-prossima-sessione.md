@@ -2,7 +2,9 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 13 novembre 2026, in mattinata, dopo le prime prese di Leonardo e il primo passo
+Aggiornato l’ultima volta il 14 novembre 2026, nella notte, dopo il modello della Santa Maria in Blender (la
+forma e una prima superficie, documento 40), in attesa delle note dell’autore sui due fogli.
+Prima, il 13 novembre 2026, in mattinata, dopo le prime prese di Leonardo e il primo passo
 sull’estetica della cinematica (il cielo), con la Santa Maria ferma in attesa di un modello in Blender.
 Prima, il 12 novembre 2026, nella notte, quando l’autore ha chiuso la sessione dopo aver
 ascoltato «Havela», l’inno degli alieni (documento 32, §3.11): «Domani ti dico cosa ne faremo. Per oggi ci
@@ -64,8 +66,22 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   più verosimile il fatto che ce la possano fare»; e «se così vincono sempre tutti, dove sta la sfida?»):
   `collaudo/verosimili.py`, con la fuga giocata da principianti veri.
 
-## Dove siamo (13 novembre 2026)
+## Dove siamo (14 novembre 2026)
 
+- **14 novembre 2026, nella notte: il modello della Santa Maria, cominciato** (documento 40). L’autore:
+  «continuiamo il lavoro?». Fatti in una sessione **la forma** (lo scafo e 160 pezzi, costruiti in Blender da
+  `strumenti/nave/modello.py` a partire da `misure.py`: 80 × 13 × 12 metri misurati sul modello, una pelle
+  chiusa) e **una prima superficie** (`superficie.py` dipinge la tessitura dello scafo sulla scheda 05B: i corsi
+  di lamiere con giunte e rivetti, le toppe di metalli diversi, la fascia scura in basso con la matricola a
+  stencil, le fasce arancioni intorno ai due portelli; `pelle.py` dice dove cade ogni punto). In più, in
+  rilievo, i particolari che nessuna tavola dice: sei botole e due corrimano sul dorso, un condotto per
+  fianco, le griglie della sala macchine, i pioli dall’uscita al dorso. **Sono proposte**: l’elenco è nel
+  documento 40. I due fogli (`progettazione/40-modello/foglio-1-la-forma.jpg`, `foglio-2-la-superficie.jpg`)
+  gli sono stati mandati durante il lavoro; **le sue note non ci sono ancora**. Quello che non va, detto nel
+  documento: la sagoma è quella semplice delle tavole (di lontano, un tubo: gli still di oggi hanno casse e
+  sovrastrutture che qui non ci sono, e aggiungerne è una sua scelta, da portare nella tabella e nelle tavole);
+  la luce delle viste è da studio. **Alla prossima**: prima le sue note sui due fogli; poi le due riprese
+  dell’intro con le luci separate, accanto agli still di oggi. Nel gioco non è cambiato niente.
 - **13 novembre 2026, mattina: le prime prese di Leonardo.** Sono arrivate `sm-001.wav`…`sm-004.wav`, le
   quattro descrizioni della plancia. Controllate: il testo è quello del copione, parola per parola (Whisper
   scrive «cucetta», ma l’autore ha ascoltato: «cuccetta va bene»; con le doppie Whisper sbaglia, non si
@@ -135,7 +151,9 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   versione sola, senza prove. È generata (2:58, `audio/musica-ia/CT/originali/CT-02-havela.mp3`, fuori da
   git), e lui l’ha ascoltata: «il brano è molto bello. Tienilo ma non sostituirlo a quello che c’è ora nei
   titoli di coda. Domani ti dico cosa ne faremo». **Nel gioco non è cambiato niente**: i titoli hanno ancora
-  «Voice in the Deep». **La prossima sessione comincia da qui: chiedergli che cosa farne**, e non proporre
+  «Voice in the Deep». **Deciso il 13 novembre** (documento 32, §3.12): «Havela» di ElevenLabs è nel gioco come «Ascolta il canto»,
+  nel colloquio con l’Anziano (beta.11), e i titoli restano com’erano; la versione di Suno resta da parte.
+  Allora la nota era: chiedergli che cosa farne, e non proporre
   di metterla nei titoli. Dei suoi 7.000 crediti ElevenLabs il connettore ne ha segnati 2.670. Prima di
   chiudere ha chiesto lo stile, il testo e il titolo per provarla lui in Suno V6 (32, §3.11, in fondo), e
   l’ha portata subito (4:03, `CT-03-havela-suno.mp3`, accanto all’altra; misurata, nel registro): «dura più
@@ -332,6 +350,8 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
    - due decisioni sue: E7, la cornice sugli schermi 16:10; E4, la modalità scritta.
 3. **L’intro, perfezionata**:
    - **l’estetica, con Fable 5.2** (documento 09, §14; cominciata il 13 novembre): ~~il cielo~~, fatto;
+     **il modello della nave è cominciato il 14 novembre** (documento 40: la forma e una prima superficie;
+     si aspettano le note dell’autore sui due fogli, poi le due riprese con le luci separate);
      **la Santa Maria nella luce**, ferma finché non c’è il modello in Blender (l’idea è dell’autore;
      Blender c’è, il collegamento MCP no e non serve; prima il progetto della nave: la scheda unica dai due
      giochi, le schematiche, poi il modello fatto da script, vedi 09, §14; il modello deve essere la nave
@@ -400,6 +420,7 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 | `progettazione/36-punto-della-situazione.md` | il punto della situazione dell’11 novembre 2026: che cosa è fatto, che cosa resta, che cosa aspetta l’autore |
 | `progettazione/37-revisione-globale.md` | la revisione globale dell’11 novembre 2026: 3 gravi, 26 medie, 40 lievi; il §8 è l’ordine consigliato, il §9 il registro delle correzioni |
 | `progettazione/38-la-santa-maria.md`, `38-la-santa-maria-schizzo.png` | il progetto della nave, primo passo: la scheda unica dai due giochi, le otto decisioni (13 novembre 2026), lo schizzo (`strumenti/nave/schizzo.py`) |
+| `progettazione/40-il-modello-della-santa-maria.md`, `40-modello/` | il terzo passo: il modello in Blender (14 novembre 2026), la forma e una prima superficie; i due fogli; che cosa è inventato lì e che cosa non va ancora; `strumenti/nave/modello.py`, `superficie.py`, `pelle.py`, `foglio.py` |
 | `progettazione/39-schematiche-della-santa-maria.md`, `39-schematiche/` | il secondo passo: le tre tavole e da dove viene ogni misura; `strumenti/nave/misure.py` è la tabella, `schematiche.py` le disegna |
 | `progettazione/33-revisione-narrativa.md` | la revisione narrativa: i 37 punti, il metodo, il registro delle decisioni, il calendario |
 | `progettazione/34-schede-personaggi.md` | le schede delle voci della nave (blocco B della revisione narrativa) |

@@ -5,7 +5,8 @@ del documento 38, §6 («Sì, tutte»); queste tavole le mettono in misura. Eran
 
 > **Approvate il 13 novembre 2026.** L’autore le ha guardate e ha risposto: «Sì vanno benissimo». Valgono
 > anche le parti inventate qui (più sotto). Dalle stesse misure si costruisce il modello in Blender: è il
-> terzo passo, non ancora cominciato. Sulle tavole resta la scritta «da approvare» finché non si ridisegnano.
+> terzo passo, cominciato il 14 novembre 2026 (documento 40: la forma e una prima superficie). Sulle tavole resta
+> la scritta «da approvare» finché non si ridisegnano.
 
 ## Le tavole
 

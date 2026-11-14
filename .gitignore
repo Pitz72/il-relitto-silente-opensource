@@ -39,3 +39,7 @@ collaudo/tracce/
 grafica/nuovi/
 grafica/copertine/*
 !grafica/copertine/relitto-social.png
+
+# Il modello della Santa Maria: il file di Blender si rifà da strumenti/nave/modello.py
+strumenti/nave/uscita/
+progettazione/40-modello/viste/
