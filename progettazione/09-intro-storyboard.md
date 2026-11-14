@@ -578,9 +578,10 @@ sia andato. K5 non l’ha messo in un posto: sta in basso a sinistra, come K4.
 
 **Da dire all’autore** (non sono errori: sono cose che solo lui può decidere):
 
-- il libro qui è *Dal Registro della Santa Maria*, come l’ha scritto; nel menu e nei titoli di coda c’è
-  ancora «Una storia tratta da *Il Registro della Santa Maria*» (la sua scelta del 19 ottobre). Sono due
-  titoli diversi per lo stesso libro: va scelto quale, e messo uguale dappertutto;
+- ~~il titolo del libro~~: **deciso lo stesso giorno, «Dal Registro»**. Il libro si chiama *Dal Registro della
+  Santa Maria* dappertutto: nel menu, nei titoli di coda, nel file dei riconoscimenti e nelle copertine la
+  riga è «Una storia tratta dal libro *Dal Registro della Santa Maria*» (con «dal libro», come nel credito
+  dell’intro, perché «tratta da Dal Registro» non si legge: questa parola in più è mia, e gliel’ho detta);
 - «Leonardo Tomassetti è William T. Erickson» compare mentre parla L.V., che ha la voce «Elio» (sintesi
   vocale). Chi guarda può credere che quella voce sia di Leonardo.
 

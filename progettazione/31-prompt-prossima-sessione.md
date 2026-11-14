@@ -123,10 +123,11 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   un colore e uno scioglimento nuovi e senza il suono delle lettere; tutto nel formato largo, loghi compresi;
   una pellicola unica su loghi e intro. **Fatte tutte**, con le prove; l’intro dura 3:24. **Non le ha ancora
   viste né sentite**: il filmato nuovo è `consegne/Filmato intro 2026-11-14/Il Relitto Silente - intro con i
-  titoli di testa.mp4`. **Alla prossima: il suo giudizio sul filmato nuovo**; due cose da decidere con lui
-  (il titolo del libro, che nell’intro è «Dal Registro della Santa Maria» e nel menu e nei titoli di coda
-  «Il Registro della Santa Maria»; il credito di Leonardo, che compare mentre parla L.V.); poi la beta 12,
-  con il suo sì. Il filmato si rifà in un quarto d’ora (`strumenti/intro/LEGGIMI.md`).
+  titoli di testa.mp4`. **Alla prossima: il suo giudizio sul filmato nuovo**; una cosa da decidere con lui (il credito di Leonardo, che compare mentre parla L.V.); poi la
+  beta 12, con il suo sì. **Il titolo del libro è deciso: «Dal Registro della Santa Maria», dappertutto**
+  (menu, titoli di coda, riconoscimenti, copertine: «Una storia tratta dal libro *Dal Registro della Santa
+  Maria*»; la copertina dell’anteprima su GitHub va ricaricata a mano dalle impostazioni del repository, se
+  la vuole aggiornata). Il filmato si rifà in un quarto d’ora (`strumenti/intro/LEGGIMI.md`).
 - **13 novembre 2026, mattina: le prime prese di Leonardo.** Sono arrivate `sm-001.wav`…`sm-004.wav`, le
   quattro descrizioni della plancia. Controllate: il testo è quello del copione, parola per parola (Whisper
   scrive «cucetta», ma l’autore ha ascoltato: «cuccetta va bene»; con le doppie Whisper sbaglia, non si

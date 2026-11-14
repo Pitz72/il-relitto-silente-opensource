@@ -239,7 +239,7 @@ def gioco():
     titolo = re.search(r'^Il titolo è "([^"]+)"', fav, re.M).group(1)
     autore = re.search(r'^L\'autore è "([^"]+)"', fav, re.M).group(1)
     return {"titolo": titolo, "autore": autore,
-            "racconto": "Una storia tratta da Il Registro della Santa Maria"}
+            "racconto": "Una storia tratta dal libro Dal Registro della Santa Maria"}
 
 
 def pacchetti_js():

@@ -11,6 +11,7 @@ documenti di `progettazione/`.
 ### Per chi gioca
 
 - **L’inizio ha i suoi titoli di testa.** La cinematica d’apertura ora si presenta come un film: chi la presenta, di chi è il gioco, chi lo produce, il libro da cui viene, il tema musicale, la voce di William. I due loghi e tutta la cinematica stanno nel formato largo del cinema, sotto una pellicola leggera: il suo colore, la luce che respira appena, ogni tanto un granello di polvere (si spegne dalla scheda «Grafica», «Pellicola dell’apertura»). Le scritte dell’apparecchio si stampano con il loro cursore, e si sente. Il titolo nasce dai glifi in un altro modo: una linea d’oro pallido che scorre fino a diventare le lettere, senza più un suono per lettera. E il faro, visto dall’oblò, ora illumina davanti.
+- **Il libro ha il suo titolo.** Nel menu e nei titoli di coda la storia è «tratta dal libro *Dal Registro della Santa Maria*», come nei titoli di testa.
 - **La Santa Maria dell’inizio è una nave vera.** Nella cinematica d’apertura non è più una fotografia: è la nave intera, costruita pezzo per pezzo, che passa davanti alle stelle girando davvero, con l’oblò acceso, i fanali che respirano e il faro che parte dalla sua lampada. Vista da dietro, i quattro reattori si spengono sotto i tuoi occhi: la fiamma si accorcia, resta la brace, e la nave prosegue da sola verso la grande forma nera. E si sente: il ronzio del reattore cala e muore, due colpi sordi, poi il metallo che si raffredda, e il silenzio.
 
 ### Aggiunto
@@ -25,6 +26,10 @@ documenti di `progettazione/`.
 ### Corretto
 
 - **Le foto dell’intro oltre il secondo 177 riescono** (`strumenti/intro/cdp_edge.mjs`). Non era il disegno: il canale di Node verso Edge chiude in silenzio quando un messaggio supera i 4 MB («Max decompressed message size exceeded»), e la foto della plancia sotto la grana li supera. Gli strumenti dell’intro ora parlano con Edge su un canale loro, senza compressione, e se il canale cade lo dicono invece di aspettare per sempre.
+
+### Cambiato
+
+- **Il titolo del libro è «Dal Registro della Santa Maria», dappertutto** (decisione dell’autore, 14 novembre 2026; prima nel menu e nei titoli di coda era «Il Registro della Santa Maria», e i due titoli convivevano). La riga è «Una storia tratta dal libro *Dal Registro della Santa Maria*»: nel menu, nei titoli di coda, nel file dei riconoscimenti e delle licenze (`strumenti/riconoscimenti.py`), nelle copertine (`strumenti/copertina/componi.py`; rifatta quella dell’anteprima del repository).
 
 ## [0.2.5-beta.11] - 2026-11-13
 
