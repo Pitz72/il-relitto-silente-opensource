@@ -8,6 +8,14 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+### Per chi gioca
+
+- **Il cognome di William è scritto giusto.** Nei titoli di testa il credito di Leonardo Tomassetti diceva «William T. Erickson»; adesso dice «William T. Eriksonn», come nel resto del gioco e nel libro.
+
+### Corretto
+
+- Il credito K5 dei titoli di testa (`app/src/intro/scaletta.ts`), la sua prova (`prove/titoli-di-testa.test.ts`) e il documento 09 usano la grafia del canone, «Eriksonn» (la bibbia della saga, i finali, il copione di William). Restano scritte come le ha sentite Whisper le trascrizioni automatiche in `doppiaggio/servizio/tagli.json`: sono il resoconto dell’ascolto, non testo del gioco.
+
 ## [0.2.5-beta.12] - 2026-11-14
 
 ### Per chi gioca

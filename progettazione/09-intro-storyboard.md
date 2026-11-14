@@ -567,7 +567,7 @@ schermo lo annunciano. Le regole stanno in `app/src/intro/intro.css` (`.credito`
 | K2 | dopo «Lo rileggo: diciannove.» | cartello | *produttore esecutivo* · **MICHELA DE PAOLA** |
 | K3 | dopo «Ho insistito io.» | in alto a sinistra, sull’immagine | *tratto dal libro* · **DAL REGISTRO DELLA SANTA MARIA** · *di* **SIMONE PIZZI** |
 | K4 | nello zoom all’indietro, quando la Santa Maria è piccola | in basso a sinistra | *tema musicale originale di* · **ALIRIO BRUNI** |
-| K5 | quando L.V. ricomincia a parlare | in basso a sinistra | **LEONARDO TOMASSETTI** · *è William T. Erickson* |
+| K5 | quando L.V. ricomincia a parlare | in basso a sinistra | **LEONARDO TOMASSETTI** · *è William T. Eriksonn* |
 
 Per K1 e K2 l’immagine della spia verde va nel nero in nove decimi, una pausa di un terzo di secondo, il
 cartello, un’altra pausa, e l’immagine torna in un secondo; L.V. aspetta ancora un respiro e continua. La
@@ -582,7 +582,7 @@ sia andato. K5 non l’ha messo in un posto: sta in basso a sinistra, come K4.
   Santa Maria* dappertutto: nel menu, nei titoli di coda, nel file dei riconoscimenti e nelle copertine la
   riga è «Una storia tratta dal libro *Dal Registro della Santa Maria*» (con «dal libro», come nel credito
   dell’intro, perché «tratta da Dal Registro» non si legge: questa parola in più è mia, e gliel’ho detta);
-- «Leonardo Tomassetti è William T. Erickson» compare mentre parla L.V., che ha la voce «Elio» (sintesi
+- «Leonardo Tomassetti è William T. Eriksonn» compare mentre parla L.V., che ha la voce «Elio» (sintesi
   vocale). Chi guarda può credere che quella voce sia di Leonardo.
 
 **16.3 Il cursore che scrive** («un effetto sonoro come di cursore che scrive, come quelli che si usavano nei

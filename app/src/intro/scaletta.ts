@@ -176,7 +176,7 @@ export const CREDITI = {
     fermo: 4.5,
   },
   K4: { righe: [{ piccolo: "tema musicale originale di" }, { grande: "ALIRIO BRUNI" }], posto: "basso", fermo: 3.6 },
-  K5: { righe: [{ grande: "LEONARDO TOMASSETTI" }, { piccolo: "è William T. Erickson" }], posto: "basso", fermo: 3.6 },
+  K5: { righe: [{ grande: "LEONARDO TOMASSETTI" }, { piccolo: "è William T. Eriksonn" }], posto: "basso", fermo: 3.6 },
 } as const satisfies Record<string, { righe: readonly Riga[]; posto: Posto; fermo: number }>;
 /** un credito entra in un secondo ed esce in poco meno */
 export const ENTRA_C = 1.0;

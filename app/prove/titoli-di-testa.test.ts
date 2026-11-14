@@ -20,7 +20,7 @@ test("i titoli di testa: sei, con le parole dell'autore, nell'ordine in cui li h
     "produttore esecutivo MICHELA DE PAOLA",
     "tratto dal libro DAL REGISTRO DELLA SANTA MARIA di SIMONE PIZZI",
     "tema musicale originale di ALIRIO BRUNI",
-    "LEONARDO TOMASSETTI è William T. Erickson",
+    "LEONARDO TOMASSETTI è William T. Eriksonn",
   ]);
   assert.deepEqual(S.crediti.map((c) => c.posto), ["centro", "centro", "centro", "alto", "basso", "basso"]);
   for (let i = 1; i < S.crediti.length; i++) assert.ok(S.crediti[i].entra >= S.crediti[i - 1].via, "due crediti insieme");
