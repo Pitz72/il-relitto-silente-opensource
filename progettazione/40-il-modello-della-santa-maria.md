@@ -11,7 +11,7 @@ dell’autore, **i pezzi che mancavano e una superficie più vecchia**.
 > d’aggancio, dei radar o una griglia di sensori e poi degli attacchi per l’attracco ai moli spaziali. La texture
 > mi piace […] la superficie deve dimostrare oltre 90 anni di attività ma diciamo che sono soddisfatto». La forma
 > e la sagoma semplice sono approvate; dei particolari inventati non ne ha tolto nessuno. Le sue tre richieste e
-> gli anni in più sono nel terzo foglio (più sotto), che deve ancora guardare.
+> gli anni in più sono nel terzo foglio (più sotto), **approvato** lo stesso giorno: «Sì, vai avanti».
 
 ## I fogli
 
@@ -163,7 +163,24 @@ Nessun testo e nessuna tavola lo dice: sono proposte, e l’autore le conferma o
 
 ## Che cosa viene dopo
 
-1. Le note dell’autore sul terzo foglio: i tre pezzi nuovi, e se gli anni si vedono abbastanza.
-2. Le due riprese dell’intro (da prua di tre quarti per B, da poppa per E), con le luci separate: lo scafo,
+1. **Una scelta dell’autore, aperta** (14 novembre 2026). Mentre preparavo le due riprese ferme ha chiesto: «Ma
+   non conviene fare il render delle animazioni della nave direttamente in Blender e poi applicarle con l’uso
+   di un canale alpha o qualcosa del genere?». Oggi l’intro è una scena in tre dimensioni disegnata dal vivo
+   (`app/src/intro/scala.ts`), e la nave ci sta come una foto ritagliata su un cartello che guarda la macchina.
+   Nella scena B la nave passa davanti a una macchina ferma, a circa 900 metri: l’angolo da cui la si vede
+   cambia, e una foto non può girare. Nella scena E la macchina arretra da 165 metri a 18 chilometri sulla
+   stessa retta: cambia la prospettiva, e la foto resta quella da vicino. Le strade sono tre:
+   - **le foto ferme**, con le luci separate (il piano di prima): poco lavoro, ma la nave resta un cartello;
+   - **il filmato da Blender, con la trasparenza** (la sua idea): la nave si muove davvero e la luce è quella
+     di Blender; ma un filmato va tenuto a tempo con il cielo, la polvere e il faro, che l’intro disegna dal
+     vivo, e basta un fotogramma di scarto perché la nave scivoli; pesa; è fatto per una sola misura di
+     schermo; e la trasparenza nei filmati su Linux non è sicura;
+   - **la nave vera dentro l’intro** (la mia raccomandazione): il modello e la sua tessitura caricati nella
+     scena, disegnati dal vivo con la stessa macchina del cielo; niente da tenere a tempo, nitida a ogni
+     misura, pochi megabyte, e le luci (l’oblò, i fanali, la spinta, il faro) nascono nei loro punti veri. Nello
+     spazio la luce è un sole solo, e dal vivo viene quasi come in Blender; le ombre morbide si possono
+     cuocere in Blender una volta. È più codice nell’intro.
+   Decide lui.
+2. Se restano le foto ferme: le due riprese dell’intro (da prua di tre quarti per B, da poppa per E), con le luci separate: lo scafo,
    l’oblò d’ambra, i fanali, la spinta dei quattro scarichi; messe accanto agli still di oggi, perché decida lui.
 3. Il faro, e la fotografia unica dell’intro (documento 09, §14).

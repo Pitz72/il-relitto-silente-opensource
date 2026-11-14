@@ -4,7 +4,7 @@ Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
 Aggiornato l’ultima volta il 14 novembre 2026, nella notte, dopo il modello della Santa Maria in Blender (la
 forma, una prima superficie e, dopo le sue note, i pezzi nuovi e gli anni: documento 40), in attesa che
-guardi il terzo foglio.
+scelga come mettere la nave nell’intro.
 Prima, il 13 novembre 2026, in mattinata, dopo le prime prese di Leonardo e il primo passo
 sull’estetica della cinematica (il cielo), con la Santa Maria ferma in attesa di un modello in Blender.
 Prima, il 12 novembre 2026, nella notte, quando l’autore ha chiuso la sessione dopo aver
@@ -87,11 +87,16 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   tubi, i tamburi del cavo), i sensori (una griglia in piedi sul dorso, un pannello per guancia del muso), i
   quattro attacchi d’ormeggio sul fianco sinistro; e la superficie invecchiata (lamiere imbarcate,
   ammaccature, saldature, perdite, antiruggine, il muso sabbiato, la poppa cotta). I tre pezzi sono anche
-  nella tabella e nelle tavole del documento 39, ridisegnate. **Il terzo foglio non l’ha ancora commentato.**
+  nella tabella e nelle tavole del documento 39, ridisegnate. **Il terzo foglio è approvato** («Sì, vai avanti»).
+  Poi una sua domanda, **aperta**: «non conviene fare il render delle animazioni della nave direttamente in
+  Blender e poi applicarle con l’uso di un canale alpha?». Tre strade (documento 40, in fondo): le foto ferme
+  con le luci separate; il filmato da Blender con la trasparenza (la sua idea); la nave vera caricata nella
+  scena dell’intro e disegnata dal vivo (la mia raccomandazione: niente da tenere a tempo, nitida a ogni
+  misura, leggera). Decide lui.
   Quello che non va, detto nel
   documento: la sagoma è semplice, come vuole la scheda 05B («I pannelli solari sono la sola cosa che rompe la
   sagoma»), ma di lontano è un tubo, e gli still di oggi hanno casse e sovrastrutture che qui non ci sono (se
-  gli sembra nuda: altri particolari piccoli sulla pelle, non volumi nuovi); la luce delle viste è da studio. **Alla prossima**: prima le sue note sul terzo foglio; poi le due riprese
+  gli sembra nuda: altri particolari piccoli sulla pelle, non volumi nuovi); la luce delle viste è da studio. **Alla prossima**: prima la sua scelta fra le tre strade; se restano le foto ferme, le due riprese
   dell’intro con le luci separate, accanto agli still di oggi. Nel gioco non è cambiato niente.
 - **13 novembre 2026, mattina: le prime prese di Leonardo.** Sono arrivate `sm-001.wav`…`sm-004.wav`, le
   quattro descrizioni della plancia. Controllate: il testo è quello del copione, parola per parola (Whisper
@@ -362,8 +367,8 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 3. **L’intro, perfezionata**:
    - **l’estetica, con Fable 5.2** (documento 09, §14; cominciata il 13 novembre): ~~il cielo~~, fatto;
      **il modello della nave è cominciato il 14 novembre** (documento 40: la forma e una prima superficie;
-     la forma è approvata, i tre pezzi chiesti e gli anni sono fatti; si aspettano le sue note sul terzo
-     foglio, poi le due riprese con le luci separate);
+     la forma, i tre pezzi chiesti e gli anni sono approvati; prima di continuare, la sua scelta su come
+     mettere la nave nell’intro: foto ferme, filmato da Blender, o la nave vera disegnata dal vivo);
      **la Santa Maria nella luce**, ferma finché non c’è il modello in Blender (l’idea è dell’autore;
      Blender c’è, il collegamento MCP no e non serve; prima il progetto della nave: la scheda unica dai due
      giochi, le schematiche, poi il modello fatto da script, vedi 09, §14; il modello deve essere la nave
