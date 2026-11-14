@@ -155,6 +155,10 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   // finché la plancia non è andata nella lente del gioco, e poi si apre su di lui. Saltata prima, la
   // partita parte quando l'intro se ne va
   const [introSopra, setIntroSopra] = useState(false);
+  // i loghi passano di nuovo subito prima dell'intro: sono l'inizio della cinematica d'apertura (documento
+  // 09, §16; l'autore, 14 novembre 2026). L'intro è già montata sotto, ferma, e parte quando finiscono
+  const [loghiPrima, setLoghiPrima] = useState(false);
+  const finitiILoghi = useCallback(() => setLoghiPrima(false), []);
   const partitaSotto = useRef(false);
   const partitaDallIntro = useCallback(() => {
     if (partitaSotto.current) return;
@@ -336,7 +340,10 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
     id: "nuova",
     etichetta: "Nuova partita",
     azione: () => {
-      const via = () => setSchermata({ tipo: "intro" });
+      const via = () => {
+        setLoghiPrima(true);
+        setSchermata({ tipo: "intro" });
+      };
       if (inCorso)
         setDomanda({ testo: "Cominciare una partita nuova?", sotto: "La partita in corso si perde, se non l’hai salvata.", si: "Comincia", no: "Lascia stare", allora: via });
       else via();
@@ -386,10 +393,16 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
               ridotto={ridotto}
               grana={opzioni.grana}
               pellicola={opzioni.pellicola}
+              attesa={loghiPrima && schermata.tipo === "intro"}
               voce={dentroTauri() && opzioni.volume > 0 && opzioni.volumeParlato > 0}
               onPartita={partitaDallIntro}
               onFine={fineIntro}
             />
+          </Suspense>
+        ) : null}
+        {schermata.tipo === "intro" && loghiPrima ? (
+          <Suspense key="loghi-intro" fallback={<div className="nero-avvio" aria-hidden="true" />}>
+            <Loghi onFine={finitiILoghi} grana={opzioni.grana} pellicola={opzioni.pellicola} />
           </Suspense>
         ) : null}
       </>

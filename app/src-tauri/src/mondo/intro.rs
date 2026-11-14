@@ -20,7 +20,7 @@ use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
 
-use super::colpi::{self, Bus, Colpo, Corpo, Lastra};
+use super::colpi::{self, Bus, Colpo, Corpo};
 use super::dsp::{db, Biquad, Caso, Scorrevole};
 use super::fondi::Ventilazione;
 use super::brusio::Brusio;
@@ -116,12 +116,6 @@ pub enum Cue {
     Abbassa(f32, f32),
     /// il re: (livello dB, armonici 0–1, secondi); nella plancia è il reattore
     Re(f32, f32, f32),
-    /// i reattori si spengono, in tanti secondi: il re fatica, perde gli armonici alti e muore
-    Reattori(f32),
-    /// un singhiozzo dei reattori, sentito da dentro: un colpo sordo nella struttura (livello dB)
-    Spinta(f32),
-    /// una lamiera degli scarichi che si raffredda: un tic di metallo, piano (livello dB, posto)
-    Lamiera(f32, f32),
     /// la ventilazione della plancia: (livello dB, secondi)
     Vent(f32, f32),
     /// il soffio di brusio dalla radio: (livello dB, secondi)
@@ -134,8 +128,6 @@ pub enum Cue {
     Cuore(f32),
     /// un carattere stampato dal cursore dell'apparecchio: (altezza in Hz, livello dB)
     Cursore(f32, f32),
-    /// un clic granulare, il glifo che compare: (livello dB, posto)
-    Glifo(f32, f32),
     /// lo squelch della radio che si apre o si chiude: (livello dB)
     Squelch(f32),
     /// tutto verso il silenzio, in secondi (i file no: hanno la loro fine)
@@ -220,25 +212,14 @@ pub fn partitura(d: &DatiIntro) -> Vec<(f32, Cue)> {
     p(m.brusio[1], Cue::Brusio(SPENTO, 0.03));
     p(m.brusio[1], Cue::Squelch(-24.0));
 
-    // ---- E · la scala: fuori dalla nave la plancia tace; resta il tema. Il re del reattore no: si sente
-    // ancora, più piano, finché i reattori non si spengono, e muore con la fiamma (l'autore, 14 novembre
-    // 2026: «un effetto di spegnimento dei reattori»; la nave prosegue per inerzia, nel silenzio)
+    // ---- E · la scala: fuori dalla nave la plancia tace; resta il tema. I reattori si spengono in silenzio
+    // (si vede: scala.ts). Il 14 novembre 2026 lo spegnimento aveva avuto un suono suo (il re che moriva con
+    // la fiamma, l'interruttore, due colpi sordi, tre tic di lamiera); l'autore, sentito il filmato: «si
+    // sentono dei bip sintetizzati da te […] non mi piacciono, meglio non mettere niente». Tolto tutto: il re
+    // del reattore sfuma quando la scena esce dalla nave, com'era prima. Se porterà dei suoni suoi (uno
+    // scandaglio, l'eco di un radar), il momento c'è: `reattori`, che la pagina manda ancora
     p(m.scala[0], Cue::Vent(SPENTO, 1.0));
-    if m.reattori[0] >= 0.0 {
-        let dura = m.reattori[1] - m.reattori[0];
-        p(m.scala[0], Cue::Re(-15.0, 0.4, 0.8));
-        // l'interruttore; la nota che muore; i due singhiozzi della fiamma (dove li fa la pagina: a 0,16 e
-        // a 0,40 dello spegnimento), come li sente chi è a bordo; e poi il metallo che si raffredda
-        p(m.reattori[0], Cue::Rele(false, -17.0, 0.0));
-        p(m.reattori[0], Cue::Reattori(dura));
-        p(m.reattori[0] + 0.16 * dura, Cue::Spinta(-18.0));
-        p(m.reattori[0] + 0.40 * dura, Cue::Spinta(-22.0));
-        for (dt, liv, posto) in [(0.9, -32.0, -0.35), (2.5, -35.0, 0.3), (4.8, -38.0, -0.1)] {
-            p(m.reattori[1] + dt, Cue::Lamiera(liv, posto));
-        }
-    } else {
-        p(m.scala[0], Cue::Re(SPENTO, 0.0, 2.0));
-    }
+    p(m.scala[0], Cue::Re(SPENTO, 0.0, 2.0));
 
     // ---- F · la traccia, seconda parte: il ponte dal fruscio; il cuore, dopo «La vedo pulsare»
     p(m.fruscio_f, Cue::Nastro(-18.0, 1.5));
@@ -247,17 +228,11 @@ pub fn partitura(d: &DatiIntro) -> Vec<(f32, Cue)> {
     p(pulsare + 1.45, Cue::Cuore(-19.0));
     p(m.spia_spenta - 0.2, Cue::Tace(0.6));
 
-    // ---- G · il titolo: sedici glifi, un clic granulare ciascuno mentre si tracciano. Quando si sciolgono
-    // nelle lettere non c'è più un suono per lettera (l'autore, 14 novembre 2026: «togli quell'effetto sonoro
-    // durante la trasformazione dei caratteri, non è mica il cartellone della stazione»): sotto sale piano una
-    // nota bassa, il re, che è piena quando il titolo è intero
-    let glifi = 16usize;
-    for i in 0..glifi {
-        let t = m.glifi[0] + (m.glifi[1] - m.glifi[0]) * (i as f32 / glifi as f32);
-        let posto = ((i * 7 % 11) as f32 / 5.0) - 1.0;
-        p(t, Cue::Glifo(-22.0, posto * 0.5));
-    }
-    p(m.traduzione[0], Cue::Re(-18.0, 0.15, (m.traduzione[1] - m.traduzione[0]).max(0.5)));
+    // ---- G · il titolo: i glifi si tracciano e si sciolgono nelle lettere in silenzio. Prima c'erano sedici
+    // clic granulari e sedici fruscii che salivano (l'autore, 14 novembre 2026: «togli quell'effetto sonoro
+    // durante la trasformazione dei caratteri, non è mica il cartellone della stazione»; e, sentiti ancora i
+    // clic e la nota che saliva: «Togli anche quel suono»). Resta, quando il titolo è intero, una nota bassa:
+    // il re, sotto la coda del tema
     p(m.traduzione[1], Cue::Re(-15.0, 0.3, 2.0));
 
     // ---- H · la plancia: il re è il reattore, la ventilazione, la console che parte
@@ -426,23 +401,6 @@ impl Intro {
             Cue::Re(liv, alti, s) => {
                 self.re.g.verso(lin(liv) * NORM_RE, s, sr);
                 self.re.alti.verso(alti, s, sr);
-                self.re.scarto.verso(0.11, s, sr);
-            }
-            Cue::Spinta(liv) => {
-                let c = colpi::spinta(&mut self.caso, sr);
-                self.colpo(c, liv, 0.0);
-            }
-            Cue::Lamiera(liv, posto) => {
-                let lastra = Lastra::a_caso((380.0, 1100.0), (0.25, 0.7), &mut self.caso);
-                let c = colpi::lamiera(&lastra, &mut self.caso, sr);
-                self.colpo(c, liv, posto);
-            }
-            Cue::Reattori(s) => {
-                // l'altezza non cambia mai: il secondo banco si scorda (il reattore fatica), gli armonici alti
-                // se ne vanno per primi, e la nota muore nel tempo in cui muore la fiamma
-                self.re.scarto.verso(0.42, s * 0.5, sr);
-                self.re.alti.verso(0.0, s * 0.45, sr);
-                self.re.g.verso(0.0, s, sr);
             }
             Cue::Vent(liv, s) => self.vent.g.verso(lin(liv) * NORM_VENT, s, sr),
             Cue::Brusio(liv, s) => {
@@ -462,10 +420,6 @@ impl Intro {
                 self.colpo_in(b, liv - 5.0, 0.0, 0.26);
             }
             Cue::Cursore(f, liv) => self.colpo(colpi::nota(f, CURSORE_S, sr), liv, 0.0),
-            Cue::Glifo(liv, posto) => {
-                let c = colpi::granello(&mut self.caso, sr);
-                self.colpo(c, liv, posto);
-            }
             Cue::Squelch(liv) => self.colpo(colpi::squelch(sr), liv, 0.1),
             Cue::Fine(s) => {
                 self.esegui(Cue::Tace(s));
@@ -613,10 +567,11 @@ mod prove {
         assert!(tra(72.7, 73.0, &|c| matches!(c, Cue::Rele(..))), "D: manca il relè del faro");
         assert!(tra(74.0, 77.0, &|c| matches!(c, Cue::Brusio(..))), "D: manca il brusio dalla radio");
         assert!(tra(101.0, 103.0, &|c| matches!(c, Cue::Nastro(..))), "F: il fruscio non torna prima della fine di E");
-        assert_eq!(p.iter().filter(|(t, c)| *t >= 130.0 && *t < 131.8 && matches!(c, Cue::Glifo(..))).count(), 16, "G: sedici glifi");
-        // le lettere del titolo non hanno più un suono ciascuna: sale una nota sola
-        assert!(tra(131.7, 131.9, &|c| matches!(c, Cue::Re(l, _, s) if *l < -15.0 && *s > 2.5)), "G: la nota non sale mentre i glifi si sciolgono");
-        assert!(tra(134.7, 134.9, &|c| *c == Cue::Re(-15.0, 0.3, 2.0)), "G: la nota non è piena con il titolo");
+        // i glifi si tracciano e si sciolgono in silenzio; la nota bassa arriva con il titolo intero
+        assert!(!tra(124.5, 134.7, &|_| true), "G: mentre i glifi diventano il titolo non deve suonare niente");
+        assert!(tra(134.7, 134.9, &|c| *c == Cue::Re(-15.0, 0.3, 2.0)), "G: la nota non arriva con il titolo");
+        // nella scala i reattori si spengono senza un suono loro: il re sfuma quando si esce dalla nave
+        assert!(tra(79.9, 80.1, &|c| *c == Cue::Re(SPENTO, 0.0, 2.0)), "E: il re non sfuma uscendo dalla nave");
         assert!(!p.iter().any(|(_, c)| matches!(c, Cue::Cursore(..))), "una pagina vecchia non manda le stampe: nessun cursore");
         assert!(tra(142.0, 146.0, &|c| matches!(c, Cue::Rele(..))), "H: la console non parte");
     }
@@ -723,41 +678,15 @@ mod prove {
     }
 
     #[test]
-    fn il_re_del_reattore_muore_quando_i_reattori_si_spengono() {
-        // l'autore, 14 novembre 2026: nella scala i reattori si spengono, e la nave prosegue per inerzia
+    fn allo_spegnimento_dei_reattori_non_si_aggiunge_nessun_suono() {
+        // l'autore, 14 novembre 2026: «meglio non mettere niente». Con il momento `reattori` o senza, la
+        // partitura della scala è la stessa: fra l'uscita dalla nave e il ritorno del fruscio non parte niente
+        let senza = partitura(&momenti_di_prova());
         let mut d = momenti_di_prova();
         d.momenti.reattori = [81.3, 83.2];
-        let p = partitura(&d);
-        assert!(p.iter().any(|(t, c)| (*t - 81.3).abs() < 0.01 && matches!(c, Cue::Reattori(s) if (*s - 1.9).abs() < 0.01)), "manca lo spegnimento");
-        assert!(!p.iter().any(|(t, c)| (*t - 80.0).abs() < 0.01 && *c == Cue::Re(SPENTO, 0.0, 2.0)), "il re tace prima che i reattori si spengano");
-        assert_eq!(p.iter().filter(|(t, c)| *t > 81.3 && *t < 83.2 && matches!(c, Cue::Spinta(..))).count(), 2, "i due singhiozzi");
-        assert_eq!(p.iter().filter(|(t, c)| *t > 83.2 && *t < 89.0 && matches!(c, Cue::Lamiera(..))).count(), 3, "il metallo che si raffredda");
-        let mut i = Intro::nuovo(24000.0, 9);
-        i.avvia(&d);
-        let blocco = 128usize;
-        let mut sez: Vec<(f32, f32)> = Vec::new(); // (secondo, potenza del re)
-        let mut t = 0.0f32;
-        while t < 90.0 {
-            i.passo(blocco as f32 / 24000.0);
-            let mut e = 0.0f32;
-            for _ in 0..blocco {
-                let u = i.campione();
-                e += u.re.0 * u.re.0 + u.re.1 * u.re.1;
-            }
-            sez.push((t, e / (blocco as f32 * 2.0)));
-            t += blocco as f32 / 24000.0;
-        }
-        let db = |da: f32, a: f32| {
-            let v: Vec<f32> = sez.iter().filter(|(t, _)| *t >= da && *t < a).map(|(_, e)| *e).collect();
-            10.0 * (v.iter().sum::<f32>() / v.len().max(1) as f32 + 1e-20).log10()
-        };
-        let (dentro, fuori, dopo) = (db(76.0, 79.5), db(80.9, 81.3), db(86.5, 89.0));
-        assert!(fuori > -75.0, "fuori dalla nave il reattore non si sente più ({fuori:.1} dB)");
-        assert!(fuori < dentro - 1.5, "fuori dalla nave il reattore non è più piano che in plancia ({fuori:.1} contro {dentro:.1} dB)");
-        assert!(dopo < fuori - 30.0, "spenti i reattori il re suona ancora ({dopo:.1} dB, prima {fuori:.1})");
-        // senza i due momenti (una pagina vecchia) il re tace appena si esce, come prima
-        let vecchia = partitura(&momenti_di_prova());
-        assert!(vecchia.iter().any(|(t, c)| (*t - 80.0).abs() < 0.01 && *c == Cue::Re(SPENTO, 0.0, 2.0)));
+        let con = partitura(&d);
+        assert_eq!(con, senza);
+        assert!(!con.iter().any(|(t, _)| *t > 80.1 && *t < 101.4), "nella scala parte un suono");
     }
 
     #[test]

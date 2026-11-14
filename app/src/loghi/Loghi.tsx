@@ -14,7 +14,11 @@
 //  Dal 14 novembre 2026 i loghi sono l'inizio della cinematica d'apertura
 //  (documento 09, §16): stanno nello stesso formato largo dell'intro, con le
 //  bande nere sopra e sotto, e sotto la stessa pellicola (pellicola/). I due
-//  loghi non sono cambiati: è cambiato il quadro in cui stanno.
+//  loghi non sono cambiati: è cambiato il quadro in cui stanno. E passano due
+//  volte: all'avvio del gioco, e di nuovo subito prima dell'intro, quando si
+//  comincia una partita nuova (l'autore: «legare i loghi […] alla cinematica
+//  iniziale anche se significa ripeterli»): lì stanno sopra l'intro, che sotto
+//  si prepara e parte quando finiscono.
 //  Solo in sviluppo: ?loghi=3.2 ferma l'orologio a quel secondo (muto);
 //  window.__loghiT lo sposta, window.__rendiSuonoLoghi rende l'audio in un
 //  file (vedi src/loghi/esporta.ts): servono a esportare i video dei loghi.
@@ -80,7 +84,7 @@ export default function Loghi({ onFine, grana = "mossa", pellicola = true }: { o
   }, [pronti]);
 
   return (
-    <div style={{ position: "fixed", inset: 0, background: "#000", cursor: "none", overflow: "hidden", userSelect: "none", display: "grid", placeItems: "center" }}
+    <div style={{ position: "fixed", inset: 0, zIndex: 60, background: "#000", cursor: "none", overflow: "hidden", userSelect: "none", display: "grid", placeItems: "center" }}
       aria-label="Loghi di apertura">
       {/* il palco 16:9, come quello dell'intro; dentro, l'immagine sotto la pellicola, e le due bande nere sopra a tutto */}
       <div style={{ position: "relative", aspectRatio: "16 / 9", width: "min(100vw, calc(100vh * 16 / 9))", overflow: "hidden" }}>

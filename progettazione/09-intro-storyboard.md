@@ -620,9 +620,8 @@ stazione. Togli il riferimento al libro, lo abbiamo messo prima»).
   istante). I pezzi di linea che uniscono due tratti diversi se ne vanno presto o arrivano tardi, così non si
   vedono righe tese attraverso la lettera. I glifi ci mettono 2,6 secondi a tracciarsi e 4,2 a sciogliersi
   (prima 1,8 e 3).
-- **Il suono**: i sedici fruscii che salivano, uno per lettera, non ci sono più. Restano i clic sottili dei
-  glifi che si tracciano; mentre si sciolgono sale piano una nota bassa sola, il re, che è piena quando il
-  titolo è intero.
+- **Il suono**: i sedici fruscii che salivano, uno per lettera, non ci sono più. (Erano rimasti i clic
+  sottili dei glifi e una nota bassa che saliva: tolti anche quelli, vedi 16.9.)
 - **Il libro** non è più sotto il titolo: il titolo è solo.
 
 **16.6 Il formato** («tutta la cinematica di apertura, compresi i loghi Runtime Multimedia e Favella1 devono
@@ -670,3 +669,24 @@ fotografa l’intro com’è nel gioco (con la voce, senza i sottotitoli dei suo
 ascoltati. Su uno schermo più largo di 16:9 il palco resta 16:9 al centro, e il formato largo ci sta dentro
 con il nero intorno: per riempire uno schermo 21:9 vero servirebbe un lavoro a parte, che tocca anche
 l’arrivo nel gioco. Niente di tutto questo è in una beta.
+
+**16.9 Dopo il filmato nuovo** (lo stesso 14 novembre). L’autore l’ha guardato: «L’intro è quasi perfetta
+[…] Per il resto per ora è perfetta». Tre correzioni, fatte; e niente filmato nuovo: una beta («NON rifare il
+filmato in mp4 ma prepara la nuova beta e rilasciala»).
+
+- **I loghi legati alla cinematica** («Dobbiamo trovare un modo per legare i loghi dell’intro del gioco alla
+  cinematica iniziale anche se significa ripeterli»). I due loghi passano all’avvio del gioco, come prima, e
+  **di nuovo subito prima dell’intro** quando si comincia una partita nuova: Runtime Multimedia, Favella1, e
+  dopo un attimo di nero «Runtime Multimedia presenta». Sono lo stesso film: stesso formato, stessa pellicola.
+  Mentre passano, l’intro è già montata sotto, nascosta e ferma, e parte quando finiscono: in mezzo non c’è
+  nessuna attesa. Esc salta i loghi e comincia l’intro; un secondo Esc salta l’intro. Con il movimento
+  ridotto i loghi non passano, come all’avvio.
+- **Lo spegnimento dei reattori** («si sentono dei bip sintetizzati da te, che sono? non mi piacciono, meglio
+  non mettere niente. Se trovo dei suoni di scandaglio o eco da radar te lo dico»). Erano i suoni del §15:
+  il re che moriva con la fiamma, l’interruttore, due colpi sordi, tre tic di lamiera. **Tolti tutti**: il re
+  del reattore sfuma quando la scena esce dalla nave, com’era prima, e lo spegnimento si vede soltanto. Il
+  momento `reattori` arriva ancora al motore audio: se porta dei suoni suoi, il posto c’è.
+- **Il titolo** («Hai lasciato quell’effetto sonoro quando c’è il morph tra glifi e titolo. Togli anche quel
+  suono»). Erano rimasti i clic dei glifi che si tracciano e la nota che saliva: **tolti**. I glifi si
+  tracciano e si sciolgono in silenzio; quando il titolo è intero arriva la nota bassa, com’era da sempre.
+- Il credito di Leonardo (16.2) non l’ha toccato: resta com’è.

@@ -141,6 +141,7 @@ export default function Intro({
   grana = "mossa",
   voce = false,
   pellicola = true,
+  attesa = false,
 }: {
   revisione?: boolean;
   onFine?: () => void;
@@ -154,7 +155,12 @@ export default function Intro({
   voce?: boolean;
   /** l'effetto pellicola (scheda Grafica): il taglio di colore, la lampada, le sporcature */
   pellicola?: boolean;
+  /** i loghi stanno ancora passando, sopra (Relitto.tsx): l'intro si prepara sotto, nascosta e ferma, e
+   *  parte quando finiscono. Così fra i loghi e l'intro non c'è nessuna attesa */
+  attesa?: boolean;
 }) {
+  const inAttesa = useRef(attesa);
+  inAttesa.current = attesa;
   const film = useRef<PellicolaViva>(null);
   const crediti = useRef<Record<string, HTMLDivElement | null>>({});
   const linee = useRef<{ W: number; lettere: (Linea | null)[] } | null>(null);
@@ -723,10 +729,10 @@ export default function Intro({
 
   // ---- il suono: la colonna sonora la suona il motore audio, con i momenti di questa scaletta ----
   useEffect(() => {
-    if (!pronta || revisione) return;
+    if (!pronta || revisione || attesa) return;
     void introSuono(true);
     return () => void introSuono(false);
-  }, [pronta, revisione]);
+  }, [pronta, revisione, attesa]);
 
   // ---- il tempo ----------------------------------------------------------------------------
   useEffect(() => {
@@ -738,7 +744,7 @@ export default function Intro({
     // con la partita sotto, l'intro dura finché si è aperta sul gioco (al più qualche secondo in più)
     const limite = conPartita ? S.durata + 6 : S.durata;
     const ciclo = (ora: number) => {
-      if (ultimo !== null && !pausa.current && !finita.current) {
+      if (ultimo !== null && !pausa.current && !finita.current && !inAttesa.current) {
         const dt = Math.min(0.1, (ora - ultimo) / 1000);
         tempo.current = Math.min(limite, tempo.current + dt);
         campioni.push(dt);
@@ -801,6 +807,8 @@ export default function Intro({
   // L'intro ascolta per prima: con il gioco già sotto, Esc salta l'intro e non apre il menu
   useEffect(() => {
     const tasto = (e: KeyboardEvent) => {
+      // finché passano i loghi i tasti sono loro (Esc li salta, e comincia l'intro)
+      if (inAttesa.current) return;
       if (e.key === "Escape") {
         e.preventDefault();
         e.stopImmediatePropagation();
@@ -863,7 +871,7 @@ export default function Intro({
   );
 
   return (
-    <div ref={radice} className={`intro${!revisione && pronta ? " in-corso" : ""}${conPartita ? " sopra" : ""}`} style={{ ["--barra" as string]: revisione ? "112px" : "0px" }}>
+    <div ref={radice} className={`intro${!revisione && pronta ? " in-corso" : ""}${conPartita ? " sopra" : ""}`} style={{ ["--barra" as string]: revisione ? "112px" : "0px", visibility: attesa ? "hidden" : undefined }}>
       <div
         className="palco"
         ref={palco}

@@ -447,14 +447,12 @@ export function costruisciScaletta(): Scaletta {
     { inizio: m.stelleSpente[0], fine: m.faro, testo: "la plancia" },
     { inizio: m.faro, fine: m.brusio[0], testo: "il relè del faro" },
     { inizio: m.brusio[0], fine: m.brusio[1], testo: "dalla radio, molte voci" },
-    { inizio: m.scala[0], fine: m.reattori[1] + 5.5, testo: "i reattori si spengono; il metallo si raffredda" },
-    { inizio: m.reattori[1] + 5.5, fine: m.fruscioF, testo: "la musica" },
+    { inizio: m.scala[0], fine: m.fruscioF, testo: "la musica" },
     { inizio: m.fruscioF, fine: m.pulsa[0], testo: "il fruscio della traccia" },
     { inizio: m.pulsa[0], fine: Math.min(m.pulsa[1], b10.entra), testo: "un battito" },
     { inizio: b10.entra, fine: b10.entra + b10.stampa! + 0.9, testo: "un cursore che scrive" },
     { inizio: m.spiaSpenta, fine: m.glifi[0], testo: "la musica si spegne" },
-    { inizio: m.glifi[0], fine: m.traduzione[0], testo: "clic sottili" },
-    { inizio: m.traduzione[0], fine: m.raccordo[0], testo: "una nota bassa, che sale piano" },
+    { inizio: m.traduzione[1], fine: m.raccordo[0], testo: "una nota bassa" },
     { inizio: m.arretra[0], fine: durata, testo: "il reattore; la console che si accende" },
   ].map((s) => ({ ...s, inizio: r(s.inizio), fine: r(s.fine) }));
 
