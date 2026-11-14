@@ -2,8 +2,16 @@
 
 14 novembre 2026. Terzo passo del progetto della nave (documento 38: la scheda unica; documento 39: le
 schematiche, approvate il 13 novembre). La nave è costruita in Blender dalla stessa tabella delle misure da cui
-nascono le tavole. In una sessione sono fatti **la forma** e **una prima superficie**. L’autore ha visto i due
-fogli mentre il lavoro andava avanti; le sue note non ci sono ancora.
+nascono le tavole. In una sessione sono fatti **la forma**, **una prima superficie** e, dopo le note
+dell’autore, **i pezzi che mancavano e una superficie più vecchia**.
+
+> **Le note dell’autore, 14 novembre 2026**, sui primi due fogli: «Di base direi che ci siamo. In fondo una nave
+> spaziale mercantile non deve avere ali o tocchi esotici alla Millennium Falcon, per quanto strano sia può anche
+> essere solo un tubo. Cercherei di mettere qualche oggetto sullo scafo, manca un punto da dove lanciare arpioni
+> d’aggancio, dei radar o una griglia di sensori e poi degli attacchi per l’attracco ai moli spaziali. La texture
+> mi piace […] la superficie deve dimostrare oltre 90 anni di attività ma diciamo che sono soddisfatto». La forma
+> e la sagoma semplice sono approvate; dei particolari inventati non ne ha tolto nessuno. Le sue tre richieste e
+> gli anni in più sono nel terzo foglio (più sotto), che deve ancora guardare.
 
 ## I fogli
 
@@ -13,11 +21,11 @@ In `progettazione/40-modello/`, da 2560 × 1440, con i nomi scritti grandi:
 |---|---|
 | `foglio-1-la-forma.jpg` | la nave liscia, di un grigio solo: lo scafo e i suoi pezzi, com’è nelle tavole |
 | `foglio-2-la-superficie.jpg` | la stessa nave con le lamiere, le toppe, la matricola, i particolari |
+| `foglio-3-i-pezzi-e-gli-anni.jpg` | dopo le note dell’autore: il lanciarpioni, i sensori, gli attacchi d’ormeggio, e la superficie invecchiata |
 
 In ogni foglio: in alto le due viste di tre quarti, che sono quelle dell’intro (da prua, con il fianco sinistro
 e il portello di carico, per la scena B; da poppa, con il fianco destro e il portello d’uscita, per la scena E);
-sotto i due fianchi. Il primo foglio è di prima della superficie: resta come memoria del passo, e con gli
-attrezzi di oggi non si rifà. Le otto viste intere (anche il muso, la poppa, dall’alto, da sotto) si rifanno con un
+sotto i due fianchi. I primi due fogli sono memoria dei passi: con gli attrezzi di oggi si rifà il terzo. Le otto viste intere (anche il muso, la poppa, dall’alto, da sotto) si rifanno con un
 comando e restano fuori da git, in `progettazione/40-modello/viste/`.
 
 ## Come è fatta
@@ -35,9 +43,9 @@ I comandi, dalla radice del progetto (Blender 5.2.4 LTS è in `%LOCALAPPDATA%\Pr
 
     python strumenti/nave/superficie.py
     blender --background --factory-startup --python strumenti/nave/modello.py -- --viste
-    python strumenti/nave/foglio.py foglio-2-la-superficie "secondo passo: la superficie"
+    python strumenti/nave/foglio.py foglio-3-i-pezzi-e-gli-anni "terzo passo: i pezzi nuovi e novant’anni di attività"
 
-La tessitura si fa in cinque secondi; la nave e le otto viste (1920 × 1080, 160 campioni, sulla scheda video) in
+La tessitura si fa in otto secondi; la nave e le otto viste (1920 × 1080, 160 campioni, sulla scheda video) in
 un minuto. Il file di Blender (`strumenti/nave/uscita/santa-maria.blend`) e le quattro immagini della tessitura
 stanno fuori da git: si rifanno da qui, sempre uguali (tutto il caso viene da un numero solo, il seme 1972).
 
@@ -91,13 +99,47 @@ sulle marcature delle due aperture, la matricola «sulla fascia scura dello scaf
 dal principio della stiva alla poppa; un condotto lungo ogni fianco, con una fascetta ogni quattro metri; una
 griglia della sala macchine per fianco; i pioli che dal portello d’uscita salgono al dorso.
 
+## Il terzo passo: i pezzi che mancavano, e gli anni
+
+**Tre pezzi nuovi**, chiesti dall’autore. Sono nella tabella (`misure.py`) e nelle tavole del documento 39,
+ridisegnate lo stesso giorno: tavole e modello restano uguali.
+
+- **Il lanciarpioni**: un mento sotto il muso, largo 4,2 metri, con la faccia inclinata; ne escono i due tubi
+  di lancio, con le teste magnetiche degli arpioni in vista; ai due lati, i tamburi dei duecento metri di cavo.
+  Prima c’erano solo due tubi appesi sotto il muso, e da fuori non si leggevano.
+- **I sensori**: una griglia in piedi sul dorso, al principio della stiva (3,2 × 2 metri, ventotto celle, che
+  guarda avanti, con due puntoni dietro), e un pannello piatto di venti celle su ogni guancia del muso. Il
+  radar che gira resta dov’era.
+- **Gli attacchi d’ormeggio**: quattro, sul fianco sinistro, due a prua e due a poppa dei pannelli: una
+  piastra imbullonata, un blocco, la staffa dove il molo aggancia. Stanno sul fianco del portello di carico,
+  perché la nave si ormeggia dal lato da cui carica (05B, decisione 3); il fianco destro non ne ha, e così i
+  due fianchi si distinguono ancora meglio (05B, decisione 4). Il collare sul dorso resta la presa del bacino
+  di disarmo.
+
+**Gli anni.** L’autore: «la superficie deve dimostrare oltre 90 anni di attività». Sulla tessitura, in più:
+
+- le lamiere appena imbarcate, in dentro o in fuori, e le ordinate che si leggono sotto la pelle, una ogni due
+  metri;
+- una settantina di ammaccature, più fitte a prua e sul fianco del carico;
+- le saldature delle riparazioni: cordoni chiari e storti, con l’alone scuro del calore;
+- le perdite: macchie brune che partono da un punto del fianco e colano verso la chiglia;
+- l’antiruggine che affiora a chiazze vicino alle giunte (bruna, non arancione);
+- il muso sabbiato dalla polvere, più chiaro e più opaco; la poppa cotta dal calore, più bruna;
+- i segni del carico: graffi corti e fitti intorno al portello;
+- lo sporco che si ferma sopra la fascia scura.
+
+La matricola dei fianchi tiene di più la vernice: «TSC-1972» deve restare leggibile.
+
 ## Quello che è inventato qui
 
 Nessun testo e nessuna tavola lo dice: sono proposte, e l’autore le conferma o le toglie guardando i fogli.
 
-- **I particolari** del paragrafo qui sopra: le botole, i corrimano, i condotti, le griglie, i pioli. Vengono da
+- **I particolari** del secondo passo: le botole, i corrimano, i condotti, le griglie, i pioli. L’autore li ha
+  visti e non ne ha tolto nessuno («Di base direi che ci siamo»). Vengono da
   una frase della scheda 05B («c’è un esterno su cui si cammina, e William ci ha lavorato») e dal documento 39,
   che lasciava al modello «i pannelli d’accesso sul dorso».
+- **Come sono fatti i tre pezzi nuovi**: le richieste sono dell’autore; la forma del mento e dei tamburi, il
+  numero delle celle dei sensori, dove stanno i quattro attacchi sono proposte.
 - **Come sono fatti i pezzi**: la forcella del faro; il radar come una barra che gira (nelle tavole era un
   segno inclinato); l’anello e i quattro denti del collare; le cerniere e i chiavistelli del portello di carico;
   il corrimano della pedana dell’uscita; i puntoni delle pedane.
@@ -107,21 +149,21 @@ Nessun testo e nessuna tavola lo dice: sono proposte, e l’autore le conferma o
 
 ## Che cosa non va ancora
 
-- **La sagoma è semplice, e la scheda la vuole così**: «I pannelli solari sono la sola cosa che rompe la
+- **La sagoma è semplice, la scheda la vuole così, e l’autore l’ha confermata** («può anche essere solo un
+  tubo»): «I pannelli solari sono la sola cosa che rompe la
   sagoma» (05B, «La sagoma»), «una nave che nessuno ha progettato per essere guardata». Di lontano però è un
   tubo, e gli still di oggi (`prua.webp`, `poppa.webp`) hanno casse, sovrastrutture e tubi che la scheda non
-  prevede e che qui non ci sono. Se all’autore sembra nuda, la strada sono altri particolari piccoli sulla pelle
-  (casse basse, tubi, portelli), non volumi nuovi; un volume nuovo andrebbe prima nella tabella e nelle tavole.
+  prevede e che qui non ci sono. La strada è quella presa con il terzo passo: oggetti sullo scafo, ognuno
+  prima nella tabella e nelle tavole.
 - **La luce delle viste è da studio** (un sole da dietro la macchina e una schiarita), su fondo scuro: serve a
   leggere la nave, e non è la fotografia dell’intro.
 - **La tessitura regge il campo lungo e i tre quarti**, non il dettaglio da vicino: per una scena sul fasciame
   ne servirebbe una più fitta, solo di quel tratto.
 - **Le scritte piccole** («SANTA MARIA» sui fianchi) da lontano non si leggono; «TSC-1972» sì.
-- Nel foglio i due fianchi toccano i bordi del riquadro.
 
 ## Che cosa viene dopo
 
-1. Le note dell’autore sui due fogli: la forma, la superficie, le cose inventate.
+1. Le note dell’autore sul terzo foglio: i tre pezzi nuovi, e se gli anni si vedono abbastanza.
 2. Le due riprese dell’intro (da prua di tre quarti per B, da poppa per E), con le luci separate: lo scafo,
    l’oblò d’ambra, i fanali, la spinta dei quattro scarichi; messe accanto agli still di oggi, perché decida lui.
 3. Il faro, e la fotografia unica dell’intro (documento 09, §14).

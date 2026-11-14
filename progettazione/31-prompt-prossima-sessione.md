@@ -3,7 +3,8 @@
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
 Aggiornato l’ultima volta il 14 novembre 2026, nella notte, dopo il modello della Santa Maria in Blender (la
-forma e una prima superficie, documento 40), in attesa delle note dell’autore sui due fogli.
+forma, una prima superficie e, dopo le sue note, i pezzi nuovi e gli anni: documento 40), in attesa che
+guardi il terzo foglio.
 Prima, il 13 novembre 2026, in mattinata, dopo le prime prese di Leonardo e il primo passo
 sull’estetica della cinematica (il cielo), con la Santa Maria ferma in attesa di un modello in Blender.
 Prima, il 12 novembre 2026, nella notte, quando l’autore ha chiuso la sessione dopo aver
@@ -77,10 +78,20 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   rilievo, i particolari che nessuna tavola dice: sei botole e due corrimano sul dorso, un condotto per
   fianco, le griglie della sala macchine, i pioli dall’uscita al dorso. **Sono proposte**: l’elenco è nel
   documento 40. I due fogli (`progettazione/40-modello/foglio-1-la-forma.jpg`, `foglio-2-la-superficie.jpg`)
-  gli sono stati mandati durante il lavoro; **le sue note non ci sono ancora**. Quello che non va, detto nel
+  gli sono stati mandati durante il lavoro. **Le sue note** (14 novembre): «Di base direi che ci siamo. In
+  fondo una nave spaziale mercantile non deve avere ali o tocchi esotici […] può anche essere solo un tubo.
+  Cercherei di mettere qualche oggetto sullo scafo, manca un punto da dove lanciare arpioni d’aggancio, dei
+  radar o una griglia di sensori e poi degli attacchi per l’attracco ai moli spaziali. La texture mi piace […]
+  la superficie deve dimostrare oltre 90 anni di attività ma diciamo che sono soddisfatto». **Fatto lo stesso
+  giorno** (terzo foglio, `foglio-3-i-pezzi-e-gli-anni.jpg`): il lanciarpioni (un mento sotto il muso, i due
+  tubi, i tamburi del cavo), i sensori (una griglia in piedi sul dorso, un pannello per guancia del muso), i
+  quattro attacchi d’ormeggio sul fianco sinistro; e la superficie invecchiata (lamiere imbarcate,
+  ammaccature, saldature, perdite, antiruggine, il muso sabbiato, la poppa cotta). I tre pezzi sono anche
+  nella tabella e nelle tavole del documento 39, ridisegnate. **Il terzo foglio non l’ha ancora commentato.**
+  Quello che non va, detto nel
   documento: la sagoma è semplice, come vuole la scheda 05B («I pannelli solari sono la sola cosa che rompe la
   sagoma»), ma di lontano è un tubo, e gli still di oggi hanno casse e sovrastrutture che qui non ci sono (se
-  gli sembra nuda: altri particolari piccoli sulla pelle, non volumi nuovi); la luce delle viste è da studio. **Alla prossima**: prima le sue note sui due fogli; poi le due riprese
+  gli sembra nuda: altri particolari piccoli sulla pelle, non volumi nuovi); la luce delle viste è da studio. **Alla prossima**: prima le sue note sul terzo foglio; poi le due riprese
   dell’intro con le luci separate, accanto agli still di oggi. Nel gioco non è cambiato niente.
 - **13 novembre 2026, mattina: le prime prese di Leonardo.** Sono arrivate `sm-001.wav`…`sm-004.wav`, le
   quattro descrizioni della plancia. Controllate: il testo è quello del copione, parola per parola (Whisper
@@ -351,7 +362,8 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 3. **L’intro, perfezionata**:
    - **l’estetica, con Fable 5.2** (documento 09, §14; cominciata il 13 novembre): ~~il cielo~~, fatto;
      **il modello della nave è cominciato il 14 novembre** (documento 40: la forma e una prima superficie;
-     si aspettano le note dell’autore sui due fogli, poi le due riprese con le luci separate);
+     la forma è approvata, i tre pezzi chiesti e gli anni sono fatti; si aspettano le sue note sul terzo
+     foglio, poi le due riprese con le luci separate);
      **la Santa Maria nella luce**, ferma finché non c’è il modello in Blender (l’idea è dell’autore;
      Blender c’è, il collegamento MCP no e non serve; prima il progetto della nave: la scheda unica dai due
      giochi, le schematiche, poi il modello fatto da script, vedi 09, §14; il modello deve essere la nave

@@ -142,7 +142,7 @@ def materiale_pelle():
     fili.new(immagine("ruvido"), b.inputs["Roughness"])
     fili.new(immagine("metallo"), b.inputs["Metallic"])
     urto = nodi.new("ShaderNodeBump")
-    urto.inputs["Strength"].default_value, urto.inputs["Distance"].default_value = 1.0, 0.04
+    urto.inputs["Strength"].default_value, urto.inputs["Distance"].default_value = 1.0, 0.12  # un'unità del rilievo: 12 cm
     fili.new(immagine("rilievo"), urto.inputs["Height"])
     fili.new(urto.outputs["Normal"], b.inputs["Normal"])
     return m
@@ -173,7 +173,7 @@ def consumato(nome, tinta, metallo=0.45, ruvido=0.55, grana=0.9):
     mescola = nodi.new("ShaderNodeMix")
     mescola.data_type = "RGBA"
     c = colore(tinta)
-    presa(mescola, "A", "RGBA").default_value = (c[0] * 0.5, c[1] * 0.5, c[2] * 0.52, 1)
+    presa(mescola, "A", "RGBA").default_value = (c[0] * 0.38, c[1] * 0.37, c[2] * 0.38, 1)
     presa(mescola, "B", "RGBA").default_value = (min(c[0] * 1.3, 1), min(c[1] * 1.3, 1), min(c[2] * 1.28, 1), 1)
     fili.new(scala.outputs["Result"], presa(mescola, "Factor", "VALUE"))
     fili.new(next(s for s in mescola.outputs if s.type == "RGBA"), b.inputs["Base Color"])
@@ -241,6 +241,17 @@ def prisma(nome, contorno, z0, z1, mat, smusso=0.04):
     base = bm.faces.new([bm.verts.new((x, y, z0)) for x, y in contorno])
     alto = bmesh.ops.extrude_face_region(bm, geom=[base])
     bmesh.ops.translate(bm, vec=(0, 0, z1 - z0), verts=[g for g in alto["geom"] if isinstance(g, bmesh.types.BMVert)])
+    if smusso:
+        bmesh.ops.bevel(bm, geom=bm.edges[:], offset=smusso, segments=2, affect="EDGES", profile=0.5)
+    return oggetto(nome, bm, mat)
+
+
+def sagoma(nome, contorno, y0, y1, mat, smusso=0.05):
+    """Un contorno visto di fianco (x, z), steso da y0 a y1."""
+    bm = bmesh.new()
+    base = bm.faces.new([bm.verts.new((x, y0, z)) for x, z in contorno])
+    stesa = bmesh.ops.extrude_face_region(bm, geom=[base])
+    bmesh.ops.translate(bm, vec=(0, y1 - y0, 0), verts=[g for g in stesa["geom"] if isinstance(g, bmesh.types.BMVert)])
     if smusso:
         bmesh.ops.bevel(bm, geom=bm.edges[:], offset=smusso, segments=2, affect="EDGES", profile=0.5)
     return oggetto(nome, bm, mat)
@@ -349,15 +360,42 @@ def prua(m):
     xs = [s[0] + (s[1] - s[0]) * i / 6 for i in range(7)]
     contorno = [(x, M.mezza(x) - 0.3) for x in xs] + [(x, M.mezza(x) + 0.45) for x in reversed(xs)]
     prisma("modulo delle comunicazioni", contorno, s[4] - 0.1, s[5] + 0.1, m["aggiunte"], 0.05)
-    # i due arpioni, sotto il muso
-    a = M.ARPIONI
+    # il lanciarpioni: un mento sotto il muso, i due tubi che ne escono con le teste magnetiche degli arpioni,
+    # e ai lati i tamburi del cavo
+    lancia, a = M.LANCIARPIONI, M.ARPIONI
+    lx0, lx1 = lancia["x"]
+    mezzo = lancia["largo"] / 2
+    sagoma("lanciarpioni: mento", [(lx0, sotto(lx0, 0) + 0.3), (lx0, a["z"] - 0.45), (lx0 + lancia["fronte"], lancia["z"]), (lx1, lancia["z"]), (lx1 + 0.6, sotto(lx1 + 0.6, 0) + 0.2),
+                                   (lx1, sotto(lx1, mezzo) + 0.4)], -mezzo, mezzo, m["aggiunte"], 0.07)
     x0, x1 = a["x"]
     r = a["diametro"] / 2
-    for i, y in enumerate(a["y"]):
+    for y in a["y"]:
         nome = f"arpione {'sinistro' if y < 0 else 'destro'}"
-        tornio(nome + ": tubo", (x1, y, a["z"]), (-1, 0, 0), [(0, r), (x1 - x0, r), (x1 - x0, r - 0.08), (x1 - x0 - 0.35, r - 0.08)], m["pezzi"], 24)
-        tornio(nome + ": punta", (x1, y, a["z"]), (-1, 0, 0), [(x1 - x0 - 0.4, 0.09), (x1 - x0 + 0.1, 0.09), (x1 - x0 + 0.28, 0)], m["scuro"], 16)
-        scatola(nome + ": staffa", x0 + 0.35, x0 + 0.7, y - 0.12, y + 0.12, a["z"] + r - 0.05, sotto(x0 + 0.5, y) + 0.15, m["pezzi"], 0.02)
+        tornio(nome + ": tubo", (x1, y, a["z"]), (-1, 0, 0), [(0, r), (x1 - x0, r), (x1 - x0, r - 0.07), (x1 - x0 - 0.5, r - 0.07)], m["pezzi"], 28)
+        tornio(nome + ": ghiera", (lx0 + 0.05, y, a["z"]), (-1, 0, 0), [(0, r + 0.12), (0.14, r + 0.12), (0.14, r)], m["pezzi"], 28)
+        tornio(nome + ": testa magnetica", (x0 + 0.25, y, a["z"]), (-1, 0, 0), [(0, 0.1), (0.2, 0.1), (0.2, r - 0.09), (0.42, r - 0.09), (0.5, r - 0.16), (0.5, 0)], m["scuro"], 24)
+    tam = M.TAMBURI
+    rt = tam["diametro"] / 2
+    for lato in (-1, 1):
+        nome = f"tamburo del cavo {'sinistro' if lato < 0 else 'destro'}"
+        tornio(nome, (tam["x"], lato * (mezzo - 0.02), tam["z"]), (0, lato, 0),
+               [(0, rt + 0.1), (0.07, rt + 0.1), (0.07, rt - 0.1), (tam["largo"] - 0.07, rt - 0.1), (tam["largo"] - 0.07, rt + 0.1), (tam["largo"], rt + 0.1), (tam["largo"], 0)], m["pezzi"], 32)
+        tornio(nome + ": cavo", (tam["x"], lato * (mezzo + 0.07), tam["z"]), (0, lato, 0), [(0, rt), (tam["largo"] - 0.14, rt)], m["scuro"], 32)
+    # i sensori di prua: un pannello piatto per guancia, che segue lo scafo, con la sua griglia di celle
+    s = M.SENSORI_PRUA
+    sx0, sx1 = s["x"]
+    sz0, sz1 = s["z"]
+    xs = [sx0 + (sx1 - sx0) * i / 4 for i in range(5)]
+    for lato in (-1, 1):
+        nome = f"sensori di prua {'sinistri' if lato < 0 else 'destri'}"
+        contorno = [(x, lato * (M.mezza(x) - 0.1)) for x in xs] + [(x, lato * (M.mezza(x) + 0.1)) for x in reversed(xs)]
+        prisma(nome + ": pannello", contorno, sz0, sz1, m["aggiunte"], 0.03)
+        for i in range(5):
+            for k in range(4):
+                x = sx0 + 0.22 + i * (sx1 - sx0 - 0.44) / 4
+                z = sz0 + 0.2 + k * (sz1 - sz0 - 0.4) / 3
+                y = M.mezza(x)
+                scatola(nome + ": cella", x - 0.13, x + 0.13, lato * (y + 0.08), lato * (y + 0.16), z - 0.13, z + 0.13, m["scuro"], 0.02)
 
 
 def dorso(m):
@@ -398,6 +436,42 @@ def dorso(m):
     asta("antenna: albero", (x, 0, su + 0.25), (x, 0, z), 0.05, m["pezzi"], 10)
     for quota, mezza in ((z - 0.45, 0.35), (z - 0.95, 0.55), (z - 1.45, 0.75)):
         asta("antenna: braccio", (x, -mezza, quota), (x, mezza, quota), 0.025, m["pezzi"], 8)
+
+
+def sensori(m):
+    """La griglia dei sensori: un telaio in piedi sul dorso, che guarda avanti, con le sue celle e i suoi puntoni."""
+    s = M.SENSORI_DORSO
+    x, (z0, z1), mezzo = s["x"], s["z"], s["largo"] / 2
+    scatola("griglia dei sensori: telaio", x - 0.07, x + 0.07, -mezzo, mezzo, z0, z1, m["aggiunte"], 0.03)
+    colonne, righe = 7, 4
+    for i in range(colonne):
+        for k in range(righe):
+            y = -mezzo + 0.28 + i * (2 * mezzo - 0.56) / (colonne - 1)
+            z = z0 + 0.28 + k * (z1 - z0 - 0.56) / (righe - 1)
+            scatola("griglia dei sensori: cella", x - 0.13, x - 0.06, y - 0.16, y + 0.16, z - 0.16, z + 0.16, m["scuro"], 0.02)
+    tratti = []
+    for y in (-mezzo + 0.25, mezzo - 0.25):
+        tratti += [((x, y, sopra(x, y) - 0.03), (x, y, z0)), ((x + 1.5, y, sopra(x + 1.5, y) - 0.03), (x + 0.05, y, z1 - 0.3))]
+        scatola("griglia dei sensori: piede", x - 0.2, x + 0.2, y - 0.2, y + 0.2, sopra(x, y) - 0.04, sopra(x, y) + 0.12, m["pezzi"], 0.02)
+        scatola("griglia dei sensori: piede", x + 1.3, x + 1.7, y - 0.2, y + 0.2, sopra(x + 1.5, y) - 0.04, sopra(x + 1.5, y) + 0.12, m["pezzi"], 0.02)
+    aste("griglia dei sensori: gambe", tratti, 0.06, m["pezzi"])
+
+
+def ormeggi(m):
+    """Gli attacchi d'ormeggio: quattro, sul fianco sinistro. Una piastra, un blocco, la staffa dove il molo aggancia."""
+    o = M.ORMEGGI
+    mezzo, sporge = o["largo"] / 2, o["sporge"]
+    for x in o["x"]:
+        for z in o["z"]:
+            y = -fianco(x, z)
+            scatola("attacco d'ormeggio: piastra", x - mezzo, x + mezzo, y - 0.09, y + 0.05, z - mezzo, z + mezzo, m["aggiunte"], 0.03)
+            scatola("attacco d'ormeggio: blocco", x - 0.36, x + 0.36, y - sporge * 0.6, y, z - 0.36, z + 0.36, m["pezzi"], 0.05)
+            fuori = y - sporge
+            aste("attacco d'ormeggio: staffa", [((x - 0.24, y - sporge * 0.55, z), (x - 0.24, fuori, z)), ((x + 0.24, y - sporge * 0.55, z), (x + 0.24, fuori, z)),
+                                                ((x - 0.24, fuori, z), (x + 0.24, fuori, z))], 0.07, m["scarichi"], 10)
+            for dx in (-0.5, 0.5):
+                for dz in (-0.5, 0.5):
+                    tornio("attacco d'ormeggio: bullone", (x + dx, y - 0.09, z + dz), (0, -1, 0), [(0, 0.06), (0.05, 0.06), (0.05, 0)], m["pezzi"], 8)
 
 
 def fianchi(m):
@@ -550,6 +624,8 @@ def costruisci():
     dorso(m)
     fianchi(m)
     poppa(m)
+    sensori(m)
+    ormeggi(m)
     particolari(m)
     print(f"PEZZI {len(NAVE.objects)}, facce {sum(len(o.data.polygons) for o in NAVE.objects)}")
 
@@ -617,7 +693,7 @@ def scena(campioni):
     return macchina, lampada("sole", 4.2, "#fff6ea"), lampada("schiarita", 0.7, "#9fb6d9")
 
 
-def inquadra(macchina, sole, schiarita, da, prospettiva, margine=1.06):
+def inquadra(macchina, sole, schiarita, da, prospettiva, margine=1.09):
     """Mette la macchina a guardare la nave da una direzione, con tutta la nave nel quadro."""
     punti = [o.matrix_world @ Vector(c) for o in NAVE.objects for c in o.bound_box]
     centro = Vector([(min(p[i] for p in punti) + max(p[i] for p in punti)) / 2 for i in range(3)])

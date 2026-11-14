@@ -105,7 +105,18 @@ FARO = {"x": (8.0, 10.0), "z": (7.1, 8.5), "largo": 1.4}  # il riflettore di pru
 RADAR = {"x": 12.6, "z": 8.6, "diametro": 1.6}
 ANTENNA = {"x": 19.0, "z": 11.0}  # la radio a lungo raggio
 COLLARE = {"x": (14.4, 17.4), "z": (7.5, 8.1), "largo": 3.0}  # il collare di presa, sul dorso
-ARPIONI = {"x": (1.2, 4.4), "y": (-1.5, 1.5), "z": -1.7, "diametro": 0.5}  # due, sotto il muso
+ARPIONI = {"x": (0.3, 4.4), "y": (-1.2, 1.2), "z": -1.55, "diametro": 0.5}  # i due tubi di lancio: escono dal mento
+# il lanciarpioni: un mento sotto il muso, da cui escono i due tubi; ai lati, i tamburi dei duecento metri di cavo
+# (chiesto dall'autore il 14 novembre 2026: «manca un punto da dove lanciare arpioni d'aggancio»)
+LANCIARPIONI = {"x": (1.0, 3.9), "largo": 4.2, "z": -2.3, "fronte": 0.7}  # fronte: quanto arretra in basso la faccia
+TAMBURI = {"x": 3.0, "z": -1.5, "diametro": 0.9, "largo": 0.45}
+# i sensori (chiesti lo stesso giorno: «dei radar o una griglia di sensori»): una griglia in piedi sul dorso, al
+# principio della stiva, e due pannelli piatti sulle guance del muso
+SENSORI_DORSO = {"x": 22.2, "z": (8.4, 10.4), "largo": 3.2}
+SENSORI_PRUA = {"x": (5.0, 7.0), "z": (2.9, 4.3)}
+# gli attacchi d'ormeggio ai moli (chiesti lo stesso giorno): quattro, sul fianco sinistro, quello del portello di
+# carico, due a prua e due a poppa dei pannelli. Il fianco destro non ne ha: così i due fianchi si distinguono
+ORMEGGI = {"x": (17.6, 48.6), "z": (0.7, 4.5), "largo": 1.3, "sporge": 0.55}
 FANALI_POPPA = {"y": (-5.5, 5.5), "z": 5.6}  # d'ambra
 LUCE_USCITA = {"x": 73.0, "z": 2.6}  # gialla, sopra il portello d'uscita
 PEDANA_POPPA = {"z": -3.4, "sporge": 1.2}  # il camminamento sotto la piastra

@@ -8,6 +8,12 @@ del documento 38, §6 («Sì, tutte»); queste tavole le mettono in misura. Eran
 > terzo passo, cominciato il 14 novembre 2026 (documento 40: la forma e una prima superficie). Sulle tavole resta
 > la scritta «da approvare» finché non si ridisegnano.
 
+> **Aggiornate il 14 novembre 2026**, dopo le note dell’autore sul modello (documento 40): tre pezzi nuovi nella
+> tabella e nelle tavole. **Il lanciarpioni**: un mento sotto il muso, da cui escono i due tubi, con i tamburi
+> del cavo ai lati (i due tubi appesi di prima non ci sono più). **I sensori**: una griglia in piedi sul dorso,
+> al principio della stiva, e un pannello su ogni guancia del muso. **Gli attacchi d’ormeggio**: quattro, sul
+> fianco sinistro. Nell’intestazione delle tavole non c’è più «da approvare».
+
 ## Le tavole
 
 Tre fogli da 2560 × 1440, in `progettazione/39-schematiche/`:

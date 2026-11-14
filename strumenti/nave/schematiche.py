@@ -84,7 +84,7 @@ def foglio(titolo, numero, scala="misure in metri · tutte le viste alla stessa 
     ax.axis("off")
     ax.text(3, 68.2, "LA SANTA MARIA · TSC-1972", color=SCAFO, fontsize=24 * K, fontweight="bold", va="center")
     ax.text(3, 65.1, f"Tavola {numero} di 3 · {titolo}", color=AMBRA, fontsize=15 * K, fontweight="bold", va="center")
-    ax.text(125, 68.2, "Schematica, prima stesura · 13 novembre 2026 · da approvare", color=TENUE, fontsize=11 * K, va="center", ha="right")
+    ax.text(125, 68.2, "Schematica · approvata il 13 novembre 2026 · il 14: lanciarpioni, sensori, ormeggi", color=TENUE, fontsize=11 * K, va="center", ha="right")
     ax.text(125, 65.6, scala, color=TENUE, fontsize=11 * K, va="center", ha="right")
     # la scala: dieci metri
     ax.plot([113, 123], [62.6, 62.6], color=TENUE, linewidth=3)
@@ -136,9 +136,19 @@ def fianco_fuori(v, lato):
     v.linea([(M.RADAR["x"] - 0.8, M.RADAR["z"] + 0.3), (M.RADAR["x"] + 0.8, M.RADAR["z"] - 0.3)], color=SCAFO, linewidth=3.5, zorder=5)
     v.rett(*M.COLLARE["x"], *M.COLLARE["z"], facecolor=SCAFO, edgecolor=SCAFO, zorder=5)
     v.linea([(M.ANTENNA["x"], 7.5), (M.ANTENNA["x"], M.ANTENNA["z"])], color=SCAFO, linewidth=1.6, zorder=5)
-    # sotto il muso: gli arpioni; a prua: l'oblò, visto di taglio
-    ax0, ax1 = M.ARPIONI["x"]
-    v.rett(ax0, ax1, M.ARPIONI["z"] - 0.3, M.ARPIONI["z"] + 0.3, facecolor=SCAFO, edgecolor=SCAFO, zorder=5)
+    # sotto il muso: il lanciarpioni (il mento, i due tubi che ne escono, i tamburi del cavo)
+    lx0, lx1 = M.LANCIARPIONI["x"]
+    fondo = M.LANCIARPIONI["z"]
+    fine = next(lx0 + i * 0.05 for i in range(200) if M.chiglia(lx0 + i * 0.05) <= fondo)  # dove il mento rientra nello scafo
+    v.poligono([(lx0, M.chiglia(lx0)), (lx0, M.ARPIONI["z"] - 0.45), (lx0 + M.LANCIARPIONI["fronte"], fondo), (fine, fondo)], facecolor=DENTRO, edgecolor=SCAFO, linewidth=2.2, zorder=3)
+    v.rett(M.ARPIONI["x"][0], lx0, M.ARPIONI["z"] - 0.25, M.ARPIONI["z"] + 0.25, facecolor=SCAFO, edgecolor=SCAFO, zorder=5)
+    v.cerchio(M.TAMBURI["x"], M.TAMBURI["z"], M.TAMBURI["diametro"] / 2, facecolor=FONDO, edgecolor=SCAFO, linewidth=1.8, zorder=5)
+    # i sensori: la griglia in piedi sul dorso, con il suo puntone, e il pannello sulla guancia del muso
+    gx, (gz0, gz1) = M.SENSORI_DORSO["x"], M.SENSORI_DORSO["z"]
+    v.linea([(gx, 7.5), (gx, gz0)], color=SCAFO, linewidth=2, zorder=5)
+    v.linea([(gx + 1.5, 7.5), (gx, gz1 - 0.3)], color=SCAFO, linewidth=1.4, zorder=5)
+    v.rett(gx - 0.14, gx + 0.14, gz0, gz1, facecolor=SCAFO, edgecolor=SCAFO, zorder=5)
+    v.rett(*M.SENSORI_PRUA["x"], *M.SENSORI_PRUA["z"], facecolor=FONDO, edgecolor=LINEA, linewidth=1.3, hatch="++", zorder=4)
     r = M.OBLO["diametro"] / 2
     v.linea([(-0.05, M.OBLO["z"] - r), (-0.05, M.OBLO["z"] + r)], color=AMBRA, linewidth=6, solid_capstyle="round", zorder=6)
     # a poppa: gli scarichi, i fanali, la pedana
@@ -157,6 +167,11 @@ def fianco_fuori(v, lato):
         v.rett(cx0, cx1, cz0, cz1, facecolor="#141d2c", edgecolor=ARANCIO, linewidth=2.6, zorder=4)
         v.linea([((cx0 + cx1) / 2, cz0), ((cx0 + cx1) / 2, cz1)], color=ARANCIO, linewidth=1.2, zorder=5)
         v.cerchio(M.OBLO_CUCCETTA["x"], M.OBLO_CUCCETTA["z"], 0.22, facecolor=AMBRA, edgecolor=AMBRA, zorder=6)
+        mezzo = M.ORMEGGI["largo"] / 2  # gli attacchi d'ormeggio: solo su questo fianco
+        for x in M.ORMEGGI["x"]:
+            for z in M.ORMEGGI["z"]:
+                v.rett(x - mezzo, x + mezzo, z - mezzo, z + mezzo, facecolor="#141d2c", edgecolor=SCAFO, linewidth=1.8, zorder=4)
+                v.cerchio(x, z, 0.24, facecolor=SCAFO, edgecolor=SCAFO, zorder=5)
     else:
         ux0, ux1 = M.PORTELLO_USCITA["x"]
         v.rett(ux0, ux1, *M.PORTELLO_USCITA["z"], facecolor="#141d2c", edgecolor=ARANCIO, linewidth=2.6, zorder=4)
@@ -173,7 +188,9 @@ def tavola_fuori():
     titolo_vista(ax, 3, 59, "IL FIANCO SINISTRO (babordo)", "il portello di carico, l’oblò piccolo della cuccetta")
     fianco_fuori(v, -1)
     v.freccia("l’oblò", (0, 1.9), (-3.5, 6.5), AMBRA, 10.5, "bold")
-    v.freccia("gli arpioni", (2.2, -2.0), (-1, -6.3), ha="left")
+    v.freccia("il lanciarpioni", (2.2, -2.3), (-1, -6.3), ha="left", peso="bold")
+    v.freccia("la griglia dei sensori", (22.3, 10.2), (31.5, 11.7))
+    v.freccia("gli attacchi d’ormeggio", (48.6, 0.7), (56, -6.3))
     v.freccia("il faro di prua", (9, 8.4), (5, 11.6))
     v.freccia("il radar", (12.6, 9.0), (11.5, 11.6))
     v.freccia("il collare\ndi presa", (16, 8.2), (17, 11.9))
@@ -192,6 +209,7 @@ def tavola_fuori():
     v.freccia("il portello d’uscita, con la luce gialla e la pedana", (73, 2.2), (60, 10.4), ARANCIO, 10.5, "bold")
     v.freccia("il modulo delle comunicazioni", (5, 2.5), (18, 10.4), LINEA)
     v.freccia("la matricola, sui due fianchi", (14.5, -3.2), (26, -6.3))
+    v.freccia("i sensori di prua", (6, 4.3), (-2, 12.6))
     # --- il muso e la poppa
     v = Vista(ax, 108.5, 43, -1.0)
     titolo_vista(ax, 97, 59, "IL MUSO")
@@ -200,9 +218,14 @@ def tavola_fuori():
         traverso(v, x, facecolor=DENTRO, edgecolor="#5a6b7c", linewidth=1.3, zorder=2)
     traverso(v, 0, facecolor="#141d2c", edgecolor=SCAFO, linewidth=2, zorder=3)
     v.cerchio(0, M.OBLO["z"], M.OBLO["diametro"] / 2, facecolor="#3a2c14", edgecolor=AMBRA, linewidth=4, zorder=5)
+    mezzo = M.LANCIARPIONI["largo"] / 2  # il mento del lanciarpioni, con i due tubi e i tamburi ai lati
+    v.rett(-mezzo, mezzo, M.LANCIARPIONI["z"], M.chiglia(M.LANCIARPIONI["x"][0]) + 0.2, facecolor=DENTRO, edgecolor=SCAFO, linewidth=2, zorder=4)
+    for lato in (-1, 1):
+        v.rett(lato * mezzo, lato * (mezzo + M.TAMBURI["largo"]), M.TAMBURI["z"] - 0.45, M.TAMBURI["z"] + 0.45, facecolor=SCAFO, edgecolor=SCAFO, zorder=4)
     for y in M.ARPIONI["y"]:
         v.cerchio(y, M.ARPIONI["z"], 0.3, facecolor=SCAFO, edgecolor=SCAFO, zorder=5)
     v.rett(-0.7, 0.7, *M.FARO["z"], facecolor=SCAFO, edgecolor=SCAFO, zorder=5)
+    v.freccia("il lanciarpioni", (1.6, -2.2), (-9.5, -5.2))
     s = M.STANZE["comunicazioni"]
     v.rett(s[2], s[3] + 0.3, s[4], s[5], facecolor="none", edgecolor=LINEA, linewidth=1.4, linestyle=(0, (4, 3)), zorder=4)
     lati_fuori(v)
@@ -226,7 +249,13 @@ def tavola_fuori():
 
 
 def lati_fuori(v):
-    """I pannelli visti di taglio, e i nomi dei due fianchi."""
+    """I pannelli visti di taglio, la griglia dei sensori, gli attacchi d'ormeggio, e i nomi dei due fianchi."""
+    mezzo = M.SENSORI_DORSO["largo"] / 2
+    v.rett(-mezzo, mezzo, *M.SENSORI_DORSO["z"], facecolor=FONDO, edgecolor=SCAFO, linewidth=1.4, hatch="++", zorder=2)
+    for y in (-mezzo + 0.25, mezzo - 0.25):
+        v.linea([(y, 7.4), (y, M.SENSORI_DORSO["z"][0])], color=SCAFO, linewidth=1.6, zorder=2)
+    for z in M.ORMEGGI["z"]:
+        v.rett(-6.5 - M.ORMEGGI["sporge"], -6.5, z - 0.36, z + 0.36, facecolor=SCAFO, edgecolor=SCAFO, zorder=4)
     z0, z1 = M.PANNELLI["z"]
     for lato in (-1, 1):
         y = lato * (6.5 + M.PANNELLI["staffa"])
@@ -407,7 +436,7 @@ def tavola_sotto():
     v.freccia("le comunicazioni", (3.2, 2.5), (9.8, 6.2), LINEA)
     for y in M.ARPIONI["y"]:
         v.cerchio(y, M.ARPIONI["z"], 0.3, facecolor=SCAFO, edgecolor=SCAFO, zorder=5)
-    v.freccia("gli arpioni", (-1.5, -1.9), (-9.5, -1.4))
+    v.freccia("i tubi degli arpioni", (-1.2, -1.75), (-9.5, -1.4))
     v = sezione_traversa(ax, 64, 11, 34.0, "DI TRAVERSO: LA STIVA", "a 34 metri dalla prua")
     v.scritta(0, 3.8, "STIVA", 20)
     v.scritta(0, 2.0, "9 × 7 metri", 10.5, LINEA, "normal")

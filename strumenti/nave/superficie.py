@@ -96,7 +96,9 @@ class Tela:
         self.colore[r0:r1, c0:c1] = tinta
         self.metallo[r0:r1, c0:c1] = metallo
         self.ruvido[r0:r1, c0:c1] = ruvido
-        self.rilievo[r0:r1, c0:c1] = 0.5 + spessore
+        # la lamiera è appena imbarcata, in dentro o in fuori: novant'anni di caldo e di freddo
+        gobba = np.outer(np.sin(np.linspace(0, np.pi, r1 - r0)), np.sin(np.linspace(0, np.pi, c1 - c0))).astype(np.float32)
+        self.rilievo[r0:r1, c0:c1] = 0.5 + spessore / 3 + float(np.clip(caso.normal(0, 0.11), -0.25, 0.25)) * min(1.0, (c1 - c0) / (2 * PX)) * gobba
         self.giunti[r0:r1, c0:c1] = 0
         self.rivetti[r0:r1, c0:c1] = 0
         for fetta in ((slice(r0, r0 + 2), slice(c0, c1)), (slice(r1 - 1, r1), slice(c0, c1)), (slice(r0, r1), slice(c0, c0 + 2)), (slice(r0, r1), slice(c1 - 1, c1))):
@@ -113,7 +115,7 @@ class Tela:
         """Le macchie larghe, la grana, lo sporco nelle giunte, i rivetti, i graffi, i crateri.
         colate: quanto pesano le colature in ogni riga (uno per riga; 0 dove non ce ne sono)."""
         h, w = self.alta, self.larga
-        self.colore *= (0.84 + 0.3 * rumore(h, w, 260))[..., None]
+        self.colore *= (0.8 + 0.38 * rumore(h, w, 260))[..., None]
         self.colore *= (0.94 + 0.12 * rumore(h, w, 6, 2))[..., None]
         self.ruvido += 0.16 * (rumore(h, w, 90) - 0.5)
         # le colature: righe scure che scendono lungo il giro, più fitte sotto le giunte
@@ -127,10 +129,10 @@ class Tela:
         self.colore *= (1 - 0.3 * sporco)[..., None]
         self.colore *= (1 - 0.5 * self.giunti)[..., None]
         self.ruvido += 0.2 * sporco
-        self.rilievo -= 0.22 * self.giunti
+        self.rilievo -= 0.08 * self.giunti
         # i rivetti: teste in rilievo, appena più scure
         self.colore *= (1 - 0.2 * self.rivetti)[..., None]
-        self.rilievo += 0.3 * self.rivetti
+        self.rilievo += 0.1 * self.rivetti
         # i graffi: lunghi, sottili, nel verso del viaggio; scoprono metallo fresco
         foglio = Image.new("L", (w, h), 0)
         penna = ImageDraw.Draw(foglio)
@@ -156,7 +158,7 @@ class Tela:
         orlo = np.clip(sfoca(buchi, 1.3) * 6 - buchi, 0, 1)
         self.colore *= (1 - 0.55 * buchi)[..., None]
         self.colore += 0.09 * orlo[..., None]
-        self.rilievo -= 0.3 * buchi
+        self.rilievo -= 0.12 * buchi
         self.usura = rumore(h, w, 9, 3)  # dove la vernice se n'è andata
 
     def vernicia(self, r0, c0, maschera, tinta, tenuta=0.3):
@@ -174,6 +176,97 @@ class Tela:
         self.colore[ra:rb, ca:cb] = sotto * (1 - a) + tinta * ombra * a
         self.metallo[ra:rb, ca:cb] *= 1 - a[..., 0]
         self.ruvido[ra:rb, ca:cb] = self.ruvido[ra:rb, ca:cb] * (1 - a[..., 0]) + 0.78 * a[..., 0]
+
+
+def anni(t):
+    """Novant'anni e più sullo scafo srotolato: le ordinate che si leggono sotto la pelle, le ammaccature, le
+    saldature delle riparazioni, le perdite colate lungo i fianchi, il fondo di antiruggine dove il metallo si è
+    scrostato, il muso sabbiato dalla polvere, la poppa cotta dal calore, i segni del carico intorno al portello."""
+    h, w = t.alta, t.larga
+    x = np.arange(w, dtype=np.float32) / PX  # i metri lungo la nave
+    s = np.arange(h, dtype=np.float32) / h * P.GIRO  # i metri lungo il giro
+    # le ordinate: una ogni due metri; fra l'una e l'altra la pelle rientra appena
+    t.rilievo += ((np.abs(np.sin(np.pi * x / 2.0)) - 0.64) * 0.16)[None, :] * (0.5 + 0.9 * rumore(h, w, 300, 2))
+    # le ammaccature: di più a prua e sul fianco del carico
+    rr, cc = np.mgrid[0:h, 0:w].astype(np.float32)
+    for _ in range(70):
+        cx = caso.exponential(14) if caso.random() < 0.4 else caso.uniform(0, 80)
+        cs = caso.uniform(P.S_FIANCO_S, P.S_GINOCCHIO_S) if caso.random() < 0.45 else caso.uniform(0, P.GIRO)
+        raggio, fonda = caso.uniform(0.25, 1.1) * PX, caso.uniform(0.12, 0.42)
+        r0, r1 = max(int(cs / P.GIRO * h - 3 * raggio), 0), min(int(cs / P.GIRO * h + 3 * raggio), h)
+        c0, c1 = max(int(cx * PX - 3 * raggio), 0), min(int(cx * PX + 3 * raggio), w)
+        if r1 <= r0 or c1 <= c0:
+            continue
+        buca = np.exp(-((rr[r0:r1, c0:c1] - cs / P.GIRO * h) ** 2 + (cc[r0:r1, c0:c1] - cx * PX) ** 2) / (2 * raggio * raggio))
+        t.rilievo[r0:r1, c0:c1] -= fonda * buca
+        t.colore[r0:r1, c0:c1] *= (1 - 0.12 * buca)[..., None]
+        t.ruvido[r0:r1, c0:c1] += 0.08 * buca
+    # le saldature delle riparazioni: cordoni chiari e storti, con l'alone scuro del calore intorno
+    foglio = Image.new("L", (w, h), 0)
+    penna = ImageDraw.Draw(foglio)
+    for _ in range(110):
+        px, py = caso.uniform(8 * PX, w), caso.uniform(0, h)
+        verso = caso.uniform(0, 2 * np.pi) if caso.random() < 0.3 else caso.choice([0.0, np.pi / 2])
+        punti = [(px, py)]
+        for _ in range(int(caso.uniform(4, 22))):
+            verso += caso.normal(0, 0.22)
+            px, py = px + 7 * np.cos(verso), py + 7 * np.sin(verso)
+            punti.append((px, py))
+        penna.line(punti, fill=255, width=2)
+    cordone = np.asarray(foglio, np.float32) / 255
+    alone = np.clip(sfoca(cordone, 3.5) * 3.2, 0, 1)
+    t.colore *= (1 - 0.33 * alone)[..., None]
+    t.colore += 0.16 * cordone[..., None] * np.array([0.9, 0.95, 1.05], np.float32)
+    t.rilievo += 0.09 * sfoca(cordone, 0.8)
+    t.ruvido += 0.12 * alone - 0.15 * cordone
+    # le perdite: una macchia che parte da un punto del fianco e cola verso la chiglia, bruna
+    for _ in range(64):
+        lato = caso.choice([-1, 1])
+        px, z = caso.uniform(10, 79), caso.uniform(-0.5, 5.2)
+        lunga, larga = caso.uniform(1.2, 5.0), caso.uniform(0.12, 0.45)
+        capo = P.giro_fianco(lato, z)
+        giu = s - capo if lato < 0 else capo - s  # quanti metri sotto il capo (verso la chiglia)
+        lungo = np.where(giu < 0, 0, np.exp(-giu / lunga) * np.clip(giu / 0.15, 0, 1)).astype(np.float32)
+        c0, c1 = max(int((px - 4 * larga) * PX), 0), min(int((px + 4 * larga) * PX), w)
+        traverso = np.exp(-((x[c0:c1] - px) ** 2) / (2 * larga * larga))
+        macchia = (lungo[:, None] * traverso[None, :] * caso.uniform(0.25, 0.6) * (0.55 + 0.45 * t.usura[:, c0:c1]))[..., None]
+        t.colore[:, c0:c1] = t.colore[:, c0:c1] * (1 - macchia) + (RUGGINE * 0.55) * macchia
+        t.metallo[:, c0:c1] *= 1 - 0.6 * macchia[..., 0]
+        t.ruvido[:, c0:c1] += 0.15 * macchia[..., 0]
+    # l'antiruggine che affiora dove il metallo si è scrostato: a chiazze, vicino alle giunte
+    chiazze = np.clip((rumore(h, w, 5, 2) - 0.62) * 6, 0, 1) * np.clip((rumore(h, w, 140, 2) - 0.5) * 3, 0, 1) * np.clip(sfoca(t.giunti, 9.0) * 6, 0, 1)
+    chiazze = (chiazze * 0.55)[..., None]
+    t.colore[:] = t.colore * (1 - chiazze) + (RUGGINE * 0.8) * chiazze
+    t.metallo *= 1 - 0.7 * chiazze[..., 0]
+    # il muso, sabbiato dalla polvere di novant'anni: più chiaro, più opaco; la poppa, cotta: più bruna
+    sabbia = np.clip(1 - x / 11.0, 0, 1)[None, :] * (0.6 + 0.4 * rumore(h, w, 80, 2))
+    t.colore[:] = t.colore * (1 - 0.2 * sabbia)[..., None] + (0.2 * sabbia)[..., None] * np.array([0.62, 0.63, 0.63], np.float32)
+    t.ruvido += 0.14 * sabbia
+    cotta = (np.clip((x - 70.5) / 9.5, 0, 1) ** 1.5)[None, :] * (0.5 + 0.5 * rumore(h, w, 120, 2))
+    t.colore *= 1 - 0.36 * cotta[..., None] * np.array([0.8, 1.0, 1.15], np.float32)
+    t.ruvido += 0.1 * cotta
+    # i segni del carico: graffi fitti e corti intorno al portello, e dove le staffe dei pannelli toccano lo scafo
+    foglio = Image.new("L", (w, h), 0)
+    penna = ImageDraw.Draw(foglio)
+    cx0, cx1 = M.PORTELLO_DI_CARICO["x"]
+    cz0, cz1 = M.PORTELLO_DI_CARICO["z"]
+    for _ in range(900):
+        px, z = caso.uniform(cx0 - 2.5, cx1 + 2.5), caso.uniform(cz0 - 1.4, cz1 + 0.8)
+        if cx0 + 0.3 < px < cx1 - 0.3 and cz0 + 0.3 < z < cz1 - 0.3 and caso.random() < 0.8:
+            continue
+        lungo, verso = caso.uniform(4, 60), caso.normal(0, 0.5)
+        a = (px * PX, P.giro_fianco(-1, z) / P.GIRO * h)
+        penna.line([a, (a[0] + lungo * np.cos(verso), a[1] + lungo * np.sin(verso))], fill=int(caso.uniform(70, 230)), width=1)
+    urti = np.asarray(foglio, np.float32) / 255
+    t.colore += 0.14 * urti[..., None]
+    t.ruvido -= 0.2 * urti
+    t.metallo += 0.25 * urti
+    t.graffi = np.maximum(t.graffi, urti)
+    # lo sporco che si ferma sopra la fascia scura: il primo metro del fianco chiaro è più scuro
+    for lato in (-1, 1):
+        sopra = (s - P.giro_fianco(lato, P.QUOTE_FIANCO[0])) * lato
+        velo = np.where((sopra > 0) & (sopra < 1.6), 1 - sopra / 1.6, 0).astype(np.float32)[:, None] * (0.4 + 0.6 * rumore(h, w, (40, 200), 2))
+        t.colore *= (1 - 0.3 * velo)[..., None]
 
 
 def tinta_lamiera(scura):
@@ -300,15 +393,16 @@ def scafo():
         tinta, metallo, ruvido, _ = tinta_lamiera(False)
         if caso.random() < 0.5:
             tinta = TOPPE[caso.integers(len(TOPPE))] * caso.uniform(0.92, 1.08)
-        t.lamiera(riga(s0), riga(s1), colonna(x0), colonna(x0 + larga), tinta, metallo, ruvido, 0.13, passo=9)
+        t.lamiera(riga(s0), riga(s1), colonna(x0), colonna(x0 + larga), tinta, metallo, ruvido, 0.18, passo=9)
     # le colature stanno sui fianchi e sulle spalle, non sul dorso né sotto
     s = np.arange(AS) / AS * P.GIRO
     colate = np.clip(np.minimum(s - P.S_GINOCCHIO_D, P.S_DORSO - s) / 2.5, 0, 1) + np.clip(np.minimum(s - P.S_SPALLA_S, P.S_FONDO_S - s) / 2.5, 0, 1)
     t.invecchia(np.clip(colate, 0, 1).astype(np.float32))
+    anni(t)
     # la matricola, sui due fianchi, sulla fascia scura; le fasce arancioni intorno alle due aperture
     mx, mz1 = sum(M.MATRICOLA_FIANCO["x"]) / 2, M.MATRICOLA_FIANCO["z"][1]
     for lato in (-1, 1):
-        sul_fianco(t, matricola(), mx, lato, mz1 - 0.05, VERNICE, 0.26)
+        sul_fianco(t, matricola(), mx, lato, mz1 - 0.05, VERNICE, 0.14)
     cx0, cx1 = M.PORTELLO_DI_CARICO["x"]
     cz0, cz1 = M.PORTELLO_DI_CARICO["z"]
     stacco, banda = 0.16, 0.32
