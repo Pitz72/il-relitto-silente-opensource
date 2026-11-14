@@ -11,6 +11,10 @@
 //  immagini parte con lui. Si parte a caratteri caricati, perché scritta e
 //  motto di FAVELLA si misurano su Sora e Inter.
 //  Esc salta i loghi. Con «riduci movimento» non si mostrano.
+//  Dal 14 novembre 2026 i loghi sono l'inizio della cinematica d'apertura
+//  (documento 09, §16): stanno nello stesso formato largo dell'intro, con le
+//  bande nere sopra e sotto, e sotto la stessa pellicola (pellicola/). I due
+//  loghi non sono cambiati: è cambiato il quadro in cui stanno.
 //  Solo in sviluppo: ?loghi=3.2 ferma l'orologio a quel secondo (muto);
 //  window.__loghiT lo sposta, window.__rendiSuonoLoghi rende l'audio in un
 //  file (vedi src/loghi/esporta.ts): servono a esportare i video dei loghi.
@@ -19,6 +23,8 @@ import { useEffect, useRef, useState } from "react";
 import LogoRuntime, { DURATA_RUNTIME, type Animabile } from "../loghi/LogoRuntime";
 import LogoFavella, { DURATA_FAVELLA } from "../loghi/LogoFavella";
 import { SuonoLoghi } from "../loghi/suono";
+import Pellicola, { type PellicolaViva } from "../pellicola/Pellicola";
+import { BANDA } from "../pellicola/scatti";
 
 const CODA = 0.35;   // nero dopo l'ultimo logo
 const DURATA = DURATA_RUNTIME + DURATA_FAVELLA + CODA;
@@ -31,7 +37,8 @@ const fermo = (() => {
 })();
 if (import.meta.env.DEV) import("../loghi/esporta").then((m) => m.installa());
 
-export default function Loghi({ onFine }: { onFine: () => void }) {
+export default function Loghi({ onFine, grana = "mossa", pellicola = true }: { onFine: () => void; grana?: "mossa" | "ferma" | "no"; pellicola?: boolean }) {
+  const film = useRef<PellicolaViva>(null);
   const runtime = useRef<Animabile>(null);
   const favella = useRef<Animabile>(null);
   const [pronti, setPronti] = useState(false);
@@ -63,6 +70,7 @@ export default function Loghi({ onFine }: { onFine: () => void }) {
       const solo = import.meta.env.DEV ? (window as unknown as { __loghiSolo?: string }).__loghiSolo : undefined;
       if (solo !== "favella") runtime.current?.aggiorna(t);
       if (solo !== "runtime") favella.current?.aggiorna(t - DURATA_RUNTIME);
+      film.current?.aggiorna(Math.max(0, t));
       if (t >= DURATA) { chiudi(); if (fermo === null) return; }
       raf = requestAnimationFrame(passo);
     };
@@ -72,10 +80,17 @@ export default function Loghi({ onFine }: { onFine: () => void }) {
   }, [pronti]);
 
   return (
-    <div style={{ position: "fixed", inset: 0, background: "#000", cursor: "none", overflow: "hidden", userSelect: "none" }}
+    <div style={{ position: "fixed", inset: 0, background: "#000", cursor: "none", overflow: "hidden", userSelect: "none", display: "grid", placeItems: "center" }}
       aria-label="Loghi di apertura">
-      <LogoRuntime ref={runtime} />
-      <LogoFavella ref={favella} />
+      {/* il palco 16:9, come quello dell'intro; dentro, l'immagine sotto la pellicola, e le due bande nere sopra a tutto */}
+      <div style={{ position: "relative", aspectRatio: "16 / 9", width: "min(100vw, calc(100vh * 16 / 9))", overflow: "hidden" }}>
+        <Pellicola ref={film} grana={grana} spenta={!pellicola} banda={BANDA} fondo="#000">
+          <LogoRuntime ref={runtime} />
+          <LogoFavella ref={favella} />
+        </Pellicola>
+        <div aria-hidden="true" style={{ position: "absolute", left: 0, right: 0, top: 0, height: `${BANDA * 100}%`, background: "#000" }} />
+        <div aria-hidden="true" style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: `${BANDA * 100}%`, background: "#000" }} />
+      </div>
     </div>
   );
 }

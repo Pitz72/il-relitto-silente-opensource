@@ -3,4 +3,4 @@
 // Sono gli stessi che la pagina manda al motore (app/src/intro/suono.ts): una fonte sola, scaletta.ts.
 import { SCALETTA, pezziDellaVoce } from "../../app/src/intro/scaletta.ts";
 
-console.log(JSON.stringify({ momenti: SCALETTA.momenti, durata: SCALETTA.durata, voce: pezziDellaVoce(SCALETTA) }, null, 2));
+console.log(JSON.stringify({ momenti: SCALETTA.momenti, durata: SCALETTA.durata, voce: pezziDellaVoce(SCALETTA), stampe: SCALETTA.stampe }, null, 2));

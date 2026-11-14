@@ -1,0 +1,12 @@
+/* ==========================================================================
+   La pellicola della cinematica d'apertura (Pellicola.tsx; documento 09, §16).
+   L'immagine sta in .pellicola-immagine, con il suo taglio di colore; sopra,
+   tre strati leggeri: la grana, le sporcature, la lampada. Le bande del formato
+   non sono qui: chi usa la pellicola le mette sopra, nere, fuori dall'effetto.
+   ========================================================================== */
+.pellicola { position: absolute; inset: 0; isolation: isolate; }
+.pellicola-immagine { position: absolute; inset: 0; }
+.pellicola-strato { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+.pellicola-grana { mix-blend-mode: overlay; opacity: 0; background-repeat: repeat; }
+.pellicola-lampada { background: #000; opacity: 0; }
+.pellicola-filtro { position: absolute; width: 0; height: 0; overflow: hidden; }

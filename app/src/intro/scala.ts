@@ -63,15 +63,26 @@ const LARGHEZZA_NAVE = { poppa: 96, prua: 112 };
 // la fotografia della nave: quanto è forte il sole (appena caldo), quanta luce fredda viene dal cielo, e le sue
 // luci (l'oblò, i fanali, la luce dell'uscita, la lente del faro acceso, la spinta dei quattro scarichi)
 const LUCE_NAVE = { sole: [1.7, 1.63, 1.52], cielo: [0.02, 0.03, 0.055], oblo: 3.0, fanali: 6.0, uscita: 4.0, faro: 14.0, spinta: 0.6 };
-const faroDi = (q: Quadro, gradi = 0) => ({
-  origine: [44, 7, -3] as V3,
-  apertura: (3.2 * Math.PI) / 180,
-  portata: 210,
-  direzione:
-    q === "faro" || q === "plancia"
-      ? norm([Math.cos(((-64 + gradi) * Math.PI) / 180), 0.02 + gradi * 0.0015, Math.sin(((-64 + gradi) * Math.PI) / 180)])
-      : norm([1, -0.03, -0.02]),
-});
+/** Il riflettore visto dall'oblò (l'autore, 14 novembre 2026: «il faro non è laterale come lo mostriamo nella
+ *  sequenza, ma è sopra l'area di plancia, perpendicolare all'oblò stesso. La luce deve venire frontalmente»).
+ *  Sta dov'è nel progetto della nave (strumenti/nave/misure.py, FARO: sul dorso, nove metri dietro il muso e
+ *  quattro sopra l'oblò), e guarda dove guarda l'oblò: da dentro si vede la luce scendere dall'alto del vetro
+ *  e andare dritta davanti, verso il punto in cui si perde. */
+const FARO_SUL_DORSO = { su: 4.2, dietro: 9 };
+const faroDi = (q: Quadro, gradi = 0): { origine: V3; apertura: number; portata: number; direzione: V3 } => {
+  const apertura = (3.2 * Math.PI) / 180;
+  if (q === "faro" || q === "plancia") {
+    const dritto = azimut(OBLO.gradi, OBLO.elev);
+    return {
+      origine: somma(somma(OBLO.pos, [0, FARO_SUL_DORSO.su, 0]), per(dritto, -FARO_SUL_DORSO.dietro)),
+      apertura,
+      portata: 210,
+      // quando cerca si sposta di poco, di lato e appena in alto: resta davanti
+      direzione: azimut(OBLO.gradi + gradi, OBLO.elev + gradi * 0.1),
+    };
+  }
+  return { origine: [44, 7, -3], apertura, portata: 210, direzione: norm([1, -0.03, -0.02]) };
+};
 
 /** L'oblò della plancia (C, D, H): la camera è il vetro. La nave scivola di lato, e il bordo del fuso
  *  avanza sulle stelle e le spegne (C); il faro si accende e cerca (D). Il tempo è quello dell'intro.
@@ -994,7 +1005,8 @@ export class Scala {
     // nella plancia il fascio cerca: la polvere sta in un cono più largo
     const largo = q === "plancia" ? 3.4 : 1.3;
     for (let i = 0; i < (q === "plancia" ? 2600 : 1400); i++) {
-      const s = 40 + r() ** 1.6 * 260, raggio = Math.tan(FARO.apertura) * s * largo * Math.sqrt(r()), a = r() * Math.PI * 2;
+      // dall'oblò il fascio comincia subito sopra il vetro: la polvere c'è anche lì vicino
+      const s = (q === "plancia" ? 14 : 40) + r() ** 1.6 * 260, raggio = Math.tan(FARO.apertura) * s * largo * Math.sqrt(r()), a = r() * Math.PI * 2;
       const p = somma(FARO.origine, somma(per(fd, s), somma(per(fu, Math.cos(a) * raggio), per(fv, Math.sin(a) * raggio))));
       dati.push(p[0], p[1], p[2], r());
     }

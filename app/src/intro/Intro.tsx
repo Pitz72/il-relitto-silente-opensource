@@ -20,20 +20,24 @@
 //  alla barra di revisione.
 // ============================================================================
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Pellicola, { type PellicolaViva } from "../pellicola/Pellicola";
 import { glifiDelTitolo } from "./glifi";
+import { contorni, posa, sciogli, spezzata, type P, type Scioglimento } from "./titolo";
 import { BANDA, Plancia, VOLO, TAGLIO_H, faro as faroDi, fuochi, otticaOblo, riprese, tempoOblo } from "./plancia";
 import { Scala } from "./scala";
 import { introSuono } from "./suono";
 import {
   SCALETTA,
-  SOTTOTITOLO,
   TITOLO,
   formatoTempo,
   pezziDellaVoce,
   fra,
+  luceDiA,
   morbido,
   opacitaBlocco,
+  opacitaCredito,
   scenaA,
+  testoCredito,
   type Blocco,
 } from "./scaletta";
 import { VOCE_INVILUPPO, VOCE_PASSO } from "./voce";
@@ -51,8 +55,29 @@ const SPIA_F = { x: 0.5, y: 0.365 };
 const BATTITI_A = [M.battito[0], M.battito[0] + 0.95, M.battito[0] + 1.95, M.battito[0] + 3.0];
 /** nel raccordo di H la camera entra nel nero del fuso, sopra il punto della nave */
 const NEL_NERO = { x: 0.5, y: 0.4 };
-/** la voce dell'apparecchio si stampa in questo tempo */
+/** la voce dell'apparecchio si stampa in questo tempo, se la scaletta non ne dà uno suo */
 const STAMPA = 1.5;
+/** il blocco del titolo */
+const T_BLOCCO = S.blocchi.find((b) => b.voce === "titolo")!;
+/** Il titolo: ogni glifo ci mette tanto a sciogliersi nella sua lettera; partono dal centro verso i lati, e
+ *  l'ultimo ha finito poco prima che il titolo sia intero. */
+const SCIOGLIE = { dura: 2.3, coda: 0.25, punti: 240 };
+/** La luce dei glifi (l'autore, 14 novembre 2026: «trova un colore che non sia così poco cinematografico»):
+ *  non più il ciano acceso di uno schermo, ma un oro pallido, caldo contro il blu freddo del cielo, che nella
+ *  lettera si raffredda fino al bianco del titolo. Tre passate: l'alone largo, il corpo, il filo chiaro.
+ *  (colore, larghezza in punti a 1080 righe, alone) */
+const TRATTO_GLIFO: readonly (readonly [string, number, number])[] = [
+  ["rgba(206, 164, 96, 0.20)", 6.4, 0],
+  ["rgba(228, 204, 160, 0.52)", 2.9, 7],
+  ["rgba(247, 238, 220, 0.96)", 1.5, 0],
+];
+const ALONE_GLIFO = "rgba(214, 172, 104, 0.75)";
+
+/** La linea di una lettera del titolo: lo scioglimento, e per ogni punto quanto è avanti nel suo tratto del
+ *  glifo (0–1), per tracciarlo. */
+interface Linea extends Scioglimento {
+  frazione: number[];
+}
 
 export type Grana = "mossa" | "ferma" | "no";
 
@@ -108,14 +133,6 @@ function livelloTraccia(τ: number): number {
   return Math.min(1, 0.12 + livelloVoce(τ) * 1.05 + impulso(τ, BATTITI_A) * 1.1);
 }
 
-/** La lunghezza di un tratto "M x y L x y …" (i glifi sono spezzate). */
-function lunghezza(d: string): number {
-  const n = d.match(/-?\d+(?:\.\d+)?/g)?.map(Number) ?? [];
-  let l = 0;
-  for (let i = 2; i + 1 < n.length; i += 2) l += Math.hypot(n[i] - n[i - 2], n[i + 1] - n[i - 1]);
-  return l;
-}
-
 export default function Intro({
   revisione = false,
   onFine,
@@ -123,6 +140,7 @@ export default function Intro({
   ridotto,
   grana = "mossa",
   voce = false,
+  pellicola = true,
 }: {
   revisione?: boolean;
   onFine?: () => void;
@@ -134,7 +152,12 @@ export default function Intro({
    *  e resta solo la scritta della scatola nera. Senza voce (la revisione nel browser, il parlato a zero)
    *  i testi ci sono, come prima */
   voce?: boolean;
+  /** l'effetto pellicola (scheda Grafica): il taglio di colore, la lampada, le sporcature */
+  pellicola?: boolean;
 }) {
+  const film = useRef<PellicolaViva>(null);
+  const crediti = useRef<Record<string, HTMLDivElement | null>>({});
+  const linee = useRef<{ W: number; lettere: (Linea | null)[] } | null>(null);
   const radice = useRef<HTMLDivElement>(null);
   const palco = useRef<HTMLDivElement>(null);
   const spazio = useRef<HTMLCanvasElement>(null);
@@ -168,7 +191,7 @@ export default function Intro({
   const [mostrato, setMostrato] = useState(0);
   const [inPausa, setInPausa] = useState(false);
   const [fps, setFps] = useState<string>("");
-  const glifi = useMemo(() => glifiDelTitolo(TITOLO).map((g) => ({ ...g, lunghezze: g.forme.map((f) => f.map(lunghezza)) })), []);
+  const glifi = useMemo(() => glifiDelTitolo(TITOLO), []);
 
   // ---- la preparazione: il motore, le immagini, i cieli --------------------------
   useEffect(() => {
@@ -196,6 +219,8 @@ export default function Intro({
         // finestra nascosta la decodifica aspetta che torni visibile: si va avanti lo stesso
         const attesa = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
         await Promise.all([hd, sfocata, lente].map((i) => Promise.race([i.decode().catch(() => undefined), attesa(1500)])));
+        // il carattere del titolo e dei crediti: il titolo si disegna in un canvas, che non lo aspetta
+        await Promise.race([Promise.all(['300 100px Newsreader', 'italic 300 40px Newsreader'].map((f) => document.fonts?.load(f).catch(() => null))), attesa(1500)]);
         m.prepara("margine");
         m.prepara("scala");
         m.prepara("plancia");
@@ -339,13 +364,14 @@ export default function Intro({
         const op = opacitaBlocco(b, t);
         if (b.voce === "apparecchio") {
           // la voce dell'apparecchio si stampa, lettera per lettera, con il cursore che poi se ne va
-          const quante = ridotto ? b.testo.length : Math.round(b.testo.length * fra(t, b.entra, b.entra + STAMPA));
+          const stampa = b.stampa ?? STAMPA;
+          const quante = ridotto ? b.testo.length : Math.round(b.testo.length * fra(t, b.entra, b.entra + stampa));
           const scritto = el.firstElementChild as HTMLElement, cursore = scritto.nextElementSibling as HTMLElement, resto = cursore.nextElementSibling as HTMLElement;
           if (scritto.textContent!.length !== quante) {
             scritto.textContent = b.testo.slice(0, quante);
             resto.textContent = b.testo.slice(quante);
           }
-          const dopo = t - (b.entra + STAMPA);
+          const dopo = t - (b.entra + stampa);
           cursore.style.opacity = !ridotto && t >= b.entra && (dopo < 0 || (dopo < 1.9 && Math.floor(dopo / 0.32) % 2 === 1)) ? "1" : "0";
           el.style.opacity = String(t < b.esce ? (t >= b.entra ? 1 : 0) : op);
         } else if (o.voce) {
@@ -365,8 +391,23 @@ export default function Intro({
         el.style.visibility = op > 0 ? "visible" : "hidden";
         if (op > 0.5) parla = b.testo;
       }
-      const T = S.blocchi.find((b) => b.voce === "titolo")!;
-      if (opacitaBlocco(T, t) > 0.5) parla = `${TITOLO}. ${SOTTOTITOLO}`;
+      // 4b. i titoli di testa: i cartelli nel nero e i crediti in sovrimpressione. Vengono a fuoco, e per
+      // tutto il tempo che restano le lettere dei nomi prendono un filo d'aria
+      for (const c of S.crediti) {
+        const el = crediti.current[c.id];
+        if (!el) continue;
+        const op = opacitaCredito(c, t);
+        el.style.opacity = String(op);
+        el.style.visibility = op > 0 ? "visible" : "hidden";
+        if (op <= 0) continue;
+        if (!ridotto) {
+          const sfoca = (1 - morbido(fra(t, c.entra, c.pieno))) * 3.5 + (t > c.esce ? morbido(fra(t, c.esce, c.via)) * 1.6 : 0);
+          el.style.filter = sfoca > 0.05 ? `blur(${((sfoca * H) / 1080).toFixed(2)}px)` : "";
+          el.style.setProperty("--aria", `${(0.03 * fra(t, c.entra, c.via)).toFixed(4)}em`);
+        }
+        if (op > 0.5) parla = testoCredito(c);
+      }
+      if (opacitaBlocco(T_BLOCCO, t) > 0.5) parla = TITOLO;
       if (annuncio.current && annuncio.current.textContent !== parla) annuncio.current.textContent = parla;
 
       // 5. il disegno sopra: la spia, il nastro, i glifi e il titolo
@@ -392,6 +433,10 @@ export default function Intro({
         const cp = canvasPlancia.current;
         if (cp) cp.style.opacity = tR === null ? "1" : String(1 - morbido(fra(t, tR + 0.9, tR + 1.3)));
       }
+
+      // 8. la pellicola, sopra tutto il quadro e sotto le bande: da quando la plancia diventa la telecamera
+      //    di bordo se ne va, e il gioco arriva senza
+      film.current?.aggiorna(t, 1 - morbido(fra(t, M.interfaccia[0] + 0.2, VOLO[1])));
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
@@ -430,6 +475,7 @@ export default function Intro({
     const px = (u: number) => u * W;
     const py = (v: number) => v * H;
     const k = H / 1080;
+    const k1080 = k;
 
     /** La spia: il punto, l'alone, e la riga orizzontale dell'obiettivo. */
     const spia = (x: number, y: number, luce: number, sfoca = 0) => {
@@ -466,7 +512,7 @@ export default function Intro({
     // A: il nastro della scatola nera. Il livello della registrazione scorre dal centro verso i lati:
     // il respiro, il cuore, i buchi. Dopo l'ultimo colpo, niente; poi la spia diventa una stella
     if (t >= M.spia && t < M.stella[0] + 1.6) {
-      const vis = morbido(fra(t, M.spia, M.spia + 1.2)) * (1 - morbido(fra(t, M.stella[0], M.stella[0] + 1.2)));
+      const vis = morbido(fra(t, M.spia, M.spia + 1.2)) * (1 - morbido(fra(t, M.stella[0], M.stella[0] + 1.2))) * luceDiA(t);
       const Y = py(SPIA_A.y), X = px(SPIA_A.x);
       const mezzo = 0.2 * W, buco = 26 * k, passo = 3 * k;
       const v = 0.075 * W; // la velocità del nastro, in pixel al secondo
@@ -496,7 +542,7 @@ export default function Intro({
       const sfoca = morbido(fra(t, M.stella[0], M.stella[0] + 1.8));
       // la spia della registrazione si accende un poco di più quando L.V. parla
       const voce = livelloVoce(t) * (ridotto ? 0.15 : 0.32);
-      const luce = accesa * (0.56 * respiro + 0.5 * colpo + voce) * (1 - sfoca);
+      const luce = accesa * (0.56 * respiro + 0.5 * colpo + voce) * (1 - sfoca) * luceDiA(t);
       spia(SPIA_A.x, SPIA_A.y, luce, sfoca);
     }
     if (t >= M.stella[0] + 0.5 && t < C0) {
@@ -525,9 +571,10 @@ export default function Intro({
       spia(SPIA_F.x, SPIA_F.y, accesa * (0.46 + 0.55 * colpo + voce) * 0.85);
     }
 
-    // G: i glifi che si tracciano, la matrice che li legge, il titolo
-    if (t >= M.glifi[0] && t < S.blocchi[S.blocchi.length - 1].via) {
-      const T = S.blocchi.find((b) => b.voce === "titolo")!;
+    // G: i glifi si tracciano; poi ognuno si scioglie nella sua lettera, dal centro verso i lati (titolo.ts);
+    // il titolo resta, prende aria, e una luce gli passa sopra una volta
+    if (t >= M.glifi[0] && t < T_BLOCCO.via) {
+      const T = T_BLOCCO;
       const fs = 0.062 * W; // 6,2cqw
       const yTitolo = 0.465 * H;
       g.save();
@@ -545,83 +592,75 @@ export default function Intro({
         x += w;
       }
       const titolo = opacitaBlocco(T, t);
-      const glifoH = 0.044 * W, glifoW = 0.032 * W;
       g.letterSpacing = "0px";
       g.textAlign = "center";
-      for (const gl of glifi) {
+      const lettere = lineeDelTitolo(W, fs);
+      // quanto aspetta il glifo più lontano dal centro prima di sciogliersi
+      const attesa = Math.max(0, M.traduzione[1] - M.traduzione[0] - SCIOGLIE.coda - SCIOGLIE.dura);
+      glifi.forEach((gl, n) => {
         const cx = posti[gl.indice];
-        const appare = M.glifi[0] + (M.glifi[1] - M.glifi[0]) * gl.compare;
-        const traccia = ridotto ? morbido(fra(t, M.glifi[0], M.glifi[1])) : fra(t, appare, appare + 0.55);
-        const riconosciuto = M.traduzione[0] + (M.traduzione[1] - M.traduzione[0]) * gl.riconosciuto - 0.1;
-        // la lettera: fino al titolo pieno; poi la sostituisce il blocco del titolo, che esce con le regole dei testi
-        const lettera = ridotto ? morbido(fra(t, M.traduzione[0], M.traduzione[1])) : morbido(fra(t, riconosciuto, riconosciuto + 0.28));
-        const alfaLettera = t < T.pieno ? lettera : titolo;
-        if (lettera < 1 && traccia > 0) {
-          // il glifo, e le forme che prende mentre la matrice lo cerca
-          let k2 = 0;
-          if (!ridotto && t >= M.traduzione[0]) {
-            const passi = gl.forme.length - 1;
-            k2 = Math.min(passi, Math.floor(fra(t, M.traduzione[0], riconosciuto) * (passi + 1)));
-          }
-          const forma = gl.forme[k2], lungh = gl.lunghezze[k2];
-          // una forma nuova si ritraccia in fretta; la prima si traccia piano
-          const disegnata = k2 === 0 ? traccia : Math.min(1, fra(t, M.traduzione[0] + ((riconosciuto - M.traduzione[0]) * k2) / gl.forme.length, M.traduzione[0] + ((riconosciuto - M.traduzione[0]) * k2) / gl.forme.length + 0.16));
+        const appare = M.glifi[0] + (M.glifi[1] - M.glifi[0] - 1.0) * gl.compare;
+        const traccia = ridotto ? morbido(fra(t, M.glifi[0], M.glifi[1])) : morbido(fra(t, appare, appare + 1.0));
+        const parte = M.traduzione[0] + attesa * Math.min(1, Math.abs(cx - W / 2) / (larghezza / 2));
+        const k = ridotto ? 0 : fra(t, parte, parte + SCIOGLIE.dura);
+        // la lettera si riempie quando il contorno è quasi chiuso; poi il tratto si spegne
+        const piena = ridotto ? morbido(fra(t, M.traduzione[0], M.traduzione[1])) : morbido(fra(t, parte + SCIOGLIE.dura * 0.66, parte + SCIOGLIE.dura));
+        const tratto = ridotto ? traccia * (1 - piena) : Math.min(1, traccia * 4) * (1 - morbido(fra(t, parte + SCIOGLIE.dura * 0.82, parte + SCIOGLIE.dura + 0.7)));
+        const s = lettere[n];
+        if (s && tratto > 0.004) {
+          const { p, e } = posa(s, k);
+          // i pezzi di linea per quanto si vedono (quattro gradi): un pezzo che è linea nel glifo e nella
+          // lettera c'è sempre; uno solo del glifo se ne va; uno solo della lettera (e la chiusura dei giri) arriva
+          const gradi: number[][] = [[], [], [], []];
+          const pezzo = (a: number, b: number, nelGlifo: boolean, nellaLettera: boolean) => {
+            if (k <= 0 && s.frazione[b] > traccia) return;
+            const em = (e[a] + e[b]) / 2;
+            // un pezzo che è linea solo nel glifo si tende mentre i suoi due capi si separano: se ne va presto;
+            // uno che è linea solo nella lettera è lungo finché i capi non si sono avvicinati: arriva tardi
+            const v = nelGlifo && nellaLettera ? 1 : nelGlifo ? 1 - morbido(fra(em, 0.02, 0.3)) : nellaLettera ? morbido(fra(em, 0.72, 0.98)) : 0;
+            const q = Math.min(3, Math.floor(v * 4 - 0.001));
+            if (v > 0.02) gradi[Math.max(0, q)].push(a, b);
+          };
+          for (let i = 0; i + 1 < p.length; i++) pezzo(i, i + 1, s.tratto[i] === s.tratto[i + 1], s.giro[i] === s.giro[i + 1]);
+          for (const [primo, ultimo] of s.capi) pezzo(ultimo, primo, false, true);
           g.save();
-          g.globalAlpha = (ridotto ? traccia : Math.min(1, traccia * 3)) * (1 - lettera);
-          g.translate(cx - glifoW / 2, yTitolo - glifoH * 0.82);
-          g.scale(glifoW / 32, glifoH / 56);
+          g.translate(cx, yTitolo);
           g.lineCap = "round";
           g.lineJoin = "round";
-          // l'alone, il tratto, e il fondo del solco: i glifi sono «incisi a fondo»
-          for (const [colore, largo, blur] of [["rgba(95, 212, 220, 0.35)", 3.4, 10], ["#86e8ee", 1.9, 4], ["rgba(4, 40, 46, 0.75)", 0.55, 0]] as const) {
+          g.shadowColor = ALONE_GLIFO;
+          for (const [colore, largo, alone] of TRATTO_GLIFO) {
             g.strokeStyle = colore;
-            g.lineWidth = largo;
-            g.shadowColor = "rgba(95, 212, 220, 0.8)";
-            g.shadowBlur = blur * k;
-            forma.forEach((d, i) => {
-              const L = lungh[i];
-              if (!ridotto) {
-                g.setLineDash([L, L]);
-                g.lineDashOffset = L * (1 - disegnata);
+            g.lineWidth = Math.max(0.8, largo * k1080);
+            g.shadowBlur = alone * k1080;
+            gradi.forEach((coppie, q) => {
+              if (!coppie.length) return;
+              g.globalAlpha = tratto * ((q + 1) / 4);
+              g.beginPath();
+              let ultimo = -1;
+              for (let i = 0; i < coppie.length; i += 2) {
+                const a = coppie[i], b = coppie[i + 1];
+                if (a !== ultimo) g.moveTo(p[a][0], p[a][1]);
+                g.lineTo(p[b][0], p[b][1]);
+                ultimo = b;
               }
-              g.stroke(new Path2D(d));
+              g.stroke();
             });
           }
           g.restore();
-          // la matrice lo aggancia: quattro angoli che si stringono, nell'ultimo istante prima della lettera
-          if (!ridotto && t >= M.traduzione[0]) {
-            const aggancio = fra(t, riconosciuto - 0.4, riconosciuto + 0.15);
-            if (aggancio > 0 && aggancio < 1) {
-              const largo = (1.5 - 0.5 * morbido(Math.min(1, aggancio / 0.7))) * glifoW * 0.75;
-              const alto = (1.5 - 0.5 * morbido(Math.min(1, aggancio / 0.7))) * glifoH * 0.62;
-              const cy = yTitolo - glifoH * 0.34;
-              const a = 0.12 * glifoW;
-              g.save();
-              g.strokeStyle = `rgba(150, 236, 240, ${0.7 * Math.sin(Math.PI * aggancio)})`;
-              g.lineWidth = Math.max(1, 1.2 * k);
-              g.beginPath();
-              for (const [sx, sy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) {
-                const xx = cx + sx * largo, yy = cy + sy * alto;
-                g.moveTo(xx - sx * a, yy);
-                g.lineTo(xx, yy);
-                g.lineTo(xx, yy - sy * a);
-              }
-              g.stroke();
-              g.restore();
-            }
-          }
         }
+        // la lettera: fino al titolo pieno; poi è il blocco del titolo, che esce con le regole dei testi
+        const alfaLettera = t < T.pieno ? piena : titolo;
         if (alfaLettera > 0) {
-          // la lettera trovata nasce ciano e si raffredda nel bianco del titolo
-          const nuova = t < T.pieno ? 1 - lettera : 0;
+          // nasce calda, della luce del glifo, e si raffredda nel bianco del titolo
+          const calda = ridotto ? 0 : 1 - morbido(fra(t, parte + SCIOGLIE.dura * 0.66, parte + SCIOGLIE.dura + 1.4));
           g.save();
-          g.shadowColor = `rgba(120, 230, 236, ${0.9 * nuova})`;
-          g.shadowBlur = 18 * k * nuova;
-          g.fillStyle = `rgba(${Math.round(236 - 90 * nuova)}, ${Math.round(240 - 10 * nuova)}, ${Math.round(238 + 4 * nuova)}, ${alfaLettera})`;
+          g.shadowColor = `rgba(214, 172, 104, ${0.6 * calda})`;
+          g.shadowBlur = 16 * k1080 * calda;
+          g.fillStyle = `rgba(${Math.round(236 + 10 * calda)}, ${Math.round(240 - 6 * calda)}, ${Math.round(238 - 26 * calda)}, ${alfaLettera})`;
           g.fillText(gl.lettera, cx, yTitolo);
           g.restore();
         }
-      }
+      });
       // una luce passa sul titolo, una volta, appena è intero
       const passa = fra(t, T.pieno + 0.5, T.pieno + 2.6);
       if (!ridotto && passa > 0 && passa < 1 && titolo > 0) {
@@ -634,34 +673,52 @@ export default function Intro({
         g.globalCompositeOperation = "lighter";
         g.fillStyle = luce;
         g.shadowColor = "rgba(255,250,240,0.6)";
-        g.shadowBlur = 14 * k;
+        g.shadowBlur = 14 * k1080;
         for (const gl of glifi) g.fillText(gl.lettera, posti[gl.indice], yTitolo);
         g.restore();
       }
-      // il sottotitolo, dopo il titolo: in tondo, e il titolo del libro in corsivo (l'uso italiano;
-      // il testo è dell'autore, 19 ottobre 2026)
-      const sotto = titolo * morbido(fra(t, T.pieno + 0.2, T.pieno + 1.6));
-      if (sotto > 0) {
-        const fs2 = 0.0165 * W;
-        const corsivo = `italic 300 ${fs2}px Newsreader, Georgia, "Times New Roman", serif`;
-        const tondo = `300 ${fs2}px Newsreader, Georgia, "Times New Roman", serif`;
-        const libro = "Il Registro della Santa Maria";
-        const prima = SOTTOTITOLO.slice(0, SOTTOTITOLO.indexOf(libro));
-        g.textAlign = "left";
-        g.letterSpacing = `${0.02 * fs2}px`;
-        g.font = tondo;
-        const w1 = g.measureText(prima).width;
-        g.font = corsivo;
-        const w2 = g.measureText(libro).width;
-        const x0 = (W - w1 - w2) / 2;
-        g.fillStyle = `rgba(184, 194, 191, ${sotto})`;
-        g.font = tondo;
-        g.fillText(prima, x0, 0.59 * H);
-        g.font = corsivo;
-        g.fillText(libro, x0 + w1, 0.59 * H);
-      }
       g.restore();
     }
+  };
+
+  /** Le linee del titolo, una per lettera: i tratti del glifo e il contorno della lettera messi in
+   *  corrispondenza (titolo.ts). Il contorno si prende dalla lettera disegnata, al doppio della misura; si
+   *  rifà solo se cambia la larghezza del palco. */
+  const lineeDelTitolo = (W: number, fs: number): (Linea | null)[] => {
+    if (linee.current?.W === W) return linee.current.lettere;
+    const carattere = `300 ${fs * 2}px Newsreader, Georgia, "Times New Roman", serif`;
+    const glifoH = 0.044 * W, glifoW = 0.032 * W;
+    const cw = Math.ceil(fs * 2.6) + 12, ch = Math.ceil(fs * 3.2) + 12, base = 6 + fs * 2.2;
+    const c = document.createElement("canvas");
+    c.width = cw;
+    c.height = ch;
+    const d = c.getContext("2d", { willReadFrequently: true });
+    const lettere = glifi.map((gl): Linea | null => {
+      if (!d) return null;
+      d.clearRect(0, 0, cw, ch);
+      d.font = carattere;
+      d.textAlign = "center";
+      d.textBaseline = "alphabetic";
+      d.fillStyle = "#fff";
+      d.fillText(gl.lettera, cw / 2, base);
+      const punti = d.getImageData(0, 0, cw, ch).data;
+      const alfa = new Uint8Array(cw * ch);
+      for (let i = 0; i < alfa.length; i++) alfa[i] = punti[i * 4 + 3];
+      const giri = contorni(alfa, cw, ch).map((l) => l.map(([x, y]): P => [(x - cw / 2) / 2, (y - base) / 2]));
+      if (!giri.length) return null;
+      const tratti = gl.forme[0].map((f) => spezzata(f).map(([x, y]): P => [-glifoW / 2 + (x * glifoW) / 32, -glifoH * 0.82 + (y * glifoH) / 56]));
+      const s = sciogli(tratti, giri, SCIOGLIE.punti);
+      // quanto è avanti ogni punto nel suo tratto del glifo
+      const primo: number[] = [], quanti: number[] = [];
+      s.tratto.forEach((tr, i) => {
+        if (primo[tr] === undefined) primo[tr] = i;
+        quanti[tr] = (quanti[tr] ?? 0) + 1;
+      });
+      return { ...s, frazione: s.tratto.map((tr, i) => (quanti[tr] > 1 ? (i - primo[tr]) / (quanti[tr] - 1) : 0)) };
+    });
+    // se il carattere non è ancora arrivato le lettere sono quelle di riserva: non si tengono
+    if (typeof document.fonts?.check !== "function" || document.fonts.check(`300 ${Math.round(fs)}px Newsreader`)) linee.current = { W, lettere };
+    return lettere;
   };
 
   // ---- il suono: la colonna sonora la suona il motore audio, con i momenti di questa scaletta ----
@@ -815,15 +872,27 @@ export default function Intro({
           if (!revisione) saltaAllaFine();
         }}
       >
-        <canvas ref={spazio} aria-hidden="true" />
-        <canvas ref={canvasPlancia} className="plancia" aria-hidden="true" />
-        <div className="grana-intro" ref={strato} aria-hidden="true" style={{ backgroundImage: tessera ? `url(${tessera})` : undefined }} />
-        <canvas ref={sopra} aria-hidden="true" />
-        {S.blocchi.filter((b) => b.voce !== "titolo").map(blocco)}
-        <div className="didascalia" ref={didascalia} aria-hidden="true">
-          <span className="rec" />
-          cam 01 · plancia · tsc-1972
-        </div>
+        <Pellicola ref={film} grana={grana} spenta={!pellicola} ridotto={opzioni.ridotto} banda={BANDA}>
+          <canvas ref={spazio} aria-hidden="true" />
+          <canvas ref={canvasPlancia} className="plancia" aria-hidden="true" />
+          <div className="grana-intro" ref={strato} aria-hidden="true" style={{ backgroundImage: tessera ? `url(${tessera})` : undefined }} />
+          <canvas ref={sopra} aria-hidden="true" />
+          {S.blocchi.filter((b) => b.voce !== "titolo").map(blocco)}
+          {S.crediti.map((c) => (
+            <div key={c.id} ref={(el) => void (crediti.current[c.id] = el)} className={`credito ${c.posto}`} aria-hidden="true">
+              {c.righe.map((r, i) => (
+                <div key={i} className={`riga${r.minore ? " minore" : ""}`}>
+                  {r.piccolo && <span className="p">{r.piccolo}</span>}
+                  {r.grande && <span className="g">{r.grande}</span>}
+                </div>
+              ))}
+            </div>
+          ))}
+          <div className="didascalia" ref={didascalia} aria-hidden="true">
+            <span className="rec" />
+            cam 01 · plancia · tsc-1972
+          </div>
+        </Pellicola>
         <div className="banda su" ref={(el) => void (bande.current[0] = el)} />
         <div className="banda giu" ref={(el) => void (bande.current[1] = el)} />
         <div className="suono" ref={suono} aria-hidden="true" />
@@ -853,7 +922,10 @@ export default function Intro({
             {S.blocchi.map((b) => (
               <div key={b.id} className="testo" style={{ left: `${(b.entra / S.durata) * 100}%`, width: `${((b.via - b.entra) / S.durata) * 100}%` }} />
             ))}
-            {[0, 30, 60, 90, 120, 150].map((s) => (
+            {S.crediti.map((c) => (
+              <div key={c.id} className="testo segno-credito" style={{ left: `${(c.entra / S.durata) * 100}%`, width: `${((c.via - c.entra) / S.durata) * 100}%` }} />
+            ))}
+            {[0, 30, 60, 90, 120, 150, 180].map((s) => (
               <div key={s} className="ora" style={{ left: `${(s / S.durata) * 100}%` }}>
                 {formatoTempo(s).slice(0, -2)}
               </div>

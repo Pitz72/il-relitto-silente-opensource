@@ -6,6 +6,7 @@ Aggiornato l’ultima volta il 14 novembre 2026, nella notte, dopo il modello de
 forma, una prima superficie e, dopo le sue note, i pezzi nuovi e gli anni: documento 40) e dopo la nave vera
 dentro l’intro, con i reattori che si spengono e il loro suono; approvata dai fogli, da vedere nel gioco.
 Poi, lo stesso giorno, il filmato intero dell’intro che ha chiesto per prendere appunti.
+Poi ancora, le sue «scelte definitive» sulla cinematica d’apertura (documento 09, §16): fatte, da fargli vedere.
 Prima, il 13 novembre 2026, in mattinata, dopo le prime prese di Leonardo e il primo passo
 sull’estetica della cinematica (il cielo), con la Santa Maria ferma in attesa di un modello in Blender.
 Prima, il 12 novembre 2026, nella notte, quando l’autore ha chiuso la sessione dopo aver
@@ -116,8 +117,16 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   14 novembre): fatto con `strumenti/intro/filma.mjs` (1920 × 1080, 30 fotogrammi al secondo, il suono del
   motore del gioco, con la voce di L.V.), in `consegne/Filmato intro 2026-11-14/` (fuori da git); il minuto e
   il secondo del filmato sono quelli dell’intro, e negli ultimi secondi manca lo schermo di gioco sotto.
-  **Alla prossima: i suoi appunti sul filmato, per la versione finale dell’intro; poi la beta 12, con il suo
-  sì.** Il filmato si rifà in una dozzina di minuti (`strumenti/intro/LEGGIMI.md`).
+  **I suoi appunti sono arrivati lo stesso giorno: «Cinematica d’apertura, scelte definitive»** (documento 09,
+  §16, dove stanno una per una): una tipografia dei titoli di testa; sei crediti (tre cartelli nel nero, tre
+  in sovrimpressione); il cursore che scrive, con il suo suono; il faro che illumina davanti; il titolo con
+  un colore e uno scioglimento nuovi e senza il suono delle lettere; tutto nel formato largo, loghi compresi;
+  una pellicola unica su loghi e intro. **Fatte tutte**, con le prove; l’intro dura 3:24. **Non le ha ancora
+  viste né sentite**: il filmato nuovo è `consegne/Filmato intro 2026-11-14/Il Relitto Silente - intro con i
+  titoli di testa.mp4`. **Alla prossima: il suo giudizio sul filmato nuovo**; due cose da decidere con lui
+  (il titolo del libro, che nell’intro è «Dal Registro della Santa Maria» e nel menu e nei titoli di coda
+  «Il Registro della Santa Maria»; il credito di Leonardo, che compare mentre parla L.V.); poi la beta 12,
+  con il suo sì. Il filmato si rifà in un quarto d’ora (`strumenti/intro/LEGGIMI.md`).
 - **13 novembre 2026, mattina: le prime prese di Leonardo.** Sono arrivate `sm-001.wav`…`sm-004.wav`, le
   quattro descrizioni della plancia. Controllate: il testo è quello del copione, parola per parola (Whisper
   scrive «cucetta», ma l’autore ha ascoltato: «cuccetta va bene»; con le doppie Whisper sbaglia, non si

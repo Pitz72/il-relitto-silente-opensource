@@ -183,6 +183,12 @@ export async function apriRevisione(porta, profilo, altri = []) {
     );
     await attendi(700);
   };
+  /** Una casella della barra di revisione (la si trova dal suo testo): accesa o spenta. */
+  const scegli = (parte, vuoi) =>
+    valuta(
+      `(()=>{const l=[...document.querySelectorAll('.revisione label')].find(x=>x.textContent.includes(${JSON.stringify(parte)}));` +
+        `const c=l.querySelector('input');if(c.checked!==${!!vuoi})c.click();})()`,
+    );
   /** Ferma il ciclo dell'intro: da qui la pagina si ridisegna solo quando `vai` la sposta, una volta per
    *  fotogramma, e la scheda video non lavora a vuoto fra una foto e l'altra (lo usa `filma.mjs`).
    *  `window.__quadroVero` resta il vero requestAnimationFrame. */
@@ -199,5 +205,5 @@ export async function apriRevisione(porta, profilo, altri = []) {
     ws.chiudi();
     figlio.kill();
   };
-  return { manda, valuta, vai, fermaCiclo, chiudi };
+  return { manda, valuta, vai, scegli, fermaCiclo, chiudi };
 }

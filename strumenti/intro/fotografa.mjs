@@ -10,12 +10,18 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { apriRevisione } from "./cdp_edge.mjs";
 
-const [uscita, ...tempi] = process.argv.slice(2);
+// --film: com'è nel gioco di chi non ha toccato le opzioni (con la voce di L.V., senza i sottotitoli dei suoni)
+const comeNelGioco = process.argv.includes("--film");
+const [uscita, ...tempi] = process.argv.slice(2).filter((a) => a !== "--film");
 if (!uscita || !tempi.length) {
   console.log("uso: node strumenti/intro/fotografa.mjs <cartella> <secondi…>");
   process.exit(1);
 }
 const r = await apriRevisione(9377, "relitto-edge-foto");
+if (comeNelGioco) {
+  await r.scegli("sottotitoli", false);
+  await r.scegli("voce di L.V.", true);
+}
 mkdirSync(uscita, { recursive: true });
 for (const t of tempi) {
   await r.vai(t);

@@ -367,7 +367,7 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   if (schermata.tipo === "loghi")
     return (
       <Suspense fallback={<div className="nero-avvio" aria-hidden="true" />}>
-        <Loghi onFine={dopoILoghi} />
+        <Loghi onFine={dopoILoghi} grana={opzioni.grana} pellicola={opzioni.pellicola} />
       </Suspense>
     );
   // il gioco, e l'intro: alla fine dell'intro stanno insieme, l'intro sopra (la stessa posizione nell'albero,
@@ -385,6 +385,7 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
             <Intro
               ridotto={ridotto}
               grana={opzioni.grana}
+              pellicola={opzioni.pellicola}
               voce={dentroTauri() && opzioni.volume > 0 && opzioni.volumeParlato > 0}
               onPartita={partitaDallIntro}
               onFine={fineIntro}

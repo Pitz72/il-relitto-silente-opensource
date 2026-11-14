@@ -257,9 +257,9 @@ const SCHEDE_OPZIONI: readonly [SchedaOpzioni, string][] = [["gioco", "Gioco"], 
 
 /** Che cosa fa ogni livello della grafica, in una riga. */
 const SPIEGA_QUALITA: Record<Qualita, string> = {
-  piena: "Tutto acceso: la grana che si muove, le vene vive, la luce della stanza, il segnale sui fili, i riflessi del casco, la sfocatura dietro i pannelli, le apparizioni.",
-  leggera: "Per i computer meno potenti: la grana ferma, niente luce della stanza né sfocatura; il resto acceso.",
-  essenziale: "Il minimo: niente grana, vene ferme, niente luci, segnali, riflessi, sfocature e apparizioni. Restano i colori e le forme.",
+  piena: "Tutto acceso: la grana che si muove, le vene vive, la luce della stanza, il segnale sui fili, i riflessi del casco, la sfocatura dietro i pannelli, le apparizioni, la pellicola dell’apertura.",
+  leggera: "Per i computer meno potenti: la grana ferma, niente luce della stanza né sfocatura; il resto acceso, anche la pellicola dell’apertura.",
+  essenziale: "Il minimo: niente grana, vene ferme, niente luci, segnali, riflessi, sfocature, apparizioni e pellicola. Restano i colori e le forme.",
 };
 
 export function PannelloOpzioni({ forma, opzioni, cambia, chiudi }: { forma: Forma; opzioni: Opzioni; cambia: (c: Partial<Opzioni>) => void; chiudi: () => void }) {
@@ -399,6 +399,7 @@ export function PannelloOpzioni({ forma, opzioni, cambia, chiudi }: { forma: For
             {riga("Riflessi sul vetro", "riflessi", [[true, "sì"], [false, "no"]], "Con la tuta: il riflesso del casco, e il fiato che appanna il vetro quando l’aria è poca.")}
             {riga("Sfocatura dietro i pannelli", "sfocatura", [[true, "sì"], [false, "no"]], "Con un pannello aperto, come questo, il gioco dietro si sfoca.")}
             {riga("Apparizioni", "apparizioni", [[true, "sì"], [false, "no"]], "I momenti della storia che hanno un’animazione loro, lenta: durano da pochi secondi a una ventina, e un clic li salta. Senza, tutto compare subito.")}
+            {riga("Pellicola dell’apertura", "pellicola", [[true, "sì"], [false, "no"]], "I loghi e la cinematica d’apertura come un film proiettato: il colore della pellicola, la luce che respira appena, ogni tanto un granello di polvere o un graffio. Senza, l’immagine com’è.")}
           </>
         )}
         {scheda === "audio" && (

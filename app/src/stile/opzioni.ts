@@ -52,17 +52,21 @@ export interface Opzioni {
   sfocatura: boolean;
   /** i momenti con un'animazione loro: l'Anziano che prende forma (no: la figura c'è subito) */
   apparizioni: boolean;
+  /** la pellicola della cinematica d'apertura (i loghi e l'intro): il taglio di colore, la lampada che
+   *  respira, la polvere e i graffi. La sua grana segue la scelta «Grana» */
+  pellicola: boolean;
 }
 
 export type Qualita = "piena" | "leggera" | "essenziale";
-type Effetti = Pick<Opzioni, "grana" | "riflessi" | "luceStanza" | "segnaleFili" | "veneVive" | "sfocatura" | "apparizioni">;
+type Effetti = Pick<Opzioni, "grana" | "riflessi" | "luceStanza" | "segnaleFili" | "veneVive" | "sfocatura" | "apparizioni" | "pellicola">;
 
 /** I tre livelli della grafica: ognuno è una scelta di effetti, che poi si cambiano uno per uno. */
 export const QUALITA: Readonly<Record<Qualita, Effetti>> = {
-  piena: { grana: "mossa", riflessi: true, luceStanza: true, segnaleFili: true, veneVive: true, sfocatura: true, apparizioni: true },
-  // le apparizioni durano pochi secondi e non costano a gioco fermo: restano anche nel livello leggero
-  leggera: { grana: "ferma", riflessi: true, luceStanza: false, segnaleFili: true, veneVive: true, sfocatura: false, apparizioni: true },
-  essenziale: { grana: "no", riflessi: false, luceStanza: false, segnaleFili: false, veneVive: false, sfocatura: false, apparizioni: false },
+  piena: { grana: "mossa", riflessi: true, luceStanza: true, segnaleFili: true, veneVive: true, sfocatura: true, apparizioni: true, pellicola: true },
+  // le apparizioni durano pochi secondi e non costano a gioco fermo: restano anche nel livello leggero; la
+  // pellicola c'è solo nei tre minuti dell'apertura, e resta anche lei
+  leggera: { grana: "ferma", riflessi: true, luceStanza: false, segnaleFili: true, veneVive: true, sfocatura: false, apparizioni: true, pellicola: true },
+  essenziale: { grana: "no", riflessi: false, luceStanza: false, segnaleFili: false, veneVive: false, sfocatura: false, apparizioni: false, pellicola: false },
 };
 
 /** Il livello che corrisponde agli effetti scelti, o null se sono stati scelti uno per uno. */

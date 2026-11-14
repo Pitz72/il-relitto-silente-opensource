@@ -11,6 +11,11 @@
 //  Dal 29 ottobre 2026 L.V. ha una voce (documento 09, §13): i suoi blocchi
 //  restano anche il tempo che lui ci mette a dirli, e il blocco che continua
 //  la frase entra poco prima della sua prima parola.
+//  Dal 14 novembre 2026 l'intro ha i titoli di testa (documento 09, §16, le
+//  «scelte definitive» dell'autore): tre cartelli nel nero (chi presenta, di chi
+//  è il gioco, chi lo produce) e tre crediti in sovrimpressione (il libro, il
+//  tema musicale, la voce di William). La voce dell'apparecchio si stampa con
+//  il suo cursore, trenta caratteri al secondo, e si sente.
 // ============================================================================
 import { SPEGNIMENTO } from "./scala.ts";
 
@@ -45,6 +50,43 @@ export interface Blocco {
   sottoA?: string;
   /** la voce di L.V. che comincia con questo blocco: quando (secondi dell'intro), e il pezzo del file */
   pezzo?: Pezzo;
+  /** la voce dell'apparecchio: in quanti secondi si stampa, lettera per lettera */
+  stampa?: number;
+}
+
+/** Una riga di un credito: la parte piccola (il ruolo, in corsivo), la parte grande (il nome, in maiuscolo
+ *  spaziato), o tutte e due sulla stessa riga. `minore`: una riga di firma, un grado sotto. */
+export interface Riga {
+  piccolo?: string;
+  grande?: string;
+  minore?: boolean;
+}
+
+/** Dove sta un credito nel quadro: un cartello al centro del nero, o in sovrimpressione in un angolo. */
+export type Posto = "centro" | "alto" | "basso";
+
+/** Un credito dei titoli di testa: entra, è pieno, comincia a uscire, è uscito. */
+export interface Credito {
+  id: string;
+  righe: Riga[];
+  posto: Posto;
+  entra: number;
+  pieno: number;
+  esce: number;
+  via: number;
+}
+
+/** L'immagine di A che va nel nero per un cartello, e ne torna: (da, a) della discesa e della risalita. */
+export interface Nero {
+  cala: [number, number];
+  torna: [number, number];
+}
+
+/** Un testo che l'apparecchio stampa: da quando a quando, e che cosa (il motore audio ne fa il cursore). */
+export interface Stampa {
+  da: number;
+  a: number;
+  testo: string;
 }
 
 /** Un pezzo del file della voce di L.V.: comincia al secondo `t` dell'intro, e va da `da` ad `a` del file. */
@@ -71,9 +113,12 @@ export function fermoPer(testo: string): { fermo: number; parole: number } {
 
 const arrotonda = (x: number) => Math.round(x * 100) / 100;
 
-/** Il cartello del titolo resta fermo quanto nello storyboard (6,55 s, la lettura del sottotitolo di
- *  allora): il sottotitolo è cambiato (l'autore, 19 ottobre 2026), l'intro e la sua musica no. */
+/** Il cartello del titolo resta fermo quanto nello storyboard (6,55 s). Il sottotitolo con il libro non c'è
+ *  più (l'autore, 14 novembre 2026: «Togli il riferimento al libro, lo abbiamo messo prima»). */
 const FERMO_TITOLO = 6.55;
+/** i glifi del titolo: quanto ci mettono a tracciarsi, e quanto a sciogliersi nelle lettere */
+const GLIFI = 2.6;
+const TRADUZIONE = 4.2;
 
 // I testi, parola per parola quelli del prologo (relitto.fav). L'unica
 // trasformazione è quella permessa dal §7 del 06: gli apostrofi tipografici.
@@ -118,12 +163,43 @@ const DOPO_LA_PAROLA = 0.8;
 const SEGUITO: Partial<Record<string, keyof typeof PROLOGO>> = { B3: "B4", B5: "B6" };
 
 export const TITOLO = "IL RELITTO SILENTE";
-export const SOTTOTITOLO = "Una storia tratta da Il Registro della Santa Maria";
+
+/** I titoli di testa, con le parole dell'autore (14 novembre 2026). Il libro è nominato qui, e non più
+ *  sotto il titolo. */
+export const CREDITI = {
+  K0: { righe: [{ grande: "RUNTIME MULTIMEDIA" }, { piccolo: "presenta" }], posto: "centro", fermo: 2.6 },
+  K1: { righe: [{ piccolo: "un gioco di" }, { grande: "SIMONE PIZZI" }], posto: "centro", fermo: 2.6 },
+  K2: { righe: [{ piccolo: "produttore esecutivo" }, { grande: "MICHELA DE PAOLA" }], posto: "centro", fermo: 2.6 },
+  K3: {
+    righe: [{ piccolo: "tratto dal libro" }, { grande: "DAL REGISTRO DELLA SANTA MARIA" }, { piccolo: "di", grande: "SIMONE PIZZI", minore: true }],
+    posto: "alto",
+    fermo: 4.5,
+  },
+  K4: { righe: [{ piccolo: "tema musicale originale di" }, { grande: "ALIRIO BRUNI" }], posto: "basso", fermo: 3.6 },
+  K5: { righe: [{ grande: "LEONARDO TOMASSETTI" }, { piccolo: "è William T. Erickson" }], posto: "basso", fermo: 3.6 },
+} as const satisfies Record<string, { righe: readonly Riga[]; posto: Posto; fermo: number }>;
+/** un credito entra in un secondo ed esce in poco meno */
+export const ENTRA_C = 1.0;
+export const ESCE_C = 0.9;
+/** il cartello nel nero: l'immagine cala, un attimo di nero, il cartello, un attimo di nero, l'immagine torna,
+ *  e L.V. aspetta un respiro prima di continuare */
+const NERO = { cala: 0.9, pausa: 0.35, torna: 1.0, respiro: 0.4 };
+/** la voce dell'apparecchio si stampa a trenta caratteri al secondo, come i terminali dei vecchi film */
+export const CARATTERI_AL_SECONDO = 30;
+
+/** Il testo di un credito, in fila: per chi usa un lettore di schermo. */
+export const testoCredito = (c: { righe: readonly Riga[] }) => c.righe.map((r) => [r.piccolo, r.grande].filter(Boolean).join(" ")).join(" ");
 
 export interface Scaletta {
   durata: number;
   scene: Scena[];
   blocchi: Blocco[];
+  /** i titoli di testa: i cartelli nel nero e i crediti in sovrimpressione */
+  crediti: Credito[];
+  /** quando l'immagine di A va nel nero per un cartello */
+  neri: Nero[];
+  /** quello che l'apparecchio stampa con il cursore */
+  stampe: Stampa[];
   /** i momenti con un nome, in secondi (vedi sotto) */
   momenti: Momenti;
   sottotitoli: Sottotitolo[];
@@ -164,6 +240,8 @@ export interface Momenti {
 export function costruisciScaletta(): Scaletta {
   let T = 0;
   const blocchi: Blocco[] = [];
+  const crediti: Credito[] = [];
+  const neri: Nero[] = [];
   const scene: Scena[] = [];
   const segna = (durata: number) => {
     const da = T;
@@ -171,7 +249,7 @@ export function costruisciScaletta(): Scaletta {
     return da;
   };
   const testo = (id: keyof typeof PROLOGO | "T", voce: Voce, scena: IdScena, sottoA?: string) => {
-    const frase = id === "T" ? `${TITOLO} ${SOTTOTITOLO}` : PROLOGO[id];
+    const frase = id === "T" ? TITOLO : PROLOGO[id];
     let { fermo } = id === "T" ? { fermo: FERMO_TITOLO } : fermoPer(frase);
     const { parole } = fermoPer(frase);
     // la voce: il testo resta finché L.V. l'ha detto
@@ -194,8 +272,7 @@ export function costruisciScaletta(): Scaletta {
     }
     const b: Blocco = {
       id,
-      testo: id === "T" ? TITOLO : frase,
-      sotto: id === "T" ? SOTTOTITOLO : undefined,
+      testo: frase,
       voce,
       scena,
       parole,
@@ -206,6 +283,7 @@ export function costruisciScaletta(): Scaletta {
       via: arrotonda(T + ENTRA + fermo + ESCE),
       sottoA,
       pezzo,
+      stampa: voce === "apparecchio" ? arrotonda(frase.length / CARATTERI_AL_SECONDO) : undefined,
     };
     blocchi.push(b);
     T = T + ENTRA + fermo;
@@ -222,28 +300,61 @@ export function costruisciScaletta(): Scaletta {
     scene.push({ id, nome, inizio: arrotonda(inizio), fine: 0 });
   };
 
+  /** Un credito, dal secondo `da` (di suo, da adesso): non sposta il tempo. */
+  const credito = (id: keyof typeof CREDITI, da = T): Credito => {
+    const k = CREDITI[id];
+    const c: Credito = {
+      id,
+      righe: [...k.righe],
+      posto: k.posto,
+      entra: arrotonda(da),
+      pieno: arrotonda(da + ENTRA_C),
+      esce: arrotonda(da + ENTRA_C + k.fermo),
+      via: arrotonda(da + ENTRA_C + k.fermo + ESCE_C),
+    };
+    crediti.push(c);
+    return c;
+  };
+  /** Un cartello nel nero, in mezzo ad A: la spia e il nastro calano, il cartello, e tornano. */
+  const cartello = (id: keyof typeof CREDITI) => {
+    const cala = segna(NERO.cala);
+    segna(NERO.pausa);
+    T = credito(id).via;
+    segna(NERO.pausa);
+    const torna = segna(NERO.torna);
+    neri.push({ cala: [arrotonda(cala), arrotonda(cala + NERO.cala)], torna: [arrotonda(torna), arrotonda(torna + NERO.torna)] });
+    segna(NERO.respiro);
+  };
+
   // --- A. La traccia --------------------------------------------------------
   scena("A", "La traccia", 0);
-  segna(2.2);
+  // mezzo secondo di nero, poi chi presenta; solo dopo si accende la spia
+  segna(0.5);
+  T = credito("K0").via;
+  segna(1.6);
   const spia = segna(0.8);
   testo("B0", "apparecchio", "A");
   T += ESCE + 0.9;
   testo("B1", "lv", "A");
-  T += ESCE + 0.9;
+  T += ESCE;
+  cartello("K1");
   testo("B2", "lv", "A");
   T += ESCE + 0.9;
   testo("B3", "lv", "A");
   testo("B4", "lv", "A", "B3");
   T += ESCE;
+  cartello("K2");
   const battito = segna(3.0);
   // --- B. Il margine -----------------------------------------------------------
   scena("B", "Il margine", T);
   const stella = segna(2.5);
   const naveB = segna(1.0);
   const reB = T;
-  testo("B5", "lv", "B");
+  const b5 = testo("B5", "lv", "B");
   testo("B6", "lv", "B", "B5");
-  T += ESCE + 1.0;
+  // il libro, in sovrimpressione, appena L.V. ha detto «Ho insistito io»: resta sulle stelle, e C aspetta che se ne vada
+  const k3 = credito("K3", b5.pezzo!.t + (VOCE.B6!.fine - VOCE.B5!.da!) + 0.5);
+  T = Math.max(T + ESCE + 1.0, k3.via + 0.3);
   // --- C. Il radar ---------------------------------------------------------------
   scena("C", "Il radar", T);
   const radar = segna(6.2);
@@ -257,10 +368,14 @@ export function costruisciScaletta(): Scaletta {
   // --- E. La scala ------------------------------------------------------------------
   scena("E", "La scala", T);
   const scala = segna(23.5);
+  // il tema musicale, quando la Santa Maria è diventata piccola
+  credito("K4", scala + 9.5);
   // --- F. La traccia, seconda parte ---------------------------------------------------
   scena("F", "La traccia, seconda parte", T);
   const f = T;
-  testo("B7", "lv", "F");
+  const b7 = testo("B7", "lv", "F");
+  // la voce di William, quando L.V. ricomincia a parlare
+  credito("K5", b7.pezzo!.t + 0.4);
   T += ESCE + 0.6;
   testo("B8", "lv", "F");
   T += ESCE + 0.6;
@@ -271,8 +386,9 @@ export function costruisciScaletta(): Scaletta {
   const spiaSpenta = segna(1.0);
   // --- G. Il titolo --------------------------------------------------------------------
   scena("G", "Il titolo", T);
-  const glifi = segna(1.8);
-  const traduzione = segna(3.0);
+  // i glifi si tracciano; poi ogni glifo si scioglie nella sua lettera (documento 09, §16)
+  const glifi = segna(GLIFI);
+  const traduzione = segna(TRADUZIONE);
   testo("T", "titolo", "G");
   T += ESCE;
   // --- H. La plancia ---------------------------------------------------------------------
@@ -286,7 +402,7 @@ export function costruisciScaletta(): Scaletta {
 
   const r = arrotonda;
   const momenti: Momenti = {
-    fruscioA: 0.8,
+    fruscioA: r(spia - 1.4),
     spia: r(spia),
     battito: [r(battito), r(battito + 3.0)],
     stella: [r(stella), r(stella + 2.5)],
@@ -306,8 +422,8 @@ export function costruisciScaletta(): Scaletta {
     pulsa: [r(b9.entra), r(b9.via)],
     pulsare: r(b9.pezzo!.t + (FINE_PULSARE - b9.pezzo!.da)),
     spiaSpenta: r(spiaSpenta),
-    glifi: [r(glifi), r(glifi + 1.8)],
-    traduzione: [r(traduzione), r(traduzione + 3.0)],
+    glifi: [r(glifi), r(glifi + GLIFI)],
+    traduzione: [r(traduzione), r(traduzione + TRADUZIONE)],
     raccordo: [r(raccordo), r(raccordo + 1.2)],
     arretra: [r(arretra), r(arretra + 3.2)],
     interfaccia: [r(interfaccia), r(interfaccia + 3.0)],
@@ -318,9 +434,12 @@ export function costruisciScaletta(): Scaletta {
   // colonna sonora che ancora non c'è (§5 dello storyboard).
   const m = momenti;
   const b1 = blocchi.find((b) => b.id === "B1")!;
+  const stampe: Stampa[] = blocchi.filter((b) => b.stampa).map((b) => ({ da: b.entra, a: r(b.entra + b.stampa!), testo: b.testo }));
+  const b10 = blocchi.find((b) => b.id === "B10")!;
   const sottotitoli: Sottotitolo[] = [
     { inizio: m.fruscioA, fine: m.spia, testo: "il fruscio di una traccia registrata" },
-    { inizio: m.spia, fine: m.spia + 1.6, testo: "un clic" },
+    { inizio: m.spia, fine: m.spia + 0.8, testo: "un clic" },
+    { inizio: m.spia + 0.8, fine: m.spia + 0.8 + stampe[0].a - stampe[0].da + 0.6, testo: "un cursore che scrive" },
     { inizio: b1.pezzo!.t, fine: b1.pezzo!.t + 4, testo: "la voce di L.V., dalla radio della tuta, senza fiato" },
     { inizio: m.battito[0], fine: m.tema, testo: "un battito, che rallenta" },
     { inizio: m.tema, fine: m.naveB + 3, testo: "il battito si allontana; entra la musica" },
@@ -331,14 +450,15 @@ export function costruisciScaletta(): Scaletta {
     { inizio: m.scala[0], fine: m.reattori[1] + 5.5, testo: "i reattori si spengono; il metallo si raffredda" },
     { inizio: m.reattori[1] + 5.5, fine: m.fruscioF, testo: "la musica" },
     { inizio: m.fruscioF, fine: m.pulsa[0], testo: "il fruscio della traccia" },
-    { inizio: m.pulsa[0], fine: m.pulsa[1], testo: "un battito" },
+    { inizio: m.pulsa[0], fine: Math.min(m.pulsa[1], b10.entra), testo: "un battito" },
+    { inizio: b10.entra, fine: b10.entra + b10.stampa! + 0.9, testo: "un cursore che scrive" },
     { inizio: m.spiaSpenta, fine: m.glifi[0], testo: "la musica si spegne" },
-    { inizio: m.glifi[0], fine: m.traduzione[1], testo: "clic sottili, poi fruscii che salgono" },
-    { inizio: m.traduzione[1], fine: m.raccordo[0], testo: "una nota bassa" },
+    { inizio: m.glifi[0], fine: m.traduzione[0], testo: "clic sottili" },
+    { inizio: m.traduzione[0], fine: m.raccordo[0], testo: "una nota bassa, che sale piano" },
     { inizio: m.arretra[0], fine: durata, testo: "il reattore; la console che si accende" },
   ].map((s) => ({ ...s, inizio: r(s.inizio), fine: r(s.fine) }));
 
-  return { durata, scene, blocchi, momenti, sottotitoli };
+  return { durata, scene, blocchi, crediti, neri, stampe, momenti, sottotitoli };
 }
 
 export const SCALETTA = costruisciScaletta();
@@ -365,6 +485,21 @@ export function opacitaBlocco(b: Blocco, t: number, s: Scaletta = SCALETTA): num
   const sotto = s.blocchi.find((x) => x.sottoA === b.id);
   if (sotto && t >= sotto.entra) o *= 1 - 0.42 * morbido(fra(t, sotto.entra, sotto.pieno));
   return o;
+}
+
+/** Quanto si vede un credito nell'istante t (0–1). */
+export function opacitaCredito(c: Credito, t: number): number {
+  if (t < c.entra || t >= c.via) return 0;
+  return t < c.pieno ? morbido(fra(t, c.entra, c.pieno)) : t > c.esce ? 1 - morbido(fra(t, c.esce, c.via)) : 1;
+}
+
+/** Quanto si vede l'immagine di A (la spia, il nastro) nell'istante t: zero mentre c'è un cartello. */
+export function luceDiA(t: number, s: Scaletta = SCALETTA): number {
+  let v = 1;
+  for (const n of s.neri) {
+    if (t >= n.cala[0] && t < n.torna[1]) v = Math.min(v, t < n.torna[0] ? 1 - morbido(fra(t, n.cala[0], n.cala[1])) : morbido(fra(t, n.torna[0], n.torna[1])));
+  }
+  return v;
 }
 
 export const formatoTempo = (t: number) => {

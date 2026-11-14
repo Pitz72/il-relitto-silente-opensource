@@ -8,8 +8,8 @@ import { reattori } from "../src/intro/scala.ts";
 
 const blocco = (id: string) => SCALETTA.blocchi.find((b) => b.id === id)!;
 
-test("la durata: 3:02,12 (era 2:40,75 prima della voce di L.V.)", () => {
-  assert.equal(SCALETTA.durata, 182.12);
+test("la durata: 3:24,16 con i titoli di testa (era 3:02,12; 2:40,75 prima della voce di L.V.)", () => {
+  assert.equal(SCALETTA.durata, 204.16);
 });
 
 test("la regola di lettura: 0,35 s per parola più 2, mai meno di 4", () => {
@@ -19,9 +19,9 @@ test("la regola di lettura: 0,35 s per parola più 2, mai meno di 4", () => {
 
 test("i testi entrano, sono pieni ed escono quando dicono la regola e la voce", () => {
   const attesi: Record<string, [number, number, number]> = {
-    B0: [3.0, 4.2, 10.7], B1: [11.6, 12.8, 25.15], B2: [26.05, 27.25, 36.9], B3: [37.8, 39.0, 57.15],
-    B4: [50.03, 51.23, 57.15], B5: [63.65, 64.85, 78.18], B6: [71.98, 73.18, 78.18], B7: [124.48, 125.68, 132.97],
-    B8: [133.57, 134.77, 141.34], B9: [141.94, 143.14, 151.77], B10: [152.37, 153.57, 158.57], T: [164.37, 165.57, 173.12],
+    B0: [7.4, 8.6, 15.1], B1: [16, 17.2, 29.55], B2: [37.05, 38.25, 47.9], B3: [48.8, 50, 68.15],
+    B4: [61.03, 62.23, 68.15], B5: [82.15, 83.35, 96.68], B6: [90.48, 91.68, 96.68], B7: [144.52, 145.72, 153.01],
+    B8: [153.61, 154.81, 161.38], B9: [161.98, 163.18, 171.81], B10: [172.41, 173.61, 178.61], T: [186.41, 187.61, 195.16],
   };
   for (const [id, [entra, pieno, via]] of Object.entries(attesi)) {
     const b = blocco(id);
@@ -31,16 +31,16 @@ test("i testi entrano, sono pieni ed escono quando dicono la regola e la voce", 
 
 test("le scene cominciano dove dice la scaletta", () => {
   const inizi = Object.fromEntries(SCALETTA.scene.map((s) => [s.id, s.inizio]));
-  assert.deepEqual(inizi, { A: 0, B: 60.15, C: 79.18, D: 91.98, E: 100.98, F: 124.48, G: 159.57, H: 173.12 });
-  assert.equal(scenaA(85).id, "C");
-  assert.equal(scenaA(200).id, "H");
+  assert.deepEqual(inizi, { A: 0, B: 78.65, C: 99.22, D: 112.02, E: 121.02, F: 144.52, G: 179.61, H: 195.16 });
+  assert.equal(scenaA(105).id, "C");
+  assert.equal(scenaA(300).id, "H");
 });
 
 test("un blocco che continua la frase attenua quello sopra, ed escono insieme", () => {
   const b3 = blocco("B3");
-  assert.equal(opacitaBlocco(b3, 42), 1);
-  assert.ok(opacitaBlocco(b3, 52) < 0.7 && opacitaBlocco(b3, 52) > 0.5);
-  assert.equal(opacitaBlocco(b3, 57.2), 0);
+  assert.equal(opacitaBlocco(b3, 53), 1);
+  assert.ok(opacitaBlocco(b3, 63) < 0.7 && opacitaBlocco(b3, 63) > 0.5);
+  assert.equal(opacitaBlocco(b3, 68.2), 0);
 });
 
 test("i sottotitoli dei suoni stanno dentro l'intro e in ordine", () => {
@@ -52,10 +52,10 @@ test("i sottotitoli dei suoni stanno dentro l'intro e in ordine", () => {
 });
 
 test("la scala dura 23,5 s e si ferma a 23", () => {
-  assert.deepEqual(SCALETTA.momenti.scala, [100.98, 124.48]);
-  assert.equal(SCALETTA.momenti.scalaFerma, 123.98);
+  assert.deepEqual(SCALETTA.momenti.scala, [121.02, 144.52]);
+  assert.equal(SCALETTA.momenti.scalaFerma, 144.02);
   // i reattori si spengono mentre la camera è ancora vicina (arretra dal terzo secondo): il suono lo segue
-  assert.deepEqual(SCALETTA.momenti.reattori, [102.28, 104.18]);
+  assert.deepEqual(SCALETTA.momenti.reattori, [122.32, 124.22]);
 });
 
 test("la voce di L.V.: ogni frase comincia con il suo testo, e il testo resta finché l'ha detta", () => {

@@ -81,6 +81,14 @@ pub struct PezzoVoce {
     pub a: f32,
 }
 
+/// Un testo che l'apparecchio stampa con il cursore: da quando a quando, e che cosa (un bip a carattere).
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct Stampa {
+    pub da: f32,
+    pub a: f32,
+    pub testo: String,
+}
+
 /// Quello che la pagina manda quando l'intro comincia.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct DatiIntro {
@@ -90,6 +98,9 @@ pub struct DatiIntro {
     /// i pezzi della voce di L.V., ognuno con il suo testo
     #[serde(default)]
     pub voce: Vec<PezzoVoce>,
+    /// quello che l'apparecchio stampa («Scatola nera…», «Fine della traccia.»): una pagina vecchia non lo manda
+    #[serde(default)]
+    pub stampe: Vec<Stampa>,
 }
 
 /// Una cosa che la partitura fa a un dato secondo.
@@ -121,8 +132,8 @@ pub enum Cue {
     Rele(bool, f32, f32),
     /// un colpo sordo del cuore: (livello dB, quanto più debole il secondo colpo del doppio)
     Cuore(f32),
-    /// un fruscio che sale, la lettera trovata: (livello dB)
-    Lettera(f32),
+    /// un carattere stampato dal cursore dell'apparecchio: (altezza in Hz, livello dB)
+    Cursore(f32, f32),
     /// un clic granulare, il glifo che compare: (livello dB, posto)
     Glifo(f32, f32),
     /// lo squelch della radio che si apre o si chiude: (livello dB)
@@ -142,6 +153,10 @@ const LIV_VOCE: f32 = -1.0;
 const LIV_TEMA: f32 = -3.0;
 /// Quanto si abbassa il tema mentre L.V. parla.
 const SOTTO_LA_VOCE: f32 = -8.0;
+/// Il bip del cursore: l'altezza di mezzo, quanto dura, e il livello (sopra il fruscio della traccia, sotto la voce).
+const CURSORE_HZ: f32 = 1860.0;
+const CURSORE_S: f32 = 0.024;
+const LIV_CURSORE: f32 = -19.0;
 
 /// La partitura dell'intro: (secondo, cue), in ordine. Pura: si prova senza il motore.
 pub fn partitura(d: &DatiIntro) -> Vec<(f32, Cue)> {
@@ -155,6 +170,19 @@ pub fn partitura(d: &DatiIntro) -> Vec<(f32, Cue)> {
     // un file in loop (l'autore, 30 ottobre 2026: «dobbiamo rendere tutto omogeneo»)
     p(m.fruscio_a, Cue::Nastro(-14.0, 1.0));
     p(m.spia, Cue::Tic(600.0, -16.0, 0.0));
+    // il cursore dell'apparecchio (l'autore, 14 novembre 2026: «un effetto sonoro come di cursore che scrive,
+    // come quelli che si usavano nei vecchi film di fantascienza»): un bip corto a ogni carattere stampato,
+    // niente agli spazi; l'altezza cambia di poco con la lettera, la punteggiatura è più grave
+    for s in &d.stampe {
+        let n = s.testo.chars().count().max(1) as f32;
+        for (i, ch) in s.testo.chars().enumerate() {
+            if ch.is_whitespace() {
+                continue;
+            }
+            let f = if ch.is_alphanumeric() { CURSORE_HZ * (1.0 + 0.05 * (((ch as u32 * 7) % 5) as f32 - 2.0)) } else { CURSORE_HZ * 0.67 };
+            p(s.da + (s.a - s.da) * (i as f32 / n), Cue::Cursore(f, LIV_CURSORE));
+        }
+    }
     // la voce di L.V., un pezzo per ogni testo; mentre parla il tema (se suona) si abbassa
     for v in &d.voce {
         p(v.t, Cue::Voce(v.da, v.a));
@@ -219,19 +247,17 @@ pub fn partitura(d: &DatiIntro) -> Vec<(f32, Cue)> {
     p(pulsare + 1.45, Cue::Cuore(-19.0));
     p(m.spia_spenta - 0.2, Cue::Tace(0.6));
 
-    // ---- G · il titolo: sedici glifi, un clic granulare ciascuno; sedici lettere, un fruscio che sale
+    // ---- G · il titolo: sedici glifi, un clic granulare ciascuno mentre si tracciano. Quando si sciolgono
+    // nelle lettere non c'è più un suono per lettera (l'autore, 14 novembre 2026: «togli quell'effetto sonoro
+    // durante la trasformazione dei caratteri, non è mica il cartellone della stazione»): sotto sale piano una
+    // nota bassa, il re, che è piena quando il titolo è intero
     let glifi = 16usize;
     for i in 0..glifi {
         let t = m.glifi[0] + (m.glifi[1] - m.glifi[0]) * (i as f32 / glifi as f32);
         let posto = ((i * 7 % 11) as f32 / 5.0) - 1.0;
         p(t, Cue::Glifo(-22.0, posto * 0.5));
     }
-    for i in 0..glifi {
-        // non da sinistra a destra: a intervalli diseguali (il passo non è costante)
-        let x = (i as f32 + 0.5 * ((i * 5 % 7) as f32 / 7.0)) / glifi as f32;
-        p(m.traduzione[0] + (m.traduzione[1] - m.traduzione[0]) * x.min(0.98), Cue::Lettera(-26.0 + (i as f32) * 0.35));
-    }
-    // il titolo intero: una nota bassa, il re, sotto la coda del tema
+    p(m.traduzione[0], Cue::Re(-18.0, 0.15, (m.traduzione[1] - m.traduzione[0]).max(0.5)));
     p(m.traduzione[1], Cue::Re(-15.0, 0.3, 2.0));
 
     // ---- H · la plancia: il re è il reattore, la ventilazione, la console che parte
@@ -435,12 +461,7 @@ impl Intro {
                 let b = colpi::spinta(&mut self.caso, sr);
                 self.colpo_in(b, liv - 5.0, 0.0, 0.26);
             }
-            Cue::Lettera(liv) => {
-                let fc0 = self.caso.tra(900.0, 1500.0);
-                let f = colpi::Fruscio::nuovo(0.22, 0.85, (fc0, fc0 * 3.2), 2.2, colpi::Filtro::Banda, sr);
-                let posto = self.caso.tra(-0.3, 0.3);
-                self.colpo(Corpo::Fruscio(f).per(2.0), liv, posto);
-            }
+            Cue::Cursore(f, liv) => self.colpo(colpi::nota(f, CURSORE_S, sr), liv, 0.0),
             Cue::Glifo(liv, posto) => {
                 let c = colpi::granello(&mut self.caso, sr);
                 self.colpo(c, liv, posto);
@@ -593,8 +614,47 @@ mod prove {
         assert!(tra(74.0, 77.0, &|c| matches!(c, Cue::Brusio(..))), "D: manca il brusio dalla radio");
         assert!(tra(101.0, 103.0, &|c| matches!(c, Cue::Nastro(..))), "F: il fruscio non torna prima della fine di E");
         assert_eq!(p.iter().filter(|(t, c)| *t >= 130.0 && *t < 131.8 && matches!(c, Cue::Glifo(..))).count(), 16, "G: sedici glifi");
-        assert_eq!(p.iter().filter(|(_, c)| matches!(c, Cue::Lettera(..))).count(), 16, "G: sedici lettere");
+        // le lettere del titolo non hanno più un suono ciascuna: sale una nota sola
+        assert!(tra(131.7, 131.9, &|c| matches!(c, Cue::Re(l, _, s) if *l < -15.0 && *s > 2.5)), "G: la nota non sale mentre i glifi si sciolgono");
+        assert!(tra(134.7, 134.9, &|c| *c == Cue::Re(-15.0, 0.3, 2.0)), "G: la nota non è piena con il titolo");
+        assert!(!p.iter().any(|(_, c)| matches!(c, Cue::Cursore(..))), "una pagina vecchia non manda le stampe: nessun cursore");
         assert!(tra(142.0, 146.0, &|c| matches!(c, Cue::Rele(..))), "H: la console non parte");
+    }
+
+    #[test]
+    fn il_cursore_dell_apparecchio_fa_un_bip_a_carattere() {
+        // l'autore, 14 novembre 2026: il cursore che scrive, come nei vecchi film di fantascienza
+        let mut d = momenti_di_prova();
+        d.stampe = vec![Stampa { da: 3.0, a: 4.0, testo: "Fine della traccia.".into() }];
+        let p = partitura(&d);
+        let bip: Vec<(f32, f32)> = p.iter().filter_map(|(t, c)| if let Cue::Cursore(f, _) = c { Some((*t, *f)) } else { None }).collect();
+        assert_eq!(bip.len(), 17, "diciannove caratteri, due spazi: diciassette bip");
+        assert!(bip.iter().all(|(t, _)| *t >= 3.0 && *t < 4.0), "i bip stanno dentro la stampa");
+        assert!(bip.last().unwrap().1 < bip[0].1, "il punto alla fine è più grave delle lettere");
+        // e si sente: nel secondo della stampa i suoni salgono sopra il fruscio
+        let potenza = |con: bool| {
+            let mut i = Intro::nuovo(24000.0, 5);
+            let mut d = momenti_di_prova();
+            if con {
+                d.stampe = vec![Stampa { da: 3.0, a: 4.0, testo: "Fine della traccia.".into() }];
+            }
+            i.avvia(&d);
+            let (mut e, mut n, mut t) = (0.0f64, 0usize, 0.0f32);
+            while t < 4.2 {
+                i.passo(128.0 / 24000.0);
+                for _ in 0..128 {
+                    let u = i.campione();
+                    if t >= 3.0 {
+                        e += (u.suoni.0 * u.suoni.0) as f64;
+                        n += 1;
+                    }
+                }
+                t += 128.0 / 24000.0;
+            }
+            10.0 * (e / n as f64 + 1e-20).log10()
+        };
+        let (senza, con) = (potenza(false), potenza(true));
+        assert!(con > senza + 0.5, "il cursore non si sente sopra il fruscio ({con:.1} contro {senza:.1} dB)");
     }
 
     #[test]

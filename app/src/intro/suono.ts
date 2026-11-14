@@ -8,5 +8,5 @@ import { pezziDellaVoce, SCALETTA, type Scaletta } from "./scaletta";
 
 /** L'intro comincia: il motore suona la sua colonna sonora; `false` la ferma (Esc, o la fine). */
 export function introSuono(si: boolean, s: Scaletta = SCALETTA): Promise<void> {
-  return mandaIntro(si ? { momenti: s.momenti, durata: s.durata, voce: pezziDellaVoce(s) } : null);
+  return mandaIntro(si ? { momenti: s.momenti, durata: s.durata, voce: pezziDellaVoce(s), stampe: s.stampe } : null);
 }

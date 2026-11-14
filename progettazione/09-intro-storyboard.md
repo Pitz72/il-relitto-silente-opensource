@@ -534,3 +534,138 @@ cosa non va ancora è nel documento 40, «Il quarto passo». Qui, quello che cam
   lamiera che si raffredda). Poi il silenzio e il tema, come prima. Nuovo momento: `reattori`.
 - Il sole della nave è uno per ripresa (`SOLE_NAVE`); la sua fotografia sta in `LUCE_NAVE`.
 
+## 16. I titoli di testa e la pellicola: le scelte definitive (14 novembre 2026)
+
+L’autore ha guardato il filmato intero dell’intro (`strumenti/intro/filma.mjs`) e ha dato le sue
+disposizioni, con il titolo «Cinematica d’apertura, scelte definitive». Qui sono riportate una per una, con
+quello che è stato fatto. Sono fatte tutte; **non le ha ancora viste**: c’è un filmato nuovo in `consegne/`.
+
+**16.1 La tipografia dei titoli di testa** («individuare e definire una tipografia cinematografica dei titoli
+di testa, coerente, stilosa, elegante e aderente al nostro prodotto»). Una famiglia sola: **Newsreader**, il
+carattere del titolo e del testo del gioco. Il film e il libro restano la stessa cosa, e non entra nessun
+carattere nuovo. Due voci:
+
+- **il ruolo**: corsivo leggero (peso 300), minuscolo, spaziato di 0,05 em, in grigio tenue `#A9B1AD`
+  (9:1 sul nero);
+- **il nome**: tondo leggero (peso 300), maiuscolo, molto spaziato (0,34 em nei cartelli, 0,30 nelle
+  sovrimpressioni), in bianco appena freddo `#E9ECEA` (16:1 sul nero), più grande del ruolo.
+
+Due posti: il **cartello** al centro del nero (nome a 2,3 centesimi della larghezza del quadro, 44 punti a
+1920; ruolo a 1,3, 25 punti) e la **sovrimpressione** in un angolo del quadro, dentro il formato largo, con
+un’ombra che la stacca dall’immagine (nome a 1,7, ruolo a 1,15). Un credito entra in un secondo venendo a
+fuoco, resta, ed esce in nove decimi; finché resta, le lettere del nome prendono un filo d’aria (0,03 em):
+non è mai fermo del tutto. Con il movimento ridotto entra ed esce in dissolvenza e basta. I lettori di
+schermo lo annunciano. Le regole stanno in `app/src/intro/intro.css` (`.credito`), i testi e i tempi in
+`app/src/intro/scaletta.ts` (`CREDITI`).
+
+**16.2 I sei crediti**, con le sue parole:
+
+| | Quando | Dove | Testo |
+| --- | --- | --- | --- |
+| K0 | dopo mezzo secondo di nero, prima che si accenda la spia verde | cartello | **RUNTIME MULTIMEDIA** · *presenta* |
+| K1 | prima di «L’acqua è finita ieri» | cartello | *un gioco di* · **SIMONE PIZZI** |
+| K2 | dopo «Lo rileggo: diciannove.» | cartello | *produttore esecutivo* · **MICHELA DE PAOLA** |
+| K3 | dopo «Ho insistito io.» | in alto a sinistra, sull’immagine | *tratto dal libro* · **DAL REGISTRO DELLA SANTA MARIA** · *di* **SIMONE PIZZI** |
+| K4 | nello zoom all’indietro, quando la Santa Maria è piccola | in basso a sinistra | *tema musicale originale di* · **ALIRIO BRUNI** |
+| K5 | quando L.V. ricomincia a parlare | in basso a sinistra | **LEONARDO TOMASSETTI** · *è William T. Erickson* |
+
+Per K1 e K2 l’immagine della spia verde va nel nero in nove decimi, una pausa di un terzo di secondo, il
+cartello, un’altra pausa, e l’immagine torna in un secondo; L.V. aspetta ancora un respiro e continua. La
+statica della traccia non si interrompe (decisione del 30 ottobre: niente buchi). Nessun pezzo della voce
+suona sopra un cartello: i pezzi restano interi, con i loro respiri, e i cartelli stanno fra un pezzo e
+l’altro. K3 resta sulle stelle: la scena B dura un secondo e mezzo in più, e la plancia aspetta che se ne
+sia andato. K5 non l’ha messo in un posto: sta in basso a sinistra, come K4.
+
+**Da dire all’autore** (non sono errori: sono cose che solo lui può decidere):
+
+- il libro qui è *Dal Registro della Santa Maria*, come l’ha scritto; nel menu e nei titoli di coda c’è
+  ancora «Una storia tratta da *Il Registro della Santa Maria*» (la sua scelta del 19 ottobre). Sono due
+  titoli diversi per lo stesso libro: va scelto quale, e messo uguale dappertutto;
+- «Leonardo Tomassetti è William T. Erickson» compare mentre parla L.V., che ha la voce «Elio» (sintesi
+  vocale). Chi guarda può credere che quella voce sia di Leonardo.
+
+**16.3 Il cursore che scrive** («un effetto sonoro come di cursore che scrive, come quelli che si usavano nei
+vecchi film di fantascienza»; lo stesso su «Fine della traccia.»). La voce dell’apparecchio si stampa a
+trenta caratteri al secondo (prima sempre in un secondo e mezzo, qualunque fosse la lunghezza): «Scatola
+nera…» in 2,7 secondi, «Fine della traccia.» in 0,6. A ogni carattere un bip corto (24 millesimi, intorno a
+1860 Hz, l’altezza cambia di poco con la lettera; la punteggiatura è più grave), niente agli spazi: si sente
+il ritmo delle parole. La pagina manda al motore audio i testi e i loro tempi (`stampe`), e il motore fa i
+bip (`mondo/intro.rs`, `Cue::Cursore`). Nel suono reso il cursore sta 8 dB sopra il fruscio della traccia e
+7 sotto la voce. Il sottotitolo dei suoni dice «un cursore che scrive». Non l’ha ancora sentito.
+
+**16.4 Il faro** («il faro non è laterale come lo mostriamo nella sequenza, ma è sopra l’area di plancia,
+perpendicolare all’oblò stesso. La luce deve venire frontalmente»). Dall’oblò il riflettore ora sta dov’è nel
+progetto della nave (`strumenti/nave/misure.py`, `FARO`: sul dorso, nove metri dietro il muso, quattro sopra
+l’oblò) e guarda dove guarda l’oblò: da dentro si vede la luce scendere dall’alto del vetro e andare dritta
+davanti, restringendosi verso il punto in cui si perde. Quando cerca si sposta di poco e resta davanti. La
+polvere del fascio comincia subito sopra il vetro (`scala.ts`, `faroDi`, `FARO_SUL_DORSO`).
+
+**16.5 Il titolo** («I glifi concettualmente possono andare bene ma trova un colore che non sia così poco
+“cinematografico” e trova un morfing di altissimo livello, l’effetto in cui diventano caratteri normali è
+brutto e togli quell’effetto sonoro durante la trasformazione dei caratteri, non è mica il cartellone della
+stazione. Togli il riferimento al libro, lo abbiamo messo prima»).
+
+- **Il colore**: non più il ciano acceso di uno schermo, ma un **oro pallido**: un filo quasi bianco
+  (`#F7EEDC`) dentro un alone d’ambra. È caldo contro il blu freddo del cielo, e nella lettera si raffredda
+  fino al bianco del titolo. Il tratto è più sottile di prima (un punto e mezzo a 1080 righe, erano tre e
+  mezzo).
+- **La trasformazione**: prima il glifo cambiava forma a scatti, quattro angoli lo agganciavano e la lettera
+  gli compariva sopra. Ora è **una linea sola che si muove**: i tratti del glifo e il contorno della lettera
+  sono la stessa fila di 240 punti, e ogni punto va dal suo posto nel glifo al suo posto sulla lettera, uno
+  dopo l’altro lungo la linea, con un arco lieve. Quando il contorno è chiuso la lettera si riempie, calda, e
+  il tratto si spegne. Ogni lettera ci mette 2,3 secondi; partono dal centro del titolo verso i lati, e
+  l’ultima ha finito poco prima che il titolo sia intero. Il contorno si prende dalla lettera vera, disegnata
+  al doppio della misura (`app/src/intro/titolo.ts`: i contorni, la corrispondenza dei punti, la posa di un
+  istante). I pezzi di linea che uniscono due tratti diversi se ne vanno presto o arrivano tardi, così non si
+  vedono righe tese attraverso la lettera. I glifi ci mettono 2,6 secondi a tracciarsi e 4,2 a sciogliersi
+  (prima 1,8 e 3).
+- **Il suono**: i sedici fruscii che salivano, uno per lettera, non ci sono più. Restano i clic sottili dei
+  glifi che si tracciano; mentre si sciolgono sale piano una nota bassa sola, il re, che è piena quando il
+  titolo è intero.
+- **Il libro** non è più sotto il titolo: il titolo è solo.
+
+**16.6 Il formato** («tutta la cinematica di apertura, compresi i loghi Runtime Multimedia e Favella1 devono
+essere in 21.9»). L’intro era già nel formato largo del cinema, 2,39 a 1 (quello che sugli schermi si chiama
+21:9), con le sue due bande nere. Ora ci stanno anche **i due loghi**: lo stesso palco 16:9, le stesse bande
+(`app/src/loghi/Loghi.tsx`). I loghi non sono stati toccati: è cambiato il quadro in cui stanno, e ci stanno
+interi. Le bande sono nere piene e stanno **sopra a tutto**: la pellicola non le tocca.
+
+**16.7 La pellicola** («un effetto unitario da inizio a fine intro: effetto cinematografico di pellicola.
+Prendi spunto da quanto fatto nel prototipo […] il flickering e il fading della pellicola devono essere più
+leggeri, il fading in particolare molto più lento. Gli effetti pellicola, polvere, sporcature e grana devono
+essere ancora più leggeri, il color grading non deve essere FUJI ma un grading da pellicola cinematografica
+SCIFI moderna»). Un pezzo solo, `app/src/pellicola/`, che usano i loghi e l’intro: l’immagine con il suo
+taglio di colore e, sopra, tre strati. Tutto va a ventiquattro scatti al secondo e dipende solo dal tempo:
+la stessa intro è sempre la stessa pellicola.
+
+| | Nel prototipo (`Avventura Vettoriale/v2/js/film.js`) | Qui |
+| --- | --- | --- |
+| Sfarfallio della lampada | quasi sempre entro il 2,6 %; cinque scatti su cento fino al 7 % | quasi sempre sotto l’1 %; tre scatti su cento fino al 2,2 % |
+| Respiro della luce (il «fading») | i respiri fondi, di pochi scatti | due onde lente, di 17 e di 11 secondi, fino all’1,4 %: non si vede salire né scendere |
+| Grana | 8,5 %, in sovrapposizione | 5 %; segue la scelta «Grana» della scheda Grafica |
+| Polvere | un granello in uno scatto su cinque a 18 scatti (quasi quattro al secondo) | uno scatto su dodici a 24 (due al secondo), più tenui |
+| Graffi | uno ogni sei secondi circa | uno ogni venti secondi circa, più tenui e più corti |
+| Peli | uno ogni quattordici secondi | uno ogni mezzo minuto |
+| Colore | «Fuji anni Ottanta»: neri sollevati verde-ciano, luci crema | fantascienza moderna: neri quasi neri e freddi (blu petrolio), mezzi toni neutri, luci appena calde, saturazione un filo trattenuta |
+
+Il nero del quadro è della pellicola (sollevato di meno di tre centesimi, e freddo); il nero delle bande è
+nero pieno. La grana che l’intro aveva già (nel cielo e sopra la plancia) resta com’era: la pellicola le sta
+sopra, leggera, e tiene insieme tutto. Alla fine, quando la plancia diventa la telecamera di bordo ed entra
+nel gioco, la pellicola se ne va per gradi: il gioco arriva senza. Nella scheda Grafica c’è la voce nuova
+**«Pellicola dell’apertura»** (sì o no; accesa nei livelli «piena» e «leggera», spenta in «essenziale»). Con
+il movimento ridotto restano il colore e la grana ferma. Le misure stanno in `pellicola/scatti.ts`, e le
+prove le tengono dentro questi limiti.
+
+**16.8 I tempi.** L’intro dura **3:24,16** (era 3:02,12): 4,4 secondi il primo cartello, 6,6 e 7,5 i due nel
+nero, un secondo e mezzo in più alla scena B, due al titolo (i glifi e lo scioglimento). Le scene: A 0 · B 1:18,65 · C 1:39,22 · D 1:52,02 · E 2:01,02 · F 2:24,52
+· G 2:59,61 · H 3:15,16. Il tema entra sempre quando si apre lo spazio.
+
+**Gli attrezzi.** `strumenti/intro/filma.mjs` fa il filmato intero con il suono; `fotografa.mjs --film`
+fotografa l’intro com’è nel gioco (con la voce, senza i sottotitoli dei suoni). Le prove:
+`app/prove/titoli-di-testa.test.ts` (i crediti, la stampa, il titolo, la pellicola), `app/prove/intro.test.ts`
+(i tempi), `mondo/intro.rs` (il cursore, la nota del titolo).
+
+**Limiti, detti chiari.** Non ho sentito niente: il cursore e la nota del titolo sono misurati, non
+ascoltati. Su uno schermo più largo di 16:9 il palco resta 16:9 al centro, e il formato largo ci sta dentro
+con il nero intorno: per riempire uno schermo 21:9 vero servirebbe un lavoro a parte, che tocca anche
+l’arrivo nel gioco. Niente di tutto questo è in una beta.
