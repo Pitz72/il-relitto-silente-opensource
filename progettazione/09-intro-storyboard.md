@@ -511,3 +511,23 @@ Il cielo ricalcolato a ogni fotogramma era la parte più pesante dell’intro: a
 Quindi non si parte da zero. Quello che manca è la geometria: le immagini, anche nate dalla stessa scheda, non coincidono nei particolari (nella tavola gli scarichi a poppa sono quattro in quadrato, nello still di poppa due coppie in fila), e **i due giochi non raccontano la stessa pianta**. Nel *Relitto Silente* (`santamaria.fav`) le stanze sono quattro: la plancia, la cuccetta a nord («poco più di un corridoio», un oblò «grande quanto una mano» dal lato da cui la massa non si vede), la stiva a ovest, con il boccaporto esterno «a poppa», e la sala macchine **sotto** la stiva, da una botola e una scaletta (e il reattore «sotto il pavimento» della plancia); nel seguito la sala macchine è sullo stesso ponte, dietro la stiva, e l’airlock ci arriva da un corridoio di servizio. Fuori, il gioco nomina il riflettore di prua («un occhio da duecento metri») e il lanciarpioni (due arpioni a testa magnetica, duecento metri di cavo).
 
 **La proposta, da decidere con l’autore**: il progetto della nave, in tre passi. Primo, la scheda unica: quello che dicono i testi dei due giochi e le immagini approvate, in fila, con le contraddizioni da sciogliere una per una (le decide lui). Secondo, le schematiche: fianco, pianta, fronte, poppa e sezioni, con le stanze dentro lo scafo e le misure. Terzo, il modello in Blender, costruito da script del progetto a partire dalle stesse misure, così che schematiche, modello e immagini non possano più divergere; dal modello, le riprese dell’intro (da davanti di tre quarti per B, da poppa per E) con le luci separate.
+
+## 15. La nave vera (14 novembre 2026)
+
+Il progetto della nave è arrivato al modello (documenti 38, 39 e 40), e l’autore ha scelto come metterlo
+nell’intro: «Nave vera dal vivo». Dal 14 novembre la Santa Maria delle scene B ed E non è più uno still
+scontornato su un piano: è il modello costruito dalla tabella delle misure, con la sua tessitura, che il motore
+(`app/src/intro/scala.ts`) disegna dal vivo con la stessa camera del cielo. Come è fatta, quanto costa e che
+cosa non va ancora è nel documento 40, «Il quarto passo». Qui, quello che cambia nella cinematica:
+
+- **B, il margine**: la camera sta a due terzi della distanza di prima, sulla stessa retta (da `[640, 55,
+  -660]` a `[395, 49, -429]`): guarda nello stesso punto, il cielo è lo stesso. La nave, passando, gira davvero:
+  entra di tre quarti da prua e finisce di fianco. Arriva con i reattori accesi.
+- **E, la scala**: la camera parte da 85 metri (prima 165) e da vicino mira alla poppa; arretrando la mira
+  torna al mezzo della nave. La direzione e la fine della scena non cambiano. **I reattori si spengono**
+  (richiesta dell’autore): accesi per poco più di un secondo, poi la fiamma si accorcia e sparisce in 1,9
+  secondi, e negli scarichi resta la brace; la nave prosegue per inerzia. Il fascio del faro parte dalla lente
+  vera, sul dorso.
+- I tempi dell’intro sono gli stessi. Il suono non è cambiato.
+- Il sole della nave è uno per ripresa (`SOLE_NAVE`); la sua fotografia sta in `LUCE_NAVE`.
+

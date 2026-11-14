@@ -3,7 +3,8 @@
 14 novembre 2026. Terzo passo del progetto della nave (documento 38: la scheda unica; documento 39: le
 schematiche, approvate il 13 novembre). La nave è costruita in Blender dalla stessa tabella delle misure da cui
 nascono le tavole. In una sessione sono fatti **la forma**, **una prima superficie** e, dopo le note
-dell’autore, **i pezzi che mancavano e una superficie più vecchia**.
+dell’autore, **i pezzi che mancavano e una superficie più vecchia**; poi **la nave vera dentro l’intro del
+gioco**, con i reattori che si spengono.
 
 > **Le note dell’autore, 14 novembre 2026**, sui primi due fogli: «Di base direi che ci siamo. In fondo una nave
 > spaziale mercantile non deve avere ali o tocchi esotici alla Millennium Falcon, per quanto strano sia può anche
@@ -22,6 +23,8 @@ In `progettazione/40-modello/`, da 2560 × 1440, con i nomi scritti grandi:
 | `foglio-1-la-forma.jpg` | la nave liscia, di un grigio solo: lo scafo e i suoi pezzi, com’è nelle tavole |
 | `foglio-2-la-superficie.jpg` | la stessa nave con le lamiere, le toppe, la matricola, i particolari |
 | `foglio-3-i-pezzi-e-gli-anni.jpg` | dopo le note dell’autore: il lanciarpioni, i sensori, gli attacchi d’ormeggio, e la superficie invecchiata |
+| `foglio-4-la-nave-nell-intro.jpg` | l’intro prima e dopo: la foto ritagliata e la nave vera, nelle due scene |
+| `foglio-5-i-reattori-si-spengono.jpg` | la scena da dietro, quattro istanti: i reattori accesi, la fiamma che si accorcia, la brace, spenti |
 
 In ogni foglio: in alto le due viste di tre quarti, che sono quelle dell’intro (da prua, con il fianco sinistro
 e il portello di carico, per la scena B; da poppa, con il fianco destro e il portello d’uscita, per la scena E);
@@ -42,7 +45,7 @@ Quattro attrezzi in `strumenti/nave/`, accanto a `misure.py` e a `schematiche.py
 I comandi, dalla radice del progetto (Blender 5.2.4 LTS è in `%LOCALAPPDATA%\Programs\Blender\5.2.4\`):
 
     python strumenti/nave/superficie.py
-    blender --background --factory-startup --python strumenti/nave/modello.py -- --viste
+    blender --background --factory-startup --python strumenti/nave/modello.py -- --viste --intro
     python strumenti/nave/foglio.py foglio-3-i-pezzi-e-gli-anni "terzo passo: i pezzi nuovi e novant’anni di attività"
 
 La tessitura si fa in otto secondi; la nave e le otto viste (1920 × 1080, 160 campioni, sulla scheda video) in
@@ -130,6 +133,76 @@ ridisegnate lo stesso giorno: tavole e modello restano uguali.
 
 La matricola dei fianchi tiene di più la vernice: «TSC-1972» deve restare leggibile.
 
+## Il quarto passo: la nave vera nell’intro
+
+L’autore ha scelto la terza strada (più sotto, «Che cosa viene dopo»): **«Nave vera dal vivo»**. È fatta lo
+stesso giorno. Nell’intro la Santa Maria non è più una foto ritagliata su un cartello: è il modello, con la sua
+tessitura, disegnato dal vivo dal motore dell’intro (`app/src/intro/scala.ts`) con la stessa macchina del cielo.
+
+**Che cosa si carica.** In `app/public/intro/nave/`, 2,4 megabyte in tutto:
+
+| File | Che cosa è | Chi lo scrive |
+|---|---|---|
+| `santa-maria.bin` | la forma: 50.803 punti, 35.144 triangoli, più gli 800 della spinta | `modello.py --intro` |
+| `santa-maria.json` | i punti che il motore deve conoscere: dove stanno l’oblò, i fanali, la luce dell’uscita, gli scarichi, la lente del faro | `modello.py --intro` |
+| `colore.webp`, `ruvido.webp`, `metallo.webp`, `rilievo.webp` | la tessitura dello scafo, a metà misura (2048 × 1472) | `superficie.py` |
+
+Nel motore non c’è nessun numero della nave: vengono tutti da questi file, cioè dalla tabella `misure.py`.
+
+**Come è disegnata.** Nello spazio la luce è un sole solo, e si calcola dal vivo: la parte diffusa e quella
+riflessa, punto per punto, con il rilievo delle lamiere preso dalla tessitura; l’ombra che un pezzo fa
+sull’altro viene da una mappa calcolata una volta per ripresa (la nave non gira rispetto al sole); un poco di
+luce fredda arriva dal cielo da ogni parte. I pezzi hanno il loro metallo macchiato e i pannelli il reticolo
+delle celle, calcolati. La nave si disegna in uno strato suo, con quattro campioni per punto perché i bordi
+siano lisci, e poi si posa sulla scena; il bagliore, la grana e la resa finale sono quelli di tutto il resto.
+
+**Le luci, nei loro punti veri.** L’oblò d’ambra; i due fanali, che respirano come prima; la luce gialla
+dell’uscita; la lente del faro, da cui adesso parte il fascio (prima partiva da un punto messo a mano davanti
+al muso); la spinta dei quattro scarichi, un cono di luce azzurra che trema appena. Gli aloni si vedono solo
+se la luce guarda la macchina.
+
+**I reattori si spengono** (l’autore, lo stesso giorno: «nell’inquadratura dove vediamo la Santa Maria dal
+lato posteriore e ci allontaniamo […] dovremmo fare un effetto di spegnimento dei reattori, per una questione di
+realismo la nave continuerà comunque ad avvicinarsi per inerzia»). Nella scena da dietro (E) la spinta è accesa
+per poco più di un secondo; poi si spegne in 1,9 secondi, con due singhiozzi, e la fiamma si accorcia; negli
+scarichi resta la brace arancione, che si raffredda in qualche secondo. Succede mentre la macchina è ancora
+vicina; quando arretra, gli scarichi sono spenti. La nave non rallenta. Nella scena con il cielo (B) arriva con
+i reattori accesi. Il suono dell’intro non è cambiato: se lo spegnimento deve sentirsi, è lavoro da fare
+(`reattori()` in `scala.ts`, con la sua prova in `app/prove/intro.test.ts`).
+
+**Due decisioni tecniche sulla macchina**, perché la nave vera è lunga ottanta metri e sottile, e nel quadro
+sembrava piccola (gli still di prima disegnavano una nave più corta e più tozza). I tempi non cambiano.
+
+- Nella scena con il cielo (B) la macchina sta a due terzi della distanza di prima, sulla stessa retta: guarda
+  nello stesso punto, e il cielo è lo stesso.
+- Nella scena da dietro (E) parte da 85 metri invece che da 165, e da vicino mira alla poppa e non al mezzo
+  della nave; arretrando la mira torna al mezzo, senza che si veda. La direzione è la stessa, e la fine della
+  scena (la nave piccola contro la grande forma nera) è identica.
+
+**Il sole è uno per ripresa**: in ognuna prende i fianchi che la macchina vede. Ogni quadro aveva già il suo
+cielo.
+
+**Quanto costa** (`node strumenti/intro/costo.mjs`, 1920 × 1080, GeForce RTX 2070; millisecondi per
+fotogramma): la scena con il cielo 2,1 (con lo still 3,0); la scena da dietro 5,0 all’inizio, 4,1 a metà, 3,9
+alla fine (5,8, 5,0, 4,7). Non costa di più. Le prove dell’app sono 128, verdi.
+
+**I due fogli**: `foglio-4-la-nave-nell-intro.jpg` (prima e dopo, nelle due scene) e
+`foglio-5-i-reattori-si-spengono.jpg` (quattro istanti). I fotogrammi interi sono in
+`consegne/Cinematica 2026-11-14 - la nave/` (fuori da git); li rifà `strumenti/nave/confronto.py`.
+
+**Che cosa non va ancora.**
+
+- **È più semplice della foto di prima.** Lo still aveva la ricchezza di un’immagine generata (casse, tubi,
+  sovrastrutture, una luce drammatica); la nave vera è coerente, gira davvero ed è la stessa da ogni lato, ma
+  è più nuda. È la scelta fatta con la forma («può anche essere solo un tubo»); la strada per arricchirla è
+  mettere altri oggetti sullo scafo, come i tre del terzo passo.
+- **Non è ancora vista nell’eseguibile**: le foto vengono dal browser di sviluppo, con la stessa scheda video.
+- I due still (`poppa.webp`, `prua.webp`) restano in `app/public/intro/`: `prua.webp` serve ancora alla
+  copertina e alle viste dello scafo; `poppa.webp` non la usa più nessuno, e si toglie quando l’autore ha visto
+  la nave nuova nel gioco.
+- Il menu usa lo stesso motore, con la nave a diciotto chilometri: carica anche lui la nave vera (si apre senza
+  errori; a quella distanza è un punto con i suoi fanali).
+
 ## Quello che è inventato qui
 
 Nessun testo e nessuna tavola lo dice: sono proposte, e l’autore le conferma o le toglie guardando i fogli.
@@ -163,7 +236,7 @@ Nessun testo e nessuna tavola lo dice: sono proposte, e l’autore le conferma o
 
 ## Che cosa viene dopo
 
-1. **Una scelta dell’autore, aperta** (14 novembre 2026). Mentre preparavo le due riprese ferme ha chiesto: «Ma
+1. **Una scelta dell’autore, presa** (14 novembre 2026): la terza strada, «Nave vera dal vivo». Mentre preparavo le due riprese ferme ha chiesto: «Ma
    non conviene fare il render delle animazioni della nave direttamente in Blender e poi applicarle con l’uso
    di un canale alpha o qualcosa del genere?». Oggi l’intro è una scena in tre dimensioni disegnata dal vivo
    (`app/src/intro/scala.ts`), e la nave ci sta come una foto ritagliata su un cartello che guarda la macchina.
@@ -180,7 +253,8 @@ Nessun testo e nessuna tavola lo dice: sono proposte, e l’autore le conferma o
      misura, pochi megabyte, e le luci (l’oblò, i fanali, la spinta, il faro) nascono nei loro punti veri. Nello
      spazio la luce è un sole solo, e dal vivo viene quasi come in Blender; le ombre morbide si possono
      cuocere in Blender una volta. È più codice nell’intro.
-   Decide lui.
-2. Se restano le foto ferme: le due riprese dell’intro (da prua di tre quarti per B, da poppa per E), con le luci separate: lo scafo,
-   l’oblò d’ambra, i fanali, la spinta dei quattro scarichi; messe accanto agli still di oggi, perché decida lui.
-3. Il faro, e la fotografia unica dell’intro (documento 09, §14).
+   Ha scelto la terza: è il quarto passo, più sopra.
+2. Le sue note sulla nave vera nell’intro (i fogli 4 e 5), e l’intro guardata nell’eseguibile.
+3. Se lo spegnimento dei reattori deve sentirsi: il suo suono.
+4. Altri oggetti sullo scafo, se la vuole più ricca; poi il faro e la fotografia unica dell’intro (documento
+   09, §14).

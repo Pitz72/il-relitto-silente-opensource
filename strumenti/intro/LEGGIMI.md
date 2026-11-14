@@ -30,6 +30,8 @@ L’intro nell’eseguibile vero, con il suono misurato dal motore e il testo a 
 
 La plancia è sempre `location/nuove/s_01_b.png`: mai `s_01.png`, mai `zoom_s01_teca.png`.
 
+Dal 14 novembre 2026 la nave dell’intro è il modello vero (`app/public/intro/nave/`, scritto da `strumenti/nave/modello.py --intro` e `superficie.py`: documento 40); i due still non li usa più l’intro (`prua.webp` serve ancora alla copertina e alle viste dello scafo).
+
 Le immagini dell’intro (`app/public/intro/`): i due still scontornati della nave (`poppa.webp`, `prua.webp`), dalla tavola e dalla prova di look; la plancia a piena risoluzione con l’oblò bucato e la sua versione sfocata (`plancia-hd.webp`, `plancia-sfocata.webp`, da `plancia_hd.py`), su cui la camera di C, D e H si muove; `plancia.webp`, la plancia della lente del gioco, in cui l’intro finisce. I quadri fermi dell’animatic (`plancia-radar`, `plancia-oblo`, `plancia-faro`, `lente`) non servono più dal 29 ottobre 2026: restano nella storia di git e nella tavola.
 
 Le immagini dentro la tavola e la prova di look sono WebP in base64. Per cambiare un testo o una posizione si modifica l’HTML direttamente, con una sostituzione esatta: i file sono grandi e conviene non riscriverli interi.

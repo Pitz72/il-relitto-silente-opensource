@@ -7,6 +7,7 @@
 #  due aperture, la matricola sulla fascia scura in basso).
 #
 #    python strumenti/nave/superficie.py   -> strumenti/nave/uscita/pelle-*.png
+#                                          -> app/public/intro/nave/*.webp (la stessa, a metà misura, per l'intro)
 #
 #  Quattro immagini (fuori da git: si rifanno da qui, sempre uguali): il
 #  colore, quanto è ruvido, quanto è metallo, il rilievo. Dove va ogni punto
@@ -26,6 +27,7 @@ import misure as M  # noqa: E402
 import pelle as P  # noqa: E402
 
 USCITA = QUI / "uscita"
+INTRO = QUI.parents[1] / "app" / "public" / "intro" / "nave"  # la tessitura che l'intro del gioco carica
 L, A, AS, PX = P.LARGA, P.ALTA, P.ALTA_SCAFO, P.PX
 caso = np.random.default_rng(1972)
 
@@ -481,6 +483,14 @@ def main():
     Image.fromarray((rilievo * 65535 + 0.5).astype(np.uint16)).save(USCITA / "pelle-rilievo.png")
     Image.fromarray(colore, "RGB").resize((L // 2, A // 2), Image.LANCZOS).save(USCITA / "pelle-anteprima.jpg", quality=88)
     print("scritte le quattro immagini della pelle in", USCITA)
+    # per l'intro del gioco, che disegna la nave dal vivo: le stesse quattro, a metà misura (circa 4 cm per punto)
+    INTRO.mkdir(parents=True, exist_ok=True)
+    meta = (L // 2, A // 2)
+    Image.fromarray(colore, "RGB").resize(meta, Image.LANCZOS).save(INTRO / "colore.webp", quality=90, method=6)
+    for strato in ("ruvido", "metallo"):
+        Image.fromarray((np.clip(getattr(foglio, strato)[::-1], 0, 1) * 255 + 0.5).astype(np.uint8), "L").resize(meta, Image.LANCZOS).save(INTRO / f"{strato}.webp", quality=88, method=6)
+    Image.fromarray((np.clip(sfoca(foglio.rilievo, 1.2)[::-1], 0, 1) * 255 + 0.5).astype(np.uint8), "L").resize(meta, Image.LANCZOS).save(INTRO / "rilievo.webp", quality=95, method=6)
+    print("scritta la tessitura dell'intro in", INTRO)
 
 
 if __name__ == "__main__":

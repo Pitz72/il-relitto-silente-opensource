@@ -65,7 +65,7 @@ export default function Sfondo({ ridotto }: { ridotto: boolean }) {
     pronta.current ??= (async () => {
       const s = new Scala(c);
       const base = new URL("./intro/", location.href).href;
-      await s.carica(`${base}poppa.webp`, `${base}prua.webp`);
+      await s.carica(`${base}nave/`);
       s.prepara("scala");
       return s;
     })();

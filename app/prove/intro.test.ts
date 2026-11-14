@@ -4,6 +4,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { ANTICIPO_VOCE, SCALETTA, VOCE, fermoPer, opacitaBlocco, pezziDellaVoce, scenaA } from "../src/intro/scaletta.ts";
+import { reattori } from "../src/intro/scala.ts";
 
 const blocco = (id: string) => SCALETTA.blocchi.find((b) => b.id === id)!;
 
@@ -80,4 +81,18 @@ test("il cuore della cosa viva batte dopo «La vedo pulsare», mentre c'è ancor
 test("la musica entra quando si apre lo spazio", () => {
   const m = SCALETTA.momenti;
   assert.ok(m.tema > m.stella[0] && m.tema < m.naveB, `il tema a ${m.tema} s`);
+});
+
+test("i reattori della Santa Maria: accesi quando la scala comincia, spenti prima che la camera arretri", () => {
+  assert.deepEqual(reattori("scala", 0.5), { forza: 1, lunga: 1, brace: 0 });
+  // a metà dello spegnimento la fiamma è più corta e più debole
+  const meta = reattori("scala", 2.2);
+  assert.ok(meta.forza > 0 && meta.forza < 0.6 && meta.lunga < 1, JSON.stringify(meta));
+  // la camera comincia ad arretrare al terzo secondo: la fiamma non c'è più, resta la brace
+  assert.equal(reattori("scala", 3.3).forza, 0);
+  assert.ok(reattori("scala", 3.3).brace > 0.8);
+  // e la brace si raffredda: da lontano, e nel menu, gli scarichi sono spenti
+  assert.ok(reattori("scala", 20).brace < 0.01);
+  // nel margine la nave arriva con i reattori accesi
+  assert.deepEqual(reattori("margine", 10), { forza: 1, lunga: 1, brace: 0 });
 });

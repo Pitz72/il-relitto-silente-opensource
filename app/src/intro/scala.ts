@@ -3,9 +3,11 @@
 //  Nasce dal motore della prova di look (progettazione/09-prova-di-look.html),
 //  portato in un modulo; qui disegna anche il margine (B). Dal 13 novembre 2026
 //  il cielo è rifatto (documento 09, §14): freddo come nelle copertine, e
-//  calcolato una volta sola per quadro. La Santa Maria è uno still canonico
-//  scontornato, su un piano nello spazio (2,5D); il fuso, le stelle, la Via
-//  Lattea, la polvere, il fascio del faro e la luce sono calcolati.
+//  calcolato una volta sola per quadro. Dal 14 novembre 2026 la Santa Maria è
+//  la nave vera (documento 40): il modello costruito in Blender dalla tabella
+//  delle misure, con la sua tessitura, disegnato dal vivo con la stessa camera
+//  del cielo (prima era uno still scontornato su un piano). Il fuso, le stelle,
+//  la Via Lattea, la polvere, il fascio del faro e la luce sono calcolati.
 //
 //  Il mondo è in metri. X è la rotta della Santa Maria, Y l'alto, Z il fianco
 //  destro.
@@ -19,6 +21,7 @@ interface Inquadratura {
   nave: V3;
   fov: number;
   avanti: V3;
+  /** la nave si vede, e da dove: da poppa (la scala) o da prua (il margine); nell'oblò non c'è */
   sprite: "poppa" | "prua" | null;
   faro: boolean;
   fuso: boolean;
@@ -52,6 +55,14 @@ const DIREZIONE = norm([Math.cos(ALFA), 0.03, -Math.sin(ALFA)]);
 // il fuso: 25 km per 4,6, fermo sulla rotta, a sei chilometri. Lo scanner dirà 340 metri.
 const FUSO = { centro: [4900, -380, -2380] as V3, semiLunghezza: 12500, semiLarghezza: 2300, inclinazione: (-6 * Math.PI) / 180 };
 const SOLE = norm([-0.55, 0.62, 0.56]);
+// il sole della nave, ripresa per ripresa: prende i fianchi che la camera vede (da poppa il destro e la
+// piastra; da prua il sinistro, e il muso di striscio). Ogni quadro ha già il suo cielo.
+const SOLE_NAVE: Record<"poppa" | "prua", V3> = { poppa: norm([-0.6, 0.45, 0.66]), prua: norm([0.34, 0.6, -0.72]) };
+// quanto erano larghi gli still di prima, in metri: `proietta` lo dice ancora all'intro, che ci regola i tempi
+const LARGHEZZA_NAVE = { poppa: 96, prua: 112 };
+// la fotografia della nave: quanto è forte il sole (appena caldo), quanta luce fredda viene dal cielo, e le sue
+// luci (l'oblò, i fanali, la luce dell'uscita, la lente del faro acceso, la spinta dei quattro scarichi)
+const LUCE_NAVE = { sole: [1.7, 1.63, 1.52], cielo: [0.02, 0.03, 0.055], oblo: 3.0, fanali: 6.0, uscita: 4.0, faro: 14.0, spinta: 0.6 };
 const faroDi = (q: Quadro, gradi = 0) => ({
   origine: [44, 7, -3] as V3,
   apertura: (3.2 * Math.PI) / 180,
@@ -84,25 +95,45 @@ function oblo(t: number, faro: number, faroGradi: number): Inquadratura {
   };
 }
 
-/** La scala (E): 0–3 s segue la nave a 165 m; 3–23 s arretra fino a 18 km, a
+/** La scala (E): 0–3 s segue la nave a 85 m; 3–23 s arretra fino a 18 km, a
  *  velocità costante in scala logaritmica, con un avvio e un arresto morbidi;
- *  l'obiettivo passa da 44° a 40°. */
+ *  l'obiettivo passa da 44° a 40°. Da vicino la camera mira alla poppa, e non al
+ *  mezzo della nave (che è lunga ottanta metri: di tre quarti non starebbe nel
+ *  quadro); arretrando la mira torna al mezzo, senza che si veda. */
 function camera(t: number): Inquadratura {
   const u = clamp01((t - 3) / 20);
   const e = 0.5 - 0.5 * Math.cos(Math.PI * Math.pow(u, 0.8));
-  const D = Math.exp(lerp(Math.log(165), Math.log(18000), e));
+  const D0 = 85;
+  const D = Math.exp(lerp(Math.log(D0), Math.log(18000), e));
   const fov = (lerp(44, 40, e) * Math.PI) / 180;
   const nave: V3 = [NAVE.velocita * t, 0, 0];
-  return { pos: somma(nave, per(DIREZIONE, -D)), nave, fov, avanti: DIREZIONE, sprite: "poppa", faro: true, fuso: true };
+  const mira: V3 = [nave[0] - (26 * D0) / D, 0, 0];
+  return { pos: somma(mira, per(DIREZIONE, -D)), nave, fov, avanti: DIREZIONE, sprite: "poppa", faro: true, fuso: true };
+}
+
+/** I reattori nella scala (l'autore, 14 novembre 2026: «dovremmo fare un effetto di spegnimento dei reattori,
+ *  per una questione di realismo la nave continuerà comunque ad avvicinarsi per inerzia»). Accesi all'inizio,
+ *  mentre la camera è vicina; poi si spengono in due secondi scarsi, con due singhiozzi, e la fiamma si
+ *  accorcia; negli scarichi resta la brace, che si raffredda piano. La nave non rallenta. */
+const SPEGNIMENTO = { quando: 1.3, dura: 1.9, brace: 3.4 };
+export function reattori(q: Quadro, t: number): { forza: number; lunga: number; brace: number } {
+  if (q !== "scala") return { forza: 1, lunga: 1, brace: 0 };
+  const u = clamp01((t - SPEGNIMENTO.quando) / SPEGNIMENTO.dura);
+  if (u <= 0) return { forza: 1, lunga: 1, brace: 0 };
+  const cala = Math.pow(1 - u, 1.6);
+  const singhiozzi = 1 - 0.6 * Math.exp(-(((u - 0.16) / 0.045) ** 2)) - 0.45 * Math.exp(-(((u - 0.4) / 0.04) ** 2));
+  const dopo = Math.max(0, t - SPEGNIMENTO.quando - SPEGNIMENTO.dura);
+  return { forza: cala * Math.max(0, singhiozzi), lunga: 0.2 + 0.8 * cala, brace: Math.min(1, u * 2.5) * Math.exp(-dopo / SPEGNIMENTO.brace) };
 }
 
 /** I quadri. `t` è il tempo del quadro, in secondi. */
 export function inquadratura(q: Quadro, t: number, faro = 0, faroGradi = 0): Inquadratura {
   if (q === "plancia") return oblo(t, faro, faroGradi);
   if (q === "margine") {
-    // la nave avanza; la camera, davanti e a babordo, è ferma
+    // la nave avanza; la camera, davanti e a babordo, è ferma. Con la nave vera, lunga ottanta metri, sta a
+    // due terzi della distanza di prima sulla stessa retta: la nave tiene nel quadro il posto che aveva lo still
     const nave: V3 = [NAVE.velocita * 3 * (t - 4), 0, 0];
-    const pos: V3 = [640, 55, -660];
+    const pos: V3 = [395, 49, -429];
     return { pos, nave, fov: (34 * Math.PI) / 180, avanti: verso(pos, [-60, 38, 0]), sprite: "prua", faro: false, fuso: false, polvere: false };
   }
   if (q === "oblo" || q === "faro") {
@@ -363,24 +394,111 @@ const FS_POLVERE = TESTA + `
 in float lum; out vec4 o;
 void main(){ vec2 p = gl_PointCoord * 2.0 - 1.0; o = vec4(vec3(1.0, 0.96, 0.9) * lum * exp(-dot(p, p) * 3.0), 1.0); }`;
 
-const VS_NAVE = TESTA + `
-in vec2 a; out vec2 uv;
-uniform mat4 uVP; uniform vec3 uCentro, uDestra, uSu; uniform vec2 uMezza;
+// La nave vera. Un punto: la posizione (dal centro della nave), la normale, il posto sulla tessitura, la
+// tinta e il tipo del pezzo (0 lo scafo, 1 il metallo dei pezzi, 2 le celle dei pannelli, 3 lo scuro, da 4 a
+// 8 le luci, 9 la spinta). I posti degli attributi sono fissi: lo stesso vao serve anche alle ombre.
+const VS_SCAFO = TESTA + `
+layout(location = 0) in vec3 aP; layout(location = 1) in vec4 aN; layout(location = 2) in vec2 aUV; layout(location = 3) in vec4 aC;
+uniform mat4 uVP; uniform vec3 uCentro;
+out vec3 p; out vec3 n; out vec2 uv; out vec3 tinta; flat out int tipo;
 void main(){
-  uv = vec2(a.x * 0.5 + 0.5, 0.5 - a.y * 0.5);
-  vec3 p = uCentro + uDestra * a.x * uMezza.x + uSu * a.y * uMezza.y;
-  gl_Position = uVP * vec4(p, 1.0);
+  p = aP; n = aN.xyz; uv = aUV; tinta = aC.rgb; tipo = int(aC.a * 255.0 + 0.5);
+  gl_Position = uVP * vec4(aP + uCentro, 1.0);
 }`;
-const FS_NAVE = TESTA + `
-in vec2 uv; out vec4 o;
-uniform sampler2D uTex; uniform float uEsp;
+// Nello spazio la luce è un sole solo: la si calcola dal vivo (diffusa e riflessa), con l'ombra portata da
+// una mappa fatta una volta, e un poco di luce fredda del cielo da ogni parte.
+const FS_SCAFO = TESTA + RUMORE + `
+in vec3 p; in vec3 n; in vec2 uv; in vec3 tinta; flat in int tipo;
+out vec4 o;
+uniform sampler2D uColore, uRuvido, uMetallo, uRilievo;
+uniform highp sampler2DShadow uOmbra;
+uniform mat4 uLuceVP;
+uniform vec3 uSole, uOcchio, uSoleLuce, uCieloLuce;
+uniform vec4 uLuci;   // l'oblò, i fanali, la luce dell'uscita, la lente del faro
+uniform vec2 uTexel;
+uniform float uSpinta, uLunga, uBrace, uT, uPendenza;
+const float PI = 3.14159265;
 void main(){
-  vec4 c = texture(uTex, uv);
-  vec3 lin = pow(max(c.rgb, 0.0), vec3(2.2));
-  float l = dot(lin, vec3(0.2126, 0.7152, 0.0722));
-  lin = mix(vec3(l), lin, 0.82) * vec3(0.94, 0.97, 1.04);
-  o = vec4(lin * uEsp, c.a);
+  vec3 N = normalize(n);
+  if (!gl_FrontFacing) N = -N;
+  vec3 V = normalize(uOcchio - p);
+  if (tipo == 9) {
+    // la spinta: un cono di luce dietro lo scarico, più forte al centro e vicino alla bocca; trema appena
+    // quando i reattori si spengono la fiamma si accorcia (uLunga) prima di sparire
+    float s = uv.x / max(uLunga, 0.05);
+    float trema = 0.88 + 0.12 * sin(uT * 31.0 + p.z * 3.0) * sin(uT * 17.3 + p.y);
+    float forza = uSpinta * trema * pow(abs(dot(N, V)), 1.6) * pow(max(1.0 - s, 0.0), 2.2) * smoothstep(0.0, 0.05, s);
+    o = vec4(mix(vec3(0.60, 0.80, 1.0), vec3(0.28, 0.42, 1.0), s) * forza, 0.0);
+    return;
+  }
+  vec3 alb; float ruv, met; vec3 emi = vec3(0.0);
+  if (tipo == 0) {
+    alb = texture(uColore, uv).rgb;
+    ruv = texture(uRuvido, uv).r; met = texture(uMetallo, uv).r;
+    // il rilievo: la pendenza della tessitura, portata sulla pelle dello scafo
+    vec2 pend = vec2(texture(uRilievo, uv + vec2(uTexel.x, 0.0)).r - texture(uRilievo, uv - vec2(uTexel.x, 0.0)).r,
+                     texture(uRilievo, uv + vec2(0.0, uTexel.y)).r - texture(uRilievo, uv - vec2(0.0, uTexel.y)).r) * uPendenza;
+    vec3 dp1 = dFdx(p), dp2 = dFdy(p); vec2 d1 = dFdx(uv), d2 = dFdy(uv);
+    vec3 a = cross(dp2, N), b = cross(N, dp1);
+    vec3 T = a * d1.x + b * d2.x, B = a * d1.y + b * d2.y;
+    float im = inversesqrt(max(max(dot(T, T), dot(B, B)), 1e-12));
+    N = normalize(N - (T * pend.x + B * pend.y) * im);
+  } else if (tipo == 1) {
+    // il metallo dei pezzi: la tinta, con le macchie di chi sta fuori da novant'anni
+    float k = clamp((0.75 * fbm(p * 0.9 + 3.0, 4) + 0.25 * rumore(p * 12.6) - 0.3) / 0.4, 0.0, 1.0);
+    alb = pow(tinta, vec3(2.2)) * mix(0.38, 1.3, k); ruv = mix(0.73, 0.43, k); met = 0.45;
+  } else if (tipo == 2) {
+    // le celle di un pannello solare: il vetro scuro, e il reticolo chiaro ogni 40 cm (da lontano si perde)
+    vec2 g = vec2(p.x, p.y) * 2.5;
+    vec2 l = smoothstep(vec2(0.05) + fwidth(g), vec2(0.05), fract(g));
+    float reticolo = max(l.x, l.y) * clamp(1.0 - max(fwidth(g.x), fwidth(g.y)) * 2.0, 0.0, 1.0);
+    alb = mix(pow(tinta, vec3(2.2)), vec3(0.27, 0.31, 0.37), reticolo); ruv = 0.22; met = 0.3;
+  } else if (tipo == 3) {
+    alb = pow(tinta, vec3(2.2)); ruv = 0.5; met = 0.3;
+  } else {
+    alb = vec3(0.03); ruv = 0.35; met = 0.0;
+    if (tipo == 4) emi = vec3(0.95, 0.74, 0.40) * uLuci.x;
+    else if (tipo == 5) emi = vec3(1.0, 0.62, 0.22) * uLuci.y;
+    else if (tipo == 6) emi = vec3(1.0, 0.88, 0.48) * uLuci.z;
+    else if (tipo == 7) emi = vec3(1.0, 0.95, 0.82) * uLuci.w;
+    else emi = vec3(0.62, 0.82, 1.0) * uSpinta * 5.0 + vec3(1.0, 0.30, 0.07) * uBrace * 1.8;  // la fiamma, e poi la brace
+  }
+  float NL = dot(N, uSole), NV = max(dot(N, V), 1e-3);
+  float ombra = 0.0;
+  if (NL > 0.0) {
+    vec4 l = uLuceVP * vec4(p + normalize(n) * 0.06, 1.0);
+    vec3 s = l.xyz * 0.5 + 0.5;
+    s.z -= 0.0012 + 0.003 * (1.0 - NL);
+    float passo = 1.0 / float(textureSize(uOmbra, 0).x);
+    for (int y = -1; y <= 1; y++) for (int x = -1; x <= 1; x++) ombra += texture(uOmbra, vec3(s.xy + vec2(x, y) * passo, s.z));
+    ombra /= 9.0;
+  }
+  NL = max(NL, 0.0);
+  vec3 H = normalize(uSole + V);
+  float NH = max(dot(N, H), 0.0), VH = max(dot(V, H), 0.0);
+  float a = max(ruv * ruv, 0.03), a2 = a * a;
+  float d = NH * NH * (a2 - 1.0) + 1.0;
+  float D = a2 / (PI * d * d);
+  float kk = a * 0.5;
+  float G = 0.25 / ((NV * (1.0 - kk) + kk) * (NL * (1.0 - kk) + kk));
+  vec3 F0 = mix(vec3(0.04), alb, met);
+  vec3 F = F0 + (1.0 - F0) * pow(1.0 - VH, 5.0);
+  vec3 c = (alb * (1.0 - met) / PI + F * D * G) * uSoleLuce * NL * ombra;
+  // la luce del cielo: poca, fredda, da ogni parte; un poco di più dall'alto
+  c += alb * uCieloLuce * (0.65 + 0.35 * N.y);
+  o = vec4(c + emi, 1.0);
 }`;
+// L'ombra: la nave vista dal sole, solo la profondità.
+const VS_OMBRA = TESTA + `
+layout(location = 0) in vec3 aP;
+uniform mat4 uLuceVP;
+void main(){ gl_Position = uLuceVP * vec4(aP, 1.0); }`;
+const FS_OMBRA = TESTA + `
+void main(){ }`;
+// La nave, disegnata nel suo strato, si posa sulla scena.
+const FS_COPIA = TESTA + `
+in vec2 uv; out vec4 o; uniform sampler2D uTex;
+void main(){ o = texture(uTex, uv); }`;
 
 const VS_LUCI = TESTA + `
 in vec3 aP; in float aI;
@@ -393,9 +511,9 @@ void main(){
   lum = aI;
 }`;
 const FS_LUCI = TESTA + `
-in float lum; out vec4 o;
+in float lum; out vec4 o; uniform vec3 uTinta;
 void main(){ vec2 p = gl_PointCoord * 2.0 - 1.0; float r = dot(p, p);
-  o = vec4(vec3(1.0, 0.62, 0.22) * lum * (exp(-r * 18.0) * 1.0 + exp(-r * 4.0) * 0.08), 1.0); }`;
+  o = vec4(uTinta * lum * (exp(-r * 18.0) * 1.0 + exp(-r * 4.0) * 0.08), 1.0); }`;
 
 // Il bagliore nasce solo dalle luci (uSoglia, al primo passo): il fondo del cielo non deve schiarire il
 // nero del fuso.
@@ -447,12 +565,35 @@ interface Bersaglio {
   w: number;
   h: number;
 }
-interface Sprite {
-  img: HTMLImageElement;
-  tex: WebGLTexture | null;
-  aspetto: number;
-  larghezza: number;
-  esp: number;
+/** I punti della nave che il motore deve conoscere (santa-maria.json, scritto con il modello). */
+interface DatiNave {
+  raggio: number;
+  pendenza: number;
+  tessitura: [number, number];
+  luci: { "oblò": V3; fanali: V3[]; uscita: V3; scarichi: V3[]; faro: V3 };
+}
+interface Nave {
+  vao: WebGLVertexArrayObject;
+  opachi: number;
+  pennacchi: number;
+  colore: WebGLTexture;
+  ruvido: WebGLTexture;
+  metallo: WebGLTexture;
+  rilievo: WebGLTexture;
+  dati: DatiNave;
+}
+/** Lo strato dove si disegna la nave, con i bordi lisciati, prima di posarla sulla scena. */
+interface Strato {
+  fb: WebGLFramebuffer;
+  colore: WebGLRenderbuffer;
+  fondo: WebGLRenderbuffer;
+  risolto: Bersaglio;
+  w: number;
+  h: number;
+}
+interface Ombra {
+  tex: WebGLTexture;
+  vp: number[];
 }
 interface Cielo {
   polo: V3;
@@ -522,7 +663,9 @@ export class Scala {
   private B: { w: number; h: number; scena: Bersaglio; scenaB: Bersaglio; catena: Bersaglio[] } | null = null;
   private formato: { interno: number; tipo: number };
   readonly hdr: boolean;
-  private sprite: Record<"poppa" | "prua", Sprite>;
+  private nave: Nave | null = null;
+  private strato: Strato | null = null;
+  private ombre = new Map<string, Ombra>();
 
   private canvas: HTMLCanvasElement;
 
@@ -539,7 +682,9 @@ export class Scala {
     this.P.fuso = this.programma(VS_PIENO, FS_FUSO);
     this.P.fascio = this.programma(VS_PIENO, FS_FASCIO);
     this.P.polvere = this.programma(VS_POLVERE, FS_POLVERE);
-    this.P.nave = this.programma(VS_NAVE, FS_NAVE);
+    this.P.scafo = this.programma(VS_SCAFO, FS_SCAFO);
+    this.P.ombra = this.programma(VS_OMBRA, FS_OMBRA);
+    this.P.copia = this.programma(VS_PIENO, FS_COPIA);
     this.P.luci = this.programma(VS_LUCI, FS_LUCI);
     this.P.giu = this.programma(VS_PIENO, FS_GIU);
     this.P.su = this.programma(VS_PIENO, FS_SU);
@@ -550,7 +695,7 @@ export class Scala {
     const buf = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buf);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
-    for (const nome of ["forno", "cielo", "fuso", "fascio", "giu", "su", "finale", "nave"]) {
+    for (const nome of ["forno", "cielo", "fuso", "fascio", "giu", "su", "finale", "copia"]) {
       const loc = gl.getAttribLocation(this.P[nome].p, "a");
       if (loc >= 0) {
         gl.enableVertexAttribArray(loc);
@@ -562,7 +707,7 @@ export class Scala {
       gl.bindVertexArray(vao);
       const b = gl.createBuffer()!;
       gl.bindBuffer(gl.ARRAY_BUFFER, b);
-      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(8), gl.DYNAMIC_DRAW);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(4 * 16), gl.DYNAMIC_DRAW);
       const lP = gl.getAttribLocation(this.P.luci.p, "aP"), lI = gl.getAttribLocation(this.P.luci.p, "aI");
       gl.enableVertexAttribArray(lP);
       gl.vertexAttribPointer(lP, 3, gl.FLOAT, false, 16, 0);
@@ -570,45 +715,79 @@ export class Scala {
       gl.vertexAttribPointer(lI, 1, gl.FLOAT, false, 16, 12);
       return { vao, b };
     })();
-    this.sprite = {
-      poppa: { img: new Image(), tex: null, aspetto: 0.5, larghezza: 96, esp: 0.62 },
-      prua: { img: new Image(), tex: null, aspetto: 0.4, larghezza: 112, esp: 0.52 },
-    };
   }
 
-  /** Carica gli still scontornati della nave. */
-  async carica(poppa: string, prua: string): Promise<void> {
+  /** Carica la nave: la forma (santa-maria.bin), i suoi punti (santa-maria.json) e la tessitura dello scafo.
+   *  `base` è la cartella, con la barra in fondo. */
+  async carica(base: string): Promise<void> {
     const gl = this.gl;
-    await Promise.all(
-      (["poppa", "prua"] as const).map(
-        (k) =>
-          new Promise<void>((risolvi, rifiuta) => {
-            const s = this.sprite[k];
-            s.img.onload = () => {
-              s.tex = gl.createTexture();
-              gl.bindTexture(gl.TEXTURE_2D, s.tex);
-              gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-              gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, s.img);
-              gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-              gl.generateMipmap(gl.TEXTURE_2D);
-              gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
-              gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-              gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-              gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-              s.aspetto = s.img.height / s.img.width;
-              risolvi();
-            };
-            s.img.onerror = () => rifiuta(new Error(`Manca l'immagine della nave: ${k}`));
-            s.img.src = k === "poppa" ? poppa : prua;
-          }),
-      ),
-    );
+    const immagine = (nome: string) =>
+      new Promise<HTMLImageElement>((risolvi, rifiuta) => {
+        const i = new Image();
+        i.onload = () => risolvi(i);
+        i.onerror = () => rifiuta(new Error(`Manca la tessitura della nave: ${nome}`));
+        i.src = `${base}${nome}.webp`;
+      });
+    const scarica = async (nome: string) => {
+      const r = await fetch(base + nome);
+      if (!r.ok) throw new Error(`Manca la nave dell'intro: ${nome}`);
+      return r;
+    };
+    const [forma, dati, colore, ruvido, metallo, rilievo] = await Promise.all([
+      scarica("santa-maria.bin").then((r) => r.arrayBuffer()),
+      scarica("santa-maria.json").then((r) => r.json() as Promise<DatiNave>),
+      immagine("colore"),
+      immagine("ruvido"),
+      immagine("metallo"),
+      immagine("rilievo"),
+    ]);
+    const testa = new DataView(forma, 0, 16);
+    if (testa.getUint32(0, true) !== 0x314e4d53) throw new Error("La nave dell'intro non è nel formato atteso");
+    const punti = testa.getUint32(4, true), opachi = testa.getUint32(8, true), pennacchi = testa.getUint32(12, true);
+    const vao = gl.createVertexArray()!;
+    gl.bindVertexArray(vao);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Uint8Array(forma, 16, punti * 24), gl.STATIC_DRAW);
+    for (let k = 0; k < 4; k++) gl.enableVertexAttribArray(k);
+    gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 24, 0);
+    gl.vertexAttribPointer(1, 4, gl.BYTE, true, 24, 12);
+    gl.vertexAttribPointer(2, 2, gl.UNSIGNED_SHORT, true, 24, 16);
+    gl.vertexAttribPointer(3, 4, gl.UNSIGNED_BYTE, true, 24, 20);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(forma, 16 + punti * 24, opachi + pennacchi), gl.STATIC_DRAW);
+    gl.bindVertexArray(null);
+    const fine = gl.getExtension("EXT_texture_filter_anisotropic");
+    const tessitura = (img: HTMLImageElement, interno: number, formato: number) => {
+      const tex = gl.createTexture()!;
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+      gl.texImage2D(gl.TEXTURE_2D, 0, interno, formato, gl.UNSIGNED_BYTE, img);
+      gl.generateMipmap(gl.TEXTURE_2D);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      // lo scafo si guarda quasi sempre di striscio
+      if (fine) gl.texParameterf(gl.TEXTURE_2D, fine.TEXTURE_MAX_ANISOTROPY_EXT, Math.min(8, gl.getParameter(fine.MAX_TEXTURE_MAX_ANISOTROPY_EXT) as number));
+      return tex;
+    };
+    this.nave = {
+      vao,
+      opachi,
+      pennacchi,
+      colore: tessitura(colore, gl.SRGB8_ALPHA8, gl.RGBA),
+      ruvido: tessitura(ruvido, gl.R8, gl.RED),
+      metallo: tessitura(metallo, gl.R8, gl.RED),
+      rilievo: tessitura(rilievo, gl.R8, gl.RED),
+      dati,
+    };
+    this.ombre.clear();
   }
 
   /** Prepara in anticipo il cielo di un quadro (le stelle si calcolano una volta). */
   prepara(q: Quadro): void {
     this.cielo(q);
     this.polvereDi(q);
+    // l'ombra della nave, per il sole di questa ripresa: si calcola adesso, e non al primo fotogramma
+    if (this.nave && (q === "scala" || q === "margine")) this.ombraDi(q === "scala" ? "poppa" : "prua");
   }
 
   // ---- un fotogramma -------------------------------------------------------------
@@ -638,8 +817,8 @@ export class Scala {
     const tanX = Math.tan(cam.fov / 2), tanY = tanX / aspetto;
     const x = (d[0] * destra[0] + d[1] * destra[1] + d[2] * destra[2]) / z / tanX;
     const y = (d[0] * su[0] + d[1] * su[1] + d[2] * su[2]) / z / tanY;
-    const sp = cam.sprite ? this.sprite[cam.sprite] : { larghezza: 0 };
-    return { x: 0.5 + x / 2, y: 0.5 - y / 2, larghezza: sp.larghezza / z / tanX / 2, davanti: z > 0 };
+    const larga = cam.sprite ? LARGHEZZA_NAVE[cam.sprite] : 0;
+    return { x: 0.5 + x / 2, y: 0.5 - y / 2, larghezza: larga / z / tanX / 2, davanti: z > 0 };
   }
 
   /** Una direzione del cielo vista dall'oblò della plancia all'istante t: dove cade (nel quadro, -1…1,
@@ -796,12 +975,18 @@ export class Scala {
     return cielo.forno;
   }
 
+  /** Il faro di un quadro. Dove la nave si vede da fuori, la luce parte dalla sua lente vera. */
+  private faro(q: Quadro, gradi = 0) {
+    const f = faroDi(q, gradi);
+    return this.nave && (q === "scala" || q === "margine") ? { ...f, origine: this.nave.dati.luci.faro } : f;
+  }
+
   /** La polvere intorno alla rotta, e un velo più fitto dove passa il fascio. */
   private polvereDi(q: Quadro) {
     const fatto = this.polvere.get(q);
     if (fatto) return fatto;
     const gl = this.gl;
-    const FARO = faroDi(q);
+    const FARO = this.faro(q);
     const r = generatore(7), dati: number[] = [];
     for (let i = 0; i < 1600; i++) dati.push(lerp(-500, 420, r()), lerp(-130, 150, r()), lerp(-230, 420, r()), r());
     const fd = FARO.direzione, fu = norm(croce(fd, [0, 1, 0])), fv = croce(fu, fd);
@@ -852,6 +1037,14 @@ export class Scala {
         gl.deleteFramebuffer(b.fb);
       }
     }
+    if (this.strato) {
+      gl.deleteFramebuffer(this.strato.fb);
+      gl.deleteRenderbuffer(this.strato.colore);
+      gl.deleteRenderbuffer(this.strato.fondo);
+      gl.deleteTexture(this.strato.risolto.tex);
+      gl.deleteFramebuffer(this.strato.risolto.fb);
+      this.strato = null;
+    }
     this.canvas.width = w;
     this.canvas.height = h;
     const catena: Bersaglio[] = [];
@@ -864,8 +1057,72 @@ export class Scala {
     this.B = { w, h, scena: this.bersaglio(w, h), scenaB: this.bersaglio(w, h), catena };
   }
 
-  private matriceVP(cam: Inquadratura, destra: V3, su: V3, avanti: V3, aspetto: number, ot: Ottica) {
-    const fx = 1 / Math.tan(cam.fov / 2), fy = fx * aspetto, n = 0.5, fr = 200000;
+  /** Lo strato della nave: un bersaglio con la profondità e quattro campioni per punto (i bordi lisci),
+   *  e la tessitura in cui si raccoglie. */
+  private stratoNave(w: number, h: number): Strato {
+    if (this.strato && this.strato.w === w && this.strato.h === h) return this.strato;
+    const gl = this.gl;
+    const possibili = gl.getInternalformatParameter(gl.RENDERBUFFER, this.formato.interno, gl.SAMPLES) as Int32Array | null;
+    let campioni = possibili && possibili.length ? Math.min(4, possibili[0]) : 0;
+    const fb = gl.createFramebuffer()!, colore = gl.createRenderbuffer()!, fondo = gl.createRenderbuffer()!;
+    for (;;) {
+      gl.bindRenderbuffer(gl.RENDERBUFFER, colore);
+      gl.renderbufferStorageMultisample(gl.RENDERBUFFER, campioni, this.formato.interno, w, h);
+      gl.bindRenderbuffer(gl.RENDERBUFFER, fondo);
+      gl.renderbufferStorageMultisample(gl.RENDERBUFFER, campioni, gl.DEPTH_COMPONENT24, w, h);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+      gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.RENDERBUFFER, colore);
+      gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, fondo);
+      if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE || campioni === 0) break;
+      campioni = 0; // questa scheda non liscia i bordi in questo formato: si fa senza
+    }
+    this.strato = { fb, colore, fondo, risolto: this.bersaglio(w, h), w, h };
+    return this.strato;
+  }
+
+  /** L'ombra della nave per un sole: la nave vista da lì, una volta sola (la nave non gira). */
+  private ombraDi(chi: "poppa" | "prua"): Ombra {
+    const fatta = this.ombre.get(chi);
+    if (fatta) return fatta;
+    const gl = this.gl, N = this.nave!, lato = 2048, R = N.dati.raggio;
+    const f = per(SOLE_NAVE[chi], -1), r = norm(croce(f, [0, 1, 0])), u = croce(r, f);
+    const vp = [r[0] / R, u[0] / R, f[0] / R, 0, r[1] / R, u[1] / R, f[1] / R, 0, r[2] / R, u[2] / R, f[2] / R, 0, 0, 0, 0, 1];
+    const tex = gl.createTexture()!;
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT24, lato, lato, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_INT, null);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_COMPARE_MODE, gl.COMPARE_REF_TO_TEXTURE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_COMPARE_FUNC, gl.LEQUAL);
+    const fb = gl.createFramebuffer()!;
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, tex, 0);
+    gl.drawBuffers([gl.NONE]);
+    gl.readBuffer(gl.NONE);
+    gl.viewport(0, 0, lato, lato);
+    gl.disable(gl.SCISSOR_TEST);
+    gl.disable(gl.BLEND);
+    gl.enable(gl.DEPTH_TEST);
+    gl.depthFunc(gl.LEQUAL);
+    gl.depthMask(true);
+    gl.clearDepth(1);
+    gl.clear(gl.DEPTH_BUFFER_BIT);
+    gl.useProgram(this.P.ombra.p);
+    gl.uniformMatrix4fv(this.P.ombra.u.uLuceVP, false, vp);
+    gl.bindVertexArray(N.vao);
+    gl.drawElements(gl.TRIANGLES, N.opachi, gl.UNSIGNED_INT, 0);
+    gl.disable(gl.DEPTH_TEST);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.deleteFramebuffer(fb);
+    const ombra = { tex, vp };
+    this.ombre.set(chi, ombra);
+    return ombra;
+  }
+
+  private matriceVP(cam: Inquadratura, destra: V3, su: V3, avanti: V3, aspetto: number, ot: Ottica, n = 0.5, fr = 200000) {
+    const fx = 1 / Math.tan(cam.fov / 2), fy = fx * aspetto;
     const p = cam.pos;
     const V = [destra[0], su[0], -avanti[0], 0, destra[1], su[1], -avanti[1], 0, destra[2], su[2], -avanti[2], 0,
       -(destra[0] * p[0] + destra[1] * p[1] + destra[2] * p[2]), -(su[0] * p[0] + su[1] * p[1] + su[2] * p[2]),
@@ -885,7 +1142,7 @@ export class Scala {
     const gl = this.gl, P = this.P, B = this.B!;
     const ridotta = !!opz.ridotta;
     const cam = inquadratura(q, t, opz.faro ?? 0, opz.faroGradi ?? 0);
-    const FARO = faroDi(q, cam.faroGradi ?? 0);
+    const FARO = this.faro(q, cam.faroGradi ?? 0);
     const cielo = this.cielo(q);
     const forno = this.inforna(q, cielo, B.w, B.h, ridotta);
     const aspetto = B.w / B.h;
@@ -993,37 +1250,104 @@ export class Scala {
       gl.drawArrays(gl.POINTS, 0, pv.n);
     }
 
-    // 6. la nave
-    const sp = cam.sprite ? this.sprite[cam.sprite] : null;
-    if (sp && sp.tex) {
-      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-      gl.useProgram(P.nave.p);
-      gl.uniformMatrix4fv(P.nave.u.uVP, false, VP);
-      gl.uniform3fv(P.nave.u.uCentro, cam.nave);
-      gl.uniform3fv(P.nave.u.uDestra, destra);
-      gl.uniform3fv(P.nave.u.uSu, su);
-      gl.uniform2f(P.nave.u.uMezza, sp.larghezza / 2, (sp.larghezza * sp.aspetto) / 2);
-      gl.uniform1f(P.nave.u.uEsp, sp.esp);
+    // 6. la nave vera, nel suo strato, e poi sulla scena; 7. le sue luci, nei loro punti
+    const N = this.nave;
+    if (cam.sprite && N) {
+      const chi = cam.sprite, L = N.dati.luci;
+      const occhio: V3 = [cam.pos[0] - cam.nave[0], cam.pos[1] - cam.nave[1], cam.pos[2] - cam.nave[2]];
+      const lontana = Math.hypot(occhio[0], occhio[1], occhio[2]);
+      // i fanali respirano; la spinta trema appena, e nella scala si spegne; il faro è acceso dove cerca
+      const respiro = 0.55 + 0.45 * Math.sin((t * 2 * Math.PI) / 2.6) ** 2;
+      const R = reattori(q, t);
+      const spinta = (0.92 + 0.08 * Math.sin(t * 9.1) * Math.sin(t * 3.7)) * R.forza;
+      const ombra = this.ombraDi(chi);
+      const S = this.stratoNave(verso.w, verso.h);
+      // la profondità si misura intorno alla nave: precisa da vicino come a diciotto chilometri
+      const VPn = this.matriceVP(cam, destra, su, avanti, ot.quadrata ? 1 : aspetto, ot, Math.max(0.5, lontana - N.dati.raggio * 1.2), lontana + N.dati.raggio * 1.2);
+      gl.disable(gl.SCISSOR_TEST);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, S.fb);
+      gl.viewport(0, 0, S.w, S.h);
+      gl.clearColor(0, 0, 0, 0);
+      gl.clearDepth(1);
+      gl.depthMask(true);
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      gl.enable(gl.DEPTH_TEST);
+      gl.depthFunc(gl.LEQUAL);
+      gl.disable(gl.BLEND);
+      const Ps = P.scafo;
+      gl.useProgram(Ps.p);
+      gl.uniformMatrix4fv(Ps.u.uVP, false, VPn);
+      gl.uniformMatrix4fv(Ps.u.uLuceVP, false, ombra.vp);
+      gl.uniform3fv(Ps.u.uCentro, cam.nave);
+      gl.uniform3fv(Ps.u.uOcchio, occhio);
+      gl.uniform3fv(Ps.u.uSole, SOLE_NAVE[chi]);
+      gl.uniform3f(Ps.u.uSoleLuce, LUCE_NAVE.sole[0], LUCE_NAVE.sole[1], LUCE_NAVE.sole[2]);
+      gl.uniform3f(Ps.u.uCieloLuce, LUCE_NAVE.cielo[0], LUCE_NAVE.cielo[1], LUCE_NAVE.cielo[2]);
+      gl.uniform4f(Ps.u.uLuci, LUCE_NAVE.oblo, LUCE_NAVE.fanali * respiro, LUCE_NAVE.uscita, cam.faro ? LUCE_NAVE.faro : 0.25);
+      gl.uniform2f(Ps.u.uTexel, 1 / N.dati.tessitura[0], 1 / N.dati.tessitura[1]);
+      gl.uniform1f(Ps.u.uPendenza, N.dati.pendenza);
+      gl.uniform1f(Ps.u.uSpinta, LUCE_NAVE.spinta * spinta);
+      gl.uniform1f(Ps.u.uLunga, R.lunga);
+      gl.uniform1f(Ps.u.uBrace, R.brace);
+      gl.uniform1f(Ps.u.uT, t);
+      const tessiture: [string, WebGLTexture][] = [["uColore", N.colore], ["uRuvido", N.ruvido], ["uMetallo", N.metallo], ["uRilievo", N.rilievo], ["uOmbra", ombra.tex]];
+      tessiture.forEach(([nome, tex], k) => {
+        gl.activeTexture(gl.TEXTURE0 + k);
+        gl.bindTexture(gl.TEXTURE_2D, tex);
+        gl.uniform1i(Ps.u[nome], k);
+      });
+      gl.bindVertexArray(N.vao);
+      gl.drawElements(gl.TRIANGLES, N.opachi, gl.UNSIGNED_INT, 0);
+      // la spinta: luce che si somma, senza coprire niente
+      gl.enable(gl.BLEND);
+      gl.blendFuncSeparate(gl.ONE, gl.ONE, gl.ZERO, gl.ONE);
+      gl.depthMask(false);
+      gl.drawElements(gl.TRIANGLES, N.pennacchi, gl.UNSIGNED_INT, N.opachi * 4);
+      gl.depthMask(true);
+      gl.disable(gl.DEPTH_TEST);
+      gl.disable(gl.BLEND);
       gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, sp.tex);
-      gl.uniform1i(P.nave.u.uTex, 0);
+      // i quattro campioni per punto si raccolgono in uno, e lo strato si posa sulla scena
+      gl.bindFramebuffer(gl.READ_FRAMEBUFFER, S.fb);
+      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, S.risolto.fb);
+      gl.blitFramebuffer(0, 0, S.w, S.h, 0, 0, S.w, S.h, gl.COLOR_BUFFER_BIT, gl.NEAREST);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, verso.fb);
+      gl.viewport(0, 0, verso.w, verso.h);
+      if (ot.ritaglio) gl.enable(gl.SCISSOR_TEST);
+      gl.enable(gl.BLEND);
+      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+      gl.useProgram(P.copia.p);
+      gl.bindTexture(gl.TEXTURE_2D, S.risolto.tex);
+      gl.uniform1i(P.copia.u.uTex, 0);
       gl.bindVertexArray(this.vaoPieno);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-    }
-    if (sp && sp.tex && cam.sprite === "poppa") {
-      // 7. i fanali di poppa: sul piano della nave, agli angoli alti della poppa, e respirano
-      const mezza = [sp.larghezza / 2, (sp.larghezza * sp.aspetto) / 2];
-      const sulPiano = (u: number, v: number) => somma(cam.nave, somma(per(destra, (u * 2 - 1) * mezza[0]), per(su, (1 - v * 2) * mezza[1])));
-      const respiro = 0.55 + 0.45 * Math.sin((t * 2 * Math.PI) / 2.6) ** 2;
-      const L1 = sulPiano(0.082, 0.208), L2 = sulPiano(0.368, 0.192);
-      gl.bindBuffer(gl.ARRAY_BUFFER, this.luci.b);
-      gl.bufferSubData(gl.ARRAY_BUFFER, 0, new Float32Array([...L1, 2.2 * respiro, ...L2, 2.2 * respiro]));
+
+      // 7. gli aloni delle luci: solo se la luce guarda la camera (i fanali e la spinta da poppa, l'oblò da prua)
+      const verso_ = (p: V3, n: V3) => {
+        const d = norm([occhio[0] - p[0], occhio[1] - p[1], occhio[2] - p[2]]);
+        return clamp01((d[0] * n[0] + d[1] * n[1] + d[2] * n[2]) * 4);
+      };
+      const aloni = (punti: [V3, number][], tinta: V3) => {
+        const vivi = punti.filter(([, forza]) => forza > 0.001);
+        if (!vivi.length) return;
+        const dati = new Float32Array(vivi.length * 4);
+        vivi.forEach(([p, forza], k) => dati.set([cam.nave[0] + p[0], cam.nave[1] + p[1], cam.nave[2] + p[2], forza], k * 4));
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.luci.b);
+        gl.bufferSubData(gl.ARRAY_BUFFER, 0, dati);
+        gl.uniform3fv(P.luci.u.uTinta, tinta);
+        gl.drawArrays(gl.POINTS, 0, vivi.length);
+      };
       gl.blendFunc(gl.ONE, gl.ONE);
       gl.useProgram(P.luci.p);
       gl.uniformMatrix4fv(P.luci.u.uVP, false, VP);
       gl.uniform1f(P.luci.u.uAltezza, verso.h * ot.sca[1]);
       gl.bindVertexArray(this.luci.vao);
-      gl.drawArrays(gl.POINTS, 0, 2);
+      const dietro: V3 = [-1, 0, 0];
+      aloni([...L.fanali.map((p): [V3, number] => [p, 2.2 * respiro * verso_(p, dietro)]), [L["oblò"], 0.9 * verso_(L["oblò"], [1, 0, 0])]], [1.0, 0.62, 0.22]);
+      aloni([[L.uscita, 0.5 * verso_(L.uscita, [0, 0, 1])]], [1.0, 0.86, 0.45]);
+      // da lontano la spinta non copre il respiro dei fanali
+      aloni(L.scarichi.map((p): [V3, number] => [p, 0.7 * LUCE_NAVE.spinta * spinta * verso_(p, dietro) * Math.min(1, 700 / lontana)]), [0.55, 0.75, 1.0]);
+      aloni(L.scarichi.map((p): [V3, number] => [p, 0.3 * R.brace * verso_(p, dietro) * Math.min(1, 400 / lontana)]), [1.0, 0.32, 0.08]);
     }
     gl.disable(gl.BLEND);
     gl.disable(gl.SCISSOR_TEST);

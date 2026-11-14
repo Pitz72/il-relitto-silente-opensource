@@ -187,7 +187,7 @@ export default function Intro({
             i.src = base + f;
           });
         const [, hd, sfocata, lente] = await Promise.all([
-          m.carica(`${base}poppa.webp`, `${base}prua.webp`),
+          m.carica(`${base}nave/`),
           immagine("plancia-hd.webp"),
           immagine("plancia-sfocata.webp"),
           immagine("plancia.webp"),

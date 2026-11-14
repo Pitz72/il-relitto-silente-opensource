@@ -3,8 +3,8 @@
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
 Aggiornato l’ultima volta il 14 novembre 2026, nella notte, dopo il modello della Santa Maria in Blender (la
-forma, una prima superficie e, dopo le sue note, i pezzi nuovi e gli anni: documento 40), in attesa che
-scelga come mettere la nave nell’intro.
+forma, una prima superficie e, dopo le sue note, i pezzi nuovi e gli anni: documento 40) e dopo la nave vera
+dentro l’intro, con i reattori che si spengono; in attesa che la guardi.
 Prima, il 13 novembre 2026, in mattinata, dopo le prime prese di Leonardo e il primo passo
 sull’estetica della cinematica (il cielo), con la Santa Maria ferma in attesa di un modello in Blender.
 Prima, il 12 novembre 2026, nella notte, quando l’autore ha chiuso la sessione dopo aver
@@ -92,12 +92,23 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   Blender e poi applicarle con l’uso di un canale alpha?». Tre strade (documento 40, in fondo): le foto ferme
   con le luci separate; il filmato da Blender con la trasparenza (la sua idea); la nave vera caricata nella
   scena dell’intro e disegnata dal vivo (la mia raccomandazione: niente da tenere a tempo, nitida a ogni
-  misura, leggera). Decide lui.
+  misura, leggera). **Ha scelto: «Nave vera dal vivo».** **Fatta lo stesso giorno** (documento 40, «Il quarto
+  passo»; documento 09, §15): il motore dell’intro carica il modello (`app/public/intro/nave/`, 2,4 MB) e lo
+  disegna dal vivo, con la luce di un sole per ripresa, le ombre, le luci nei loro punti (l’oblò, i fanali,
+  l’uscita, il faro) e la spinta dei quattro scarichi; un fotogramma non costa più di prima. Mentre lavoravo
+  ha chiesto: «dovremmo fare un effetto di spegnimento dei reattori, per una questione di realismo la nave
+  continuerà comunque ad avvicinarsi per inerzia»: **fatto** (nella scena da dietro la fiamma si accorcia e
+  sparisce nei primi tre secondi, resta la brace; la nave non rallenta). Due decisioni tecniche mie: la
+  macchina è più vicina alla nave nelle due scene (la nave vera è lunga e sottile); tempi e fine della scala
+  identici. I fogli 4 e 5 gli sono stati mandati. **Non l’ha ancora commentata, e nell’eseguibile non è
+  ancora vista.** Detto a lui con chiarezza: la nave vera è più nuda della foto di prima. Il suono
+  dell’intro non è cambiato (lo spegnimento non si sente).
   Quello che non va, detto nel
   documento: la sagoma è semplice, come vuole la scheda 05B («I pannelli solari sono la sola cosa che rompe la
   sagoma»), ma di lontano è un tubo, e gli still di oggi hanno casse e sovrastrutture che qui non ci sono (se
-  gli sembra nuda: altri particolari piccoli sulla pelle, non volumi nuovi); la luce delle viste è da studio. **Alla prossima**: prima la sua scelta fra le tre strade; se restano le foto ferme, le due riprese
-  dell’intro con le luci separate, accanto agli still di oggi. Nel gioco non è cambiato niente.
+  gli sembra nuda: altri particolari piccoli sulla pelle, non volumi nuovi); la luce delle viste è da studio. **Alla prossima**: le sue note sulla nave vera nell’intro (i fogli 4 e 5); poi guardarla
+  nell’eseguibile, e chiedergli se lo spegnimento dei reattori deve avere un suono. L’intro del gioco è
+  cambiata (la nave); non è in una beta.
 - **13 novembre 2026, mattina: le prime prese di Leonardo.** Sono arrivate `sm-001.wav`…`sm-004.wav`, le
   quattro descrizioni della plancia. Controllate: il testo è quello del copione, parola per parola (Whisper
   scrive «cucetta», ma l’autore ha ascoltato: «cuccetta va bene»; con le doppie Whisper sbaglia, non si
@@ -367,8 +378,9 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 3. **L’intro, perfezionata**:
    - **l’estetica, con Fable 5.2** (documento 09, §14; cominciata il 13 novembre): ~~il cielo~~, fatto;
      **il modello della nave è cominciato il 14 novembre** (documento 40: la forma e una prima superficie;
-     la forma, i tre pezzi chiesti e gli anni sono approvati; prima di continuare, la sua scelta su come
-     mettere la nave nell’intro: foto ferme, filmato da Blender, o la nave vera disegnata dal vivo);
+     la forma, i tre pezzi chiesti e gli anni sono approvati; **la nave vera è nell’intro**, disegnata dal
+     vivo, con i reattori che si spengono nella scena da dietro; si aspettano le sue note, e va guardata
+     nell’eseguibile);
      **la Santa Maria nella luce**, ferma finché non c’è il modello in Blender (l’idea è dell’autore;
      Blender c’è, il collegamento MCP no e non serve; prima il progetto della nave: la scheda unica dai due
      giochi, le schematiche, poi il modello fatto da script, vedi 09, §14; il modello deve essere la nave

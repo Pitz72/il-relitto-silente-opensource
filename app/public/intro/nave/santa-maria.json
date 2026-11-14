@@ -1,0 +1,60 @@
+{
+  "che cosa": "La Santa Maria per l'intro: lo scrive strumenti/nave/modello.py --intro, dalla tabella misure.py. Metri; x la rotta, y l'alto, z il fianco destro; dal centro della nave.",
+  "raggio": 46.89,
+  "pendenza": 1.536,
+  "tessitura": [
+    2048,
+    1472
+  ],
+  "luci": {
+    "oblò": [
+      40.12,
+      0.4,
+      0.0
+    ],
+    "fanali": [
+      [
+        -40.28,
+        4.1,
+        -5.5
+      ],
+      [
+        -40.28,
+        4.1,
+        5.5
+      ]
+    ],
+    "uscita": [
+      -33.0,
+      1.1,
+      6.74
+    ],
+    "scarichi": [
+      [
+        -40.5,
+        -3.8,
+        -4.6
+      ],
+      [
+        -40.5,
+        -3.8,
+        -3.2
+      ],
+      [
+        -40.5,
+        -3.8,
+        3.2
+      ],
+      [
+        -40.5,
+        -3.8,
+        4.6
+      ]
+    ],
+    "faro": [
+      31.945,
+      6.227,
+      0.0
+    ]
+  }
+}

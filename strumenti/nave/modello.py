@@ -5,9 +5,11 @@
 #  nave che non venga dalla tabella: ci sono solo gli spessori dei pezzi.
 #
 #  Si lancia da Blender, senza finestra (5.2 LTS):
-#    blender --background --factory-startup --python strumenti/nave/modello.py -- [--viste] [--solo NOME] [--campioni 128]
+#    blender --background --factory-startup --python strumenti/nave/modello.py -- [--viste] [--solo NOME] [--campioni 128] [--intro]
 #  Scrive strumenti/nave/uscita/santa-maria.blend (fuori da git: si rifà da qui)
-#  e, con --viste, le immagini in progettazione/40-modello/viste/.
+#  e, con --viste, le immagini in progettazione/40-modello/viste/. Con --intro scrive la nave per l'intro del
+#  gioco, che la disegna dal vivo: app/public/intro/nave/santa-maria.bin (la forma) e santa-maria.json (dove
+#  stanno le luci); la tessitura per l'intro la scrive superficie.py, nella stessa cartella.
 #
 #  Gli assi sono quelli della tabella: x da prua (0) a poppa (80), y dal fianco
 #  sinistro (negativa) al destro (positiva), z l'altezza. Un'unità è un metro.
@@ -20,8 +22,11 @@
 #  grigio solo. Le luci hanno ognuna il suo materiale («luce …»), così dopo
 #  si accendono e si rendono separate.
 # ============================================================================
+import json
 import math
+import struct
 import sys
+from array import array
 from pathlib import Path
 
 import bmesh
@@ -36,6 +41,7 @@ import pelle as P  # noqa: E402
 RADICE = QUI.parents[1]
 USCITA = QUI / "uscita"
 VISTE = RADICE / "progettazione" / "40-modello" / "viste"
+INTRO = RADICE / "app" / "public" / "intro" / "nave"
 
 ARCO = 10  # i tratti di ogni spigolo tondo dello scafo
 Z = Vector((0, 0, 1))
@@ -102,6 +108,7 @@ def colore(esadecimale):
 
 def materiale(nome, tinta, metallo=0.0, ruvido=0.6, luce=None, forza=0.0):
     m = bpy.data.materials.new(nome)
+    m["tinta"] = tinta  # la legge l'intro del gioco (--intro)
     m.use_nodes = True
     b = next(n for n in m.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
     b.inputs["Base Color"].default_value = (*colore(tinta), 1)
@@ -725,6 +732,93 @@ def inquadra(macchina, sole, schiarita, da, prospettiva, margine=1.09):
     schiarita.rotation_euler = (d * 0.45 + destra * 0.85 - alto * 0.1).normalized().to_track_quat("-Z", "Y").to_euler()
 
 
+# ============================================================================
+#  La nave per l'intro del gioco: la forma in un file solo, e i suoi punti
+# ============================================================================
+#  Che cosa è ogni pezzo per l'intro (il numero finisce in ogni suo punto)
+TIPI = {"scafo": 0, "aggiunte": 1, "pezzi": 1, "portelli": 1, "scarichi": 1, "telaio dei pannelli": 1, "celle": 2, "celle di ricambio": 2, "scuro": 3,
+        "luce oblò": 4, "luce fanali": 5, "luce uscita": 6, "luce faro": 7, "luce scarichi": 8}
+PENNACCHIO = 9  # la spinta degli scarichi: non è nel modello di Blender, si aggiunge qui
+CENTRO = (M.LUNGHEZZA / 2, 0.0, (M.dorso(40) + M.chiglia(40)) / 2)  # il punto della nave che l'intro muove
+
+
+def in_scena(x, y, z):
+    """Dagli assi della tabella a quelli dell'intro: la rotta, l'alto, il fianco destro; dal centro della nave."""
+    return (CENTRO[0] - x, z - CENTRO[2], y - CENTRO[1])
+
+
+def esporta():
+    """Scrive la nave per l'intro. Un punto: la posizione (tre numeri a virgola), la normale (quattro ottetti con
+    il segno), il posto sulla tessitura (due interi da 16), la tinta e il tipo (quattro ottetti): 24 ottetti."""
+    INTRO.mkdir(parents=True, exist_ok=True)
+    dg = bpy.context.evaluated_depsgraph_get()
+    posto, punti, opachi, pennacchi = {}, bytearray(), array("I"), array("I")
+
+    def punto(pos, nor, uv, tinta, tipo):
+        dati = struct.pack("<3f4b2H4B", *pos, *(max(-127, min(127, round(c * 127))) for c in nor), 0,
+                           *(max(0, min(65535, round(c * 65535))) for c in uv), *tinta, tipo)
+        if dati not in posto:
+            posto[dati] = len(posto)
+            punti.extend(dati)
+        return posto[dati]
+    for ob in NAVE.objects:
+        valutato = ob.evaluated_get(dg)
+        me = valutato.to_mesh()
+        me.calc_loop_triangles()
+        mat = me.materials[0]
+        tipo = TIPI[mat.name]
+        tinta = tuple(int(mat["tinta"][i:i + 2], 16) for i in (1, 3, 5)) if "tinta" in mat else (255, 255, 255)
+        pelle = me.uv_layers["pelle"].data if tipo == 0 else None
+        mondo, giro = ob.matrix_world, ob.matrix_world.to_3x3()
+        for tri in me.loop_triangles:
+            for li in tri.loops:
+                p = mondo @ me.vertices[me.loops[li].vertex_index].co
+                n = (giro @ me.corner_normals[li].vector).normalized()
+                uv = (pelle[li].uv[0], 1 - pelle[li].uv[1]) if pelle else (0.0, 0.0)  # nelle immagini la riga 0 è in alto
+                opachi.append(punto(in_scena(*p), (-n.x, n.z, n.y), uv, tinta, tipo))
+        valutato.to_mesh_clear()
+    # la spinta: un cono di luce dietro ogni scarico; quanto è lontano dallo scarico (0…1) va al posto della tessitura
+    s = M.SCARICHI
+    lungo, raggio, spicchi = 5.0, s["diametro"] / 2 - 0.13, 20
+    passi = (0.0, 0.08, 0.2, 0.4, 0.65, 1.0)
+    for y in s["y"]:
+        anelli = []
+        for f in passi:
+            r = raggio * (1 - f) ** 0.7 * (1 + 0.5 * f)
+            anelli.append([punto(in_scena(M.LUNGHEZZA + 0.3 + lungo * f, y + r * math.cos(a), s["z"] + r * math.sin(a)), (0.0, math.sin(a), math.cos(a)), (f, 0.0), (255, 255, 255), PENNACCHIO)
+                           for a in (2 * math.pi * k / spicchi for k in range(spicchi))])
+        for a, b in zip(anelli, anelli[1:]):
+            for k in range(spicchi):
+                j = (k + 1) % spicchi
+                pennacchi.extend((a[k], a[j], b[j], a[k], b[j], b[k]))
+    with open(INTRO / "santa-maria.bin", "wb") as f:
+        f.write(struct.pack("<4s3I", b"SMN1", len(posto), len(opachi), len(pennacchi)))
+        f.write(punti)
+        f.write(opachi.tobytes())
+        f.write(pennacchi.tobytes())
+    # i punti della nave che l'intro deve conoscere: dove stanno le luci, e quanto è grande
+    fx0, fx1 = M.FARO["x"]
+    asse = Vector((-1, 0, -0.07)).normalized()
+    lente = Vector((fx1 - 0.05, 0, sum(M.FARO["z"]) / 2 + 0.06)) + asse * (fx1 - fx0 - 0.1)
+    angoli = [ob.matrix_world @ Vector(c) for ob in NAVE.objects for c in ob.bound_box]
+    centro = Vector(CENTRO)
+    dati = {
+        "che cosa": "La Santa Maria per l'intro: lo scrive strumenti/nave/modello.py --intro, dalla tabella misure.py. Metri; x la rotta, y l'alto, z il fianco destro; dal centro della nave.",
+        "raggio": round(max((a - centro).length for a in angoli) + lungo, 2),
+        "pendenza": round(0.12 / (2 * (M.LUNGHEZZA / (P.LARGA / 2))), 4),  # il rilievo: 12 cm per unità, su una tessitura a metà misura
+        "tessitura": [P.LARGA // 2, P.ALTA // 2],
+        "luci": {
+            "oblò": [round(c, 3) for c in in_scena(M.OBLO["x"] - 0.12, 0, M.OBLO["z"])],
+            "fanali": [[round(c, 3) for c in in_scena(M.LUNGHEZZA + 0.28, y, M.FANALI_POPPA["z"])] for y in M.FANALI_POPPA["y"]],
+            "uscita": [round(c, 3) for c in in_scena(M.LUCE_USCITA["x"], M.mezza(M.LUCE_USCITA["x"]) + 0.24, M.LUCE_USCITA["z"])],
+            "scarichi": [[round(c, 3) for c in in_scena(M.LUNGHEZZA + 0.5, y, s["z"])] for y in s["y"]],
+            "faro": [round(c, 3) for c in in_scena(*lente)],
+        },
+    }
+    (INTRO / "santa-maria.json").write_text(json.dumps(dati, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"INTRO {len(posto)} punti, {len(opachi) // 3} triangoli, più {len(pennacchi) // 3} della spinta; {(16 + len(punti) + 4 * (len(opachi) + len(pennacchi))) / 1e6:.2f} MB")
+
+
 def main():
     argomenti = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
     campioni = int(argomenti[argomenti.index("--campioni") + 1]) if "--campioni" in argomenti else 128
@@ -733,6 +827,8 @@ def main():
     macchina, sole, schiarita = scena(campioni)
     USCITA.mkdir(exist_ok=True)
     bpy.ops.wm.save_as_mainfile(filepath=str(USCITA / "santa-maria.blend"))
+    if "--intro" in argomenti:
+        esporta()
     if "--viste" in argomenti:
         VISTE.mkdir(parents=True, exist_ok=True)
         for nome, (da, prospettiva) in RIPRESE.items():
