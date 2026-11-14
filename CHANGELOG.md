@@ -8,6 +8,8 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+## [0.2.5-beta.12] - 2026-11-14
+
 ### Per chi gioca
 
 - **L’inizio ha i suoi titoli di testa.** La cinematica d’apertura ora si presenta come un film: chi la presenta, di chi è il gioco, chi lo produce, il libro da cui viene, il tema musicale, la voce di William. Quando cominci una partita nuova i due loghi passano di nuovo, e la cinematica parte da lì: è un film solo. I loghi e tutta la cinematica stanno nel formato largo del cinema, sotto una pellicola leggera: il suo colore, la luce che respira appena, ogni tanto un granello di polvere (si spegne dalla scheda «Grafica», «Pellicola dell’apertura»). Le scritte dell’apparecchio si stampano con il loro cursore, e si sente. Il titolo nasce dai glifi in un altro modo: una linea d’oro pallido che scorre fino a diventare le lettere, in silenzio. E il faro, visto dall’oblò, ora illumina davanti.
