@@ -385,3 +385,30 @@ Con la stessa decisione l’autore ha fissato le altre tre domande del copione: 
 «millenovecentosettantadue»; la firma di William sul suo registro sono le iniziali («… Nessun contatto. W. T.»,
 `santamaria.fav`); la frase delle fasce del pilastro è corretta («…una fascia alla volta: [risveglio] su quattro,
 per ora.», `memoria.fav`).
+
+## 12. Il messaggio di Yusuf per l’intro (14 novembre 2026)
+
+Idea dell’autore: un messaggio registrato di Yusuf, nella segreteria della Santa Maria, da mettere
+nell’intro. William non ha ancora pagato né reso la roba; il messaggio non è legato a un momento preciso
+della storia. Il dove lo decide l’autore (ancora aperto). Yusuf dice «William», come nel gioco e nel libro:
+è l’unico che pronuncia il suo nome. Il resto viene dalla sua voce nel libro (*Frequenza di servizio*,
+prologo: «carretta», il conto fino a dieci, «Magazzino Quattro») e nel gioco (il nodo «credito»). Testo
+approvato dall’autore, con la richiesta di far sentire l’irritazione e anche l’amicizia, in una passata sola:
+
+> «William. Sono Yusuf. Lo so che li ricevi, i miei messaggi: la radio di quella carretta funziona
+> benissimo, quando sei tu ad aver bisogno di qualcosa. Sei settimane, maledetto. I filtri, le guarnizioni,
+> la cella buona: tutto a credito, e da te non è arrivato niente. Né i soldi né la roba. Qui c’è gente che
+> chiede a me, non a te. Così mi farai finire nei guai, lo capisci? …otto, nove, dieci. Richiamami. Anche
+> solo per dirmi di no. E se quella carretta ti ha mollato alla deriva… almeno dimmelo. Magazzino Quattro,
+> chiudo.»
+
+- **La presa.** ElevenLabs, `eleven_v4`, la voce clonata «Simone Pizzi» (`wgEd9ji3F42lxb58izkq`), una
+  generazione, 588 crediti (prima ne restavano 3503). Le indicazioni, fra quadre: irritato all’inizio,
+  arrabbiato su «Sei settimane», un sospiro e il conto sussurrato, poi caldo su «Richiamami» e piano sulla
+  deriva. Flusso `aL6uHqxfFz3m635ua3KC`.
+- **Il file.** `audio/sorgenti/voce/yusuf-messaggio-intro-presa1-2026-11-14.mp3` (34,5 s, picco −2,5 dB,
+  media −21,6 dB; le sorgenti stanno fuori da git, come le altre prese) e, accanto, la trascrizione parola
+  per parola (`strumenti/intro/trascrivi.py`, faster-whisper large-v3 in locale): ci sono tutte le parole,
+  il conto compreso, e nessuna indicazione letta ad alta voce.
+- **Da fare.** L’ascolto dell’autore; poi il posto nell’intro e il trattamento (la segreteria della radio di
+  plancia, leggero: «non pacchiano»).
