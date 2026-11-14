@@ -4,8 +4,8 @@
 //  accanto il prima e il dopo.
 //    npm --prefix app run dev            (in un altro terminale: la porta 5274)
 //    node strumenti/intro/fotografa.mjs <cartella> 64 71 124.2 …
-//  Scrive <cartella>/t064.0.png, t071.0.png… Le foto oltre il secondo 177 (la
-//  plancia che entra nella lente) non riescono: quelle si guardano nel pannello.
+//  Scrive <cartella>/t064.0.png, t071.0.png… Il filmato intero, con il suono, lo
+//  fa `filma.mjs`.
 // ============================================================================
 import { mkdirSync, writeFileSync } from "node:fs";
 import { apriRevisione } from "./cdp_edge.mjs";
