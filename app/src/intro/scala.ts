@@ -114,8 +114,9 @@ function camera(t: number): Inquadratura {
 /** I reattori nella scala (l'autore, 14 novembre 2026: «dovremmo fare un effetto di spegnimento dei reattori,
  *  per una questione di realismo la nave continuerà comunque ad avvicinarsi per inerzia»). Accesi all'inizio,
  *  mentre la camera è vicina; poi si spengono in due secondi scarsi, con due singhiozzi, e la fiamma si
- *  accorcia; negli scarichi resta la brace, che si raffredda piano. La nave non rallenta. */
-const SPEGNIMENTO = { quando: 1.3, dura: 1.9, brace: 3.4 };
+ *  accorcia; negli scarichi resta la brace, che si raffredda piano. La nave non rallenta. Gli stessi due
+ *  momenti vanno al motore audio (scaletta.ts, `reattori`): il re del reattore muore con la fiamma. */
+export const SPEGNIMENTO = { quando: 1.3, dura: 1.9, brace: 3.4 };
 export function reattori(q: Quadro, t: number): { forza: number; lunga: number; brace: number } {
   if (q !== "scala") return { forza: 1, lunga: 1, brace: 0 };
   const u = clamp01((t - SPEGNIMENTO.quando) / SPEGNIMENTO.dura);

@@ -54,6 +54,8 @@ test("i sottotitoli dei suoni stanno dentro l'intro e in ordine", () => {
 test("la scala dura 23,5 s e si ferma a 23", () => {
   assert.deepEqual(SCALETTA.momenti.scala, [100.98, 124.48]);
   assert.equal(SCALETTA.momenti.scalaFerma, 123.98);
+  // i reattori si spengono mentre la camera è ancora vicina (arretra dal terzo secondo): il suono lo segue
+  assert.deepEqual(SCALETTA.momenti.reattori, [102.28, 104.18]);
 });
 
 test("la voce di L.V.: ogni frase comincia con il suo testo, e il testo resta finché l'ha detta", () => {

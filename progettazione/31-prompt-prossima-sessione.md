@@ -4,7 +4,7 @@ Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
 Aggiornato l’ultima volta il 14 novembre 2026, nella notte, dopo il modello della Santa Maria in Blender (la
 forma, una prima superficie e, dopo le sue note, i pezzi nuovi e gli anni: documento 40) e dopo la nave vera
-dentro l’intro, con i reattori che si spengono; in attesa che la guardi.
+dentro l’intro, con i reattori che si spengono e il loro suono; approvata dai fogli, da vedere nel gioco.
 Prima, il 13 novembre 2026, in mattinata, dopo le prime prese di Leonardo e il primo passo
 sull’estetica della cinematica (il cielo), con la Santa Maria ferma in attesa di un modello in Blender.
 Prima, il 12 novembre 2026, nella notte, quando l’autore ha chiuso la sessione dopo aver
@@ -100,14 +100,16 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   continuerà comunque ad avvicinarsi per inerzia»: **fatto** (nella scena da dietro la fiamma si accorcia e
   sparisce nei primi tre secondi, resta la brace; la nave non rallenta). Due decisioni tecniche mie: la
   macchina è più vicina alla nave nelle due scene (la nave vera è lunga e sottile); tempi e fine della scala
-  identici. I fogli 4 e 5 gli sono stati mandati. **Non l’ha ancora commentata, e nell’eseguibile non è
-  ancora vista.** Detto a lui con chiarezza: la nave vera è più nuda della foto di prima. Il suono
-  dell’intro non è cambiato (lo spegnimento non si sente).
+  identici. I fogli 4 e 5 gli sono stati mandati: **approvata** («Sì, va bene»), sapendo che la nave vera è
+  più nuda della foto di prima. **Poi il suono dello spegnimento** (documento 40): il re del reattore resta
+  quando la scena esce dalla nave e muore con la fiamma, con lo scatto dell’interruttore, due colpi sordi e
+  tre tic di lamiera che si raffredda; l’ascolto è in `consegne/Ascolto reattori 2026-11-14/`. **Non l’ha
+  ancora sentito, e nell’eseguibile la nave non è ancora vista.**
   Quello che non va, detto nel
   documento: la sagoma è semplice, come vuole la scheda 05B («I pannelli solari sono la sola cosa che rompe la
   sagoma»), ma di lontano è un tubo, e gli still di oggi hanno casse e sovrastrutture che qui non ci sono (se
-  gli sembra nuda: altri particolari piccoli sulla pelle, non volumi nuovi); la luce delle viste è da studio. **Alla prossima**: le sue note sulla nave vera nell’intro (i fogli 4 e 5); poi guardarla
-  nell’eseguibile, e chiedergli se lo spegnimento dei reattori deve avere un suono. L’intro del gioco è
+  gli sembra nuda: altri particolari piccoli sulla pelle, non volumi nuovi); la luce delle viste è da studio. **Alla prossima**: una beta (la 12) perché veda la nave vera nel gioco e senta lo
+  spegnimento dei reattori: serve il suo sì per pubblicarla; poi le sue note. L’intro del gioco è
   cambiata (la nave); non è in una beta.
 - **13 novembre 2026, mattina: le prime prese di Leonardo.** Sono arrivate `sm-001.wav`…`sm-004.wav`, le
   quattro descrizioni della plancia. Controllate: il testo è quello del copione, parola per parola (Whisper

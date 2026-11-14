@@ -167,8 +167,19 @@ realismo la nave continuerà comunque ad avvicinarsi per inerzia»). Nella scena
 per poco più di un secondo; poi si spegne in 1,9 secondi, con due singhiozzi, e la fiamma si accorcia; negli
 scarichi resta la brace arancione, che si raffredda in qualche secondo. Succede mentre la macchina è ancora
 vicina; quando arretra, gli scarichi sono spenti. La nave non rallenta. Nella scena con il cielo (B) arriva con
-i reattori accesi. Il suono dell’intro non è cambiato: se lo spegnimento deve sentirsi, è lavoro da fare
-(`reattori()` in `scala.ts`, con la sua prova in `app/prove/intro.test.ts`).
+i reattori accesi (`reattori()` in `scala.ts`, con la sua prova in `app/prove/intro.test.ts`).
+
+**E si sente** (dopo il «Sì, va bene» dell’autore alla nave vera, 14 novembre). Non è un suono nuovo: è il re
+del reattore, che il gioco ha già. Prima taceva appena la scena usciva dalla nave; adesso resta, come lo sente
+chi è a bordo, finché i reattori non si spengono. Allora: lo scatto dell’interruttore; la nota che muore nel
+tempo della fiamma (l’altezza non cambia mai, com’è regola del re: si scordano i battimenti e se ne vanno gli
+armonici alti); due colpi sordi nella struttura, dove la fiamma singhiozza; e poi tre tic di lamiera, sempre
+più piano, per il metallo degli scarichi che si raffredda. Dopo, il silenzio e la musica. I due momenti
+arrivano al motore audio dalla stessa costante che muove la fiamma (`SPEGNIMENTO` in `scala.ts`, `reattori`
+nei momenti di `scaletta.ts`; `mondo/intro.rs`, con la sua prova). Il sottotitolo dei suoni dice «i reattori
+si spengono; il metallo si raffredda». Il livello della scena non cambia (picco a −11,2 dBFS, prima −11,4).
+L’ascolto, con la musica e senza, è in `consegne/Ascolto reattori 2026-11-14/` (fuori da git): l’autore non
+l’ha ancora sentito.
 
 **Due decisioni tecniche sulla macchina**, perché la nave vera è lunga ottanta metri e sottile, e nel quadro
 sembrava piccola (gli still di prima disegnavano una nave più corta e più tozza). I tempi non cambiano.
@@ -254,7 +265,8 @@ Nessun testo e nessuna tavola lo dice: sono proposte, e l’autore le conferma o
      spazio la luce è un sole solo, e dal vivo viene quasi come in Blender; le ombre morbide si possono
      cuocere in Blender una volta. È più codice nell’intro.
    Ha scelto la terza: è il quarto passo, più sopra.
-2. Le sue note sulla nave vera nell’intro (i fogli 4 e 5), e l’intro guardata nell’eseguibile.
-3. Se lo spegnimento dei reattori deve sentirsi: il suo suono.
+2. La nave vera nell’intro è **approvata** dai fogli 4 e 5 («Sì, va bene», 14 novembre). Resta da guardarla
+   nell’eseguibile, e da sentire lo spegnimento dei reattori: con una beta.
+3. ~~Il suono dello spegnimento~~: fatto, da ascoltare.
 4. Altri oggetti sullo scafo, se la vuole più ricca; poi il faro e la fotografia unica dell’intro (documento
    09, §14).

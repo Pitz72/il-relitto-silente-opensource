@@ -528,6 +528,9 @@ cosa non va ancora è nel documento 40, «Il quarto passo». Qui, quello che cam
   (richiesta dell’autore): accesi per poco più di un secondo, poi la fiamma si accorcia e sparisce in 1,9
   secondi, e negli scarichi resta la brace; la nave prosegue per inerzia. Il fascio del faro parte dalla lente
   vera, sul dorso.
-- I tempi dell’intro sono gli stessi. Il suono non è cambiato.
+- I tempi dell’intro sono gli stessi.
+- **Il suono di E**: il re del reattore non tace più quando la scena esce dalla nave; resta finché i reattori
+  non si spengono, e muore con la fiamma (l’interruttore, la nota che cala, due colpi sordi, tre tic di
+  lamiera che si raffredda). Poi il silenzio e il tema, come prima. Nuovo momento: `reattori`.
 - Il sole della nave è uno per ripresa (`SOLE_NAVE`); la sua fotografia sta in `LUCE_NAVE`.
 

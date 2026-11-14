@@ -12,6 +12,7 @@
 //  restano anche il tempo che lui ci mette a dirli, e il blocco che continua
 //  la frase entra poco prima della sua prima parola.
 // ============================================================================
+import { SPEGNIMENTO } from "./scala.ts";
 
 export type IdScena = "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H";
 export type Voce = "apparecchio" | "lv" | "titolo";
@@ -144,6 +145,8 @@ export interface Momenti {
   brusio: [number, number];
   scala: [number, number];
   scalaFerma: number;
+  /** nella scala i reattori si spengono: da quando a quando (scala.ts, SPEGNIMENTO) */
+  reattori: [number, number];
   fruscioF: number;
   pulsa: [number, number];
   /** finisce «La vedo pulsare»: poco dopo si sente il cuore della cosa viva */
@@ -298,6 +301,7 @@ export function costruisciScaletta(): Scaletta {
     brusio: [r(faro + 2.05), r(faro + 3.55)],
     scala: [r(scala), r(scala + 23.5)],
     scalaFerma: r(scala + 23),
+    reattori: [r(scala + SPEGNIMENTO.quando), r(scala + SPEGNIMENTO.quando + SPEGNIMENTO.dura)],
     fruscioF: r(f - 2),
     pulsa: [r(b9.entra), r(b9.via)],
     pulsare: r(b9.pezzo!.t + (FINE_PULSARE - b9.pezzo!.da)),
@@ -324,7 +328,8 @@ export function costruisciScaletta(): Scaletta {
     { inizio: m.stelleSpente[0], fine: m.faro, testo: "la plancia" },
     { inizio: m.faro, fine: m.brusio[0], testo: "il relè del faro" },
     { inizio: m.brusio[0], fine: m.brusio[1], testo: "dalla radio, molte voci" },
-    { inizio: m.scala[0], fine: m.fruscioF, testo: "la musica" },
+    { inizio: m.scala[0], fine: m.reattori[1] + 5.5, testo: "i reattori si spengono; il metallo si raffredda" },
+    { inizio: m.reattori[1] + 5.5, fine: m.fruscioF, testo: "la musica" },
     { inizio: m.fruscioF, fine: m.pulsa[0], testo: "il fruscio della traccia" },
     { inizio: m.pulsa[0], fine: m.pulsa[1], testo: "un battito" },
     { inizio: m.spiaSpenta, fine: m.glifi[0], testo: "la musica si spegne" },
