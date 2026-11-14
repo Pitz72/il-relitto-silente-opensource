@@ -815,7 +815,7 @@ def esporta():
             "faro": [round(c, 3) for c in in_scena(*lente)],
         },
     }
-    (INTRO / "santa-maria.json").write_text(json.dumps(dati, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    (INTRO / "santa-maria.json").write_text(json.dumps(dati, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(f"INTRO {len(posto)} punti, {len(opachi) // 3} triangoli, più {len(pennacchi) // 3} della spinta; {(16 + len(punti) + 4 * (len(opachi) + len(pennacchi))) / 1e6:.2f} MB")
 
 
