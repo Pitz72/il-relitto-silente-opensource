@@ -45,7 +45,7 @@ await r.valuta(`(async()=>{await Promise.all([...document.fonts].map(f=>f.load()
 const durata = await r.valuta(
   `(()=>{const metti=(parte,vuoi)=>{const l=[...document.querySelectorAll('.revisione label')].find(x=>x.textContent.includes(parte));` +
     `const c=l.querySelector('input');if(c.checked!==vuoi)c.click();};` +
-    `metti('sottotitoli',${conSottotitoli});metti('voce di L.V.',${!conTesti});metti('movimento ridotto',false);metti('qualità ridotta',false);` +
+    `metti('sottotitoli',${conSottotitoli});metti('con le voci',${!conTesti});metti('movimento ridotto',false);metti('qualità ridotta',false);` +
     `const i=document.querySelector('.revisione input[type=range]');i.step='any';return Number(i.max);})()`,
 );
 await r.fermaCiclo();

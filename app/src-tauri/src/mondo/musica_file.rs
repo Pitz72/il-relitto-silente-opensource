@@ -180,6 +180,11 @@ pub enum Pezzo {
     Sv43,
     Sv44,
     Sv45,
+    /// l’intro nello spazio (documento 09, §17): il registro di bordo di William, detto da Leonardo Tomassetti
+    Wi01,
+    /// l’intro nello spazio: il messaggio di Yusuf dalla radio di plancia, quattro pezzi con il beep in mezzo,
+    /// già lavorato (`strumenti/intro/voci_spazio.py`)
+    Yu09,
 }
 
 /// Le battute delle voci della nave e i loro file: il nome senza «.mp3» è quello che manda il
@@ -311,7 +316,7 @@ pub const VOCI_SV: [(Pezzo, &str); 45] = [
 ];
 
 impl Pezzo {
-    pub const TUTTI: [Pezzo; 129] = [
+    pub const TUTTI: [Pezzo; 131] = [
         Pezzo::M1a,
         Pezzo::M1b,
         Pezzo::S2,
@@ -441,6 +446,8 @@ impl Pezzo {
         Pezzo::Sv43,
         Pezzo::Sv44,
         Pezzo::Sv45,
+        Pezzo::Wi01,
+        Pezzo::Yu09,
     ];
 
     /// Una voce registrata, che si porta al suo livello misurando le parole e non il silenzio fra
@@ -448,7 +455,7 @@ impl Pezzo {
     /// è tarato dal 2 novembre sul valore efficace di tutto il file. Nemmeno la scatola nera di L.V.:
     /// il fruscio continuo del nastro inganna la misura sulle parole.
     pub fn parlato(self) -> bool {
-        self.yusuf() || self.servizio() || BATTUTE_NV.iter().any(|(p, _)| *p == self)
+        self.yusuf() || self.servizio() || matches!(self, Pezzo::Wi01 | Pezzo::Yu09) || BATTUTE_NV.iter().any(|(p, _)| *p == self)
     }
 
     /// Una parte della voce di servizio.
@@ -522,6 +529,8 @@ impl Pezzo {
             Pezzo::SM => ("SM", "SM-01-santa-maria.mp3"),
             Pezzo::LV => ("LV", "LV-01-la-traccia.mp3"),
             Pezzo::CA => ("AN", "AN-00-canto.mp3"),
+            Pezzo::Wi01 => ("WI", "WI-01-registro-di-bordo.mp3"),
+            Pezzo::Yu09 => ("YU", "YU-09-messaggio-intro.mp3"),
             // le voci: le trovano le loro tabelle, qui sopra
             _ => ("", ""),
         }

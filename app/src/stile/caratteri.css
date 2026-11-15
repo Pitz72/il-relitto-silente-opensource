@@ -60,6 +60,17 @@
   src: url("@fontsource-variable/big-shoulders-stencil/files/big-shoulders-stencil-latin-opsz-normal.woff2") format("woff2-variations");
 }
 
+/* Lo stencil com'è sul poster (strumenti/copertina/poster.py): lo stesso carattere, nel file con il solo peso,
+   alla sua dimensione ottica di base, più largo e più pieno di quello che il browser sceglie da sé per le
+   scritte grandi. È il carattere dei titoli di testa e del titolo dell'intro (documento 09, §17). */
+@font-face {
+  font-family: "Stencil del poster";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: block;
+  src: url("@fontsource-variable/big-shoulders-stencil/files/big-shoulders-stencil-latin-wght-normal.woff2") format("woff2-variations");
+}
+
 /* Atkinson Hyperlegible Next: l'alternativa di leggibilità, nelle opzioni. */
 @font-face {
   font-family: "Atkinson Hyperlegible Next";

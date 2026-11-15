@@ -410,5 +410,7 @@ approvato dall’autore, con la richiesta di far sentire l’irritazione e anche
   media −21,6 dB; le sorgenti stanno fuori da git, come le altre prese) e, accanto, la trascrizione parola
   per parola (`strumenti/intro/trascrivi.py`, faster-whisper large-v3 in locale): ci sono tutte le parole,
   il conto compreso, e nessuna indicazione letta ad alta voce.
-- **Da fare.** L’ascolto dell’autore; poi il posto nell’intro e il trattamento (la segreteria della radio di
-  plancia, leggero: «non pacchiano»).
+- **Nell’intro dal 15 novembre 2026** (documento 09, §17): subito dopo il registro di bordo di William, in
+  quattro pezzi con un beep di registrazione davanti a ognuno, dalla radio di bordo
+  (`strumenti/intro/voci_spazio.py`, `audio/musica-ia/YU/YU-09-messaggio-intro.mp3`). Nei titoli di testa:
+  «SIMONE PIZZI è Yusuf», senza dire com’è fatta la voce (l’autore: «Non specificare che è una voce clonata»).

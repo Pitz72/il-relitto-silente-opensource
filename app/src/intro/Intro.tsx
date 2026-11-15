@@ -41,6 +41,8 @@ import {
   type Blocco,
 } from "./scaletta";
 import { VOCE_INVILUPPO, VOCE_PASSO } from "./voce";
+// i caratteri: nel gioco li porta già lo stile di base; la revisione nel browser (?intro) apre solo l'intro
+import "../stile/caratteri.css";
 import "./intro.css";
 
 const S = SCALETTA;
@@ -73,6 +75,15 @@ const TRATTO_GLIFO: readonly (readonly [string, number, number])[] = [
 ];
 const ALONE_GLIFO = "rgba(214, 172, 104, 0.75)";
 
+/** Il titolo è nello stencil del poster (l'autore, 15 novembre 2026: «la tipografia del poster»): lo stesso
+ *  carattere, lo stesso peso, lo stesso bianco freddo. */
+const CARATTERE_TITOLO = (px: number) => `800 ${px}px "Stencil del poster", "Big Shoulders Stencil", "Arial Narrow", Impact, sans-serif`;
+/** quanto è grande il titolo (in larghezze del quadro) e quanta aria fra le lettere (in corpi) */
+const TITOLO_CORPO = 0.068;
+const TITOLO_ARIA = 0.16;
+/** il bianco freddo del poster */
+const FREDDO = [205, 216, 224] as const;
+
 /** La linea di una lettera del titolo: lo scioglimento, e per ogni punto quanto è avanti nel suo tratto del
  *  glifo (0–1), per tracciarlo. */
 interface Linea extends Scioglimento {
@@ -85,7 +96,7 @@ interface Opzioni {
   ridotto: boolean;
   sottotitoli: boolean;
   ridotta: boolean;
-  /** la voce di L.V. si sente: i suoi testi non compaiono (l'autore, 30 ottobre 2026) */
+  /** le voci si sentono (L.V., William, Yusuf): i loro testi non compaiono (l'autore, 30 ottobre 2026) */
   voce: boolean;
 }
 
@@ -226,7 +237,7 @@ export default function Intro({
         const attesa = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
         await Promise.all([hd, sfocata, lente].map((i) => Promise.race([i.decode().catch(() => undefined), attesa(1500)])));
         // il carattere del titolo e dei crediti: il titolo si disegna in un canvas, che non lo aspetta
-        await Promise.race([Promise.all(['300 100px Newsreader', 'italic 300 40px Newsreader'].map((f) => document.fonts?.load(f).catch(() => null))), attesa(1500)]);
+        await Promise.race([Promise.all([CARATTERE_TITOLO(100), 'italic 300 40px Newsreader'].map((f) => document.fonts?.load(f).catch(() => null))), attesa(1500)]);
         m.prepara("margine");
         m.prepara("scala");
         m.prepara("plancia");
@@ -251,7 +262,9 @@ export default function Intro({
           }
           return (lo + hi) / 2;
         };
-        const t0 = cerca(1.12), t1 = cerca(0.16);
+        // B dura un minuto e mezzo (le due voci): la nave non aspetta fuori dal quadro, il muso entra con le prime
+        // parole di William, e la attraversa piano fino a dove arrivava prima
+        const t0 = cerca(1.0), t1 = cerca(0.16);
         calibra.current = { t0, k: (t1 - t0) / (S.scene[2].inizio - M.naveB), meta: cerca(0.56) };
         if (vivo) setPronta(true);
       } catch (e) {
@@ -381,7 +394,7 @@ export default function Intro({
           cursore.style.opacity = !ridotto && t >= b.entra && (dopo < 0 || (dopo < 1.9 && Math.floor(dopo / 0.32) % 2 === 1)) ? "1" : "0";
           el.style.opacity = String(t < b.esce ? (t >= b.entra ? 1 : 0) : op);
         } else if (o.voce) {
-          // L.V. parla: il suo testo non c'è
+          // la voce si sente (L.V., William, Yusuf): il testo non c'è
           el.style.opacity = "0";
           el.style.visibility = "hidden";
           continue;
@@ -581,11 +594,11 @@ export default function Intro({
     // il titolo resta, prende aria, e una luce gli passa sopra una volta
     if (t >= M.glifi[0] && t < T_BLOCCO.via) {
       const T = T_BLOCCO;
-      const fs = 0.062 * W; // 6,2cqw
+      const fs = TITOLO_CORPO * W;
       const yTitolo = 0.465 * H;
       g.save();
-      g.font = `300 ${fs}px Newsreader, Georgia, "Times New Roman", serif`;
-      g.letterSpacing = `${0.06 * fs}px`;
+      g.font = CARATTERE_TITOLO(fs);
+      g.letterSpacing = `${TITOLO_ARIA * fs}px`;
       g.textBaseline = "alphabetic";
       const larghezza = g.measureText(TITOLO).width;
       let x = (W - larghezza) / 2;
@@ -662,7 +675,7 @@ export default function Intro({
           g.save();
           g.shadowColor = `rgba(214, 172, 104, ${0.6 * calda})`;
           g.shadowBlur = 16 * k1080 * calda;
-          g.fillStyle = `rgba(${Math.round(236 + 10 * calda)}, ${Math.round(240 - 6 * calda)}, ${Math.round(238 - 26 * calda)}, ${alfaLettera})`;
+          g.fillStyle = `rgba(${Math.round(FREDDO[0] + 38 * calda)}, ${Math.round(FREDDO[1] + 16 * calda)}, ${Math.round(FREDDO[2] - 14 * calda)}, ${alfaLettera})`;
           g.fillText(gl.lettera, cx, yTitolo);
           g.restore();
         }
@@ -692,7 +705,7 @@ export default function Intro({
    *  rifà solo se cambia la larghezza del palco. */
   const lineeDelTitolo = (W: number, fs: number): (Linea | null)[] => {
     if (linee.current?.W === W) return linee.current.lettere;
-    const carattere = `300 ${fs * 2}px Newsreader, Georgia, "Times New Roman", serif`;
+    const carattere = CARATTERE_TITOLO(fs * 2);
     const glifoH = 0.044 * W, glifoW = 0.032 * W;
     const cw = Math.ceil(fs * 2.6) + 12, ch = Math.ceil(fs * 3.2) + 12, base = 6 + fs * 2.2;
     const c = document.createElement("canvas");
@@ -723,7 +736,7 @@ export default function Intro({
       return { ...s, frazione: s.tratto.map((tr, i) => (quanti[tr] > 1 ? (i - primo[tr]) / (quanti[tr] - 1) : 0)) };
     });
     // se il carattere non è ancora arrivato le lettere sono quelle di riserva: non si tengono
-    if (typeof document.fonts?.check !== "function" || document.fonts.check(`300 ${Math.round(fs)}px Newsreader`)) linee.current = { W, lettere };
+    if (typeof document.fonts?.check !== "function" || document.fonts.check(`800 ${Math.round(fs)}px "Stencil del poster"`)) linee.current = { W, lettere };
     return lettere;
   };
 
@@ -933,7 +946,7 @@ export default function Intro({
             {S.crediti.map((c) => (
               <div key={c.id} className="testo segno-credito" style={{ left: `${(c.entra / S.durata) * 100}%`, width: `${((c.via - c.entra) / S.durata) * 100}%` }} />
             ))}
-            {[0, 30, 60, 90, 120, 150, 180].map((s) => (
+            {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270].map((s) => (
               <div key={s} className="ora" style={{ left: `${(s / S.durata) * 100}%` }}>
                 {formatoTempo(s).slice(0, -2)}
               </div>
@@ -984,7 +997,7 @@ export default function Intro({
             </label>
             <label>
               <input type="checkbox" checked={opzioni.voce} onChange={(e) => setOpzioni({ ...opzioni, voce: e.target.checked })} />
-              con la voce di L.V. (senza i suoi testi)
+              con le voci (senza i loro testi)
             </label>
             <span className="misura">{fps}</span>
           </div>

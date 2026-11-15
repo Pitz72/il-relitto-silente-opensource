@@ -111,8 +111,10 @@ Ogni altro suono del gioco è sintetizzato nel suo motore audio, senza registraz
   di Simone Pizzi, da Google, sintesi vocale (la voce «Elio») · CC BY-NC-SA 4.0 per quanto di spettanza dell’autore; i Termini di Google prevalgono
 «La voce dell’Anziano (ventisei battute)» — l’Anziano: tutte le sue battute
   di Simone Pizzi, da ElevenLabs, eleven_v4 (la voce disegnata «Edoardo Straniero») · CC BY-NC-SA 4.0 per quanto di spettanza dell’autore; i Termini di ElevenLabs prevalgono
-«La voce di Yusuf (otto battute)» — Yusuf: la radio di plancia, la chiamata nella fuga
+«La voce di Yusuf (otto battute e il messaggio dell’intro)» — Yusuf: la radio di plancia, la chiamata nella fuga, il messaggio registrato dell’intro
   di Simone Pizzi, da ElevenLabs, eleven_v4 (la voce dell’autore, clonata: Instant Voice Clone «Simone Pizzi») · CC BY-NC-SA 4.0 per quanto di spettanza dell’autore; i Termini di ElevenLabs prevalgono
+«La voce di William: il registro di bordo dell’intro» — l’intro: il registro di bordo di William, nello spazio
+  di Leonardo Tomassetti, da registrata dall’attore per questo gioco · dell’attore: fuori dalla licenza libera del gioco, non si riusa senza il suo consenso
 «Le voci della nave (quindici voci, ventisette battute)» — le echi del Sintonizzatore, le registrazioni dello scanner, l’ultima voce
   di Simone Pizzi, da ElevenLabs, Voice Design eleven_ttv_v3 (quindici voci disegnate: le anteprime scelte sono le prese) · CC BY-NC-SA 4.0 per quanto di spettanza dell’autore; i Termini di ElevenLabs prevalgono
 «La voce di servizio (quarantacinque parti)» — la tuta (la protezione vitale, le scritte del visore, le letture dello scanner, la matrice di traduzione), i suggerimenti e il computer di bordo (la riga del registro che chiude i finali)
@@ -146,7 +148,7 @@ Il logo dell’eseguibile: il fuso nero che mangia le stelle, con il seme al cen
   Simone Pizzi · dell’autore · disegnato in codice da strumenti/logo/disegna_logo.py (progettazione/24-copertina-e-logo.md, §3, strada A), su indicazione dell’autore
 Lo stesso logo, in vettoriale
   Simone Pizzi · dell’autore · lo stesso strumento
-Le copertine del gioco: il poster (9:16 e 2:3, con i crediti), lo sfondo 16:9, l’anteprima social, quella del repository (2:1) e le due aperture senza scritte (21:9 e 9:16), in italiano e in inglese. La scena è quella del poster approvato dall’autore il 15 novembre 2026: il relitto troppo grande per il quadro, la Santa Maria da dietro che gli va incontro, il fascio del faro che lo tocca, il seme sulla stessa linea
+Le copertine del gioco: il poster (9:16 e 2:3, con i crediti), lo sfondo 16:9, l’anteprima social, quella del repository (2:1), la copertina larga 21:9 e le due aperture del sito della saga, senza scritte, in italiano e in inglese. La scena è quella del poster approvato dall’autore il 15 novembre 2026: il relitto troppo grande per il quadro, la Santa Maria da dietro che gli va incontro, il fascio del faro che lo tocca, il seme sulla stessa linea
   Simone Pizzi · dell’autore · composte in codice da strumenti/copertina/poster.py, con il cielo e il fuso di strumenti/copertina/componi.py, la nave resa dal modello (grafica/nave/santa-maria-verso-il-relitto.webp, strumenti/nave/ritratto.py) e i caratteri del gioco; **nessuna immagine generata da strumenti di IA**
 La Santa Maria da dietro e dall’alto, su fondo trasparente: la nave del poster e delle copertine
   Simone Pizzi · dell’autore · resa in Blender da strumenti/nave/ritratto.py (ripresa «verso-il-relitto») sul modello di strumenti/nave/modello.py (documento 40); **nessuna immagine generata da strumenti di IA**

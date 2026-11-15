@@ -27,13 +27,23 @@
   },
   {
    "sigla": "YU",
-   "titolo": "La voce di Yusuf (otto battute)",
+   "titolo": "La voce di Yusuf (otto battute e il messaggio dell’intro)",
    "autore": "Simone Pizzi",
    "fonte": "ElevenLabs, eleven_v4 (la voce dell’autore, clonata: Instant Voice Clone «Simone Pizzi»)",
    "url": null,
    "licenza": "CC BY-NC-SA 4.0 per quanto di spettanza dell’autore; i Termini di ElevenLabs prevalgono",
    "ridistribuibile": "sì",
-   "uso": "Yusuf: la radio di plancia, la chiamata nella fuga"
+   "uso": "Yusuf: la radio di plancia, la chiamata nella fuga, il messaggio registrato dell’intro"
+  },
+  {
+   "sigla": "WI",
+   "titolo": "La voce di William: il registro di bordo dell’intro",
+   "autore": "Leonardo Tomassetti",
+   "fonte": "registrata dall’attore per questo gioco",
+   "url": null,
+   "licenza": "dell’attore: fuori dalla licenza libera del gioco, non si riusa senza il suo consenso",
+   "ridistribuibile": "con il gioco",
+   "uso": "l’intro: il registro di bordo di William, nello spazio"
   },
   {
    "sigla": "NV",
@@ -333,8 +343,8 @@
    "licenza": "dell’autore"
   },
   {
-   "file": "relitto-{9x16,poster,16x9,anteprima,social}{,-en}.png, relitto-21x9.png, relitto-9x16-nudo.png",
-   "che_cosa": "le copertine del gioco: il poster (9:16 e 2:3, con i crediti), lo sfondo 16:9, l’anteprima social, quella del repository (2:1) e le due aperture senza scritte (21:9 e 9:16), in italiano e in inglese. La scena è quella del poster approvato dall’autore il 15 novembre 2026: il relitto troppo grande per il quadro, la Santa Maria da dietro che gli va incontro, il fascio del faro che lo tocca, il seme sulla stessa linea",
+   "file": "relitto-{9x16,poster,16x9,anteprima,social}{,-en}.png, relitto-21x9.png, relitto-apertura-{orizzontale,verticale}.png",
+   "che_cosa": "le copertine del gioco: il poster (9:16 e 2:3, con i crediti), lo sfondo 16:9, l’anteprima social, quella del repository (2:1), la copertina larga 21:9 e le due aperture del sito della saga, senza scritte, in italiano e in inglese. La scena è quella del poster approvato dall’autore il 15 novembre 2026: il relitto troppo grande per il quadro, la Santa Maria da dietro che gli va incontro, il fascio del faro che lo tocca, il seme sulla stessa linea",
    "da_dove": "composte in codice da strumenti/copertina/poster.py, con il cielo e il fuso di strumenti/copertina/componi.py, la nave resa dal modello (grafica/nave/santa-maria-verso-il-relitto.webp, strumenti/nave/ritratto.py) e i caratteri del gioco; **nessuna immagine generata da strumenti di IA**",
    "autore": "Simone Pizzi",
    "licenza": "dell’autore"

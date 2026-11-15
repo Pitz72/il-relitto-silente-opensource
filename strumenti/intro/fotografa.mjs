@@ -20,7 +20,7 @@ if (!uscita || !tempi.length) {
 const r = await apriRevisione(9377, "relitto-edge-foto");
 if (comeNelGioco) {
   await r.scegli("sottotitoli", false);
-  await r.scegli("voce di L.V.", true);
+  await r.scegli("con le voci", true);
 }
 mkdirSync(uscita, { recursive: true });
 for (const t of tempi) {

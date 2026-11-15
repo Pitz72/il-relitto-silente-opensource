@@ -15,6 +15,7 @@
   --serif: "Newsreader", Georgia, "Times New Roman", serif;
   --mono: "IBM Plex Mono", Consolas, "Cascadia Mono", ui-monospace, monospace;
   --stencil: "Big Shoulders Stencil", "Arial Narrow", Impact, sans-serif;
+  --poster: "Stencil del poster", "Big Shoulders Stencil", "Arial Narrow", Impact, sans-serif;
   --tenue: #9fa9a6;
   --voce: #dce6e2;
   --didascalia: #b8c2bf;
@@ -58,7 +59,7 @@
 
 /* i testi */
 .intro .blocco { opacity: 0; visibility: hidden; text-align: center; left: 20cqw; width: 60cqw; }
-.intro .blocco.lv { font-family: var(--serif); font-style: italic; font-weight: 300; font-size: 1.77cqw; line-height: 1.42; color: var(--voce); }
+.intro .blocco.lv, .intro .blocco.william, .intro .blocco.yusuf { font-family: var(--serif); font-style: italic; font-weight: 300; font-size: 1.77cqw; line-height: 1.42; color: var(--voce); }
 .intro .blocco.apparecchio { font-family: var(--mono); font-size: 1.02cqw; letter-spacing: .2em; text-transform: uppercase; color: var(--tenue); line-height: 1.7; }
 .intro .blocco.apparecchio .cursore { color: var(--verde); opacity: 0; margin-left: .05em; letter-spacing: 0; }
 .intro .blocco.apparecchio .resto { visibility: hidden; }
@@ -67,28 +68,36 @@
 .intro .blocco.scena-B { left: 60cqw; width: 33cqw; top: 19%; text-align: left; }
 .intro .blocco.scena-B.sotto { top: 29%; }
 .intro .blocco.scena-F { top: 39%; }
+.intro .blocco.scena-F.sotto { top: 44.5%; }
 
-/* I titoli di testa (documento 09, §16.1). Una famiglia sola, Newsreader: è il carattere del titolo e del
-   testo del gioco, e il film e il libro restano la stessa cosa. Due voci: il ruolo, in corsivo leggero,
-   minuscolo e tenue; il nome, in tondo leggero, maiuscolo, molto spaziato, più grande. I cartelli stanno al
-   centro del nero; i crediti in sovrimpressione in un angolo del quadro, dentro il formato, con un'ombra
-   che li stacca dall'immagine. Contrasti sul nero: il nome #E9ECEA 16:1, il ruolo #A9B1AD 9:1. */
-.intro .credito { opacity: 0; visibility: hidden; font-family: var(--serif); font-weight: 300; color: #e9ecea; line-height: 1.25; }
+/* I titoli di testa (documento 09, §16.1 e §17). L'autore, 15 novembre 2026: «dovresti usare la tipografia del
+   poster per i titoli di testa. Sembrano più titolo da programma televisivo che di un'epopea cinematografica».
+   La tipografia è quella del poster approvato: il nome nello stencil del titolo (peso 800, maiuscolo, largo, nel
+   bianco freddo del poster), il ruolo in Newsreader corsivo leggero, minuscolo e tenue, come la riga del libro.
+   I cartelli stanno al centro del nero; i crediti in sovrimpressione in un angolo del quadro, dentro il formato,
+   con un'ombra che li stacca dall'immagine; il libro, dopo il titolo, dove stava il titolo.
+   Contrasti sul nero: il nome #CDD8E0 14:1, il ruolo #A9B1AD 9:1. */
+.intro .credito { opacity: 0; visibility: hidden; font-family: var(--serif); font-weight: 300; color: #cdd8e0; line-height: 1.2; }
 .intro .credito .riga { white-space: nowrap; }
-.intro .credito .riga + .riga { margin-top: .5cqw; }
-.intro .credito .p { font-style: italic; font-size: max(15px, 1.3cqw); letter-spacing: .05em; color: #a9b1ad; }
-.intro .credito .p + .g { margin-left: .55em; }
-.intro .credito .g { font-size: max(22px, 2.3cqw); letter-spacing: calc(.34em + var(--aria, 0em)); }
-.intro .credito.centro { left: 8cqw; width: 84cqw; top: 50%; transform: translateY(-50%); text-align: center; }
-.intro .credito.centro .riga + .riga { margin-top: .95cqw; }
+.intro .credito .riga + .riga { margin-top: .45cqw; }
+.intro .credito .p { font-style: italic; font-size: max(15px, 1.5cqw); letter-spacing: .04em; color: #a9b1ad; }
+.intro .credito .p + .g { margin-left: .5em; }
+.intro .credito .g { font-family: var(--poster); font-weight: 800; font-size: max(28px, 4.1cqw); line-height: 1; letter-spacing: calc(.13em + var(--aria, 0em)); }
+.intro .credito.centro, .intro .credito.titolo { left: 8cqw; width: 84cqw; transform: translateY(-50%); text-align: center; }
+.intro .credito.centro { top: 50%; }
+/* il libro: fra il bordo del relitto e il punto della nave, dove stava il titolo */
+.intro .credito.titolo { top: 41.2%; }
+.intro .credito.centro .riga + .riga, .intro .credito.titolo .riga + .riga { margin-top: .7cqw; }
 /* lo spazio dopo l'ultima lettera sposterebbe il nome a sinistra: se ne mette altrettanto davanti */
-.intro .credito.centro .g { padding-left: .34em; }
+.intro .credito.centro .g, .intro .credito.titolo .g { padding-left: .13em; }
+.intro .credito.titolo .g { font-size: max(24px, 3cqw); }
 .intro .credito.alto, .intro .credito.basso { left: 5.2cqw; text-align: left; text-shadow: 0 0 .55cqw rgba(0, 0, 0, .9), 0 0 .14cqw rgba(0, 0, 0, .95); }
 .intro .credito.alto { top: calc(12.8% + 2.9cqw); }
 .intro .credito.basso { bottom: calc(12.8% + 2.9cqw); }
-.intro .credito.alto .p, .intro .credito.basso .p { font-size: max(14px, 1.15cqw); }
-.intro .credito.alto .g, .intro .credito.basso .g { font-size: max(18px, 1.7cqw); letter-spacing: calc(.3em + var(--aria, 0em)); }
-.intro .credito .riga.minore .g { font-size: max(15px, 1.3cqw); }
+.intro .credito.alto .p, .intro .credito.basso .p { font-size: max(14px, 1.25cqw); }
+.intro .credito.alto .g, .intro .credito.basso .g { font-size: max(20px, 2.5cqw); }
+.intro .credito .riga.minore .g { font-size: max(17px, 1.75cqw); }
+.intro .credito .riga.minore .p + .g { padding-left: 0; }
 
 /* la telecamera di bordo (H): la scritta in alto a sinistra, con la spia della registrazione, come
    sotto la lente del gioco */
@@ -107,17 +116,20 @@
 .intro .preparazione.errore { color: #ff8a80; white-space: pre-wrap; text-transform: none; letter-spacing: 0; padding: 24px; }
 .intro .solo-lettori { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-/* la barra di revisione dell'animatic */
-.intro .revisione { position: relative; width: min(100vw, 1600px); box-sizing: border-box; padding: 10px 16px 12px; display: flex; flex-direction: column; gap: 8px; font-family: var(--mono); font-size: 12px; color: #e6eae8; background: #0b0f10; border-top: 1px solid #1e2626; cursor: default; }
-.intro .revisione .comandi { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+/* la barra di revisione dell'animatic. È alta sempre quanto dice --barra: il palco fa i conti con quell'altezza,
+   e una barra che va a capo (il nome lungo di una scena) lo spostava in su di nove punti e si faceva vedere
+   in fondo ai filmati, per tutta la seconda parte della traccia (trovato il 15 novembre 2026) */
+.intro .revisione { position: relative; width: min(100vw, 1600px); height: var(--barra, 112px); overflow: hidden; flex: none; box-sizing: border-box; padding: 10px 16px 12px; display: flex; flex-direction: column; gap: 8px; font-family: var(--mono); font-size: 12px; color: #e6eae8; background: #0b0f10; border-top: 1px solid #1e2626; cursor: default; }
+.intro .revisione .comandi { display: flex; flex-wrap: nowrap; white-space: nowrap; align-items: center; gap: 8px 12px; }
+.intro .revisione .comandi > * { flex: none; }
 .intro .revisione button { background: transparent; color: #e6eae8; border: 1px solid #2b3536; border-radius: 999px; padding: 6px 14px; min-height: 32px; font: inherit; cursor: pointer; }
 .intro .revisione button:hover { border-color: var(--verde); }
 .intro .revisione button:focus-visible, .intro .revisione input:focus-visible { outline: 2px solid var(--verde); outline-offset: 2px; }
 .intro .revisione label { display: flex; align-items: center; gap: 6px; color: var(--tenue); cursor: pointer; }
 .intro .revisione input[type="checkbox"] { accent-color: #8bf0a2; width: 16px; height: 16px; }
 .intro .revisione .tempo { min-width: 15ch; }
-.intro .revisione .scena { color: var(--verde); }
-.intro .revisione .misura { margin-left: auto; color: var(--tenue); }
+.intro .revisione .comandi > .scena { color: var(--verde); flex: 0 1 auto; min-width: 3ch; overflow: hidden; text-overflow: ellipsis; }
+.intro .revisione .comandi > .misura { margin-left: auto; color: var(--tenue); flex: 0 1 auto; overflow: hidden; }
 .intro .linea { position: relative; height: 34px; }
 .intro .linea input[type="range"] { position: absolute; inset: 0; width: 100%; margin: 0; opacity: 0; cursor: pointer; }
 .intro .linea .segmento { position: absolute; top: 0; height: 14px; border-radius: 2px; font-size: 10px; line-height: 14px; padding-left: 4px; color: #060708; overflow: hidden; pointer-events: none; }

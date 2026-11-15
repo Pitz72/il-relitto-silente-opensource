@@ -1,10 +1,12 @@
 // Le prove dei titoli di testa della cinematica d'apertura (documento 09, §16; le «scelte definitive»
-// dell'autore, 14 novembre 2026): i cartelli e i crediti, la stampa a cursore, il titolo che si scioglie
-// dai glifi, la pellicola.
+// dell'autore, 14 novembre 2026; i crediti delle voci e il libro dopo il titolo, §17, 15 novembre): i cartelli e i
+// crediti, la stampa a cursore, il titolo che si scioglie dai glifi, la pellicola.
 //   node --test prove/titoli-di-testa.test.ts        (da app/)
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { CARATTERI_AL_SECONDO, SCALETTA, VOCE, luceDiA, opacitaCredito, pezziDellaVoce, testoCredito } from "../src/intro/scaletta.ts";
+import { readFileSync } from "node:fs";
+import { CARATTERI_AL_SECONDO, SCALETTA, luceDiA, opacitaCredito, pezziDellaVoce, testoCredito } from "../src/intro/scaletta.ts";
+import { MESSAGGIO, REGISTRO } from "../src/intro/spazio.ts";
 import { avanzamento, contorni, lungoLaLinea, posa, sciogli, spartisci, spezzata, type P } from "../src/intro/titolo.ts";
 import { glifiDelTitolo } from "../src/intro/glifi.ts";
 import { BANDA, CURVE, GRANA, SCATTI, respiro, sfarfallio, sporcature, taglio } from "../src/pellicola/scatti.ts";
@@ -13,20 +15,38 @@ const S = SCALETTA;
 const credito = (id: string) => S.crediti.find((c) => c.id === id)!;
 const blocco = (id: string) => S.blocchi.find((b) => b.id === id)!;
 
-test("i titoli di testa: sei, con le parole dell'autore, nell'ordine in cui li ha chiesti", () => {
+test("i titoli di testa: otto, con le parole dell'autore, nell'ordine in cui li ha chiesti", () => {
   assert.deepEqual(S.crediti.map((c) => testoCredito(c)), [
     "RUNTIME MULTIMEDIA presenta",
     "un gioco di SIMONE PIZZI",
     "produttore esecutivo MICHELA DE PAOLA",
-    "tratto dal libro DAL REGISTRO DELLA SANTA MARIA di SIMONE PIZZI",
-    "tema musicale originale di ALIRIO BRUNI",
     "LEONARDO TOMASSETTI è William T. Eriksonn",
+    "SIMONE PIZZI è Yusuf",
+    "tema musicale originale di ALIRIO BRUNI",
+    "ELIO è L.V.",
+    "tratto dal libro DAL REGISTRO DELLA SANTA MARIA di SIMONE PIZZI",
   ]);
-  assert.deepEqual(S.crediti.map((c) => c.posto), ["centro", "centro", "centro", "alto", "basso", "basso"]);
+  assert.deepEqual(S.crediti.map((c) => c.posto), ["centro", "centro", "centro", "alto", "alto", "basso", "basso", "titolo"]);
   for (let i = 1; i < S.crediti.length; i++) assert.ok(S.crediti[i].entra >= S.crediti[i - 1].via, "due crediti insieme");
-  // il libro non sta più sotto il titolo
+  // il libro non sta sotto il titolo: viene dopo
   assert.equal(blocco("T").testo, "IL RELITTO SILENTE");
   assert.equal(blocco("T").sotto, undefined);
+  // della voce di Yusuf si dice di chi è, e basta (l'autore: «Non specificare che è una voce clonata»)
+  assert.ok(!S.crediti.some((c) => /clon|sintes|digital/i.test(testoCredito(c))));
+});
+
+test("la tipografia è quella del poster: i nomi e il titolo nello stencil, i ruoli in corsivo", () => {
+  // l'autore, 15 novembre 2026: «dovresti usare la tipografia del poster per i titoli di testa»; e, del titolo:
+  // «dovrebbe usare il font del titolo del poster»
+  const css = readFileSync(new URL("../src/intro/intro.css", import.meta.url), "utf8");
+  assert.match(css, /--poster: "Stencil del poster"/);
+  assert.match(css, /\.intro \.credito \.g \{[^}]*font-family: var\(--poster\);[^}]*font-weight: 800/);
+  assert.match(css, /\.intro \.credito \.p \{[^}]*font-style: italic/);
+  const caratteri = readFileSync(new URL("../src/stile/caratteri.css", import.meta.url), "utf8");
+  assert.match(caratteri, /font-family: "Stencil del poster";[^}]*big-shoulders-stencil-latin-wght-normal\.woff2/);
+  const intro = readFileSync(new URL("../src/intro/Intro.tsx", import.meta.url), "utf8");
+  assert.match(intro, /CARATTERE_TITOLO = \(px: number\) => `800 \$\{px\}px "Stencil del poster"/);
+  assert.ok(!/px Newsreader, Georgia/.test(intro), "il titolo non è più in Newsreader");
 });
 
 test("mezzo secondo di nero, poi «Runtime Multimedia presenta»; la spia si accende dopo", () => {
@@ -56,16 +76,31 @@ test("i due cartelli nel nero: l'immagine cala, il cartello, l'immagine torna, e
   assert.ok(credito("K2").entra > blocco("B4").esce && credito("K2").via < S.momenti.battito[0]);
 });
 
-test("i crediti in sovrimpressione: il libro dopo «Ho insistito io», il tema nella scala, la voce quando L.V. riprende", () => {
-  const b5 = blocco("B5").pezzo!;
-  const detto = b5.t + (VOCE.B6!.fine - VOCE.B5!.da!);
-  const k3 = credito("K3"), k4 = credito("K4"), k5 = credito("K5");
-  assert.ok(k3.entra > detto && k3.entra < detto + 1, `il libro a ${k3.entra}, «Ho insistito io» finisce a ${detto.toFixed(2)}`);
-  assert.ok(k3.via <= S.scene.find((s) => s.id === "C")!.inizio, "il libro resta sulle stelle: C aspetta");
+test("i crediti delle voci arrivano con le voci: Leonardo con William, l'autore con Yusuf, la voce di L.V. quando L.V. riprende", () => {
+  const m = S.momenti;
+  const k3 = credito("K3"), k4 = credito("K4"), k5 = credito("K5"), k6 = credito("K6");
+  // Leonardo al posto in cui stava il libro, quando William dice il suo nome
+  assert.equal(k3.posto, "alto");
+  assert.equal(k3.entra, Math.round((m.registro[0] + REGISTRO.nome) * 100) / 100);
+  assert.ok(k3.via < m.registro[1], "il credito di Leonardo se ne va mentre William parla ancora");
+  // l'autore quando Yusuf ha detto «Sono Yusuf»
+  assert.ok(k4.entra > m.messaggio[0] + MESSAGGIO.nome && k4.entra < m.messaggio[0] + MESSAGGIO.nome + 1);
+  assert.ok(k4.via < m.messaggio[1]);
   // la camera della scala arretra dal terzo secondo: a nove e mezzo la nave è già piccola
-  assert.ok(k4.entra >= S.momenti.scala[0] + 9 && k4.via < S.momenti.scala[1] - 5);
-  const b7 = blocco("B7").pezzo!;
-  assert.ok(k5.entra >= b7.t && k5.entra < b7.t + 1, "la voce di William non arriva quando L.V. riprende a parlare");
+  assert.ok(k5.entra >= m.scala[0] + 9 && k5.via < m.scala[1] - 5);
+  // «Ho firmato tutte le carte… Ho insistito io» apre la seconda parte di L.V., e lì arriva il credito della sua voce
+  assert.equal(blocco("B5").scena, "F");
+  assert.equal(blocco("B6").scena, "F");
+  assert.ok(blocco("B6").via <= blocco("B7").entra);
+  const b5 = blocco("B5").pezzo!;
+  assert.ok(k6.entra >= b5.t && k6.entra < b5.t + 1, "il credito della voce di L.V. non arriva quando L.V. riprende a parlare");
+});
+
+test("il libro viene dopo il titolo, dove stava il titolo, e la plancia aspetta che se ne sia andato", () => {
+  const k7 = credito("K7"), t = blocco("T");
+  assert.equal(k7.posto, "titolo");
+  assert.ok(k7.entra >= t.via && k7.entra < t.via + 1, `il libro a ${k7.entra}, il titolo via a ${t.via}`);
+  assert.ok(k7.via <= S.momenti.raccordo[0]);
 });
 
 test("la voce dell'apparecchio si stampa a trenta caratteri al secondo, e il motore audio lo sa", () => {

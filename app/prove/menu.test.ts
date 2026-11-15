@@ -76,11 +76,13 @@ test("l'elenco dei riconoscimenti ha un testo per ogni licenza che usa", () => {
   for (const p of tutti) assert.ok(p.copyright.length || p.autori?.length, `${p.nome}: né copyright né autori`);
   // dal 15 ottobre 2026 ogni suono è sintetizzato; le sole registrazioni sono le voci: dal 29 ottobre
   // quella di L.V. nell'intro, dal 2 novembre quella dell'Anziano (documento 32), dal 7 novembre le voci
-  // della nave, quella di Yusuf e la voce di servizio (documento 35)
+  // della nave, quella di Yusuf e la voce di servizio (documento 35); dal 15 novembre la prima voce di un attore,
+  // William detto da Leonardo Tomassetti, e il messaggio di Yusuf, nell'intro (documento 09, §17)
   assert.deepEqual(e.suoni.map((s) => s.titolo), [
     "La voce di L.V.",
     "La voce dell’Anziano (ventisei battute)",
-    "La voce di Yusuf (otto battute)",
+    "La voce di Yusuf (otto battute e il messaggio dell’intro)",
+    "La voce di William: il registro di bordo dell’intro",
     "Le voci della nave (quindici voci, ventisette battute)",
     "La voce di servizio (quarantacinque parti)",
   ]);

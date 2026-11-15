@@ -8,6 +8,12 @@
 //! nell'intro si ascolta una registrazione, poi la plancia vista da fuori). Se l'intro cambia i suoi
 //! tempi, la partitura li segue da sé.
 //!
+//! Dal 15 novembre 2026 nello spazio (B) ci sono due voci (documento 09, §17): il registro di bordo di William,
+//! detto da Leonardo Tomassetti, e subito dopo il messaggio di Yusuf dalla radio, con i suoi beep. Un file
+//! ciascuna, intero, sul cursore del parlato. La scena dura un minuto in più e il tema, che dura 1:52, non
+//! basterebbe fino al titolo: entra come prima quando si apre lo spazio, e ricomincia da capo venti secondi
+//! prima della plancia, così da lì in avanti cade sulle immagini come cadeva.
+//!
 //! Quattro uscite: il **sound design** (il fruscio della traccia, i clic, il cuore), il **re** (nella
 //! plancia è il reattore; sul titolo, una nota), il **tema** e la **voce**. La voce di L.V. e il tema
 //! sono due file (decisione dell'autore del 29 ottobre 2026: la voce generata da lui con la sintesi
@@ -39,6 +45,9 @@ pub struct Momenti {
     /// entra il tema, quando si apre lo spazio (−1: la pagina non lo manda, e il tema non c'è)
     #[serde(default = "senza")]
     pub tema: f32,
+    /// il tema ricomincia da capo, poco prima della plancia (−1: la pagina non lo manda, e suona una volta sola)
+    #[serde(default = "senza")]
+    pub tema_da_capo: f32,
     pub nave_b: f32,
     pub re_b: f32,
     pub radar: [f32; 2],
@@ -101,6 +110,12 @@ pub struct DatiIntro {
     /// quello che l'apparecchio stampa («Scatola nera…», «Fine della traccia.»): una pagina vecchia non lo manda
     #[serde(default)]
     pub stampe: Vec<Stampa>,
+    /// il registro di bordo di William (Leonardo Tomassetti), nello spazio: (quando comincia, quanto dura)
+    #[serde(default)]
+    pub registro: Option<[f32; 2]>,
+    /// il messaggio di Yusuf dalla radio, subito dopo: (quando comincia, quanto dura)
+    #[serde(default)]
+    pub messaggio: Option<[f32; 2]>,
 }
 
 /// Una cosa che la partitura fa a un dato secondo.
@@ -110,8 +125,14 @@ pub enum Cue {
     Nastro(f32, f32),
     /// un pezzo della voce di L.V.: (da, a) nel file
     Voce(f32, f32),
+    /// il registro di bordo di William, il file intero
+    Registro,
+    /// il messaggio di Yusuf dalla radio, il file intero (i beep sono nel file)
+    Messaggio,
     /// entra il tema
     Tema,
+    /// il tema ricomincia da capo, sopra la sua coda
+    TemaDaCapo,
     /// il tema sotto la voce: (quanto più basso, in dB; secondi)
     Abbassa(f32, f32),
     /// il re: (livello dB, armonici 0–1, secondi); nella plancia è il reattore
@@ -141,6 +162,11 @@ const MAX_COLPI: usize = 48;
 /// La voce di L.V. sopra il livello a cui il lettore porta ogni file: il parlato sta a circa
 /// −22 dBFS di valore efficace (il file intero, con le sue pause, a −27).
 const LIV_VOCE: f32 = -1.0;
+/// Il registro di William: la voce di un attore, pulita. Il lettore porta le sue parole a −27; qui stanno
+/// intorno a −25 dBFS (con le pause, −23 di valore efficace): cinque decibel sopra L.V., che è un nastro rovinato.
+const LIV_REGISTRO: f32 = 2.0;
+/// Il messaggio di Yusuf: l'altoparlante della radio, più piccolo della voce di William.
+const LIV_MESSAGGIO: f32 = 0.0;
 /// Il tema, un poco sotto la musica del gioco: è sotto le parole e sotto le immagini.
 const LIV_TEMA: f32 = -3.0;
 /// Quanto si abbassa il tema mentre L.V. parla.
@@ -194,6 +220,25 @@ pub fn partitura(d: &DatiIntro) -> Vec<(f32, Cue)> {
     p(m.battito[1], Cue::Tace(0.3));
     if m.tema >= 0.0 {
         p(m.tema, Cue::Tema);
+    }
+    // le due voci nello spazio (l'autore, 15 novembre 2026): il registro di William e, subito dopo, il messaggio
+    // di Yusuf. Il tema sta sotto, fermo, dalla prima parola di William all'ultima di Yusuf: non sale e non scende
+    // a ogni frase (l'autore, 2 novembre 2026: «fa troppo radio»), e torna su una volta sola, verso la plancia
+    if let Some([t, _]) = d.registro {
+        p(t, Cue::Registro);
+    }
+    if let Some([t, _]) = d.messaggio {
+        p(t, Cue::Messaggio);
+    }
+    let prima = d.registro.or(d.messaggio).map(|v| v[0]);
+    let ultima = d.messaggio.or(d.registro).map(|v| v[0] + v[1]);
+    if let (Some(a), Some(b)) = (prima, ultima) {
+        p(a - 0.6, Cue::Abbassa(SOTTO_LA_VOCE, 0.9));
+        p(b + 0.2, Cue::Abbassa(0.0, 2.5));
+    }
+    // il tema dura 1:52 e B adesso ne dura quasi uno e mezzo: ricomincia da capo, sulla coda della prima volta
+    if m.tema >= 0.0 && m.tema_da_capo >= 0.0 {
+        p(m.tema_da_capo, Cue::TemaDaCapo);
     }
 
     // ---- C · il radar: il reattore sotto il pavimento, la ventilazione, il tic del radar a ogni giro
@@ -378,6 +423,12 @@ impl Intro {
         if d.momenti.tema >= 0.0 {
             self.tema.precarica(Pezzo::SM);
         }
+        if d.registro.is_some() {
+            self.voce.precarica(Pezzo::Wi01);
+        }
+        if d.messaggio.is_some() {
+            self.voce.precarica(Pezzo::Yu09);
+        }
         self.master.verso(1.0, 0.3, self.sr);
     }
 
@@ -396,7 +447,13 @@ impl Intro {
         match c {
             Cue::Nastro(liv, s) => self.nastro.g.verso(lin(liv), s, sr),
             Cue::Voce(da, a) => self.voce.avvia(Richiesta { pezzo: Pezzo::LV, da, a: Some(a), entra: 0.03, dopo: Dopo::Niente, incrocio: 0.0, esce: 0.2, livello: LIV_VOCE }),
-            Cue::Tema => self.tema.avvia(Richiesta { pezzo: Pezzo::SM, da: 0.0, a: None, entra: 2.5, dopo: Dopo::Niente, incrocio: 0.0, esce: 4.0, livello: LIV_TEMA }),
+            Cue::Registro => self.voce.avvia(Richiesta { pezzo: Pezzo::Wi01, da: 0.0, a: None, entra: 0.02, dopo: Dopo::Niente, incrocio: 0.0, esce: 0.0, livello: LIV_REGISTRO }),
+            Cue::Messaggio => self.voce.avvia(Richiesta { pezzo: Pezzo::Yu09, da: 0.0, a: None, entra: 0.02, dopo: Dopo::Niente, incrocio: 0.0, esce: 0.0, livello: LIV_MESSAGGIO }),
+            // la seconda volta entra più piano della prima: sotto c'è ancora la coda, e sopra la voce di Yusuf
+            Cue::Tema | Cue::TemaDaCapo => {
+                let entra = if c == Cue::Tema { 2.5 } else { 4.0 };
+                self.tema.avvia(Richiesta { pezzo: Pezzo::SM, da: 0.0, a: None, entra, dopo: Dopo::Niente, incrocio: 0.0, esce: 4.0, livello: LIV_TEMA })
+            }
             Cue::Abbassa(liv, s) => self.abbassa.verso(db(liv), s, sr),
             Cue::Re(liv, alti, s) => {
                 self.re.g.verso(lin(liv) * NORM_RE, s, sr);
@@ -687,6 +744,93 @@ mod prove {
         let con = partitura(&d);
         assert_eq!(con, senza);
         assert!(!con.iter().any(|(t, _)| *t > 80.1 && *t < 101.4), "nella scala parte un suono");
+    }
+
+    #[test]
+    fn nello_spazio_parlano_william_e_yusuf_e_il_tema_ricomincia() {
+        // l'autore, 15 novembre 2026: il registro di bordo di William quando si apre lo spazio; subito dopo, il
+        // messaggio di Yusuf dalla radio. Una pagina vecchia non li manda, e l'intro suona come prima
+        let mut d = momenti_di_prova();
+        d.voce.truncate(1);
+        let prima = partitura(&d);
+        assert!(!prima.iter().any(|(_, c)| matches!(c, Cue::Registro | Cue::Messaggio | Cue::TemaDaCapo)), "senza i dati nuovi non parte niente di nuovo");
+        d.registro = Some([49.0, 42.0]);
+        d.messaggio = Some([91.4, 37.1]);
+        d.momenti.tema_da_capo = 110.0;
+        let p = partitura(&d);
+        let quando = |q: Cue| p.iter().find(|(_, c)| *c == q).map(|(t, _)| *t);
+        assert_eq!(quando(Cue::Registro), Some(49.0), "il registro di William");
+        assert_eq!(quando(Cue::Messaggio), Some(91.4), "il messaggio di Yusuf");
+        assert_eq!(quando(Cue::TemaDaCapo), Some(110.0), "il tema da capo");
+        assert_eq!(quando(Cue::Tema), Some(46.3), "il tema entra ancora quando si apre lo spazio");
+        // il tema sta sotto dalla prima parola di William all'ultima di Yusuf: scende una volta, risale una volta
+        let mosse: Vec<(f32, f32)> = p.iter().filter_map(|(t, c)| if let Cue::Abbassa(l, _) = c { Some((*t, *l)) } else { None }).filter(|(t, _)| *t > 40.0).collect();
+        assert_eq!(mosse.len(), 2, "il tema sale e scende fra una voce e l'altra: {mosse:?}");
+        assert!(mosse[0].0 < 49.0 && mosse[0].1 < 0.0, "il tema non scende prima di William: {mosse:?}");
+        assert!(mosse[1].0 > 91.4 + 37.1 && mosse[1].1 == 0.0, "il tema non torna su dopo Yusuf: {mosse:?}");
+        // senza il tema (la pagina non lo manda) non c'è niente da ricominciare
+        d.momenti.tema = -1.0;
+        assert!(!partitura(&d).iter().any(|(_, c)| matches!(c, Cue::Tema | Cue::TemaDaCapo)));
+    }
+
+    #[test]
+    fn le_voci_nello_spazio_suonano_dai_file() {
+        // con i file veri, se ci sono: William comincia al suo secondo, Yusuf al suo, e fra i due non c'è un buco
+        // più lungo di un secondo; il tema, la seconda volta, suona sopra la coda della prima
+        let cartella = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../audio/musica-ia");
+        if !cartella.join("WI").join("WI-01-registro-di-bordo.mp3").is_file() || !cartella.join("YU").join("YU-09-messaggio-intro.mp3").is_file() {
+            return;
+        }
+        let sr = 24000.0;
+        let mut i = Intro::nuovo(sr, 11);
+        i.con_cartella(cartella);
+        let mut d = momenti_di_prova();
+        d.voce.clear();
+        d.registro = Some([49.0, 42.04]);
+        d.messaggio = Some([91.4, 37.13]);
+        d.momenti.tema_da_capo = 110.0;
+        d.momenti.radar = [130.2, 136.4];
+        d.momenti.faro = 143.0;
+        i.avvia(&d);
+        for _ in 0..600 {
+            i.voce.passo(0.0);
+            i.tema.passo(0.0);
+            let pronto = |l: &Lettore, p: Pezzo| l.biblioteca.as_ref().is_some_and(|b| b.pronto(p).is_some());
+            if pronto(&i.voce, Pezzo::Wi01) && pronto(&i.voce, Pezzo::Yu09) && pronto(&i.tema, Pezzo::SM) {
+                break;
+            }
+            std::thread::sleep(std::time::Duration::from_millis(50));
+        }
+        let mut sez: Vec<(f32, f32, f32)> = Vec::new(); // (secondo, voce, tema)
+        let mut t = 0.0f32;
+        while t < 131.0 {
+            i.passo(128.0 / sr);
+            let (mut v, mut m) = (0.0f32, 0.0f32);
+            for _ in 0..128 {
+                let u = i.campione();
+                v += u.voce.0 * u.voce.0;
+                m += u.tema.0 * u.tema.0;
+            }
+            sez.push((t, v / 128.0, m / 128.0));
+            t += 128.0 / sr;
+        }
+        let media = |da: f32, a: f32, k: usize| {
+            let v: Vec<f32> = sez.iter().filter(|s| s.0 >= da && s.0 < a).map(|s| if k == 0 { s.1 } else { s.2 }).collect();
+            10.0 * (v.iter().sum::<f32>() / v.len().max(1) as f32 + 1e-20).log10()
+        };
+        assert!(media(40.0, 48.9, 0) < -100.0, "una voce parla prima del registro ({:.1} dB)", media(40.0, 48.9, 0));
+        assert!(media(49.2, 55.0, 0) > -40.0, "William non si sente ({:.1} dB)", media(49.2, 55.0, 0));
+        assert!(media(91.5, 100.0, 0) > -40.0, "Yusuf non si sente ({:.1} dB)", media(91.5, 100.0, 0));
+        // «tutto molto legato»: in ogni secondo fra l'ultima parola di William e la fine di Yusuf c'è suono
+        let mut s = 85.0;
+        while s < 127.0 {
+            assert!(media(s, s + 1.6, 0) > -60.0, "un vuoto fra le voci a {s:.0} s ({:.1} dB)", media(s, s + 1.6, 0));
+            s += 1.0;
+        }
+        assert!(media(129.5, 131.0, 0) < -80.0, "Yusuf parla ancora quando comincia la plancia ({:.1} dB)", media(129.5, 131.0, 0));
+        // il tema: la prima volta è alla coda quando ricomincia, e ricominciando torna su
+        assert!(media(47.0, 49.0, 1) > -60.0, "il tema non entra con lo spazio");
+        assert!(media(116.0, 126.0, 1) > media(104.0, 109.5, 1), "il tema non ricomincia ({:.1} contro {:.1} dB)", media(116.0, 126.0, 1), media(104.0, 109.5, 1));
     }
 
     #[test]

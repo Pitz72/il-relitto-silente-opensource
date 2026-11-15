@@ -690,3 +690,119 @@ filmato in mp4 ma prepara la nuova beta e rilasciala»).
   suono»). Erano rimasti i clic dei glifi che si tracciano e la nota che saliva: **tolti**. I glifi si
   tracciano e si sciolgono in silenzio; quando il titolo è intero arriva la nota bassa, com’era da sempre.
 - Il credito di Leonardo (16.2) non l’ha toccato: resta com’è.
+
+## 17. William e Yusuf nello spazio; i titoli di testa con la tipografia del poster (15 novembre 2026)
+
+Le disposizioni dell’autore, dopo la presa di Leonardo Tomassetti (`intro.wav`, il registro di bordo di
+William nella versione scritta e detta ad alta voce, che chiude con «Settimana sei. Stiva vuota. Nessun
+contatto. W. T.»):
+
+1. «quando finisce la transizione tra il nero con la luce verde e lo spazio nella parte iniziale parte intro
+   di Leonardo e cambia il titolo di testa dove al posto del libro va il suo nome»;
+2. «Subito dopo il pezzo di William c’è un beep tipo registrazione e si sente il pezzo di Yusuf inframezzati da
+   beep di registrazione, come se fossero più pezzi, ma tutto molto legato, senza lasciare troppi spazi vuoti.
+   Yusuf deve sembrare che parte dalla radio. Il resto tutto uguale, quando parte la seconda parte di LV
+   scrivici sotto il titolo di testa L.V. e ci metto il nome dell’attore digitale»;
+3. «La scritta tratto dal libro la metto dopo il titolo di testa»;
+4. «dovresti usare la tipografia del poster per i titoli di testa. Sembrano più titolo da programma televisivo
+   che di un’epopea cinematografica»; e, mentre lavoravo: «il titolo dovrebbe usare il font del titolo del
+   poster»;
+5. «quando c’è Yusuf mettere il mio nome come titolo di testa. Non specificare che è una voce clonata».
+
+**17.1 Le due voci.** Due file, ognuno suonato intero dal motore audio sul cursore del parlato; li prepara
+`strumenti/intro/voci_spazio.py`, che scrive anche `app/src/intro/spazio.ts` (le durate e le frasi con i loro
+tempi: una fonte sola per la scaletta).
+
+- **William** (`audio/musica-ia/WI/WI-01-registro-di-bordo.mp3`, 42,0 s): la presa di Leonardo com’è. Tolto
+  solo il silenzio ai due capi; nessun filtro, nessun taglio dentro; portata a livello, con i picchi piegati
+  sotto −3 dB (1.146 campioni su 1,85 milioni). Comincia mezzo secondo dopo che il nero è diventato cielo.
+- **Yusuf** (`audio/musica-ia/YU/YU-09-messaggio-intro.mp3`, 37,1 s): la presa del 14 novembre (documento 35,
+  §12) in quattro pezzi, tagliati nei silenzi veri fra una frase e l’altra e mai dentro una frase: «William.
+  Sono Yusuf… bisogno di qualcosa.» · «Sei settimane, maledetto… lo capisci?» · «…otto, nove, dieci.
+  Richiamami. Anche solo per dirmi di no.» · «E se quella carretta ti ha mollato alla deriva… almeno dimmelo.
+  Magazzino Quattro, chiudo.» Davanti a ogni pezzo un **beep**: una nota sola di tre decimi, un si (la
+  tonalità del tema), con il colore della stessa radio, al livello delle parole e non sopra (alla prima prova
+  usciva 6 dB più forte delle parole: abbassato prima di consegnare); dal beep alla voce 0,24 s, dalla voce
+  al beep 0,30. Dopo
+  l’ultimo pezzo nessun beep: la portante si chiude con un piccolo sbuffo. **La radio** è quella di bordo
+  (`strumenti/audio/voce_yusuf.py`, approvata il 7 novembre), un poco più stretta perché è una registrazione
+  riascoltata (250 Hz–4,3 kHz), con un filo di portante sotto, 30 dB sotto le parole, dal primo beep
+  all’ultima parola. Fra l’ultima parola di William e il primo beep passano 0,35 s più la coda della presa.
+- **I livelli** (misurati sul suono reso dal motore, `rendi_intro`): William −23 dBFS di valore efficace con
+  le pause, picco −5; Yusuf −26, picco −3; L.V., per confronto, −28. La scena intera sta a −24,5, la plancia
+  che segue a −26. Whisper ha riascoltato la scena resa, con la musica sotto: ci sono tutte le frasi dei due.
+- **Per chi non sente le voci** (il parlato a zero, la revisione nel browser) le frasi di William (otto) e di
+  Yusuf (cinque) compaiono in alto a destra, una dopo l’altra, ognuna con la sua prima parola; con le voci non
+  compaiono, come quelle di L.V.
+
+**17.2 Il montaggio: le scelte mie, da dire all’autore.**
+
+- **La scena nello spazio dura 84 secondi** (erano 20,6): le due voci stanno tutte lì, sulla nave che
+  attraversa le stelle, e la plancia arriva 1,3 s dopo «chiudo». La nave non aspetta più fuori dal quadro: il
+  muso entra con le prime parole di William, e arriva dove arrivava prima. L’alternativa (le voci che
+  proseguono sulla plancia e sul radar) cambierebbe le scene approvate: non l’ho fatta.
+- **«Ho firmato tutte le carte… Ho insistito io»** stava nello spazio, dove ora parla William (l’autore, 14
+  novembre: «andrà più avanti»): **apre la seconda parte di L.V.**, prima di «Qui dentro c’è una cosa viva»,
+  nell’ordine in cui L.V. l’ha detta. La seconda parte dura 50 secondi (erano 35).
+- **Il tema ricomincia da capo.** «The Santa Maria Theme» dura 1:52, e con la scena lunga non arriverebbe più
+  alla scala e al titolo. Entra come prima quando si apre lo spazio, e suona sotto William; poi ricomincia,
+  sopra la sua coda, 20,17 s prima della plancia (quanto prima ci entrava quando la scena era corta), sotto le
+  ultime frasi di Yusuf: dalla plancia in poi cade sulle immagini esattamente come cadeva. Sotto le due voci
+  sta più basso di 8 dB e **fermo**: scende una volta prima di William e risale una volta dopo Yusuf (la
+  regola del 2 novembre: niente musica che sale e scende a ogni frase).
+- **I crediti delle voci entrano quando la voce dice il suo nome**: Leonardo quando William dice «William T.
+  Eriksonn» (8,3 s dopo l’inizio), l’autore dopo «Sono Yusuf».
+- **L’attore digitale di L.V.** l’ho scritto **«ELIO»** (la voce di Google con cui l’autore l’ha generata,
+  come nei riconoscimenti): «ELIO · è L.V.». Se il nome dev’essere un altro, è una riga in `CREDITI`.
+- **Il libro dopo il titolo** è un cartello a sé: il titolo se ne va, e dove stava compare «tratto dal libro ·
+  DAL REGISTRO DELLA SANTA MARIA · di SIMONE PIZZI», sulla stessa immagine; poi la camera entra nel nero.
+  L’altra lettura (la riga sotto il titolo, come sul poster) non ci sta: sotto il titolo c’è il punto della
+  nave.
+
+**17.3 I titoli di testa, ora otto** (`scaletta.ts`, `CREDITI`):
+
+| | Quando | Dove | Testo |
+| --- | --- | --- | --- |
+| K0 | dopo mezzo secondo di nero | cartello | **RUNTIME MULTIMEDIA** · *presenta* |
+| K1 | prima di «L’acqua è finita ieri» | cartello | *un gioco di* · **SIMONE PIZZI** |
+| K2 | dopo «Lo rileggo: diciannove.» | cartello | *produttore esecutivo* · **MICHELA DE PAOLA** |
+| K3 | quando William dice il suo nome (1:30) | in alto a sinistra, sulle stelle | **LEONARDO TOMASSETTI** · *è William T. Eriksonn* |
+| K4 | dopo «Sono Yusuf» (2:05) | in alto a sinistra | **SIMONE PIZZI** · *è Yusuf* |
+| K5 | nello zoom all’indietro | in basso a sinistra | *tema musicale originale di* · **ALIRIO BRUNI** |
+| K6 | quando L.V. ricomincia (3:28) | in basso a sinistra | **ELIO** · *è L.V.* |
+| K7 | dopo il titolo (4:34) | dove stava il titolo | *tratto dal libro* · **DAL REGISTRO DELLA SANTA MARIA** · *di* **SIMONE PIZZI** |
+
+**17.4 La tipografia del poster.** Sul poster approvato il titolo è nello stencil delle targhe della Santa
+Maria (Big Shoulders Stencil, peso 800, largo, nel bianco freddo `#CDD8E0`), e le righe piccole in Newsreader
+corsivo. Ora è così anche l’intro: **i nomi dei titoli di testa** nello stencil (4,1 centesimi della larghezza
+nei cartelli, 2,5 nelle sovrimpressioni, 0,13 di aria fra le lettere), **i ruoli** in Newsreader corsivo
+leggero (com’erano), e **il titolo** «IL RELITTO SILENTE» nello stesso stencil del poster: i glifi si
+sciolgono in quelle lettere (lo scioglimento prende il contorno dalla lettera vera, qualunque sia il
+carattere), nascono caldi e si raffreddano nel bianco del poster. Il carattere è lo stesso file che usa
+`poster.py` (`big-shoulders-stencil-latin-wght-normal.woff2`, la famiglia «Stencil del poster» in
+`stile/caratteri.css`): il browser, da sé, per le scritte grandi sceglierebbe un taglio più stretto.
+Trovato facendo le foto: la revisione nel browser (`?intro`) non caricava nessun carattere del gioco, e
+mostrava quelli di riserva; ora `Intro.tsx` li porta con sé (nel gioco c’erano già). E, guardando il filmato:
+per tutta la seconda parte della traccia il quadro stava nove punti più in alto e in fondo si vedeva una riga
+della barra di revisione, che andava a capo quando il nome della scena è lungo (c’era anche nei filmati del 14
+novembre); la barra ora è alta sempre uguale (`intro.css`, `.revisione`), e il quadro sta al suo posto in ogni
+scena. Nel gioco la barra non c’è.
+
+**17.5 I tempi.** L’intro dura **4:49,24** (era 3:24,16): 63,2 s in più nello spazio, 15,1 nella seconda parte
+di L.V., 6,7 per il libro dopo il titolo. Le scene: A 0 · B 1:18,65 · C 2:42,47 · D 2:55,27 · E 3:04,27 ·
+F 3:27,77 · G 4:17,99 · H 4:40,24. C, D, E e H durano quanto prima.
+
+**17.6 Nel motore audio** (`mondo/intro.rs`): la pagina manda `registro` e `messaggio` (quando cominciano e
+quanto durano) e il momento `temaDaCapo`; la partitura ha tre cose nuove (`Registro`, `Messaggio`,
+`TemaDaCapo`). Una pagina che non li manda suona l’intro di prima. I due file sono `Pezzo::Wi01` e
+`Pezzo::Yu09` (`musica_file.rs`), fra le risorse dell’app.
+
+**Le prove.** In node (`prove/intro.test.ts`, `prove/titoli-di-testa.test.ts`): i tempi nuovi; William dopo
+la transizione, Yusuf subito dopo, la plancia dopo un respiro; le frasi per chi non sente; il tema da capo a
+20,17 s dalla plancia; gli otto crediti e i loro posti; nessun credito dice «clonata»; la tipografia. In Rust:
+la partitura (le due voci, il tema che scende e risale una volta sola) e, con i file veri, che William e
+Yusuf suonino al loro secondo senza un vuoto in mezzo.
+
+**Limiti, detti chiari.** Non ho sentito niente: i livelli sono misurati, le parole le ha riascoltate
+Whisper. Il beep, la radio e il tema che ricomincia li giudica l’orecchio dell’autore. Il filmato è in
+`consegne/Filmato intro 2026-11-15/`. Niente di questo è in una beta.

@@ -16,11 +16,19 @@
 //  è il gioco, chi lo produce) e tre crediti in sovrimpressione (il libro, il
 //  tema musicale, la voce di William). La voce dell'apparecchio si stampa con
 //  il suo cursore, trenta caratteri al secondo, e si sente.
+//  Dal 15 novembre 2026 nello spazio parlano William e Yusuf (documento 09, §17,
+//  le disposizioni dell'autore): quando il nero con la luce verde è diventato lo
+//  spazio comincia il registro di bordo di William, detto da Leonardo Tomassetti;
+//  subito dopo, un beep di registrazione e il messaggio di Yusuf dalla radio.
+//  «Ho firmato tutte le carte… Ho insistito io» apre la seconda parte di L.V.
+//  I crediti: Leonardo al posto del libro, l'autore quando parla Yusuf, la voce
+//  di L.V. quando L.V. ricomincia, il libro dopo il titolo.
 // ============================================================================
 import { SPEGNIMENTO } from "./scala.ts";
+import { MESSAGGIO, REGISTRO, type VoceNelloSpazio } from "./spazio.ts";
 
 export type IdScena = "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H";
-export type Voce = "apparecchio" | "lv" | "titolo";
+export type Voce = "apparecchio" | "lv" | "titolo" | "william" | "yusuf";
 
 export interface Scena {
   id: IdScena;
@@ -62,8 +70,9 @@ export interface Riga {
   minore?: boolean;
 }
 
-/** Dove sta un credito nel quadro: un cartello al centro del nero, o in sovrimpressione in un angolo. */
-export type Posto = "centro" | "alto" | "basso";
+/** Dove sta un credito nel quadro: un cartello al centro del nero, in sovrimpressione in un angolo, o dove
+ *  stava il titolo (il libro, che viene dopo il titolo). */
+export type Posto = "centro" | "alto" | "basso" | "titolo";
 
 /** Un credito dei titoli di testa: entra, è pieno, comincia a uscire, è uscito. */
 export interface Credito {
@@ -161,22 +170,34 @@ const PRIMA_DELLA_PAROLA = 0.6;
 /** e ogni blocco resta almeno così dopo l'ultima parola */
 const DOPO_LA_PAROLA = 0.8;
 const SEGUITO: Partial<Record<string, keyof typeof PROLOGO>> = { B3: "B4", B5: "B6" };
+/** Nello spazio: William comincia mezzo secondo dopo che il nero è diventato cielo; fra la sua ultima parola e il
+ *  beep di Yusuf passa poco (l'autore: «tutto molto legato, senza lasciare troppi spazi vuoti»); dopo Yusuf, un
+ *  respiro, e la plancia. */
+const SPAZIO = { prima: 0.5, fra: 0.35, dopo: 1.3 };
+/** Il tema dura 1:52. Quando B durava venti secondi entrava 20,17 s prima della plancia, e arrivava fino al
+ *  titolo; adesso B dura un minuto in più: entra come prima con lo spazio, e ricomincia da capo a questa distanza
+ *  dalla plancia. */
+const TEMA_PRIMA_DELLA_PLANCIA = 20.17;
 
 export const TITOLO = "IL RELITTO SILENTE";
 
-/** I titoli di testa, con le parole dell'autore (14 novembre 2026). Il libro è nominato qui, e non più
- *  sotto il titolo. */
+/** I titoli di testa, con le parole dell'autore (14 e 15 novembre 2026). Chi presenta, di chi è il gioco e chi lo
+ *  produce sono cartelli nel nero; le voci hanno il loro credito quando si sentono (Leonardo quando William dice
+ *  il suo nome, l'autore quando Yusuf dice il suo, la voce di L.V. quando L.V. ricomincia); il libro viene dopo
+ *  il titolo. Della voce di Yusuf si dice di chi è e basta (l'autore: «Non specificare che è una voce clonata»). */
 export const CREDITI = {
   K0: { righe: [{ grande: "RUNTIME MULTIMEDIA" }, { piccolo: "presenta" }], posto: "centro", fermo: 2.6 },
   K1: { righe: [{ piccolo: "un gioco di" }, { grande: "SIMONE PIZZI" }], posto: "centro", fermo: 2.6 },
   K2: { righe: [{ piccolo: "produttore esecutivo" }, { grande: "MICHELA DE PAOLA" }], posto: "centro", fermo: 2.6 },
-  K3: {
+  K3: { righe: [{ grande: "LEONARDO TOMASSETTI" }, { piccolo: "è William T. Eriksonn" }], posto: "alto", fermo: 4.2 },
+  K4: { righe: [{ grande: "SIMONE PIZZI" }, { piccolo: "è Yusuf" }], posto: "alto", fermo: 4.2 },
+  K5: { righe: [{ piccolo: "tema musicale originale di" }, { grande: "ALIRIO BRUNI" }], posto: "basso", fermo: 3.6 },
+  K6: { righe: [{ grande: "ELIO" }, { piccolo: "è L.V." }], posto: "basso", fermo: 3.6 },
+  K7: {
     righe: [{ piccolo: "tratto dal libro" }, { grande: "DAL REGISTRO DELLA SANTA MARIA" }, { piccolo: "di", grande: "SIMONE PIZZI", minore: true }],
-    posto: "alto",
-    fermo: 4.5,
+    posto: "titolo",
+    fermo: 4.2,
   },
-  K4: { righe: [{ piccolo: "tema musicale originale di" }, { grande: "ALIRIO BRUNI" }], posto: "basso", fermo: 3.6 },
-  K5: { righe: [{ grande: "LEONARDO TOMASSETTI" }, { piccolo: "è William T. Eriksonn" }], posto: "basso", fermo: 3.6 },
 } as const satisfies Record<string, { righe: readonly Riga[]; posto: Posto; fermo: number }>;
 /** un credito entra in un secondo ed esce in poco meno */
 export const ENTRA_C = 1.0;
@@ -212,6 +233,12 @@ export interface Momenti {
   stella: [number, number];
   /** entra la musica: il tema della Santa Maria, quando si apre lo spazio */
   tema: number;
+  /** il tema ricomincia da capo: tanto prima della plancia quanto ci entrava quando B era corta, così da C in poi
+   *  cade sulle immagini come cadeva */
+  temaDaCapo: number;
+  /** il registro di bordo di William, e il messaggio di Yusuf: da quando a quando */
+  registro: [number, number];
+  messaggio: [number, number];
   naveB: number;
   reB: number;
   radar: [number, number];
@@ -300,6 +327,28 @@ export function costruisciScaletta(): Scaletta {
     scene.push({ id, nome, inizio: arrotonda(inizio), fine: 0 });
   };
 
+  /** Le frasi di una voce nello spazio, per chi non la sente: ognuna entra con la sua prima parola e resta finché
+   *  arriva la successiva. Non spostano il tempo: lo sposta il file, che si suona intero. */
+  const frasi = (sigla: string, voce: Voce, v: VoceNelloSpazio, da: number) => {
+    v.frasi.forEach((f, i) => {
+      const entra = da + f.da - 0.2;
+      const via = i + 1 < v.frasi.length ? da + v.frasi[i + 1].da - 0.2 : da + f.a + 1.0;
+      const { parole } = fermoPer(f.testo);
+      blocchi.push({
+        id: sigla + (i + 1),
+        testo: f.testo,
+        voce,
+        scena: "B",
+        parole,
+        fermo: arrotonda(via - 0.5 - (entra + 0.6)),
+        entra: arrotonda(entra),
+        pieno: arrotonda(entra + 0.6),
+        esce: arrotonda(via - 0.5),
+        via: arrotonda(via),
+      });
+    });
+  };
+
   /** Un credito, dal secondo `da` (di suo, da adesso): non sposta il tempo. */
   const credito = (id: keyof typeof CREDITI, da = T): Credito => {
     const k = CREDITI[id];
@@ -348,13 +397,19 @@ export function costruisciScaletta(): Scaletta {
   // --- B. Il margine -----------------------------------------------------------
   scena("B", "Il margine", T);
   const stella = segna(2.5);
-  const naveB = segna(1.0);
+  const naveB = segna(SPAZIO.prima);
   const reB = T;
-  const b5 = testo("B5", "lv", "B");
-  testo("B6", "lv", "B", "B5");
-  // il libro, in sovrimpressione, appena L.V. ha detto «Ho insistito io»: resta sulle stelle, e C aspetta che se ne vada
-  const k3 = credito("K3", b5.pezzo!.t + (VOCE.B6!.fine - VOCE.B5!.da!) + 0.5);
-  T = Math.max(T + ESCE + 1.0, k3.via + 0.3);
+  // il registro di bordo di William, e subito dopo il messaggio di Yusuf dalla radio: due file, interi
+  const registro = T;
+  frasi("W", "william", REGISTRO, registro);
+  // Leonardo, quando William dice il suo nome: al posto in cui stava il libro
+  credito("K3", registro + REGISTRO.nome);
+  T = arrotonda(registro + REGISTRO.dura + SPAZIO.fra);
+  const messaggio = T;
+  frasi("Y", "yusuf", MESSAGGIO, messaggio);
+  // l'autore, quando Yusuf dice il suo
+  credito("K4", messaggio + MESSAGGIO.nome + 0.4);
+  T = arrotonda(messaggio + MESSAGGIO.dura + SPAZIO.dopo);
   // --- C. Il radar ---------------------------------------------------------------
   scena("C", "Il radar", T);
   const radar = segna(6.2);
@@ -369,13 +424,18 @@ export function costruisciScaletta(): Scaletta {
   scena("E", "La scala", T);
   const scala = segna(23.5);
   // il tema musicale, quando la Santa Maria è diventata piccola
-  credito("K4", scala + 9.5);
+  credito("K5", scala + 9.5);
   // --- F. La traccia, seconda parte ---------------------------------------------------
   scena("F", "La traccia, seconda parte", T);
   const f = T;
-  const b7 = testo("B7", "lv", "F");
-  // la voce di William, quando L.V. ricomincia a parlare
-  credito("K5", b7.pezzo!.t + 0.4);
+  // «Ho firmato tutte le carte… Ho insistito io»: stava nello spazio, dove adesso parla William; apre la seconda
+  // parte della traccia, nell'ordine in cui L.V. l'ha detta
+  const b5 = testo("B5", "lv", "F");
+  testo("B6", "lv", "F", "B5");
+  // la voce di L.V., quando L.V. ricomincia a parlare
+  credito("K6", b5.pezzo!.t + 0.4);
+  T += ESCE + 0.6;
+  testo("B7", "lv", "F");
   T += ESCE + 0.6;
   testo("B8", "lv", "F");
   T += ESCE + 0.6;
@@ -391,6 +451,10 @@ export function costruisciScaletta(): Scaletta {
   const traduzione = segna(TRADUZIONE);
   testo("T", "titolo", "G");
   T += ESCE;
+  // il libro, dopo il titolo (l'autore, 15 novembre 2026): un cartello dove stava il titolo, sulla stessa immagine
+  segna(0.3);
+  T = credito("K7").via;
+  segna(0.3);
   // --- H. La plancia ---------------------------------------------------------------------
   scena("H", "La plancia", T);
   const raccordo = segna(1.2);
@@ -407,6 +471,9 @@ export function costruisciScaletta(): Scaletta {
     battito: [r(battito), r(battito + 3.0)],
     stella: [r(stella), r(stella + 2.5)],
     tema: r(stella + 0.4),
+    temaDaCapo: r(radar - TEMA_PRIMA_DELLA_PLANCIA),
+    registro: [r(registro), r(registro + REGISTRO.dura)],
+    messaggio: [r(messaggio), r(messaggio + MESSAGGIO.dura)],
     naveB: r(naveB),
     reB: r(reB),
     radar: [r(radar), r(radar + 6.2)],
@@ -442,7 +509,10 @@ export function costruisciScaletta(): Scaletta {
     { inizio: m.spia + 0.8, fine: m.spia + 0.8 + stampe[0].a - stampe[0].da + 0.6, testo: "un cursore che scrive" },
     { inizio: b1.pezzo!.t, fine: b1.pezzo!.t + 4, testo: "la voce di L.V., dalla radio della tuta, senza fiato" },
     { inizio: m.battito[0], fine: m.tema, testo: "un battito, che rallenta" },
-    { inizio: m.tema, fine: m.naveB + 3, testo: "il battito si allontana; entra la musica" },
+    { inizio: m.tema, fine: m.registro[0], testo: "il battito si allontana; entra la musica" },
+    { inizio: m.registro[0], fine: m.registro[0] + 4, testo: "la voce di William: il registro di bordo" },
+    { inizio: m.messaggio[0], fine: m.messaggio[0] + 4, testo: "un beep; dalla radio, un messaggio registrato" },
+    { inizio: m.temaDaCapo, fine: m.temaDaCapo + 4, testo: "la musica ricomincia, piano" },
     { inizio: m.radar[0], fine: m.stelleSpente[0], testo: "il reattore sotto il pavimento; il radar, un tic a ogni giro" },
     { inizio: m.stelleSpente[0], fine: m.faro, testo: "la plancia" },
     { inizio: m.faro, fine: m.brusio[0], testo: "il relè del faro" },
@@ -509,4 +579,13 @@ export const formatoTempo = (t: number) => {
 /** I pezzi della voce di L.V., in ordine: per il motore audio. */
 export function pezziDellaVoce(s: Scaletta = SCALETTA): Pezzo[] {
   return s.blocchi.filter((b) => b.pezzo).map((b) => b.pezzo!);
+}
+
+/** Quello che la pagina manda al motore audio quando l'intro comincia (mondo/intro.rs, DatiIntro): i momenti, i
+ *  pezzi della voce di L.V., quello che l'apparecchio stampa, e le due voci nello spazio (quando cominciano e
+ *  quanto durano). Una fonte sola, per il gioco e per il suono reso su file (strumenti/intro/momenti.mjs). */
+export function datiPerIlSuono(s: Scaletta = SCALETTA) {
+  const m = s.momenti;
+  const durata = ([da, a]: [number, number]): [number, number] => [da, arrotonda(a - da)];
+  return { momenti: m, durata: s.durata, voce: pezziDellaVoce(s), stampe: s.stampe, registro: durata(m.registro), messaggio: durata(m.messaggio) };
 }

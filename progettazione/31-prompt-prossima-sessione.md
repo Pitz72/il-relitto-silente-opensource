@@ -2,7 +2,9 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 14 novembre 2026, nella notte, dopo il modello della Santa Maria in Blender (la
+Aggiornato l’ultima volta il 15 novembre 2026, a notte: William e Yusuf nella cinematica d’apertura, e i
+titoli di testa con la tipografia del poster (documento 09, §17); fatto, da fargli vedere nel filmato.
+Prima, il 14 novembre 2026, nella notte, dopo il modello della Santa Maria in Blender (la
 forma, una prima superficie e, dopo le sue note, i pezzi nuovi e gli anni: documento 40) e dopo la nave vera
 dentro l’intro, con i reattori che si spengono e il loro suono; approvata dai fogli, da vedere nel gioco.
 Poi, lo stesso giorno, il filmato intero dell’intro che ha chiesto per prendere appunti.
@@ -69,9 +71,50 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   più verosimile il fatto che ce la possano fare»; e «se così vincono sempre tutti, dove sta la sfida?»):
   `collaudo/verosimili.py`, con la fuga giocata da principianti veri.
 
-## Dove siamo (14 novembre 2026)
+## Dove siamo (15 novembre 2026)
 
-- **14 novembre 2026, sera: il registro di bordo di William e il messaggio di Yusuf, in pausa.** L’autore vuole
+- **15 novembre 2026, a notte: William e Yusuf nell’intro, e i titoli di testa con la tipografia del poster**
+  (documento 09, §17: lì stanno le sue disposizioni parola per parola e quello che è stato fatto). Leonardo ha
+  mandato il registro di bordo (la versione scritta e detta, che chiude con «W. T.»; `intro.wav`; c’è anche una
+  seconda presa, `intro2.wav`, non usata), e l’autore ha deciso il montaggio: il registro parte quando il nero
+  con la luce verde è diventato lo spazio; subito dopo un beep di registrazione e il messaggio di Yusuf, in più
+  pezzi con il beep in mezzo, dalla radio; «il resto tutto uguale». I crediti: Leonardo al posto del libro,
+  «Simone Pizzi è Yusuf» (senza dire che la voce è clonata), la voce di L.V. quando L.V. ricomincia, il libro
+  dopo il titolo; e la tipografia del poster per i titoli di testa e per il titolo. **Fatto tutto**, con le
+  prove (145 in node, 107 in Rust). L’intro dura 4:49 (era 3:24).
+  **Le scelte mie, che deve giudicare** (09, §17.2): la scena nello spazio dura 84 secondi, con le due voci
+  tutte lì; «Ho firmato tutte le carte… Ho insistito io» apre la seconda parte di L.V.; il tema, che dura
+  1:52, ricomincia da capo venti secondi prima della plancia; l’attore digitale di L.V. è scritto «ELIO»; il
+  libro dopo il titolo è un cartello a sé, dove stava il titolo; il beep è una nota sola (un si), e dopo
+  l’ultimo pezzo di Yusuf non c’è (la radio si chiude e basta). Nella dichiarazione d’apertura una frase in
+  più: «William, nell’intro, ha la voce dell’attore Leonardo Tomassetti». La voce di Leonardo nei registri è
+  scritta «fuori dalla licenza libera del gioco» finché l’autore non dice altro.
+  **Non l’ha ancora visto né sentito**: il filmato è `consegne/Filmato intro 2026-11-15/Il Relitto Silente -
+  intro con William e Yusuf.mp4`. Non è in una beta. **Alla prossima: le sue note sul filmato.**
+- **15 novembre 2026: le prese di Leonardo per il gioco, e come deve funzionare il parlato.** L’autore: «ma
+  non ti avevo già mandato dei file di Leo? perché non sono integrati? Il modo in cui l’audio del parlato e
+  dei dialoghi deve funzionare è esattamente come abbiamo fatto ne Il Viaggiatore»; e ne manderà altre. Le
+  prese arrivate sono **quattordici** (`SM-001`…`SM-014`, tutta la plancia; le prime quattro rimandate con i
+  picchi sotto −3 dB, come gli era stato chiesto; 16 bit), in `doppiaggio/william/consegne/` (fuori da git;
+  quelle del 13 in `2026-11-13/`), controllate (`controllo-2026-11-15.json`): testo fedele; tre parole da far
+  sentire all’autore (SM-011 «nel rosso» sentito «del rosso»; SM-014 «lo faccio correre» sentito «scorrere»;
+  in SM-001 Whisper sente un «ebbe» in più dopo «servirebbe»). **Non sono nel gioco: il gioco non ha ancora un
+  lettore per la voce di William.** Va costruito sul modello del Viaggiatore
+  (`C:\Users\Utente\Documents\GitHub\IlViaggiatore`: `app/src/gioco/voce.ts`, `parti.ts`,
+  `components/ViaggiatorePlayer.tsx`, `gioco/musica.ts`; il progetto è in `pre-produzione/08-doppiaggio-tts.md`):
+  il testo del turno compare tutto e la voce parte da sola con lui; le parti si ritrovano dal testo stampato
+  (il racconto è del narratore, le «» del personaggio, le parentesi della voce di servizio), in fila
+  nell’ordine del testo, 0,3 s fra le frasi e 0,55 fra le righe; al primo tasto o comando la voce tace di
+  colpo e il testo resta; Esc, se parla, la zittisce soltanto; F2 la ridice; le scelte dei dialoghi le legge
+  il narratore quando il mouse ci si ferma un terzo di secondo, mai sopra chi sta parlando; una riga senza
+  file resta muta; un modo «voce recitata / nessuna / lettore di schermo». Qui il copione dice già quale presa
+  è quale testo (`doppiaggio/william/copione.json`), e le altre voci (la nave, l’Anziano, Yusuf, la voce di
+  servizio) ci sono già, in fila nel motore audio; i file di William sono 604 e non possono essere voci fisse
+  del lettore (`Pezzo` in `musica_file.rs` è un elenco chiuso): serve un lettore per nome di file. **Una cosa
+  da chiedergli prima**: nel Viaggiatore la musica scende di 6 dB sotto la voce; qui il 2 novembre ha chiesto
+  musica ferma e più bassa, senza salire e scendere («fa troppo radio»): quale delle due.
+- **14 novembre 2026, sera: il registro di bordo di William e il messaggio di Yusuf** (in pausa quella sera;
+  **deciso e fatto il 15**, vedi sopra: Leonardo ha registrato la versione B). L’autore vuole
   nell’intro, dove oggi in B c’è «Ho firmato tutte le carte… Ho insistito io» (che andrà più avanti), un registro
   di bordo detto da William; **il posto e il montaggio li decide lui: non toccare la scaletta finché non lo dice**.
   Il testo è scritto e quasi approvato (sua correzione: «il giorno che smetterà, mi preoccuperò»); due versioni,
