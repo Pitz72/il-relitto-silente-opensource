@@ -335,7 +335,14 @@
   {
    "file": "relitto-{16x9,21x9,9x16,poster,social}.png",
    "che_cosa": "le copertine social del gioco in cinque formati (16:9, 21:9, 9:16, poster 2:3, anteprima 2:1): il cielo con la Via Lattea, il fuso nero che mangia le stelle, il seme verde, la Santa Maria canonica e il titolo",
-   "da_dove": "composte in codice da strumenti/copertina/componi.py (progettazione/24-copertina-e-logo.md, §9) con app/public/intro/prua.webp e i caratteri del gioco; **nessuna immagine generata da strumenti di IA**",
+   "da_dove": "composte in codice da strumenti/copertina/componi.py (progettazione/24-copertina-e-logo.md, §9) con il ritratto del modello della nave (grafica/nave/santa-maria-tre-quarti.webp, dal 15 novembre 2026; prima app/public/intro/prua.webp) e i caratteri del gioco; **nessuna immagine generata da strumenti di IA**",
+   "autore": "Simone Pizzi",
+   "licenza": "dell’autore"
+  },
+  {
+   "file": "santa-maria-tre-quarti.webp",
+   "che_cosa": "la Santa Maria di tre quarti dal davanti, su fondo trasparente: il ritratto per le copertine e per il sito della saga",
+   "da_dove": "reso in Blender da strumenti/nave/ritratto.py sul modello di strumenti/nave/modello.py (documento 40); **nessuna immagine generata da strumenti di IA**",
    "autore": "Simone Pizzi",
    "licenza": "dell’autore"
   },

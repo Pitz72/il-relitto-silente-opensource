@@ -147,7 +147,9 @@ Il logo dell’eseguibile: il fuso nero che mangia le stelle, con il seme al cen
 Lo stesso logo, in vettoriale
   Simone Pizzi · dell’autore · lo stesso strumento
 Le copertine social del gioco in cinque formati (16:9, 21:9, 9:16, poster 2:3, anteprima 2:1): il cielo con la Via Lattea, il fuso nero che mangia le stelle, il seme verde, la Santa Maria canonica e il titolo
-  Simone Pizzi · dell’autore · composte in codice da strumenti/copertina/componi.py (progettazione/24-copertina-e-logo.md, §9) con app/public/intro/prua.webp e i caratteri del gioco; **nessuna immagine generata da strumenti di IA**
+  Simone Pizzi · dell’autore · composte in codice da strumenti/copertina/componi.py (progettazione/24-copertina-e-logo.md, §9) con il ritratto del modello della nave (grafica/nave/santa-maria-tre-quarti.webp, dal 15 novembre 2026; prima app/public/intro/prua.webp) e i caratteri del gioco; **nessuna immagine generata da strumenti di IA**
+La Santa Maria di tre quarti dal davanti, su fondo trasparente: il ritratto per le copertine e per il sito della saga
+  Simone Pizzi · dell’autore · reso in Blender da strumenti/nave/ritratto.py sul modello di strumenti/nave/modello.py (documento 40); **nessuna immagine generata da strumenti di IA**
 Il marchio ufficiale di Runtime Multimedia (a colori e in bianco, con la trasparenza), per i credits del poster
   Simone Pizzi · dell’autore · il kit dei loghi dell’autore (J:/PODCAST/ASSETS/LOGO 2025/RUNTIME MULTIMEDIA/PNG/)
 

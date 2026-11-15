@@ -40,6 +40,17 @@
         "--strictPort"
       ],
       "port": 5276
+    },
+    {
+      "name": "sito-saga",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "C:/Users/Utente/Documents/SVILUPPO/VIDEOGIOCHI/IlMisteroDellaSantaMaria/sito",
+        "run",
+        "dev"
+      ],
+      "port": 4321
     }
   ]
 }

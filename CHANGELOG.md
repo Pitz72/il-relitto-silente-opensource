@@ -16,6 +16,10 @@ documenti di `progettazione/`.
 
 - Il credito K5 dei titoli di testa (`app/src/intro/scaletta.ts`), la sua prova (`prove/titoli-di-testa.test.ts`) e il documento 09 usano la grafia del canone, «Eriksonn» (la bibbia della saga, i finali, il copione di William). Restano scritte come le ha sentite Whisper le trascrizioni automatiche in `doppiaggio/servizio/tagli.json`: sono il resoconto dell’ascolto, non testo del gioco.
 
+### Cambiato
+
+- **Le copertine hanno la nave vera** (15 novembre 2026, richiesta dell’autore per il sito della saga). `strumenti/nave/ritratto.py` rende in Blender il modello della Santa Maria (documento 40) di tre quarti dal davanti, su fondo trasparente, e lo taglia in `grafica/nave/santa-maria-tre-quarti.webp`; `strumenti/copertina/componi.py` usa questo ritratto al posto dello still generato `app/public/intro/prua.webp`. Rifatte le copertine in `grafica/copertine/` (in git c’è l’anteprima del repository, `relitto-social.png`); righe nuove in `grafica/LICENZE.md` e nei riconoscimenti. Nel gioco non cambia niente: `prua.webp` resta per la vista dello scafo (`strumenti/viste/scafo.py`).
+
 ## [0.2.5-beta.12] - 2026-11-14
 
 ### Per chi gioca

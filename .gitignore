@@ -43,3 +43,6 @@ grafica/copertine/*
 # Il modello della Santa Maria: il file di Blender si rifà da strumenti/nave/modello.py
 strumenti/nave/uscita/
 progettazione/40-modello/viste/
+
+# il render grezzo del ritratto della nave (strumenti/nave/ritratto.py): si rifà, è grande
+grafica/nave/*-grezza.png

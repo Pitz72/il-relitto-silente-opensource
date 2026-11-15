@@ -1,7 +1,9 @@
 # componi.py — le copertine social del gioco, in cinque formati (progettazione/24-copertina-e-logo.md, §4, direzione A:
 # «il muro nero»). Tutto in codice, senza strumenti di immagini: il cielo con la Via Lattea, il fuso nero che
 # occupa il cielo e mangia le stelle ai suoi bordi, il punto verde del seme nel suo cuore; la Santa Maria
-# canonica (app/public/intro/prua.webp) piccola in un angolo; il titolo con i caratteri del gioco.
+# canonica piccola in un angolo; il titolo con i caratteri del gioco. Dal 15 novembre 2026 la nave è il ritratto del
+# modello vero (grafica/nave/santa-maria-tre-quarti.webp, da strumenti/nave/ritratto.py; documento 40), non più lo
+# still generato app/public/intro/prua.webp: una nave sola per tutti i progetti.
 #
 # Uso (dalla radice del progetto):
 #   python strumenti/copertina/componi.py                 tutti i formati, in grafica/copertine/
@@ -24,7 +26,7 @@ from scipy.ndimage import gaussian_filter
 QUI = os.path.dirname(os.path.abspath(__file__))
 RADICE = os.path.dirname(os.path.dirname(QUI))
 USCITA = os.path.join(RADICE, "grafica", "copertine")
-NAVE = os.path.join(RADICE, "app", "public", "intro", "prua.webp")
+NAVE = os.path.join(RADICE, "grafica", "nave", "santa-maria-tre-quarti.webp")
 FONT = os.path.join(RADICE, "app", "node_modules", "@fontsource-variable")
 
 TITOLO = "IL RELITTO SILENTE"
