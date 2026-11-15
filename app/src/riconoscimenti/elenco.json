@@ -333,15 +333,22 @@
    "licenza": "dell’autore"
   },
   {
-   "file": "relitto-{16x9,21x9,9x16,poster,social}.png",
-   "che_cosa": "le copertine social del gioco in cinque formati (16:9, 21:9, 9:16, poster 2:3, anteprima 2:1): il cielo con la Via Lattea, il fuso nero che mangia le stelle, il seme verde, la Santa Maria canonica e il titolo",
-   "da_dove": "composte in codice da strumenti/copertina/componi.py (progettazione/24-copertina-e-logo.md, §9) con il ritratto del modello della nave (grafica/nave/santa-maria-tre-quarti.webp, dal 15 novembre 2026; prima app/public/intro/prua.webp) e i caratteri del gioco; **nessuna immagine generata da strumenti di IA**",
+   "file": "relitto-{9x16,poster,16x9,anteprima,social}{,-en}.png, relitto-21x9.png, relitto-9x16-nudo.png",
+   "che_cosa": "le copertine del gioco: il poster (9:16 e 2:3, con i crediti), lo sfondo 16:9, l’anteprima social, quella del repository (2:1) e le due aperture senza scritte (21:9 e 9:16), in italiano e in inglese. La scena è quella del poster approvato dall’autore il 15 novembre 2026: il relitto troppo grande per il quadro, la Santa Maria da dietro che gli va incontro, il fascio del faro che lo tocca, il seme sulla stessa linea",
+   "da_dove": "composte in codice da strumenti/copertina/poster.py, con il cielo e il fuso di strumenti/copertina/componi.py, la nave resa dal modello (grafica/nave/santa-maria-verso-il-relitto.webp, strumenti/nave/ritratto.py) e i caratteri del gioco; **nessuna immagine generata da strumenti di IA**",
+   "autore": "Simone Pizzi",
+   "licenza": "dell’autore"
+  },
+  {
+   "file": "santa-maria-verso-il-relitto.webp (e il suo .json, dove cadono il faro e gli scarichi)",
+   "che_cosa": "la Santa Maria da dietro e dall’alto, su fondo trasparente: la nave del poster e delle copertine",
+   "da_dove": "resa in Blender da strumenti/nave/ritratto.py (ripresa «verso-il-relitto») sul modello di strumenti/nave/modello.py (documento 40); **nessuna immagine generata da strumenti di IA**",
    "autore": "Simone Pizzi",
    "licenza": "dell’autore"
   },
   {
    "file": "santa-maria-tre-quarti.webp",
-   "che_cosa": "la Santa Maria di tre quarti dal davanti, su fondo trasparente: il ritratto per le copertine e per il sito della saga",
+   "che_cosa": "la Santa Maria di tre quarti dal davanti, su fondo trasparente: il ritratto per il sito della saga (le immagini con la sola nave nello spazio)",
    "da_dove": "reso in Blender da strumenti/nave/ritratto.py sul modello di strumenti/nave/modello.py (documento 40); **nessuna immagine generata da strumenti di IA**",
    "autore": "Simone Pizzi",
    "licenza": "dell’autore"

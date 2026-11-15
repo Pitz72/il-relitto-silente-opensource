@@ -5,6 +5,10 @@
 # modello vero (grafica/nave/santa-maria-tre-quarti.webp, da strumenti/nave/ritratto.py; documento 40), non più lo
 # still generato app/public/intro/prua.webp: una nave sola per tutti i progetti.
 #
+# ⭐ Dal 15 novembre 2026 le copertine seguono il poster approvato dall'autore e le compone strumenti/copertina/poster.py
+# (la nave che va incontro al relitto); questo file resta la cassetta degli attrezzi, e lanciato da solo passa a
+# poster.py. La composizione di prima, con la nave nell'angolo, si ha ancora con --vecchia.
+#
 # Uso (dalla radice del progetto):
 #   python strumenti/copertina/componi.py                 tutti i formati, in grafica/copertine/
 #   python strumenti/copertina/componi.py 16x9 poster     solo questi
@@ -286,6 +290,13 @@ def componi(nome):
 
 
 if __name__ == "__main__":
-    scelti = sys.argv[1:] or list(FORMATI)
+    # dal 15 novembre 2026 le copertine le compone poster.py, sul poster approvato dall'autore; qui restano gli
+    # attrezzi (il cielo, il fuso, i caratteri, la finitura). La composizione di prima si ha con --vecchia.
+    if "--vecchia" not in sys.argv:
+        import poster
+        for n in sys.argv[1:] or ["16x9", "21x9", "9x16", "poster", "social"]:
+            poster.componi(n, "it", USCITA)
+        sys.exit()
+    scelti = [a for a in sys.argv[1:] if a != "--vecchia"] or list(FORMATI)
     for n in scelti:
         componi(n)
