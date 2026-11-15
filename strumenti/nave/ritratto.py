@@ -15,6 +15,7 @@
 #  filo di luce alle ombre. Il chiaroscuro da sinistra lo aggiunge componi.py.
 #  L'oblò, i fanali e il faro restano accesi come nel modello.
 # ============================================================================
+import json
 import math
 import sys
 from pathlib import Path
@@ -27,18 +28,30 @@ except ImportError:  # il secondo passo, fuori da Blender
 
 QUI = Path(__file__).resolve().parent
 RADICE = QUI.parents[1]
+sys.path.insert(0, str(QUI))
 BLEND = QUI / "uscita" / "santa-maria.blend"
 USCITA = RADICE / "grafica" / "nave"
 Z = Vector((0, 0, 1)) if bpy else None
 
-DA = (-0.86, -0.48, 0.19)  # da dove si guarda: il muso e il fianco sinistro, un poco dall'alto
-LENTE = 110
+# Le riprese. «da»: da dove si guarda, rispetto al centro della nave; «sole» e «schiarita»: verso dove va la luce,
+# nella terna della macchina (avanti, destra, alto); «quadro»: la misura del render grezzo.
+RIPRESE = {
+    # il muso e il fianco sinistro, un poco dall'alto: le copertine orizzontali e il sito
+    "tre-quarti": dict(da=(-0.86, -0.48, 0.19), lente=110, sole=(0.85, -0.25, -0.50), forza=4.0,
+                       schiarita=(-0.75, -0.55, -0.25), forza_schiarita=2.6, quadro=(4000, 1750)),
+    # da dietro e dall'alto, la nave che va incontro al relitto: il poster. Il sole radente da sinistra sul dorso,
+    # la schiarita fredda da davanti che disegna il contorno
+    "verso-il-relitto": dict(da=(0.86, 0.40, 0.24), lente=100, sole=(-0.45, 0.55, -0.70), forza=4.2,
+                             schiarita=(0.60, -0.70, 0.10), forza_schiarita=0.9, quadro=(3600, 2000)),
+}
 
 
 def main():
     argomenti = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
     campioni = int(argomenti[argomenti.index("--campioni") + 1]) if "--campioni" in argomenti else 128
     prova = "--prova" in argomenti
+    nome = argomenti[argomenti.index("--ripresa") + 1] if "--ripresa" in argomenti else "tre-quarti"
+    r = RIPRESE[nome]
     bpy.ops.wm.open_mainfile(filepath=str(BLEND))
     sc = bpy.context.scene
     nave = bpy.data.collections["Santa Maria"]
@@ -46,7 +59,7 @@ def main():
 
     sc.cycles.samples = 32 if prova else campioni
     sc.render.film_transparent = True
-    sc.render.resolution_x, sc.render.resolution_y = (1600, 700) if prova else (4000, 1750)
+    sc.render.resolution_x, sc.render.resolution_y = tuple(v // 2 for v in r["quadro"]) if prova else r["quadro"]
     sc.render.image_settings.file_format = "PNG"
     sc.render.image_settings.color_mode = "RGBA"
     sc.render.image_settings.color_depth = "16"
@@ -56,11 +69,11 @@ def main():
     # la macchina: tutta la nave nel quadro, con poco margine (il taglio lo fa dopo l'immagine)
     punti = [o.matrix_world @ Vector(c) for o in nave.objects for c in o.bound_box]
     centro = Vector([(min(p[i] for p in punti) + max(p[i] for p in punti)) / 2 for i in range(3)])
-    d = -Vector(DA).normalized()
+    d = -Vector(r["da"]).normalized()
     destra = d.cross(Z).normalized()
     alto = destra.cross(d)
     formato = sc.render.resolution_x / sc.render.resolution_y
-    macchina.data.type, macchina.data.lens, macchina.data.clip_end = "PERSP", LENTE, 3000
+    macchina.data.type, macchina.data.lens, macchina.data.clip_end = "PERSP", r["lente"], 3000
     macchina.rotation_euler = Matrix((destra, alto, -d)).transposed().to_euler()
     mezzo = (macchina.data.sensor_width / 2) / macchina.data.lens
     for _ in range(5):
@@ -71,13 +84,14 @@ def main():
         centro = centro + destra * ((min(xs) + max(xs)) / 2 * t) + alto * ((min(ys) + max(ys)) / 2 * t)
     macchina.location = centro - d * t
 
-    # le luci: il sole da sinistra in alto e un poco da davanti; la schiarita fredda da dietro a destra
+    # le luci, nella terna della macchina
     def verso(v):
-        return v.normalized().to_track_quat("-Z", "Y").to_euler()
-    sole.rotation_euler = verso(d * 0.85 - destra * 0.25 - alto * 0.50)
-    sole.data.energy, sole.data.angle = 4.0, math.radians(2)
-    schiarita.rotation_euler = verso(-d * 0.75 - destra * 0.55 - alto * 0.25)
-    schiarita.data.energy = 2.6
+        a, b, c = v
+        return (d * a + destra * b + alto * c).normalized().to_track_quat("-Z", "Y").to_euler()
+    sole.rotation_euler = verso(r["sole"])
+    sole.data.energy, sole.data.angle = r["forza"], math.radians(2)
+    schiarita.rotation_euler = verso(r["schiarita"])
+    schiarita.data.energy = r["forza_schiarita"]
     # il mondo: niente cielo azzurro sullo scafo, solo un filo di luce fredda per le ombre
     mondo = sc.world
     for n in mondo.node_tree.nodes:
@@ -85,25 +99,48 @@ def main():
             n.inputs["Strength"].default_value = 0.12
 
     USCITA.mkdir(parents=True, exist_ok=True)
-    grezza = USCITA / ("prova-grezza.png" if prova else "santa-maria-tre-quarti-grezza.png")
+    grezza = USCITA / (f"prova-{nome}-grezza.png" if prova else f"santa-maria-{nome}-grezza.png")
     sc.render.filepath = str(grezza)
     bpy.ops.render.render(write_still=True)
-    print("RITRATTO", grezza)
+    # dove cadono nel quadro la lente del faro, un punto 60 metri avanti lungo il fascio, e gli scarichi:
+    # chi compone il poster ci disegna il fascio e la brace
+    from bpy_extras.object_utils import world_to_camera_view
+    import misure as M
+    fx0, fx1 = M.FARO["x"]
+    asse = Vector((-1, 0, -0.07)).normalized()
+    lente = Vector((fx1 - 0.05, 0, sum(M.FARO["z"]) / 2 + 0.06)) + asse * (fx1 - fx0 - 0.1)
+    Lx, Ly = sc.render.resolution_x, sc.render.resolution_y
+
+    def nel_quadro(p):
+        v = world_to_camera_view(sc, macchina, p)
+        return [round(v.x * Lx, 1), round((1 - v.y) * Ly, 1)]
+    punti = {"faro": nel_quadro(lente), "fascio": nel_quadro(lente + asse * 60),
+             "scarichi": [nel_quadro(Vector((M.LUNGHEZZA + 0.3, y, M.SCARICHI["z"]))) for y in M.SCARICHI["y"]]}
+    grezza.with_suffix(".json").write_text(json.dumps(punti, indent=1), encoding="utf-8")
+    print("RITRATTO", grezza, punti)
 
 
-def taglia():
-    """Il secondo passo: la nave tagliata con un margine di 12 punti, in webp con la trasparenza."""
+def taglia(nome):
+    """Il secondo passo: la nave tagliata con un margine di 12 punti, in webp con la trasparenza; i punti del faro e
+    degli scarichi, spostati del taglio, nel .json accanto."""
     import numpy as np
     from PIL import Image
-    img = Image.open(USCITA / "santa-maria-tre-quarti-grezza.png").convert("RGBA")
+    grezza = USCITA / f"santa-maria-{nome}-grezza.png"
+    img = Image.open(grezza).convert("RGBA")
     ys, xs = np.where(np.asarray(img)[..., 3] > 2)
     m = 12
-    box = (max(0, xs.min() - m), max(0, ys.min() - m), min(img.width, xs.max() + m + 1), min(img.height, ys.max() + m + 1))
-    img.crop(box).save(USCITA / "santa-maria-tre-quarti.webp", quality=92, method=6)
-    print("TAGLIATA", box)
+    box = tuple(int(v) for v in (max(0, xs.min() - m), max(0, ys.min() - m), min(img.width, xs.max() + m + 1), min(img.height, ys.max() + m + 1)))
+    img.crop(box).save(USCITA / f"santa-maria-{nome}.webp", quality=92, method=6)
+    if grezza.with_suffix(".json").exists():
+        p = json.loads(grezza.with_suffix(".json").read_text(encoding="utf-8"))
+        sposta = lambda q: [round(q[0] - box[0], 1), round(q[1] - box[1], 1)]  # noqa: E731
+        p = {"faro": sposta(p["faro"]), "fascio": sposta(p["fascio"]), "scarichi": [sposta(q) for q in p["scarichi"]],
+             "misura": [box[2] - box[0], box[3] - box[1]]}
+        (USCITA / f"santa-maria-{nome}.json").write_text(json.dumps(p, indent=1) + chr(10), encoding="utf-8", newline=chr(10))
+    print("TAGLIATA", nome, box)
 
 
 if bpy:
     main()
 else:
-    taglia()
+    taglia(sys.argv[1] if len(sys.argv) > 1 else "tre-quarti")
