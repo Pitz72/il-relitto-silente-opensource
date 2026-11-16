@@ -8,6 +8,8 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+## [0.2.5-beta.13] - 2026-11-16
+
 ### Per chi gioca
 
 - **William ha la sua voce anche nel gioco.** Leonardo Tomassetti legge il racconto mentre compare, come un audiolibro: per ora la plancia della Santa Maria, il resto arriverà man mano che registra. Al primo comando o tasto tace, F2 te lo fa ridire, Esc lo zittisce. Nei dialoghi, fermandoti su una risposta, la sentirai dalla sua voce. Se preferisci leggere in silenzio: Opzioni, Audio, «Voce di William».
