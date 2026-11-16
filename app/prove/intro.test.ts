@@ -10,8 +10,8 @@ import { reattori } from "../src/intro/scala.ts";
 
 const blocco = (id: string) => SCALETTA.blocchi.find((b) => b.id === id)!;
 
-test("la durata: 4:48,29 con il libro a ridosso del titolo (era 4:49,24 con William e Yusuf nello spazio; 3:24,16 con i titoli di testa; 3:02,12; 2:40,75 prima della voce di L.V.)", () => {
-  assert.equal(SCALETTA.durata, 288.29);
+test("la durata: 4:48,39 con il libro a ridosso del titolo (era 4:49,24 con William e Yusuf nello spazio; 3:24,16 con i titoli di testa; 3:02,12; 2:40,75 prima della voce di L.V.)", () => {
+  assert.equal(SCALETTA.durata, 288.39);
 });
 
 test("le inquadrature del 16 novembre: il passaggio sul beep di Yusuf, i due dettagli in F, il quadro largo che torna prima di «La vedo pulsare» e si allarga fino al titolo", () => {
@@ -26,6 +26,20 @@ test("le inquadrature del 16 novembre: il passaggio sul beep di Yusuf, i due det
   assert.ok(M.sensori[1] - M.sensori[0] > 10 && M.cerca[1] - M.cerca[0] > 10);
   assert.ok(M.allarga[0] < blocco("B9").pezzo!.t);
   assert.ok(M.cerca[0] < blocco("B7").pezzo!.t);
+});
+
+test("il tema di Alirio: tre passaggi, il punto più forte sul titolo, la musica fino al gioco", () => {
+  const M = SCALETTA.momenti;
+  // il primo quando si apre lo spazio, il secondo poco prima della plancia, il terzo nella seconda parte di L.V.
+  assert.ok(M.tema < M.temaDaCapo && M.temaDaCapo < M.temaTerzo);
+  assert.ok(M.temaTerzo > SCALETTA.scene[5].inizio && M.temaTerzo < M.glifi[0]);
+  // il tema ha il suo punto più forte a 36 s: cade sul titolo intero
+  assert.equal(Math.round((blocco("T").pieno - M.temaTerzo) * 100) / 100, 36);
+  // la musica piena dura un minuto: dal terzo passaggio copre fino alla fine dell'intro
+  assert.ok(SCALETTA.durata - M.temaTerzo < 60, "la musica piena non arriva al gioco");
+  // nessun passaggio lascia un buco: ognuno comincia prima che quello di prima sia finito (1:52)
+  assert.ok(M.temaDaCapo - M.tema < 112 && M.temaTerzo - M.temaDaCapo < 112);
+  assert.equal(datiPerIlSuono().momenti.temaTerzo, M.temaTerzo);
 });
 
 test("nei dettagli di F i reattori sono spenti, nel passaggio accesi", () => {
@@ -43,7 +57,7 @@ test("i testi entrano, sono pieni ed escono quando dicono la regola e la voce", 
   const attesi: Record<string, [number, number, number]> = {
     B0: [7.4, 8.6, 15.1], B1: [16, 17.2, 29.55], B2: [37.05, 38.25, 47.9], B3: [48.8, 50, 68.15],
     B4: [61.03, 62.23, 68.15], B5: [207.77, 208.97, 222.3], B6: [216.1, 217.3, 222.3], B7: [222.9, 224.1, 231.39],
-    B8: [231.99, 233.19, 239.76], B9: [240.36, 241.56, 250.19], B10: [250.79, 251.99, 256.99], T: [264.79, 265.99, 273.54],
+    B8: [231.99, 233.19, 239.76], B9: [240.36, 241.56, 250.19], B10: [250.79, 251.99, 256.99], T: [264.79, 265.99, 273.14],
   };
   for (const [id, [entra, pieno, via]] of Object.entries(attesi)) {
     const b = blocco(id);
@@ -53,7 +67,7 @@ test("i testi entrano, sono pieni ed escono quando dicono la regola e la voce", 
 
 test("le scene cominciano dove dice la scaletta", () => {
   const inizi = Object.fromEntries(SCALETTA.scene.map((s) => [s.id, s.inizio]));
-  assert.deepEqual(inizi, { A: 0, B: 78.65, C: 162.47, D: 175.27, E: 184.27, F: 207.77, G: 257.99, H: 279.29 });
+  assert.deepEqual(inizi, { A: 0, B: 78.65, C: 162.47, D: 175.27, E: 184.27, F: 207.77, G: 257.99, H: 279.39 });
   // da C in poi le scene durano quanto prima: è B che è cresciuta (le due voci), F (le due frasi di L.V. che
   // stavano in B) e G (il libro dopo il titolo; dal 16 novembre a ridosso, e G si è accorciata di 0,95 s)
   const dura = Object.fromEntries(SCALETTA.scene.map((s) => [s.id, Math.round((s.fine - s.inizio) * 100) / 100]));

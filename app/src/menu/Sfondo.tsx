@@ -64,6 +64,8 @@ export default function Sfondo({ ridotto }: { ridotto: boolean }) {
     let raf = 0;
     pronta.current ??= (async () => {
       const s = new Scala(c);
+      // lo sfondo del menu resta com'era: niente riflesso dell'obiettivo dietro le voci
+      s.riflessi = false;
       const base = new URL("./intro/", location.href).href;
       await s.carica(`${base}nave/`);
       s.prepara("scala");

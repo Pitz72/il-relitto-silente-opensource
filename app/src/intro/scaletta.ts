@@ -184,6 +184,13 @@ const SPAZIO = { prima: 0.5, fra: 0.35, dopo: 1.3 };
  *  titolo; adesso B dura un minuto in più: entra come prima con lo spazio, e ricomincia da capo a questa distanza
  *  dalla plancia. */
 const TEMA_PRIMA_DELLA_PLANCIA = 20.17;
+/** Il punto più forte del tema sta a 36 secondi dal suo inizio (misurato sul file): il terzo passaggio parte perché
+ *  cada sul titolo intero. Da lì la musica piena dura ancora una ventina di secondi: fino al gioco. */
+const TEMA_PUNTO_FORTE = 36;
+/** Il titolo esce più in fretta degli altri testi, e il libro entra quando è quasi sparito: a ridosso, ma senza che
+ *  i due si leggano uno sull'altro (nella beta 14 si sovrapponevano per sei decimi). */
+const TITOLO_ESCE = 0.6;
+const LIBRO_DOPO = 0.45;
 
 export const TITOLO = "IL RELITTO SILENTE";
 
@@ -243,6 +250,9 @@ export interface Momenti {
   /** il tema ricomincia da capo: tanto prima della plancia quanto ci entrava quando B era corta, così da C in poi
    *  cade sulle immagini come cadeva */
   temaDaCapo: number;
+  /** il tema ricomincia una terza volta, nella seconda parte di L.V.: il suo punto più forte cade sul titolo, e la
+   *  musica arriva fino al gioco (l'autore, 16 novembre 2026). Ogni volta la copia di prima esce in dissolvenza */
+  temaTerzo: number;
   /** il registro di bordo di William, e il messaggio di Yusuf: da quando a quando */
   registro: [number, number];
   messaggio: [number, number];
@@ -465,8 +475,9 @@ export function costruisciScaletta(): Scaletta {
   const traduzione = segna(TRADUZIONE);
   const titolo = testo("T", "titolo", "G");
   // il libro, dopo il titolo (l'autore, 15 novembre 2026): un cartello dove stava il titolo, sulla stessa immagine; dal
-  // 16 novembre «subito dopo, molto a ridosso»: entra mentre il titolo sta uscendo, e i due si danno il cambio
-  T = credito("K7", arrotonda(titolo.esce + 0.35)).via;
+  // 16 novembre «subito dopo, molto a ridosso»: il titolo esce in fretta, e il libro entra quando è quasi sparito
+  titolo.via = arrotonda(titolo.esce + TITOLO_ESCE);
+  T = credito("K7", arrotonda(titolo.esce + LIBRO_DOPO)).via;
   segna(0.3);
   // --- H. La plancia ---------------------------------------------------------------------
   scena("H", "La plancia", T);
@@ -485,6 +496,7 @@ export function costruisciScaletta(): Scaletta {
     stella: [r(stella), r(stella + 2.5)],
     tema: r(stella + 0.4),
     temaDaCapo: r(radar - TEMA_PRIMA_DELLA_PLANCIA),
+    temaTerzo: r(titolo.pieno - TEMA_PUNTO_FORTE),
     registro: [r(registro), r(registro + REGISTRO.dura)],
     messaggio: [r(messaggio), r(messaggio + MESSAGGIO.dura)],
     // lo stacco sul passaggio cade sul beep di Yusuf
@@ -533,17 +545,18 @@ export function costruisciScaletta(): Scaletta {
     { inizio: m.registro[0], fine: m.registro[0] + 4, testo: "la voce di William: il registro di bordo" },
     { inizio: m.messaggio[0], fine: m.messaggio[0] + 4, testo: "un beep; dalla radio, un messaggio registrato" },
     { inizio: m.temaDaCapo, fine: m.temaDaCapo + 4, testo: "la musica ricomincia, piano" },
-    { inizio: m.radar[0], fine: m.stelleSpente[0], testo: "il reattore sotto il pavimento; il radar, un tic a ogni giro" },
+    { inizio: m.radar[0], fine: m.stelleSpente[0], testo: "la ventilazione; il radar, un tic a ogni giro" },
     { inizio: m.stelleSpente[0], fine: m.faro, testo: "la plancia" },
     { inizio: m.faro, fine: m.brusio[0], testo: "il relè del faro" },
     { inizio: m.brusio[0], fine: m.brusio[1], testo: "dalla radio, molte voci" },
     { inizio: m.scala[0], fine: m.fruscioF, testo: "la musica" },
-    { inizio: m.fruscioF, fine: m.pulsa[0], testo: "il fruscio della traccia" },
+    { inizio: m.fruscioF, fine: m.temaTerzo, testo: "il fruscio della traccia" },
+    { inizio: m.temaTerzo, fine: m.temaTerzo + 4, testo: "la musica ricomincia, piano" },
     { inizio: m.pulsa[0], fine: Math.min(m.pulsa[1], b10.entra), testo: "un battito" },
     { inizio: b10.entra, fine: b10.entra + b10.stampa! + 0.9, testo: "un cursore che scrive" },
-    { inizio: m.spiaSpenta, fine: m.glifi[0], testo: "la musica si spegne" },
-    { inizio: m.traduzione[1], fine: m.raccordo[0], testo: "una nota bassa" },
-    { inizio: m.arretra[0], fine: durata, testo: "il reattore; la console che si accende" },
+    { inizio: m.spiaSpenta, fine: m.glifi[0], testo: "la musica sale" },
+    { inizio: m.traduzione[1], fine: m.raccordo[0], testo: "la musica, piena" },
+    { inizio: m.arretra[0], fine: durata, testo: "la console che si accende; la musica sfuma" },
   ].map((s) => ({ ...s, inizio: r(s.inizio), fine: r(s.fine) }));
 
   return { durata, scene, blocchi, crediti, neri, stampe, momenti, sottotitoli };

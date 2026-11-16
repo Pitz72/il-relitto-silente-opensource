@@ -8,6 +8,38 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+### Per chi gioca
+
+- **La musica di Alirio Bruni accompagna tutta la cinematica**, fino al momento in cui cominci a giocare, e sotto non c’è più nient’altro: prima suonavano insieme due copie del tema e una nota del reattore.
+- **I reattori hanno le loro fiamme**, lunghe e azzurre, e si vedono anche quando la nave passa di fianco, da lontano.
+- **Il faro fa una luce vera**: il fascio esce largo quanto la lente, la lente accesa ha il suo bagliore, e dalle luci forti parte la striscia degli obiettivi da cinema.
+- **Da vicino la nave è di metallo**: nei due dettagli il radar, il faro e il dorso hanno la loro grana e i loro riflessi; la camera si muove piano e il pulviscolo attraversa il fascio.
+- **Nel racconto di William la nave è più grande** e cresce mentre si avvicina; nel passaggio accanto alla camera dietro c’è la Via Lattea.
+- **La voce dell’assistente è più alta**, al livello di quella di William.
+- **William ha dodici battute nuove** sulla plancia (Leonardo Tomassetti): il faro, il lanciarpioni, la scansione del relitto.
+
+### Corretto
+
+- **Due copie del tema insieme, e il «re» del reattore sotto il tema** (documento 09, §19–20.1; l’autore: «sotto, si sente che c’è una musica […] Quella deve proprio sparire»). `Lettore::avvia` non ferma quello che suona: il da capo del 15 novembre lasciava due copie di «The Santa Maria Theme» insieme per 49 secondi. Ora a ogni da capo la copia di prima esce in quattro secondi. Il re sintetizzato non suona più in nessun punto dell’intro.
+- **Le macchie del metallo scorrevano sui pezzi che girano** (il fanale, il radar): ora stanno sul pezzo a riposo (`p0` negli shader dello scafo).
+- **Sotto L.V., nella seconda parte, il tema saliva e scendeva a ogni frase**: una discesa e una risalita per serie di frasi.
+
+### Aggiunto
+
+- **Il terzo passaggio del tema** (`temaTerzo`, `Cue::TemaEsce`): il punto più forte del tema sul titolo, la musica fino al gioco.
+- **Il riflesso dell’obiettivo** (`FS_STRISCIA`, `RIFLESSO` in `scala.ts`; documento 09, §20.6): la striscia orizzontale dalle luci forti, nell’effetto pellicola della scheda Grafica.
+- **Le prese nuove di William**: dodici (`SM-017`…`SM-022`, `SM-026`…`SM-031`), ventisei in tutto; il controllo in `doppiaggio/william/consegne/controllo-2026-11-16.json` (documento 41, §5).
+- Una prova in node (il tema in tre passaggi) e una in Rust (i due da capo, la discesa unica sotto le frasi).
+
+### Cambiato
+
+- **Le fiamme dei reattori** (documento 09, §20.2): lunghe 14 m, visibili di fianco, con il bagliore che la nave copre da davanti.
+- **Il fascio del faro nasce dalla lente, largo quanto lei** (§20.3); la lente ha il centro caldo e gli anelli; la base del faro gira con il fanale (nave riesportata da Blender).
+- **I materiali da vicino** (§20.4): grana, righe, spigoli, luce di taglio, solo quando la camera è vicina.
+- **Le camere** (§20.5): il margine a metà distanza (la nave grande il doppio), il passaggio con il cielo della Via Lattea e la nave un secondo prima, i due dettagli ripresi da capo con un carrello lento e il pulviscolo fermo nel mondo.
+- **Dal titolo al libro** senza sovrapposizione (§20.7): l’intro dura 4:48,39.
+- **La voce di servizio** nel gioco sale di 5 dB, al livello di William (le parole a circa −18 dBFS), con lo stesso tetto ai picchi (`LIV_SERVIZIO`, `mondo/mod.rs`; documento 41).
+
 ## [0.2.5-beta.14] - 2026-11-16
 
 ### Per chi gioca

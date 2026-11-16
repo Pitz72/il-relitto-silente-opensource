@@ -48,6 +48,10 @@ pub struct Momenti {
     /// il tema ricomincia da capo, poco prima della plancia (−1: la pagina non lo manda, e suona una volta sola)
     #[serde(default = "senza")]
     pub tema_da_capo: f32,
+    /// il tema ricomincia una terza volta, perché il suo punto più forte cada sul titolo e la musica arrivi fino al
+    /// gioco (−1: la pagina non lo manda)
+    #[serde(default = "senza")]
+    pub tema_terzo: f32,
     pub nave_b: f32,
     pub re_b: f32,
     pub radar: [f32; 2],
@@ -131,8 +135,11 @@ pub enum Cue {
     Messaggio,
     /// entra il tema
     Tema,
-    /// il tema ricomincia da capo, sopra la sua coda
+    /// il tema ricomincia da capo: la copia che suonava esce in quattro secondi mentre la nuova entra (mai due
+    /// copie insieme oltre la dissolvenza)
     TemaDaCapo,
+    /// il tema esce, in secondi: quando comincia il gioco
+    TemaEsce(f32),
     /// il tema sotto la voce: (quanto più basso, in dB; secondi)
     Abbassa(f32, f32),
     /// il re: (livello dB, armonici 0–1, secondi); nella plancia è il reattore
@@ -201,11 +208,23 @@ pub fn partitura(d: &DatiIntro) -> Vec<(f32, Cue)> {
             p(s.da + (s.a - s.da) * (i as f32 / n), Cue::Cursore(f, LIV_CURSORE));
         }
     }
-    // la voce di L.V., un pezzo per ogni testo; mentre parla il tema (se suona) si abbassa
+    // la voce di L.V., un pezzo per ogni testo. Dove sotto c'è il tema, il tema sta più basso e fermo dalla prima
+    // frase all'ultima di una serie (le frasi a meno di dodici secondi l'una dall'altra): scende una volta e risale
+    // una volta, non a ogni frase (l'autore, 2 novembre 2026: «fa troppo radio»)
     for v in &d.voce {
         p(v.t, Cue::Voce(v.da, v.a));
-        p(v.t - 0.6, Cue::Abbassa(SOTTO_LA_VOCE, 0.9));
-        p(v.t + (v.a - v.da) + 0.2, Cue::Abbassa(0.0, 2.5));
+    }
+    let mut serie: Vec<(f32, f32)> = Vec::new();
+    for v in d.voce.iter().filter(|v| m.tema >= 0.0 && v.t >= m.tema) {
+        let fine = v.t + (v.a - v.da);
+        match serie.last_mut() {
+            Some(u) if v.t - u.1 < 12.0 => u.1 = fine,
+            _ => serie.push((v.t, fine)),
+        }
+    }
+    for (da, a) in serie {
+        p(da - 0.6, Cue::Abbassa(SOTTO_LA_VOCE, 0.9));
+        p(a + 0.2, Cue::Abbassa(0.0, 2.5));
     }
     // il cuore (54 al minuto, che rallenta): quattro doppi colpi nel nero; poi, quando si apre lo
     // spazio, va avanti ancora un poco, sempre più lento e lontano, finché non si sente più
@@ -236,13 +255,24 @@ pub fn partitura(d: &DatiIntro) -> Vec<(f32, Cue)> {
         p(a - 0.6, Cue::Abbassa(SOTTO_LA_VOCE, 0.9));
         p(b + 0.2, Cue::Abbassa(0.0, 2.5));
     }
-    // il tema dura 1:52 e B adesso ne dura quasi uno e mezzo: ricomincia da capo, sulla coda della prima volta
-    if m.tema >= 0.0 && m.tema_da_capo >= 0.0 {
-        p(m.tema_da_capo, Cue::TemaDaCapo);
+    // il tema dura 1:52, ma la musica piena sta nel primo minuto: poi è una coda che si spegne. Ricomincia da capo
+    // poco prima della plancia, e una terza volta nella seconda parte di L.V., messa perché il suo punto più forte
+    // cada sul titolo; ogni volta la copia di prima esce in quattro secondi. L'autore, sentita la beta 14 (16 novembre
+    // 2026): «sotto, si sente che c'è una musica […] Quella deve proprio sparire. Mentre la traccia di Alirio deve
+    // continuare fino a che non si arriva al momento in cui si gioca». Sotto c'erano la prima copia del tema, che
+    // nessuno fermava (49 secondi di due copie insieme), e il re sintetizzato del reattore
+    if m.tema >= 0.0 {
+        for t in [m.tema_da_capo, m.tema_terzo] {
+            if t >= 0.0 {
+                p(t, Cue::TemaDaCapo);
+            }
+        }
+        // e arriva fino al gioco: esce mentre l'intro si apre sulla plancia di chi gioca
+        p((d.durata - 3.0).max(m.partita[0] - 1.4), Cue::TemaEsce(3.0));
     }
 
-    // ---- C · il radar: il reattore sotto il pavimento, la ventilazione, il tic del radar a ogni giro
-    p(m.radar[0], Cue::Re(-16.0, 0.45, 3.0));
+    // ---- C · il radar: la ventilazione, il tic del radar a ogni giro. Il re del reattore non c'è più, in tutta
+    // l'intro: è una nota intonata, e sotto il tema si sentiva come un'altra musica
     p(m.radar[0], Cue::Vent(-22.0, 3.0));
     let mut t = m.radar[0] + 1.5;
     while t < m.faro {
@@ -264,7 +294,6 @@ pub fn partitura(d: &DatiIntro) -> Vec<(f32, Cue)> {
     // del reattore sfuma quando la scena esce dalla nave, com'era prima. Se porterà dei suoni suoi (uno
     // scandaglio, l'eco di un radar), il momento c'è: `reattori`, che la pagina manda ancora
     p(m.scala[0], Cue::Vent(SPENTO, 1.0));
-    p(m.scala[0], Cue::Re(SPENTO, 0.0, 2.0));
 
     // ---- F · la traccia, seconda parte: il ponte dal fruscio; il cuore, dopo «La vedo pulsare»
     p(m.fruscio_f, Cue::Nastro(-18.0, 1.5));
@@ -276,12 +305,10 @@ pub fn partitura(d: &DatiIntro) -> Vec<(f32, Cue)> {
     // ---- G · il titolo: i glifi si tracciano e si sciolgono nelle lettere in silenzio. Prima c'erano sedici
     // clic granulari e sedici fruscii che salivano (l'autore, 14 novembre 2026: «togli quell'effetto sonoro
     // durante la trasformazione dei caratteri, non è mica il cartellone della stazione»; e, sentiti ancora i
-    // clic e la nota che saliva: «Togli anche quel suono»). Resta, quando il titolo è intero, una nota bassa:
-    // il re, sotto la coda del tema
-    p(m.traduzione[1], Cue::Re(-15.0, 0.3, 2.0));
+    // clic e la nota che saliva: «Togli anche quel suono»). Al titolo c'era ancora una nota bassa, il re: via anche
+    // quella (16 novembre 2026); sul titolo adesso c'è il tema, nel suo punto più forte
 
-    // ---- H · la plancia: il re è il reattore, la ventilazione, la console che parte
-    p(m.raccordo[0], Cue::Re(-14.0, 0.5, 1.2));
+    // ---- H · la plancia: la ventilazione, la console che parte (il re del reattore torna con il gioco, che ha il suo)
     p(m.arretra[0], Cue::Vent(-20.0, 3.0));
     for (i, dt) in [0.0, 0.45, 0.9, 1.35, 1.9, 2.4].iter().enumerate() {
         let t = m.interfaccia[0] + dt;
@@ -449,11 +476,16 @@ impl Intro {
             Cue::Voce(da, a) => self.voce.avvia(Richiesta { pezzo: Pezzo::LV, da, a: Some(a), entra: 0.03, dopo: Dopo::Niente, incrocio: 0.0, esce: 0.2, livello: LIV_VOCE }),
             Cue::Registro => self.voce.avvia(Richiesta { pezzo: Pezzo::Wi01, da: 0.0, a: None, entra: 0.02, dopo: Dopo::Niente, incrocio: 0.0, esce: 0.0, livello: LIV_REGISTRO }),
             Cue::Messaggio => self.voce.avvia(Richiesta { pezzo: Pezzo::Yu09, da: 0.0, a: None, entra: 0.02, dopo: Dopo::Niente, incrocio: 0.0, esce: 0.0, livello: LIV_MESSAGGIO }),
-            // la seconda volta entra più piano della prima: sotto c'è ancora la coda, e sopra la voce di Yusuf
+            // da capo entra più piano della prima volta, e la copia che suonava esce nello stesso tempo: `avvia` da
+            // solo non la fermerebbe, e le due copie suonerebbero insieme
             Cue::Tema | Cue::TemaDaCapo => {
                 let entra = if c == Cue::Tema { 2.5 } else { 4.0 };
+                if c == Cue::TemaDaCapo {
+                    self.tema.tace(entra);
+                }
                 self.tema.avvia(Richiesta { pezzo: Pezzo::SM, da: 0.0, a: None, entra, dopo: Dopo::Niente, incrocio: 0.0, esce: 4.0, livello: LIV_TEMA })
             }
+            Cue::TemaEsce(s) => self.tema.tace(s),
             Cue::Abbassa(liv, s) => self.abbassa.verso(db(liv), s, sr),
             Cue::Re(liv, alti, s) => {
                 self.re.g.verso(lin(liv) * NORM_RE, s, sr);
@@ -624,11 +656,13 @@ mod prove {
         assert!(tra(72.7, 73.0, &|c| matches!(c, Cue::Rele(..))), "D: manca il relè del faro");
         assert!(tra(74.0, 77.0, &|c| matches!(c, Cue::Brusio(..))), "D: manca il brusio dalla radio");
         assert!(tra(101.0, 103.0, &|c| matches!(c, Cue::Nastro(..))), "F: il fruscio non torna prima della fine di E");
-        // i glifi si tracciano e si sciolgono in silenzio; la nota bassa arriva con il titolo intero
-        assert!(!tra(124.5, 134.7, &|_| true), "G: mentre i glifi diventano il titolo non deve suonare niente");
-        assert!(tra(134.7, 134.9, &|c| *c == Cue::Re(-15.0, 0.3, 2.0)), "G: la nota non arriva con il titolo");
-        // nella scala i reattori si spengono senza un suono loro: il re sfuma quando si esce dalla nave
-        assert!(tra(79.9, 80.1, &|c| *c == Cue::Re(SPENTO, 0.0, 2.0)), "E: il re non sfuma uscendo dalla nave");
+        // i glifi si tracciano e si sciolgono senza un suono loro (sotto c'è il tema)
+        assert!(!tra(124.5, 134.7, &|_| true), "G: mentre i glifi diventano il titolo non deve partire niente");
+        // il re sintetizzato del reattore non suona più in nessun punto dell'intro: sotto il tema si sentiva come
+        // un'altra musica (l'autore, 16 novembre 2026: «Quella deve proprio sparire»)
+        assert!(!p.iter().any(|(_, c)| matches!(c, Cue::Re(..))), "il re del reattore suona ancora nell'intro");
+        // il tema arriva fino al gioco: esce negli ultimi tre secondi
+        assert!(tra(d.durata - 3.1, d.durata - 2.9, &|c| *c == Cue::TemaEsce(3.0)), "il tema non arriva fino al gioco");
         assert!(!p.iter().any(|(_, c)| matches!(c, Cue::Cursore(..))), "una pagina vecchia non manda le stampe: nessun cursore");
         assert!(tra(142.0, 146.0, &|c| matches!(c, Cue::Rele(..))), "H: la console non parte");
     }
@@ -831,6 +865,21 @@ mod prove {
         // il tema: la prima volta è alla coda quando ricomincia, e ricominciando torna su
         assert!(media(47.0, 49.0, 1) > -60.0, "il tema non entra con lo spazio");
         assert!(media(116.0, 126.0, 1) > media(104.0, 109.5, 1), "il tema non ricomincia ({:.1} contro {:.1} dB)", media(116.0, 126.0, 1), media(104.0, 109.5, 1));
+    }
+
+    #[test]
+    fn il_tema_passa_tre_volte_e_sotto_le_frasi_di_lv_scende_una_volta_sola() {
+        let mut d = momenti_di_prova();
+        d.momenti.tema_da_capo = 110.0;
+        d.momenti.tema_terzo = 130.0;
+        // quattro frasi di L.V. vicine, dopo che il tema è entrato: una serie sola
+        d.voce = vec![PezzoVoce { t: 112.0, da: 0.0, a: 6.0 }, PezzoVoce { t: 122.0, da: 6.0, a: 12.0 }, PezzoVoce { t: 131.0, da: 12.0, a: 16.0 }];
+        let p = partitura(&d);
+        let capo: Vec<f32> = p.iter().filter(|(_, c)| *c == Cue::TemaDaCapo).map(|(t, _)| *t).collect();
+        assert_eq!(capo, vec![110.0, 130.0], "i due da capo");
+        let mosse: Vec<(f32, f32)> = p.iter().filter_map(|(t, c)| if let Cue::Abbassa(l, _) = c { Some((*t, *l)) } else { None }).collect();
+        assert_eq!(mosse.len(), 2, "il tema sale e scende a ogni frase: {mosse:?}");
+        assert!(mosse[0].1 < 0.0 && mosse[0].0 < 112.0 && mosse[1].1 == 0.0 && mosse[1].0 > 135.0, "{mosse:?}");
     }
 
     #[test]

@@ -289,10 +289,11 @@ export default function Intro({
           }
           return (lo + hi) / 2;
         };
-        // B dura un minuto e mezzo (le due voci): la nave non aspetta fuori dal quadro, il muso entra con le prime
-        // parole di William, e la attraversa piano fino a dove arrivava prima
-        const t0 = cerca(1.0), t1 = cerca(0.16);
-        calibra.current = { t0, k: (t1 - t0) / (S.scene[2].inizio - M.naveB), meta: cerca(0.56) };
+        // il margine dura quanto il registro di William: la nave non aspetta fuori dal quadro, entra con le sue prime
+        // parole e lo attraversa piano; quando lo stacco passa a Yusuf è a un terzo del quadro da sinistra (dopo la
+        // beta 14 la nave è grande il doppio: la camera è a metà strada, scala.ts)
+        const t0 = cerca(1.0), t1 = cerca(0.3);
+        calibra.current = { t0, k: (t1 - t0) / (M.passaggio[0] - M.naveB), meta: cerca(0.56) };
         if (vivo) {
           setPronta(true);
           avvisaPronta.current?.();
@@ -310,6 +311,12 @@ export default function Intro({
       vivo = false;
     };
   }, []);
+
+  // il riflesso dell'obiettivo (la striscia delle luci forti, scala.ts) è parte dell'effetto pellicola: con la
+  // pellicola spenta nella scheda Grafica non c'è
+  useEffect(() => {
+    if (motore.current) motore.current.riflessi = pellicola;
+  }, [pellicola, pronta]);
 
   // il contesto WebGL perso a metà (un driver aggiornato, il ritorno dalla sospensione: revisione
   // 25, L10): l'intro non si può più vedere, e si va al gioco, come senza WebGL2. Nella revisione resta
@@ -384,7 +391,7 @@ export default function Intro({
         if (rp) {
           // dal nero del taglio la vista fuori si accende piano
           const luce = t >= TAGLIO_H ? morbido(fra(t, TAGLIO_H, TAGLIO_H + 0.5)) : 1;
-          m.quadro("plancia", tempoOblo(t), { ridotta: o.ridotta, ottica: otticaOblo(rp.r, W, H), faro: f.luce, faroGradi: f.gradi, grana: false, vignetta: false, luce });
+          m.quadro("plancia", tempoOblo(t), { ridotta: o.ridotta, ottica: otticaOblo(rp.r, W, H), faro: f.luce, faroGradi: f.gradi, grana: false, vignetta: false, riflessi: false, luce });
         }
       }
       // il fuoco sull'oblò: prima del cambio di fuoco la vista fuori è sfocata

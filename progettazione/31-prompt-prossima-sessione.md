@@ -81,6 +81,20 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 
 ## Dove siamo (16 novembre 2026)
 
+- **16 novembre 2026, pomeriggio: le correzioni dopo la revisione** (documento 09, §20). L’autore: «applica tutto con
+  qualità secondo le tue indicazioni». Fatto: il tema di Alirio in tre passaggi, mai due insieme, con il punto forte
+  sul titolo e la musica fino al gioco; via il «re» del reattore da tutta l’intro; le fiamme dei reattori lunghe e
+  visibili di fianco; il fascio del faro largo quanto la lente, la lente con il suo bagliore; il riflesso
+  dell’obiettivo (la striscia dalle luci forti: lo ha chiesto lui vedendo i fotogrammi, «flare o effetti di
+  luminescenza realistici»); i materiali da vicino; le camere (il margine con la nave grande il doppio, il
+  passaggio con la Via Lattea, i due dettagli ripresi da capo, con carrello e pulviscolo); il titolo e il libro
+  senza sovrapposizione; la voce di servizio al livello di William. **Dodici prese nuove di Leonardo** nel gioco
+  (26 in tutto; documento 41, §5). **Non in una beta**: sul main, da rilasciare quando lo dice. **Da dirgli**: due
+  parole delle prese da far sentire (SM-018 «ferma» o «firma»; SM-031 «scansione» o «canzone»); SM-030 (la
+  scansione lunga): Leonardo ha letto in una presa sola le tre parti di William, e la voce del computer arriva dopo,
+  tutta insieme (tenerla così, o chiedergli tre prese?). **Limiti**: il suono è misurato, non ascoltato; il
+  movimento visto a fotogrammi fermi.
+
 - **16 novembre 2026, dopo la beta 14: la revisione della cinematica** (documento 09, §19: le sue parole, le
   quattro segnalazioni con la diagnosi, e altri nove punti che non tornano). Ha chiesto di individuare tutto
   «prima di fare qualcosa»: **niente è cambiato nel codice, aspetta le sue decisioni.** Le diagnosi: sotto il tema

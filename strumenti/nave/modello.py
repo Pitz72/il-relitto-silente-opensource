@@ -741,7 +741,8 @@ TIPI = {"scafo": 0, "aggiunte": 1, "pezzi": 1, "portelli": 1, "scarichi": 1, "te
 PENNACCHIO = 9  # la spinta degli scarichi: non è nel modello di Blender, si aggiunge qui
 #  I pezzi che nell'intro si muovono (16 novembre 2026: il faro che cerca, il radar che gira, nei dettagli della
 #  scena F): il numero va nel quarto ottetto della normale, che prima era sempre 0; i perni vanno nel .json
-PARTI = {"faro: forcella sinistra": 1, "faro: forcella destra": 1, "faro: lampada": 2, "faro: lente": 2, "radar: barra": 3}
+#  (la base del faro gira con le forcelle: ferma, quando il fanale girava il suo spigolo spuntava dentro la lente)
+PARTI = {"faro: base": 1, "faro: forcella sinistra": 1, "faro: forcella destra": 1, "faro: lampada": 2, "faro: lente": 2, "radar: barra": 3}
 CENTRO = (M.LUNGHEZZA / 2, 0.0, (M.dorso(40) + M.chiglia(40)) / 2)  # il punto della nave che l'intro muove
 
 

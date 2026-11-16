@@ -967,3 +967,73 @@ l’intro (`fotografa.mjs`) e misurando il suono reso dal motore (`rendi_intro`)
 13. **Senza suono loro** il passaggio e i dettagli: scelta mia (§18.8), da confermare.
 
 Le proposte e le sue decisioni stanno nel messaggio all’autore e nel prompt 31; quando decide, si scrivono qui.
+
+## 20. Le correzioni dopo la revisione (16 novembre 2026, pomeriggio)
+
+L’autore, letto l’elenco del §19 (io consigliavo tutto tranne il sole unico, 11, e i suoni nuovi, 13): «applica
+tutto con qualità secondo le tue indicazioni». E, vedendo i primi fotogrammi: «Mi sembra che stiamo sulla strada
+giusta ma il nostro motore 3d non è in grado di produrre flare o effetti di luminescenza realistici?».
+
+**20.1 Il suono** (`mondo/intro.rs`, `scaletta.ts`).
+
+- **Il tema passa tre volte, mai due copie insieme**: a 1:19 (lo spazio), a 2:22 (poco prima della plancia, dov’era)
+  e a 3:50 (`temaTerzo`, nella seconda parte di L.V.). A ogni da capo la copia che suonava esce in quattro secondi
+  (`Lettore::tace`, poi `avvia`). Il tema ha il suo punto più forte a 36 s dall’inizio (misurato sul file): il terzo
+  passaggio parte perché cada **sul titolo intero**; da lì la musica piena dura ancora una ventina di secondi, fino
+  al gioco, ed esce negli ultimi tre (`TemaEsce`).
+- **Il «re» del reattore non c’è più in tutta l’intro** (plancia, titolo, plancia finale). Restano i rumori non
+  intonati: la ventilazione, il tic del radar, il relè, il brusio della radio.
+- **Sotto L.V. il tema scende una volta e risale una volta** per ogni serie di frasi (prima saliva e scendeva fra
+  una frase e l’altra della seconda parte: la regola del 2 novembre valeva anche lì).
+- **Misurato sul suono reso** (`rendi_intro`, correlazione con il file del tema): una sola copia alla volta; dopo
+  «Fine della traccia» −28,7 dBFS (erano −56), sul titolo −28,3 (erano −41,5), sul libro −27,9.
+
+**20.2 Le fiamme dei reattori** (`scala.ts`, `FIAMMA`). Lunghe 14 m (nel modello 5: si allungano nello shader), con
+un cuore corto e chiaro alla bocca e un corpo azzurro che si perde; si vedono anche di fianco (la luce di un volume
+sottile è quella del suo spessore). Il loro bagliore sta 5,5 m dietro gli scarichi, pieno da dietro e più debole di
+lato; da davanti lo copre la nave (una prova contro la scatola dello scafo: le luci si sommano senza profondità).
+Nel margine si intravedono per tutto il passaggio; nel passaggio ravvicinato e all’inizio dello zoom indietro sono
+lunghe e chiare.
+
+**20.3 Il faro** (`LENTE`, `FS_FASCIO`). Il fascio nasce dalla lente, largo quanto lei (1,1 m): il vertice del cono
+sta dieci metri dietro, e la luce comincia al piano della lente. La lente accesa ha il centro più caldo e gli anelli
+della lavorazione; la sua luce bagna la parete interna del fanale; nei dettagli è esposta per essere guardata
+(`faroVicino`), da lontano buca come prima. Dove il faro si guarda da dentro (l’oblò della plancia) non cambia.
+
+**20.4 I materiali da vicino** (`FS_SCAFO`, `vicino`). Quando la camera è a pochi millimetri di nave per punto di
+schermo (i dettagli, in parte il passaggio; da lontano non cambia niente): la grana fine del metallo con il suo
+rilievo, le righe della lavorazione, gli spigoli consumati, più riflesso, le macchie grandi attenuate (a un metro
+sembravano pietra), e un filo di luce fredda di taglio. Le macchie e la grana stanno sul pezzo a riposo: nella
+beta 14 scorrevano sul fanale e sul radar mentre giravano.
+
+**20.5 Le camere.**
+
+- **Il margine** (William): la camera è a metà strada sulla stessa geometria; guarda dalla stessa parte (il cielo è
+  quello di prima) e la nave è grande il doppio, e cresce: entra da destra e allo stacco è a un terzo del quadro da
+  sinistra, larga più di un terzo del quadro.
+- **Il passaggio** (Yusuf): la nave entra un secondo prima; il cielo è quello del margine guardato dove passa il
+  braccio lontano della Via Lattea (`cieloVerso`: gli assi del cielo sono suoi, le stelle sono le stesse).
+- **I sensori**: la camera più avanti (nella beta 14 la scatola scura era un dente del collare di presa, vicinissimo
+  e in ombra), il radar e il faro al centro, il muro del relitto e la striscia di stelle in alto.
+- **Il faro**: da dritta, poco davanti alla lente, a sessanta gradi dal suo asse: la lente accesa, il radar che gira
+  dietro, il fascio come una colonna di luce che attraversa mezzo quadro (più di fronte diventava una foschia). Qui
+  il relitto non si vede: sta dietro la camera; lo mostra il dettaglio di prima.
+- **Il carrello**: nei due dettagli la camera si sposta di otto, dieci centimetri al secondo; **il pulviscolo** sta
+  fermo nel mondo lungo il tratto che la nave percorre, e i granelli attraversano il fascio.
+- La base del faro gira con il fanale (`modello.py`, `PARTI`; nave riesportata): ferma, il suo spigolo spuntava
+  dentro la lente.
+
+**20.6 Il riflesso dell’obiettivo** (`FS_STRISCIA`, `RIFLESSO`). Il motore lavora in HDR e aveva un bagliore timido.
+Ora dalle luci forti (i fanali, le fiamme, la lente, le stelle più forti, un riflesso del sole sul metallo) parte
+la striscia orizzontale delle lenti anamorfiche, sottile e appena fredda, proporzionata alla luce della sorgente
+(la stessa lingua della riga verde della spia). Sta nell’effetto pellicola della scheda Grafica; l’oblò della
+plancia e lo sfondo del menu non la usano.
+
+**20.7 Dal titolo al libro.** Il titolo esce in sei decimi (gli altri testi in un secondo) e il libro entra quando è
+quasi sparito: a ridosso, senza che si leggano uno sull’altro. L’intro dura **4:48,39**.
+
+**Non fatto, come proposto**: il sole unico per tutte le inquadrature (11) e i suoni per il passaggio e i dettagli
+(13). **Le prove**: 152 in node (una nuova sul tema), 114 in Rust (una nuova sui tre passaggi e sulla discesa
+unica), le 17 partite nel motore audio; le scene fotografate e guardate più volte. Sei fotogrammi per l’autore in
+`consegne/Cinematica dopo la beta 14 2026-11-16/`. **Limiti**: non ho sentito niente (il suono è misurato); il
+movimento (il carrello, il pulviscolo, il fanale che gira) l’ho visto solo a fotogrammi fermi.
