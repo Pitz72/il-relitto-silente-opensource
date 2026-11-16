@@ -8,6 +8,8 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+## [0.2.5-beta.15] - 2026-11-16
+
 ### Per chi gioca
 
 - **La musica di Alirio Bruni accompagna tutta la cinematica**, fino al momento in cui cominci a giocare, e sotto non c’è più nient’altro: prima suonavano insieme due copie del tema e una nota del reattore.
