@@ -86,6 +86,10 @@ pub struct EventoGioco {
     /// fra quanti secondi entrano quelle battute, se non subito: la riga del registro di bordo in fondo a un
     /// finale arriva dopo il tempo di leggere il finale (il ponte, `_dopo_registro`)
     pub dopo: Option<f32>,
+    /// le prese di William («racconto», documento 41) che vengono prima di ogni altra voce del turno, e quelle che
+    /// vengono dopo una di loro: il ponte le manda solo se ci sono le loro parole e il loro file
+    pub prese: Vec<String>,
+    pub poi: Vec<String>,
 }
 
 impl EventoGioco {

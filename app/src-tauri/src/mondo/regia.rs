@@ -20,6 +20,7 @@ use super::ambienti::FormaRonzio;
 use super::colpi::{self, Bus, Corpo, Tonfo, CLIC_ARMONIOSO};
 use super::dsp::{db, Biquad, Scorrevole};
 use super::musica_file::Pezzo;
+use super::racconto;
 use super::stanze::{self, Luogo, Speciale, Specie, Superficie};
 use super::sintonia::{self, voce, Eco, Forma, Profilo, GIRO_DELL_ANELLO};
 use super::stato::{EventoGioco, StatiGioco, TurnoSuono};
@@ -36,7 +37,7 @@ const ACCORDO: [f32; 4] = [103.826, 155.563, 207.652, 311.127];
 /// Tutti gli eventi che il ponte può mandare (collaudo/eventi.py, la tabella), più il
 /// caricamento: la regia li conosce tutti, quelli che suonano e quelli che per il suono
 /// sono solo stato. La prova delle partite controlla che non ne arrivi uno sconosciuto.
-pub const EVENTI_NOTI: [&str; 87] = [
+pub const EVENTI_NOTI: [&str; 88] = [
     "accostamento", "altare", "ambra", "archivio_forzato", "archivio_saluta", "aria", "arpioni", "assestamento",
     "attrezzo", "bengala_acceso", "bengala_spento", "boccaporto", "brusio_cala", "caricamento", "casco_tolto",
     "cassetta", "cella", "chiave", "connessione", "crollo", "dialogo", "dialogo_fine", "discesa", "disco_liberato",
@@ -44,7 +45,7 @@ pub const EVENTI_NOTI: [&str; 87] = [
     "giuntura_trovata", "grande_porta", "groviglio_desto", "groviglio_prende", "groviglio_sente", "incrinature",
     "inizio", "ipossia", "kit", "matrice", "nodo", "nota_reattore", "nota_riconosciuta", "pannello", "pareti_lampo",
     "porta_interna", "porta_tonda", "postazione", "primo_contatto", "protezione", "protezione_fine",
-    "protezione_fuga", "radio", "reattore_ascoltato", "reattore_toccato", "registro", "ricarica", "rientro",
+    "protezione_fuga", "racconto", "radio", "reattore_ascoltato", "reattore_toccato", "registro", "ricarica", "rientro",
     "ripresa", "risonanza", "risuonata", "risuonatore_lasciato", "risuonatore_preso", "risuonatore_staccato",
     "risuonatore_toccato", "scansione_lunga", "scatola_nera", "seme_lasciato", "seme_preso", "seme_spento",
     "sistema", "sonaglio", "stanza", "tacche", "taglio", "teca_serra", "terminale", "traccia",
@@ -136,6 +137,26 @@ impl Mondo {
             self.ingresso = Scorrevole::nuovo(0.0);
             self.ingresso.verso(1.0, if inizio { 3.0 } else { 1.5 }, sr);
         }
+
+        // la voce di William (documento 41): un turno nuovo la fa tacere di colpo; le sue prese, se ce ne sono,
+        // partono con il testo (la prima della partita, quando l’intro si è aperta sulla plancia)
+        if carica {
+            self.racconto.dimentica();
+        }
+        let (mut prima_w, mut poi_w) = ([Pezzo::Wi(0); 16], [Pezzo::Wi(0); 16]);
+        let (mut n_prima, mut n_poi) = (0, 0);
+        for e in t.eventi.iter().filter(|e| e.evento == "racconto") {
+            for (lista, dove, n) in [(&e.prese, &mut prima_w, &mut n_prima), (&e.poi, &mut poi_w, &mut n_poi)] {
+                for p in lista.iter().filter_map(|s| Pezzo::della_presa(s)) {
+                    if *n < dove.len() {
+                        dove[*n] = p;
+                        *n += 1;
+                    }
+                }
+            }
+        }
+        let ritardo = if inizio { racconto::ALL_INIZIO } else { racconto::SUBITO };
+        self.racconto.turno(&prima_w[..n_prima], &poi_w[..n_poi], ritardo);
 
         // la stanza
         let nuova = stanze::stanza(&self.gioco.stanza);
@@ -313,11 +334,16 @@ impl Mondo {
 
     /// Il tempo delle voci della nave; e quando tacciono, quello che le aspettava.
     pub(super) fn passo_voci_nave(&mut self, dt: f32) {
-        // le due file non si parlano sopra: quella che ha un’altra voce in corso aspetta che finisca
+        // le file non si parlano sopra: quella che ha un’altra voce in corso aspetta che finisca. William racconta
+        // per primo (documento 41): le altre aspettano lui; le sue prese che nel testo vengono dopo una voce
+        // aspettano lei
+        let william = self.racconto.occupato();
         let nave = self.voci_nave.viva();
-        self.voci_radio.passo_con(dt, nave);
+        self.voci_radio.passo_con(dt, nave || william);
         let radio = self.voci_radio.viva();
-        self.voci_nave.passo_con(dt, radio);
+        self.voci_nave.passo_con(dt, radio || william);
+        let altri = self.voci_nave.viva() || self.voci_radio.viva() || self.musica.voce_viva();
+        self.racconto.passo(dt, altri);
         if self.voci_nave.nave_occupate() || self.anello.is_some() {
             return;
         }

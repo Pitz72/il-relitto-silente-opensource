@@ -23,6 +23,9 @@
 #      dicono le stesse cose;
 #   6. il ponte non cambia la partita: lo stesso percorso giocato dal ponte e
 #      giocato dal motore da solo arriva alla stessa impronta;
+#   8. la voce di William (documento 41): il copione è quello del gioco di adesso, le prese
+#      che il ponte conosce hanno il loro file, e all'inizio della partita William racconta
+#      la plancia;
 #   7. il congedo dell'Anziano non si disfa (revisione 37, G3): per il gioco la
 #      fuga comincia al gesto «[Chiudi gli occhi e lascia andare.]», per lo
 #      schermo e per il suono quando il colloquio finisce; a occhi chiusi non
@@ -33,6 +36,7 @@
 import argparse
 import collections
 import glob
+import hashlib
 import json
 import os
 import sys
@@ -93,7 +97,7 @@ def segni_dei_finali():
 
 # Gli eventi che scattano per passaggio di stato, per comando o per segno a sorte,
 # più quelli che il ponte ricava da sé (stanza, aria, soglie, contatori, dialogo).
-DERIVATI = ("inizio", "stanza", "boccaporto", "rientro", "discesa", "groviglio_prende", "casco_tolto", "voci",
+DERIVATI = ("inizio", "stanza", "boccaporto", "rientro", "discesa", "groviglio_prende", "casco_tolto", "voci", "racconto",
             "dialogo", "dialogo_fine", "nodo", "chiave", "eco", "risonanza", "traccia", "taglio",
             "risuonata", "matrice", "traduzione_completa", "aria", "ambra", "ipossia", "protezione",
             "protezione_fine", "protezione_fuga", "attrezzo", "finale", "ripresa")
@@ -120,6 +124,34 @@ RAMI = (
 def _nomi_della_tabella():
     nomi = {n for n, *_ in ponte._PASSAGGI} | set(ponte._PER_COMANDO.values()) | set(ponte.SEGNI_A_SORTE)
     return nomi | set(DERIVATI)
+
+
+def racconto():
+    """La voce di William (documento 41): il copione è stato fatto sul gioco di adesso (se i .fav cambiano, le sigle
+    possono spostarsi: si rifanno il copione e le prese); il ponte conosce soltanto prese che hanno il loro file; la
+    plancia del primo turno è la presa SM-001."""
+    problemi = []
+    sys.path.insert(0, os.path.join(RADICE, "strumenti", "audio"))
+    import copione_william
+    impronta = hashlib.sha256("".join(open(os.path.join(copione_william.STORIA, f), encoding="utf-8").read()
+                                      for f, _, _ in copione_william.CAPITOLI).encode()).hexdigest()
+    copione = json.load(open(os.path.join(RADICE, "doppiaggio", "william", "copione.json"), encoding="utf-8"))
+    tabella = json.load(open(os.path.join(RADICE, "app", "src", "motore", "racconto.json"), encoding="utf-8"))
+    if copione["impronta_fav"] != impronta:
+        problemi.append("il copione di William non è del gioco di adesso: python strumenti/audio/copione_william.py, "
+                        "poi python strumenti/audio/voce_william.py")
+    if tabella.get("impronta_fav") != copione["impronta_fav"]:
+        problemi.append("le prese di William non sono del copione di adesso: python strumenti/audio/voce_william.py")
+    cartella = os.path.join(RADICE, "audio", "musica-ia", "WI")
+    senza = sorted({z["file"] for z in tabella["pezzi"] if not os.path.isfile(os.path.join(cartella, f"WI-{z['file']}.mp3"))})
+    if senza:
+        problemi.append(f"prese senza file: {', '.join(senza)}")
+    ponte.rel_avvia(1)
+    primo = json.loads(ponte.rel_avvia(1))
+    dette = [s for e in primo["suono"]["eventi"] if e["evento"] == "racconto" for s in e["prese"]]
+    if any(z["file"] == "SM-001" for z in tabella["pezzi"]) and dette != ["SM-001"]:
+        problemi.append(f"all'inizio William dovrebbe raccontare la plancia (SM-001), e dice {dette}")
+    return problemi
 
 
 def gioca(percorso, conta):
@@ -384,6 +416,11 @@ def main():
     if da_generare:
         print(f"     da generare (doppiaggio/servizio/servizio-nuove.txt): {', '.join(da_generare)}")
 
+    william = racconto()
+    print(f"[{'NO' if william else 'OK'}] la voce di William: il copione, le prese e la plancia all'inizio")
+    for p in william:
+        print(f"     {p}")
+
     addio = congedo()
     print(f"[{'NO' if addio else 'OK'}] il congedo dell'Anziano non si disfa (a occhi chiusi, chiudendo, parlandogli nella fuga)")
     for p in addio:
@@ -399,7 +436,7 @@ def main():
         print()
         for nome, n in sorted(conta.items()):
             print(f"  {n:5}  {nome}")
-    sbagli = falliti + bool(frasi) + bool(rami) + bool(mai or ignoti) + bool(persi) + bool(perse) + bool(servizio) + bool(addio) + bool(divergenze)
+    sbagli = falliti + bool(frasi) + bool(rami) + bool(mai or ignoti) + bool(persi) + bool(perse) + bool(servizio) + bool(william) + bool(addio) + bool(divergenze)
     print(f"\nPercorsi: {len(percorsi)}; falliti: {falliti}. Eventi diversi: {len(conta)}; "
           f"eventi in tutto: {sum(conta.values())}.")
     return 1 if sbagli else 0

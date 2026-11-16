@@ -5,6 +5,7 @@
 //  Tolta da Gioco.tsx così com'era (revisione 25, L13): Gioco le passa lo stato
 //  e le azioni.
 // ============================================================================
+import { ridiciWilliam, williamParla, zittisciWilliam } from "./suono";
 import { useEffect } from "react";
 import type { ModelloAzione, SceltaModello } from "../azione/modello";
 import type { Turno } from "../motore/tipi";
@@ -36,10 +37,27 @@ export interface Tastiera {
   scegli: (s: SceltaModello) => void;
 }
 
+/** I tasti che non fanno tacere William: non sono un gesto (documento 41, come nel Viaggiatore). */
+const TASTI_MUTI = new Set(["Shift", "Control", "Alt", "AltGraph", "Meta", "CapsLock", "Tab", "Escape", "F2"]);
+
+/** Esc: se William sta parlando lo zittisce soltanto; se no fa quello che fa sempre. */
+function pausaOZitto(altrimenti: () => void) {
+  void williamParla().then((parla) => (parla ? void zittisciWilliam() : altrimenti()));
+}
+
 export function useTastiera({ modello, selezione, altri, pannello, domanda, turno, scritti, apriSalvataggi, schermoIntero, setPannello, chiudi, completa, gioca, scegli }: Tastiera) {
   useEffect(() => {
     const giu = (e: KeyboardEvent) => {
       if (e.ctrlKey || e.altKey || e.metaKey) return;
+      // la voce di William (documento 41), come nel Viaggiatore: F2 la ridice; ogni altro tasto la fa tacere, tranne
+      // quelli che non sono un gesto (Maiusc, Tab per passare da un pulsante all'altro) ed Esc, che la zittisce e
+      // basta solo se sta parlando (più sotto)
+      if (e.key === "F2") {
+        e.preventDefault();
+        if (turno && !domanda) void ridiciWilliam();
+        return;
+      }
+      if (!TASTI_MUTI.has(e.key)) void zittisciWilliam();
       // F5 e F9 non ricaricano la pagina: salvano e caricano
       if (e.key === "F5" || e.key === "F9") {
         e.preventDefault();
@@ -76,7 +94,7 @@ export function useTastiera({ modello, selezione, altri, pannello, domanda, turn
         // Esc: la riga lo prende se ha del testo da svuotare; a riga vuota arriva qui, e apre la pausa
         if (e.key === "Escape") {
           e.preventDefault();
-          if (turno) setPannello("pausa");
+          if (turno) pausaOZitto(() => setPannello("pausa"));
         }
         return;
       }
@@ -100,7 +118,7 @@ export function useTastiera({ modello, selezione, altri, pannello, domanda, turn
                 if (b) return b.focus();
               }
             }, 0);
-        } else if (turno) setPannello("pausa");
+        } else if (turno) pausaOZitto(() => setPannello("pausa"));
         return;
       }
       // Spazio completa il testo; su un pulsante lo preme, tranne su una cosa mentre il testo sta comparendo

@@ -2,7 +2,10 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 15 novembre 2026, a notte: William e Yusuf nella cinematica d’apertura, e i
+Aggiornato l’ultima volta il 16 novembre 2026, a notte: la voce di William nel gioco, come nel Viaggiatore
+(documento 41), e la beta 13, pubblicata su suo ordine («quando hai finito, committa, pusha […] e rilascia nuova
+versione senza ulteriori autorizzazioni. Buonanotte»).
+Prima, il 15 novembre 2026, a notte: William e Yusuf nella cinematica d’apertura, e i
 titoli di testa con la tipografia del poster (documento 09, §17); fatto, da fargli vedere nel filmato.
 Prima, il 14 novembre 2026, nella notte, dopo il modello della Santa Maria in Blender (la
 forma, una prima superficie e, dopo le sue note, i pezzi nuovi e gli anni: documento 40) e dopo la nave vera
@@ -71,7 +74,20 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   più verosimile il fatto che ce la possano fare»; e «se così vincono sempre tutti, dove sta la sfida?»):
   `collaudo/verosimili.py`, con la fuga giocata da principianti veri.
 
-## Dove siamo (15 novembre 2026)
+## Dove siamo (16 novembre 2026)
+
+- **16 novembre 2026, a notte: la voce di William nel gioco** (documento 41: lì il Viaggiatore studiato, come è fatto
+  qui, le scelte mie e le prove). L’autore: «Sì, costruiscila». Fatto: le prese di Leonardo entrano nel gioco con
+  `strumenti/audio/voce_william.py` (dalla cartella `doppiaggio/william/consegne/`); il ponte le trova nel testo a
+  schermo e manda l’evento «racconto»; il motore audio ha un lettore suo (`mondo/racconto.rs`), e le altre voci
+  aspettano William; un comando o un tasto lo fanno tacere, F2 lo ridice, Esc lo zittisce; le risposte dei dialoghi
+  le dice passandoci sopra con il mouse; nelle opzioni «Voce di William: recitata / nessuna». Le prese sono
+  quattordici, la plancia (`SM-001`…`SM-014`). L’ascolto dell’inizio di una partita, reso dal motore del gioco:
+  `consegne/Ascolto voce di William 2026-11-16/`. **Le scelte mie da dirgli** (41, §3): la musica non scende sotto
+  William (la sua regola del 2 novembre, non quella del Viaggiatore); fra due prese 0,55 s. **Nella beta 13**,
+  pubblicata la stessa notte su sua richiesta, insieme all’intro con William e Yusuf e ai titoli di testa nuovi.
+  **Alla prossima: le sue note sulla beta 13** (la voce nel gioco, l’intro), le tre parole delle prese da fargli
+  sentire (41, §5), e le prese nuove di Leonardo quando arrivano (si copiano in `consegne/` e si lancia lo strumento).
 
 - **15 novembre 2026, a notte: William e Yusuf nell’intro, e i titoli di testa con la tipografia del poster**
   (documento 09, §17: lì stanno le sue disposizioni parola per parola e quello che è stato fatto). Leonardo ha
@@ -98,8 +114,8 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   picchi sotto −3 dB, come gli era stato chiesto; 16 bit), in `doppiaggio/william/consegne/` (fuori da git;
   quelle del 13 in `2026-11-13/`), controllate (`controllo-2026-11-15.json`): testo fedele; tre parole da far
   sentire all’autore (SM-011 «nel rosso» sentito «del rosso»; SM-014 «lo faccio correre» sentito «scorrere»;
-  in SM-001 Whisper sente un «ebbe» in più dopo «servirebbe»). **Non sono nel gioco: il gioco non ha ancora un
-  lettore per la voce di William.** Va costruito sul modello del Viaggiatore
+  in SM-001 Whisper sente un «ebbe» in più dopo «servirebbe»). **Nel gioco dal 16 novembre** (vedi sopra; prima il gioco non
+  aveva un lettore per la voce di William). Va costruito sul modello del Viaggiatore
   (`C:\Users\Utente\Documents\GitHub\IlViaggiatore`: `app/src/gioco/voce.ts`, `parti.ts`,
   `components/ViaggiatorePlayer.tsx`, `gioco/musica.ts`; il progetto è in `pre-produzione/08-doppiaggio-tts.md`):
   il testo del turno compare tutto e la voce parte da sola con lui; le parti si ritrovano dal testo stampato
@@ -525,6 +541,7 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 | `progettazione/36-punto-della-situazione.md` | il punto della situazione dell’11 novembre 2026: che cosa è fatto, che cosa resta, che cosa aspetta l’autore |
 | `progettazione/37-revisione-globale.md` | la revisione globale dell’11 novembre 2026: 3 gravi, 26 medie, 40 lievi; il §8 è l’ordine consigliato, il §9 il registro delle correzioni |
 | `progettazione/38-la-santa-maria.md`, `38-la-santa-maria-schizzo.png` | il progetto della nave, primo passo: la scheda unica dai due giochi, le otto decisioni (13 novembre 2026), lo schizzo (`strumenti/nave/schizzo.py`) |
+| `progettazione/41-la-voce-di-william.md` | la voce di William nel gioco, come nel Viaggiatore (16 novembre 2026): le prese di Leonardo, il ponte, il motore audio, la pagina; `strumenti/audio/voce_william.py` |
 | `progettazione/40-il-modello-della-santa-maria.md`, `40-modello/` | il terzo passo: il modello in Blender (14 novembre 2026), la forma e una prima superficie; i due fogli; che cosa è inventato lì e che cosa non va ancora; `strumenti/nave/modello.py`, `superficie.py`, `pelle.py`, `foglio.py` |
 | `progettazione/39-schematiche-della-santa-maria.md`, `39-schematiche/` | il secondo passo: le tre tavole e da dove viene ogni misura; `strumenti/nave/misure.py` è la tabella, `schematiche.py` le disegna |
 | `progettazione/33-revisione-narrativa.md` | la revisione narrativa: i 37 punti, il metodo, il registro delle decisioni, il calendario |

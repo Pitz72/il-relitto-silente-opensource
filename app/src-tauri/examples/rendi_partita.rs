@@ -9,6 +9,9 @@
 //! Con «--da N --a M» rende solo i turni da N a M (contati da 0): per ascoltare un pezzo.
 //! Con «--coda S» il tempo dopo l’ultimo turno è di S secondi invece di 28: per sentire una
 //! chiusura fino in fondo (la musica di un finale dura più di un minuto).
+//! Con «--file» suonano anche i file di `audio/musica-ia/` (la musica, le voci della nave, Yusuf, la voce di servizio,
+//! William): senza, il motore suona soltanto quello che sintetizza. Con «--aspetta-william» un turno dura
+//! anche finché William ha finito di dirlo (documento 41): per ascoltare le sue prese intere.
 
 mod comune;
 
@@ -29,7 +32,12 @@ fn main() -> Result<(), String> {
     let coda = cerca("--coda").unwrap_or(28) as f32;
     let a = cerca("--a").unwrap_or(t.turni.len().saturating_sub(1)).min(t.turni.len().saturating_sub(1));
 
-    let (mut mondo, tx, _stato) = Mondo::nuovo(SR, 11);
+    let (mut mondo, tx, stato) = Mondo::nuovo(SR, 11);
+    let con_file = argomenti.iter().any(|a| a == "--file");
+    let aspetta_william = argomenti.iter().any(|a| a == "--aspetta-william");
+    if con_file {
+        mondo.cartella_musica(std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../audio/musica-ia"));
+    }
     let dt = 1.0 / SR as f64;
     let blocco = 128;
     let mut buf = vec![Frame::ZERO; blocco];
@@ -66,8 +74,14 @@ fn main() -> Result<(), String> {
             // dopo l’ultimo turno, il tempo della fine
             durata += coda;
         }
-        let n = (durata * SR) as usize;
+        if con_file {
+            // il thread di lavoro decodifica i file del turno: nella realtà ha il tempo, qui lo si aspetta
+            mondo.rendi(&mut buf[..1], dt);
+            std::thread::sleep(std::time::Duration::from_millis(400));
+        }
+        let mut n = (durata * SR) as usize;
         let mut i = 0;
+        let mut zitto_da = 0usize;
         while i < n {
             let q = blocco.min(n - i);
             mondo.rendi(&mut buf[..q], dt);
@@ -76,7 +90,17 @@ fn main() -> Result<(), String> {
                 pcm.push((f.right.clamp(-1.0, 1.0) * 32767.0).round() as i16);
             }
             i += q;
+            // William parla ancora: il turno aspetta che finisca, e poi un respiro (al più un minuto in più)
+            if aspetta_william && k < a {
+                if stato.istantanea().racconto {
+                    zitto_da = i;
+                }
+                if i >= n && zitto_da > 0 && i < zitto_da + (1.5 * SR) as usize && i < n + (60.0 * SR) as usize {
+                    n = i + blocco;
+                }
+            }
         }
+        let durata = n as f32 / SR;
         secondi_audio += durata;
     }
     scrivi_wav(&uscita, &pcm).map_err(|e| e.to_string())?;

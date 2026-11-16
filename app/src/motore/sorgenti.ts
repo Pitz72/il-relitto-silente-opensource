@@ -7,6 +7,8 @@
 //  niente da fuori.
 // ============================================================================
 import ponte from "./ponte.py?raw";
+// la voce di William (documento 41): i pezzi del copione che hanno la loro presa (strumenti/audio/voce_william.py)
+import racconto from "./racconto.json?raw";
 import versione from "../../../versione.json?raw";
 
 const motore = import.meta.glob(
@@ -30,7 +32,7 @@ const nome = (p: string) => p.slice(p.lastIndexOf("/") + 1);
 
 /** Percorso nel filesystem di Pyodide → contenuto. */
 export function fileDaScrivere(): Record<string, string> {
-  const file: Record<string, string> = { "/relitto/app/ponte.py": ponte, "/relitto/versione.json": versione };
+  const file: Record<string, string> = { "/relitto/app/ponte.py": ponte, "/relitto/app/racconto.json": racconto, "/relitto/versione.json": versione };
   for (const [p, testo] of Object.entries(motore)) file[`/relitto/motore/${nome(p)}`] = testo;
   for (const [p, testo] of Object.entries(storia)) file[`/relitto/relitto-silente/${nome(p)}`] = testo;
   for (const [p, testo] of Object.entries(percorsi)) file[`/relitto/collaudo/${nome(p)}`] = testo;

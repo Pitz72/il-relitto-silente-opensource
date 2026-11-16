@@ -7,6 +7,9 @@
 //  sequel (il comunicatore del Magazzino Quattro); le altre viste definitive
 //  sono della fase 5.
 // ============================================================================
+import { anteprimaWilliam } from "../suono";
+import { SOSTA } from "../racconto";
+import { presaDellaRisposta } from "../racconto-tabella";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { cicloA, FOTOGRAMMI } from "../ritmo";
 import type { Forma } from "../../stile/atmosfere";
@@ -45,6 +48,48 @@ const CHI: Record<string, string> = { anziano: "l’Anziano", yusuf: "Yusuf", ec
 
 export default function Dialogo({ personaggio, blocchi, detto, scelte, forma, ridotto, scegli, riga, arrivo, nodo = null, momenti = true }: Props) {
   const primoSeme = useRef<HTMLButtonElement>(null);
+  // La voce di William sulle risposte (documento 41, come nel Viaggiatore): fermandosi un terzo di secondo con il
+  // mouse su una risposta, o arrivandoci con la tastiera, William la dice; mai sopra chi parla (lo decide il motore).
+  // Se a un turno nuovo il mouse è già fermo su una risposta, aspetta che si muova; il fuoco che il dialogo mette da
+  // sé sulla prima risposta non conta.
+  const sostaRef = useRef<{ timer: number; detta: string | null; mosso: boolean; daCodice: boolean }>({ timer: 0, detta: null, mosso: false, daCodice: false });
+  useEffect(() => {
+    const st = sostaRef.current;
+    st.mosso = false;
+    st.detta = null;
+    const muovi = () => (st.mosso = true);
+    addEventListener("mousemove", muovi, { once: true });
+    return () => {
+      removeEventListener("mousemove", muovi);
+      clearTimeout(st.timer);
+    };
+  }, [scelte]);
+  const dici = (etichetta: string) => {
+    const st = sostaRef.current;
+    const sigla = presaDellaRisposta(etichetta);
+    if (!sigla || st.detta === sigla) return;
+    st.detta = sigla;
+    void anteprimaWilliam(sigla);
+  };
+  const sosta = (etichetta: string) => {
+    const st = sostaRef.current;
+    clearTimeout(st.timer);
+    if (st.mosso) st.timer = window.setTimeout(() => dici(etichetta), SOSTA);
+    else addEventListener("mousemove", () => sosta(etichetta), { once: true });
+  };
+  const lascia = () => {
+    const st = sostaRef.current;
+    clearTimeout(st.timer);
+    st.detta = null;
+  };
+  const fuoco = (b: HTMLButtonElement, etichetta: string) => {
+    const st = sostaRef.current;
+    if (st.daCodice) {
+      st.daCodice = false;
+      return;
+    }
+    if (b.matches(":focus-visible")) dici(etichetta);
+  };
   const tastoAscolta = useRef<HTMLButtonElement>(null);
   // «Ascolta il canto»: al nodo «musica» chi vuole ascolta l'inno degli alieni per intero (Inno.tsx)
   const [ascolto, setAscolto] = useState(false);
@@ -89,7 +134,10 @@ export default function Dialogo({ personaggio, blocchi, detto, scelte, forma, ri
   const rivedi = import.meta.env.DEV && personaggio === "anziano" && !ridotto ? (quale: Momento) => setApparizione((a) => ({ tipo: quale, n: (a?.n ?? 0) + 1 })) : undefined;
   // il fuoco sul primo seme a ogni battuta nuova (e quando le parole arrivano)
   useEffect(() => {
-    if (formata) primoSeme.current?.focus({ preventScroll: true });
+    if (formata && primoSeme.current) {
+      sostaRef.current.daCodice = true;
+      primoSeme.current.focus({ preventScroll: true });
+    }
   }, [chiave, formata]);
   const battute = blocchi.filter((b) => b.tipo === "dialogo");
   const narrazione = blocchi.filter((b) => b.tipo === "paragrafo");
@@ -125,7 +173,18 @@ export default function Dialogo({ personaggio, blocchi, detto, scelte, forma, ri
       {riga ?? (
       <nav className="semi" aria-label="Le risposte">
         {scelte.map((s, i) => (
-          <button key={s.comando} ref={i === 0 ? primoSeme : undefined} type="button" data-comando={s.comando} className={s.comando === "esci" ? "esci" : ""} onClick={() => scegli(s)} aria-keyshortcuts={s.tasto ?? undefined}>
+          <button
+            key={s.comando}
+            ref={i === 0 ? primoSeme : undefined}
+            type="button"
+            data-comando={s.comando}
+            className={s.comando === "esci" ? "esci" : ""}
+            onClick={() => scegli(s)}
+            aria-keyshortcuts={s.tasto ?? undefined}
+            onMouseEnter={() => sosta(s.etichetta)}
+            onMouseLeave={lascia}
+            onFocus={(e) => fuoco(e.currentTarget, s.etichetta)}
+          >
             {s.tasto && <span className="numero">{s.tasto}</span>}
             {s.etichetta.replace(/'/g, "’")}
           </button>

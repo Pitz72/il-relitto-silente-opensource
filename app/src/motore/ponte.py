@@ -882,6 +882,26 @@ def _dopo_registro(eventi):
     return None
 
 
+def _voci_nave_dove(testo, servizio=True):
+    """Le battute delle voci della nave, di Yusuf, di L.V. e le parti della voce di servizio che un testo ha a
+    schermo: (punto del testo, nome), nell'ordine in cui ci stanno."""
+    dove = _frammenti_dove(testo)
+    fr = [parole for _, parole in dove]
+    trovate = []
+    i = 0
+    while i < len(fr):
+        for nome, att in _VOCI_NAVE_FRAMMENTI:
+            if tuple(fr[i:i + len(att)]) == att:
+                trovate.append((dove[i][0], nome))
+                i += len(att)
+                break
+        else:
+            i += 1
+    if servizio:
+        trovate += _servizio(testo)
+    return sorted(trovate, key=lambda x: x[0])
+
+
 def _voci_nave(eventi, servizio=True):
     """Le battute delle voci della nave, di Yusuf, di L.V. e le parti della voce di servizio che questo turno ha
     a schermo, nell'ordine in cui ci stanno."""
@@ -889,22 +909,91 @@ def _voci_nave(eventi, servizio=True):
     for e in eventi:
         if e.get("tipo") == "errore" or not isinstance(e.get("testo"), str):
             continue
-        dove = _frammenti_dove(e["testo"])
-        fr = [parole for _, parole in dove]
-        trovate = []
-        i = 0
-        while i < len(fr):
-            for nome, att in _VOCI_NAVE_FRAMMENTI:
-                if tuple(fr[i:i + len(att)]) == att:
-                    trovate.append((dove[i][0], nome))
-                    i += len(att)
-                    break
-            else:
-                i += 1
-        if servizio:
-            trovate += _servizio(e["testo"])
-        out += [nome for _, nome in sorted(trovate, key=lambda x: x[0])]
+        out += [nome for _, nome in _voci_nave_dove(e["testo"], servizio)]
     return out
+
+
+# La voce di William (documento 41): le prese di Leonardo Tomassetti, come nel Viaggiatore. Il testo del turno compare
+# e William lo dice: il ponte trova a schermo i pezzi del copione che hanno la loro presa (app/src/motore/racconto.json,
+# scritto da strumenti/audio/voce_william.py, con le parole che William dice di ogni pezzo: il racconto, le scritte che
+# legge, mai le voci degli altri) e li manda al suono nell'ordine in cui stanno, insieme alle altre voci. Un pezzo
+# senza presa resta muto. Le risposte dei dialoghi no: si sentono passandoci sopra con il mouse (Dialogo.tsx), e dopo
+# averle scelte non si ridicono.
+_RACCONTO_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "racconto.json")
+
+
+def _carica_racconto():
+    try:
+        with open(_RACCONTO_FILE, encoding="utf-8") as f:
+            dati = json.load(f)
+    except (OSError, ValueError):
+        return {}
+    indice = {}
+    for z in dati.get("pezzi", []):
+        if z.get("tipo") == "opzione":
+            continue
+        parti = tuple(tuple(x.split()) for x in z["parti"] if x)
+        if parti:
+            indice.setdefault(parti[0][0], []).append((z["file"], parti, sum(len(x) for x in parti)))
+    # i pezzi più lunghi per primi: una variante che ne contiene un'altra vince
+    for v in indice.values():
+        v.sort(key=lambda x: -x[2])
+    return indice
+
+
+_RACCONTO = _carica_racconto()
+
+
+def _racconto_dove(testo):
+    """I pezzi di William che un testo ha a schermo: (punto del testo, file), in ordine. Le parti di un pezzo devono
+    esserci tutte, in fila (fra una e l'altra possono stare le voci degli altri), e due pezzi non si sovrappongono."""
+    if not _RACCONTO:
+        return []
+    testo = testo.replace("’", "'")
+    parole = [(m.start(), m.group().lower()) for m in re.finditer(r"\w+", testo)]
+    w = [x for _, x in parole]
+    presi = [False] * len(w)
+    out = []
+    for i, x in enumerate(w):
+        if presi[i]:
+            continue
+        for file, parti, _ in _RACCONTO.get(x, ()):
+            n = len(parti[0])
+            if tuple(w[i:i + n]) != parti[0] or any(presi[i:i + n]):
+                continue
+            tratti, fine = [(i, i + n)], i + n
+            for parte in parti[1:]:
+                k = next((j for j in range(fine, len(w) - len(parte) + 1) if tuple(w[j:j + len(parte)]) == parte
+                          and not any(presi[j:j + len(parte)])), None)
+                if k is None:
+                    break
+                tratti.append((k, k + len(parte)))
+                fine = k + len(parte)
+            else:
+                for a, b in tratti:
+                    presi[a:b] = [True] * (b - a)
+                out.append((parole[i][0], file))
+                break
+    return out
+
+
+def _racconto(eventi, anziano=False):
+    """Le prese di William del turno, divise in due: quelle che vengono prima di ogni altra voce, e quelle che vengono
+    dopo (un personaggio parla, e William racconta dopo di lui). L'ordine è quello del testo, come nel Viaggiatore."""
+    prima, poi, altri = [], [], False
+    for e in eventi:
+        if e.get("tipo") == "errore" or not isinstance(e.get("testo"), str):
+            continue
+        voci = [(d, "voce") for d, _ in _voci_nave_dove(e["testo"])]
+        if anziano and e.get("tipo") == "dialogo":
+            voci += [(d, "voce") for d, _ in _frammenti_dove(e["testo"])[:1]]
+        for _, chi, file in sorted([(d, k, None) for d, k in voci] + [(d, "william", f) for d, f in _racconto_dove(e["testo"])],
+                                   key=lambda x: (x[0], x[1] != "voce")):
+            if chi == "voce":
+                altri = True
+            else:
+                (poi if altri else prima).append(file)
+    return prima, poi
 
 
 def _parole_dette(testo):
@@ -961,7 +1050,12 @@ def _finale(m):
 
 def _rileva(prima, dopo, comando, eventi):
     if prima is None:
-        return [{"evento": "inizio", "stanza": dopo["stanza"]}]
+        # la partita comincia: la plancia, e William che la racconta (documento 41)
+        out = [{"evento": "inizio", "stanza": dopo["stanza"]}]
+        prima_w, poi_w = _racconto(eventi)
+        if prima_w or poi_w:
+            out.append({"evento": "racconto", "prese": prima_w, "poi": poi_w})
+        return out
     out = []
     if prima["stanza"] != dopo["stanza"]:
         out.append({"evento": "stanza", "da": prima["stanza"], "a": dopo["stanza"]})
@@ -1016,6 +1110,10 @@ def _rileva(prima, dopo, comando, eventi):
     if (a0 is not None and a1 is not None and a0 >= 30 > a1 and dopo["fuga"] == "iniziata"
             and prima["fuga"] == "iniziata"):
         out.append({"evento": "protezione_fuga"})
+    # la voce di William (documento 41): le sue prese, quelle prima delle altre voci e quelle dopo
+    prima_w, poi_w = _racconto(eventi, anziano=bool(nodo and nodo.get("voce")))
+    if prima_w or poi_w:
+        out.append({"evento": "racconto", "prese": prima_w, "poi": poi_w})
     # le voci della nave a schermo
     battute = _voci_nave(eventi)
     if battute:

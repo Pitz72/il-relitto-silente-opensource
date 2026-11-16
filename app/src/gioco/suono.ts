@@ -5,7 +5,7 @@
 //  suonare. Il mondo sonoro parte con la partita, si abbassa nella pausa e tace
 //  tornando al menu. Fuori da Tauri (il browser dello sviluppo) tutto tace.
 // ============================================================================
-import { comando, dentroTauri, type ComandoMondo, type MixMondo } from "../lib/tauri";
+import { comando, dentroTauri, type ComandoMondo, type IstantaneaMondo, type MixMondo } from "../lib/tauri";
 import type { Turno } from "../motore/tipi";
 import type { Opzioni } from "../stile/opzioni";
 import type { Gesto } from "./tocco";
@@ -74,6 +74,7 @@ export function mixDa(o: Opzioni): MixMondo {
     musica: o.volumeMusica,
     interfaccia: o.volumeInterfaccia,
     parlato: o.volumeParlato,
+    william: o.voceWilliam,
     mono: o.mono,
     dinamica_ridotta: o.dinamicaRidotta,
     intensi_ridotti: o.suoniIntensiRidotti,
@@ -87,3 +88,20 @@ export const livelliSuono = (l: Record<string, number>) => manda({ tipo: "livell
 export const mandaIntro = (valore: unknown) => manda({ tipo: "intro", valore });
 
 export const mixSuono = (o: Opzioni) => manda({ tipo: "mix", valore: mixDa(o) });
+
+// La voce di William (documento 41; mondo/racconto.rs), come nel Viaggiatore: F2 la ridice, un tasto la zittisce,
+// una risposta di un dialogo sotto il mouse la fa dire.
+export const ridiciWilliam = () => manda({ tipo: "racconto", valore: "ridici" });
+export const zittisciWilliam = () => manda({ tipo: "racconto", valore: "zitto" });
+export const anteprimaWilliam = (sigla: string) => manda({ tipo: "racconto", valore: { anteprima: sigla } });
+
+/** William sta parlando? Con Esc la pagina lo zittisce invece di aprire la pausa. Fuori da Tauri, mai. */
+export async function williamParla(): Promise<boolean> {
+  if (!dentroTauri() || !avviato) return false;
+  try {
+    await avviato;
+    return !!(await comando<IstantaneaMondo | null>("audio_mondo_stato"))?.racconto;
+  } catch {
+    return false;
+  }
+}

@@ -1,0 +1,114 @@
+{
+ "SM-001": {
+  "sorgente": "ac128895aa97b8d8c1bd0e0f50d43cc6654b574342bda0b20564f929048f116a",
+  "secondi": 35.3,
+  "tolti": [
+   0.94,
+   0.45
+  ]
+ },
+ "SM-002": {
+  "sorgente": "86e669bf58b6c4eb9efab3d7900cc9d783f668255c0e254f8dc0b4d8f05311a7",
+  "secondi": 23.34,
+  "tolti": [
+   1.26,
+   0.42
+  ]
+ },
+ "SM-003": {
+  "sorgente": "0ffd0c766aeed41a4b2b39df24fb67333d7ff1a964c3df3f5ad5c93fd0acfaad",
+  "secondi": 24.3,
+  "tolti": [
+   1.04,
+   0.5
+  ]
+ },
+ "SM-004": {
+  "sorgente": "147cf88c94fe29f5a0b52770cb85cd66fef32537486a2d78fa543f63196a3377",
+  "secondi": 24.78,
+  "tolti": [
+   0.94,
+   0.83
+  ]
+ },
+ "SM-005": {
+  "sorgente": "d1134964171a8270f2d25d6a78cbaf01ecfe4f772c17f179193b5aa6ae3d18ad",
+  "secondi": 11.4,
+  "tolti": [
+   1.32,
+   0.51
+  ]
+ },
+ "SM-006": {
+  "sorgente": "a69d0044660978f2cc3051cafeb72d2964eb834257ad672a43540dc1edb6e52e",
+  "secondi": 5.2,
+  "tolti": [
+   1.14,
+   0.48
+  ]
+ },
+ "SM-007": {
+  "sorgente": "2a58f4d1f8c83b5d94bf725dbbd669a78a42dc513f9613314d0e0f95784ecd27",
+  "secondi": 17.76,
+  "tolti": [
+   1.18,
+   0.33
+  ]
+ },
+ "SM-008": {
+  "sorgente": "7b9b3df2e3cf44deb7b555d9a4dba95134fa27c224ba9c32b26a3183fc1ee815",
+  "secondi": 8.32,
+  "tolti": [
+   0.94,
+   0.5
+  ]
+ },
+ "SM-009": {
+  "sorgente": "5ddc565f03e22c66f94eaf65a799de6a814346c441f4a1fdc83ca7779d234238",
+  "secondi": 9.28,
+  "tolti": [
+   1.06,
+   0.38
+  ]
+ },
+ "SM-010": {
+  "sorgente": "d1a6b2cb5397517b19ff85efaf4521164ef2b5a9a7def2223549d0f997497559",
+  "secondi": 4.96,
+  "tolti": [
+   0.94,
+   0.75
+  ]
+ },
+ "SM-011": {
+  "sorgente": "aacbb428bd0ac1e93334ba2abd8db3ebb073d918e1de157155e715a0f6b5f8a2",
+  "secondi": 16.36,
+  "tolti": [
+   0.94,
+   0.51
+  ]
+ },
+ "SM-012": {
+  "sorgente": "cf9af2789e53b8d8392a07548e79b4fab307d982a0f6972c6a8858ca531844c4",
+  "secondi": 5.96,
+  "tolti": [
+   0.94,
+   0.19
+  ]
+ },
+ "SM-013": {
+  "sorgente": "2cf67ab4af6ca50912ab85271a1dea543142f8e5e56249576d7cc3773088e70b",
+  "secondi": 5.96,
+  "tolti": [
+   0.94,
+   0.32
+  ]
+ },
+ "SM-014": {
+  "sorgente": "5c139c4084391fb882fd9f99093f894f9c8c89e450ff275405f4249d0a291273",
+  "secondi": 16.92,
+  "tolti": [
+   0.94,
+   0.19
+  ]
+ }
+}

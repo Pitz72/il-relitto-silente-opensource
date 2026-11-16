@@ -82,7 +82,7 @@ test("l'elenco dei riconoscimenti ha un testo per ogni licenza che usa", () => {
     "La voce di L.V.",
     "La voce dell’Anziano (ventisei battute)",
     "La voce di Yusuf (otto battute e il messaggio dell’intro)",
-    "La voce di William: il registro di bordo dell’intro",
+    "La voce di William: il registro di bordo dell’intro e le prese del gioco",
     "Le voci della nave (quindici voci, ventisette battute)",
     "La voce di servizio (quarantacinque parti)",
   ]);

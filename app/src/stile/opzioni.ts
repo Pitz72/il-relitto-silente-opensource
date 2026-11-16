@@ -32,8 +32,11 @@ export interface Opzioni {
   volumeInterfaccia: number;
   /** la musica (documenti 21 e 22) */
   volumeMusica: number;
-  /** il parlato: le voci registrate (narratore, personaggi). Il canale c'è, le registrazioni no */
+  /** il parlato: le voci registrate (William, le voci della nave, l'Anziano, Yusuf, la tuta) */
   volumeParlato: number;
+  /** la voce di William (documento 41): il racconto letto da Leonardo Tomassetti mentre compare. Spenta, si legge in
+   *  silenzio; le altre voci restano */
+  voceWilliam: boolean;
   mono: boolean;
   dinamicaRidotta: boolean;
   suoniIntensiRidotti: boolean;
@@ -90,6 +93,7 @@ export const OPZIONI_DI_BASE: Opzioni = {
   volumeInterfaccia: 1,
   volumeMusica: 1,
   volumeParlato: 1,
+  voceWilliam: true,
   mono: false,
   dinamicaRidotta: false,
   suoniIntensiRidotti: false,

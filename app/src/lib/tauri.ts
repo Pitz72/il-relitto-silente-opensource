@@ -71,7 +71,8 @@ export type ComandoMondo =
   | { tipo: "menu"; valore: boolean }
   | { tipo: "musica"; valore: "titoli" | "silenzio" }
   | { tipo: "sfuma"; valore: number }
-  | { tipo: "inno"; valore: boolean };
+  | { tipo: "inno"; valore: boolean }
+  | { tipo: "racconto"; valore: "ridici" | "zitto" | { anteprima: string } };
 
 /** I cursori e le opzioni del suono (mondo/mod.rs, `Mix`): i volumi da 0 a 1. */
 export interface MixMondo {
@@ -82,6 +83,8 @@ export interface MixMondo {
   musica: number;
   interfaccia: number;
   parlato: number;
+  /** la voce di William, il racconto letto da Leonardo Tomassetti (documento 41) */
+  william: boolean;
   mono: boolean;
   dinamica_ridotta: boolean;
   intensi_ridotti: boolean;
@@ -113,4 +116,6 @@ export interface IstantaneaMondo {
   livello_db: number;
   protezione: boolean;
   voci: number;
+  /** William sta parlando (documento 41) */
+  racconto?: boolean;
 }

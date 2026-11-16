@@ -24,6 +24,8 @@ pub mod intro;
 pub mod livelli;
 pub mod musica;
 pub mod musica_file;
+pub mod prese_william;
+pub mod racconto;
 pub mod re;
 mod regia;
 pub mod sintonia;
@@ -57,6 +59,7 @@ use sintonia::{Profilo, Spostatore};
 use stanze::{Specie, Stanza};
 use voce::Voce;
 use voci_nave::VociNave;
+use racconto::Racconto;
 use musica_file::Pezzo;
 
 pub use interfaccia::Gesto;
@@ -106,9 +109,10 @@ pub struct Mix {
     pub musica: f32,
     /// il tocco dei pulsanti: un cursore a parte, non è un effetto del mondo
     pub interfaccia: f32,
-    /// il parlato (06, §9.2): le voci registrate, del narratore e dei personaggi. Il canale
-    /// c’è già; le registrazioni arriveranno dopo (l’autore le farà con il TTS di Google)
+    /// il parlato (06, §9.2): le voci registrate, del narratore e dei personaggi
     pub parlato: f32,
+    /// la voce di William, il racconto letto da Leonardo Tomassetti (documento 41): l’opzione «Voce di William»
+    pub william: bool,
     /// i due canali sommati, con le differenze di volume
     pub mono: bool,
     /// la dinamica ridotta: per chi gioca piano o di notte (3:1 sopra −30 dBFS)
@@ -120,7 +124,7 @@ pub struct Mix {
 
 impl Default for Mix {
     fn default() -> Self {
-        Mix { generale: 1.0, ambienti: 1.0, effetti: 1.0, voci: 1.0, musica: 1.0, interfaccia: 1.0, parlato: 1.0, mono: false, dinamica_ridotta: false, intensi_ridotti: false }
+        Mix { generale: 1.0, ambienti: 1.0, effetti: 1.0, voci: 1.0, musica: 1.0, interfaccia: 1.0, parlato: 1.0, william: true, mono: false, dinamica_ridotta: false, intensi_ridotti: false }
     }
 }
 
@@ -149,6 +153,8 @@ pub enum Comando {
     Sfuma(f32),
     /// l'inno degli alieni, dal colloquio con l'Anziano: `true` «Ascolta il canto», `false` lo interrompe
     Inno(bool),
+    /// la voce di William (documento 41): F2 la ridice, un tasto la zittisce, una risposta sotto il mouse la fa dire
+    Racconto(AzioneRacconto),
     // ---- il prototipo dei tre ambienti (la pagina di prova, i rendering)
     Ambiente(Ambiente),
     /// la cifra dell’aria, da 0 a 100
@@ -171,6 +177,18 @@ pub enum Comando {
     /// «goccia», «crepa», «granello», «gemito», «spinta», «arpione», «urto»), o mette
     /// il brusio a una voce sola («una_voce») o al coro («coro»)
     Prova(String),
+}
+
+/// Che cosa la pagina chiede alla voce di William.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum AzioneRacconto {
+    /// F2: le prese dell’ultimo turno, da capo
+    Ridici,
+    /// un tasto, Esc: tace di colpo
+    Zitto,
+    /// una risposta di un dialogo sotto il mouse: la sigla della sua presa
+    Anteprima(String),
 }
 
 const S_RE: u32 = 1;
@@ -214,6 +232,8 @@ pub struct StatoMondo {
     livello: AtomicU32,
     protezione: AtomicBool,
     voci: AtomicU32,
+    /// William sta parlando (documento 41): con Esc la pagina lo zittisce, invece di aprire la pausa
+    racconto: AtomicBool,
 }
 
 #[derive(Serialize, Clone, Debug)]
@@ -224,6 +244,7 @@ pub struct Istantanea {
     pub livello_db: f32,
     pub protezione: bool,
     pub voci: u32,
+    pub racconto: bool,
 }
 
 impl StatoMondo {
@@ -234,6 +255,7 @@ impl StatoMondo {
             livello_db: f32::from_bits(self.livello.load(Ordering::Relaxed)),
             protezione: self.protezione.load(Ordering::Relaxed),
             voci: self.voci.load(Ordering::Relaxed),
+            racconto: self.racconto.load(Ordering::Relaxed),
         }
     }
 }
@@ -420,6 +442,8 @@ pub struct Mondo {
     anello: Option<Anello>,
     /// le voci della nave (documento 35), registrate: al posto del filo, quando ci sono i file
     voci_nave: VociNave,
+    /// la voce di William (documento 41): il racconto, letto da Leonardo Tomassetti
+    racconto: Racconto,
     /// Yusuf e la scatola nera di L.V. (documento 35): la radio e il nastro ce l’hanno già nel file, ed escono
     /// asciutti
     voci_radio: VociNave,
@@ -573,6 +597,7 @@ impl Mondo {
             filo_shift: Scorrevole::nuovo(0.0),
             anello: None,
             voci_nave: VociNave::nuove(sr),
+            racconto: Racconto::nuovo(sr),
             voci_radio: VociNave::nuove(sr),
             sintonia_nel_turno: false,
             voci_turno: Vec::with_capacity(16),
@@ -705,6 +730,8 @@ impl Mondo {
         // le voci della nave stanno nella stessa cartella, con un lettore loro
         self.voci_nave.con_cartella(cartella.clone(), true);
         self.voci_radio.con_cartella(cartella.clone(), false);
+        // e le prese di William, con un lettore loro
+        self.racconto.con_cartella(cartella.clone());
         self.musica.con_cartella(cartella);
     }
 
@@ -719,6 +746,11 @@ impl Mondo {
         self.c_interfaccia.verso(q(m.interfaccia), 0.15, sr);
         self.c_musica.verso(q(m.musica), 0.15, sr);
         self.c_parlato.verso(q(m.parlato), 0.15, sr);
+        // la voce di William spenta: tace subito, e non parte più
+        self.racconto.accesa = m.william;
+        if !m.william {
+            self.racconto.zitto();
+        }
         self.c_ossa.verso(if m.intensi_ridotti { db(-12.0) } else { 1.0 }, 0.3, sr);
         // il cuore e il fischio dell’anticamera si tolgono con i suoni intensi
         self.applica(0.3);
@@ -750,6 +782,15 @@ impl Mondo {
             Comando::Musica(b) => self.musica.avvia(b),
             Comando::Sfuma(s) => self.musica.sfuma(s),
             Comando::Inno(si) => self.musica.inno(si),
+            Comando::Racconto(a) => match a {
+                AzioneRacconto::Ridici => self.racconto.ridici(),
+                AzioneRacconto::Zitto => self.racconto.zitto(),
+                AzioneRacconto::Anteprima(sigla) => {
+                    if let Some(p) = Pezzo::della_presa(&sigla) {
+                        self.racconto.anteprima(p);
+                    }
+                }
+            },
             Comando::Ambiente(a) => self.prototipo(a),
             Comando::Aria(v) => self.aria_prototipo(v),
             Comando::Nave(n) => {
@@ -1182,6 +1223,11 @@ impl Mondo {
             let ks = vp * gp * LIV_SERVIZIO;
             l += sl * ks;
             r += sr_ * ks;
+            // William (documento 41): il narratore, asciutto, sul cursore del parlato
+            let (wl, wr) = self.racconto.campione();
+            let kw = vp * gp * LIV_WILLIAM;
+            l += wl * kw;
+            r += wr * kw;
             // l'intro: il suo sound design sta sul cursore degli effetti, il re e il tema su quello della
             // musica (il tema come i file di musica), la voce di L.V. su quello del parlato
             if self.intro.attiva() {
@@ -1229,6 +1275,7 @@ impl Mondo {
         s.al_minuto.store(if self.fiato.acceso { self.fiato.al_minuto() } else { 0.0 }.to_bits(), Ordering::Relaxed);
         s.voci.store(self.colpi.len() as u32, Ordering::Relaxed);
         s.protezione.store(self.protezione, Ordering::Relaxed);
+        s.racconto.store(self.racconto.parla(), Ordering::Relaxed);
         if self.campioni_misurati as f32 >= self.sr * 0.1 {
             let rms = (self.energia / self.campioni_misurati as f64).sqrt();
             s.livello.store((20.0 * (rms + 1e-9).log10() as f32).to_bits(), Ordering::Relaxed);
@@ -1261,6 +1308,9 @@ const LIV_YUSUF: f32 = 2.0;
 /// La voce di servizio sopra il livello delle parole a cui il lettore porta ogni parte (−27 dBFS): +4 dB, le parole
 /// a circa −23 dBFS, un poco sotto Yusuf: chiara, ma non davanti al mondo
 const LIV_SERVIZIO: f32 = 1.58;
+/// William sopra il livello delle parole a cui il lettore porta ogni presa (−27 dBFS): +5 dB, le parole a circa
+/// −22 dBFS, fra Yusuf e la voce di servizio: è la voce che porta il gioco, davanti al mondo e alla musica
+const LIV_WILLIAM: f32 = 1.78;
 const LIV_CUORE: f32 = -10.0;
 const LIV_ACUFENE: f32 = -42.0;
 const LIV_PASSI: f32 = -24.0;

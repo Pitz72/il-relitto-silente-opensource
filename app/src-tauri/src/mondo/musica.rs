@@ -609,6 +609,11 @@ impl Musica {
         self.brano
     }
 
+    /// La voce dell’Anziano sta parlando: le prese di William che vengono dopo di lui aspettano.
+    pub fn voce_viva(&self) -> bool {
+        self.voce.vivo()
+    }
+
     /// Serve ancora il suo calcolo? Finché un brano suona sì, e dopo che è finito finché
     /// ne resta la coda del riverbero.
     pub fn attiva(&self) -> bool {

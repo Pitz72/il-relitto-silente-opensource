@@ -9,7 +9,16 @@ sono già registrate: qui c’è soltanto quello che dice William.
 | `copione.json` | i dati: capitoli, blocchi, prese, pezzi, segmenti (di William e degli altri), le prese uguali; lo scrive lo strumento |
 | `contesti.json` | le due righe di contesto e il titolo di ogni blocco, scritte a mano (7 novembre 2026) |
 
-Si rifà così, dalla radice:
+**Le prese, quando arrivano** (dal 16 novembre 2026, documento 41): si copiano in `consegne/` con il nome che hanno
+(la sigla: `sm-015.wav`), e poi, dalla radice:
+
+    python strumenti/audio/voce_william.py
+
+Lo strumento le prepara per il gioco (`audio/musica-ia/WI/`), scrive le tabelle per il ponte, la pagina e il motore, e
+le mette fra le risorse dell'app; poi si costruisce il gioco. Se i `.fav` cambiano, prima si rifà il copione (qui sotto):
+il collaudo (`collaudo/eventi.py`) se ne accorge.
+
+Il copione si rifà così, dalla radice:
 
     python strumenti/audio/copione_william.py
     python strumenti/audio/copione_pdf.py

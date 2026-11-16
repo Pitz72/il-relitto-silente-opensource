@@ -15,6 +15,7 @@
 //! la liberazione dei pezzi che non servono più: un solo thread di lavoro decodifica e butta
 //! (revisione 25, M5). Il thread audio manda soltanto messaggi.
 
+use super::prese_william::PRESE;
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::sync::mpsc::{channel, Receiver, Sender};
@@ -185,6 +186,9 @@ pub enum Pezzo {
     /// l’intro nello spazio: il messaggio di Yusuf dalla radio di plancia, quattro pezzi con il beep in mezzo,
     /// già lavorato (`strumenti/intro/voci_spazio.py`)
     Yu09,
+    /// la voce di William nel gioco (documento 41): una presa di Leonardo Tomassetti, il numero della sua sigla in
+    /// `prese_william::PRESE` (tutte le sigle del copione: una presa non ancora arrivata non ha il file, e resta muta)
+    Wi(u16),
 }
 
 /// Le battute delle voci della nave e i loro file: il nome senza «.mp3» è quello che manda il
@@ -455,7 +459,12 @@ impl Pezzo {
     /// è tarato dal 2 novembre sul valore efficace di tutto il file. Nemmeno la scatola nera di L.V.:
     /// il fruscio continuo del nastro inganna la misura sulle parole.
     pub fn parlato(self) -> bool {
-        self.yusuf() || self.servizio() || matches!(self, Pezzo::Wi01 | Pezzo::Yu09) || BATTUTE_NV.iter().any(|(p, _)| *p == self)
+        self.yusuf() || self.servizio() || matches!(self, Pezzo::Wi01 | Pezzo::Yu09 | Pezzo::Wi(_)) || BATTUTE_NV.iter().any(|(p, _)| *p == self)
+    }
+
+    /// La presa di William dalla sua sigla, come la manda il ponte («SM-001»).
+    pub fn della_presa(sigla: &str) -> Option<Pezzo> {
+        PRESE.iter().position(|(s, _)| *s == sigla).map(|i| Pezzo::Wi(i as u16))
     }
 
     /// Una parte della voce di servizio.
@@ -491,6 +500,9 @@ impl Pezzo {
 
     /// (la cartella della scheda, il nome del file) come stanno in `audio/musica-ia/`.
     pub fn file(self) -> (&'static str, &'static str) {
+        if let Pezzo::Wi(i) = self {
+            return ("WI", PRESE.get(i as usize).map(|p| p.1).unwrap_or(""));
+        }
         if let Some((_, n)) = BATTUTE_NV.iter().find(|(p, _)| *p == self) {
             return ("NV", n);
         }
@@ -677,9 +689,21 @@ impl Biblioteca {
     /// Va creata fuori dal thread audio: cerca i file e fa partire il thread di lavoro, che vive
     /// quanto la biblioteca.
     pub fn nuova(cartella: PathBuf) -> Self {
-        let percorsi: HashMap<Pezzo, PathBuf> = Pezzo::TUTTI
-            .iter()
-            .filter_map(|&p| {
+        Self::nuova_con(cartella, Pezzo::TUTTI.iter().copied())
+    }
+
+    /// La biblioteca delle prese di William (documento 41): le sigle del copione, ognuna con il suo file se c’è.
+    pub fn delle_prese(cartella: PathBuf) -> Self {
+        Self::nuova_con(cartella, (0..PRESE.len()).map(|i| Pezzo::Wi(i as u16)))
+    }
+
+    /// Una biblioteca di questi pezzi soltanto.
+    pub fn nuova_con(cartella: PathBuf, pezzi: impl Iterator<Item = Pezzo>) -> Self {
+        let pezzi: Vec<Pezzo> = pezzi.collect();
+        let quanti = pezzi.len().max(8);
+        let percorsi: HashMap<Pezzo, PathBuf> = pezzi
+            .into_iter()
+            .filter_map(|p| {
                 // nella cartella piatta (l’installazione) o nella sua sottocartella (l’albero di lavoro)
                 let (sotto, nome) = p.file();
                 [cartella.join(nome), cartella.join(sotto).join(nome)].into_iter().find(|f| f.is_file()).map(|f| (p, f))
@@ -705,7 +729,7 @@ impl Biblioteca {
                 }
             })
             .expect("il thread della musica non parte");
-        Biblioteca { percorsi, caselle: HashMap::with_capacity(Pezzo::TUTTI.len()), lavori, rx }
+        Biblioteca { percorsi, caselle: HashMap::with_capacity(quanti), lavori, rx }
     }
 
     /// C’è il file, o è già in memoria?
