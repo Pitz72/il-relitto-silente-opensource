@@ -527,6 +527,8 @@ pub struct Mondo {
     limitatore: Inseguitore,
     /// il tetto dei picchi di William, suo soltanto (vedi LIV_WILLIAM)
     tetto_william: Inseguitore,
+    /// e quello della voce di servizio (vedi LIV_SERVIZIO)
+    tetto_servizio: Inseguitore,
     fermo: bool,
     // --- il prototipo
     cammina: bool,
@@ -671,6 +673,7 @@ impl Mondo {
             dinamica: Inseguitore::nuovo(0.01, 0.25, sr),
             limitatore: Inseguitore::nuovo(0.0008, 0.12, sr),
             tetto_william: Inseguitore::nuovo(0.0008, 0.12, sr),
+            tetto_servizio: Inseguitore::nuovo(0.0008, 0.12, sr),
             fermo: false,
             cammina: false,
             piede: false,
@@ -1224,8 +1227,17 @@ impl Mondo {
             // protezione vitale non la chiude, perché è lei che la annuncia
             let (sl, sr_) = self.voci_nave.campione_servizio();
             let ks = vp * gp * LIV_SERVIZIO;
-            l += sl * ks;
-            r += sr_ * ks;
+            let (mut sl, mut sr_) = (sl * ks, sr_ * ks);
+            // i suoi picchi li tiene un tetto suo, come per William
+            let ps = sl.abs().max(sr_.abs());
+            let es = self.tetto_servizio.segui(ps).max(ps);
+            if es > TETTO_WILLIAM {
+                let g = TETTO_WILLIAM / es;
+                sl *= g;
+                sr_ *= g;
+            }
+            l += sl;
+            r += sr_;
             // William (documento 41): il narratore, asciutto, sul cursore del parlato
             let (wl, wr) = self.racconto.campione();
             let kw = vp * gp * LIV_WILLIAM;
@@ -1318,9 +1330,12 @@ const LIV_VOCI_NAVE: f32 = 0.75;
 /// Yusuf sopra il livello delle parole a cui il lettore porta ogni battuta (−27 dBFS): +6 dB, le parole a circa
 /// −21 dBFS, come negli ascolti approvati (documento 35, §8)
 const LIV_YUSUF: f32 = 2.0;
-/// La voce di servizio sopra il livello delle parole a cui il lettore porta ogni parte (−27 dBFS): +4 dB, le parole
-/// a circa −23 dBFS, un poco sotto Yusuf: chiara, ma non davanti al mondo
-const LIV_SERVIZIO: f32 = 1.58;
+/// La voce di servizio sopra il livello delle parole a cui il lettore porta ogni parte (−27 dBFS): +9 dB, le parole
+/// a circa −18 dBFS, come William. Era +4 (−23, un poco sotto Yusuf); alzato William, restava 5 dB sotto di lui, e
+/// nello stesso turno si sentono uno dopo l'altra: l'autore, sulla beta 14 (16 novembre 2026), «la voce
+/// dell'assistente è bassa come era bassa la voce di William nel gioco, quando legge il risultato dell'analisi
+/// della nave». I picchi (la cresta delle parti arriva a 24 dB) li piega lo stesso tetto di William
+const LIV_SERVIZIO: f32 = 2.818;
 /// William sopra il livello delle parole a cui il lettore porta ogni presa (−27 dBFS): +9 dB, le parole a circa
 /// −18 dBFS. Era +5 (−22 dBFS, appena 2 dB sopra la plancia calma): l'autore, giocando la beta 13 (16 novembre
 /// 2026), «La voce di William nella parte "gioco" è un po' bassina». È la voce che porta il gioco, come un

@@ -129,6 +129,128 @@
 "parti": [
 "accendo il riflettore di prua e lo faccio correre lungo la massa su qualunque scafo il fascio troverebbe uno spigolo una saldatura un riflesso da restituirmi su questo scorre come su velluto bagnato e non torna indietro niente lo spengo"
 ]
+},
+{
+"id": "SM-017",
+"file": "SM-017",
+"tipo": "descrizione",
+"parti": [
+"la cloche i vettori il pilota automatico roba vecchia che risponde"
+]
+},
+{
+"id": "SM-018",
+"file": "SM-018",
+"tipo": "descrizione",
+"parti": [
+"due arpioni a testa magnetica duecento metri di cavo ciascuno servono a tenere ferma una preda mentre la taglio"
+]
+},
+{
+"id": "SM-019",
+"file": "SM-019",
+"tipo": "descrizione",
+"parti": [
+"i cavi sono tesi e tengono finché tengono loro la santa maria e la massa nera restano una cosa sola"
+]
+},
+{
+"id": "SM-020",
+"file": "SM-020",
+"tipo": "risposta",
+"parti": [
+"i cavi sono già tesi"
+]
+},
+{
+"id": "SM-021",
+"file": "SM-021",
+"tipo": "risposta",
+"parti": [
+"troppo lontano a questa distanza i cavi tornerebbero indietro a vuoto"
+]
+},
+{
+"id": "SM-022",
+"file": "SM-022",
+"tipo": "risposta",
+"parti": [
+"due colpi sordi che sento nelle ossa più che nelle orecchie gli arpioni volano mordono lo scafo nero e tengono avvolgo i cavi a strappi corti finché le due navi non si toccano con un urto lungo che fa tremare la plancia"
+]
+},
+{
+"id": "SM-023",
+"file": "SM-020",
+"tipo": "risposta",
+"parti": [
+"i cavi sono già tesi"
+]
+},
+{
+"id": "SM-024",
+"file": "SM-021",
+"tipo": "risposta",
+"parti": [
+"troppo lontano a questa distanza i cavi tornerebbero indietro a vuoto"
+]
+},
+{
+"id": "SM-025",
+"file": "SM-022",
+"tipo": "risposta",
+"parti": [
+"due colpi sordi che sento nelle ossa più che nelle orecchie gli arpioni volano mordono lo scafo nero e tengono avvolgo i cavi a strappi corti finché le due navi non si toccano con un urto lungo che fa tremare la plancia"
+]
+},
+{
+"id": "SM-026",
+"file": "SM-026",
+"tipo": "descrizione",
+"parti": [
+"la radio a lungo raggio fra i canali salvati ce n è uno solo che uso magazzino quattro"
+]
+},
+{
+"id": "SM-027",
+"file": "SM-027",
+"tipo": "descrizione",
+"parti": [
+"fra un canale e l altro c è un fruscio che il filtro non toglie tante voci una sopra l altra nessuna intera abbasso il volume il fruscio resta sullo schermo una riga che trema"
+]
+},
+{
+"id": "SM-028",
+"file": "SM-028",
+"tipo": "risposta",
+"parti": [
+"magazzino quattro è il primo canale della lista"
+]
+},
+{
+"id": "SM-029",
+"file": "SM-029",
+"tipo": "risposta",
+"parti": [
+"il fruscio se mi concentro su una voce ne arrivano altre dieci a coprirla"
+]
+},
+{
+"id": "SM-030",
+"file": "SM-030",
+"tipo": "risposta",
+"parti": [
+"lancio la scansione lunga il computer di bordo ha la mia età e se la prende comoda",
+"il calcolo parte si ferma riparte al terzo tentativo si arrende e scrive",
+"una cosa che l archivio non conosce o non vale niente o vale abbastanza da chiudere il conto con yusuf disinserisco il pilota automatico"
+]
+},
+{
+"id": "SM-031",
+"file": "SM-031",
+"tipo": "risposta",
+"parti": [
+"la scansione è sullo schermo ferma sulla stessa riga rifarla non le farà cambiare idea"
+]
 }
 ]
 }

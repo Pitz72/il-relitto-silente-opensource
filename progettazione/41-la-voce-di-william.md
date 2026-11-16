@@ -59,7 +59,10 @@ dalla cuffia), sul cursore del parlato, con le parole intorno a −18 dBFS. Eran
 servizio), appena 2 dB sopra la plancia calma: l’autore, giocando la beta 13 il 16 novembre 2026, «La voce di
 William nella parte "gioco" è un po bassina». Alzata di 4 dB (`LIV_WILLIAM` in `mondo/mod.rs`); i suoi picchi (la
 cresta delle prese è di 19 dB sopra le parole) li piega un tetto suo a −4,5 dBFS (`TETTO_WILLIAM`), prima del
-limitatore del mixer, così il mondo sotto di lui non si abbassa a ogni consonante forte.
+limitatore del mixer, così il mondo sotto di lui non si abbassa a ogni consonante forte. Lo stesso giorno, sulla
+beta 14: «la voce dell’assistente è bassa come era bassa la voce di William nel gioco, quando legge il risultato
+dell’analisi della nave»: la voce di servizio stava 5 dB sotto William, e nello stesso turno si sentono uno dopo
+l’altra. Portata al suo livello (`LIV_SERVIZIO`, +9 dB sopra il lettore), con lo stesso tetto ai picchi.
 
 - Un turno nuovo fa tacere quello che diceva, in sei centesimi di secondo; le prese del turno partono con il testo
   (0,15 s; la prima della partita 2 s, quando l’intro si è aperta sulla plancia), in fila, con 0,55 s fra l’una e
@@ -91,7 +94,8 @@ scheda Audio delle opzioni, **«Voce di William»: recitata o nessuna** (di base
   «nessuna».
 - **Una presa che contiene la voce di un altro in mezzo** (per esempio il racconto, poi una voce della nave, poi
   ancora il racconto, in una presa sola) suona intera e poi lascia parlare l’altro: Leonardo registra una presa per
-  pezzo, e dentro non si taglia. Con le prese della plancia non succede.
+  pezzo, e dentro non si taglia. Con le prime quattordici non succedeva; succede con `SM-030`, la scansione lunga
+  (§5).
 
 ## 4. Le prove
 
@@ -107,8 +111,17 @@ scheda Audio delle opzioni, **«Voce di William»: recitata o nessuna** (di base
 
 ## 5. Le prese, a oggi
 
-Quattordici, la plancia (`SM-001`…`SM-014`), arrivate il 13 e il 15 novembre; sedici pezzi del copione hanno la voce
-(due sono uguali a un’altra presa), su 736. Il controllo del 15 novembre (`doppiaggio/william/consegne/controllo-2026-11-15.json`):
+**Ventisei**, tutte della plancia: `SM-001`…`SM-014` (arrivate il 13 e il 15 novembre) e `SM-017`…`SM-022`,
+`SM-026`…`SM-031` (arrivate il 16 novembre 2026). Trentuno pezzi del copione hanno la voce, su 736. Nel gioco le
+ventisei prese durano 5:26 (le dodici nuove 1:56).
+
+**Nella serie non manca niente fino a `SM-031`.** I cinque numeri che non hanno un file non lo avranno: il copione
+li registra una volta sola, e nel gioco suonano la presa uguale (`SM-015` è `SM-013`, `SM-016` è `SM-014`: il faro
+di prua con «usa» invece di «accendi»; `SM-023` è `SM-020`, `SM-024` è `SM-021`, `SM-025` è `SM-022`: il
+lanciarpioni con «usa» invece di «spara»). La prima presa che manca è `SM-032`: della Santa Maria ne restano 73 su
+99, di tutto il copione 578 su 604.
+
+**Le prime quattordici.** Il controllo del 15 novembre (`doppiaggio/william/consegne/controllo-2026-11-15.json`):
 il testo è quello del copione; tre parole da far sentire all’autore (SM-011 «nel rosso», che Whisper sente «del
 rosso»; SM-014 «lo faccio correre», sentito «scorrere»; in SM-001 Whisper sente un «ebbe» in più dopo «servirebbe»).
 I file sono a 16 bit (il copione chiedeva 24), con i picchi sotto −3 dB.
@@ -117,3 +130,30 @@ Il 16 novembre 2026 l’autore ha chiesto se nella cartella `Downloads/DOPPIAGGI
 (sciolti e nei due archivi TransferNow, identici byte per byte) sono tutti nel gioco, tranne `intro2.wav`, una
 seconda versione del registro di bordo dell’intro. L’autore: «Archivialo come materiale storico»; sta in
 `audio/sorgenti/voce/william-registro-intro-leonardo-presa2-storica-2026-11-15.wav`, fuori dal gioco.
+
+**Le dodici del 16 novembre** (`SM-017`, `018`, `019`, `020`, `021`, `022`, `026`, `027`, `028`, `029`, `030`,
+`031`): i comandi di manovra; il lanciarpioni guardato (prima e dopo l’aggancio) e sparato (da lontano, a segno,
+a cavi già tesi); la radio guardata (prima e dopo l’aggancio), usata, ascoltata; la scansione lunga, la prima volta
+e le altre. I dodici file sciolti e i dodici dell’archivio `TransferNow-20261116TIGWzGyk.zip` sono identici byte
+per byte. Giocati dal ponte sulla plancia, i comandi le fanno dire tutte e dodici.
+
+Il controllo (`doppiaggio/william/consegne/controllo-2026-11-16.json`, come quello del 15): 48 kHz, 16 bit (il
+copione ne chiede 24), mono; i picchi fra −6,6 e −3,5 dBFS, nessun campione pieno, nessuna presa sopra −3; le parole
+fra −26,3 e −18,7 dBFS (lo strumento le porta tutte a −23); il fondo fra −82 e −74,5 dBFS; in testa 1,1–1,3 s, in
+coda 0,4–1,4 s. Negli MP3 del gioco i picchi stanno fra −8,4 e −2,0 dBFS (`SM-030` il più alto). Il testo è quello
+del copione, e riascoltati dopo il taglio ai due capi gli MP3 hanno tutte le parole. Le cifre che Whisper scrive in
+numero («200», «4» per «duecento», «Quattro») non sono differenze. Due parole da far sentire all’autore:
+
+- `SM-018`, «Servono a tenere **ferma** una preda»: Whisper sente «firma» (large-v3, large-v3-turbo e medium);
+- `SM-031`, «La **scansione** è sullo schermo», le prime parole della presa: large-v3 e medium sentono «La canzone
+  (è) sullo schermo», large-v3-turbo sente «La scansione è sullo schermo».
+
+**`SM-030`, la scansione lunga, ha in mezzo la voce del computer** (è il caso del §3). Nel testo William parla tre
+volte, e fra una e l’altra il computer di bordo dice «Lunghezza: trecentoquaranta metri…» e «MATERIALE NON IN
+ARCHIVIO.»; in fondo c’è il suggerimento «(Adesso puoi ACCOSTARE.)». Leonardo ha letto le tre parti di William in una
+presa sola, senza le parole del computer, con una pausa dove parlerebbe lui: 1,6 s dopo «se la prende comoda», 2,3 s
+dopo «si arrende e scrive». Nel gioco la presa suona intera (28,6 s) e poi la voce di servizio dice in fila le sue
+tre parti (7,3 s, 1,9 s, 1,4 s): chi ascolta sente William dire «si arrende e scrive», poi il suo commento, e
+soltanto alla fine il computer, con la lunghezza e con «MATERIALE NON IN ARCHIVIO.». Nella prima pausa la parte del
+computer non ci sta (7,3 s contro 1,6), e dentro una presa non si taglia. Da far sentire all’autore, che decide:
+tenerla così, o chiedere a Leonardo le tre parti in tre prese.
