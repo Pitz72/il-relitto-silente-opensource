@@ -81,6 +81,14 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 
 ## Dove siamo (16 novembre 2026)
 
+- **16 novembre 2026, dopo la beta 14: la revisione della cinematica** (documento 09, §19: le sue parole, le
+  quattro segnalazioni con la diagnosi, e altri nove punti che non tornano). Ha chiesto di individuare tutto
+  «prima di fare qualcosa»: **niente è cambiato nel codice, aspetta le sue decisioni.** Le diagnosi: sotto il tema
+  di Alirio suonano una seconda copia del tema stesso (49 s, errore mio) e il «re» sintetizzato del reattore; il
+  tema finisce a 4:14 e lui lo vuole fino al gioco (proposta: tre passaggi, mai due insieme, via il «re»
+  dall’intro); il fascio del faro nasce da un punto (deve nascere largo quanto la lente); la voce di servizio è
+  5 dB sotto William; le fiamme dei reattori si vedono solo da dietro. **Si riparte dalle sue risposte.**
+
 - **16 novembre 2026, di giorno: le note dell’autore sulla beta 13** (documento 09, §18, con le sue parole punto per
   punto). Fatto: all’avvio il **cartello fermo** (Runtime Multimedia e Favella1, i marchi fermi su nero; i loghi
   animati solo prima dell’intro); il **logo nero** all’inizio della cinematica (la preparazione dell’intro gli

@@ -913,3 +913,57 @@ dettagli abbastanza lunghi, il quadro largo prima di «La vedo pulsare», i reat
 nel passaggio, il libro a ridosso del titolo, il credito di Elio. Fotografati con `fotografa.mjs`, e guardati:
 il muso a 84, 88, 93 e 99 s; il passaggio; i due dettagli in più istanti; il ritorno, il titolo e il libro; le
 altre scene, intatte. Il filmato non l’ho rifatto (l’autore: «rilascia direttamente la beta»).
+
+## 19. La revisione della cinematica dopo la beta 14: che cosa non torna (16 novembre 2026)
+
+L’autore, vista la beta 14: «ci sono ancora delle imperfezioni. Quando parte la musica di Alirio, sotto, si
+sente che c’è una musica. Forse una vecchia traccia che avevi costruito in codice. Quella deve proprio sparire.
+Mentre la traccia di Alirio deve continuare fino a che non si arriva al momento in cui si gioca. Il faro quando è
+nel dettaglio, ha un diametro visibilmente più ampio del punto di partenza della luce che pare una cosa iper
+polarizzata […]. la voce dell’assistente è bassa come era bassa la voce di William nel gioco, quando legge il
+risultato dell’analisi della nave. La nave quando viaggia laterale durante il diario di William, si dovrebbero
+comunque intravedere le fiamme dei reattori anche se è da lontano. Fatti una revisione generale della cinematica
+e individua, prima di fare qualcosa, tutto quello che secondo te non torna e cerchiamo di dare più realismo
+cinematografico».
+
+**Niente è stato cambiato: questo è l’elenco, da decidere con lui.** Fatto guardando 59 fotogrammi di tutta
+l’intro (`fotografa.mjs`) e misurando il suono reso dal motore (`rendi_intro`).
+
+**19.1 Le sue quattro segnalazioni: che cosa sono.**
+
+1. **La musica sotto il tema.** Due cose, tutte e due vere. (a) Il tema parte due volte (1:19 e 2:22) e
+   `Lettore::avvia` non ferma la copia che suona: **due copie di «The Santa Maria Theme» insieme per 49 secondi**
+   (2:22–3:11; misurato: tutte e due nel suono reso). Errore mio del 15 novembre («ricomincia sopra la sua coda»).
+   (b) **Il «re» sintetizzato del reattore** (una nota tenuta, intonata, quella del gioco) suona nella plancia
+   (2:42–3:04), al titolo (4:25, «una nota bassa») e nella plancia finale: sotto il tema si sente come un’altra
+   musica. E **il tema finisce a 4:14**, 34 secondi prima del gioco: da 4:15 a 4:25 c’è quasi silenzio
+   (−56 dBFS), il titolo e il libro stanno su quella nota sola (−41). Il tema dura 1:52, ma la musica piena sta
+   nel primo minuto: poi è una coda che si spegne in 50 secondi.
+2. **Il faro nel dettaglio.** Il fascio è un cono che nasce da un punto al centro della lente (apertura 3,2°),
+   e la lente è larga 1,1 m, il fanale 1,4: un raggio sottile che esce da un fanale molto più grande. Visto da
+   dietro, in prospettiva, diventa un cono tozzo che finisce in una macchia.
+3. **La voce di servizio** nel gioco sta a circa −23 dBFS, 5 dB sotto William dopo il ritocco (−18).
+4. **Le fiamme nel passaggio laterale.** La fiamma è lunga 5 m su una nave di 80, e si disegna quasi solo vista
+   da dietro (il suo bagliore anche): di lato e da lontano non resta niente.
+
+**19.2 Il resto, in ordine di peso.**
+
+5. **I materiali da vicino** (i due dettagli): il fanale e le basi hanno le chiazze pensate per la nave vista da
+   lontano, e da vicino sembrano pietra; il dorso è sfocato (26 punti di tessitura per metro); la barra del radar
+   è bruciata dal bianco.
+6. **L’inquadratura del faro** (3:43–4:00) è quasi tutta nera per 17 secondi: il fanale di spalle in basso a
+   sinistra, il fascio debole. Il canone (§3) vuole il relitto nero assoluto e il faro che si perde nel buio:
+   resta così, ma la lente accesa e il fascio vanno visti da davanti e di lato.
+7. **Nell’inquadratura dei sensori** c’è una scatola scura senza forma in basso a sinistra, sotto il credito di
+   Elio.
+8. **La camera dei dettagli è ferma** e agganciata alla nave: niente scorre, sembrano foto con due pezzi che
+   girano. Nessun pulviscolo attraversa il fascio.
+9. **Il passaggio laterale** (William, 45 s): la nave è piccola (un ventesimo del quadro) e ne percorre un terzo.
+10. **Il passaggio ravvicinato**: quattro secondi di cielo vuoto dopo lo stacco, e un cielo quasi senza stelle;
+    le fiamme piccole (vedi 4).
+11. **Il sole cambia posto a ogni inquadratura** (davanti a sinistra, dietro a sinistra, dietro a destra): ognuna
+    è illuminata bene per sé, insieme non sono lo stesso luogo. Al cinema si fa; lo dico, e consiglio di lasciare.
+12. **Dal titolo al libro** i due testi si sovrappongono per sei decimi nello stesso posto.
+13. **Senza suono loro** il passaggio e i dettagli: scelta mia (§18.8), da confermare.
+
+Le proposte e le sue decisioni stanno nel messaggio all’autore e nel prompt 31; quando decide, si scrivono qui.
