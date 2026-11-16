@@ -2,7 +2,8 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 16 novembre 2026, di giorno: le note dell’autore sulla beta 13 (documento 09, §18:
+Aggiornato l’ultima volta il 16 novembre 2026, nel pomeriggio: la revisione della cinematica e le sue correzioni (documento 09, §19–20), dodici prese nuove di Leonardo, la beta 15 pubblicata. Alla prossima: le sue note sulla beta 15, e le tre domande sulle prese (in «Dove siamo»).
+Prima, lo stesso giorno, di giorno: le note dell’autore sulla beta 13 (documento 09, §18:
 il cartello fermo all’avvio, il logo nero, la «cupola nera» sul muso, il passaggio, i due dettagli, il quadro largo
 che si allarga fino al titolo, Elio voce TTS di Google; la voce di William più alta, documento 41) e la beta 14,
 pubblicata su suo ordine («non rifare il filmato, rilascia direttamente la beta così la vedo direttamente nel
@@ -89,7 +90,7 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   luminescenza realistici»); i materiali da vicino; le camere (il margine con la nave grande il doppio, il
   passaggio con la Via Lattea, i due dettagli ripresi da capo, con carrello e pulviscolo); il titolo e il libro
   senza sovrapposizione; la voce di servizio al livello di William. **Dodici prese nuove di Leonardo** nel gioco
-  (26 in tutto; documento 41, §5). **Non in una beta**: sul main, da rilasciare quando lo dice. **Da dirgli**: due
+  (26 in tutto; documento 41, §5). **Nella beta 15**, pubblicata lo stesso pomeriggio sul suo «Sì, pubblicala». **Alla prossima: le sue note sulla beta 15.** **Da dirgli**: due
   parole delle prese da far sentire (SM-018 «ferma» o «firma»; SM-031 «scansione» o «canzone»); SM-030 (la
   scansione lunga): Leonardo ha letto in una presa sola le tre parti di William, e la voce del computer arriva dopo,
   tutta insieme (tenerla così, o chiedergli tre prese?). **Limiti**: il suono è misurato, non ascoltato; il
