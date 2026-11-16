@@ -8,6 +8,8 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+## [0.2.5-beta.14] - 2026-11-16
+
 ### Per chi gioca
 
 - **La cinematica d’apertura ha tre inquadrature nuove.** Mentre parla Yusuf, la Santa Maria passa accanto alla camera e si allontana con i reattori accesi, sotto un altro pezzo di cielo. Dopo lo zoom indietro, due dettagli: il radar che gira e il faro che cerca nel buio, davanti al muro nero del relitto. Poi si torna al quadro largo, che si apre piano fino al titolo, e il libro arriva subito dopo il titolo.
