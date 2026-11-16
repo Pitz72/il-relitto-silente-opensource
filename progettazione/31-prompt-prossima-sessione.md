@@ -82,6 +82,21 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 
 ## Dove siamo (16 novembre 2026)
 
+- **16 novembre 2026, alla chiusura: la beta 15 è confermata, e c’è una cosa da fare per prima.** L’autore, giocata
+  la beta 15: «Ok, tutto confermato. Funziona tutto, niente da segnalare. L’intro va bene, ora ha abbastanza varietà
+  per far seguire il racconto senza restare solo su una immagine. Belli gli effetti di luce. Per ora stiamo bene
+  così. Alla prossima sessione.» E poi, con una schermata del menu: **«Voglio però che ti appunti il fatto che è
+  tornato il cerchio verde intorno alle voci interattive del menu e NON DEVONO ESSERCI.»** Nella schermata l’anello
+  verde sta intorno a «Continua», la prima voce. **È la prima cosa della prossima sessione.** Quello che ho visto,
+  senza toccare niente: è l’anello generale della tastiera (`app/src/stile/base.css`, `.tema :focus-visible`); il
+  menu mette il fuoco sulla prima voce con `focus({ focusVisible: false })` (`app/src/menu/Menu.tsx`), e
+  nell’eseguibile evidentemente non basta (la mia ipotesi: dopo un tasto premuto sul cartello dell’avvio o sulla
+  dichiarazione). La correzione da proporgli: nessun contorno sulle voci del menu, mai (il menu ha già il suo segno,
+  il filo che si accende accanto alla voce), e lo stesso controllo sugli altri elenchi (la pausa, i pannelli, le
+  risposte dei dialoghi); da verificare nell’eseguibile. Era già stato tolto una volta (19 ottobre 2026): è un
+  ritorno. **Restano aperte le tre domande sulle prese di Leonardo** (SM-018, SM-031, SM-030, qui sotto): non ha
+  ancora risposto.
+
 - **16 novembre 2026, pomeriggio: le correzioni dopo la revisione** (documento 09, §20). L’autore: «applica tutto con
   qualità secondo le tue indicazioni». Fatto: il tema di Alirio in tre passaggi, mai due insieme, con il punto forte
   sul titolo e la musica fino al gioco; via il «re» del reattore da tutta l’intro; le fiamme dei reattori lunghe e
