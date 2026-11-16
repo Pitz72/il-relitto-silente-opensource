@@ -2,7 +2,12 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 16 novembre 2026, a notte: la voce di William nel gioco, come nel Viaggiatore
+Aggiornato l’ultima volta il 16 novembre 2026, di giorno: le note dell’autore sulla beta 13 (documento 09, §18:
+il cartello fermo all’avvio, il logo nero, la «cupola nera» sul muso, il passaggio, i due dettagli, il quadro largo
+che si allarga fino al titolo, Elio voce TTS di Google; la voce di William più alta, documento 41) e la beta 14,
+pubblicata su suo ordine («non rifare il filmato, rilascia direttamente la beta così la vedo direttamente nel
+gioco»). Alla prossima: le sue note sulla beta 14.
+Prima, il 16 novembre 2026, a notte: la voce di William nel gioco, come nel Viaggiatore
 (documento 41), e la beta 13, pubblicata su suo ordine («quando hai finito, committa, pusha […] e rilascia nuova
 versione senza ulteriori autorizzazioni. Buonanotte»).
 Prima, il 15 novembre 2026, a notte: William e Yusuf nella cinematica d’apertura, e i
@@ -76,6 +81,19 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 
 ## Dove siamo (16 novembre 2026)
 
+- **16 novembre 2026, di giorno: le note dell’autore sulla beta 13** (documento 09, §18, con le sue parole punto per
+  punto). Fatto: all’avvio il **cartello fermo** (Runtime Multimedia e Favella1, i marchi fermi su nero; i loghi
+  animati solo prima dell’intro); il **logo nero** all’inizio della cinematica (la preparazione dell’intro gli
+  cadeva sopra: ora i loghi aspettano); la **«cupola nera» sul muso** (non un’ombra: il piano vicino della camera
+  tagliava la nave; trovata con il parallelepipedo che ha suggerito lui, scatti in `consegne/Ombra sul muso
+  2026-11-16/`); il **passaggio** con Yusuf (la nave accanto alla camera, reattori accesi, altro cielo); i **due
+  dettagli** in F (il radar che gira, il faro che cerca, davanti al muro nero del relitto: i pezzi si muovono
+  davvero, la nave riesportata da Blender con il numero dei pezzi); il **quadro largo** che torna per «La vedo
+  pulsare» e si allarga fino al titolo, il **libro** a ridosso del titolo; **Elio** «voce TTS di Google»; la **voce
+  di William** nel gioco 4 dB più alta (documento 41). Le prese di Leo nella cartella Download sono tutte nel
+  gioco; `intro2.wav` è archiviata come materiale storico. **Nella beta 14**, pubblicata su sua richiesta senza
+  filmato. **Le scelte mie da dirgli** (09, §18.8): il quadro largo torna per «La vedo pulsare» e non al titolo;
+  niente suono per il passaggio e i dettagli; il cartello muto. **Alla prossima: le sue note sulla beta 14.**
 - **16 novembre 2026, a notte: la voce di William nel gioco** (documento 41: lì il Viaggiatore studiato, come è fatto
   qui, le scelte mie e le prove). L’autore: «Sì, costruiscila». Fatto: le prese di Leonardo entrano nel gioco con
   `strumenti/audio/voce_william.py` (dalla cartella `doppiaggio/william/consegne/`); il ponte le trova nel testo a
@@ -92,7 +110,7 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 - **15 novembre 2026, a notte: William e Yusuf nell’intro, e i titoli di testa con la tipografia del poster**
   (documento 09, §17: lì stanno le sue disposizioni parola per parola e quello che è stato fatto). Leonardo ha
   mandato il registro di bordo (la versione scritta e detta, che chiude con «W. T.»; `intro.wav`; c’è anche una
-  seconda presa, `intro2.wav`, non usata), e l’autore ha deciso il montaggio: il registro parte quando il nero
+  seconda versione, `intro2.wav`, archiviata come materiale storico il 16 novembre in `audio/sorgenti/voce/`), e l’autore ha deciso il montaggio: il registro parte quando il nero
   con la luce verde è diventato lo spazio; subito dopo un beep di registrazione e il messaggio di Yusuf, in più
   pezzi con il beep in mezzo, dalla radio; «il resto tutto uguale». I crediti: Leonardo al posto del libro,
   «Simone Pizzi è Yusuf» (senza dire che la voce è clonata), la voce di L.V. quando L.V. ricomincia, il libro

@@ -806,3 +806,110 @@ Yusuf suonino al loro secondo senza un vuoto in mezzo.
 **Limiti, detti chiari.** Non ho sentito niente: i livelli sono misurati, le parole le ha riascoltate
 Whisper. Il beep, la radio e il tema che ricomincia li giudica l’orecchio dell’autore. Il filmato è in
 `consegne/Filmato intro 2026-11-15/`. Niente di questo è in una beta.
+
+## 18. Le note dell’autore sulla beta 13: il muso, il passaggio, i dettagli, il quadro largo (16 novembre 2026)
+
+L’autore ha giocato la beta 13 installata, e ha scritto (le sue parole, per i punti che toccano l’intro):
+
+1. «dato che mettiamo i loghi animati attaccati alla cinematica, prima del menu di gioco facciamo un cartello
+   senza loghi animati. Cartello statico in nero che dice che è un produzione Runtime Multimedia e che è
+   realizzato con Favella1. Ovviamente i loghi grafici devi metterceli»;
+2. «Quando c’è la dissolvenza che va nello spazio e inizia ad apparire la Santa Maria, nella prima parte che la
+   nave si muove, pare ci sia qualcosa che le faccia ombra o una delle illuminazioni non la copre. Si nota sulla
+   parte frontale della nave»;
+3. «La sequenza con William e Yosuf è molto lunga. Potremmo inventare una nuova inquadratura dove vediamo la nave
+   da un’altra angolazione che passa accanto alla telecamera? ovviamente la nave in questa fase ha i reattori
+   accesi e lo sfondo di stelle deve essere diverso»;
+4. «Quando parte la cinematica, il logo Runtime Multimedia ha un problema, si sente l’audio ma parte in nero e il
+   logo non appare fino a che l’animazione non è finita. […] Favella1 è ok»;
+5. «La parte finale, dove vediamo il zoom out che mostra la Santa Maria piccola rispetto al relitto, è molto
+   lunga e statica. Possiamo creare una animazinne di dettaglio, tipo inquadratura che mostra sensori e faro che
+   si muovono alla ricerca, se riusciamo a creare due nuove inquadratura diamo maggiore dinamismo. E’ vero che il
+   richiamo alla lentezza di 2001 Odissea nello Spazio mi piace ma da quando l’intero è diventata piu lunga si è
+   sbilanciato tutto»;
+6. «Poi si torna all’immagine originale, anche poco più larga, quando appare il titolo e subito dopo, molto a
+   ridosso, la scritta del libro»;
+7. (mentre lavoravo) «Quando appare il titolo di Elio, va bene come appare e l’estetica, ma li scrivicelo che è
+   una voce TTS di Google».
+
+E poi: «quando hai fatto non rifare il filmato, rilascia direttamente la beta così la vedo direttamente nel
+gioco».
+
+**18.1 Il cartello dell’avvio** (`loghi/Cartello.tsx`, `cartello.css`). All’avvio, dopo il nero e prima della
+dichiarazione, al posto dei loghi animati: nero, i due marchi fermi dei titoli di coda (`loghi/Marchi.tsx`) nel
+bianco freddo dei titoli di testa, uno accanto all’altro, con sopra le righe piccole «una produzione» e
+«realizzato con» in Newsreader corsivo, come i ruoli dei crediti. Entra in 1,2 s, resta 4,2, esce in 1,0;
+nessun suono; Esc, Invio, Spazio o un clic lo saltano. I loghi animati passano soltanto prima dell’intro.
+
+**18.2 Il logo nero** (punto 4). Scegliendo «Nuova partita», l’intro si monta sotto i loghi e si prepara: la
+nave, le stelle dei cieli (milioni di estrazioni in JavaScript), le mappe d’ombra, la compilazione degli
+shader. Tutto di fila, sul filo principale: 2,7 s misurati nel browser, proprio sopra il logo di Runtime, che
+non si ridisegnava mentre il suo suono (già programmato) andava avanti; ricompariva intero al «plin» finale.
+Ora i loghi aspettano che l’intro sia pronta (`Relitto.tsx`: `introPronta`, al più 8 s; `Loghi.tsx`: `parti`;
+`Intro.tsx`: `onPronta`): dopo il clic qualche istante di nero, poi i loghi interi. Misurato: il primo
+fotogramma del logo arriva dopo la fine della preparazione.
+
+**18.3 L’ombra sul muso** (punto 2). Non era un’ombra. Il motore disegna la nave in uno strato suo, con i piani
+vicino e lontano stretti intorno a lei, calcolati dalla distanza in linea d’aria dal centro della nave meno 56 m.
+Nei primi secondi di B la nave sta sul bordo destro del quadro: lungo l’asse della camera il suo centro è più
+vicino di quella distanza, e il muso, che sta 29 m più avanti, passava davanti al piano vicino. Veniva tagliato
+via, e si vedeva l’interno vuoto dello scafo: la «cupola nera». Trovato con le prove che l’autore ha chiesto per
+curiosità (in `consegne/Ombra sul muso 2026-11-16/`): la scena vista da lontano, anche da Blender (attorno alla
+nave non c’è niente), e soprattutto **un parallelepipedo grande quanto la nave al posto della nave**, idea sua:
+sulla scatola compariva un rettangolo nero dai bordi dritti, nella sola parte più vicina alla camera, e su una
+scatola nessuna ombra può fare così. Corretto (`scala.ts`): i piani si misurano lungo l’asse della camera. La
+luce resta quella approvata; prima di trovarlo avevo provato un sole più frontale e una schiarita, e l’autore
+mi aveva fermato a ragione («Scurire o schiarire potrebbe non servire»). Il margine resta l’inquadratura di
+prima, che l’autore aveva detto andare bene.
+
+**18.4 Il passaggio** (punto 3; `scala.ts`, quadro `passaggio`). B ha due inquadrature: il margine con William, e
+dal beep di Yusuf (lo stacco cade lì) il passaggio fino alla plancia, 38 s. La camera è ferma, a babordo della
+rotta, 26 m dall’asse e 4,5 m sopra, e guarda avanti; la nave arriva da dietro alla velocità del margine (7 m/s),
+le scivola accanto ed entra dal bordo destro dopo qualche secondo di cielo vuoto, poi si allontana mostrando la
+poppa con la targa e i quattro scarichi accesi, azzurri. Un sole suo (da dietro, a sinistra, dall’alto). Il
+cielo è diverso, come chiesto, ma non costa niente: sono le stelle del margine viste da un’altra parte, una
+regione più rada, senza il nucleo della Via Lattea. Il credito «Simone Pizzi è Yusuf» sta in alto a sinistra,
+dove la nave non passa.
+
+**18.5 I due dettagli** (punto 5; quadri `sensori` e `cerca`). In F, dopo che lo zoom indietro si è fermato:
+
+| | Da | A | Sulle frasi di L.V. | Che cosa |
+| --- | --- | --- | --- | --- |
+| i sensori | 3:28,37 | 3:42,60 | «Ho firmato tutte le carte… Ho insistito io» | il radar che gira, il faro più avanti |
+| il faro | 3:42,60 | 4:00,00 | «Qui dentro c’è una cosa viva» · «Sta dietro un vetro…» | la lampada che cerca, il fascio che entra nel buio |
+
+La nave è quella della scala, nel suo tempo, che continua: avanza per inerzia, a reattori spenti, verso il
+relitto. La camera le sta addosso, bassa sul dorso, a dritta (il lato che il sole prende), con l’obiettivo
+largo. Davanti c’è il relitto: un muro nero alto fino a 22° sopra l’orizzonte (l’autore: «il muro nero sarà il
+relitto, è normale»), con le stelle sopra il suo bordo. **I pezzi si muovono davvero**: il modello porta ora il
+numero del pezzo nel quarto ottetto della normale (`strumenti/nave/modello.py`, `PARTI`: le forcelle del faro,
+la lampada e la lente, la barra del radar; i perni nel `.json`), e gli shader li girano intorno ai perni. La
+nave è stata riesportata da Blender: gli stessi triangoli di prima (160 in un ordine diverso). Il radar fa un
+giro ogni sei secondi e mezzo; il faro cerca nove gradi per parte in undici secondi e alza e abbassa appena la
+lampada; il fascio parte dalla lente dove sta, e guarda dove guarda lei. L’ombra, nei dettagli, si rifà a ogni
+fotogramma in una cornice stretta (i pezzi si muovono, e da vicino serve più fine). Il cielo è quello della
+scala, lo stesso del quadro largo che li circonda. Il credito «Elio è L.V.» passa sopra i sensori.
+
+**18.6 Il quadro largo, il titolo, il libro** (punto 6). Il quadro largo torna poco prima di «La vedo pulsare»
+(4:00,00), e con lui la spia verde, nel nero del relitto: batte con le parole come prima. Da lì fino ai glifi
+del titolo la camera della scala arretra ancora piano (del 16 %) e l’obiettivo si apre appena (dell’8,5 %, non
+oltre i 44° per cui il cielo è cotto): così il quadro non è fermo, e al titolo è «poco più largo». La spia e il
+punto in cui la camera entra nel nero (il raccordo di H) sono ora due punti del relitto, presi nel quadro di
+sempre, che si ritrovano sullo schermo anche quando il quadro si allarga. Il tempo della scala non si ferma più
+a 23,5 s: prima F e G erano un fotogramma solo, grana compresa. **Il libro** entra 0,35 s dopo che il titolo ha
+cominciato a uscire, nello stesso posto: i due si danno il cambio, senza un vuoto in mezzo. L’intro dura
+**4:48,29** (0,95 s in meno: G è più corta).
+
+**18.7 Elio** (punto 7). Il credito di L.V. ha una terza riga, nello stesso corsivo: «ELIO · è L.V. · voce TTS
+di Google».
+
+**18.8 Le scelte mie, da dire all’autore.** Il quadro largo torna per «La vedo pulsare», non al titolo: è il
+momento della spia che batte sul relitto, e sui dettagli si perdeva; dal ritorno al titolo passano 18 s, ma il
+quadro si allarga. Il passaggio e i dettagli non hanno un suono loro: nel vuoto non si sente niente, e la musica
+e le voci continuano. Il cartello dell’avvio è muto.
+
+**Le prove.** In node: i tempi (la durata, gli inizi delle scene), le inquadrature nuove in fila senza buchi, i
+dettagli abbastanza lunghi, il quadro largo prima di «La vedo pulsare», i reattori spenti nei dettagli e accesi
+nel passaggio, il libro a ridosso del titolo, il credito di Elio. Fotografati con `fotografa.mjs`, e guardati:
+il muso a 84, 88, 93 e 99 s; il passaggio; i due dettagli in più istanti; il ritorno, il titolo e il libro; le
+altre scene, intatte. Il filmato non l’ho rifatto (l’autore: «rilascia direttamente la beta»).

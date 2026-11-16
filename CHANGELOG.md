@@ -8,6 +8,35 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+### Per chi gioca
+
+- **La cinematica d’apertura ha tre inquadrature nuove.** Mentre parla Yusuf, la Santa Maria passa accanto alla camera e si allontana con i reattori accesi, sotto un altro pezzo di cielo. Dopo lo zoom indietro, due dettagli: il radar che gira e il faro che cerca nel buio, davanti al muro nero del relitto. Poi si torna al quadro largo, che si apre piano fino al titolo, e il libro arriva subito dopo il titolo.
+- **Il muso della nave non è più nero** nei primi secondi in cui compare: non era un’ombra, era un taglio sbagliato della camera.
+- **Il logo di Runtime Multimedia si vede tutto** quando cominci una partita nuova: prima restava nero fino al suo ultimo suono.
+- **All’avvio, un cartello fermo** con i marchi di Runtime Multimedia e di Favella1; i loghi animati li vedi all’inizio della cinematica.
+- **La voce di William nel gioco è più alta**, davanti ai rumori della nave.
+- **Nei titoli di testa, sotto Elio, c’è scritto che è una voce TTS di Google.**
+
+### Corretto
+
+- **La «cupola nera» sul muso della nave, nei primi secondi della scena nello spazio** (documento 09, §18.3; l’autore: «pare ci sia qualcosa che le faccia ombra»). Il motore della scala disegna la nave in uno strato con i piani vicino e lontano stretti intorno a lei, calcolati dalla distanza in linea d’aria dal suo centro; con la nave sul bordo del quadro il centro è più vicino lungo l’asse della camera, e il muso passava davanti al piano vicino: tagliato, mostrava l’interno vuoto dello scafo. Ora i piani si misurano lungo l’asse (`scala.ts`). Trovato con un parallelepipedo grande quanto la nave al posto della nave, idea dell’autore (gli scatti in `consegne/Ombra sul muso 2026-11-16/`, fuori da git).
+- **Il logo di Runtime nero all’inizio della cinematica** (documento 09, §18.2): la preparazione dell’intro (stelle, mappe d’ombra, shader: 2,7 s sul filo principale) cadeva sopra il logo, che non si ridisegnava mentre il suo suono andava avanti. I loghi ora aspettano che l’intro sia pronta (`Relitto.tsx`, `Loghi.tsx` con `parti`, `Intro.tsx` con `onPronta`; al più 8 s).
+
+### Aggiunto
+
+- **Il passaggio** (documento 09, §18.4; quadro `passaggio` in `scala.ts`): dal beep di Yusuf alla plancia, la nave passa accanto alla camera ferma e si allontana con i quattro scarichi accesi, con un sole suo e le stelle del margine viste da un’altra parte.
+- **I due dettagli di F** (documento 09, §18.5; quadri `sensori` e `cerca`): il radar che gira e il faro che cerca, sul dorso della nave che avanza per inerzia verso il relitto. I pezzi si muovono davvero: `strumenti/nave/modello.py` scrive il numero del pezzo nel quarto ottetto della normale (`PARTI`) e i perni in `santa-maria.json`; gli shader dello scafo e dell’ombra li girano (`uParte`); il fascio segue la lampada; nei dettagli l’ombra si rifà a ogni fotogramma in una cornice stretta. La nave è riesportata da Blender, con gli stessi triangoli.
+- **Il cartello fermo dell’avvio** (documento 09, §18.1; `loghi/Cartello.tsx`, `cartello.css`): i marchi di Runtime Multimedia e di Favella1 fermi, su nero, con «una produzione» e «realizzato con»; al posto dei loghi animati all’avvio, che passano soltanto prima dell’intro. I marchi fermi (`loghi/Marchi.tsx`) prendono un colore.
+- `Scala.proiettaPunto`, `Scala.puntoSulFuso` e `puntoDelFuso`: la spia di F e il punto del raccordo sono punti del relitto, che si ritrovano sullo schermo anche quando il quadro largo si allarga.
+
+### Cambiato
+
+- **Il quadro largo della fine** (documento 09, §18.6): torna poco prima di «La vedo pulsare», con la spia, e da lì fino al titolo la camera arretra piano e l’obiettivo si apre appena (`allargamento` in `scala.ts`). Il tempo della scala non si ferma più a 23,5 s (prima F e G erano un fotogramma solo, grana compresa). Il libro entra mentre il titolo esce: l’intro dura 4:48,29.
+- **La voce di William nel gioco** sale di 4 dB (le parole a circa −18 dBFS; l’autore: «un po bassina»), con un tetto suo per i picchi a −4,5 dBFS (`mondo/mod.rs`, `LIV_WILLIAM`, `TETTO_WILLIAM`; documento 41).
+- **Il credito di L.V.** dice «ELIO · è L.V. · voce TTS di Google» (l’autore: «li scrivicelo che è una voce TTS di Google»).
+- Il cielo di ogni quadro si cuoce già nella preparazione, non al primo fotogramma dopo uno stacco.
+- `intro2.wav`, la seconda versione del registro di bordo di Leonardo, è archiviata come materiale storico in `audio/sorgenti/voce/` (fuori dal gioco; l’autore: «Archivialo come materiale storico»).
+
 ## [0.2.5-beta.13] - 2026-11-16
 
 ### Per chi gioca

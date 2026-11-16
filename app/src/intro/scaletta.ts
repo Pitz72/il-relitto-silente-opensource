@@ -23,6 +23,12 @@
 //  «Ho firmato tutte le carte… Ho insistito io» apre la seconda parte di L.V.
 //  I crediti: Leonardo al posto del libro, l'autore quando parla Yusuf, la voce
 //  di L.V. quando L.V. ricomincia, il libro dopo il titolo.
+//  Dal 16 novembre 2026 (le note dell'autore sulla beta 13, documento 09, §18)
+//  B ha due inquadrature: il margine con William, il passaggio con Yusuf (la
+//  nave che passa accanto alla camera, reattori accesi, un'altra parte di
+//  cielo). In F, dopo la scala, due dettagli (i sensori con il radar che gira;
+//  il faro che cerca); con «La vedo pulsare» torna il quadro largo, che si
+//  allarga piano fino al titolo. Il libro entra a ridosso del titolo.
 // ============================================================================
 import { SPEGNIMENTO } from "./scala.ts";
 import { MESSAGGIO, REGISTRO, type VoceNelloSpazio } from "./spazio.ts";
@@ -192,7 +198,8 @@ export const CREDITI = {
   K3: { righe: [{ grande: "LEONARDO TOMASSETTI" }, { piccolo: "è William T. Eriksonn" }], posto: "alto", fermo: 4.2 },
   K4: { righe: [{ grande: "SIMONE PIZZI" }, { piccolo: "è Yusuf" }], posto: "alto", fermo: 4.2 },
   K5: { righe: [{ piccolo: "tema musicale originale di" }, { grande: "ALIRIO BRUNI" }], posto: "basso", fermo: 3.6 },
-  K6: { righe: [{ grande: "ELIO" }, { piccolo: "è L.V." }], posto: "basso", fermo: 3.6 },
+  // l'autore, 16 novembre 2026: «va bene come appare e l'estetica, ma li scrivicelo che è una voce TTS di Google»
+  K6: { righe: [{ grande: "ELIO" }, { piccolo: "è L.V." }, { piccolo: "voce TTS di Google", minore: true }], posto: "basso", fermo: 3.6 },
   K7: {
     righe: [{ piccolo: "tratto dal libro" }, { grande: "DAL REGISTRO DELLA SANTA MARIA" }, { piccolo: "di", grande: "SIMONE PIZZI", minore: true }],
     posto: "titolo",
@@ -239,6 +246,13 @@ export interface Momenti {
   /** il registro di bordo di William, e il messaggio di Yusuf: da quando a quando */
   registro: [number, number];
   messaggio: [number, number];
+  /** B: il passaggio (scala.ts, PASSAGGIO), dal beep di Yusuf fino alla plancia */
+  passaggio: [number, number];
+  /** F: i due dettagli (i sensori con il radar; il faro che cerca), poi il quadro largo che torna, con «La vedo
+   *  pulsare», e si allarga piano fino al titolo (l'autore, 16 novembre 2026) */
+  sensori: [number, number];
+  cerca: [number, number];
+  allarga: [number, number];
   naveB: number;
   reB: number;
   radar: [number, number];
@@ -435,7 +449,7 @@ export function costruisciScaletta(): Scaletta {
   // la voce di L.V., quando L.V. ricomincia a parlare
   credito("K6", b5.pezzo!.t + 0.4);
   T += ESCE + 0.6;
-  testo("B7", "lv", "F");
+  const b7 = testo("B7", "lv", "F");
   T += ESCE + 0.6;
   testo("B8", "lv", "F");
   T += ESCE + 0.6;
@@ -449,11 +463,10 @@ export function costruisciScaletta(): Scaletta {
   // i glifi si tracciano; poi ogni glifo si scioglie nella sua lettera (documento 09, §16)
   const glifi = segna(GLIFI);
   const traduzione = segna(TRADUZIONE);
-  testo("T", "titolo", "G");
-  T += ESCE;
-  // il libro, dopo il titolo (l'autore, 15 novembre 2026): un cartello dove stava il titolo, sulla stessa immagine
-  segna(0.3);
-  T = credito("K7").via;
+  const titolo = testo("T", "titolo", "G");
+  // il libro, dopo il titolo (l'autore, 15 novembre 2026): un cartello dove stava il titolo, sulla stessa immagine; dal
+  // 16 novembre «subito dopo, molto a ridosso»: entra mentre il titolo sta uscendo, e i due si danno il cambio
+  T = credito("K7", arrotonda(titolo.esce + 0.35)).via;
   segna(0.3);
   // --- H. La plancia ---------------------------------------------------------------------
   scena("H", "La plancia", T);
@@ -474,6 +487,13 @@ export function costruisciScaletta(): Scaletta {
     temaDaCapo: r(radar - TEMA_PRIMA_DELLA_PLANCIA),
     registro: [r(registro), r(registro + REGISTRO.dura)],
     messaggio: [r(messaggio), r(messaggio + MESSAGGIO.dura)],
+    // lo stacco sul passaggio cade sul beep di Yusuf
+    passaggio: [r(messaggio), r(radar)],
+    // i dettagli: poco dopo che la scala si è fermata, il primo; il secondo poco prima di «Qui dentro c'è una cosa
+    // viva»; il quadro largo torna poco prima di «La vedo pulsare», e si allarga fino ai glifi del titolo
+    sensori: [r(scala + 23.5 + 0.6), r(b7.entra - 0.3)],
+    cerca: [r(b7.entra - 0.3), r(b9.entra - 0.36)],
+    allarga: [r(b9.entra - 0.36), r(glifi)],
     naveB: r(naveB),
     reB: r(reB),
     radar: [r(radar), r(radar + 6.2)],

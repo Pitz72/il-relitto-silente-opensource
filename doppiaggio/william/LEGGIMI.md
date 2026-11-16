@@ -18,6 +18,12 @@ Lo strumento le prepara per il gioco (`audio/musica-ia/WI/`), scrive le tabelle 
 le mette fra le risorse dell'app; poi si costruisce il gioco. Se i `.fav` cambiano, prima si rifà il copione (qui sotto):
 il collaudo (`collaudo/eventi.py`) se ne accorge.
 
+Il registro di bordo dell’intro (`consegne/intro.wav`) non passa da qui: lo prepara `strumenti/intro/voci_spazio.py`,
+dalla sua copia in `audio/sorgenti/voce/william-registro-intro-leonardo-2026-11-15.wav`. Leonardo ne aveva mandato
+anche una seconda versione (`intro2.wav`): l’autore, 16 novembre 2026, «Archivialo come materiale storico»; sta in
+`audio/sorgenti/voce/william-registro-intro-leonardo-presa2-storica-2026-11-15.wav` (impronta
+`6912944192a5eed684896f4c20720ecf7b6bf018a655fd7b8b08c97288028939`), fuori dal gioco.
+
 Il copione si rifà così, dalla radice:
 
     python strumenti/audio/copione_william.py

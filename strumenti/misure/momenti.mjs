@@ -79,7 +79,7 @@ const stampa = () => console.log(JSON.stringify(rapporto, null, 1));
 
 try {
   // --- dai loghi al menu: i loghi con Esc, la dichiarazione con «continua»
-  const VISTA = `(() => { const el = (s) => document.querySelector(s); return el(".gioco") ? "gioco" : el(".menu-voci button") ? "menu" : el(".dichiarazione") ? "dichiarazione" : el("[aria-label='Loghi di apertura']") ? "loghi" : ""; })()`;
+  const VISTA = `(() => { const el = (s) => document.querySelector(s); return el(".gioco") ? "gioco" : el(".menu-voci button") ? "menu" : el(".dichiarazione") ? "dichiarazione" : el(".cartello-avvio, [aria-label='Loghi di apertura']") ? "loghi" : ""; })()`;
   for (let giri = 0; giri < 60; giri++) {
     const v = await valuta(VISTA);
     if (v === "menu" || v === "gioco") break;

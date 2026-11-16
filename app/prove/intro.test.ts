@@ -10,8 +10,28 @@ import { reattori } from "../src/intro/scala.ts";
 
 const blocco = (id: string) => SCALETTA.blocchi.find((b) => b.id === id)!;
 
-test("la durata: 4:49,24 con William e Yusuf nello spazio (era 3:24,16 con i titoli di testa; 3:02,12; 2:40,75 prima della voce di L.V.)", () => {
-  assert.equal(SCALETTA.durata, 289.24);
+test("la durata: 4:48,29 con il libro a ridosso del titolo (era 4:49,24 con William e Yusuf nello spazio; 3:24,16 con i titoli di testa; 3:02,12; 2:40,75 prima della voce di L.V.)", () => {
+  assert.equal(SCALETTA.durata, 288.29);
+});
+
+test("le inquadrature del 16 novembre: il passaggio sul beep di Yusuf, i due dettagli in F, il quadro largo che torna prima di «La vedo pulsare» e si allarga fino al titolo", () => {
+  const M = SCALETTA.momenti;
+  assert.deepEqual(M.passaggio, [M.messaggio[0], SCALETTA.scene[2].inizio]);
+  // i tagli si susseguono senza buchi, dentro F e prima dei glifi
+  assert.ok(M.sensori[0] > M.scala[1] && M.sensori[0] < M.scala[1] + 1);
+  assert.equal(M.sensori[1], M.cerca[0]);
+  assert.equal(M.cerca[1], M.allarga[0]);
+  assert.equal(M.allarga[1], M.glifi[0]);
+  // ogni dettaglio dura abbastanza per guardarlo, e il quadro largo torna prima che L.V. dica «La vedo pulsare»
+  assert.ok(M.sensori[1] - M.sensori[0] > 10 && M.cerca[1] - M.cerca[0] > 10);
+  assert.ok(M.allarga[0] < blocco("B9").pezzo!.t);
+  assert.ok(M.cerca[0] < blocco("B7").pezzo!.t);
+});
+
+test("nei dettagli di F i reattori sono spenti, nel passaggio accesi", () => {
+  assert.equal(reattori("sensori", 30).forza, 0);
+  assert.equal(reattori("cerca", 40).brace, 0);
+  assert.equal(reattori("passaggio", 10).forza, 1);
 });
 
 test("la regola di lettura: 0,35 s per parola più 2, mai meno di 4", () => {
@@ -33,9 +53,9 @@ test("i testi entrano, sono pieni ed escono quando dicono la regola e la voce", 
 
 test("le scene cominciano dove dice la scaletta", () => {
   const inizi = Object.fromEntries(SCALETTA.scene.map((s) => [s.id, s.inizio]));
-  assert.deepEqual(inizi, { A: 0, B: 78.65, C: 162.47, D: 175.27, E: 184.27, F: 207.77, G: 257.99, H: 280.24 });
+  assert.deepEqual(inizi, { A: 0, B: 78.65, C: 162.47, D: 175.27, E: 184.27, F: 207.77, G: 257.99, H: 279.29 });
   // da C in poi le scene durano quanto prima: è B che è cresciuta (le due voci), F (le due frasi di L.V. che
-  // stavano in B) e G (il libro dopo il titolo)
+  // stavano in B) e G (il libro dopo il titolo; dal 16 novembre a ridosso, e G si è accorciata di 0,95 s)
   const dura = Object.fromEntries(SCALETTA.scene.map((s) => [s.id, Math.round((s.fine - s.inizio) * 100) / 100]));
   assert.deepEqual([dura.C, dura.D, dura.E, dura.H], [12.8, 9, 23.5, 9]);
   assert.equal(scenaA(170).id, "C");

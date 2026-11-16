@@ -119,6 +119,14 @@ function tempoMargine(t: number, calibra: { t0: number; k: number; meta: number 
   return ridotto ? calibra.meta : calibra.t0 + (t - M.naveB) * calibra.k;
 }
 
+/** Dove cade sullo schermo un punto del relitto nel quadro largo (la scala nel tempo tE, allargata quanto dice
+ *  `allarga`); se il punto non c'è, il posto di riserva (quello di sempre). */
+function sulloSchermo(m: Scala, P: [number, number, number] | null, tE: number, allarga: number, riserva: { x: number; y: number }) {
+  if (!P) return riserva;
+  const s = m.proiettaPunto("scala", tE, P, { allarga });
+  return s.davanti ? { x: s.x, y: s.y } : riserva;
+}
+
 /** Un numero a caso ma sempre lo stesso, da 0 a 1. */
 const caso = (a: number, b = 0) => {
   const x = Math.sin(a * 127.1 + b * 311.7) * 43758.5453;
@@ -153,6 +161,7 @@ export default function Intro({
   voce = false,
   pellicola = true,
   attesa = false,
+  onPronta,
 }: {
   revisione?: boolean;
   onFine?: () => void;
@@ -169,7 +178,11 @@ export default function Intro({
   /** i loghi stanno ancora passando, sopra (Relitto.tsx): l'intro si prepara sotto, nascosta e ferma, e
    *  parte quando finiscono. Così fra i loghi e l'intro non c'è nessuna attesa */
   attesa?: boolean;
+  /** l'intro è pronta (la nave, i cieli, le immagini): i loghi sopra possono partire (Relitto.tsx) */
+  onPronta?: () => void;
 }) {
+  const avvisaPronta = useRef(onPronta);
+  avvisaPronta.current = onPronta;
   const inAttesa = useRef(attesa);
   inAttesa.current = attesa;
   const film = useRef<PellicolaViva>(null);
@@ -183,6 +196,10 @@ export default function Intro({
   const motore = useRef<Scala | null>(null);
   const plancia = useRef<Plancia | null>(null);
   const calibra = useRef({ t0: 0, k: 1, meta: 0 });
+  /** dove sta la spia di F sullo schermo adesso (segue il relitto mentre il quadro largo si allarga) */
+  const spiaF = useRef<{ x: number; y: number }>(SPIA_F);
+  /** due punti del relitto (la spia di F, il nero del raccordo), nel mondo */
+  const puntiDelFuso = useRef<{ spia: [number, number, number] | null; nero: [number, number, number] | null }>({ spia: null, nero: null });
   const testi = useRef<Record<string, HTMLDivElement | null>>({});
   const bande = useRef<(HTMLDivElement | null)[]>([]);
   const strato = useRef<HTMLDivElement>(null);
@@ -241,6 +258,16 @@ export default function Intro({
         m.prepara("margine");
         m.prepara("scala");
         m.prepara("plancia");
+        // le inquadrature del 16 novembre 2026: costano poco, le stelle sono quelle del margine e della scala
+        m.prepara("passaggio");
+        m.prepara("sensori");
+        m.prepara("cerca");
+        // la spia di F e il punto del raccordo stanno nel nero del fuso: due punti del relitto, presi nel quadro largo
+        // di sempre, che si ritrovano sullo schermo anche quando il quadro si allarga
+        puntiDelFuso.current = {
+          spia: m.puntoSulFuso("scala", 23.5, SPIA_F.x, SPIA_F.y),
+          nero: m.puntoSulFuso("scala", 23.5, NEL_NERO.x, NEL_NERO.y),
+        };
         const p = new Plancia({ hd, sfocata, lente });
         p.prepara(m);
         plancia.current = p;
@@ -266,7 +293,10 @@ export default function Intro({
         // parole di William, e la attraversa piano fino a dove arrivava prima
         const t0 = cerca(1.0), t1 = cerca(0.16);
         calibra.current = { t0, k: (t1 - t0) / (S.scene[2].inizio - M.naveB), meta: cerca(0.56) };
-        if (vivo) setPronta(true);
+        if (vivo) {
+          setPronta(true);
+          avvisaPronta.current?.();
+        }
       } catch (e) {
         if (!vivo) return;
         setErrore(String(e instanceof Error ? e.message : e));
@@ -308,13 +338,16 @@ export default function Intro({
       if (!p) return;
       const W = p.clientWidth, H = p.clientHeight;
 
-      // 1. lo spazio (WebGL): il margine in B; la plancia e il suo oblò in C, D e H; la scala in E, F, G
-      //    e all'inizio del raccordo
+      // 1. lo spazio (WebGL): il margine e il passaggio in B; la plancia e il suo oblò in C, D e H; la scala in E,
+      //    F e G (in F i due dettagli, poi il quadro largo che torna e si allarga) e all'inizio del raccordo
       const m = motore.current;
-      let quadroGl: "margine" | "scala" | "plancia" | null = null;
+      let quadroGl: "margine" | "passaggio" | "scala" | "sensori" | "cerca" | "plancia" | null = null;
       const lenteFinale = morbido(fra(t, VOLO[0] + 0.1, VOLO[0] + 0.9));
-      if (t >= M.stella[0] + 0.4 && t < C0) quadroGl = "margine";
+      if (t >= M.stella[0] + 0.4 && t < M.passaggio[0]) quadroGl = "margine";
+      else if (t >= M.passaggio[0] && t < C0) quadroGl = "passaggio";
       else if (t >= C0 && t < E0) quadroGl = "plancia";
+      else if (t >= M.sensori[0] && t < M.sensori[1]) quadroGl = "sensori";
+      else if (t >= M.cerca[0] && t < M.cerca[1]) quadroGl = "cerca";
       else if (t >= E0 && t < TAGLIO_H) quadroGl = "scala";
       else if (t >= TAGLIO_H && lenteFinale < 1) quadroGl = "plancia";
       const sp = spazio.current;
@@ -322,17 +355,29 @@ export default function Intro({
       if (m && quadroGl === "margine") {
         const luce = morbido(fra(t, M.stella[0] + 0.4, M.naveB));
         m.quadro("margine", tempoMargine(t, calibra.current, ridotto), { ridotta: o.ridotta, luce });
+      } else if (m && quadroGl === "passaggio") {
+        // con il movimento ridotto, fermo, con la nave nel quadro
+        m.quadro("passaggio", ridotto ? 22 : t - M.passaggio[0], { ridotta: o.ridotta });
+      } else if (m && (quadroGl === "sensori" || quadroGl === "cerca")) {
+        // nel tempo della scala, che continua: la nave avanza come avanzava; con il movimento ridotto, fermi
+        const da = quadroGl === "sensori" ? M.sensori[0] : M.cerca[0];
+        m.quadro(quadroGl, (ridotto ? da : t) - M.scala[0], { ridotta: o.ridotta });
       } else if (m && quadroGl === "scala") {
-        const tE = Math.min(t - M.scala[0], 23.5);
+        // il tempo della scala va avanti anche dopo i suoi 23,5 s (prima era fermo, e con lui la grana): la camera è
+        // lontana diciotto chilometri, e la nave che avanza non sposta niente; dal ritorno del quadro largo si allarga
+        const tE = ridotto && t >= M.allarga[0] ? 23.5 : t - M.scala[0];
+        const allarga = ridotto ? (t >= M.allarga[0] ? 1 : 0) : morbido(fra(t, M.allarga[0], M.allarga[1]));
+        spiaF.current = sulloSchermo(m, puntiDelFuso.current.spia, tE, allarga, SPIA_F);
         if (t >= M.raccordo[0] && !ridotto) {
           // il raccordo: la camera entra nel nero del fuso, sopra la nave, finché il nero è tutto
           const k = Math.exp(morbido(fra(t, M.raccordo[0], TAGLIO_H)) * Math.log(18));
-          const P: [number, number] = [NEL_NERO.x * 2 - 1, 1 - NEL_NERO.y * 2];
-          m.quadro("scala", 23.5, { ridotta: o.ridotta, ottica: { sca: [k, k], off: [P[0] * (1 - k), P[1] * (1 - k)] } });
+          const nero = sulloSchermo(m, puntiDelFuso.current.nero, tE, 1, NEL_NERO);
+          const P: [number, number] = [nero.x * 2 - 1, 1 - nero.y * 2];
+          m.quadro("scala", tE, { ridotta: o.ridotta, allarga: 1, ottica: { sca: [k, k], off: [P[0] * (1 - k), P[1] * (1 - k)] } });
         } else if (t >= M.raccordo[0]) {
-          m.quadro("scala", 23.5, { ridotta: o.ridotta, luce: 1 - morbido(fra(t, M.raccordo[0], TAGLIO_H)) });
-        } else if (ridotto) m.dissolvenza("scala", 0.5, 23.5, morbido(fra(tE, 3, 6)), { ridotta: o.ridotta });
-        else m.quadro("scala", tE, { ridotta: o.ridotta });
+          m.quadro("scala", 23.5, { ridotta: o.ridotta, allarga: 1, luce: 1 - morbido(fra(t, M.raccordo[0], TAGLIO_H)) });
+        } else if (ridotto && t < M.allarga[0]) m.dissolvenza("scala", 0.5, 23.5, morbido(fra(tE, 3, 6)), { ridotta: o.ridotta });
+        else m.quadro("scala", tE, { ridotta: o.ridotta, allarga });
       } else if (m && quadroGl === "plancia") {
         const rp = riprese(t, ridotto)[0];
         const f = faroDi(t, ridotto);
@@ -564,7 +609,7 @@ export default function Intro({
       const luce = accesa * (0.56 * respiro + 0.5 * colpo + voce) * (1 - sfoca) * luceDiA(t);
       spia(SPIA_A.x, SPIA_A.y, luce, sfoca);
     }
-    if (t >= M.stella[0] + 0.5 && t < C0) {
+    if (t >= M.stella[0] + 0.5 && t < M.passaggio[0]) {
       const s = morbido(fra(t, M.stella[0] + 0.5, M.stella[0] + 1.6));
       g.fillStyle = `rgba(240, 244, 255, ${0.95 * s})`;
       g.beginPath();
@@ -579,15 +624,16 @@ export default function Intro({
       g.fill();
     }
 
-    // F: la spia ricompare sopra il testo; con «La vedo pulsare» batte; a «Fine della traccia» si spegne
-    if (t >= M.scala[1] - 0.5 && t < M.spiaSpenta + 1) {
-      const accesa = morbido(fra(t, M.scala[1], M.scala[1] + 1.2)) * (1 - morbido(fra(t, M.spiaSpenta - 0.2, M.spiaSpenta + 0.6)));
+    // F: la spia ricompare quando torna il quadro largo, nel nero del relitto, e lo segue mentre il quadro si allarga
+    // (prima dei dettagli c'era da subito); con «La vedo pulsare» batte; a «Fine della traccia» si spegne
+    if (t >= M.allarga[0] && t < M.spiaSpenta + 1) {
+      const accesa = morbido(fra(t, M.allarga[0] + 0.2, M.allarga[0] + 1.4)) * (1 - morbido(fra(t, M.spiaSpenta - 0.2, M.spiaSpenta + 0.6)));
       // batte da «La vedo pulsare», con i colpi che si sentono (intro.rs), e continua finché resta il testo
       const colpi: number[] = [];
       for (let c = M.pulsare + 0.3; c < M.pulsa[1]; c += 1.15) colpi.push(c);
       const colpo = impulso(t, colpi) * (ridotto ? 0.5 : 1);
       const voce = livelloVoce(t) * (ridotto ? 0.15 : 0.35);
-      spia(SPIA_F.x, SPIA_F.y, accesa * (0.46 + 0.55 * colpo + voce) * 0.85);
+      spia(spiaF.current.x, spiaF.current.y, accesa * (0.46 + 0.55 * colpo + voce) * 0.85);
     }
 
     // G: i glifi si tracciano; poi ognuno si scioglie nella sua lettera, dal centro verso i lati (titolo.ts);

@@ -163,18 +163,18 @@ async function gioca(c: string): Promise<string> {
   return modo;
 }
 
-/** Dalla schermata in cui si è al menu principale: i loghi (Esc), la dichiarazione
+/** Dalla schermata in cui si è al menu principale: il cartello dell'avvio o i loghi (Esc), la dichiarazione
  *  («continua»), i titoli di coda (Esc), il gioco (la pausa). */
 async function alMenu() {
   for (let giri = 0; giri < 8; giri++) {
     if (pulsante(".menu-voci button[data-voce='nuova']")) return;
     await finche(
-      () => document.querySelector(".menu-voci button, .dichiarazione, .titoli, .gioco, [aria-label='Loghi di apertura']"),
+      () => document.querySelector(".menu-voci button, .dichiarazione, .titoli, .gioco, .cartello-avvio, [aria-label='Loghi di apertura']"),
       "una schermata",
     );
-    if (document.querySelector("[aria-label='Loghi di apertura']")) {
+    if (document.querySelector(".cartello-avvio, [aria-label='Loghi di apertura']")) {
       esc();
-      await finche(() => !document.querySelector("[aria-label='Loghi di apertura']"), "la fine dei loghi", 5000);
+      await finche(() => !document.querySelector(".cartello-avvio, [aria-label='Loghi di apertura']"), "la fine del cartello o dei loghi", 5000);
     } else if (document.querySelector(".dichiarazione")) {
       await tocca(await finche(() => pulsante(".dichiarazione button"), "«continua» della dichiarazione", 5000), "continua");
     } else if (document.querySelector(".titoli")) {

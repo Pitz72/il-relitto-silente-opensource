@@ -525,6 +525,8 @@ pub struct Mondo {
     volume: Scorrevole,
     dinamica: Inseguitore,
     limitatore: Inseguitore,
+    /// il tetto dei picchi di William, suo soltanto (vedi LIV_WILLIAM)
+    tetto_william: Inseguitore,
     fermo: bool,
     // --- il prototipo
     cammina: bool,
@@ -668,6 +670,7 @@ impl Mondo {
             volume: Scorrevole::nuovo(1.0),
             dinamica: Inseguitore::nuovo(0.01, 0.25, sr),
             limitatore: Inseguitore::nuovo(0.0008, 0.12, sr),
+            tetto_william: Inseguitore::nuovo(0.0008, 0.12, sr),
             fermo: false,
             cammina: false,
             piede: false,
@@ -1226,8 +1229,18 @@ impl Mondo {
             // William (documento 41): il narratore, asciutto, sul cursore del parlato
             let (wl, wr) = self.racconto.campione();
             let kw = vp * gp * LIV_WILLIAM;
-            l += wl * kw;
-            r += wr * kw;
+            let (mut wl, mut wr) = (wl * kw, wr * kw);
+            // i suoi picchi li tiene un tetto suo: così il limitatore del mixer non abbassa il mondo a ogni sua
+            // consonante forte
+            let pw = wl.abs().max(wr.abs());
+            let ew = self.tetto_william.segui(pw).max(pw);
+            if ew > TETTO_WILLIAM {
+                let g = TETTO_WILLIAM / ew;
+                wl *= g;
+                wr *= g;
+            }
+            l += wl;
+            r += wr;
             // l'intro: il suo sound design sta sul cursore degli effetti, il re e il tema su quello della
             // musica (il tema come i file di musica), la voce di L.V. su quello del parlato
             if self.intro.attiva() {
@@ -1308,9 +1321,14 @@ const LIV_YUSUF: f32 = 2.0;
 /// La voce di servizio sopra il livello delle parole a cui il lettore porta ogni parte (−27 dBFS): +4 dB, le parole
 /// a circa −23 dBFS, un poco sotto Yusuf: chiara, ma non davanti al mondo
 const LIV_SERVIZIO: f32 = 1.58;
-/// William sopra il livello delle parole a cui il lettore porta ogni presa (−27 dBFS): +5 dB, le parole a circa
-/// −22 dBFS, fra Yusuf e la voce di servizio: è la voce che porta il gioco, davanti al mondo e alla musica
-const LIV_WILLIAM: f32 = 1.78;
+/// William sopra il livello delle parole a cui il lettore porta ogni presa (−27 dBFS): +9 dB, le parole a circa
+/// −18 dBFS. Era +5 (−22 dBFS, appena 2 dB sopra la plancia calma): l'autore, giocando la beta 13 (16 novembre
+/// 2026), «La voce di William nella parte "gioco" è un po' bassina». È la voce che porta il gioco, come un
+/// audiolibro: davanti al mondo e alla musica, che non scende sotto di lui (documento 41, §3)
+const LIV_WILLIAM: f32 = 2.818;
+/// Il tetto dei suoi picchi (−4,5 dBFS): la cresta delle prese è di 19 dB sopra le parole, e a −18 i picchi
+/// passerebbero lo zero; il tetto li piega lui, prima del limitatore del mixer
+const TETTO_WILLIAM: f32 = 0.596;
 const LIV_CUORE: f32 = -10.0;
 const LIV_ACUFENE: f32 = -42.0;
 const LIV_PASSI: f32 = -24.0;

@@ -9,26 +9,49 @@
 //  del cielo (prima era uno still scontornato su un piano). Il fuso, le stelle,
 //  la Via Lattea, la polvere, il fascio del faro e la luce sono calcolati.
 //
+//  Dal 16 novembre 2026 (le note dell'autore sulla beta 13) ci sono tre quadri
+//  nuovi: il passaggio (B, la nave che passa accanto alla camera con i
+//  reattori accesi) e due dettagli in F (i sensori, con il radar che gira; il
+//  faro che cerca). Nei dettagli il faro e la barra del radar si muovono: il
+//  modello porta il numero del pezzo nel quarto ottetto della normale
+//  (strumenti/nave/modello.py, PARTI), e gli shader li girano intorno ai perni.
+//
 //  Il mondo è in metri. X è la rotta della Santa Maria, Y l'alto, Z il fianco
 //  destro.
 // ============================================================================
 
-export type Quadro = "scala" | "margine" | "oblo" | "faro" | "plancia";
+export type Quadro = "scala" | "margine" | "oblo" | "faro" | "plancia" | "passaggio" | "sensori" | "cerca";
 type V3 = [number, number, number];
+/** il sole della nave, e la sua mappa d'ombra: uno per ripresa */
+type Sole = "poppa" | "prua" | "passaggio";
+/** I pezzi che si muovono, in radianti: il faro gira (intorno all'asse verticale) e alza la lampada (intorno
+ *  all'asse delle forcelle); la barra del radar gira sul suo albero. */
+export interface Parti {
+  giro: number;
+  alzo: number;
+  radar: number;
+}
 
 interface Inquadratura {
   pos: V3;
   nave: V3;
   fov: number;
   avanti: V3;
-  /** la nave si vede, e da dove: da poppa (la scala) o da prua (il margine); nell'oblò non c'è */
-  sprite: "poppa" | "prua" | null;
+  /** la nave si vede, e con quale sole: da poppa (la scala e i dettagli), da prua (il margine), il passaggio;
+   *  nell'oblò non c'è */
+  sprite: Sole | null;
   faro: boolean;
   fuso: boolean;
   polvere?: boolean;
   luceFaro?: number;
   /** solo la plancia: di quanti gradi il faro si sposta dalla sua direzione */
   faroGradi?: number;
+  /** i dettagli: i pezzi che si muovono */
+  parti?: Parti;
+  /** i dettagli: l'ombra si rifà a ogni fotogramma (i pezzi si muovono), stretta intorno a quello che si vede */
+  ombraStretta?: { centro: V3; raggio: number };
+  /** i dettagli: la polvere resta ferma nel mondo da qui (la nave le passa in mezzo) */
+  polvereDa?: V3;
 }
 
 // ---- vettori -----------------------------------------------------------------
@@ -57,9 +80,11 @@ const FUSO = { centro: [4900, -380, -2380] as V3, semiLunghezza: 12500, semiLarg
 const SOLE = norm([-0.55, 0.62, 0.56]);
 // il sole della nave, ripresa per ripresa: prende i fianchi che la camera vede (da poppa il destro e la
 // piastra; da prua il sinistro, e il muso di striscio). Ogni quadro ha già il suo cielo.
-const SOLE_NAVE: Record<"poppa" | "prua", V3> = { poppa: norm([-0.6, 0.45, 0.66]), prua: norm([0.34, 0.6, -0.72]) };
+// Il passaggio: da dietro, a sinistra e dall'alto, perché prenda il fianco sinistro, il dorso e la poppa.
+const SOLE_NAVE: Record<Sole, V3> = { poppa: norm([-0.6, 0.45, 0.66]), prua: norm([0.34, 0.6, -0.72]), passaggio: norm([-0.45, 0.55, -0.7]) };
 // quanto erano larghi gli still di prima, in metri: `proietta` lo dice ancora all'intro, che ci regola i tempi
-const LARGHEZZA_NAVE = { poppa: 96, prua: 112 };
+const LARGHEZZA_NAVE: Record<Sole, number> = { poppa: 96, prua: 112, passaggio: 112 };
+const rad = (gradi: number) => (gradi * Math.PI) / 180;
 // la fotografia della nave: quanto è forte il sole (appena caldo), quanta luce fredda viene dal cielo, e le sue
 // luci (l'oblò, i fanali, la luce dell'uscita, la lente del faro acceso, la spinta dei quattro scarichi)
 const LUCE_NAVE = { sole: [1.7, 1.63, 1.52], cielo: [0.02, 0.03, 0.055], oblo: 3.0, fanali: 6.0, uscita: 4.0, faro: 14.0, spinta: 0.6 };
@@ -122,6 +147,62 @@ function camera(t: number): Inquadratura {
   return { pos: somma(mira, per(DIREZIONE, -D)), nave, fov, avanti: DIREZIONE, sprite: "poppa", faro: true, fuso: true };
 }
 
+/** Il passaggio (B, sul messaggio di Yusuf; l'autore, 16 novembre 2026: «Potremmo inventare una nuova
+ *  inquadratura dove vediamo la nave da un'altra angolazione che passa accanto alla telecamera? ovviamente la nave
+ *  in questa fase ha i reattori accesi e lo sfondo di stelle deve essere diverso»). La camera è ferma, a babordo
+ *  della rotta e qualche metro sopra; la nave arriva da dietro, le scivola accanto ed entra dal bordo destro, poi si
+ *  allontana mostrando la poppa con i quattro scarichi accesi. Va alla velocità del margine. Il cielo è quello del
+ *  margine visto da un'altra parte: le stesse stelle, un'altra regione del cielo. */
+export const PASSAGGIO = { parte: -24, velocita: 7, camera: [0, 4.5, -26] as V3, guarda: norm([1, -0.035, 0.13]), fov: 50 };
+function passaggio(t: number): Inquadratura {
+  const P = PASSAGGIO;
+  return { pos: P.camera, nave: [P.parte + P.velocita * t, 0, 0], fov: rad(P.fov), avanti: P.guarda, sprite: "passaggio", faro: false, fuso: false, polvere: false };
+}
+
+/** I pezzi che si muovono nei dettagli di F, nel tempo della scala (che continua dopo i suoi 23,5 s): il radar fa un
+ *  giro ogni sei secondi e mezzo; il faro cerca piano, nove gradi per parte in undici secondi, e alza e abbassa
+ *  appena la lampada. Lenti, come chi cerca qualcosa che non sa dove sia. */
+export function partiDi(t: number): Parti {
+  return { giro: rad(9) * Math.sin((2 * Math.PI * t) / 11), alzo: rad(-0.6) + rad(1.4) * Math.sin((2 * Math.PI * t) / 7.3), radar: rad(24) + (2 * Math.PI * t) / 6.5 };
+}
+
+/** I dettagli di F (l'autore, 16 novembre 2026: «una animazione di dettaglio, tipo inquadratura che mostra sensori e
+ *  faro che si muovono alla ricerca»). La nave è quella della scala, nel suo tempo: avanza per inerzia, a reattori
+ *  spenti, verso il relitto. La camera le sta addosso, bassa sul dorso, a dritta (il lato che il sole prende), e
+ *  guarda avanti e in su: davanti c'è il fuso nero, alto fino a 22° sopra l'orizzonte, e sopra il suo bordo le
+ *  stelle. L'obiettivo è largo, perché stiano nel quadro gli strumenti vicini e il bordo lontano. I sensori: il radar
+ *  che gira, il faro più avanti. Il faro: la lampada che cerca, e il fascio che entra nel buio. */
+const SENSORI = { da: [23.4, 6.55, 2.7] as V3, verso: [38, 8.85, -4.6] as V3, fov: 70 };
+const CERCA = { da: [28.6, 7.45, 7.9] as V3, verso: [40, 7.25, -5.2] as V3, fov: 58 };
+function dettaglio(q: "sensori" | "cerca", t: number): Inquadratura {
+  const D = q === "sensori" ? SENSORI : CERCA;
+  const nave: V3 = [NAVE.velocita * t, 0, 0];
+  return {
+    pos: somma(nave, D.da),
+    nave,
+    fov: rad(D.fov),
+    avanti: verso(D.da, D.verso),
+    sprite: "poppa",
+    faro: true,
+    fuso: true,
+    polvere: q === "cerca",
+    luceFaro: q === "cerca" ? 0.05 : 0.024,
+    parti: partiDi(t),
+    ombraStretta: q === "sensori" ? { centro: [29, 6.8, 0], raggio: 13 } : { centro: [31.5, 6.4, 0], raggio: 9 },
+    polvereDa: [NAVE.velocita * 74, 0, 0],
+  };
+}
+
+/** Il quadro largo della fine, «anche poco più largo» (l'autore, 16 novembre 2026): la camera della scala arretra
+ *  ancora un poco e l'obiettivo si apre appena (non oltre i 44° per cui il cielo è cotto). `k` da 0 a 1. */
+export function allargamento(k: number): { distanza: number; fov: number } {
+  return { distanza: 1 + 0.16 * k, fov: 1 + 0.085 * k };
+}
+function allargata(cam: Inquadratura, a: { distanza: number; fov: number }): Inquadratura {
+  const d: V3 = [cam.pos[0] - cam.nave[0], cam.pos[1] - cam.nave[1], cam.pos[2] - cam.nave[2]];
+  return { ...cam, pos: somma(cam.nave, per(d, a.distanza)), fov: cam.fov * a.fov };
+}
+
 /** I reattori nella scala (l'autore, 14 novembre 2026: «dovremmo fare un effetto di spegnimento dei reattori,
  *  per una questione di realismo la nave continuerà comunque ad avvicinarsi per inerzia»). Accesi all'inizio,
  *  mentre la camera è vicina; poi si spengono in due secondi scarsi, con due singhiozzi, e la fiamma si
@@ -129,6 +210,8 @@ function camera(t: number): Inquadratura {
  *  momenti vanno al motore audio (scaletta.ts, `reattori`): il re del reattore muore con la fiamma. */
 export const SPEGNIMENTO = { quando: 1.3, dura: 1.9, brace: 3.4 };
 export function reattori(q: Quadro, t: number): { forza: number; lunga: number; brace: number } {
+  // nei dettagli di F i reattori sono spenti da un pezzo, e la brace è fredda
+  if (q === "sensori" || q === "cerca") return { forza: 0, lunga: 0.2, brace: 0 };
   if (q !== "scala") return { forza: 1, lunga: 1, brace: 0 };
   const u = clamp01((t - SPEGNIMENTO.quando) / SPEGNIMENTO.dura);
   if (u <= 0) return { forza: 1, lunga: 1, brace: 0 };
@@ -141,6 +224,8 @@ export function reattori(q: Quadro, t: number): { forza: number; lunga: number; 
 /** I quadri. `t` è il tempo del quadro, in secondi. */
 export function inquadratura(q: Quadro, t: number, faro = 0, faroGradi = 0): Inquadratura {
   if (q === "plancia") return oblo(t, faro, faroGradi);
+  if (q === "passaggio") return passaggio(t);
+  if (q === "sensori" || q === "cerca") return dettaglio(q, t);
   if (q === "margine") {
     // la nave avanza; la camera, davanti e a babordo, è ferma. Con la nave vera, lunga ottanta metri, sta a
     // due terzi della distanza di prima sulla stessa retta: la nave tiene nel quadro il posto che aveva lo still
@@ -158,6 +243,37 @@ export function inquadratura(q: Quadro, t: number, faro = 0, faroGradi = 0): Inq
 
 /** La direzione di riferimento del cielo: dove guarda il quadro (per la scala, alla fine). */
 const direzioneCielo = (q: Quadro): V3 => (q === "scala" ? DIREZIONE : inquadratura(q, 0).avanti);
+/** I quadri nuovi non hanno stelle loro (costerebbero quasi un secondo ciascuno): usano quelle di un altro quadro,
+ *  viste dalla loro parte. Il passaggio quelle del margine, i dettagli quelle della scala (lo stesso cielo del
+ *  quadro largo che li circonda). */
+const CIELO_DI: Partial<Record<Quadro, Quadro>> = { passaggio: "margine", sensori: "scala", cerca: "scala" };
+
+// ---- i pezzi che si muovono: matrici 4×4 per colonne, come le vuole WebGL -----------------------------
+type M4 = number[];
+const IDENTITA: M4 = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+function molt(a: M4, b: M4): M4 {
+  const o = new Array(16).fill(0);
+  for (let c = 0; c < 4; c++) for (let r = 0; r < 4; r++) for (let k = 0; k < 4; k++) o[c * 4 + r] += a[k * 4 + r] * b[c * 4 + k];
+  return o;
+}
+const sposta = (v: V3): M4 => [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, v[0], v[1], v[2], 1];
+/** intorno all'asse verticale (Y): positivo, la prua va verso babordo */
+const giraY = (a: number): M4 => [Math.cos(a), 0, -Math.sin(a), 0, 0, 1, 0, 0, Math.sin(a), 0, Math.cos(a), 0, 0, 0, 0, 1];
+/** intorno all'asse Z (le forcelle del faro): positivo, la lampada alza il muso */
+const giraZ = (a: number): M4 => [Math.cos(a), Math.sin(a), 0, 0, -Math.sin(a), Math.cos(a), 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+const intorno = (perno: V3, m: M4): M4 => molt(sposta(perno), molt(m, sposta([-perno[0], -perno[1], -perno[2]])));
+export const applica = (m: M4, p: V3, w = 1): V3 => [
+  m[0] * p[0] + m[4] * p[1] + m[8] * p[2] + m[12] * w,
+  m[1] * p[0] + m[5] * p[1] + m[9] * p[2] + m[13] * w,
+  m[2] * p[0] + m[6] * p[1] + m[10] * p[2] + m[14] * w,
+];
+/** Le quattro matrici dei pezzi (0 lo scafo, fermo; 1 le forcelle del faro; 2 la lampada; 3 la barra del radar). */
+export function matriciParti(parti: Parti | undefined, perni: { faro: V3; radar: V3 } | undefined): M4[] {
+  if (!parti || !perni) return [IDENTITA, IDENTITA, IDENTITA, IDENTITA];
+  const forcelle = intorno(perni.faro, giraY(parti.giro));
+  const lampada = intorno(perni.faro, molt(giraY(parti.giro), giraZ(parti.alzo)));
+  return [IDENTITA, forcelle, lampada, intorno(perni.radar, giraY(parti.radar - rad(24)))];
+}
 
 /** Il fuso nel mondo: i due capi. */
 function capiDelFuso(): [V3, V3] {
@@ -178,6 +294,19 @@ function distanzaDalFuso(p: V3): number {
   const r = 0.5 * l, d = (0.5 * (r * r - w * w)) / w;
   const h = r * qx < d * (qy - r) ? [0, r, 0] : [-d, 0, d + w];
   return Math.hypot(qx - h[0], qy - h[1]) - h[2];
+}
+
+/** Il punto in cui un raggio da `da` nella direzione `dir` incontra il fuso, o null. */
+export function puntoDelFuso(da: V3, dir: V3): V3 | null {
+  let t = 0;
+  for (let i = 0; i < 200; i++) {
+    const p = somma(da, per(dir, t));
+    const h = distanzaDalFuso(p);
+    if (h < 0.0002 * Math.max(t, 1)) return p;
+    t += h * 0.9;
+    if (t > 200000) break;
+  }
+  return null;
 }
 
 /** Se un raggio da `da` nella direzione `dir` incontra il fuso. */
@@ -409,13 +538,15 @@ void main(){ vec2 p = gl_PointCoord * 2.0 - 1.0; o = vec4(vec3(1.0, 0.96, 0.9) *
 // La nave vera. Un punto: la posizione (dal centro della nave), la normale, il posto sulla tessitura, la
 // tinta e il tipo del pezzo (0 lo scafo, 1 il metallo dei pezzi, 2 le celle dei pannelli, 3 lo scuro, da 4 a
 // 8 le luci, 9 la spinta). I posti degli attributi sono fissi: lo stesso vao serve anche alle ombre.
+// I pezzi che si muovono: il quarto numero della normale dice quale (0 lo scafo, fermo), uParte lo gira.
 const VS_SCAFO = TESTA + `
 layout(location = 0) in vec3 aP; layout(location = 1) in vec4 aN; layout(location = 2) in vec2 aUV; layout(location = 3) in vec4 aC;
-uniform mat4 uVP; uniform vec3 uCentro;
+uniform mat4 uVP; uniform vec3 uCentro; uniform mat4 uParte[4];
 out vec3 p; out vec3 n; out vec2 uv; out vec3 tinta; flat out int tipo;
 void main(){
-  p = aP; n = aN.xyz; uv = aUV; tinta = aC.rgb; tipo = int(aC.a * 255.0 + 0.5);
-  gl_Position = uVP * vec4(aP + uCentro, 1.0);
+  mat4 m = uParte[clamp(int(aN.w * 127.0 + 0.5), 0, 3)];
+  p = (m * vec4(aP, 1.0)).xyz; n = mat3(m) * aN.xyz; uv = aUV; tinta = aC.rgb; tipo = int(aC.a * 255.0 + 0.5);
+  gl_Position = uVP * vec4(p + uCentro, 1.0);
 }`;
 // Nello spazio la luce è un sole solo: la si calcola dal vivo (diffusa e riflessa), con l'ombra portata da
 // una mappa fatta una volta, e un poco di luce fredda del cielo da ogni parte.
@@ -425,6 +556,7 @@ out vec4 o;
 uniform sampler2D uColore, uRuvido, uMetallo, uRilievo;
 uniform highp sampler2DShadow uOmbra;
 uniform mat4 uLuceVP;
+uniform vec2 uBias;   // la correzione dell'ombra, nelle unità della sua profondità (fissa, e per la pendenza)
 uniform vec3 uSole, uOcchio, uSoleLuce, uCieloLuce;
 uniform vec4 uLuci;   // l'oblò, i fanali, la luce dell'uscita, la lente del faro
 uniform vec2 uTexel;
@@ -480,10 +612,12 @@ void main(){
   if (NL > 0.0) {
     vec4 l = uLuceVP * vec4(p + normalize(n) * 0.06, 1.0);
     vec3 s = l.xyz * 0.5 + 0.5;
-    s.z -= 0.0012 + 0.003 * (1.0 - NL);
+    s.z -= uBias.x + uBias.y * (1.0 - NL);
     float passo = 1.0 / float(textureSize(uOmbra, 0).x);
     for (int y = -1; y <= 1; y++) for (int x = -1; x <= 1; x++) ombra += texture(uOmbra, vec3(s.xy + vec2(x, y) * passo, s.z));
     ombra /= 9.0;
+    // fuori dalla mappa (l'ombra stretta dei dettagli copre solo una parte della nave): luce piena
+    if (any(lessThan(s, vec3(0.0))) || any(greaterThan(s, vec3(1.0)))) ombra = 1.0;
   }
   NL = max(NL, 0.0);
   vec3 H = normalize(uSole + V);
@@ -502,9 +636,9 @@ void main(){
 }`;
 // L'ombra: la nave vista dal sole, solo la profondità.
 const VS_OMBRA = TESTA + `
-layout(location = 0) in vec3 aP;
-uniform mat4 uLuceVP;
-void main(){ gl_Position = uLuceVP * vec4(aP, 1.0); }`;
+layout(location = 0) in vec3 aP; layout(location = 1) in vec4 aN;
+uniform mat4 uLuceVP; uniform mat4 uParte[4];
+void main(){ gl_Position = uLuceVP * (uParte[clamp(int(aN.w * 127.0 + 0.5), 0, 3)] * vec4(aP, 1.0)); }`;
 const FS_OMBRA = TESTA + `
 void main(){ }`;
 // La nave, disegnata nel suo strato, si posa sulla scena.
@@ -583,6 +717,8 @@ interface DatiNave {
   pendenza: number;
   tessitura: [number, number];
   luci: { "oblò": V3; fanali: V3[]; uscita: V3; scarichi: V3[]; faro: V3 };
+  /** i perni dei pezzi che si muovono (dal 16 novembre 2026) */
+  parti?: { faro: V3; radar: V3 };
 }
 interface Nave {
   vao: WebGLVertexArrayObject;
@@ -606,6 +742,10 @@ interface Strato {
 interface Ombra {
   tex: WebGLTexture;
   vp: number[];
+  /** la correzione, nelle unità della profondità della mappa */
+  bias: [number, number];
+  /** l'ombra stretta si rifà a ogni fotogramma: la sua cornice resta */
+  fb?: WebGLFramebuffer;
 }
 interface Cielo {
   polo: V3;
@@ -663,6 +803,8 @@ export interface OpzioniQuadro {
   grana?: boolean;
   /** la vignetta del motore (di base sì; nell'oblò no: la luce è quella della plancia) */
   vignetta?: boolean;
+  /** la scala, alla fine: quanto è allargata (0 com'era, 1 «poco più larga»; vedi `allargamento`) */
+  allarga?: number;
 }
 
 export class Scala {
@@ -796,10 +938,44 @@ export class Scala {
 
   /** Prepara in anticipo il cielo di un quadro (le stelle si calcolano una volta). */
   prepara(q: Quadro): void {
-    this.cielo(q);
+    const cielo = this.cielo(q);
     this.polvereDi(q);
-    // l'ombra della nave, per il sole di questa ripresa: si calcola adesso, e non al primo fotogramma
-    if (this.nave && (q === "scala" || q === "margine")) this.ombraDi(q === "scala" ? "poppa" : "prua");
+    // l'ombra della nave, per il sole di questa ripresa: si calcola adesso, e non al primo fotogramma (quella stretta
+    // dei dettagli si rifà comunque a ogni fotogramma)
+    const cam = inquadratura(q, 0);
+    if (this.nave && cam.sprite && !cam.ombraStretta) this.ombraDi(cam.sprite);
+    // e il cielo si cuoce adesso, perché al primo fotogramma dopo uno stacco non si fermi l'immagine
+    if (this.canvas.clientWidth > 0) {
+      this.dimensiona(false);
+      this.inforna(q, cielo, this.B!.w, this.B!.h, false);
+    }
+  }
+
+  /** La camera di un quadro con le sue opzioni (la scala allargata, alla fine). */
+  private camera(q: Quadro, t: number, opz: OpzioniQuadro = {}): Inquadratura {
+    const cam = inquadratura(q, t, opz.faro ?? 0, opz.faroGradi ?? 0);
+    return opz.allarga ? allargata(cam, allargamento(opz.allarga)) : cam;
+  }
+
+  /** Dove cade un punto del mondo sullo schermo (0–1, dall'alto a sinistra), e se sta davanti. */
+  proiettaPunto(q: Quadro, t: number, P: V3, opz: OpzioniQuadro = {}, aspetto = 16 / 9): { x: number; y: number; davanti: boolean } {
+    const cam = this.camera(q, t, opz);
+    const avanti = cam.avanti, destra = norm(croce(avanti, [0, 1, 0])), su = croce(destra, avanti);
+    const d: V3 = [P[0] - cam.pos[0], P[1] - cam.pos[1], P[2] - cam.pos[2]];
+    const z = d[0] * avanti[0] + d[1] * avanti[1] + d[2] * avanti[2];
+    const tanX = Math.tan(cam.fov / 2), tanY = tanX / aspetto;
+    const x = (d[0] * destra[0] + d[1] * destra[1] + d[2] * destra[2]) / z / tanX;
+    const y = (d[0] * su[0] + d[1] * su[1] + d[2] * su[2]) / z / tanY;
+    return { x: 0.5 + x / 2, y: 0.5 - y / 2, davanti: z > 0 };
+  }
+
+  /** Il punto del fuso che cade nel punto (x, y) dello schermo (0–1), o null se lì non c'è il fuso. */
+  puntoSulFuso(q: Quadro, t: number, x: number, y: number, opz: OpzioniQuadro = {}, aspetto = 16 / 9): V3 | null {
+    const cam = this.camera(q, t, opz);
+    const avanti = cam.avanti, destra = norm(croce(avanti, [0, 1, 0])), su = croce(destra, avanti);
+    const tanX = Math.tan(cam.fov / 2), tanY = tanX / aspetto;
+    const dir = norm(somma(avanti, somma(per(destra, (x * 2 - 1) * tanX), per(su, (1 - y * 2) * tanY))));
+    return puntoDelFuso(cam.pos, dir);
   }
 
   // ---- un fotogramma -------------------------------------------------------------
@@ -891,6 +1067,14 @@ export class Scala {
     if (fatto) return fatto;
     const gl = this.gl;
     const avanti = direzioneCielo(q), destra = norm(croce(avanti, [0, 1, 0])), su = croce(destra, avanti);
+    const di = CIELO_DI[q];
+    if (di) {
+      // le stesse stelle e la stessa galassia di un altro quadro; il forno è suo, nella sua direzione
+      const b = this.cielo(di);
+      const c: Cielo = { polo: b.polo, centro: b.centro, stelle: b.stelle, rif: { destra, su, avanti }, forno: null };
+      this.cieli.set(chiave, c);
+      return c;
+    }
     const d0 = norm(somma(avanti, somma(per(destra, 0.2), per(su, 0.02))));
     const ang = (62 * Math.PI) / 180;
     const tang = norm(somma(per(destra, Math.cos(ang)), per(su, Math.sin(ang))));
@@ -988,9 +1172,14 @@ export class Scala {
   }
 
   /** Il faro di un quadro. Dove la nave si vede da fuori, la luce parte dalla sua lente vera. */
-  private faro(q: Quadro, gradi = 0) {
+  private faro(q: Quadro, gradi = 0, cam?: Inquadratura) {
     const f = faroDi(q, gradi);
-    return this.nave && (q === "scala" || q === "margine") ? { ...f, origine: this.nave.dati.luci.faro } : f;
+    if (!this.nave || q === "plancia" || q === "oblo" || q === "faro") return f;
+    const lente = this.nave.dati.luci.faro;
+    if (!cam?.parti || !this.nave.dati.parti) return { ...f, origine: lente };
+    // la lampada gira e alza il muso: il fascio parte dalla lente dove sta adesso, e guarda dove guarda lei
+    const lampada = matriciParti(cam.parti, this.nave.dati.parti)[2];
+    return { ...f, origine: applica(lampada, lente), direzione: norm(applica(lampada, f.direzione, 0)) };
   }
 
   /** La polvere intorno alla rotta, e un velo più fitto dove passa il fascio. */
@@ -1003,7 +1192,7 @@ export class Scala {
     for (let i = 0; i < 1600; i++) dati.push(lerp(-500, 420, r()), lerp(-130, 150, r()), lerp(-230, 420, r()), r());
     const fd = FARO.direzione, fu = norm(croce(fd, [0, 1, 0])), fv = croce(fu, fd);
     // nella plancia il fascio cerca: la polvere sta in un cono più largo
-    const largo = q === "plancia" ? 3.4 : 1.3;
+    const largo = q === "plancia" || q === "cerca" ? 3.4 : 1.3;
     for (let i = 0; i < (q === "plancia" ? 2600 : 1400); i++) {
       // dall'oblò il fascio comincia subito sopra il vetro: la polvere c'è anche lì vicino
       const s = (q === "plancia" ? 14 : 40) + r() ** 1.6 * 260, raggio = Math.tan(FARO.apertura) * s * largo * Math.sqrt(r()), a = r() * Math.PI * 2;
@@ -1093,27 +1282,43 @@ export class Scala {
     return this.strato;
   }
 
-  /** L'ombra della nave per un sole: la nave vista da lì, una volta sola (la nave non gira). */
-  private ombraDi(chi: "poppa" | "prua"): Ombra {
-    const fatta = this.ombre.get(chi);
-    if (fatta) return fatta;
-    const gl = this.gl, N = this.nave!, lato = 2048, R = N.dati.raggio;
+  /** L'ombra della nave per un sole: la nave vista da lì, una volta sola (la nave non gira). Nei dettagli i pezzi si
+   *  muovono e la camera è vicina: l'ombra si rifà a ogni fotogramma, in una cornice stretta intorno a quello che si
+   *  vede (più fine), con i pezzi dove stanno adesso. */
+  private ombraDi(chi: Sole, stretta?: { centro: V3; raggio: number }, parti?: Float32Array): Ombra {
+    const chiave = stretta ? `${chi}:stretta` : chi;
+    const fatta = this.ombre.get(chiave);
+    if (fatta && !stretta) return fatta;
+    const gl = this.gl, N = this.nave!, lato = 2048;
+    const c: V3 = stretta?.centro ?? [0, 0, 0];
+    const R = stretta?.raggio ?? N.dati.raggio;
+    // in profondità la cornice resta larga quanto la nave intera (anche dal centro stretto), perché niente di
+    // quello che fa ombra resti fuori; la precisione basta (24 bit)
+    const Rz = N.dati.raggio + Math.hypot(c[0], c[1], c[2]);
     const f = per(SOLE_NAVE[chi], -1), r = norm(croce(f, [0, 1, 0])), u = croce(r, f);
-    const vp = [r[0] / R, u[0] / R, f[0] / R, 0, r[1] / R, u[1] / R, f[1] / R, 0, r[2] / R, u[2] / R, f[2] / R, 0, 0, 0, 0, 1];
-    const tex = gl.createTexture()!;
-    gl.bindTexture(gl.TEXTURE_2D, tex);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT24, lato, lato, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_INT, null);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_COMPARE_MODE, gl.COMPARE_REF_TO_TEXTURE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_COMPARE_FUNC, gl.LEQUAL);
-    const fb = gl.createFramebuffer()!;
-    gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
-    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, tex, 0);
-    gl.drawBuffers([gl.NONE]);
-    gl.readBuffer(gl.NONE);
+    const pc = (v: V3) => v[0] * c[0] + v[1] * c[1] + v[2] * c[2];
+    const vp = [r[0] / R, u[0] / R, f[0] / Rz, 0, r[1] / R, u[1] / R, f[1] / Rz, 0, r[2] / R, u[2] / R, f[2] / Rz, 0, -pc(r) / R, -pc(u) / R, -pc(f) / Rz, 1];
+    // la correzione: per la nave intera quella di sempre; da vicino 2 cm più 4 per la pendenza
+    const bias: [number, number] = stretta ? [0.02 / (2 * Rz), 0.04 / (2 * Rz)] : [0.0012, 0.003];
+    let tex = fatta?.tex, fb = fatta?.fb;
+    if (!tex) {
+      tex = gl.createTexture()!;
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT24, lato, lato, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_INT, null);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_COMPARE_MODE, gl.COMPARE_REF_TO_TEXTURE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_COMPARE_FUNC, gl.LEQUAL);
+    }
+    if (!fb) {
+      fb = gl.createFramebuffer()!;
+      gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, tex, 0);
+      gl.drawBuffers([gl.NONE]);
+      gl.readBuffer(gl.NONE);
+    } else gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
     gl.viewport(0, 0, lato, lato);
     gl.disable(gl.SCISSOR_TEST);
     gl.disable(gl.BLEND);
@@ -1124,13 +1329,18 @@ export class Scala {
     gl.clear(gl.DEPTH_BUFFER_BIT);
     gl.useProgram(this.P.ombra.p);
     gl.uniformMatrix4fv(this.P.ombra.u.uLuceVP, false, vp);
+    gl.uniformMatrix4fv(this.P.ombra.u.uParte, false, parti ?? new Float32Array(matriciParti(undefined, undefined).flat()));
     gl.bindVertexArray(N.vao);
     gl.drawElements(gl.TRIANGLES, N.opachi, gl.UNSIGNED_INT, 0);
     gl.disable(gl.DEPTH_TEST);
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    gl.deleteFramebuffer(fb);
-    const ombra = { tex, vp };
-    this.ombre.set(chi, ombra);
+    // la cornice dell'ombra fatta una volta non serve più; quella stretta si tiene, per il prossimo fotogramma
+    if (!stretta) {
+      gl.deleteFramebuffer(fb);
+      fb = undefined;
+    }
+    const ombra: Ombra = { tex, vp, bias, fb };
+    this.ombre.set(chiave, ombra);
     return ombra;
   }
 
@@ -1154,8 +1364,8 @@ export class Scala {
   private disegna(q: Quadro, t: number, verso: Bersaglio, opz: OpzioniQuadro) {
     const gl = this.gl, P = this.P, B = this.B!;
     const ridotta = !!opz.ridotta;
-    const cam = inquadratura(q, t, opz.faro ?? 0, opz.faroGradi ?? 0);
-    const FARO = this.faro(q, cam.faroGradi ?? 0);
+    const cam = this.camera(q, t, opz);
+    const FARO = this.faro(q, cam.faroGradi ?? 0, cam);
     const cielo = this.cielo(q);
     const forno = this.inforna(q, cielo, B.w, B.h, ridotta);
     const aspetto = B.w / B.h;
@@ -1254,7 +1464,7 @@ export class Scala {
       gl.uniform3fv(P.polvere.u.uD, FARO.direzione);
       gl.uniform3fv(P.polvere.u.uSole, SOLE);
       // nella plancia la polvere del fascio viaggia con la nave, perché il faro la trovi
-      gl.uniform3fv(P.polvere.u.uSposta, q === "plancia" ? cam.nave : [0, 0, 0]);
+      gl.uniform3fv(P.polvere.u.uSposta, q === "plancia" ? cam.nave : cam.polvereDa ?? [0, 0, 0]);
       gl.uniform1f(P.polvere.u.uCos, Math.cos(FARO.apertura * 1.4));
       gl.uniform1f(P.polvere.u.uPortata, FARO.portata);
       gl.uniform1f(P.polvere.u.uAltezza, verso.h * ot.sca[1]);
@@ -1273,10 +1483,15 @@ export class Scala {
       const respiro = 0.55 + 0.45 * Math.sin((t * 2 * Math.PI) / 2.6) ** 2;
       const R = reattori(q, t);
       const spinta = (0.92 + 0.08 * Math.sin(t * 9.1) * Math.sin(t * 3.7)) * R.forza;
-      const ombra = this.ombraDi(chi);
+      const parti = new Float32Array(matriciParti(cam.parti, N.dati.parti).flat());
+      const ombra = this.ombraDi(chi, cam.ombraStretta, parti);
       const S = this.stratoNave(verso.w, verso.h);
-      // la profondità si misura intorno alla nave: precisa da vicino come a diciotto chilometri
-      const VPn = this.matriceVP(cam, destra, su, avanti, ot.quadrata ? 1 : aspetto, ot, Math.max(0.5, lontana - N.dati.raggio * 1.2), lontana + N.dati.raggio * 1.2);
+      // la profondità si misura intorno alla nave: precisa da vicino come a diciotto chilometri. Lungo l'asse della
+      // camera, non in linea d'aria: con la nave sul bordo del quadro il centro è più vicino all'obiettivo di
+      // quanto dica la distanza, e il piano vicino tagliava via il muso (la «cupola nera» dei primi secondi di B,
+      // 16 novembre 2026: si vedeva l'interno vuoto dello scafo)
+      const profonda = -(occhio[0] * avanti[0] + occhio[1] * avanti[1] + occhio[2] * avanti[2]);
+      const VPn = this.matriceVP(cam, destra, su, avanti, ot.quadrata ? 1 : aspetto, ot, Math.max(0.5, profonda - N.dati.raggio * 1.2), Math.max(1, profonda + N.dati.raggio * 1.2));
       gl.disable(gl.SCISSOR_TEST);
       gl.bindFramebuffer(gl.FRAMEBUFFER, S.fb);
       gl.viewport(0, 0, S.w, S.h);
@@ -1291,6 +1506,8 @@ export class Scala {
       gl.useProgram(Ps.p);
       gl.uniformMatrix4fv(Ps.u.uVP, false, VPn);
       gl.uniformMatrix4fv(Ps.u.uLuceVP, false, ombra.vp);
+      gl.uniformMatrix4fv(Ps.u.uParte, false, parti);
+      gl.uniform2f(Ps.u.uBias, ombra.bias[0], ombra.bias[1]);
       gl.uniform3fv(Ps.u.uCentro, cam.nave);
       gl.uniform3fv(Ps.u.uOcchio, occhio);
       gl.uniform3fv(Ps.u.uSole, SOLE_NAVE[chi]);

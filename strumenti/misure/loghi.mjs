@@ -11,7 +11,7 @@ const { manda, valuta, chiudi } = await lancia(exe, 9340);
 await manda("Page.enable");
 await manda("Page.addScriptToEvaluateOnNewDocument", {
   source: `window.__lunghi = []; new PerformanceObserver((l) => { for (const e of l.getEntries()) window.__lunghi.push([Math.round(e.startTime), Math.round(e.duration)]); }).observe({ type: "longtask", buffered: true });
-  window.__fasi = []; let prima = ""; setInterval(() => { const s = document.querySelector("[aria-label='Loghi di apertura']") ? "loghi" : document.querySelector(".dichiarazione") ? "dichiarazione" : document.querySelector(".menu-principale") ? "menu" : "altro"; if (s !== prima) { window.__fasi.push([s, Math.round(performance.now())]); prima = s; } }, 50);`,
+  window.__fasi = []; let prima = ""; setInterval(() => { const s = document.querySelector(".cartello-avvio, [aria-label='Loghi di apertura']") ? "loghi" : document.querySelector(".dichiarazione") ? "dichiarazione" : document.querySelector(".menu-principale") ? "menu" : "altro"; if (s !== prima) { window.__fasi.push([s, Math.round(performance.now())]); prima = s; } }, 50);`,
 });
 await manda("Page.reload");
 await attendi(17000);

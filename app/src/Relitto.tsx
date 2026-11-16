@@ -2,15 +2,17 @@
 //  L'app, dall'avvio alla partita (06-app-desktop.md, §4.6, §10, §18.3; gli
 //  appunti dell'autore del 15 ottobre 2026).
 //    all'avvio      lo schermo intero, nero; il motore comincia a caricarsi,
-//                   dietro. Dopo un attimo i loghi di Runtime Multimedia e di
-//                   Favella1 (loghi/, pari pari dal Viaggiatore; Esc li salta).
-//                   Poi la dichiarazione su come è nato il gioco. I
+//                   dietro. Dopo un attimo il cartello fermo: una produzione
+//                   Runtime Multimedia, realizzato con Favella1, con i due
+//                   marchi (loghi/Cartello.tsx; l'autore, 16 novembre 2026:
+//                   i loghi animati passano soltanto prima dell'intro; Esc lo
+//                   salta). Poi la dichiarazione su come è nato il gioco. I
 //                   riconoscimenti non ci sono più (decisione dell'autore,
 //                   19 ottobre 2026): sono i titoli di coda
 //    il menu        Continua, Nuova partita, Carica, Opzioni, Registro dei
 //                   finali, Riconoscimenti, Esci, sopra la scena finale
 //                   dell'intro
-//    Nuova partita  l'intro (Esc la salta), poi la plancia
+//    Nuova partita  i loghi animati e l'intro (Esc li salta), poi la plancia
 //    il gioco       dalla pausa si torna al menu: la partita resta nel motore,
 //                   e Continua la riprende
 //    i titoli       dopo un finale («Titoli di coda») o da «Riconoscimenti»
@@ -50,11 +52,13 @@ const Gioco = lazy(() => import("./gioco/Gioco"));
 const Intro = lazy(() => import("./intro/Intro"));
 const Titoli = lazy(() => import("./riconoscimenti/Titoli"));
 const Loghi = lazy(() => import("./loghi/Loghi"));
+const Cartello = lazy(() => import("./loghi/Cartello"));
 const Dichiarazione = lazy(() => import("./riconoscimenti/Dichiarazione"));
 
-/** Il nero prima dei loghi: «avvii il gioco, va in fullscreen nero; dopo un secondo…»
- *  (la luce del primo logo arriva 0,6 secondi dopo che i loghi partono). */
+/** Il nero prima del cartello: «avvii il gioco, va in fullscreen nero; dopo un secondo…» */
 const NERO = 400;
+/** I loghi prima dell'intro aspettano che l'intro sia pronta (vedi sotto), ma non più di così (ms). */
+const ATTESA_INTRO = 8000;
 
 const VERSIONE = __VERSIONE__;
 const NOVITA = __NOVITA__;
@@ -66,7 +70,7 @@ const PROVA_NUOVA = import.meta.env.DEV && new URLSearchParams(location.search).
 
 type Schermata =
   | { tipo: "nero" }
-  | { tipo: "loghi" }
+  | { tipo: "cartello" }
   | { tipo: "titoli" }
   | { tipo: "dichiarazione" }
   | { tipo: "menu" }
@@ -99,9 +103,9 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   const [novitaDecise, setNovitaDecise] = useState(false);
   const partite = useRef(0);
 
-  // all'avvio: il nero, poi i loghi; il registro dei finali si legge
+  // all'avvio: il nero, poi il cartello; il registro dei finali si legge
   useEffect(() => {
-    const t = setTimeout(() => setSchermata((s) => (s.tipo === "nero" ? (PROVA_NUOVA ? { tipo: "intro" } : { tipo: "loghi" }) : s)), NERO);
+    const t = setTimeout(() => setSchermata((s) => (s.tipo === "nero" ? (PROVA_NUOVA ? { tipo: "intro" } : { tipo: "cartello" }) : s)), NERO);
     if (PROVA_NUOVA) void avviaMotore().catch(() => undefined);
     void leggiRegistro().then((r) => {
       registroRef.current = r;
@@ -159,6 +163,17 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   // 09, §16; l'autore, 14 novembre 2026). L'intro è già montata sotto, ferma, e parte quando finiscono
   const [loghiPrima, setLoghiPrima] = useState(false);
   const finitiILoghi = useCallback(() => setLoghiPrima(false), []);
+  // e partono quando l'intro è pronta: la sua preparazione (la nave e i cieli nella scheda video, Intro.tsx) tiene
+  // fermo il disegno per qualche secondo, e il logo di Runtime restava nero mentre il suo suono andava avanti
+  // (l'autore, 16 novembre 2026: «si sente l'audio ma parte in nero e il logo non appare fino a che l'animazione
+  // non è finita»). Prima, qualche istante di nero
+  const [introPronta, setIntroPronta] = useState(false);
+  const pronteLeImmagini = useCallback(() => setIntroPronta(true), []);
+  useEffect(() => {
+    if (!loghiPrima) return;
+    const t = setTimeout(() => setIntroPronta(true), ATTESA_INTRO);
+    return () => clearTimeout(t);
+  }, [loghiPrima]);
   const partitaSotto = useRef(false);
   const partitaDallIntro = useCallback(() => {
     if (partitaSotto.current) return;
@@ -189,14 +204,14 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
     void scriviRegistro(nuovo).catch(() => undefined);
   }, []);
 
-  // dopo i loghi, la dichiarazione
-  const dopoILoghi = useCallback(() => setSchermata({ tipo: "dichiarazione" }), []);
+  // dopo il cartello, la dichiarazione
+  const dopoIlCartello = useCallback(() => setSchermata({ tipo: "dichiarazione" }), []);
 
-  // il motore comincia a caricarsi finiti i loghi (revisione 25, M1): l'importazione del ponte e la
-  // compilazione sono chiamate sincrone di Pyodide, e durante i loghi li fermavano per quasi un
-  // secondo. La dichiarazione è un testo fermo: regge l'attesa. Un attimo dopo, perché la sua
-  // dissolvenza d'entrata cominci prima
-  const versoIlMotore = schermata.tipo !== "nero" && schermata.tipo !== "loghi";
+  // il motore comincia a caricarsi finito il cartello (revisione 25, M1): l'importazione del ponte e la
+  // compilazione sono chiamate sincrone di Pyodide, e fermavano per quasi un secondo i loghi che stavano qui
+  // (e fermerebbero le dissolvenze del cartello). La dichiarazione è un testo fermo: regge l'attesa. Un attimo
+  // dopo, perché la sua dissolvenza d'entrata cominci prima
+  const versoIlMotore = schermata.tipo !== "nero" && schermata.tipo !== "cartello";
   useEffect(() => {
     if (!versoIlMotore) return;
     const t = setTimeout(() => void avviaMotore().catch(() => undefined), 300);
@@ -341,6 +356,7 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
     etichetta: "Nuova partita",
     azione: () => {
       const via = () => {
+        setIntroPronta(false);
         setLoghiPrima(true);
         setSchermata({ tipo: "intro" });
       };
@@ -371,10 +387,10 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
 
   // ---- le schermate -------------------------------------------------------------
   if (schermata.tipo === "nero") return <div className="nero-avvio" aria-hidden="true" />;
-  if (schermata.tipo === "loghi")
+  if (schermata.tipo === "cartello")
     return (
       <Suspense fallback={<div className="nero-avvio" aria-hidden="true" />}>
-        <Loghi onFine={dopoILoghi} grana={opzioni.grana} pellicola={opzioni.pellicola} />
+        <Cartello onFine={dopoIlCartello} />
       </Suspense>
     );
   // il gioco, e l'intro: alla fine dell'intro stanno insieme, l'intro sopra (la stessa posizione nell'albero,
@@ -394,6 +410,7 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
               grana={opzioni.grana}
               pellicola={opzioni.pellicola}
               attesa={loghiPrima && schermata.tipo === "intro"}
+              onPronta={pronteLeImmagini}
               voce={dentroTauri() && opzioni.volume > 0 && opzioni.volumeParlato > 0}
               onPartita={partitaDallIntro}
               onFine={fineIntro}
@@ -402,7 +419,7 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
         ) : null}
         {schermata.tipo === "intro" && loghiPrima ? (
           <Suspense key="loghi-intro" fallback={<div className="nero-avvio" aria-hidden="true" />}>
-            <Loghi onFine={finitiILoghi} grana={opzioni.grana} pellicola={opzioni.pellicola} />
+            <Loghi onFine={finitiILoghi} grana={opzioni.grana} pellicola={opzioni.pellicola} parti={introPronta} />
           </Suspense>
         ) : null}
       </>

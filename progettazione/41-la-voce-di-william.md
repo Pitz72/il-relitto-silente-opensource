@@ -55,7 +55,11 @@ Anche il primo turno: all’inizio della partita William racconta la plancia. Le
 nell’evento.
 
 **Il motore audio** (`app/src-tauri/src/mondo/racconto.rs`). Un lettore suo, asciutto (è il narratore: non passa
-dalla cuffia), sul cursore del parlato, con le parole intorno a −22 dBFS (fra Yusuf e la voce di servizio).
+dalla cuffia), sul cursore del parlato, con le parole intorno a −18 dBFS. Erano −22 (fra Yusuf e la voce di
+servizio), appena 2 dB sopra la plancia calma: l’autore, giocando la beta 13 il 16 novembre 2026, «La voce di
+William nella parte "gioco" è un po bassina». Alzata di 4 dB (`LIV_WILLIAM` in `mondo/mod.rs`); i suoi picchi (la
+cresta delle prese è di 19 dB sopra le parole) li piega un tetto suo a −4,5 dBFS (`TETTO_WILLIAM`), prima del
+limitatore del mixer, così il mondo sotto di lui non si abbassa a ogni consonante forte.
 
 - Un turno nuovo fa tacere quello che diceva, in sei centesimi di secondo; le prese del turno partono con il testo
   (0,15 s; la prima della partita 2 s, quando l’intro si è aperta sulla plancia), in fila, con 0,55 s fra l’una e
@@ -108,3 +112,8 @@ Quattordici, la plancia (`SM-001`…`SM-014`), arrivate il 13 e il 15 novembre; 
 il testo è quello del copione; tre parole da far sentire all’autore (SM-011 «nel rosso», che Whisper sente «del
 rosso»; SM-014 «lo faccio correre», sentito «scorrere»; in SM-001 Whisper sente un «ebbe» in più dopo «servirebbe»).
 I file sono a 16 bit (il copione chiedeva 24), con i picchi sotto −3 dB.
+
+Il 16 novembre 2026 l’autore ha chiesto se nella cartella `Downloads/DOPPIAGGIO LEO` c’era altro: i sedici file
+(sciolti e nei due archivi TransferNow, identici byte per byte) sono tutti nel gioco, tranne `intro2.wav`, una
+seconda versione del registro di bordo dell’intro. L’autore: «Archivialo come materiale storico»; sta in
+`audio/sorgenti/voce/william-registro-intro-leonardo-presa2-storica-2026-11-15.wav`, fuori dal gioco.

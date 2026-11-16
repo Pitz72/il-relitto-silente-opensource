@@ -5,16 +5,19 @@
 //  loghi d'apertura (forme.ts), senza animazione e senza colori: tutto
 //  bianco sul fondo scuro; dove due forme si sovrappongono, un filo del
 //  colore del fondo (--fondo-2) le separa.
+//  Dal 16 novembre 2026 li usa anche il cartello fermo dell'avvio
+//  (Cartello.tsx), nel bianco freddo dei titoli di testa.
 // ====================================================================
 import {
   RUNTIME_VISTA, RUNTIME_LETTERE, MULTIMEDIA_LETTERE, SIMBOLO, TRIANGOLO_ESTERNO, TRIANGOLO_INTERNO, PIXEL,
   EMBLEMA_POSA as P, FOGLIE, LIBRO, GRAFFA, GEMMA, ASSE,
 } from "./forme";
 
-const BIANCO = "#f4f6f7";
+const BIANCO_TITOLI = "#f4f6f7";
 const TAGLIO = { stroke: "var(--fondo-2, #050a0c)" };
 
-export function MarchioRuntime({ className }: { className?: string }) {
+export function MarchioRuntime({ className, colore = BIANCO_TITOLI }: { className?: string; colore?: string }) {
+  const BIANCO = colore;
   const V = RUNTIME_VISTA;
   return (
     <svg className={className} viewBox={`${V.x} ${V.y} ${V.w} ${V.h}`} role="img" aria-label="Runtime Multimedia">
@@ -40,7 +43,8 @@ const SPECCHIO = `translate(${2 * ASSE} 0) scale(-1 1)`;
 const SCRITTA = "FAVELLA1";
 const MOTTO = "Programmare storie interattive in linguaggio naturale italiano";
 
-export function MarchioFavella({ className }: { className?: string }) {
+export function MarchioFavella({ className, colore = BIANCO_TITOLI }: { className?: string; colore?: string }) {
+  const BIANCO = colore;
   const V = F_VISTA;
   const foglie = FOGLIE.map((d, i) => <path key={i} d={d} fill={BIANCO} style={TAGLIO} strokeWidth={6} paintOrder="stroke" strokeLinejoin="round" />);
   return (

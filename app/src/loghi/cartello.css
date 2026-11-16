@@ -1,0 +1,43 @@
+/* Il cartello fermo dell'avvio (Cartello.tsx): nero, i due marchi uno accanto all'altro, ognuno con la sua riga
+   piccola sopra, come i ruoli dei crediti dei titoli di testa. Il fondo è nero vero: anche il filo che separa le
+   forme sovrapposte dei marchi (--fondo-2) è nero. */
+.cartello-avvio {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: #000;
+  --fondo-2: #000;
+  cursor: none;
+  user-select: none;
+  display: grid;
+  place-items: center;
+  container-type: size;
+}
+.cartello-lastra {
+  /* due colonne, due righe: le righe piccole sulla stessa linea, i marchi centrati sotto */
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: auto auto;
+  justify-items: center;
+  align-items: center;
+  column-gap: 9cqw;
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
+}
+.cartello-lastra.pieno { opacity: 1; }
+.cartello-lastra.via { opacity: 0; transition-duration: 1s; }
+.cartello-voce { display: contents; }
+.cartello-ruolo {
+  margin: 0 0 1.8cqw;
+  align-self: end;
+  font-family: "Newsreader", Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: max(16px, 1.8cqw);
+  letter-spacing: .04em;
+  color: #a9b1ad;
+}
+.cartello-marchio { display: block; height: auto; flex: none; }
+/* le altezze ottiche, come nei titoli di coda: i due marchi hanno proporzioni molto diverse */
+.cartello-runtime { width: 28cqw; }
+.cartello-favella { width: 34cqw; }

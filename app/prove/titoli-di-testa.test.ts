@@ -23,7 +23,7 @@ test("i titoli di testa: otto, con le parole dell'autore, nell'ordine in cui li 
     "LEONARDO TOMASSETTI è William T. Eriksonn",
     "SIMONE PIZZI è Yusuf",
     "tema musicale originale di ALIRIO BRUNI",
-    "ELIO è L.V.",
+    "ELIO è L.V. voce TTS di Google",
     "tratto dal libro DAL REGISTRO DELLA SANTA MARIA di SIMONE PIZZI",
   ]);
   assert.deepEqual(S.crediti.map((c) => c.posto), ["centro", "centro", "centro", "alto", "alto", "basso", "basso", "titolo"]);
@@ -96,10 +96,11 @@ test("i crediti delle voci arrivano con le voci: Leonardo con William, l'autore 
   assert.ok(k6.entra >= b5.t && k6.entra < b5.t + 1, "il credito della voce di L.V. non arriva quando L.V. riprende a parlare");
 });
 
-test("il libro viene dopo il titolo, dove stava il titolo, e la plancia aspetta che se ne sia andato", () => {
+test("il libro viene dopo il titolo, a ridosso, dove stava il titolo, e la plancia aspetta che se ne sia andato", () => {
   const k7 = credito("K7"), t = blocco("T");
   assert.equal(k7.posto, "titolo");
-  assert.ok(k7.entra >= t.via && k7.entra < t.via + 1, `il libro a ${k7.entra}, il titolo via a ${t.via}`);
+  // l'autore, 16 novembre 2026: «subito dopo, molto a ridosso»: entra mentre il titolo sta uscendo, non dopo
+  assert.ok(k7.entra > t.esce && k7.entra < t.via, `il libro a ${k7.entra}, il titolo esce a ${t.esce} ed è via a ${t.via}`);
   assert.ok(k7.via <= S.momenti.raccordo[0]);
 });
 

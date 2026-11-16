@@ -739,6 +739,9 @@ def inquadra(macchina, sole, schiarita, da, prospettiva, margine=1.09):
 TIPI = {"scafo": 0, "aggiunte": 1, "pezzi": 1, "portelli": 1, "scarichi": 1, "telaio dei pannelli": 1, "celle": 2, "celle di ricambio": 2, "scuro": 3,
         "luce oblò": 4, "luce fanali": 5, "luce uscita": 6, "luce faro": 7, "luce scarichi": 8}
 PENNACCHIO = 9  # la spinta degli scarichi: non è nel modello di Blender, si aggiunge qui
+#  I pezzi che nell'intro si muovono (16 novembre 2026: il faro che cerca, il radar che gira, nei dettagli della
+#  scena F): il numero va nel quarto ottetto della normale, che prima era sempre 0; i perni vanno nel .json
+PARTI = {"faro: forcella sinistra": 1, "faro: forcella destra": 1, "faro: lampada": 2, "faro: lente": 2, "radar: barra": 3}
 CENTRO = (M.LUNGHEZZA / 2, 0.0, (M.dorso(40) + M.chiglia(40)) / 2)  # il punto della nave che l'intro muove
 
 
@@ -754,8 +757,8 @@ def esporta():
     dg = bpy.context.evaluated_depsgraph_get()
     posto, punti, opachi, pennacchi = {}, bytearray(), array("I"), array("I")
 
-    def punto(pos, nor, uv, tinta, tipo):
-        dati = struct.pack("<3f4b2H4B", *pos, *(max(-127, min(127, round(c * 127))) for c in nor), 0,
+    def punto(pos, nor, uv, tinta, tipo, parte=0):
+        dati = struct.pack("<3f4b2H4B", *pos, *(max(-127, min(127, round(c * 127))) for c in nor), parte,
                            *(max(0, min(65535, round(c * 65535))) for c in uv), *tinta, tipo)
         if dati not in posto:
             posto[dati] = len(posto)
@@ -767,6 +770,7 @@ def esporta():
         me.calc_loop_triangles()
         mat = me.materials[0]
         tipo = TIPI[mat.name]
+        parte = PARTI.get(ob.name, 0)
         tinta = tuple(int(mat["tinta"][i:i + 2], 16) for i in (1, 3, 5)) if "tinta" in mat else (255, 255, 255)
         pelle = me.uv_layers["pelle"].data if tipo == 0 else None
         mondo, giro = ob.matrix_world, ob.matrix_world.to_3x3()
@@ -775,7 +779,7 @@ def esporta():
                 p = mondo @ me.vertices[me.loops[li].vertex_index].co
                 n = (giro @ me.corner_normals[li].vector).normalized()
                 uv = (pelle[li].uv[0], 1 - pelle[li].uv[1]) if pelle else (0.0, 0.0)  # nelle immagini la riga 0 è in alto
-                opachi.append(punto(in_scena(*p), (-n.x, n.z, n.y), uv, tinta, tipo))
+                opachi.append(punto(in_scena(*p), (-n.x, n.z, n.y), uv, tinta, tipo, parte))
         valutato.to_mesh_clear()
     # la spinta: un cono di luce dietro ogni scarico; quanto è lontano dallo scarico (0…1) va al posto della tessitura
     s = M.SCARICHI
@@ -813,6 +817,12 @@ def esporta():
             "uscita": [round(c, 3) for c in in_scena(M.LUCE_USCITA["x"], M.mezza(M.LUCE_USCITA["x"]) + 0.24, M.LUCE_USCITA["z"])],
             "scarichi": [[round(c, 3) for c in in_scena(M.LUNGHEZZA + 0.5, y, s["z"])] for y in s["y"]],
             "faro": [round(c, 3) for c in in_scena(*lente)],
+        },
+        # i perni dei pezzi che si muovono: il faro gira intorno all'asse verticale e alza o abbassa la lampada
+        # intorno all'asse delle forcelle, tutti e due per questo punto; la barra del radar gira sul suo albero
+        "parti": {
+            "faro": [round(c, 3) for c in in_scena(fx0 + 1.0, 0, sum(M.FARO["z"]) / 2 + 0.06)],
+            "radar": [round(c, 3) for c in in_scena(M.RADAR["x"], 0, M.RADAR["z"])],
         },
     }
     (INTRO / "santa-maria.json").write_text(json.dumps(dati, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")

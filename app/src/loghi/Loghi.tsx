@@ -19,6 +19,10 @@
 //  comincia una partita nuova (l'autore: «legare i loghi […] alla cinematica
 //  iniziale anche se significa ripeterli»): lì stanno sopra l'intro, che sotto
 //  si prepara e parte quando finiscono.
+//  Prima dell'intro aspettano `parti` (Relitto.tsx): l'intro, sotto, prepara
+//  la nave nella scheda video e per qualche secondo il disegno si ferma; se
+//  quei secondi cadevano sul logo di Runtime, lo si sentiva e non lo si vedeva
+//  (l'autore, 16 novembre 2026). Fino ad allora, nero.
 //  Solo in sviluppo: ?loghi=3.2 ferma l'orologio a quel secondo (muto);
 //  window.__loghiT lo sposta, window.__rendiSuonoLoghi rende l'audio in un
 //  file (vedi src/loghi/esporta.ts): servono a esportare i video dei loghi.
@@ -41,11 +45,13 @@ const fermo = (() => {
 })();
 if (import.meta.env.DEV) import("../loghi/esporta").then((m) => m.installa());
 
-export default function Loghi({ onFine, grana = "mossa", pellicola = true }: { onFine: () => void; grana?: "mossa" | "ferma" | "no"; pellicola?: boolean }) {
+export default function Loghi({ onFine, grana = "mossa", pellicola = true, parti = true }: { onFine: () => void; grana?: "mossa" | "ferma" | "no"; pellicola?: boolean; parti?: boolean }) {
   const film = useRef<PellicolaViva>(null);
   const runtime = useRef<Animabile>(null);
   const favella = useRef<Animabile>(null);
-  const [pronti, setPronti] = useState(false);
+  const [caratteri, setCaratteri] = useState(false);
+  // partono a caratteri caricati, e quando chi li ospita lo dice
+  const pronti = caratteri && parti;
   const fatto = useRef(false);
   const fine = useRef(onFine);
   fine.current = onFine;
@@ -56,7 +62,7 @@ export default function Loghi({ onFine, grana = "mossa", pellicola = true }: { o
     let vivo = true;
     const caratteri = Promise.all(CARATTERI.map((f) => document.fonts?.load(f).catch(() => null)));
     Promise.race([caratteri, new Promise((r) => setTimeout(r, 1500))])
-      .then(() => { if (vivo) { favella.current?.prepara?.(); setPronti(true); } });
+      .then(() => { if (vivo) { favella.current?.prepara?.(); setCaratteri(true); } });
     const tasto = (e: KeyboardEvent) => { if (e.key === "Escape") { e.preventDefault(); chiudi(); } };
     window.addEventListener("keydown", tasto);
     return () => { vivo = false; window.removeEventListener("keydown", tasto); };
