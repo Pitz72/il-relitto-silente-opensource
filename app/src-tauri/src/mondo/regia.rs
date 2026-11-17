@@ -143,15 +143,22 @@ impl Mondo {
         if carica {
             self.racconto.dimentica();
         }
-        let (mut prima_w, mut poi_w) = ([Pezzo::Wi(0); 16], [Pezzo::Wi(0); 16]);
+        let (mut prima_w, mut poi_w) = ([Pezzo::Wi(0); 16], [(Pezzo::Wi(0), 0u8); 16]);
         let (mut n_prima, mut n_poi) = (0, 0);
         for e in t.eventi.iter().filter(|e| e.evento == "racconto") {
-            for (lista, dove, n) in [(&e.prese, &mut prima_w, &mut n_prima), (&e.poi, &mut poi_w, &mut n_poi)] {
-                for p in lista.iter().filter_map(|s| Pezzo::della_presa(s)) {
-                    if *n < dove.len() {
-                        dove[*n] = p;
-                        *n += 1;
-                    }
+            for p in e.prese.iter().filter_map(|s| Pezzo::della_presa(s)) {
+                if n_prima < prima_w.len() {
+                    prima_w[n_prima] = p;
+                    n_prima += 1;
+                }
+            }
+            // ogni presa «poi» con quante voci asciutte stanno prima di lei (documento 41, §5)
+            for (i, s) in e.poi.iter().enumerate() {
+                if let Some(p) = Pezzo::della_presa(s)
+                    && n_poi < poi_w.len()
+                {
+                    poi_w[n_poi] = (p, e.dopo_voci.get(i).copied().unwrap_or(0));
+                    n_poi += 1;
                 }
             }
         }
@@ -316,7 +323,7 @@ impl Mondo {
     /// della linea; nella fuga dal canale della Santa Maria che la tuta aggancia. La scatola nera di L.V.: dopo il
     /// cavo innestato. Come per l’Anziano, una battuta nuova prende il posto di quella che stava ancora parlando.
     fn asciutte(&mut self) {
-        let mut yu = [Pezzo::Yu01; 4];
+        let mut yu = [Pezzo::Yu06; 6];
         let mut n = 0;
         for p in &self.voci_turno {
             if p.asciutta() && n < yu.len() {
@@ -339,11 +346,12 @@ impl Mondo {
         // aspettano lei
         let william = self.racconto.occupato();
         let nave = self.voci_nave.viva();
-        self.voci_radio.passo_con(dt, nave || william);
+        // la presa di William che nel testo sta fra due frasi di Yusuf: finita la prima, la radio cede a lui
+        self.voci_radio.passo_con(dt, nave || william, self.racconto.soglia());
         let radio = self.voci_radio.viva();
-        self.voci_nave.passo_con(dt, radio || william);
+        self.voci_nave.passo_con(dt, radio || william, None);
         let altri = self.voci_nave.viva() || self.voci_radio.viva() || self.musica.voce_viva();
-        self.racconto.passo(dt, altri);
+        self.racconto.passo(dt, altri, self.voci_radio.finite());
         if self.voci_nave.nave_occupate() || self.anello.is_some() {
             return;
         }

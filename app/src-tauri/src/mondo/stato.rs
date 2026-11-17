@@ -90,6 +90,8 @@ pub struct EventoGioco {
     /// vengono dopo una di loro: il ponte le manda solo se ci sono le loro parole e il loro file
     pub prese: Vec<String>,
     pub poi: Vec<String>,
+    /// per ogni presa «poi», quante voci asciutte (Yusuf, L.V.) stanno prima di lei nel testo (documento 41, §5)
+    pub dopo_voci: Vec<u8>,
 }
 
 impl EventoGioco {

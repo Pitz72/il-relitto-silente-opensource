@@ -11,6 +11,8 @@ documenti di `progettazione/`.
 ### Per chi gioca
 
 - **William ha venticinque battute nuove** (Leonardo Tomassetti): l’accostata al relitto, la telefonata a Yusuf con le risposte che gli dai, la cuccetta e il registro di bordo.
+- **Alla radio Yusuf e William parlano nell’ordine del testo**: Yusuf dice una frase, William racconta, Yusuf continua.
+
 
 ## [0.2.5-beta.15] - 2026-11-16
 

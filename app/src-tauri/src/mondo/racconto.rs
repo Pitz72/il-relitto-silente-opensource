@@ -6,7 +6,8 @@
 //!   Fra una presa e l’altra una pausa breve (`PAUSA`, la pausa fra due righe del Viaggiatore).
 //! - Le altre voci (le voci della nave, Yusuf, la scatola nera, la voce di servizio) aspettano che William abbia
 //!   finito, e poi la loro pausa; le prese che nel testo vengono dopo una di loro (`poi`) aspettano a loro volta che
-//!   tutte tacciano.
+//!   tutte tacciano. Una presa `poi` sa anche dopo quante voci asciutte (Yusuf, L.V.) sta nel testo: entra dopo
+//!   quella, e la voce che segue aspetta lei (le battute di Yusuf con il racconto in mezzo, documento 41, §5).
 //! - Un comando nuovo lo fa tacere di colpo (`zitto`): il testo resta. F2 ridice le prese dell’ultimo turno.
 //! - Passando con il mouse sopra una risposta di un dialogo, William la dice (`anteprima`): mai sopra chi sta
 //!   parlando; un’anteprima può prendere il posto di un’altra.
@@ -36,7 +37,8 @@ pub struct Racconto {
     lettore: Lettore,
     /// le prese che vengono prima delle altre voci, e quelle che vengono dopo
     fila: Vec<Pezzo>,
-    poi: Vec<Pezzo>,
+    /// le prese che vengono dopo una voce, ognuna con quante voci asciutte stanno prima di lei nel testo
+    poi: Vec<(Pezzo, u8)>,
     /// le prese dell’ultimo turno, per F2
     ultime: Vec<Pezzo>,
     /// i secondi che mancano alla prossima presa (contano solo quando William tace)
@@ -86,16 +88,22 @@ impl Racconto {
         self.lettore.vivo() || !self.fila.is_empty() || !self.poi.is_empty()
     }
 
+    /// Dopo quante voci asciutte entra la prossima presa che aspetta una voce: finite quelle, la loro fila cede a
+    /// William.
+    pub fn soglia(&self) -> Option<u8> {
+        self.poi.first().map(|p| p.1)
+    }
+
     /// Un turno nuovo: quello che diceva tace di colpo, e le prese del turno vanno in fila. `ritardo`: quando entra
     /// la prima.
-    pub fn turno(&mut self, prima: &[Pezzo], poi: &[Pezzo], ritardo: f32) {
+    pub fn turno(&mut self, prima: &[Pezzo], poi: &[(Pezzo, u8)], ritardo: f32) {
         self.zitto();
         if !self.accesa || (prima.is_empty() && poi.is_empty()) {
             return;
         }
         // F2 ridice l’ultimo turno in cui William ha parlato
         self.ultime.clear();
-        for &p in prima.iter().chain(poi) {
+        for &p in prima.iter().chain(poi.iter().map(|p| &p.0)) {
             if self.ultime.len() < MAX_FILA {
                 self.ultime.push(p);
             }
@@ -145,8 +153,9 @@ impl Racconto {
     }
 
     /// Fa andare il tempo, una volta per blocco. `altri`: un’altra voce parla (la nave, la radio, l’Anziano), e le
-    /// prese che vengono dopo di lei aspettano.
-    pub fn passo(&mut self, dt: f32, altri: bool) {
+    /// prese che vengono dopo di lei aspettano. `asciutte`: quante battute della fila di Yusuf e di L.V. sono finite
+    /// nel turno; la presa che ne aspetta di più aspetta.
+    pub fn passo(&mut self, dt: f32, altri: bool, asciutte: u8) {
         self.lettore.passo(dt);
         let parla = self.lettore.vivo();
         if self.parlava && !parla {
@@ -162,13 +171,13 @@ impl Racconto {
                     self.lettore.avvia(richiesta(p));
                     self.parlava = true;
                 }
-            } else if !self.poi.is_empty() {
-                if altri {
+            } else if let Some(&(_, n)) = self.poi.first() {
+                if altri || n > asciutte {
                     self.attesa = self.attesa.max(PAUSA);
                 } else {
                     self.attesa -= dt;
                     if self.attesa <= 0.0 {
-                        let p = self.poi.remove(0);
+                        let (p, _) = self.poi.remove(0);
                         self.lettore.avvia(richiesta(p));
                         self.parlava = true;
                     }
@@ -231,7 +240,7 @@ mod prove {
         let blocco = (SR * 0.01) as usize;
         (0..(secondi / 0.01) as usize)
             .map(|k| {
-                r.passo(0.01, altri(k as f32 * 0.01));
+                r.passo(0.01, altri(k as f32 * 0.01), u8::MAX);
                 let mut e = 0.0f32;
                 for _ in 0..blocco {
                     let (l, _) = r.campione();
@@ -293,14 +302,14 @@ mod prove {
     #[test]
     fn le_prese_che_vengono_dopo_una_voce_la_aspettano() {
         let mut r = racconto_con(&[(w(0), 1.0), (w(1), 1.0)]);
-        r.turno(&[w(0)], &[w(1)], SUBITO);
+        r.turno(&[w(0)], &[(w(1), 0)], SUBITO);
         // un’altra voce parla da 1,5 a 3 s (entra dopo William): la seconda presa aspetta lei, e la pausa
         let t = tratti(&ascolta(&mut r, 6.0, |t| (1.5..3.0).contains(&t)));
         assert_eq!(t.len(), 2, "{t:?}");
         assert!(t[1].0 >= 3.0 + PAUSA - 0.03, "la presa dopo la voce entra a {:.2} s", t[1].0);
         // mentre una presa «poi» aspetta, William non tiene ferme le altre voci
         let mut r = racconto_con(&[(w(1), 1.0)]);
-        r.turno(&[], &[w(1)], SUBITO);
+        r.turno(&[], &[(w(1), 0)], SUBITO);
         assert!(!r.occupato());
     }
 

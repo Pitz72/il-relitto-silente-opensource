@@ -697,10 +697,10 @@ mod prove {
     #[test]
     fn yusuf_parla_dalla_radio_dopo_lo_schiocco_e_se_ne_va_con_la_linea() {
         let (mut m, tx) = mondo_in("plancia", "");
-        m.voci_radio.con_biblioteca(biblioteca(&[(Pezzo::Yu01, 3.0), (Pezzo::Yu04, 4.0)]));
+        m.voci_radio.con_biblioteca(biblioteca(&[(Pezzo::Yu06, 3.0), (Pezzo::Yu04b, 4.0)]));
         let dialogo = |n: &str| format!(r#", "dialogo": "yusuf", "nodo": "{n}""#);
         tx.send(turno(&format!(
-            r#"{{"stati": {}, "eventi": [{{"evento": "dialogo", "con": "yusuf", "nodo": "apertura"}}, {{"evento": "voci", "battute": ["YU-01-apertura"]}}]}}"#,
+            r#"{{"stati": {}, "eventi": [{{"evento": "dialogo", "con": "yusuf", "nodo": "apertura"}}, {{"evento": "voci", "battute": ["YU-06-voce"]}}]}}"#,
             stati("plancia", "", &dialogo("apertura"))
         )))
         .unwrap();
@@ -718,7 +718,7 @@ mod prove {
         assert!((inizio - 0.5).abs() < 0.05, "Yusuf parla {inizio:.2} s dopo lo schiocco");
         // un nodo nuovo: la battuta nuova al posto di quella di prima, mezzo secondo dopo
         tx.send(turno(&format!(
-            r#"{{"stati": {}, "eventi": [{{"evento": "nodo", "con": "yusuf", "nodo": "cosa"}}, {{"evento": "voci", "battute": ["YU-04-cosa"]}}]}}"#,
+            r#"{{"stati": {}, "eventi": [{{"evento": "nodo", "con": "yusuf", "nodo": "cosa"}}, {{"evento": "voci", "battute": ["YU-04b-cosa"]}}]}}"#,
             stati("plancia", "", &dialogo("cosa"))
         )))
         .unwrap();
@@ -728,6 +728,67 @@ mod prove {
         tx.send(turno(&format!(r#"{{"stati": {}, "eventi": [{{"evento": "dialogo_fine", "con": "yusuf"}}]}}"#, stati("plancia", "", "")))).unwrap();
         suona(&mut m, 0.5);
         assert!(!m.voci_radio.parla(), "Yusuf parla ancora dopo lo schiocco");
+    }
+
+    /// Yusuf e William in un turno: (i tratti della radio, i tratti di William), in secondi.
+    fn radio_e_william(m: &mut Mondo, secondi: f32) -> (Vec<(f32, f32)>, Vec<(f32, f32)>) {
+        let (mut radio, mut william) = (Vec::new(), Vec::new());
+        let (mut da_r, mut da_w): (Option<f32>, Option<f32>) = (None, None);
+        let blocco = 128usize;
+        for i in 0..(secondi * SR / blocco as f32) as usize {
+            let mut buf = vec![kira::Frame::ZERO; blocco];
+            m.rendi(&mut buf, 1.0 / SR as f64);
+            let t = i as f32 * blocco as f32 / SR;
+            for (parla, da, out) in [(m.voci_radio.parla(), &mut da_r, &mut radio), (m.racconto.occupato(), &mut da_w, &mut william)] {
+                match (parla, *da) {
+                    (true, None) => *da = Some(t),
+                    (false, Some(a)) => {
+                        out.push((a, t));
+                        *da = None;
+                    }
+                    _ => {}
+                }
+            }
+        }
+        (radio, william)
+    }
+
+    #[test]
+    fn william_racconta_fra_le_frasi_di_yusuf() {
+        // «Magazzino Quattro.» Una pausa, il tempo di leggere chi chiama. «William. Se è per il credito…»
+        // (documento 41, §5): la prima frase di Yusuf, il racconto di William, la seconda frase
+        let (mut m, tx) = mondo_in("plancia", "");
+        m.voci_radio.con_biblioteca(biblioteca(&[(Pezzo::Yu01a, 1.0), (Pezzo::Yu01b, 2.0)]));
+        let sm037 = Pezzo::della_presa("SM-037").unwrap();
+        let mut b = Biblioteca::nuova(std::path::PathBuf::from("non-esiste"));
+        b.inserisci(sm037, Pcm::da_frame(SR, (0..(1.5 * SR) as usize).map(|n| {
+            let v = 0.3 * (n as f32 * 0.05).sin();
+            (v, v)
+        })));
+        m.racconto.con_biblioteca(b);
+        let turno_yusuf = |m: &mut Mondo, tx: &std::sync::mpsc::Sender<Comando>| {
+            tx.send(turno(&format!(
+                r#"{{"stati": {}, "eventi": [{{"evento": "dialogo", "con": "yusuf", "nodo": "apertura"}}, {{"evento": "racconto", "prese": [], "poi": ["SM-037"], "dopo_voci": [1]}}, {{"evento": "voci", "battute": ["YU-01a-apertura", "YU-01b-apertura"]}}]}}"#,
+                stati("plancia", "", r#", "dialogo": "yusuf", "nodo": "apertura""#)
+            )))
+            .unwrap();
+            radio_e_william(m, 8.0)
+        };
+        let (radio, william) = turno_yusuf(&mut m, &tx);
+        assert_eq!(radio.len(), 2, "Yusuf: {radio:?}");
+        assert_eq!(william.len(), 1, "William: {william:?}");
+        let (a, w, b) = (radio[0], william[0], radio[1]);
+        assert!((w.0 - a.1 - super::super::racconto::PAUSA).abs() < 0.05, "William entra {:.2} s dopo la prima frase", w.0 - a.1);
+        assert!((b.0 - w.1 - super::super::racconto::PAUSA).abs() < 0.05, "la seconda frase entra {:.2} s dopo William", b.0 - w.1);
+        // senza la voce di William le due frasi stanno attaccate, con il silenzio che hanno nei file
+        tx.send(turno(&format!(r#"{{"stati": {}, "eventi": [{{"evento": "dialogo_fine", "con": "yusuf"}}]}}"#, stati("plancia", "", "")))).unwrap();
+        suona(&mut m, 1.0);
+        m.racconto.accesa = false;
+        let (radio, william) = turno_yusuf(&mut m, &tx);
+        assert!(william.is_empty(), "{william:?}");
+        // le frasi finte non hanno silenzio ai capi: la seconda attacca dove finisce la prima
+        assert_eq!(radio.len(), 1, "Yusuf: {radio:?}");
+        assert!((radio[0].1 - radio[0].0 - 3.0).abs() < 0.05, "le due frasi durano {:.2} s", radio[0].1 - radio[0].0);
     }
 
     #[test]

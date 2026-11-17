@@ -742,6 +742,20 @@ VOCI_YUSUF = {
     "YU-08-fuga-nessuno": ("William.", "Niente. Volevo sapere se c'eri."),
 }
 
+# Le battute di Yusuf con il racconto di William in mezzo (documento 41, §5; l'autore, 17 novembre 2026: «Sì,
+# dividile»): un file per frase fra «» (strumenti/audio/voce_yusuf.py, PARTI). Il ponte riconosce la battuta intera e
+# manda le parti, ognuna dove sta la sua frase, così le prese di William che stanno fra l'una e l'altra parlano lì.
+PARTI_YUSUF = {
+    "YU-01-apertura": ("YU-01a-apertura", "YU-01b-apertura"),
+    "YU-02-apertura-pezzo": ("YU-02a-apertura-pezzo", "YU-02b-apertura-pezzo"),
+    "YU-03-credito": ("YU-03a-credito", "YU-03b-credito"),
+    "YU-04-cosa": ("YU-04a-cosa", "YU-04b-cosa"),
+    "YU-05-qualcuno": ("YU-05a-qualcuno", "YU-05b-qualcuno", "YU-05c-qualcuno"),
+    "YU-07-fuga-pezzo": ("YU-07a-fuga-pezzo", "YU-07b-fuga-pezzo"),
+    "YU-08-fuga-nessuno": ("YU-08a-fuga-nessuno", "YU-08b-fuga-nessuno"),
+}
+assert all(len(PARTI_YUSUF[n]) == len(VOCI_YUSUF[n]) for n in PARTI_YUSUF)
+
 
 # La scatola nera di L.V. nella serra (vita.fav; documento 35, V4): «Elio» di Google, sul nastro vecchio dell'intro,
 # con i due buchi che il testo cita. Va con l'evento «voci»; il motore la fa uscire asciutta, come Yusuf.
@@ -892,7 +906,11 @@ def _voci_nave_dove(testo, servizio=True):
     while i < len(fr):
         for nome, att in _VOCI_NAVE_FRAMMENTI:
             if tuple(fr[i:i + len(att)]) == att:
-                trovate.append((dove[i][0], nome))
+                if nome in PARTI_YUSUF:
+                    # una parte per frase, ognuna al suo posto nel testo
+                    trovate += [(dove[i + k][0], parte) for k, parte in enumerate(PARTI_YUSUF[nome])]
+                else:
+                    trovate.append((dove[i][0], nome))
                 i += len(att)
                 break
         else:
@@ -929,15 +947,16 @@ def _carica_racconto():
     except (OSError, ValueError):
         return {}
     indice = {}
-    for z in dati.get("pezzi", []):
-        if z.get("tipo") == "opzione":
-            continue
-        parti = tuple(tuple(x.split()) for x in z["parti"] if x)
+    # i pezzi che non hanno ancora la presa (file None): occupano il loro testo e restano muti, come nel Viaggiatore
+    pezzi = [(z["file"], z["parti"]) for z in dati.get("pezzi", []) if z.get("tipo") != "opzione"]
+    pezzi += [(None, m) for m in dati.get("muti", [])]
+    for file, parti in pezzi:
+        parti = tuple(tuple(x.split()) for x in parti if x)
         if parti:
-            indice.setdefault(parti[0][0], []).append((z["file"], parti, sum(len(x) for x in parti)))
+            indice.setdefault(parti[0][0], []).append((file, parti, sum(len(x) for x in parti)))
     # i pezzi più lunghi per primi: una variante che ne contiene un'altra vince
     for v in indice.values():
-        v.sort(key=lambda x: -x[2])
+        v.sort(key=lambda x: (-x[2], x[0] is None))
     return indice
 
 
@@ -972,28 +991,40 @@ def _racconto_dove(testo):
             else:
                 for a, b in tratti:
                     presi[a:b] = [True] * (b - a)
-                out.append((parole[i][0], file))
+                if file is not None:
+                    out.append((parole[i][0], file))
                 break
     return out
 
 
+def _asciutta(nome):
+    """Una voce che il motore fa uscire dalla radio o dal nastro, nella sua fila (Yusuf, la scatola nera di L.V.)."""
+    return nome is not None and nome.startswith(("YU-", "LV-"))
+
+
 def _racconto(eventi, anziano=False):
     """Le prese di William del turno, divise in due: quelle che vengono prima di ogni altra voce, e quelle che vengono
-    dopo (un personaggio parla, e William racconta dopo di lui). L'ordine è quello del testo, come nel Viaggiatore."""
-    prima, poi, altri = [], [], False
+    dopo (un personaggio parla, e William racconta dopo di lui). L'ordine è quello del testo, come nel Viaggiatore.
+    Per ogni presa «poi», quante voci asciutte (Yusuf, L.V.) vengono prima di lei: il motore la fa entrare dopo
+    quella, e la voce che segue aspetta lei (le battute di Yusuf con il racconto in mezzo, documento 41, §5)."""
+    prima, poi, dopo_voci, altri, asciutte = [], [], [], False, 0
     for e in eventi:
         if e.get("tipo") == "errore" or not isinstance(e.get("testo"), str):
             continue
-        voci = [(d, "voce") for d, _ in _voci_nave_dove(e["testo"])]
+        voci = [(d, "voce", nome) for d, nome in _voci_nave_dove(e["testo"])]
         if anziano and e.get("tipo") == "dialogo":
-            voci += [(d, "voce") for d, _ in _frammenti_dove(e["testo"])[:1]]
-        for _, chi, file in sorted([(d, k, None) for d, k in voci] + [(d, "william", f) for d, f in _racconto_dove(e["testo"])],
+            voci += [(d, "voce", None) for d, _ in _frammenti_dove(e["testo"])[:1]]
+        for _, chi, nome in sorted(voci + [(d, "william", f) for d, f in _racconto_dove(e["testo"])],
                                    key=lambda x: (x[0], x[1] != "voce")):
             if chi == "voce":
                 altri = True
+                asciutte += _asciutta(nome)
+            elif altri:
+                poi.append(nome)
+                dopo_voci.append(asciutte)
             else:
-                (poi if altri else prima).append(file)
-    return prima, poi
+                prima.append(nome)
+    return prima, poi, dopo_voci
 
 
 def _parole_dette(testo):
@@ -1052,9 +1083,9 @@ def _rileva(prima, dopo, comando, eventi):
     if prima is None:
         # la partita comincia: la plancia, e William che la racconta (documento 41)
         out = [{"evento": "inizio", "stanza": dopo["stanza"]}]
-        prima_w, poi_w = _racconto(eventi)
+        prima_w, poi_w, dopo_w = _racconto(eventi)
         if prima_w or poi_w:
-            out.append({"evento": "racconto", "prese": prima_w, "poi": poi_w})
+            out.append({"evento": "racconto", "prese": prima_w, "poi": poi_w, "dopo_voci": dopo_w})
         return out
     out = []
     if prima["stanza"] != dopo["stanza"]:
@@ -1111,9 +1142,9 @@ def _rileva(prima, dopo, comando, eventi):
             and prima["fuga"] == "iniziata"):
         out.append({"evento": "protezione_fuga"})
     # la voce di William (documento 41): le sue prese, quelle prima delle altre voci e quelle dopo
-    prima_w, poi_w = _racconto(eventi, anziano=bool(nodo and nodo.get("voce")))
+    prima_w, poi_w, dopo_w = _racconto(eventi, anziano=bool(nodo and nodo.get("voce")))
     if prima_w or poi_w:
-        out.append({"evento": "racconto", "prese": prima_w, "poi": poi_w})
+        out.append({"evento": "racconto", "prese": prima_w, "poi": poi_w, "dopo_voci": dopo_w})
     # le voci della nave a schermo
     battute = _voci_nave(eventi)
     if battute:
@@ -1205,6 +1236,8 @@ def rel_voci_nave():
                 # la matrice di traduzione ha il suo numero: 4, 18, 75 o 100 (traduci.fav)
                 for valore in ("4", "18", "75", "100") if "[traduzione]" in pezzo else ("",):
                     trovate.update(_voci_nave([{"tipo": "testo", "testo": pezzo.replace("[traduzione]", valore)}]))
+    # una battuta di Yusuf divisa c'è se ci sono tutte le sue parti
+    trovate |= {nome for nome, parti in PARTI_YUSUF.items() if set(parti) <= trovate}
     return _json({nome: nome in trovate for nome in {**VOCI_NAVE, **VOCI_YUSUF, **VOCI_LV, **VOCI_SERVIZIO}})
 
 

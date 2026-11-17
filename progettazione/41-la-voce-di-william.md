@@ -94,7 +94,8 @@ scheda Audio delle opzioni, **«Voce di William»: recitata o nessuna** (di base
   «nessuna».
 - **Una presa che contiene la voce di un altro in mezzo** (per esempio il racconto, poi una voce della nave, poi
   ancora il racconto, in una presa sola) suona intera e poi lascia parlare l’altro: Leonardo registra una presa per
-  pezzo, e dentro non si taglia. Con le prime quattordici non succedeva; succede con `SM-030`, la scansione lunga
+  pezzo, e dentro non si taglia. Il contrario, una battuta di Yusuf con il racconto in mezzo, dal 17 novembre si
+  divide nelle sue frasi (§5). Con le prime quattordici non succedeva; succede con `SM-030`, la scansione lunga
   (§5).
 
 ## 4. Le prove
@@ -179,9 +180,37 @@ perde le doppie e il «gli»). Da far sentire all’autore:
 
 **Le battute di Yusuf con il racconto in mezzo.** In cinque battute (`apertura` due volte, `credito`, `cosa`,
 `qualcuno`) il testo alterna Yusuf e William: «Magazzino Quattro.» — *Una pausa, il tempo di leggere chi chiama.* —
-«William. Se è per il credito…». Leonardo ha registrato solo il racconto, come chiede il copione; la battuta di
-Yusuf è un file solo (`YU-01`…`YU-05`). Il gioco, oggi, fa dire a Yusuf tutta la battuta e poi a William il suo
-racconto (le prese «poi» del §2): l’ordine del testo si perde, e in `cosa` William finisce su «Poi:» quando Yusuf ha
-già parlato. Solo `voce` (`SM-050`: Yusuf, poi il racconto) torna giusta. Dentro i file di Yusuf, fra una frase e
-l’altra, c’è un silenzio vero (0,4–0,9 s): da decidere con l’autore se dividerli lì, così che William parli fra le
-frasi di Yusuf come nel testo (è il caso del §3).
+«William. Se è per il credito…». Leonardo ha registrato solo il racconto, come chiede il copione, e la battuta di
+Yusuf era un file solo: il gioco faceva dire a Yusuf tutta la battuta e poi a William il suo racconto, e in `cosa`
+William finiva su «Poi:» quando Yusuf aveva già parlato.
+
+L’autore, 17 novembre 2026: «Sì, dividile». Fatto così:
+
+- **I file di Yusuf** (`strumenti/audio/voce_yusuf.py`, `PARTI`): la battuta si lavora intera, come prima (rifatta,
+  è identica campione per campione ai file di prima), e poi si divide in una parte per frase fra «»: `YU-01a`,
+  `YU-01b`… (sedici file al posto di otto, più il messaggio dell’intro). I tagli cadono a metà dei silenzi veri fra
+  due frasi (sotto −70 dBFS, 0,15–0,8 s), con 20 ms di dissolvenza; nella fuga (`YU-07`, `YU-08`: anche lì il testo
+  ha il racconto in mezzo, «Aspetta.», «Una pausa, e dietro di lui il magazzino.») la statica del canale non tace
+  mai, e il taglio cade a metà del tratto senza voce, con 120 ms di dissolvenza. Il conto sottovoce del credito
+  («Uno, due… dieci.») sta con la seconda frase: William dice che Yusuf conta, «come fa sempre prima di dirmi di
+  sì», poi si sente il conto, e il «No.». La risata corta di `qualcuno` sta con la frase che la segue. Riascoltate
+  con Whisper, le sedici parti hanno ognuna la sua frase, intera.
+- **Il ponte** riconosce la battuta intera (`VOCI_YUSUF`) e manda le parti (`PARTI_YUSUF`), ognuna dove sta la sua
+  frase. Per ogni presa «poi» manda anche quante voci asciutte (Yusuf, L.V.) vengono prima di lei nel testo
+  (`dopo_voci` nell’evento «racconto»).
+- **Il motore audio**: la fila della radio conta le battute finite nel turno; finite quelle che stanno prima della
+  presa di William, cede a lui (`VociNave::passo_con`, `Racconto::soglia`), e la presa entra con la sua pausa
+  (0,55 s). Finita la presa, la frase che continua la battuta entra dopo la stessa pausa. Senza la voce di William
+  (o senza la sua presa) le frasi di Yusuf restano attaccate, con il silenzio che hanno nei file: come prima.
+  `SM-048` è una presa sola con dentro due pezzi di racconto («Lo sento ridere, corto.» e «Un’altra pausa.»): entra
+  dopo la prima frase di Yusuf, intera, e le altre due frasi la seguono.
+
+Una prova del motore (`william_racconta_fra_le_frasi_di_yusuf`) lo controlla; l’ascolto delle sei scene alla radio,
+reso dal motore con i tempi del gioco, è in `consegne/Ascolto Yusuf e William 2026-11-17/` (2:10).
+
+**Le prese corte dentro le frasi lunghe.** Con le prese del 17 novembre il ponte metteva «Una pausa.» (`SM-038`, e
+le cinque battute del Ponte uguali a lei) dentro la chiamata della fuga, «Una pausa, e dietro di lui il magazzino.»:
+le parole di una presa corta c’erano tutte, in fila, dentro una frase più lunga che non ha ancora la sua presa. Ora
+`racconto.json` porta anche le parole dei pezzi senza presa (`muti`, 536): a schermo occupano il loro testo e
+restano muti, come nel Viaggiatore, e il pezzo più lungo vince. Rigiocati i diciassette percorsi del collaudo,
+nessuna presa che prima si sentiva ha perso la voce.

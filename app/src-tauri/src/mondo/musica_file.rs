@@ -93,15 +93,24 @@ pub enum Pezzo {
     An24,
     An25,
     An26,
-    /// Yusuf (documento 35, §1): le otto battute con la voce clonata dell’autore, già passate dalla radio
-    Yu01,
-    Yu02,
-    Yu03,
-    Yu04,
-    Yu05,
+    /// Yusuf (documento 35, §1): le otto battute con la voce clonata dell’autore, già passate dalla radio; quelle con
+    /// il racconto di William in mezzo divise in una parte per frase (documento 41, §5: a, b, c)
+    Yu01a,
+    Yu01b,
+    Yu02a,
+    Yu02b,
+    Yu03a,
+    Yu03b,
+    Yu04a,
+    Yu04b,
+    Yu05a,
+    Yu05b,
+    Yu05c,
     Yu06,
-    Yu07,
-    Yu08,
+    Yu07a,
+    Yu07b,
+    Yu08a,
+    Yu08b,
     /// L.V. nella scatola nera della serra (documento 35, V4): «Elio» di Google, sul nastro vecchio dell’intro
     Lv02,
     /// le voci della nave (documento 35): le echi, le registrazioni dello scanner, l’ultima voce.
@@ -254,16 +263,25 @@ pub const VOCI_AN: [(Pezzo, &str); 26] = [
     (Pezzo::An26, "AN-26-congedo.mp3"),
 ];
 
-/// Le battute di Yusuf e i loro file: il nome senza «.mp3» è quello che manda il ponte (`VOCI_YUSUF`).
-pub const VOCI_YU: [(Pezzo, &str); 8] = [
-    (Pezzo::Yu01, "YU-01-apertura.mp3"),
-    (Pezzo::Yu02, "YU-02-apertura-pezzo.mp3"),
-    (Pezzo::Yu03, "YU-03-credito.mp3"),
-    (Pezzo::Yu04, "YU-04-cosa.mp3"),
-    (Pezzo::Yu05, "YU-05-qualcuno.mp3"),
+/// Le battute di Yusuf e i loro file: il nome senza «.mp3» è quello che manda il ponte (`VOCI_YUSUF`, e per le battute
+/// divise `PARTI_YUSUF`).
+pub const VOCI_YU: [(Pezzo, &str); 16] = [
+    (Pezzo::Yu01a, "YU-01a-apertura.mp3"),
+    (Pezzo::Yu01b, "YU-01b-apertura.mp3"),
+    (Pezzo::Yu02a, "YU-02a-apertura-pezzo.mp3"),
+    (Pezzo::Yu02b, "YU-02b-apertura-pezzo.mp3"),
+    (Pezzo::Yu03a, "YU-03a-credito.mp3"),
+    (Pezzo::Yu03b, "YU-03b-credito.mp3"),
+    (Pezzo::Yu04a, "YU-04a-cosa.mp3"),
+    (Pezzo::Yu04b, "YU-04b-cosa.mp3"),
+    (Pezzo::Yu05a, "YU-05a-qualcuno.mp3"),
+    (Pezzo::Yu05b, "YU-05b-qualcuno.mp3"),
+    (Pezzo::Yu05c, "YU-05c-qualcuno.mp3"),
     (Pezzo::Yu06, "YU-06-voce.mp3"),
-    (Pezzo::Yu07, "YU-07-fuga-pezzo.mp3"),
-    (Pezzo::Yu08, "YU-08-fuga-nessuno.mp3"),
+    (Pezzo::Yu07a, "YU-07a-fuga-pezzo.mp3"),
+    (Pezzo::Yu07b, "YU-07b-fuga-pezzo.mp3"),
+    (Pezzo::Yu08a, "YU-08a-fuga-nessuno.mp3"),
+    (Pezzo::Yu08b, "YU-08b-fuga-nessuno.mp3"),
 ];
 
 /// La scatola nera di L.V. nella serra: il nome senza «.mp3» è quello che manda il ponte (`VOCI_LV`).
@@ -320,7 +338,7 @@ pub const VOCI_SV: [(Pezzo, &str); 45] = [
 ];
 
 impl Pezzo {
-    pub const TUTTI: [Pezzo; 131] = [
+    pub const TUTTI: [Pezzo; 139] = [
         Pezzo::M1a,
         Pezzo::M1b,
         Pezzo::S2,
@@ -396,14 +414,22 @@ impl Pezzo {
         Pezzo::An24,
         Pezzo::An25,
         Pezzo::An26,
-        Pezzo::Yu01,
-        Pezzo::Yu02,
-        Pezzo::Yu03,
-        Pezzo::Yu04,
-        Pezzo::Yu05,
+        Pezzo::Yu01a,
+        Pezzo::Yu01b,
+        Pezzo::Yu02a,
+        Pezzo::Yu02b,
+        Pezzo::Yu03a,
+        Pezzo::Yu03b,
+        Pezzo::Yu04a,
+        Pezzo::Yu04b,
+        Pezzo::Yu05a,
+        Pezzo::Yu05b,
+        Pezzo::Yu05c,
         Pezzo::Yu06,
-        Pezzo::Yu07,
-        Pezzo::Yu08,
+        Pezzo::Yu07a,
+        Pezzo::Yu07b,
+        Pezzo::Yu08a,
+        Pezzo::Yu08b,
         Pezzo::Lv02,
         Pezzo::Sv01,
         Pezzo::Sv02,
@@ -484,6 +510,12 @@ impl Pezzo {
     /// Una battuta di Yusuf.
     pub fn yusuf(self) -> bool {
         VOCI_YU.iter().any(|(p, _)| *p == self)
+    }
+
+    /// Una parte di una battuta di Yusuf che continua la frase di prima (b, c): dopo la parte di prima entra subito,
+    /// perché il silenzio fra le due frasi ce l’hanno già i file; dopo il racconto di William, con la sua pausa.
+    pub fn segue(self) -> bool {
+        matches!(self, Pezzo::Yu01b | Pezzo::Yu02b | Pezzo::Yu03b | Pezzo::Yu04b | Pezzo::Yu05b | Pezzo::Yu05c | Pezzo::Yu07b | Pezzo::Yu08b)
     }
 
     /// Una voce che ha già nel file la sua radio o il suo nastro (Yusuf, la scatola nera di L.V.): esce

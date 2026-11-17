@@ -41,6 +41,11 @@ pub struct VociNave {
     parlava: bool,
     /// da quanto tutto tace
     muto_da: f32,
+    /// una sua voce suonava al passo di prima
+    mia: bool,
+    /// le sue battute finite da quando la fila è cominciata (`sostituisci`): il racconto di William che nel testo sta
+    /// dopo la battuta n entra quando ne sono finite n (documento 41, §5)
+    finite: u8,
 }
 
 impl VociNave {
@@ -52,6 +57,8 @@ impl VociNave {
             attesa: 0.0,
             parlava: false,
             muto_da: 0.0,
+            mia: false,
+            finite: 0,
         }
     }
 
@@ -134,6 +141,8 @@ impl VociNave {
     pub fn sostituisci(&mut self, battute: &[Pezzo], ritardo: f32, sfuma: f32) {
         self.tace(sfuma);
         self.parlava = false;
+        self.mia = false;
+        self.finite = 0;
         self.attesa = ritardo;
         for &p in battute {
             if self.fila.len() < MAX_FILA {
@@ -161,21 +170,45 @@ impl VociNave {
         self.servizio.tace(s);
     }
 
+    /// Le sue battute finite da quando la fila è cominciata.
+    pub fn finite(&self) -> u8 {
+        self.finite
+    }
+
     /// Fa andare il tempo, una volta per blocco.
     pub fn passo(&mut self, dt: f32) {
-        self.passo_con(dt, false);
+        self.passo_con(dt, false, None);
     }
 
     /// Come `passo`; con `altri` un’altra voce parla fuori da questa fila (Yusuf, la scatola nera): la fila
-    /// aspetta che finisca, e poi la pausa, come per le sue.
-    pub fn passo_con(&mut self, dt: f32, altri: bool) {
+    /// aspetta che finisca, e poi la pausa, come per le sue. `william`: dopo quante battute di questa fila entra la
+    /// prossima presa di William che aspetta una voce (documento 41, §5): finite quelle, la fila cede a lui.
+    pub fn passo_con(&mut self, dt: f32, altri: bool, william: Option<u8>) {
         self.lettore.passo(dt);
         self.servizio.passo(dt);
         // quello che sta sfumando via non conta: la fila non lo aspetta
-        let parla = self.lettore.vivo() || self.servizio.vivo() || altri;
+        let mia = self.lettore.vivo() || self.servizio.vivo();
+        let finita_mia = self.mia && !mia;
+        if finita_mia {
+            self.finite = self.finite.saturating_add(1);
+        }
+        self.mia = mia;
+        let cede = william.is_some_and(|n| n <= self.finite);
+        let parla = mia || altri || cede;
         if self.parlava && !parla {
-            // una voce è finita: la prossima aspetta la pausa
-            self.attesa = PAUSA_FRA_VOCI;
+            // una voce è finita: la prossima aspetta la pausa. La frase che continua una battuta di Yusuf entra
+            // subito dopo la frase di prima (il silenzio fra le due ce l’hanno i file), e dopo il racconto di
+            // William con la sua pausa
+            self.attesa = match self.fila.first() {
+                Some(p) if p.segue() => {
+                    if finita_mia {
+                        0.0
+                    } else {
+                        super::racconto::PAUSA
+                    }
+                }
+                _ => PAUSA_FRA_VOCI,
+            };
         }
         self.parlava = parla;
         if !parla && !self.fila.is_empty() {
@@ -304,12 +337,12 @@ mod prove {
 
     #[test]
     fn una_battuta_nuova_prende_il_posto_di_quella_che_parla() {
-        let mut v = voci_con(&[(Pezzo::Yu01, 4.0), (Pezzo::Yu04, 2.0)]);
-        v.sostituisci(&[Pezzo::Yu01], 0.5, 0.3);
+        let mut v = voci_con(&[(Pezzo::Yu06, 4.0), (Pezzo::Yu04b, 2.0)]);
+        v.sostituisci(&[Pezzo::Yu06], 0.5, 0.3);
         let a = tratti(&ascolta(&mut v, 1.5));
         assert_eq!(a.len(), 1, "{a:?}");
         assert!((a[0].0 - 0.5).abs() < 0.05);
-        v.sostituisci(&[Pezzo::Yu04], 0.5, 0.3);
+        v.sostituisci(&[Pezzo::Yu04b], 0.5, 0.3);
         // il livello, ogni 10 ms: la prima sfuma in pochi decimi, la seconda entra dopo mezzo secondo, senza la
         // pausa delle echi, e dura intera
         let blocco = (SR * 0.01) as usize;
@@ -393,7 +426,7 @@ mod prove {
         let mut sentita = Vec::new();
         for k in 0..500 {
             // un'altra voce (Yusuf) parla per i primi due secondi
-            v.passo_con(0.01, k < 200);
+            v.passo_con(0.01, k < 200, None);
             let e: f32 = (0..blocco).map(|_| v.campione_servizio().0.powi(2)).sum();
             sentita.push(e > 1e-6);
         }
@@ -425,12 +458,12 @@ mod prove {
         assert_eq!(Pezzo::della_voce("tracce-parola"), Some(Pezzo::An24));
         assert_eq!(Pezzo::della_voce("tracce"), Some(Pezzo::An22));
         assert_eq!(Pezzo::della_voce("niente"), None);
-        assert_eq!(Pezzo::della_battuta("YU-07-fuga-pezzo"), Some(Pezzo::Yu07));
+        assert_eq!(Pezzo::della_battuta("YU-07a-fuga-pezzo"), Some(Pezzo::Yu07a));
         assert_eq!(Pezzo::della_battuta("SV-01-protezione-vitale"), Some(Pezzo::Sv01));
         assert_eq!(Pezzo::della_battuta("SV-41-usala"), Some(Pezzo::Sv41));
         assert_eq!(Pezzo::della_battuta("SV-45-registro-carico-nessuno"), Some(Pezzo::Sv45));
         assert!(Pezzo::Sv12.servizio() && Pezzo::Sv12.parlato() && !Pezzo::Sv12.asciutta() && !Pezzo::Nv01.servizio());
-        assert!(Pezzo::Yu03.yusuf() && Pezzo::Yu03.parlato() && !Pezzo::Nv01.yusuf() && !Pezzo::An10.parlato());
+        assert!(Pezzo::Yu03a.yusuf() && Pezzo::Yu03a.parlato() && Pezzo::Yu03b.segue() && !Pezzo::Yu03a.segue() && !Pezzo::Nv01.yusuf() && !Pezzo::An10.parlato());
         // ogni battuta ha il suo file nella cartella, e la tabella le ha tutte
         let radice = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../audio/musica-ia");
         use super::super::musica_file::{BATTUTE_NV, VOCI_AN, VOCI_LV, VOCI_SV, VOCI_YU};

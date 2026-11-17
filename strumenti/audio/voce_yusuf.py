@@ -12,7 +12,8 @@
 #   python strumenti/audio/voce_yusuf.py
 #
 # Le sorgenti (le prese intere di ElevenLabs) stanno in audio/sorgenti/voce/, fuori da git; le loro impronte vanno
-# in audio/LICENZE.md. Ne escono audio/musica-ia/YU/YU-0n-*.mp3 (44,1 kHz, mono, 112 kbps).
+# in audio/LICENZE.md. Ne escono audio/musica-ia/YU/YU-0n-*.mp3 (44,1 kHz, mono, 112 kbps); le battute divise
+# (PARTI, sotto) in una parte per frase: YU-0na-*.mp3, YU-0nb-*.mp3…
 import os
 import subprocess
 
@@ -37,6 +38,33 @@ BATTUTE = [
     ("YU-07-fuga-pezzo", "yusuf-fuga-pezzo-presa2-2026-11-06", 0.00, None, "instabile"),
     ("YU-08-fuga-nessuno", "yusuf-fuga-cerano-presa2-2026-11-06", 0.00, None, "instabile"),
 ]
+
+# Le battute con il racconto di William in mezzo (documento 41, §5; l'autore, 17 novembre 2026: «Sì, dividile»): nel
+# testo Yusuf dice una frase, William racconta, Yusuf ne dice un'altra. La battuta si lavora intera, come sempre, e
+# poi si divide in una parte per frase fra «» (YU-01a-apertura, YU-01b-apertura…), così William parla fra l'una e
+# l'altra. I tagli (in secondi, sul file lavorato) cadono a metà dei silenzi veri fra due frasi (sotto −70 dBFS:
+# nessuna parola e nessun respiro si toccano); nella fuga, dove la statica del canale non tace mai, a metà del tratto
+# senza voce, con una dissolvenza più lunga. Il conto sottovoce del credito sta con la seconda frase («Uno, due…
+# dieci. No.»), e la risata corta di «qualcuno» con la frase che la segue: William racconta, e poi si sente.
+PARTI = {
+    "YU-01-apertura": (1.71,),
+    "YU-02-apertura-pezzo": (1.585,),
+    "YU-03-credito": (6.56,),
+    "YU-04-cosa": (1.275,),
+    "YU-05-qualcuno": (1.455, 5.18),
+    "YU-07-fuga-pezzo": (3.40,),
+    "YU-08-fuga-nessuno": (2.00,),
+}
+# la dissolvenza ai due capi di un taglio: nel silenzio basta un attimo; nella statica della fuga il canale si chiude
+# e si riapre piano
+DISSOLVI = {"bordo": 0.02, "casco": 0.02, "instabile": 0.12}
+
+
+def scrivi(y, f):
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-",
+                    "-c:a", "libmp3lame", "-b:a", "112k", "-write_xing", "1", f],
+                   input=np.clip(y, -1, 1).astype(np.float32).tobytes(), check=True)
+    print(f"{os.path.relpath(f, RADICE)}: {len(y) / SR:5.2f} s")
 
 
 def leggi(f):
@@ -135,8 +163,17 @@ for k, (nome, presa, a, b, catena) in enumerate(BATTUTE):
     pezzo[:n_in] *= np.linspace(0, 1, n_in)
     pezzo[-n_out:] *= np.linspace(1, 0, n_out)
     y = instabile(pezzo, 2201 + k) if catena == "instabile" else radio(pezzo, catena == "casco")
-    f = os.path.join(USCITA, nome + ".mp3")
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-",
-                    "-c:a", "libmp3lame", "-b:a", "112k", "-write_xing", "1", f],
-                   input=np.clip(y, -1, 1).astype(np.float32).tobytes(), check=True)
-    print(f"{os.path.relpath(f, RADICE)}: {len(y) / SR:5.2f} s, {catena}")
+    tagli = PARTI.get(nome)
+    if not tagli:
+        scrivi(y, os.path.join(USCITA, nome + ".mp3"))
+        continue
+    capi = [0] + [int(c * SR) for c in tagli] + [len(y)]
+    d = int(DISSOLVI[catena] * SR)
+    for i in range(len(capi) - 1):
+        parte = y[capi[i]:capi[i + 1]].copy()
+        if i > 0:
+            parte[:d] *= np.linspace(0, 1, d)
+        if i < len(capi) - 2:
+            parte[-d:] *= np.linspace(1, 0, d)
+        numero, resto = nome[3:5], nome[6:]
+        scrivi(parte, os.path.join(USCITA, f"YU-{numero}{'abc'[i]}-{resto}.mp3"))

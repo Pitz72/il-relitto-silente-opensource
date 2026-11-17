@@ -13,7 +13,8 @@
 #                                          44,1 kHz, 96 kbit/s. Una presa già fatta dalla stessa sorgente non si rifà
 #   audio/musica-ia/WI/IMPRONTE.sha256     un'impronta per file, e accanto quella della sorgente (prese.json)
 #   app/src/motore/racconto.json           per il ponte e per la pagina: ogni pezzo del copione che ha la sua presa, con
-#                                          le parole che William dice (il racconto, le scritte che legge, le risposte)
+#                                          le parole che William dice (il racconto, le scritte che legge, le risposte);
+#                                          e le parole dei pezzi che non ce l'hanno ancora («muti», per il ponte)
 #   app/src-tauri/src/mondo/prese_william.rs   per il motore audio: tutte le sigle del copione e i loro file
 #   app/src-tauri/tauri.conf.json          le prese fra le risorse dell'app (si tolgono quelle che non ci sono più)
 #
@@ -152,11 +153,15 @@ def main():
             if n.endswith(".mp3"):
                 o.write(f"{impronta(os.path.join(USCITA, n))}  {n}\n")
 
-    # il ponte e la pagina: i pezzi che hanno la loro presa
+    # il ponte e la pagina: i pezzi che hanno la loro presa; e, per il ponte, le parole dei pezzi che non ce l'hanno
+    # ancora (le risposte no): a schermo occupano il loro testo e restano muti, così una presa corta non entra dentro
+    # una frase più lunga che la contiene («Una pausa.» dentro «Una pausa, e dietro di lui il magazzino.»)
     con_voce = [z for z in pezzi if z["file"] in fatte]
+    muti = sorted({tuple(z["parti"]) for z in pezzi if z["file"] not in fatte and z["tipo"] != "opzione"})
     with open(RACCONTO, "w", encoding="utf-8", newline="\n") as o:
         json.dump({"nota": "Scritto da strumenti/audio/voce_william.py: non si corregge a mano.",
-                   "impronta_fav": copione["impronta_fav"], "pezzi": con_voce}, o, ensure_ascii=False, indent=0)
+                   "impronta_fav": copione["impronta_fav"], "pezzi": con_voce, "muti": [list(m) for m in muti]},
+                  o, ensure_ascii=False, indent=0)
         o.write("\n")
 
     # il motore: tutte le sigle del copione (la tabella cambia solo se cambia il copione)
