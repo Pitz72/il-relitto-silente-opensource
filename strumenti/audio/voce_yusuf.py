@@ -44,17 +44,22 @@ BATTUTE = [
 # poi si divide in una parte per frase fra «» (YU-01a-apertura, YU-01b-apertura…), così William parla fra l'una e
 # l'altra. I tagli (in secondi, sul file lavorato) cadono a metà dei silenzi veri fra due frasi (sotto −70 dBFS:
 # nessuna parola e nessun respiro si toccano); nella fuga, dove la statica del canale non tace mai, a metà del tratto
-# senza voce, con una dissolvenza più lunga. Il conto sottovoce del credito sta con la seconda frase («Uno, due…
-# dieci. No.»), e la risata corta di «qualcuno» con la frase che la segue: William racconta, e poi si sente.
+# senza voce, con una dissolvenza più lunga. La risata corta di «qualcuno» sta con la frase che la segue: William
+# racconta, e poi si sente.
 PARTI = {
     "YU-01-apertura": (1.71,),
     "YU-02-apertura-pezzo": (1.585,),
-    "YU-03-credito": (6.56,),
+    "YU-03-credito": (6.56, 14.54),
     "YU-04-cosa": (1.275,),
     "YU-05-qualcuno": (1.455, 5.18),
     "YU-07-fuga-pezzo": (3.40,),
     "YU-08-fuga-nessuno": (2.00,),
 }
+# I tratti che si tolgono (il numero del tratto fra due tagli, da 0). Il conto sottovoce del credito, «Uno, due…
+# dieci.»: William dice che Yusuf conta, e basta; l'autore, ascoltate le scene alla radio il 17 novembre 2026: «dopo
+# che Leo dice che Yusuf conta, la parte dove conta veramente, lo toglierei». Il secondo taglio cade a metà del
+# silenzio vero fra «dieci» e «No» (14,42–14,65 s).
+TOGLI = {"YU-03-credito": (1,)}
 # la dissolvenza ai due capi di un taglio: nel silenzio basta un attimo; nella statica della fuga il canale si chiude
 # e si riapre piano
 DISSOLVI = {"bordo": 0.02, "casco": 0.02, "instabile": 0.12}
@@ -169,11 +174,12 @@ for k, (nome, presa, a, b, catena) in enumerate(BATTUTE):
         continue
     capi = [0] + [int(c * SR) for c in tagli] + [len(y)]
     d = int(DISSOLVI[catena] * SR)
-    for i in range(len(capi) - 1):
+    tenuti = [i for i in range(len(capi) - 1) if i not in TOGLI.get(nome, ())]
+    for lettera, i in zip("abc", tenuti):
         parte = y[capi[i]:capi[i + 1]].copy()
         if i > 0:
             parte[:d] *= np.linspace(0, 1, d)
         if i < len(capi) - 2:
             parte[-d:] *= np.linspace(1, 0, d)
         numero, resto = nome[3:5], nome[6:]
-        scrivi(parte, os.path.join(USCITA, f"YU-{numero}{'abc'[i]}-{resto}.mp3"))
+        scrivi(parte, os.path.join(USCITA, f"YU-{numero}{lettera}-{resto}.mp3"))

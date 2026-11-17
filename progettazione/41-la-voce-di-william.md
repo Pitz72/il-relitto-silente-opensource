@@ -192,8 +192,9 @@ L’autore, 17 novembre 2026: «Sì, dividile». Fatto così:
   due frasi (sotto −70 dBFS, 0,15–0,8 s), con 20 ms di dissolvenza; nella fuga (`YU-07`, `YU-08`: anche lì il testo
   ha il racconto in mezzo, «Aspetta.», «Una pausa, e dietro di lui il magazzino.») la statica del canale non tace
   mai, e il taglio cade a metà del tratto senza voce, con 120 ms di dissolvenza. Il conto sottovoce del credito
-  («Uno, due… dieci.») sta con la seconda frase: William dice che Yusuf conta, «come fa sempre prima di dirmi di
-  sì», poi si sente il conto, e il «No.». La risata corta di `qualcuno` sta con la frase che la segue. Riascoltate
+  («Uno, due… dieci.») stava con la seconda frase; ascoltate le scene, l’autore: «dopo che Leo dice che Yusuf
+  conta, la parte dove conta veramente, lo toglierei». Tolto (`TOGLI`): William dice che Yusuf conta, «Arriva a
+  dieci.», e subito dopo il «No.». La risata corta di `qualcuno` sta con la frase che la segue. Riascoltate
   con Whisper, le sedici parti hanno ognuna la sua frase, intera.
 - **Il ponte** riconosce la battuta intera (`VOCI_YUSUF`) e manda le parti (`PARTI_YUSUF`), ognuna dove sta la sua
   frase. Per ogni presa «poi» manda anche quante voci asciutte (Yusuf, L.V.) vengono prima di lei nel testo
@@ -206,7 +207,12 @@ L’autore, 17 novembre 2026: «Sì, dividile». Fatto così:
   dopo la prima frase di Yusuf, intera, e le altre due frasi la seguono.
 
 Una prova del motore (`william_racconta_fra_le_frasi_di_yusuf`) lo controlla; l’ascolto delle sei scene alla radio,
-reso dal motore con i tempi del gioco, è in `consegne/Ascolto Yusuf e William 2026-11-17/` (2:10).
+reso dal motore con i tempi del gioco, è in `consegne/Ascolto Yusuf e William 2026-11-17/` (2:04). L’autore,
+ascoltato: «Per il resto sono molto soddisfatto»; e «la voce di Yusuf è lievemente più bassa rispetto a quella di
+Leo». La radio ha la banda stretta, e allo stesso livello si sente meno: nelle scene rese William stava 4–5 LUFS
+sopra Yusuf. Yusuf sale di 3 dB (`LIV_YUSUF`, le parole a circa −18 dBFS come William) e ora sta 1–2 LUFS sotto di
+lui; la scatola nera di L.V., che passa dallo stesso lettore, scende di 3 dB nel suo livello proprio e resta
+dov’era.
 
 **Le prese corte dentro le frasi lunghe.** Con le prese del 17 novembre il ponte metteva «Una pausa.» (`SM-038`, e
 le cinque battute del Ponte uguali a lei) dentro la chiamata della fuga, «Una pausa, e dietro di lui il magazzino.»:

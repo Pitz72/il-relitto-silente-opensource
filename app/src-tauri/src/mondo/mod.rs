@@ -1327,9 +1327,11 @@ const LIV_FILO: f32 = -12.0;
 /// ogni battuta: tarato perché escano dove usciva il filo (la mediana delle parole a −31 dBFS,
 /// documento 35, §8): −2,5 dB, perché il compressore della cuffia ne toglie una parte
 const LIV_VOCI_NAVE: f32 = 0.75;
-/// Yusuf sopra il livello delle parole a cui il lettore porta ogni battuta (−27 dBFS): +6 dB, le parole a circa
-/// −21 dBFS, come negli ascolti approvati (documento 35, §8)
-const LIV_YUSUF: f32 = 2.0;
+/// Yusuf sopra il livello delle parole a cui il lettore porta ogni battuta (−27 dBFS): +9 dB, le parole a circa
+/// −18 dBFS, come William. Era +6 (documento 35, §8): con William fra le sue frasi (documento 41, §5) l'autore, il
+/// 17 novembre 2026: «la voce di Yusuf è lievemente più bassa rispetto a quella di Leo» (la radio ha la banda stretta:
+/// allo stesso livello, nelle scene rese, William stava 4–5 LUFS sopra di lui)
+const LIV_YUSUF: f32 = 2.818;
 /// La voce di servizio sopra il livello delle parole a cui il lettore porta ogni parte (−27 dBFS): +9 dB, le parole
 /// a circa −18 dBFS, come William. Era +4 (−23, un poco sotto Yusuf); alzato William, restava 5 dB sotto di lui, e
 /// nello stesso turno si sentono uno dopo l'altra: l'autore, sulla beta 14 (16 novembre 2026), «la voce

@@ -499,10 +499,11 @@ impl Pezzo {
     }
 
     /// Quanto suona sopra o sotto le altre voci del suo lettore, in dB. La scatola nera di L.V. (valore
-    /// efficace a −27, +6 del lettore di Yusuf, −7) sta a circa −28 dBFS, come la sua voce nell’intro.
+    /// efficace a −27, +9 del lettore di Yusuf, −10) sta a circa −28 dBFS, come la sua voce nell’intro: alzato Yusuf
+    /// di 3 dB il 17 novembre 2026, lei resta dov’era.
     pub fn livello_proprio(self) -> f32 {
         match self {
-            Pezzo::Lv02 => -7.0,
+            Pezzo::Lv02 => -10.0,
             _ => 0.0,
         }
     }
