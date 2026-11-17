@@ -251,6 +251,269 @@
 "parti": [
 "la scansione è sullo schermo ferma sulla stessa riga rifarla non le farà cambiare idea"
 ]
+},
+{
+"id": "SM-032",
+"file": "SM-032",
+"tipo": "risposta",
+"parti": [
+"le manovre si fanno dalla plancia"
+]
+},
+{
+"id": "SM-033",
+"file": "SM-033",
+"tipo": "risposta",
+"parti": [
+"accostare a una cosa che non so cos è no prima la scansione lunga"
+]
+},
+{
+"id": "SM-034",
+"file": "SM-034",
+"tipo": "risposta",
+"parti": [
+"più vicino di così mi ci appoggio"
+]
+},
+{
+"id": "SM-035",
+"file": "SM-035",
+"tipo": "risposta",
+"parti": [
+"porto la santa maria verso la massa a spinte corte con gli occhi sulla distanza che scende il reattore abbassa il suo lamento a cinquanta metri mi fermo la sagoma riempie l oblò e non restituisce niente né un riflesso né un bordo adesso gli arpioni ci arrivano"
+]
+},
+{
+"id": "SM-036",
+"file": "SM-036",
+"tipo": "descrizione",
+"parti": [
+"yusuf è a magazzino quattro a quattro giorni di rotta da qui sulla santa maria c è soltanto la sua voce quando la radio la porta vent anni di forniture a credito io non gli ho mai chiesto come sta e lui ha smesso di aspettarselo"
+]
+},
+{
+"id": "SM-037",
+"file": "SM-037",
+"tipo": "battuta",
+"parti": [
+"una pausa il tempo di leggere chi chiama"
+]
+},
+{
+"id": "SM-038",
+"file": "SM-038",
+"tipo": "battuta",
+"parti": [
+"una pausa"
+]
+},
+{
+"id": "SM-039",
+"file": "SM-039",
+"tipo": "opzione",
+"parti": [
+"mi serve credito"
+]
+},
+{
+"id": "SM-040",
+"file": "SM-040",
+"tipo": "opzione",
+"parti": [
+"ho trovato una cosa"
+]
+},
+{
+"id": "SM-041",
+"file": "SM-041",
+"tipo": "opzione",
+"parti": [
+"niente volevo sentire una voce"
+]
+},
+{
+"id": "SM-042",
+"file": "SM-042",
+"tipo": "battuta",
+"parti": [
+"lo sento contare sottovoce come fa sempre prima di dirmi di sì arriva a dieci"
+]
+},
+{
+"id": "SM-043",
+"file": "SM-040",
+"tipo": "opzione",
+"parti": [
+"ho trovato una cosa"
+]
+},
+{
+"id": "SM-044",
+"file": "SM-044",
+"tipo": "opzione",
+"parti": [
+"va bene"
+]
+},
+{
+"id": "SM-045",
+"file": "SM-045",
+"tipo": "battuta",
+"parti": [
+"aspetta che continui gli racconto della massa la scansione i trecentoquaranta metri la riga che lo scanner continua a scrivere per un po dall altra parte non arriva niente poi"
+]
+},
+{
+"id": "SM-046",
+"file": "SM-046",
+"tipo": "opzione",
+"parti": [
+"e se dentro c è qualcuno"
+]
+},
+{
+"id": "SM-047",
+"file": "SM-047",
+"tipo": "opzione",
+"parti": [
+"te lo porto"
+]
+},
+{
+"id": "SM-048",
+"file": "SM-048",
+"tipo": "battuta",
+"parti": [
+"lo sento ridere corto",
+"un altra pausa"
+]
+},
+{
+"id": "SM-049",
+"file": "SM-047",
+"tipo": "opzione",
+"parti": [
+"te lo porto"
+]
+},
+{
+"id": "SM-050",
+"file": "SM-050",
+"tipo": "battuta",
+"parti": [
+"però non chiude per qualche secondo sento il magazzino dietro di lui un muletto in retromarcia qualcuno che litiga con una bolla di carico poi la linea fa il suo schiocco"
+]
+},
+{
+"id": "SM-051",
+"file": "SM-051",
+"tipo": "descrizione",
+"parti": [
+"la cuccetta è poco più di un corridoio una branda con i cassetti sotto una lampada da lettura un armadietto un oblò grande quanto una mano a sud si torna in plancia"
+]
+},
+{
+"id": "SM-052",
+"file": "SM-052",
+"tipo": "descrizione",
+"parti": [
+"la mia branda stretta con i cassetti sotto la coperta è tirata su alla meglio tanto non la vede nessuno"
+]
+},
+{
+"id": "SM-053",
+"file": "SM-053",
+"tipo": "descrizione",
+"parti": [
+"due tute da lavoro una giacca buona che non metto da anni una scatola di fusibili che non sapevo dove altro tenere"
+]
+},
+{
+"id": "SM-054",
+"file": "SM-054",
+"tipo": "descrizione",
+"parti": [
+"grande quanto una mano da questo lato la massa non si vede solo stelle ferme"
+]
+},
+{
+"id": "SM-055",
+"file": "SM-055",
+"tipo": "descrizione",
+"parti": [
+"il registro della santa maria la prima pagina non è mia",
+"tsc 1972 prima registrazione autonoma 14 marzo 2105",
+"novantasei anni di nave tre alla radiazione le ultime pagine sono mie e l ultima riga aspetta la settimana sette"
+]
+},
+{
+"id": "SM-056",
+"file": "SM-056",
+"tipo": "risposta",
+"parti": [
+"il registro della santa maria è di carta i file si perdono la carta resta dove la metto la prima pagina non l ho scritta io in una grafia d altri tempi",
+"tsc 1972 prima registrazione autonoma 14 marzo 2105",
+"novantasei anni di nave tre alla radiazione le ultime pagine sono mie e si somigliano tutte l ultima dice",
+"settimana sei stiva vuota nessun contatto w t",
+"fra le pagine a tenere il segno c è la chiavetta della cassetta di ferraglia"
+]
+},
+{
+"id": "SM-057",
+"file": "SM-057",
+"tipo": "risposta",
+"parti": [
+"il registro non lascia la nave è la regola più vecchia che rispetto"
+]
+},
+{
+"id": "SM-058",
+"file": "SM-058",
+"tipo": "descrizione",
+"parti": [
+"piccola d ottone consumata sui denti apre la cassetta di ferraglia della sala macchine"
+]
+},
+{
+"id": "PO-054",
+"file": "SM-038",
+"tipo": "battuta",
+"parti": [
+"una pausa"
+]
+},
+{
+"id": "PO-062",
+"file": "SM-038",
+"tipo": "battuta",
+"parti": [
+"una pausa"
+]
+},
+{
+"id": "PO-072b",
+"file": "SM-038",
+"tipo": "battuta",
+"parti": [
+"una pausa"
+]
+},
+{
+"id": "PO-073b",
+"file": "SM-038",
+"tipo": "battuta",
+"parti": [
+"una pausa"
+]
+},
+{
+"id": "PO-075",
+"file": "SM-038",
+"tipo": "battuta",
+"parti": [
+"una pausa"
+]
 }
 ]
 }

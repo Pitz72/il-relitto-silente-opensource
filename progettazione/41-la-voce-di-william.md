@@ -111,15 +111,16 @@ scheda Audio delle opzioni, **«Voce di William»: recitata o nessuna** (di base
 
 ## 5. Le prese, a oggi
 
-**Ventisei**, tutte della plancia: `SM-001`…`SM-014` (arrivate il 13 e il 15 novembre) e `SM-017`…`SM-022`,
-`SM-026`…`SM-031` (arrivate il 16 novembre 2026). Trentuno pezzi del copione hanno la voce, su 736. Nel gioco le
-ventisei prese durano 5:26 (le dodici nuove 1:56).
+**Cinquantuno**: `SM-001`…`SM-014` (arrivate il 13 e il 15 novembre), `SM-017`…`SM-022`, `SM-026`…`SM-031`
+(arrivate il 16 novembre) e `SM-032`…`SM-058` (arrivate il 17 novembre 2026): la plancia, Yusuf alla radio, la
+cuccetta. Sessantatré pezzi del copione hanno la voce, su 736. Nel gioco le cinquantuno prese durano 9:14 (le
+venticinque nuove 3:47).
 
-**Nella serie non manca niente fino a `SM-031`.** I cinque numeri che non hanno un file non lo avranno: il copione
+**Nella serie non manca niente fino a `SM-058`.** I sette numeri che non hanno un file non lo avranno: il copione
 li registra una volta sola, e nel gioco suonano la presa uguale (`SM-015` è `SM-013`, `SM-016` è `SM-014`: il faro
 di prua con «usa» invece di «accendi»; `SM-023` è `SM-020`, `SM-024` è `SM-021`, `SM-025` è `SM-022`: il
-lanciarpioni con «usa» invece di «spara»). La prima presa che manca è `SM-032`: della Santa Maria ne restano 73 su
-99, di tutto il copione 578 su 604.
+lanciarpioni con «usa» invece di «spara»; `SM-043` è `SM-040`, «Ho trovato una cosa.», e `SM-049` è `SM-047`, «Te
+lo porto.», le stesse risposte a Yusuf in due nodi). La prima presa che manca è `SM-059`, la sala macchine.
 
 **Le prime quattordici.** Il controllo del 15 novembre (`doppiaggio/william/consegne/controllo-2026-11-15.json`):
 il testo è quello del copione; tre parole da far sentire all’autore (SM-011 «nel rosso», che Whisper sente «del
@@ -157,3 +158,30 @@ tre parti (7,3 s, 1,9 s, 1,4 s): chi ascolta sente William dire «si arrende e s
 soltanto alla fine il computer, con la lunghezza e con «MATERIALE NON IN ARCHIVIO.». Nella prima pausa la parte del
 computer non ci sta (7,3 s contro 1,6), e dentro una presa non si taglia. Da far sentire all’autore, che decide:
 tenerla così, o chiedere a Leonardo le tre parti in tre prese.
+
+**Le venticinque del 17 novembre** (`SM-032`…`SM-042`, `SM-044`…`SM-048`, `SM-050`…`SM-058`): la manovra
+(accostare, la scansione lunga chiesta prima, l’accostata a cinquanta metri); Yusuf alla radio (la descrizione, il
+racconto dentro le sue battute, le risposte che William gli dà); la cuccetta (la stanza, la branda, l’armadietto,
+l’oblò, il registro di bordo guardato, esaminato e preso, la chiavetta). I venticinque file sciolti e quelli
+dell’archivio `TransferNow-20261117Ps9DUvnw.zip` sono gli stessi.
+
+Il controllo (`doppiaggio/william/consegne/controllo-2026-11-17.json`, come i precedenti): 48 kHz, 16 bit, mono; i
+picchi fra −9,0 e −3,7 dBFS, nessun campione pieno; le parole fra −29,6 e −22,5 dBFS (`SM-037` e `SM-038`, «Una
+pausa», le più basse: lo strumento le porta tutte a −23); il fondo fra −81,6 e −74,5 dBFS; in testa 1,1–1,4 s, in
+coda 0,5–1,1 s. Negli MP3 del gioco i picchi stanno fra −8,2 e −1,5 dBFS. Il testo è quello del copione; nel
+registro di bordo (`SM-055`, `SM-056`) Leonardo legge anche le scritte fra «» («TSC-1972…», «Settimana sei…»), che
+sono sue. Le cifre di Whisper («4», «340», «2105») non sono differenze, e nemmeno «cucetta» e «ferraia» (Whisper
+perde le doppie e il «gli»). Da far sentire all’autore:
+
+- `SM-046`, la risposta «E se dentro c’è qualcuno?»: Leonardo dice «E se **c’è dentro** qualcuno?», le due parole
+  scambiate (le stesse parole, a schermo resta il testo del gioco);
+- `SM-056`, la firma «W. T.» in fondo all’ultima riga del registro: Whisper sente «VT».
+
+**Le battute di Yusuf con il racconto in mezzo.** In cinque battute (`apertura` due volte, `credito`, `cosa`,
+`qualcuno`) il testo alterna Yusuf e William: «Magazzino Quattro.» — *Una pausa, il tempo di leggere chi chiama.* —
+«William. Se è per il credito…». Leonardo ha registrato solo il racconto, come chiede il copione; la battuta di
+Yusuf è un file solo (`YU-01`…`YU-05`). Il gioco, oggi, fa dire a Yusuf tutta la battuta e poi a William il suo
+racconto (le prese «poi» del §2): l’ordine del testo si perde, e in `cosa` William finisce su «Poi:» quando Yusuf ha
+già parlato. Solo `voce` (`SM-050`: Yusuf, poi il racconto) torna giusta. Dentro i file di Yusuf, fra una frase e
+l’altra, c’è un silenzio vero (0,4–0,9 s): da decidere con l’autore se dividerli lì, così che William parli fra le
+frasi di Yusuf come nel testo (è il caso del §3).

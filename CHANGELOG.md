@@ -8,6 +8,10 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+### Per chi gioca
+
+- **William ha venticinque battute nuove** (Leonardo Tomassetti): l’accostata al relitto, la telefonata a Yusuf con le risposte che gli dai, la cuccetta e il registro di bordo.
+
 ## [0.2.5-beta.15] - 2026-11-16
 
 ### Per chi gioca
