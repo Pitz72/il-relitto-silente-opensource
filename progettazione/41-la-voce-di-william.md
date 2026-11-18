@@ -112,16 +112,19 @@ scheda Audio delle opzioni, **«Voce di William»: recitata o nessuna** (di base
 
 ## 5. Le prese, a oggi
 
-**Cinquantuno**: `SM-001`…`SM-014` (arrivate il 13 e il 15 novembre), `SM-017`…`SM-022`, `SM-026`…`SM-031`
-(arrivate il 16 novembre) e `SM-032`…`SM-058` (arrivate il 17 novembre 2026): la plancia, Yusuf alla radio, la
-cuccetta. Sessantatré pezzi del copione hanno la voce, su 736. Nel gioco le cinquantuno prese durano 9:14 (le
-venticinque nuove 3:47).
+**Settantasei**: `SM-001`…`SM-014` (arrivate il 13 e il 15 novembre), `SM-017`…`SM-022`, `SM-026`…`SM-031`
+(arrivate il 16 novembre), `SM-032`…`SM-058` (arrivate il 17 novembre) e `SM-059`…`SM-082` tranne `SM-062`
+(arrivate il 18 novembre 2026): la plancia, Yusuf alla radio, la cuccetta, la sala macchine, la stiva. Novantadue
+pezzi del copione hanno la voce, su 736: il 12,6 % delle sigle (76 su 604) e l’11,6 % delle parole di William;
+dell’atto I, la Santa Maria, 76 sigle su 99 e l’82 % delle parole. Nel gioco le prese durano 13:55 (le venticinque
+del 18 novembre 4:41).
 
 **Nella serie non manca niente fino a `SM-058`.** I sette numeri che non hanno un file non lo avranno: il copione
 li registra una volta sola, e nel gioco suonano la presa uguale (`SM-015` è `SM-013`, `SM-016` è `SM-014`: il faro
 di prua con «usa» invece di «accendi»; `SM-023` è `SM-020`, `SM-024` è `SM-021`, `SM-025` è `SM-022`: il
 lanciarpioni con «usa» invece di «spara»; `SM-043` è `SM-040`, «Ho trovato una cosa.», e `SM-049` è `SM-047`, «Te
-lo porto.», le stesse risposte a Yusuf in due nodi). La prima presa che manca è `SM-059`, la sala macchine.
+lo porto.», le stesse risposte a Yusuf in due nodi). Dal 18 novembre manca `SM-062` (vedi sotto); dopo `SM-082`
+la prima che manca è `SM-083`, la batteria nella stiva.
 
 **Le prime quattordici.** Il controllo del 15 novembre (`doppiaggio/william/consegne/controllo-2026-11-15.json`):
 il testo è quello del copione; tre parole da far sentire all’autore (SM-011 «nel rosso», che Whisper sente «del
@@ -177,6 +180,33 @@ perde le doppie e il «gli»). Da far sentire all’autore:
 - `SM-046`, la risposta «E se dentro c’è qualcuno?»: Leonardo dice «E se **c’è dentro** qualcuno?», le due parole
   scambiate (le stesse parole, a schermo resta il testo del gioco);
 - `SM-056`, la firma «W. T.» in fondo all’ultima riga del registro: Whisper sente «VT».
+
+**Le venticinque del 18 novembre** (`SM-059`…`SM-061`, `SM-063`…`SM-073`, `SM-074a`, `SM-074b`, `SM-075`…`SM-077`,
+`SM-078a`, `SM-078b`, `SM-079`…`SM-082`): la sala macchine (la stanza, il reattore guardato, ascoltato e toccato, la
+cassetta di ferraglia guardata e aperta nei tre casi, il bengala, l’amplificatore di firma) e la stiva (la stanza,
+anche in tuta, i ganci, la rastrelliera, il lettore di ebook, il boccaporto, la tuta, anche indossata, il kit, la
+taglierina). Le «a» e le «b» sono due varianti della stessa descrizione: `SM-074a` e `SM-078a` con la spia del
+boccaporto verde, a Santa Maria agganciata al relitto, `SM-074b` e `SM-078b` con la spia rossa. I venticinque file
+sciolti e quelli dell’archivio `TransferNow-20261118lYf7cf0W.zip` sono gli stessi.
+
+- **`sm-062.wav` è `SM-063`.** Whisper ci sente «Il re del reattore. Sempre quello.», che è il testo di `SM-063` (la
+  terza risposta ad «ascolta il reattore», dalla seconda volta in poi); `SM-062`, la prima volta che si ascolta il
+  reattore senza sapere del sonaglio («Sto fermo e lo ascolto davvero, per una volta…»), non c’è. Il file è entrato
+  come `SM-063` (rinominato in `consegne/`, dove la copia di Leonardo resta com’era in `Downloads`), e `SM-062` resta
+  muta: da chiedere a Leonardo.
+- **Le parti non venivano riconosciute.** `voce_william.py` confrontava il nome del file in maiuscolo con la sigla del
+  copione, e `SM-074A` non è `SM-074a`: le quattro mezze prese restavano fuori. Corretto (il confronto è in maiuscolo
+  da tutte e due le parti).
+- **Giocate dal ponte** (tre percorsi: prima dell’accostata, dopo, con la chiavetta e il kit aperto), le prese partono
+  tutte al loro comando: la variante giusta del boccaporto e della stiva in tuta, `SM-068` alla prima apertura della
+  cassetta con la chiavetta e `SM-066` alla seconda, `SM-063` dalla seconda volta che si ascolta il reattore.
+
+Il controllo (`doppiaggio/william/consegne/controllo-2026-11-18.json`, come i precedenti): 48 kHz, 16 bit, mono; i
+picchi fra −7,3 e −2,8 dBFS, nessun campione pieno; le parole fra −27,8 e −20,5 dBFS (lo strumento le porta tutte a
+−23); il fondo fra −82,1 e −74,1 dBFS; in testa 1,0–1,3 s, in coda 0,5–0,9 s. Il testo è quello del copione, tranne
+`SM-062` qui sopra. In `SM-077` Leonardo legge anche il titolo sul lettore («…nello di Ghiaccio»), che sta fra «» ed è
+suo. «suonaio» per «sonaglio» (`SM-061`) e «baligetta» per «valigetta» (`SM-081`) sono di Whisper, con le parole
+sicure intorno; da sentire, se l’autore vuole.
 
 **Le battute di Yusuf con il racconto in mezzo.** In cinque battute (`apertura` due volte, `credito`, `cosa`,
 `qualcuno`) il testo alterna Yusuf e William: «Magazzino Quattro.» — *Una pausa, il tempo di leggere chi chiama.* —

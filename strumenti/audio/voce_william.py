@@ -118,13 +118,17 @@ def main():
                     if parti:
                         pezzi.append({"id": z["id"], "file": z.get("uguale", z["id"]), "tipo": p["tipo"], "parti": parti})
 
-    # le consegne: una per sigla (il nome del file è la sigla, in minuscolo o in maiuscolo)
+    # le consegne: una per sigla (il nome del file è la sigla, in minuscolo o in maiuscolo). Le sigle delle prese in più
+    # parti hanno la lettera minuscola («SM-074a»): il confronto si fa in maiuscolo, la chiave resta quella del copione
+    # (il 18 novembre 2026 sm-074a.wav non veniva riconosciuto)
+    per_maiuscolo = {s.upper(): s for s in sigle}
     arrivate = {}
     for nome in sorted(os.listdir(CONSEGNE)):
         m = re.fullmatch(r"([a-z]+-\d+[a-z]?(?:-[cs])?)\.wav", nome, re.I)
-        if m and m.group(1).upper() in sigle:
-            arrivate[m.group(1).upper()] = os.path.join(CONSEGNE, nome)
-    estranee = [n for n in os.listdir(CONSEGNE) if n.lower().endswith(".wav") and re.sub(r"\.wav$", "", n, flags=re.I).upper() not in arrivate]
+        if m and m.group(1).upper() in per_maiuscolo:
+            arrivate[per_maiuscolo[m.group(1).upper()]] = os.path.join(CONSEGNE, nome)
+    arrivate_m = {k.upper() for k in arrivate}
+    estranee = [n for n in os.listdir(CONSEGNE) if n.lower().endswith(".wav") and re.sub(r"\.wav$", "", n, flags=re.I).upper() not in arrivate_m]
 
     os.makedirs(USCITA, exist_ok=True)
     registro_f = os.path.join(USCITA, "prese.json")

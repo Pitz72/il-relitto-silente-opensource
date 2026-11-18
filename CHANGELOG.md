@@ -11,7 +11,16 @@ documenti di `progettazione/`.
 ### Per chi gioca
 
 - **William ha venticinque battute nuove** (Leonardo Tomassetti): l’accostata al relitto, la telefonata a Yusuf con le risposte che gli dai, la cuccetta e il registro di bordo.
+- **William ha altre venticinque battute nuove** (Leonardo Tomassetti): la sala macchine, con il reattore, la cassetta di ferraglia, il bengala e l’amplificatore, e la stiva, con la tuta, il kit, i ganci, il lettore di ebook e il boccaporto.
 - **Alla radio Yusuf e William parlano nell’ordine del testo**: Yusuf dice una frase, William racconta, Yusuf continua. La voce di Yusuf è un poco più alta, e quando William dice che Yusuf conta fino a dieci il conto non si sente più.
+
+### Aggiunto
+
+- **Le prese del 18 novembre** (documento 41, §5): `SM-059`…`SM-061`, `SM-063`…`SM-082`, con le due varianti di `SM-074` (la stiva in tuta, accostati o no) e di `SM-078` (il boccaporto, spia verde o rossa); settantasei in tutto. Il file `sm-062.wav` della consegna conteneva la frase di `SM-063` («Il re del reattore. Sempre quello.»): è entrato come `SM-063`, e `SM-062` resta da registrare.
+
+### Corretto
+
+- **Le prese in due parti non venivano riconosciute** (`strumenti/audio/voce_william.py`): il nome del file si confrontava in maiuscolo con la sigla del copione, che per le parti ha la lettera minuscola (`SM-074a`). Ora il confronto è in maiuscolo da entrambe le parti, e la chiave resta quella del copione.
 
 
 ## [0.2.5-beta.15] - 2026-11-16
