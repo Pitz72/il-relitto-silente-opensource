@@ -181,6 +181,11 @@ perde le doppie e il «gli»). Da far sentire all’autore:
   scambiate (le stesse parole, a schermo resta il testo del gioco);
 - `SM-056`, la firma «W. T.» in fondo all’ultima riga del registro: Whisper sente «VT».
 
+**Ascoltate dall’autore il 18 novembre 2026** (`consegne/Ascolto quattro prese di William 2026-11-18/`, un annuncio a
+voce prima di ogni presa): `SM-018` «ferma ok»; `SM-031` «ok»; `SM-046` «ok… lo dice interrogativo» (le parole
+scambiate restano); `SM-056` **da rifare**: «Dice VT, dovrebbe dire DoppiaV T». Chiesta a Leonardo nel resoconto
+tecnico del 18 novembre (`doppiaggio/william/resoconti/`, §2.2), con `SM-062`. Resta aperta `SM-030` (qui sopra).
+
 **Le venticinque del 18 novembre** (`SM-059`…`SM-061`, `SM-063`…`SM-073`, `SM-074a`, `SM-074b`, `SM-075`…`SM-077`,
 `SM-078a`, `SM-078b`, `SM-079`…`SM-082`): la sala macchine (la stanza, il reattore guardato, ascoltato e toccato, la
 cassetta di ferraglia guardata e aperta nei tre casi, il bengala, l’amplificatore di firma) e la stiva (la stanza,

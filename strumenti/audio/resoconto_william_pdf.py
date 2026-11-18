@@ -193,7 +193,14 @@ def main():
              "SM-063. <b>SM-062 non è stata consegnata</b> e va registrata:"),
            p(f"<font name='Segno-B' color='#1F5C73'>SM-062</font> · Sala macchine · risposta ad «ascolta il "
              f"reattore», la prima volta, quando la nota del reattore è ancora sconosciuta", "cella"),
-           p(x(testo(z)), "battuta")]
+           p(x(testo(z)), "battuta"),
+           # l'autore, ascoltata la presa il 18 novembre 2026: «Dice VT, dovrebbe dire DoppiaV T»
+           p("2.2 SM-056: da rifare", "h2"),
+           p("La firma in fondo all’ultima riga del registro di bordo, scritta «W. T.», è pronunciata «VT». La lettura "
+             "corretta è <b>«doppia vu, ti»</b>. Va rifatta la presa intera (nella presa non si taglia):"),
+           p("<font name='Segno-B' color='#1F5C73'>SM-056</font> · Cuccetta · il registro di bordo esaminato, "
+             "l’ultima riga", "cella"),
+           p(x("«Settimana sei. Stiva vuota. Nessun contatto. W. T.»") + " — W. T. = «doppia vu, ti»", "battuta")]
 
     # 3. conformità
     picchi = [r["picco"] for r in controlli]
@@ -224,7 +231,7 @@ def main():
     st += [p("3. Conformità tecnica", "h1"),
            tabella(righe, [5.4 * cm, 8.4 * cm, 3.2 * cm]),
            Spacer(1, 4),
-           p("Le prese consegnate sono state integrate così come sono (16 bit, il picco di SM-074b, le code corte): non è "
+           p("Le prese consegnate sono state integrate così come sono (16 bit, il picco di SM-074b, le code corte): per questi punti non è "
              "richiesta una nuova registrazione. Dalle prossime consegne: 24 bit, picchi entro −3 dBFS, un secondo di "
              "silenzio anche dopo l’ultima parola, il silenzio della stanza e il foglio delle note.")]
 
