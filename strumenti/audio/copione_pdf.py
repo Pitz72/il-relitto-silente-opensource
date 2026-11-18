@@ -365,7 +365,7 @@ def pagine_davanti(tot):
     st.append(PageBreak())
     st += h1("Come registrare", "tecnica")
     st += punti([
-        "<b>Formato</b>: WAV, 48 kHz, 24 bit, mono.",
+        "<b>Formato</b>: WAV, 48 kHz, 16 o 24 bit, mono.",
         "<b>Asciutto</b>: niente effetti, niente compressione, niente equalizzazione, niente riverbero. Il casco, "
         "la radio e le stanze li mette il gioco.",
         "<b>Sempre uguale</b>: lo stesso microfono, la stessa distanza (20–30 cm, con l’antipop), la stessa stanza "

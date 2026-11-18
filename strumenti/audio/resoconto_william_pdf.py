@@ -213,7 +213,8 @@ def main():
     righe = [["Requisito (copione, «Come registrare»)", "Rilevato su tutte le consegne", "Esito"],
              ["WAV, 48 kHz", f"{', '.join(str(s) for s in sr)} Hz su {n_file} file", "Conforme"],
              ["Mono", f"{', '.join(str(c) for c in canali)} canale su {n_file} file", "Conforme"],
-             ["24 bit", f"{', '.join(str(b) for b in bit)} bit su {n_file} file", "<font color='#9B2C2C'>Non conforme</font>"],
+             # 16 o 24 bit: l'autore, 18 novembre 2026, «A 16 va bene uguale, come arrivano li sistemiamo noi»
+             ["16 o 24 bit", f"{', '.join(str(b) for b in bit)} bit su {n_file} file", "Conforme"],
              ["Picchi intorno a −6 dBFS, mai sopra −3", f"da {n(min(picchi))} a {n(max(picchi))} dBFS; sopra −3: "
               f"{fmt_sopra or 'nessuno'}; nessun campione a fondo scala",
               "Conforme" if not sopra else f"<font color='#9B2C2C'>{len(sopra)} file fuori soglia</font>"],
@@ -231,8 +232,8 @@ def main():
     st += [p("3. Conformità tecnica", "h1"),
            tabella(righe, [5.4 * cm, 8.4 * cm, 3.2 * cm]),
            Spacer(1, 4),
-           p("Le prese consegnate sono state integrate così come sono (16 bit, il picco di SM-074b, le code corte): per questi punti non è "
-             "richiesta una nuova registrazione. Dalle prossime consegne: 24 bit, picchi entro −3 dBFS, un secondo di "
+           p("Le prese consegnate sono state integrate così come sono (il picco di SM-074b, le code corte): per questi punti non è "
+             "richiesta una nuova registrazione. Dalle prossime consegne: picchi entro −3 dBFS, un secondo di "
              "silenzio anche dopo l’ultima parola, il silenzio della stanza e il foglio delle note.")]
 
     # 4. restanti

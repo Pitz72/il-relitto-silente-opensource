@@ -270,7 +270,7 @@ def contenuto():
 
     st += [PageBreak(), p("Come registrare", "h1"),
            *punti([
-               "<b>Formato</b>: WAV, 48 kHz, 24 bit, mono.",
+               "<b>Formato</b>: WAV, 48 kHz, 16 o 24 bit, mono.",
                "<b>Asciutto</b>: niente effetti, niente compressione, niente equalizzazione, niente riverbero. La "
                "radio, il nastro vecchio e il fruscio li mette il gioco.",
                "<b>Vicino</b>: 10–15 cm dal microfono, con l’antipop, a voce bassa. Sempre la stessa distanza.",
