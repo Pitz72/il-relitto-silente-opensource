@@ -16,7 +16,9 @@
 #     di servizio, la voce del computer»), perché William il suo nome non lo dice mai.
 # Le parti nuove, che non hanno ancora il loro file (doppiaggio/servizio/tagli.json), vanno anche in
 # servizio-nuove.txt: si genera soltanto quello, con la stessa voce e la stessa descrizione.
-# Il resto, compreso il numero dell'aria che William legge sul visore, è di William (Leonardo).
+#   - la cifra dell'aria sul visore, «ARIA 28%»: la legge la tuta (l'autore, 19 novembre 2026: «Quelle informazioni
+#     sono del computer o della voce dell'assistente nel gioco»), una parte per ogni valore, da 0 a 100.
+# Il resto è di William (Leonardo).
 #
 # Ne escono, in doppiaggio/servizio/:
 #   servizio.txt    il testo da incollare in AI Studio: una parte per riga, `<long pause>` fra l'una e l'altra (serve a
@@ -45,14 +47,15 @@ NOMI = {"YUSUF": "Yusuf", "XYLOS": "Xylos", "ANZIANO": "Anziano", "SANTA": "Sant
         "TSC-1972": "TSC 1972", "AURORA-7": "Aurora 7"}
 # La riga del registro di bordo, in fondo ai finali.
 REGISTRO = re.compile(r"^Registro di bordo, TSC-1972\..*$")
-ORDINE = ["protezione", "schermo", "lettura", "etichetta", "matrice", "suggerimento", "registro"]
+# I tipi nuovi vanno in fondo: così le parti che hanno già il loro file non cambiano numero.
+ORDINE = ["protezione", "schermo", "lettura", "etichetta", "matrice", "suggerimento", "registro", "aria"]
 # Dentro le letture dello scanner, le frasi che sono di William: restano a lui, e la lettura si divide lì.
 DI_WILLIAM = ["Provo con un'altra, e un'altra ancora:",
               "il calcolo parte, si ferma, riparte. Al terzo tentativo si arrende e scrive"]
 # Quanto può durare un blocco: AI Studio ne fa circa sei minuti a richiesta; si sta sotto, con margine.
 MAX_MINUTI = 5.0
 # I valori che il gioco può scrivere al posto dei segnaposto: la matrice va a 4, 18, 75 e 100 (traduci.fav).
-VALORI = {"traduzione": [4, 18, 75, 100]}
+VALORI = {"traduzione": [4, 18, 75, 100], "aria": list(range(101))}
 NUMERI = {4: "quattro", 18: "diciotto", 75: "settantacinque", 100: "cento"}
 # Le righe che sono una lettura dello scanner o del computer di bordo (grammatica.ts, LETTURA).
 LETTURA = re.compile(r"^(?:ANALISI\b|LETTURA:|IDENTIFICAZIONE\b|DATAZIONE\b|Lunghezza: )")
@@ -65,6 +68,24 @@ SCHERMO = re.compile(r"SOTTO 30, PROTEZIONE VITALE|PROTEZIONE VITALE|MATERIALE N
 # Una parentesi con dentro un maiuscolo di almeno due lettere: un suggerimento.
 PARENTESI = re.compile(r"\(([^()]*)\)")
 MAIUSCOLO = re.compile(rf"[{MAIUSCOLA}]{{2,}}")
+# La cifra dell'aria sul visore, com'è nei .fav (aria.fav e le regole della protezione vitale).
+ARIA = re.compile(r"ARIA \[aria\]%")
+UNITA = ["zero", "uno", "due", "tre", "quattro", "cinque", "sei", "sette", "otto", "nove", "dieci", "undici", "dodici",
+         "tredici", "quattordici", "quindici", "sedici", "diciassette", "diciotto", "diciannove"]
+DECINE = ["", "", "venti", "trenta", "quaranta", "cinquanta", "sessanta", "settanta", "ottanta", "novanta"]
+
+
+def in_lettere(n):
+    """Un numero da 0 a 100 in lettere: «ventotto», «trentuno», «cento»."""
+    if n == 100:
+        return "cento"
+    if n < 20:
+        return UNITA[n]
+    d, u = divmod(n, 10)
+    dec = DECINE[d]
+    if u in (1, 8):
+        dec = dec[:-1]
+    return dec + ("" if u == 0 else "tré" if u == 3 else UNITA[u])
 
 
 def per_la_voce(testo):
@@ -77,6 +98,8 @@ def per_la_voce(testo):
     # davanti a un apostrofo («L'», «D'»); «L.V.» resta com'è
     t = re.sub(rf"[{MAIUSCOLA}][{MAIUSCOLA}0-9\-]+|[{MAIUSCOLA}](?=['’][{MAIUSCOLA}])", abbassa, testo)
     t = t.replace("'", "’").replace("‹", "").replace("›", "")
+    # la cifra dell'aria in lettere («Aria ventotto per cento»)
+    t = re.sub(r"\baria (\d+)%", lambda m: f"aria {in_lettere(int(m.group(1)))} per cento", t)
     # le percentuali della matrice in lettere, come le dice la voce
     t = re.sub(r"\b(\d+)%", lambda m: f"{NUMERI.get(int(m.group(1)), m.group(1))} per cento", t)
     t = " ".join(t.split()).strip()
@@ -151,13 +174,16 @@ def parti_di_servizio():
                     trovate.append(("matrice", dentro if tutta_schermo or not lettura else lettura.group(0)))
                 for m in ETICHETTA.finditer(riga):
                     trovate.append(("etichetta", m.group(0)))
+                # la cifra dell'aria, anche dentro una parentesi di William («(Abbasso gli occhi sul visore: ARIA…»)
+                for m in ARIA.finditer(riga):
+                    trovate.append(("aria", m.group(0)))
                 senza_parentesi = PARENTESI.sub(lambda m: " " * len(m.group(0)), riga)
                 for m in SCHERMO.finditer(senza_parentesi):
                     tipo = "protezione" if m.group(0) == "PROTEZIONE VITALE" else "schermo"
                     trovate.append((tipo, m.group(0)))
                 for m in PARENTESI.finditer(riga):
                     dentro = m.group(1)
-                    if MATRICE.fullmatch(m.group(0)) or not MAIUSCOLO.search(dentro):
+                    if MATRICE.fullmatch(m.group(0)) or not MAIUSCOLO.search(ARIA.sub("", dentro)):
                         continue
                     if re.search(r"intraducibile:", dentro):
                         continue
@@ -178,10 +204,13 @@ def parti_di_servizio():
                 if voce not in viste:
                     viste[voce] = {"id": hashlib.sha1(("servizio|" + voce).encode()).hexdigest()[:12], "voce": voce,
                                    "gioco": originale, "tipo": tipo, "da": []}
+                    if tipo == "aria":
+                        viste[voce]["valore"] = int(re.search(r"\d+", originale).group(0))
                 if dove not in viste[voce]["da"]:
                     viste[voce]["da"].append(dove)
     # i tipi nuovi vanno in fondo: così le parti che hanno già un file non cambiano numero
-    return sorted(viste.values(), key=lambda p: (ORDINE.index(p["tipo"]), p["voce"]))
+    # la cifra dell'aria in ordine di valore, da 0 a 100: così si genera e si taglia di fila
+    return sorted(viste.values(), key=lambda p: (ORDINE.index(p["tipo"]), p.get("valore", 0), p["voce"]))
 
 
 def parole(t):

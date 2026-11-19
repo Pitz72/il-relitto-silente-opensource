@@ -112,6 +112,32 @@ scheda Audio delle opzioni, **«Voce di William»: recitata o nessuna** (di base
 
 ## 5. Le prese, a oggi
 
+**Cento, dal 19 novembre 2026.** La consegna del 19 novembre (`TransferNow-20261119c7HrKROE.zip`, 27 file): `SM-083`…
+`SM-112` (la batteria, la cella di riserva, il faro del casco, il kit, la tuta, il boccaporto), `IN-001` e `IN-002`
+(le prime due dell’atto II, sullo scafo), `SM-062` che mancava (giusta: «Sto fermo e lo ascolto davvero…») e
+`SM-056` rifatta per la firma (va detta «doppia vu, ti»; la copia di prima è in `consegne/2026-11-18-sostituite/`).
+Dentro c’erano anche `sm-093.wav` (uguale a `SM-089`, non serve), un file di silenzio della stanza e le cifre
+dell’aria lette «sospese», da 0 a 100 a passi di dieci: fuori dal gioco, in `audio/sorgenti/voce/` (vedi sotto).
+Controllo con Whisper (`consegne/controllo-2026-11-19.json`): il testo è quello del copione; le differenze sono di
+Whisper (le cifre in numeri, «soia» per «soglia», «magnati» per «magneti»). In `SM-056` Whisper non può dire se la
+firma è «vu ti» o «doppia vu, ti», e prima di «novantasei anni» c’è un piccolo suono: da sentire per l’autore
+(`consegne/Ascolto SM-056 2026-11-19/`). Fra `SM-083` e `SM-112` non mancano che `SM-094` e `SM-095`, le due frasi
+del faro con la cifra dell’aria: Leonardo le ha lasciate, e con ragione (qui sotto).
+
+**La cifra dell’aria non è di William.** Leonardo l’ha fatto notare, e l’autore, 19 novembre 2026: «ci sono le
+letture dell’aria nel suo copione, ma è sbagliato. Quelle informazioni sono del computer o della voce
+dell’assistente nel gioco». Era già la sua idea del 7 novembre (documento 35, §11, «la tuta che gli dice l’aria»),
+e il copione l’aveva lasciata a William per un errore mio. Corretto così, con le frasi approvate dall’autore lo
+stesso giorno: nei `.fav` la cifra è una scritta del visore, «ARIA [aria]%» (33 frasi, in `aria.fav`, `echi.fav`,
+`traduci.fav`, `ingresso.fav`, `santamaria.fav`, `vita.fav`, `equipaggio.fav`, `ponte.fav`), e le frasi di William
+stanno in piedi senza il numero («PROTEZIONE VITALE. ARIA 28%. La tuta non mi lascia ascoltare…»). La legge Kira
+(documento 35, §11); il copione l’ha in grigio, l’appendice delle cifre non c’è più. Nessuna presa già consegnata
+conteneva la cifra: le sigle e i testi delle cento prese non sono cambiati.
+
+**Il copione, edizione del 19 novembre 2026**: soltanto le prese da registrare. `copione_pdf.py` toglie i pezzi che
+hanno già la loro presa nel gioco (`audio/musica-ia/WI/prese.json`) e quelli uguali a loro: 504 prese, 107 blocchi,
+97 pagine. Corretta anche la pronuncia della firma, che nel copione era rimasta «vu ti».
+
 **Settantasei**: `SM-001`…`SM-014` (arrivate il 13 e il 15 novembre), `SM-017`…`SM-022`, `SM-026`…`SM-031`
 (arrivate il 16 novembre), `SM-032`…`SM-058` (arrivate il 17 novembre) e `SM-059`…`SM-082` tranne `SM-062`
 (arrivate il 18 novembre 2026): la plancia, Yusuf alla radio, la cuccetta, la sala macchine, la stiva. Novantadue

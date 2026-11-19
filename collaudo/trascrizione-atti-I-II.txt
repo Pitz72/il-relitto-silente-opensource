@@ -187,7 +187,7 @@ Stai portando:
   - Il visore
 
 > esamina il visore
-Sul bordo del visore, in verde, la cifra dell'aria: 100.
+Sul bordo del visore, in verde: ARIA 100%.
 
 > esamina il faro del casco
 Il faro del casco, al massimo: un cono bianco che apre il buio davanti a me e lo richiude alle mie spalle.
@@ -393,7 +393,7 @@ Stai portando:
 Tiepido, più leggero di quanto pensassi. Il brusio viene da lì, e finché lo porto la cifra dell'aria scende a ogni passo. Vale sei mesi di stive vuote. Forse un anno.
 
 > esamina il visore
-Sul bordo del visore, in verde, la cifra dell'aria: 87.
+Sul bordo del visore, in verde: ARIA 87%.
 
 > guarda
 
@@ -426,7 +426,7 @@ Vuota. Dove l'arnese si saldava alla parete restano i miei tagli, netti, già me
 Il brusio risale sotto il guanto, e la cifra sul visore scende di un punto. Tolgo la mano.
 
 > esamina il visore
-Sul bordo del visore, in verde, la cifra dell'aria: 81.
+Sul bordo del visore, in verde: ARIA 81%.
 
 > ovest
 

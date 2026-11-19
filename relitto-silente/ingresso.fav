@@ -227,7 +227,7 @@ Invece di usa la taglierina sul risuonatore: dire "(Per liberarlo dalla nicchia:
 
 # --- L'eco delle gole (serve il Sintonizzatore, dal Laboratorio) -------------
 Invece di sintonizza le gole se il giocatore non ha il sintonizzatore: dire "Mi serve il Sintonizzatore di Frequenza per separare il brusio in voci.".
-Invece di sintonizza le gole se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.".
+Invece di sintonizza le gole se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. ARIA [aria]%. La tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.".
 Invece di sintonizza le gole se il giocatore ha il risuonatore: dire "Il Sintonizzatore cerca una voce e ne trova cento: con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovrei posarlo.".
 Invece di sintonizza le gole se le gole è muta: dire "Il Sintonizzatore separa il brusio in fili, e due restano. Una voce che chiede, con urgenza, di tenere il campo: «…il campo, tenetelo…». E un'altra, più bassa, che risponde a chi non la ascolta: «…non tiene più…». Poi le voci tornano a sovrapporsi, e il resto è coro." e adesso le gole è risuonata e adesso aumenta gli echi e adesso diminuisci l'aria di 4.
 Invece di sintonizza le gole: dire "Il campo da tenere, e qualcuno che dice che non tiene più. Il resto è coro.".

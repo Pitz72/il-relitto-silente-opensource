@@ -1,6 +1,6 @@
 {
 "nota": "Scritto da strumenti/audio/voce_william.py: non si corregge a mano.",
-"impronta_fav": "59ab934f77a450a60c101b0ca8810b0a61b2a2a58536117b6e3e3010319af406",
+"impronta_fav": "4eba9a0f4847b7141813b998a2d612938854fa9798db5a3a07d8a47007d7f0cd",
 "pezzi": [
 {
 "id": "SM-001",
@@ -1017,11 +1017,13 @@
 "a mani nude non viene è cresciuto insieme alla parete ci vorrebbe la taglierina"
 ],
 [
-"abbasso gli occhi sul visore aria aria quando li rialzo la figura guarda la stessa cifra",
+"abbasso gli occhi sul visore",
+"quando li rialzo la figura guarda la stessa cifra",
 "una pausa"
 ],
 [
-"abbasso gli occhi sul visore aria aria quando li rialzo la figura guarda la stessa cifra",
+"abbasso gli occhi sul visore",
+"quando li rialzo la figura guarda la stessa cifra",
 "una pausa",
 "e poi più piano"
 ],
@@ -1082,20 +1084,6 @@
 ],
 [
 "archivi di dati cristallini di una capacità che non so immaginare quasi tutti incrinati e lungo le crepe il cristallo si è fatto bianco l ultimo pulsa ancora appena con un filo di corrente lo scanner mi direbbe quanto ne resta"
-],
-[
-"aria la cifra è rossa da qui alla santa maria la tuta lavora soltanto per tenermi in vita"
-],
-[
-"aria la cifra è rossa la tuta fa da sola quello che le hanno insegnato stacca i canali secondari e sul visore compare la scritta che speravo di non leggere",
-"niente ascolto niente traduzione finché non le do altra aria anche il faro scende al minimo da solo"
-],
-[
-"aria mi accorgo che ragiono più piano e che la cosa non mi spaventa è così che comincia"
-],
-[
-"aria sotto la cifra si accende una riga che conosco dal manuale",
-"ancora poco e la tuta non mi lascerà più ascoltare né tradurre"
 ],
 [
 "ascolto il brusio della nave che non smette e il mio fiato nel casco"
@@ -1180,18 +1168,6 @@
 ],
 [
 "con il faro al minimo ho un alone e poco altro le teche aperte sono sagome il groviglio che prima mi veniva incontro si è fermato a mezz aria e cerca lungo le pareti sento più che vedere il freddo delle teche chiuse su la gola di mezzo a ovest da qualche parte oltre il groviglio il passaggio a est il nodo di fibre"
-],
-[
-"con l aria a aria la tuta non cede corrente a nessuno"
-],
-[
-"con l aria a aria la tuta non mi lascia ascoltare niente che non sia il mio fiato mi serve una ricarica"
-],
-[
-"con l aria a aria la tuta non mi ridà il faro anche la luce per lei è un canale secondario"
-],
-[
-"con l aria a aria la tuta tiene spento il traduttore ogni canale che non mi serve per respirare resta chiuso mi serve una ricarica"
 ],
 [
 "costeggiare cosa qui non serve"
@@ -1633,7 +1609,15 @@
 "la cifra sul visore è a zero e il visore non ha più niente da dirmi"
 ],
 [
-"la cifra torna sopra il rosso aria la tuta riapre i canali secondari e mi restituisce il faro"
+"la cifra torna sopra il rosso",
+"la tuta riapre i canali secondari e mi restituisce il faro"
+],
+[
+"la cifra è rossa da qui alla santa maria la tuta lavora soltanto per tenermi in vita"
+],
+[
+"la cifra è rossa la tuta fa da sola quello che le hanno insegnato stacca i canali secondari e sul visore compare la scritta che speravo di non leggere",
+"niente ascolto niente traduzione finché non le do altra aria anche il faro scende al minimo da solo"
 ],
 [
 "la console è già sveglia la mappa stellare brilla sopra di me"
@@ -1752,11 +1736,23 @@
 "la terza fascia la luce ambrata sale quasi fino in cima e la cifra scende ancora"
 ],
 [
+"la tuta non cede corrente a nessuno"
+],
+[
+"la tuta non mi lascia ascoltare niente che non sia il mio fiato mi serve una ricarica"
+],
+[
+"la tuta non mi ridà il faro anche la luce per lei è un canale secondario"
+],
+[
+"la tuta tiene spento il traduttore ogni canale che non mi serve per respirare resta chiuso mi serve una ricarica"
+],
+[
 "la tuta è piena per tre quarti la ricarica la tengo per quando servirà"
 ],
 [
 "la voce c è ma la tuta tiene chiusi i canali secondari",
-"con l aria a aria non mi lascia ascoltare"
+"non mi lascia ascoltare"
 ],
 [
 "la voce del cilindro più chiara e più personale"
@@ -1855,6 +1851,9 @@
 ],
 [
 "metto un piede oltre il bordo poi l altro e mi lascio scendere il tremito del reattore che mi saliva dalle suole non c è più"
+],
+[
+"mi accorgo che ragiono più piano e che la cosa non mi spaventa è così che comincia"
 ],
 [
 "mi accorgo di avere il pugno chiuso dentro c è il seme scuro da giù dalla stiva sale il brusio del risuonatore le voci le vendo yusuf trova il compratore in due giorni su ganimede e il margine torna verde il seme lo tengo prima in un cassetto della plancia poi in una teca e a nessuno dico che esiste ogni tanto quando sono solo nella teca batte un poco di luce verde"
@@ -2219,6 +2218,10 @@
 "sotto il pavimento il reattore tiene il suo re e per la prima volta lo sento è lo stesso del sonaglio nella cella del piccolo"
 ],
 [
+"sotto la cifra si accende una riga che conosco dal manuale",
+"ancora poco e la tuta non mi lascerà più ascoltare né tradurre"
+],
+[
 "sotto la pietra c è un suono non una voce e il sintonizzatore non riesce a fissarlo forse mi manca qualcosa con cui confrontarlo"
 ],
 [
@@ -2262,22 +2265,24 @@
 "su una placca laggiù una frase adesso arriva in fondo"
 ],
 [
-"sul bordo del visore in ambra la cifra dell aria aria"
+"sul bordo del visore in ambra"
 ],
 [
-"sul bordo del visore in rosso la cifra dell aria aria sotto fissa la scritta"
+"sul bordo del visore in rosso",
+"sotto fissa la scritta"
 ],
 [
-"sul bordo del visore in verde la cifra dell aria aria"
+"sul bordo del visore in verde"
 ],
 [
-"sul bordo del visore la cifra passa all ambra aria"
+"sul bordo del visore la cifra passa all ambra"
 ],
 [
 "sul pannello brilla una linea di luce ambrata"
 ],
 [
-"sul visore la tuta mi mette davanti un conto che non le ho chiesto aria aria e oltre quella porta se c è un ritorno sarà lungo"
+"sul visore la tuta mi mette davanti un conto che non le ho chiesto",
+"oltre quella porta se c è un ritorno sarà lungo"
 ],
 [
 "tagliare alla cieca uno scafo che non conosco senza sapere cosa c è dietro no prima devo trovare dove"

@@ -1,9 +1,9 @@
 {
- "impronta_fav": "59ab934f77a450a60c101b0ca8810b0a61b2a2a58536117b6e3e3010319af406",
+ "impronta_fav": "4eba9a0f4847b7141813b998a2d612938854fa9798db5a3a07d8a47007d7f0cd",
  "totali": {
   "prese": 604,
   "uguali": 132,
-  "parole": 16029,
+  "parole": 15976,
   "parlato": 23,
   "citazione": 252,
   "william": 581
@@ -2332,12 +2332,22 @@
            "SV-01-protezione-vitale"
           ],
           [
+           "spazio",
+           " ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
            "william",
-           " Con l'aria a [aria] la tuta non mi ridà il faro: anche la luce, per lei, è un canale secondario.",
+           " La tuta non mi ridà il faro: anche la luce, per lei, è un canale secondario.",
            ""
           ]
          ],
-         "william": "Con l'aria a [aria] la tuta non mi ridà il faro: anche la luce, per lei, è un canale secondario.",
+         "william": "La tuta non mi ridà il faro: anche la luce, per lei, è un canale secondario.",
          "id": "SM-094"
         }
        ]
@@ -2358,12 +2368,22 @@
            "SV-01-protezione-vitale"
           ],
           [
+           "spazio",
+           " ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
            "william",
-           " Con l'aria a [aria] la tuta non mi ridà il faro: anche la luce, per lei, è un canale secondario.",
+           " La tuta non mi ridà il faro: anche la luce, per lei, è un canale secondario.",
            ""
           ]
          ],
-         "william": "Con l'aria a [aria] la tuta non mi ridà il faro: anche la luce, per lei, è un canale secondario.",
+         "william": "La tuta non mi ridà il faro: anche la luce, per lei, è un canale secondario.",
          "uguale": "SM-094",
          "id": "SM-095"
         }
@@ -4539,12 +4559,22 @@
            "SV-01-protezione-vitale"
           ],
           [
+           "spazio",
+           " ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
            "william",
-           " Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
+           " La tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
            ""
           ]
          ],
-         "william": "Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
+         "william": "La tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
          "id": "IN-077"
         }
        ]
@@ -6008,12 +6038,22 @@
            "SV-01-protezione-vitale"
           ],
           [
+           "spazio",
+           " ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
            "william",
-           " Con l'aria a [aria] la tuta non cede corrente a nessuno.",
+           " La tuta non cede corrente a nessuno.",
            ""
           ]
          ],
-         "william": "Con l'aria a [aria] la tuta non cede corrente a nessuno.",
+         "william": "La tuta non cede corrente a nessuno.",
          "id": "VI-031"
         }
        ]
@@ -8673,12 +8713,22 @@
            "SV-01-protezione-vitale"
           ],
           [
+           "spazio",
+           " ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
            "william",
-           " Con l'aria a [aria] non mi lascia ascoltare.",
+           " Non mi lascia ascoltare.",
            ""
           ]
          ],
-         "william": "La voce c'è, ma la tuta tiene chiusi i canali secondari:  Con l'aria a [aria] non mi lascia ascoltare.",
+         "william": "La voce c'è, ma la tuta tiene chiusi i canali secondari:  Non mi lascia ascoltare.",
          "id": "EQ-017"
         }
        ]
@@ -10819,11 +10869,21 @@
          "segmenti": [
           [
            "william",
-           "Sul visore la tuta mi mette davanti un conto che non le ho chiesto: aria [aria], e oltre quella porta, se c'è un ritorno, sarà lungo.",
+           "Sul visore la tuta mi mette davanti un conto che non le ho chiesto: ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
+           "william",
+           " Oltre quella porta, se c'è un ritorno, sarà lungo.",
            ""
           ]
          ],
-         "william": "Sul visore la tuta mi mette davanti un conto che non le ho chiesto: aria [aria], e oltre quella porta, se c'è un ritorno, sarà lungo.",
+         "william": "Sul visore la tuta mi mette davanti un conto che non le ho chiesto:  Oltre quella porta, se c'è un ritorno, sarà lungo.",
          "id": "PO-026a"
         },
         {
@@ -12365,7 +12425,17 @@
          "segmenti": [
           [
            "william",
-           "(Abbasso gli occhi sul visore: aria [aria]. Quando li rialzo, la figura guarda la stessa cifra.) ",
+           "(Abbasso gli occhi sul visore: ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
+           "william",
+           " Quando li rialzo, la figura guarda la stessa cifra.) ",
            ""
           ],
           [
@@ -12384,7 +12454,7 @@
            "l’Anziano"
           ]
          ],
-         "william": "(Abbasso gli occhi sul visore: aria [aria]. Quando li rialzo, la figura guarda la stessa cifra.)  (Una pausa.)",
+         "william": "(Abbasso gli occhi sul visore:  Quando li rialzo, la figura guarda la stessa cifra.)  (Una pausa.)",
          "id": "PO-078"
         }
        ]
@@ -12401,7 +12471,17 @@
          "segmenti": [
           [
            "william",
-           "(Abbasso gli occhi sul visore: aria [aria]. Quando li rialzo, la figura guarda la stessa cifra.) ",
+           "(Abbasso gli occhi sul visore: ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
+           "william",
+           " Quando li rialzo, la figura guarda la stessa cifra.) ",
            ""
           ],
           [
@@ -12430,7 +12510,7 @@
            "l’Anziano"
           ]
          ],
-         "william": "(Abbasso gli occhi sul visore: aria [aria]. Quando li rialzo, la figura guarda la stessa cifra.)  (Una pausa.)  (E poi, più piano:)",
+         "william": "(Abbasso gli occhi sul visore:  Quando li rialzo, la figura guarda la stessa cifra.)  (Una pausa.)  (E poi, più piano:)",
          "id": "PO-079"
         }
        ]
@@ -14222,12 +14302,22 @@
            "SV-01-protezione-vitale"
           ],
           [
+           "spazio",
+           " ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
            "william",
-           " Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
+           " La tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
            ""
           ]
          ],
-         "william": "Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
+         "william": "La tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
          "uguale": "IN-077",
          "id": "EC-004"
         }
@@ -14428,12 +14518,22 @@
            "SV-01-protezione-vitale"
           ],
           [
+           "spazio",
+           " ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
            "william",
-           " Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
+           " La tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
            ""
           ]
          ],
-         "william": "Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
+         "william": "La tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
          "uguale": "IN-077",
          "id": "EC-009"
         }
@@ -14603,12 +14703,22 @@
            "SV-01-protezione-vitale"
           ],
           [
+           "spazio",
+           " ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
            "william",
-           " Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
+           " La tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
            ""
           ]
          ],
-         "william": "Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
+         "william": "La tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
          "uguale": "IN-077",
          "id": "EC-016"
         }
@@ -14754,12 +14864,22 @@
            "SV-01-protezione-vitale"
           ],
           [
+           "spazio",
+           " ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
            "william",
-           " Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
+           " La tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
            ""
           ]
          ],
-         "william": "Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
+         "william": "La tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
          "uguale": "IN-077",
          "id": "EC-021"
         }
@@ -14930,12 +15050,22 @@
            "SV-01-protezione-vitale"
           ],
           [
+           "spazio",
+           " ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
            "william",
-           " Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
+           " La tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
            ""
           ]
          ],
-         "william": "Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
+         "william": "La tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
          "uguale": "IN-077",
          "id": "EC-028"
         }
@@ -15081,12 +15211,22 @@
            "SV-01-protezione-vitale"
           ],
           [
+           "spazio",
+           " ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
            "william",
-           " Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
+           " La tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
            ""
           ]
          ],
-         "william": "Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
+         "william": "La tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
          "uguale": "IN-077",
          "id": "EC-033"
         }
@@ -15206,12 +15346,22 @@
            "SV-01-protezione-vitale"
           ],
           [
+           "spazio",
+           " ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
            "william",
-           " Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
+           " La tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
            ""
           ]
          ],
-         "william": "Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
+         "william": "La tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
          "uguale": "IN-077",
          "id": "EC-038"
         }
@@ -15359,12 +15509,22 @@
            "SV-01-protezione-vitale"
           ],
           [
+           "spazio",
+           " ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
            "william",
-           " Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
+           " La tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
            ""
           ]
          ],
-         "william": "Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
+         "william": "La tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
          "uguale": "IN-077",
          "id": "EC-043"
         }
@@ -15521,12 +15681,22 @@
            "SV-01-protezione-vitale"
           ],
           [
+           "spazio",
+           " ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
            "william",
-           " Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
+           " La tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
            ""
           ]
          ],
-         "william": "Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
+         "william": "La tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
          "uguale": "IN-077",
          "id": "EC-049"
         }
@@ -15726,12 +15896,22 @@
            "SV-01-protezione-vitale"
           ],
           [
+           "spazio",
+           " ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
            "william",
-           " Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
+           " La tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
            ""
           ]
          ],
-         "william": "Con l'aria a [aria] la tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
+         "william": "La tuta non mi lascia ascoltare niente che non sia il mio fiato. Mi serve una ricarica.",
          "uguale": "IN-077",
          "id": "EC-056"
         }
@@ -16394,12 +16574,22 @@
            "SV-01-protezione-vitale"
           ],
           [
+           "spazio",
+           " ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
            "william",
-           " Con l'aria a [aria] la tuta tiene spento il traduttore: ogni canale che non mi serve per respirare resta chiuso. Mi serve una ricarica.",
+           " La tuta tiene spento il traduttore: ogni canale che non mi serve per respirare resta chiuso. Mi serve una ricarica.",
            ""
           ]
          ],
-         "william": "Con l'aria a [aria] la tuta tiene spento il traduttore: ogni canale che non mi serve per respirare resta chiuso. Mi serve una ricarica.",
+         "william": "La tuta tiene spento il traduttore: ogni canale che non mi serve per respirare resta chiuso. Mi serve una ricarica.",
          "id": "TR-014"
         }
        ]
@@ -16563,12 +16753,22 @@
            "SV-01-protezione-vitale"
           ],
           [
+           "spazio",
+           " ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
            "william",
-           " Con l'aria a [aria] la tuta tiene spento il traduttore: ogni canale che non mi serve per respirare resta chiuso. Mi serve una ricarica.",
+           " La tuta tiene spento il traduttore: ogni canale che non mi serve per respirare resta chiuso. Mi serve una ricarica.",
            ""
           ]
          ],
-         "william": "Con l'aria a [aria] la tuta tiene spento il traduttore: ogni canale che non mi serve per respirare resta chiuso. Mi serve una ricarica.",
+         "william": "La tuta tiene spento il traduttore: ogni canale che non mi serve per respirare resta chiuso. Mi serve una ricarica.",
          "uguale": "TR-014",
          "id": "TR-019"
         }
@@ -16718,12 +16918,22 @@
            "SV-01-protezione-vitale"
           ],
           [
+           "spazio",
+           " ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
            "william",
-           " Con l'aria a [aria] la tuta tiene spento il traduttore: ogni canale che non mi serve per respirare resta chiuso. Mi serve una ricarica.",
+           " La tuta tiene spento il traduttore: ogni canale che non mi serve per respirare resta chiuso. Mi serve una ricarica.",
            ""
           ]
          ],
-         "william": "Con l'aria a [aria] la tuta tiene spento il traduttore: ogni canale che non mi serve per respirare resta chiuso. Mi serve una ricarica.",
+         "william": "La tuta tiene spento il traduttore: ogni canale che non mi serve per respirare resta chiuso. Mi serve una ricarica.",
          "uguale": "TR-014",
          "id": "TR-024"
         }
@@ -16899,12 +17109,22 @@
            "SV-01-protezione-vitale"
           ],
           [
+           "spazio",
+           " ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
            "william",
-           " Con l'aria a [aria] la tuta tiene spento il traduttore: ogni canale che non mi serve per respirare resta chiuso. Mi serve una ricarica.",
+           " La tuta tiene spento il traduttore: ogni canale che non mi serve per respirare resta chiuso. Mi serve una ricarica.",
            ""
           ]
          ],
-         "william": "Con l'aria a [aria] la tuta tiene spento il traduttore: ogni canale che non mi serve per respirare resta chiuso. Mi serve una ricarica.",
+         "william": "La tuta tiene spento il traduttore: ogni canale che non mi serve per respirare resta chiuso. Mi serve una ricarica.",
          "uguale": "TR-014",
          "id": "TR-030"
         }
@@ -17039,12 +17259,22 @@
            "SV-01-protezione-vitale"
           ],
           [
+           "spazio",
+           " ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
            "william",
-           " Con l'aria a [aria] la tuta tiene spento il traduttore: ogni canale che non mi serve per respirare resta chiuso. Mi serve una ricarica.",
+           " La tuta tiene spento il traduttore: ogni canale che non mi serve per respirare resta chiuso. Mi serve una ricarica.",
            ""
           ]
          ],
-         "william": "Con l'aria a [aria] la tuta tiene spento il traduttore: ogni canale che non mi serve per respirare resta chiuso. Mi serve una ricarica.",
+         "william": "La tuta tiene spento il traduttore: ogni canale che non mi serve per respirare resta chiuso. Mi serve una ricarica.",
          "uguale": "TR-014",
          "id": "TR-035"
         }
@@ -17174,12 +17404,22 @@
            "SV-01-protezione-vitale"
           ],
           [
+           "spazio",
+           " ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
            "william",
-           " Con l'aria a [aria] la tuta tiene spento il traduttore: ogni canale che non mi serve per respirare resta chiuso. Mi serve una ricarica.",
+           " La tuta tiene spento il traduttore: ogni canale che non mi serve per respirare resta chiuso. Mi serve una ricarica.",
            ""
           ]
          ],
-         "william": "Con l'aria a [aria] la tuta tiene spento il traduttore: ogni canale che non mi serve per respirare resta chiuso. Mi serve una ricarica.",
+         "william": "La tuta tiene spento il traduttore: ogni canale che non mi serve per respirare resta chiuso. Mi serve una ricarica.",
          "uguale": "TR-014",
          "id": "TR-040"
         }
@@ -17292,11 +17532,16 @@
          "segmenti": [
           [
            "william",
-           "Sul bordo del visore, in verde, la cifra dell'aria: [aria].",
+           "Sul bordo del visore, in verde: ",
            ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
           ]
          ],
-         "william": "Sul bordo del visore, in verde, la cifra dell'aria: [aria].",
+         "william": "Sul bordo del visore, in verde:",
          "id": "AR-001"
         }
        ]
@@ -17313,7 +17558,17 @@
          "segmenti": [
           [
            "william",
-           "Sul bordo del visore, in rosso, la cifra dell'aria: [aria]. Sotto, fissa, la scritta ",
+           "Sul bordo del visore, in rosso: ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
+           "william",
+           " Sotto, fissa, la scritta ",
            ""
           ],
           [
@@ -17322,7 +17577,7 @@
            "SV-01-protezione-vitale"
           ]
          ],
-         "william": "Sul bordo del visore, in rosso, la cifra dell'aria: [aria]. Sotto, fissa, la scritta",
+         "william": "Sul bordo del visore, in rosso:  Sotto, fissa, la scritta",
          "id": "AR-002"
         }
        ]
@@ -17339,11 +17594,16 @@
          "segmenti": [
           [
            "william",
-           "Sul bordo del visore, in ambra, la cifra dell'aria: [aria].",
+           "Sul bordo del visore, in ambra: ",
            ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
           ]
          ],
-         "william": "Sul bordo del visore, in ambra, la cifra dell'aria: [aria].",
+         "william": "Sul bordo del visore, in ambra:",
          "id": "AR-003"
         }
        ]
@@ -17391,11 +17651,16 @@
          "segmenti": [
           [
            "william",
-           "Sul bordo del visore la cifra passa all'ambra: [aria].",
+           "Sul bordo del visore la cifra passa all'ambra: ",
            ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
           ]
          ],
-         "william": "Sul bordo del visore la cifra passa all'ambra: [aria].",
+         "william": "Sul bordo del visore la cifra passa all'ambra:",
          "id": "AR-005"
         }
        ]
@@ -17411,8 +17676,13 @@
          "condizione": null,
          "segmenti": [
           [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
            "william",
-           "[aria]. Sotto la cifra si accende una riga che conosco dal manuale: ",
+           " Sotto la cifra si accende una riga che conosco dal manuale: ",
            ""
           ],
           [
@@ -17426,7 +17696,7 @@
            ""
           ]
          ],
-         "william": "[aria]. Sotto la cifra si accende una riga che conosco dal manuale:  Ancora poco, e la tuta non mi lascerà più ascoltare né tradurre.",
+         "william": "Sotto la cifra si accende una riga che conosco dal manuale:  Ancora poco, e la tuta non mi lascerà più ascoltare né tradurre.",
          "id": "AR-006"
         }
        ]
@@ -17442,8 +17712,13 @@
          "condizione": null,
          "segmenti": [
           [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
            "william",
-           "[aria]. La cifra è rossa. La tuta fa da sola quello che le hanno insegnato: stacca i canali secondari, e sul visore compare la scritta che speravo di non leggere, ",
+           " La cifra è rossa. La tuta fa da sola quello che le hanno insegnato: stacca i canali secondari, e sul visore compare la scritta che speravo di non leggere, ",
            ""
           ],
           [
@@ -17457,7 +17732,7 @@
            ""
           ]
          ],
-         "william": "[aria]. La cifra è rossa. La tuta fa da sola quello che le hanno insegnato: stacca i canali secondari, e sul visore compare la scritta che speravo di non leggere,  Niente ascolto, niente traduzione, finché non le do altra aria. Anche il faro scende al minimo, da solo.",
+         "william": "La cifra è rossa. La tuta fa da sola quello che le hanno insegnato: stacca i canali secondari, e sul visore compare la scritta che speravo di non leggere,  Niente ascolto, niente traduzione, finché non le do altra aria. Anche il faro scende al minimo, da solo.",
          "id": "AR-007"
         }
        ]
@@ -17473,12 +17748,17 @@
          "condizione": null,
          "segmenti": [
           [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
            "william",
-           "[aria]. La cifra è rossa. Da qui alla Santa Maria la tuta lavora soltanto per tenermi in vita.",
+           " La cifra è rossa. Da qui alla Santa Maria la tuta lavora soltanto per tenermi in vita.",
            ""
           ]
          ],
-         "william": "[aria]. La cifra è rossa. Da qui alla Santa Maria la tuta lavora soltanto per tenermi in vita.",
+         "william": "La cifra è rossa. Da qui alla Santa Maria la tuta lavora soltanto per tenermi in vita.",
          "id": "AR-008"
         }
        ]
@@ -17495,11 +17775,21 @@
          "segmenti": [
           [
            "william",
-           "La cifra torna sopra il rosso: [aria]. La tuta riapre i canali secondari, e mi restituisce il faro.",
+           "La cifra torna sopra il rosso: ",
+           ""
+          ],
+          [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
+           "william",
+           " La tuta riapre i canali secondari, e mi restituisce il faro.",
            ""
           ]
          ],
-         "william": "La cifra torna sopra il rosso: [aria]. La tuta riapre i canali secondari, e mi restituisce il faro.",
+         "william": "La cifra torna sopra il rosso:  La tuta riapre i canali secondari, e mi restituisce il faro.",
          "id": "AR-009"
         }
        ]
@@ -17515,12 +17805,17 @@
          "condizione": null,
          "segmenti": [
           [
+           "servizio",
+           "ARIA [aria]%.",
+           "la cifra dell'aria"
+          ],
+          [
            "william",
-           "[aria]. Mi accorgo che ragiono più piano, e che la cosa non mi spaventa. È così che comincia.",
+           " Mi accorgo che ragiono più piano, e che la cosa non mi spaventa. È così che comincia.",
            ""
           ]
          ],
-         "william": "[aria]. Mi accorgo che ragiono più piano, e che la cosa non mi spaventa. È così che comincia.",
+         "william": "Mi accorgo che ragiono più piano, e che la cosa non mi spaventa. È così che comincia.",
          "id": "AR-010"
         }
        ]

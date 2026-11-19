@@ -80,7 +80,18 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   più verosimile il fatto che ce la possano fare»; e «se così vincono sempre tutti, dove sta la sfida?»):
   `collaudo/verosimili.py`, con la fuga giocata da principianti veri.
 
-## Dove siamo (16 novembre 2026)
+## Dove siamo (19 novembre 2026)
+
+- **19 novembre 2026: le prese del 19 novembre e la cifra dell’aria alla voce della tuta** (documento 41, §5;
+  documento 35, §11). Nel gioco cento prese di William (24 nuove, `SM-062` e `SM-056` rifatta). La cifra dell’aria
+  non è più di William: nei `.fav` è la scritta «ARIA [aria]%» (33 frasi, approvate dall’autore), la legge Kira; il
+  copione per Leonardo ha soltanto le prese da registrare (504) e la firma «doppia vu, ti». **Restano due cose
+  dell’autore**: ascoltare `SM-056` (`consegne/Ascolto SM-056 2026-11-19/`: la firma, e un piccolo suono prima di
+  «novantasei anni») e generare con Kira `doppiaggio/servizio/servizio-nuove.txt` (le 101 cifre, circa quattro
+  minuti e mezzo); poi taglio io con `taglia_servizio.py … --nuove` e aggiungo i file al motore
+  (`musica_file.rs`, come le righe del registro in `222f881`). Il PDF nuovo va mandato a Leonardo.
+
+## Prima (16 novembre 2026)
 
 - **16 novembre 2026, alla chiusura: la beta 15 è confermata, e c’è una cosa da fare per prima.** L’autore, giocata
   la beta 15: «Ok, tutto confermato. Funziona tutto, niente da segnalare. L’intro va bene, ora ha abbastanza varietà

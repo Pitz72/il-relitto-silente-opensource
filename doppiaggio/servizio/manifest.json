@@ -1,7 +1,7 @@
 {
  "voce": "servizio",
  "blocchi": {
-  "servizio": [
+  "servizio-a": [
    "d36d0f144e18",
    "40bc3cba378a",
    "f75b5d9ee9ce",
@@ -46,7 +46,110 @@
    "185a0a3488c1",
    "624265ea4e8b",
    "973d9016d675",
-   "781860443d79"
+   "781860443d79",
+   "057802524099",
+   "add7354e09bd",
+   "f2c0069a9002",
+   "779b642d56b5",
+   "e9d2226e9a4e",
+   "c072c3713eb8",
+   "ea234d56f282",
+   "ab6bc4ee85e3",
+   "2e307e775cea",
+   "5c854ba7b55e",
+   "873236cbde10",
+   "488baae45ee3",
+   "e7ba193782c1",
+   "123d686389ab",
+   "e532c9d10f4a",
+   "48df30fd7953",
+   "6695a618314a",
+   "1feeca674ccf",
+   "b3bed87a8710",
+   "76cbce34e020",
+   "62946aa54f9a",
+   "c57ba9559e07",
+   "eca4eecd4724",
+   "d3d85ec0637e",
+   "2b8400b4faac",
+   "31f55ad6d85e",
+   "3fff2528b153",
+   "f3bc6a8e0eda"
+  ],
+  "servizio-b": [
+   "dd5de792145c",
+   "973672b4223c",
+   "fcee690f0658",
+   "d775e3229a75",
+   "291bc9323db6",
+   "1d5221038595",
+   "49f7140b32e7",
+   "a1e1858e5f19",
+   "d0bfd577dfbf",
+   "9420934aae0c",
+   "a54dcdfde8cb",
+   "f756b45a11ef",
+   "52d30dd5487d",
+   "f684e4701881",
+   "5e71b717cbe3",
+   "076d85511a32",
+   "afb0df9b1b40",
+   "40bdb1fa2b12",
+   "bab37204a198",
+   "aa1c7735fbae",
+   "0b22a80e9800",
+   "3fd8b7d7bd32",
+   "66cd143dcba4",
+   "3c638c48b865",
+   "12a2096a4a14",
+   "2d3ac038730e",
+   "f761569e71bf",
+   "487eb480d983",
+   "438f6cfd776c",
+   "348ada55e810",
+   "bd53e9544198",
+   "b28bb4a32cb2",
+   "b754bd933d1e",
+   "d5218740a9d5",
+   "8a4646a5c2b6",
+   "25ba663782cb",
+   "6e0d56485fe3",
+   "e0a9cc250c65",
+   "66fc9c0f387c",
+   "0c35e17d2bc3",
+   "183c11a83e90",
+   "720bbe99cfdb",
+   "b92536c0284c",
+   "dcde1bc88641",
+   "b4542c58f2af",
+   "b2136f043881",
+   "ed2bafc80431",
+   "37676022b0ba",
+   "f2c828bcb5e8",
+   "ea634d346473",
+   "8d65b4200537",
+   "e996cb796863",
+   "74f6a9e20d70",
+   "2095a47560f8",
+   "8b45cdc66831",
+   "d9924c49147a",
+   "0833ca68ffd0",
+   "f3d65843e2e4",
+   "615e912f3acc",
+   "be872a1e3e57",
+   "d137e1bbe545",
+   "a44ed8aa87f3",
+   "d012e77a6b35",
+   "0c51f8f43622",
+   "8832609405c8",
+   "523e282c3a09",
+   "9079963fc7f3",
+   "8bc5f3e20ff6",
+   "63e634e8b2f0",
+   "c2ec806c938d",
+   "f06dca059032",
+   "80defe83d2a6",
+   "5d145a62fce3"
   ]
  },
  "parti": [
@@ -466,6 +569,1420 @@
    "da": [
     "finale"
    ]
+  },
+  {
+   "id": "057802524099",
+   "voce": "Aria zero per cento.",
+   "gioco": "ARIA 0%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 0
+  },
+  {
+   "id": "add7354e09bd",
+   "voce": "Aria uno per cento.",
+   "gioco": "ARIA 1%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 1
+  },
+  {
+   "id": "f2c0069a9002",
+   "voce": "Aria due per cento.",
+   "gioco": "ARIA 2%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 2
+  },
+  {
+   "id": "779b642d56b5",
+   "voce": "Aria tre per cento.",
+   "gioco": "ARIA 3%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 3
+  },
+  {
+   "id": "e9d2226e9a4e",
+   "voce": "Aria quattro per cento.",
+   "gioco": "ARIA 4%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 4
+  },
+  {
+   "id": "c072c3713eb8",
+   "voce": "Aria cinque per cento.",
+   "gioco": "ARIA 5%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 5
+  },
+  {
+   "id": "ea234d56f282",
+   "voce": "Aria sei per cento.",
+   "gioco": "ARIA 6%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 6
+  },
+  {
+   "id": "ab6bc4ee85e3",
+   "voce": "Aria sette per cento.",
+   "gioco": "ARIA 7%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 7
+  },
+  {
+   "id": "2e307e775cea",
+   "voce": "Aria otto per cento.",
+   "gioco": "ARIA 8%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 8
+  },
+  {
+   "id": "5c854ba7b55e",
+   "voce": "Aria nove per cento.",
+   "gioco": "ARIA 9%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 9
+  },
+  {
+   "id": "873236cbde10",
+   "voce": "Aria dieci per cento.",
+   "gioco": "ARIA 10%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 10
+  },
+  {
+   "id": "488baae45ee3",
+   "voce": "Aria undici per cento.",
+   "gioco": "ARIA 11%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 11
+  },
+  {
+   "id": "e7ba193782c1",
+   "voce": "Aria dodici per cento.",
+   "gioco": "ARIA 12%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 12
+  },
+  {
+   "id": "123d686389ab",
+   "voce": "Aria tredici per cento.",
+   "gioco": "ARIA 13%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 13
+  },
+  {
+   "id": "e532c9d10f4a",
+   "voce": "Aria quattordici per cento.",
+   "gioco": "ARIA 14%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 14
+  },
+  {
+   "id": "48df30fd7953",
+   "voce": "Aria quindici per cento.",
+   "gioco": "ARIA 15%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 15
+  },
+  {
+   "id": "6695a618314a",
+   "voce": "Aria sedici per cento.",
+   "gioco": "ARIA 16%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 16
+  },
+  {
+   "id": "1feeca674ccf",
+   "voce": "Aria diciassette per cento.",
+   "gioco": "ARIA 17%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 17
+  },
+  {
+   "id": "b3bed87a8710",
+   "voce": "Aria diciotto per cento.",
+   "gioco": "ARIA 18%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 18
+  },
+  {
+   "id": "76cbce34e020",
+   "voce": "Aria diciannove per cento.",
+   "gioco": "ARIA 19%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 19
+  },
+  {
+   "id": "62946aa54f9a",
+   "voce": "Aria venti per cento.",
+   "gioco": "ARIA 20%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 20
+  },
+  {
+   "id": "c57ba9559e07",
+   "voce": "Aria ventuno per cento.",
+   "gioco": "ARIA 21%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 21
+  },
+  {
+   "id": "eca4eecd4724",
+   "voce": "Aria ventidue per cento.",
+   "gioco": "ARIA 22%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 22
+  },
+  {
+   "id": "d3d85ec0637e",
+   "voce": "Aria ventitré per cento.",
+   "gioco": "ARIA 23%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 23
+  },
+  {
+   "id": "2b8400b4faac",
+   "voce": "Aria ventiquattro per cento.",
+   "gioco": "ARIA 24%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 24
+  },
+  {
+   "id": "31f55ad6d85e",
+   "voce": "Aria venticinque per cento.",
+   "gioco": "ARIA 25%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 25
+  },
+  {
+   "id": "3fff2528b153",
+   "voce": "Aria ventisei per cento.",
+   "gioco": "ARIA 26%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 26
+  },
+  {
+   "id": "f3bc6a8e0eda",
+   "voce": "Aria ventisette per cento.",
+   "gioco": "ARIA 27%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 27
+  },
+  {
+   "id": "dd5de792145c",
+   "voce": "Aria ventotto per cento.",
+   "gioco": "ARIA 28%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 28
+  },
+  {
+   "id": "973672b4223c",
+   "voce": "Aria ventinove per cento.",
+   "gioco": "ARIA 29%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 29
+  },
+  {
+   "id": "fcee690f0658",
+   "voce": "Aria trenta per cento.",
+   "gioco": "ARIA 30%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 30
+  },
+  {
+   "id": "d775e3229a75",
+   "voce": "Aria trentuno per cento.",
+   "gioco": "ARIA 31%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 31
+  },
+  {
+   "id": "291bc9323db6",
+   "voce": "Aria trentadue per cento.",
+   "gioco": "ARIA 32%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 32
+  },
+  {
+   "id": "1d5221038595",
+   "voce": "Aria trentatré per cento.",
+   "gioco": "ARIA 33%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 33
+  },
+  {
+   "id": "49f7140b32e7",
+   "voce": "Aria trentaquattro per cento.",
+   "gioco": "ARIA 34%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 34
+  },
+  {
+   "id": "a1e1858e5f19",
+   "voce": "Aria trentacinque per cento.",
+   "gioco": "ARIA 35%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 35
+  },
+  {
+   "id": "d0bfd577dfbf",
+   "voce": "Aria trentasei per cento.",
+   "gioco": "ARIA 36%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 36
+  },
+  {
+   "id": "9420934aae0c",
+   "voce": "Aria trentasette per cento.",
+   "gioco": "ARIA 37%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 37
+  },
+  {
+   "id": "a54dcdfde8cb",
+   "voce": "Aria trentotto per cento.",
+   "gioco": "ARIA 38%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 38
+  },
+  {
+   "id": "f756b45a11ef",
+   "voce": "Aria trentanove per cento.",
+   "gioco": "ARIA 39%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 39
+  },
+  {
+   "id": "52d30dd5487d",
+   "voce": "Aria quaranta per cento.",
+   "gioco": "ARIA 40%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 40
+  },
+  {
+   "id": "f684e4701881",
+   "voce": "Aria quarantuno per cento.",
+   "gioco": "ARIA 41%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 41
+  },
+  {
+   "id": "5e71b717cbe3",
+   "voce": "Aria quarantadue per cento.",
+   "gioco": "ARIA 42%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 42
+  },
+  {
+   "id": "076d85511a32",
+   "voce": "Aria quarantatré per cento.",
+   "gioco": "ARIA 43%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 43
+  },
+  {
+   "id": "afb0df9b1b40",
+   "voce": "Aria quarantaquattro per cento.",
+   "gioco": "ARIA 44%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 44
+  },
+  {
+   "id": "40bdb1fa2b12",
+   "voce": "Aria quarantacinque per cento.",
+   "gioco": "ARIA 45%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 45
+  },
+  {
+   "id": "bab37204a198",
+   "voce": "Aria quarantasei per cento.",
+   "gioco": "ARIA 46%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 46
+  },
+  {
+   "id": "aa1c7735fbae",
+   "voce": "Aria quarantasette per cento.",
+   "gioco": "ARIA 47%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 47
+  },
+  {
+   "id": "0b22a80e9800",
+   "voce": "Aria quarantotto per cento.",
+   "gioco": "ARIA 48%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 48
+  },
+  {
+   "id": "3fd8b7d7bd32",
+   "voce": "Aria quarantanove per cento.",
+   "gioco": "ARIA 49%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 49
+  },
+  {
+   "id": "66cd143dcba4",
+   "voce": "Aria cinquanta per cento.",
+   "gioco": "ARIA 50%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 50
+  },
+  {
+   "id": "3c638c48b865",
+   "voce": "Aria cinquantuno per cento.",
+   "gioco": "ARIA 51%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 51
+  },
+  {
+   "id": "12a2096a4a14",
+   "voce": "Aria cinquantadue per cento.",
+   "gioco": "ARIA 52%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 52
+  },
+  {
+   "id": "2d3ac038730e",
+   "voce": "Aria cinquantatré per cento.",
+   "gioco": "ARIA 53%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 53
+  },
+  {
+   "id": "f761569e71bf",
+   "voce": "Aria cinquantaquattro per cento.",
+   "gioco": "ARIA 54%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 54
+  },
+  {
+   "id": "487eb480d983",
+   "voce": "Aria cinquantacinque per cento.",
+   "gioco": "ARIA 55%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 55
+  },
+  {
+   "id": "438f6cfd776c",
+   "voce": "Aria cinquantasei per cento.",
+   "gioco": "ARIA 56%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 56
+  },
+  {
+   "id": "348ada55e810",
+   "voce": "Aria cinquantasette per cento.",
+   "gioco": "ARIA 57%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 57
+  },
+  {
+   "id": "bd53e9544198",
+   "voce": "Aria cinquantotto per cento.",
+   "gioco": "ARIA 58%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 58
+  },
+  {
+   "id": "b28bb4a32cb2",
+   "voce": "Aria cinquantanove per cento.",
+   "gioco": "ARIA 59%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 59
+  },
+  {
+   "id": "b754bd933d1e",
+   "voce": "Aria sessanta per cento.",
+   "gioco": "ARIA 60%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 60
+  },
+  {
+   "id": "d5218740a9d5",
+   "voce": "Aria sessantuno per cento.",
+   "gioco": "ARIA 61%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 61
+  },
+  {
+   "id": "8a4646a5c2b6",
+   "voce": "Aria sessantadue per cento.",
+   "gioco": "ARIA 62%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 62
+  },
+  {
+   "id": "25ba663782cb",
+   "voce": "Aria sessantatré per cento.",
+   "gioco": "ARIA 63%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 63
+  },
+  {
+   "id": "6e0d56485fe3",
+   "voce": "Aria sessantaquattro per cento.",
+   "gioco": "ARIA 64%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 64
+  },
+  {
+   "id": "e0a9cc250c65",
+   "voce": "Aria sessantacinque per cento.",
+   "gioco": "ARIA 65%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 65
+  },
+  {
+   "id": "66fc9c0f387c",
+   "voce": "Aria sessantasei per cento.",
+   "gioco": "ARIA 66%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 66
+  },
+  {
+   "id": "0c35e17d2bc3",
+   "voce": "Aria sessantasette per cento.",
+   "gioco": "ARIA 67%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 67
+  },
+  {
+   "id": "183c11a83e90",
+   "voce": "Aria sessantotto per cento.",
+   "gioco": "ARIA 68%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 68
+  },
+  {
+   "id": "720bbe99cfdb",
+   "voce": "Aria sessantanove per cento.",
+   "gioco": "ARIA 69%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 69
+  },
+  {
+   "id": "b92536c0284c",
+   "voce": "Aria settanta per cento.",
+   "gioco": "ARIA 70%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 70
+  },
+  {
+   "id": "dcde1bc88641",
+   "voce": "Aria settantuno per cento.",
+   "gioco": "ARIA 71%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 71
+  },
+  {
+   "id": "b4542c58f2af",
+   "voce": "Aria settantadue per cento.",
+   "gioco": "ARIA 72%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 72
+  },
+  {
+   "id": "b2136f043881",
+   "voce": "Aria settantatré per cento.",
+   "gioco": "ARIA 73%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 73
+  },
+  {
+   "id": "ed2bafc80431",
+   "voce": "Aria settantaquattro per cento.",
+   "gioco": "ARIA 74%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 74
+  },
+  {
+   "id": "37676022b0ba",
+   "voce": "Aria settantacinque per cento.",
+   "gioco": "ARIA 75%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 75
+  },
+  {
+   "id": "f2c828bcb5e8",
+   "voce": "Aria settantasei per cento.",
+   "gioco": "ARIA 76%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 76
+  },
+  {
+   "id": "ea634d346473",
+   "voce": "Aria settantasette per cento.",
+   "gioco": "ARIA 77%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 77
+  },
+  {
+   "id": "8d65b4200537",
+   "voce": "Aria settantotto per cento.",
+   "gioco": "ARIA 78%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 78
+  },
+  {
+   "id": "e996cb796863",
+   "voce": "Aria settantanove per cento.",
+   "gioco": "ARIA 79%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 79
+  },
+  {
+   "id": "74f6a9e20d70",
+   "voce": "Aria ottanta per cento.",
+   "gioco": "ARIA 80%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 80
+  },
+  {
+   "id": "2095a47560f8",
+   "voce": "Aria ottantuno per cento.",
+   "gioco": "ARIA 81%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 81
+  },
+  {
+   "id": "8b45cdc66831",
+   "voce": "Aria ottantadue per cento.",
+   "gioco": "ARIA 82%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 82
+  },
+  {
+   "id": "d9924c49147a",
+   "voce": "Aria ottantatré per cento.",
+   "gioco": "ARIA 83%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 83
+  },
+  {
+   "id": "0833ca68ffd0",
+   "voce": "Aria ottantaquattro per cento.",
+   "gioco": "ARIA 84%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 84
+  },
+  {
+   "id": "f3d65843e2e4",
+   "voce": "Aria ottantacinque per cento.",
+   "gioco": "ARIA 85%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 85
+  },
+  {
+   "id": "615e912f3acc",
+   "voce": "Aria ottantasei per cento.",
+   "gioco": "ARIA 86%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 86
+  },
+  {
+   "id": "be872a1e3e57",
+   "voce": "Aria ottantasette per cento.",
+   "gioco": "ARIA 87%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 87
+  },
+  {
+   "id": "d137e1bbe545",
+   "voce": "Aria ottantotto per cento.",
+   "gioco": "ARIA 88%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 88
+  },
+  {
+   "id": "a44ed8aa87f3",
+   "voce": "Aria ottantanove per cento.",
+   "gioco": "ARIA 89%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 89
+  },
+  {
+   "id": "d012e77a6b35",
+   "voce": "Aria novanta per cento.",
+   "gioco": "ARIA 90%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 90
+  },
+  {
+   "id": "0c51f8f43622",
+   "voce": "Aria novantuno per cento.",
+   "gioco": "ARIA 91%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 91
+  },
+  {
+   "id": "8832609405c8",
+   "voce": "Aria novantadue per cento.",
+   "gioco": "ARIA 92%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 92
+  },
+  {
+   "id": "523e282c3a09",
+   "voce": "Aria novantatré per cento.",
+   "gioco": "ARIA 93%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 93
+  },
+  {
+   "id": "9079963fc7f3",
+   "voce": "Aria novantaquattro per cento.",
+   "gioco": "ARIA 94%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 94
+  },
+  {
+   "id": "8bc5f3e20ff6",
+   "voce": "Aria novantacinque per cento.",
+   "gioco": "ARIA 95%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 95
+  },
+  {
+   "id": "63e634e8b2f0",
+   "voce": "Aria novantasei per cento.",
+   "gioco": "ARIA 96%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 96
+  },
+  {
+   "id": "c2ec806c938d",
+   "voce": "Aria novantasette per cento.",
+   "gioco": "ARIA 97%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 97
+  },
+  {
+   "id": "f06dca059032",
+   "voce": "Aria novantotto per cento.",
+   "gioco": "ARIA 98%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 98
+  },
+  {
+   "id": "80defe83d2a6",
+   "voce": "Aria novantanove per cento.",
+   "gioco": "ARIA 99%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 99
+  },
+  {
+   "id": "5d145a62fce3",
+   "voce": "Aria cento per cento.",
+   "gioco": "ARIA 100%",
+   "tipo": "aria",
+   "da": [
+    "descrizione di visore",
+    "regola",
+    "ogni turno",
+    "dialogo domanda",
+    "dialogo congedo"
+   ],
+   "valore": 100
   }
  ]
 }

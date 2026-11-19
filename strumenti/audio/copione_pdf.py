@@ -28,7 +28,10 @@ RADICE = os.path.normpath(os.path.join(QUI, "..", ".."))
 CARTELLA = os.path.join(RADICE, "doppiaggio", "william")
 USCITA = os.path.join(CARTELLA, "Il Relitto Silente - Il copione di William.pdf")
 VERSIONE = json.load(open(os.path.join(RADICE, "versione.json"), encoding="utf-8"))["gioco"]
-DATA = "7 novembre 2026"
+DATA = "19 novembre 2026"
+# Le prese già consegnate e nel gioco (strumenti/audio/voce_william.py): non si stampano più. L'autore, 19 novembre
+# 2026: «togli le cose che ha già doppiato».
+FATTE = set(json.load(open(os.path.join(RADICE, "audio", "musica-ia", "WI", "prese.json"), encoding="utf-8")))
 
 FONT = r"C:\Windows\Fonts"
 for nome, file in [("Testo", "georgia.ttf"), ("Testo-B", "georgiab.ttf"), ("Testo-I", "georgiai.ttf"),
@@ -80,7 +83,9 @@ TIPI = {"descrizione": "Descrizione", "risposta": "Quando chi gioca scrive", "ev
 def x(t):
     """Il testo per Paragraph: l'apostrofo tipografico, gli a capo, il segnaposto della cifra in evidenza."""
     t = escape(t.replace("'", "’"))
-    t = re.sub(r"\[(aria|risveglio)\]", lambda m: f'<font backColor="{EVIDENZA}" name="Segno-B">[{m.group(1)}]</font>', t)
+    # la cifra dell'aria la dice la voce della tuta: nella sua riga grigia resta un segno, non un segnaposto da leggere
+    t = t.replace("ARIA [aria]%", "ARIA …%")
+    t = re.sub(r"\[(risveglio)\]", lambda m: f'<font backColor="{EVIDENZA}" name="Segno-B">[{m.group(1)}]</font>', t)
     return t.replace("\n", "<br/>")
 
 
@@ -220,7 +225,9 @@ def copertina(tot):
             p("per <b>Leonardo Tomassetti</b>", "copertina"), Spacer(1, 3.2 * cm),
             p(f"{tot['blocchi']} blocchi di contesto · {tot['da_registrare']} prese da registrare · "
               f"circa {tot['parole_da_registrare']:,} parole".replace(",", "."), "copertina"),
-            p(f"Il gioco alla versione {VERSIONE} · {DATA}", "copertina"), Spacer(1, 2.6 * cm),
+            p(f"Il gioco alla versione {VERSIONE} · {DATA}", "copertina"),
+            p(f"Soltanto le prese ancora da registrare: le {tot['consegnate']} già consegnate non ci sono più.",
+              "copertina"), Spacer(1, 2.2 * cm),
             p("Simone Pizzi", "copertina"),
             p("Documento di lavoro per il doppiaggio: non è da diffondere.", "copertina"),
             NextPageTemplate("pagina"), PageBreak()]
@@ -247,7 +254,11 @@ def pagine_davanti(tot):
              "della storia, atto per atto e stanza per stanza; in fondo vengono le cose che attraversano tutta la "
              "nave: il Sintonizzatore, la matrice di traduzione, l’aria della tuta."),
            p("Ogni blocco comincia con due righe di contesto: dove sei, che cosa sta succedendo, con che fiato lo "
-             "dici. Sono un riferimento, non una regia. La regia la facciamo insieme in sala.")]
+             "dici. Sono un riferimento, non una regia. La regia la facciamo insieme in sala."),
+           p(f"<b>Questa edizione, del {DATA}, ha soltanto quello che resta da registrare.</b> Le "
+             f"{tot['consegnate']} prese che hai già consegnato sono nel gioco e qui non ci sono più; le sigle delle "
+             "altre non sono cambiate. Le cifre dell’aria non sono più da registrare: le legge la voce della tuta "
+             "(vedi «Le decisioni», in fondo).")]
     st.append(tabella([
         ["In numeri", ""],
         ["Blocchi di contesto", str(tot["blocchi"])],
@@ -255,7 +266,7 @@ def pagine_davanti(tot):
         ["Parole da registrare", f"circa {tot['parole_da_registrare']:,}".replace(",", ".")],
         ["Frasi dette ad alta voce", f"{tot['parlato']} (le risposte nei dialoghi)"],
         ["Parole lette fra «»", f"circa {tot['citazione']} (incisioni tradotte, scritte, la firma sul registro)"],
-        ["Durata stimata", f"circa {durata(tot['minuti'])} di parlato finito, più le cifre dell’aria "
+        ["Durata stimata", f"circa {durata(tot['minuti'])} di parlato finito, più le fasce del pilastro "
                            "(appendice A)"],
     ], [5 * cm, 11.5 * cm]))
 
@@ -314,11 +325,8 @@ def pagine_davanti(tot):
          "Quattro.»</font>", "Lo dice un’altra voce, già registrata: non lo leggi. Ti serve per sapere dove "
          "entri e dove esci."],
         ["<font name='Testo' size='11' color='#9A9A9A'><font name='Segno-B' size='7'>VOCE DI SERVIZIO</font> "
-         "PROTEZIONE VITALE.</font>", "La voce della tuta (le scritte del visore, lo scanner, la matrice, i "
-         "suggerimenti). Non la leggi; spesso la tua frase comincia subito dopo."],
-        [f"<font name='Segno-B' backColor='{EVIDENZA}'>[aria]</font>", "Qui il gioco mette la cifra dell’aria. Leggi "
-         "la frase dicendo «quaranta» al posto della cifra, con il ritmo naturale: le cifre vere le registri a "
-         "parte (appendice A) e le montiamo noi."],
+         "PROTEZIONE VITALE.</font>", "La voce della tuta (le scritte del visore, la cifra dell’aria, lo scanner, "
+         "la matrice, i suggerimenti). Non la leggi; spesso la tua frase comincia subito dopo."],
         ["<font name='Segno-B' color='#A0522D'>DETTO AD ALTA VOCE</font>", "Una frase che William pronuncia "
          "davvero, a qualcuno."],
         ["<font name='Segno-I' color='#8C8C8C'>uguale a SM-012</font>", "La stessa frase c’è già: non si registra "
@@ -348,7 +356,7 @@ def pagine_davanti(tot):
                      "pagina del registro.", "SM: il registro di bordo"],
         ["TSC", "«ti esse ci»: la sigla sul kit.", "SM: il kit"],
         ["14 marzo 2105", "«quattordici marzo duemilacentocinque».", "SM: il registro di bordo"],
-        ["W. T.", "«vu ti»: la firma di William, le sue iniziali, in fondo alla sua ultima riga del registro "
+        ["W. T.", "«doppia vu, ti»: la firma di William, le sue iniziali, in fondo alla sua ultima riga del registro "
                   "(«Settimana sei. Stiva vuota. Nessun contatto. W. T.»).", "SM: il registro di bordo"],
         ["L.V.", "«elle vu», lettera per lettera: le iniziali dell’uomo nella serra.", "VI: la placca"],
         ["QUI PRIMA. IL SEME. NON SIAMO S—", "Graffiato sulla placca. La «S—» si interrompe: una esse che non "
@@ -379,7 +387,7 @@ def pagine_davanti(tot):
         "<b>Gli a capo</b> dentro una presa sono un cambio di paragrafo: una pausa naturale, intorno a un secondo.",
         "<b>Le prese «uguale a»</b> non si registrano.",
         "<b>La consegna</b>: una cartella per capitolo (SM, IN, CO, VI, TE, EQ, ME, PO, FU, FI, EC, TR, AR, RE, "
-        "ARIA, FASCE) e un foglio con le note di sessione (le prese da rifare, i dubbi).",
+        "FASCE) e un foglio con le note di sessione (le prese da rifare, i dubbi).",
     ])
     st += [p("Il gioco in sala", "h2"),
            p("Le voci degli altri si possono ascoltare nel gioco (la beta, nel canale di prova) o nei file che Simone "
@@ -464,22 +472,8 @@ def presa(q):
 # ---------------------------------------------------------------------------------------------------------------
 def appendici(prese_cifra):
     st = [PageBreak()]
-    st += h1("Appendice A · Le cifre dell’aria", "cifre")
-    st += [p("La cifra dell’aria sta sul bordo del visore, e William la legge. Nelle prese con <font name='Segno-B' "
-             f"backColor='{EVIDENZA}'>[aria]</font> hai detto «quaranta»; qui registri le cifre vere, da zero a "
-             "cento, che il gioco mette al suo posto."),
-           p("Due letture per ogni numero:"),
-           *punti(["<b>conclusiva</b>, come a fine frase: «…la cifra dell’aria: <i>quaranta</i>.», e come quando la "
-                   "frase comincia con la cifra: «<i>Quaranta</i>. La cifra è rossa.»;",
-                   "<b>sospesa</b>, dentro una frase che continua: «Con l’aria a <i>quaranta</i> la tuta non mi lascia "
-                   "ascoltare niente…»."]),
-           p("I file: <font name='Segno-B'>ARIA-000-c.wav</font> … <font name='Segno-B'>ARIA-100-c.wav</font> per la "
-             "conclusiva, <font name='Segno-B'>ARIA-000-s.wav</font> … <font name='Segno-B'>ARIA-100-s.wav</font> per "
-             "la sospesa. Si possono registrare di fila, con un respiro fra l’uno e l’altro: li tagliamo noi. Il tono è "
-             "quello di chi legge uno strumento, non di chi annuncia."),
-           p(f"Le prese che usano la cifra: {', '.join(prese_cifra['aria'])}.", "piccolo"),
-           Spacer(1, 8),
-           p("Le fasce del pilastro", "h2"),
+    st += h1("Appendice A · Le fasce del pilastro", "cifre")
+    st += [
            p("Una sola presa, nell’arca della memoria, dice quante fasce del pilastro sono accese: «…una fascia alla "
              f"volta: <font name='Segno-B' backColor='{EVIDENZA}'>[risveglio]</font> su quattro, per ora.» "
              f"({', '.join(prese_cifra['risveglio'])}). Nella presa dici «due»; qui registri, sospese, «zero», «una», "
@@ -496,7 +490,7 @@ def appendici(prese_cifra):
                ["Le voci della nave", "Le echi del Sintonizzatore, le registrazioni lette dallo scanner, l’ultima "
                                       "voce: quindici persone dell’equipaggio, il Piccolo compreso", "ElevenLabs, quindici "
                                                                                                     "voci disegnate"],
-               ["La voce di servizio", "La tuta e il gioco: PROTEZIONE VITALE, le scritte del visore, le letture dello "
+               ["La voce di servizio", "La tuta e il gioco: PROTEZIONE VITALE, le scritte del visore, la cifra dell’aria, le letture dello "
                                        "scanner, la matrice di traduzione, i suggerimenti fra parentesi", "Google, la voce "
                                                                                                          "«Kira»"],
                ["Il computer di bordo", "La riga del registro che chiude ogni finale («Registro di bordo, TSC-1972. "
@@ -511,11 +505,19 @@ def appendici(prese_cifra):
     st += punti([
         "<b>La sigla TSC-1972</b> si legge «ti esse ci, millenovecentosettantadue».",
         "<b>La firma sul registro</b> sono le iniziali: «Settimana sei. Stiva vuota. Nessun contatto. W. T.» "
-        "William legge «vu ti», e il suo nome resta non detto.",
+        "William legge «doppia vu, ti», e il suo nome resta non detto.",
         "<b>La riga del registro di bordo</b> che chiude i finali la legge il computer di bordo, con la voce di "
         "servizio: non è di William.",
         "<b>Le fasce del pilastro</b>: la frase è stata corretta nel gioco («…una fascia alla volta: [risveglio] su "
         "quattro, per ora.»), e va bene con qualunque numero.",
+    ])
+    st += [p("Prese da Simone il 18 e il 19 novembre 2026:")]
+    st += punti([
+        "<b>La firma W. T.</b> si legge «doppia vu, ti».",
+        "<b>La cifra dell’aria</b> sul visore («ARIA 28%») la legge la voce della tuta, non William: nelle frasi "
+        "dove c’era la cifra adesso c’è la scritta del visore, in grigio, e le frasi sono state ritoccate perché "
+        "stiano in piedi senza. Le cifre da zero a cento non sono più da registrare.",
+        "<b>Le prese già consegnate</b> non sono più in questo copione.",
     ])
     return st
 
@@ -523,6 +525,17 @@ def appendici(prese_cifra):
 def main():
     dati = json.load(open(os.path.join(CARTELLA, "copione.json"), encoding="utf-8"))
     contesti = json.load(open(os.path.join(CARTELLA, "contesti.json"), encoding="utf-8"))
+    # via i pezzi già consegnati, e quelli uguali a un pezzo consegnato; poi le prese, i blocchi e i capitoli vuoti
+    consegnate = 0
+    for c in dati["capitoli"]:
+        for b in c["blocchi"]:
+            for q in b["prese"]:
+                prima = len(q["pezzi"])
+                q["pezzi"] = [z for z in q["pezzi"] if not ({z.get("id"), z.get("uguale")} & FATTE)]
+                consegnate += prima - len(q["pezzi"])
+            b["prese"] = [q for q in b["prese"] if any(z["william"] for z in q["pezzi"])]
+        c["blocchi"] = [b for b in c["blocchi"] if b["prese"]]
+    dati["capitoli"] = [c for c in dati["capitoli"] if c["blocchi"]]
     blocchi = [b for c in dati["capitoli"] for b in c["blocchi"]]
     mancano = [b["id"] for b in blocchi if b["id"] not in contesti]
     if mancano:
@@ -539,7 +552,7 @@ def main():
                         if f"[{k}]" in z["william"]:
                             cifra[k].append(z["id"])
     tot = dict(dati["totali"], blocchi=len(blocchi), da_registrare=da_registrare, parole_da_registrare=parole,
-               minuti=round(parole / 145))
+               minuti=round(parole / 145), consegnate=len(FATTE))
     doc = Copione(USCITA)
     toc = TableOfContents(levelStyles=[S["toc0"], S["toc1"]], dotsMinLevel=0)
     storia = copertina(tot)

@@ -315,7 +315,9 @@ lettere, le frasi con un numero variabile una per valore (la matrice: 4, 18, 75,
 dei display, le letture dello scanner (dentro le quali due frasi restano di William: «Provo con un’altra, e un’altra
 ancora:» e «il calcolo parte, si ferma, riparte. Al terzo tentativo si arrende e scrive»), la matrice di traduzione
 (quello che William aggiunge nella stessa parentesi resta suo) e i suggerimenti fra parentesi. Il numero dell’aria che
-William legge sul visore resta di William. In tutto 41 parti, circa 250 parole, circa 2 minuti e mezzo: una
+William legge sul visore resta di William. **Corretto il 19 novembre 2026**: era un errore, contro le parole stesse
+dell’autore qui sopra. La cifra è una scritta del visore, «ARIA 28%», e la legge Kira (qui sotto, «La cifra
+dell’aria»). In tutto 41 parti, circa 250 parole, circa 2 minuti e mezzo: una
 generazione sola (AI Studio arriva a circa sei minuti, l’autore; lo strumento divide i blocchi oltre i cinque).
 
 Nel gioco andrà come Yusuf e la scatola nera: asciutta, sul cursore del parlato; la tuta un poco dentro il casco, i
@@ -385,6 +387,20 @@ Con la stessa decisione l’autore ha fissato le altre tre domande del copione: 
 «millenovecentosettantadue»; la firma di William sul suo registro sono le iniziali («… Nessun contatto. W. T.»,
 `santamaria.fav`); la frase delle fasce del pilastro è corretta («…una fascia alla volta: [risveglio] su quattro,
 per ora.», `memoria.fav`).
+
+**La cifra dell’aria (19 novembre 2026).** L’autore: «Quelle informazioni sono del computer o della voce
+dell’assistente nel gioco». Nei `.fav` la cifra è una scritta del visore, «ARIA [aria]%» (documento 41, §5), e
+`voce_servizio.py` ne fa una parte per valore, da 0 a 100 (il tipo «aria», in fondo all’ordine: i numeri delle
+parti che hanno già un file non cambiano). Per la voce: «Aria ventotto per cento.». Le 101 parti nuove
+(`SV-46`…`SV-146`) sono in `servizio-nuove.txt`, da generare in una volta; finché non c’è il file il motore le
+salta. Il taglio le passa appena dentro il casco, come PROTEZIONE VITALE.
+
+**Il controllo di quello che Kira ha già detto (19 novembre 2026).** Le 45 parti di prima hanno tutte il loro file e
+Whisper ci sente il loro testo (somiglianza fra 0,96 e 1,0; «Prima a Costa» è di Whisper). Cercate nel copione di
+William le scritte in maiuscolo che potrebbero essere della macchina: restano sue i nomi davanti alle voci della
+nave dentro il racconto («IL NAVARCA, e stavolta…»), le scritte che legge (la placca, «TSC» sul kit, «AURORA-7»
+ripetuto dopo lo scanner) e «con la PROTEZIONE VITALE la tuta…», detta da lui con l’articolo (`IN-063`). Non manca
+altro.
 
 ## 12. Il messaggio di Yusuf per l’intro (14 novembre 2026)
 

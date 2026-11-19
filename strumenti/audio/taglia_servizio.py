@@ -47,7 +47,7 @@ SOGLIA_DB = -48.0     # sotto questo, in blocchi di 10 ms, è silenzio
 TESTA, CODA = 0.06, 0.18   # i secondi di silenzio che restano davanti e dietro le parole
 FINESTRA = 0.9        # quanto lontano da dove Whisper mette il confine si cerca il silenzio
 SOMIGLIANZA = 0.85    # sotto, la parte va riascoltata
-CASCO = {"protezione", "schermo", "lettura", "etichetta", "matrice"}
+CASCO = {"protezione", "schermo", "lettura", "etichetta", "matrice", "aria"}
 COMPUTER = {"registro"}
 CIFRE = {"35": "trentacinque", "150": "centocinquant", "340": "trecentoquaranta", "100": "cento", "18": "diciotto",
          "4": "quattro", "75": "settantacinque"}

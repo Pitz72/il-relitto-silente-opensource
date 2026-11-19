@@ -24,6 +24,10 @@ anche una seconda versione (`intro2.wav`): l’autore, 16 novembre 2026, «Archi
 `audio/sorgenti/voce/william-registro-intro-leonardo-presa2-storica-2026-11-15.wav` (impronta
 `6912944192a5eed684896f4c20720ecf7b6bf018a655fd7b8b08c97288028939`), fuori dal gioco.
 
+Dal 19 novembre 2026 il PDF ha soltanto le prese ancora da registrare: quelle che hanno già il loro file nel gioco
+(e quelle uguali a loro) non si stampano. La cifra dell’aria («ARIA [aria]%») la legge la voce di servizio, non
+William: non ci sono più le cifre da registrare (documento 41, §5).
+
 Il copione si rifà così, dalla radice:
 
     python strumenti/audio/copione_william.py

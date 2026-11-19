@@ -153,6 +153,8 @@ const SEGNI: { re: RegExp; tipo: TipoSegmento }[] = [
   { re: /TSC-1972|\bTSC\b|AURORA-7/g, tipo: "stampo" },
   // Il preavviso al 40% (aria.fav, RN-F1): «SOTTO 30, PROTEZIONE VITALE», la soglia sullo schermo.
   { re: /SOTTO 30,(?= PROTEZIONE VITALE)/g, tipo: "schermo" },
+  // La cifra dell'aria sul visore («ARIA 28%»): la legge la tuta, con la voce di servizio (l'autore, 19 novembre 2026).
+  { re: /\bARIA \d+%/g, tipo: "schermo" },
   { re: /PROTEZIONE VITALE/g, tipo: "protezione" },
   { re: /MATERIALE NON IN ARCHIVIO|CHIUSURA RIFIUTATA|CANALE APERTO DA REMOTO|DECODIFICA COMPLETATA/g, tipo: "schermo" },
   {

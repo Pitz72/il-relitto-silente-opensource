@@ -6,7 +6,9 @@
 #   - quello che dice ad alta voce: le opzioni dei dialoghi (non i gesti fra parentesi quadre, né «Chiudi la
 #     comunicazione.» e «Lascia stare.», che sono azioni);
 #   - le parole fra «» che nessun’altra voce dice: le incisioni lette con la matrice, le scritte, le citazioni;
-#   - il numero dell’aria che legge sul visore ([aria]) e le fasce accese ([risveglio]).
+#   - le fasce accese del pilastro ([risveglio]).
+# La cifra dell’aria sul visore («ARIA [aria]%») non è sua: la legge la tuta, con la voce di servizio (l’autore,
+# 19 novembre 2026).
 # Non è di William: il prologo e la scatola nera (L.V.), l’Anziano, Yusuf, le voci della nave (le loro battute e le
 # varianti brevi delle registrazioni), la voce di servizio (la tuta, lo scanner, la matrice, i suggerimenti), il
 # nome di chi parla davanti alle voci della nave («IL NAVARCA:»), la riga del registro di bordo che chiude i
@@ -81,6 +83,8 @@ REGISTRO = re.compile(r"Registro di bordo, TSC-1972\..*$", re.S)
 MATRICE = re.compile(r"\((?:Matrice di traduzione|MATRICE DI TRADUZIONE): \[traduzione\]%(?: — DECODIFICA COMPLETATA)?\)?")
 # Un blocco più lungo di così si divide, cosa per cosa (o nodo per nodo, nei dialoghi).
 MAX_PRESE = 12
+# La cifra dell'aria sul visore, com'è nei .fav: la dice la voce di servizio, con il numero del momento.
+ARIA = re.compile(r"ARIA \[aria\]%")
 # Il titolo dei blocchi che nei .fav non hanno una sezione sopra.
 SEZIONI = {"corridoio.fav": "CORRIDOIO PRINCIPALE", "tecnica.fav": "LABORATORIO DI RISONANZA",
            "fuga.fav": "LA FUGA", "finali.fav": "I FINALI", "echi.fav": "IL SINTONIZZATORE",
@@ -230,6 +234,8 @@ def segmenti(testo, parlante, ponte, frammenti):
             i = t.find(cerca, i + 1)
     for m in MATRICE.finditer(t):
         segna(m.start(), m.end(), "servizio", "la matrice")
+    for m in ARIA.finditer(t):
+        segna(m.start(), m.end(), "servizio", "la cifra dell'aria")
     m = REGISTRO.search(t)
     if m:
         segna(m.start(), m.end(), "registro")
