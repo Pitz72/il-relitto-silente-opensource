@@ -7,6 +7,10 @@
   {
    "presa": "servizio-kira-nuove-2026-11-07.wav",
    "sha256": "d59dfc1deb338b26c8813e743016e001034386e5b2d14496de5e7e5543940e0c"
+  },
+  {
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "sha256": "a937d4608b304ff9085d71315aac2137022817da568d6b3c53a06721cb1985f8"
   }
  ],
  "parti": {
@@ -418,6 +422,1016 @@
    "presa": "servizio-kira-nuove-2026-11-07.wav",
    "whisper": "Registro di bordo TSC 1972. Operatore W.T. Erickson. Rotta ripresa. Carico nessuno.",
    "somiglianza": 0.98
+  },
+  "057802524099": {
+   "file": "SV-46-aria-zero-per-cento",
+   "tipo": "aria",
+   "inizio": 0.22,
+   "fine": 1.85,
+   "durata": 1.63,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Area 0%.",
+   "somiglianza": 0.76
+  },
+  "add7354e09bd": {
+   "file": "SV-47-aria-uno-per-cento",
+   "tipo": "aria",
+   "inizio": 2.21,
+   "fine": 3.81,
+   "durata": 1.6,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 1%",
+   "somiglianza": 0.86
+  },
+  "f2c0069a9002": {
+   "file": "SV-48-aria-due-per-cento",
+   "tipo": "aria",
+   "inizio": 4.16,
+   "fine": 5.92,
+   "durata": 1.75,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 2%",
+   "somiglianza": 0.86
+  },
+  "779b642d56b5": {
+   "file": "SV-49-aria-tre-per-cento",
+   "tipo": "aria",
+   "inizio": 6.03,
+   "fine": 7.56,
+   "durata": 1.53,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 3%.",
+   "somiglianza": 0.86
+  },
+  "e9d2226e9a4e": {
+   "file": "SV-50-aria-quattro-per-cento",
+   "tipo": "aria",
+   "inizio": 7.9,
+   "fine": 9.54,
+   "durata": 1.64,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 4%.",
+   "somiglianza": 1.0
+  },
+  "c072c3713eb8": {
+   "file": "SV-51-aria-cinque-per-cento",
+   "tipo": "aria",
+   "inizio": 9.86,
+   "fine": 11.45,
+   "durata": 1.59,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 5%.",
+   "somiglianza": 0.77
+  },
+  "ea234d56f282": {
+   "file": "SV-52-aria-sei-per-cento",
+   "tipo": "aria",
+   "inizio": 11.76,
+   "fine": 13.4,
+   "durata": 1.64,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 6%",
+   "somiglianza": 0.86
+  },
+  "ab6bc4ee85e3": {
+   "file": "SV-53-aria-sette-per-cento",
+   "tipo": "aria",
+   "inizio": 13.61,
+   "fine": 15.22,
+   "durata": 1.61,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 7%.",
+   "somiglianza": 0.8
+  },
+  "2e307e775cea": {
+   "file": "SV-54-aria-otto-per-cento",
+   "tipo": "aria",
+   "inizio": 15.51,
+   "fine": 17.09,
+   "durata": 1.58,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 8%.",
+   "somiglianza": 0.83
+  },
+  "5c854ba7b55e": {
+   "file": "SV-55-aria-nove-per-cento",
+   "tipo": "aria",
+   "inizio": 17.41,
+   "fine": 18.98,
+   "durata": 1.57,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 9%",
+   "somiglianza": 0.83
+  },
+  "873236cbde10": {
+   "file": "SV-56-aria-dieci-per-cento",
+   "tipo": "aria",
+   "inizio": 19.29,
+   "fine": 20.88,
+   "durata": 1.59,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 10%.",
+   "somiglianza": 0.77
+  },
+  "488baae45ee3": {
+   "file": "SV-57-aria-undici-per-cento",
+   "tipo": "aria",
+   "inizio": 21.17,
+   "fine": 22.85,
+   "durata": 1.68,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 11%.",
+   "somiglianza": 0.75
+  },
+  "e7ba193782c1": {
+   "file": "SV-58-aria-dodici-per-cento",
+   "tipo": "aria",
+   "inizio": 23.13,
+   "fine": 24.75,
+   "durata": 1.62,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 12%.",
+   "somiglianza": 0.75
+  },
+  "123d686389ab": {
+   "file": "SV-59-aria-tredici-per-cento",
+   "tipo": "aria",
+   "inizio": 25.04,
+   "fine": 26.69,
+   "durata": 1.65,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria a 13%.",
+   "somiglianza": 0.71
+  },
+  "e532c9d10f4a": {
+   "file": "SV-60-aria-quattordici-per-cento",
+   "tipo": "aria",
+   "inizio": 26.97,
+   "fine": 28.8,
+   "durata": 1.83,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 14%.",
+   "somiglianza": 0.75
+  },
+  "48df30fd7953": {
+   "file": "SV-61-aria-quindici-per-cento",
+   "tipo": "aria",
+   "inizio": 29.14,
+   "fine": 30.73,
+   "durata": 1.59,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 15%.",
+   "somiglianza": 0.75
+  },
+  "6695a618314a": {
+   "file": "SV-62-aria-sedici-per-cento",
+   "tipo": "aria",
+   "inizio": 31.01,
+   "fine": 32.64,
+   "durata": 1.63,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 16%.",
+   "somiglianza": 0.75
+  },
+  "1feeca674ccf": {
+   "file": "SV-63-aria-diciassette-per-cento",
+   "tipo": "aria",
+   "inizio": 32.95,
+   "fine": 34.77,
+   "durata": 1.82,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 17%.",
+   "somiglianza": 0.75
+  },
+  "b3bed87a8710": {
+   "file": "SV-64-aria-diciotto-per-cento",
+   "tipo": "aria",
+   "inizio": 35.06,
+   "fine": 36.73,
+   "durata": 1.67,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 18%.",
+   "somiglianza": 1.0
+  },
+  "76cbce34e020": {
+   "file": "SV-65-aria-diciannove-per-cento",
+   "tipo": "aria",
+   "inizio": 37.02,
+   "fine": 38.79,
+   "durata": 1.77,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 19%.",
+   "somiglianza": 0.75
+  },
+  "62946aa54f9a": {
+   "file": "SV-66-aria-venti-per-cento",
+   "tipo": "aria",
+   "inizio": 39.1,
+   "fine": 40.59,
+   "durata": 1.49,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 20%.",
+   "somiglianza": 0.77
+  },
+  "c57ba9559e07": {
+   "file": "SV-67-aria-ventuno-per-cento",
+   "tipo": "aria",
+   "inizio": 40.88,
+   "fine": 42.51,
+   "durata": 1.63,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 21%.",
+   "somiglianza": 0.75
+  },
+  "eca4eecd4724": {
+   "file": "SV-68-aria-ventidue-per-cento",
+   "tipo": "aria",
+   "inizio": 42.81,
+   "fine": 44.64,
+   "durata": 1.83,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 22%.",
+   "somiglianza": 0.75
+  },
+  "d3d85ec0637e": {
+   "file": "SV-69-aria-ventitre-per-cento",
+   "tipo": "aria",
+   "inizio": 44.84,
+   "fine": 46.44,
+   "durata": 1.6,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 23%.",
+   "somiglianza": 0.75
+  },
+  "2b8400b4faac": {
+   "file": "SV-70-aria-ventiquattro-per-cento",
+   "tipo": "aria",
+   "inizio": 46.76,
+   "fine": 48.54,
+   "durata": 1.78,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 24%.",
+   "somiglianza": 0.75
+  },
+  "31f55ad6d85e": {
+   "file": "SV-71-aria-venticinque-per-cento",
+   "tipo": "aria",
+   "inizio": 48.86,
+   "fine": 50.63,
+   "durata": 1.77,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 25%.",
+   "somiglianza": 0.75
+  },
+  "3fff2528b153": {
+   "file": "SV-72-aria-ventisei-per-cento",
+   "tipo": "aria",
+   "inizio": 50.93,
+   "fine": 52.61,
+   "durata": 1.68,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 26%.",
+   "somiglianza": 0.75
+  },
+  "f3bc6a8e0eda": {
+   "file": "SV-73-aria-ventisette-per-cento",
+   "tipo": "aria",
+   "inizio": 52.91,
+   "fine": 54.66,
+   "durata": 1.75,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 27%.",
+   "somiglianza": 0.75
+  },
+  "dd5de792145c": {
+   "file": "SV-74-aria-ventotto-per-cento",
+   "tipo": "aria",
+   "inizio": 54.95,
+   "fine": 56.64,
+   "durata": 1.69,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 28%.",
+   "somiglianza": 0.75
+  },
+  "973672b4223c": {
+   "file": "SV-75-aria-ventinove-per-cento",
+   "tipo": "aria",
+   "inizio": 56.92,
+   "fine": 58.65,
+   "durata": 1.73,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 29%.",
+   "somiglianza": 0.75
+  },
+  "fcee690f0658": {
+   "file": "SV-76-aria-trenta-per-cento",
+   "tipo": "aria",
+   "inizio": 58.93,
+   "fine": 60.44,
+   "durata": 1.51,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 30%.",
+   "somiglianza": 0.75
+  },
+  "d775e3229a75": {
+   "file": "SV-77-aria-trentuno-per-cento",
+   "tipo": "aria",
+   "inizio": 60.74,
+   "fine": 62.38,
+   "durata": 1.64,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 31%.",
+   "somiglianza": 0.75
+  },
+  "291bc9323db6": {
+   "file": "SV-78-aria-trentadue-per-cento",
+   "tipo": "aria",
+   "inizio": 62.68,
+   "fine": 64.35,
+   "durata": 1.67,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 32%.",
+   "somiglianza": 0.75
+  },
+  "1d5221038595": {
+   "file": "SV-79-aria-trentatre-per-cento",
+   "tipo": "aria",
+   "inizio": 64.66,
+   "fine": 66.32,
+   "durata": 1.66,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 33%.",
+   "somiglianza": 0.75
+  },
+  "49f7140b32e7": {
+   "file": "SV-80-aria-trentaquattro-per-cento",
+   "tipo": "aria",
+   "inizio": 66.6,
+   "fine": 68.41,
+   "durata": 1.81,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 34%.",
+   "somiglianza": 0.75
+  },
+  "a1e1858e5f19": {
+   "file": "SV-81-aria-trentacinque-per-cento",
+   "tipo": "aria",
+   "inizio": 68.71,
+   "fine": 70.54,
+   "durata": 1.83,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 35%.",
+   "somiglianza": 1.0
+  },
+  "d0bfd577dfbf": {
+   "file": "SV-82-aria-trentasei-per-cento",
+   "tipo": "aria",
+   "inizio": 70.83,
+   "fine": 72.54,
+   "durata": 1.71,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 36%.",
+   "somiglianza": 0.75
+  },
+  "9420934aae0c": {
+   "file": "SV-83-aria-trentasette-per-cento",
+   "tipo": "aria",
+   "inizio": 72.88,
+   "fine": 74.67,
+   "durata": 1.79,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 37%.",
+   "somiglianza": 0.75
+  },
+  "a54dcdfde8cb": {
+   "file": "SV-84-aria-trentotto-per-cento",
+   "tipo": "aria",
+   "inizio": 75.02,
+   "fine": 76.76,
+   "durata": 1.74,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 38%.",
+   "somiglianza": 0.75
+  },
+  "f756b45a11ef": {
+   "file": "SV-85-aria-trentanove-per-cento",
+   "tipo": "aria",
+   "inizio": 77.06,
+   "fine": 78.8,
+   "durata": 1.74,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 39%.",
+   "somiglianza": 0.75
+  },
+  "52d30dd5487d": {
+   "file": "SV-86-aria-quaranta-per-cento",
+   "tipo": "aria",
+   "inizio": 79.12,
+   "fine": 80.73,
+   "durata": 1.61,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 40%.",
+   "somiglianza": 0.75
+  },
+  "f684e4701881": {
+   "file": "SV-87-aria-quarantuno-per-cento",
+   "tipo": "aria",
+   "inizio": 81.06,
+   "fine": 82.74,
+   "durata": 1.68,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 41%.",
+   "somiglianza": 0.75
+  },
+  "5e71b717cbe3": {
+   "file": "SV-88-aria-quarantadue-per-cento",
+   "tipo": "aria",
+   "inizio": 83.07,
+   "fine": 84.82,
+   "durata": 1.75,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 42%.",
+   "somiglianza": 0.75
+  },
+  "076d85511a32": {
+   "file": "SV-89-aria-quarantatre-per-cento",
+   "tipo": "aria",
+   "inizio": 85.15,
+   "fine": 86.85,
+   "durata": 1.7,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 43%.",
+   "somiglianza": 0.75
+  },
+  "afb0df9b1b40": {
+   "file": "SV-90-aria-quarantaquattro-per-cento",
+   "tipo": "aria",
+   "inizio": 87.19,
+   "fine": 89.02,
+   "durata": 1.83,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 44%.",
+   "somiglianza": 0.75
+  },
+  "40bdb1fa2b12": {
+   "file": "SV-91-aria-quarantacinque-per-cento",
+   "tipo": "aria",
+   "inizio": 89.33,
+   "fine": 91.17,
+   "durata": 1.84,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 45%.",
+   "somiglianza": 0.75
+  },
+  "bab37204a198": {
+   "file": "SV-92-aria-quarantasei-per-cento",
+   "tipo": "aria",
+   "inizio": 91.5,
+   "fine": 93.31,
+   "durata": 1.81,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 46%.",
+   "somiglianza": 0.75
+  },
+  "aa1c7735fbae": {
+   "file": "SV-93-aria-quarantasette-per-cento",
+   "tipo": "aria",
+   "inizio": 93.6,
+   "fine": 95.5,
+   "durata": 1.9,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 47%.",
+   "somiglianza": 0.75
+  },
+  "0b22a80e9800": {
+   "file": "SV-94-aria-quarantotto-per-cento",
+   "tipo": "aria",
+   "inizio": 95.81,
+   "fine": 97.56,
+   "durata": 1.75,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 48%.",
+   "somiglianza": 0.75
+  },
+  "3fd8b7d7bd32": {
+   "file": "SV-95-aria-quarantanove-per-cento",
+   "tipo": "aria",
+   "inizio": 97.86,
+   "fine": 99.64,
+   "durata": 1.78,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 49%.",
+   "somiglianza": 0.75
+  },
+  "66cd143dcba4": {
+   "file": "SV-96-aria-cinquanta-per-cento",
+   "tipo": "aria",
+   "inizio": 99.96,
+   "fine": 101.65,
+   "durata": 1.69,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 50%.",
+   "somiglianza": 0.75
+  },
+  "3c638c48b865": {
+   "file": "SV-97-aria-cinquantuno-per-cento",
+   "tipo": "aria",
+   "inizio": 101.98,
+   "fine": 103.72,
+   "durata": 1.74,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 51%.",
+   "somiglianza": 0.75
+  },
+  "12a2096a4a14": {
+   "file": "SV-98-aria-cinquantadue-per-cento",
+   "tipo": "aria",
+   "inizio": 103.9,
+   "fine": 105.88,
+   "durata": 1.98,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Area 52%.",
+   "somiglianza": 0.58
+  },
+  "2d3ac038730e": {
+   "file": "SV-99-aria-cinquantatre-per-cento",
+   "tipo": "aria",
+   "inizio": 106.54,
+   "fine": 108.51,
+   "durata": 1.97,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 53%.",
+   "somiglianza": 0.75
+  },
+  "f761569e71bf": {
+   "file": "SV-100-aria-cinquantaquattro-per-cento",
+   "tipo": "aria",
+   "inizio": 109.17,
+   "fine": 111.19,
+   "durata": 2.02,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 54%.",
+   "somiglianza": 0.75
+  },
+  "487eb480d983": {
+   "file": "SV-101-aria-cinquantacinque-per-cento",
+   "tipo": "aria",
+   "inizio": 111.75,
+   "fine": 114.04,
+   "durata": 2.29,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 55%.",
+   "somiglianza": 0.75
+  },
+  "438f6cfd776c": {
+   "file": "SV-102-aria-cinquantasei-per-cento",
+   "tipo": "aria",
+   "inizio": 114.54,
+   "fine": 116.51,
+   "durata": 1.97,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 56%.",
+   "somiglianza": 0.75
+  },
+  "348ada55e810": {
+   "file": "SV-103-aria-cinquantasette-per-cento",
+   "tipo": "aria",
+   "inizio": 117.0,
+   "fine": 119.07,
+   "durata": 2.07,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 57%.",
+   "somiglianza": 0.75
+  },
+  "bd53e9544198": {
+   "file": "SV-104-aria-cinquantotto-per-cento",
+   "tipo": "aria",
+   "inizio": 119.6,
+   "fine": 121.56,
+   "durata": 1.96,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria, 58%.",
+   "somiglianza": 0.75
+  },
+  "b28bb4a32cb2": {
+   "file": "SV-105-aria-cinquantanove-per-cento",
+   "tipo": "aria",
+   "inizio": 122.11,
+   "fine": 124.09,
+   "durata": 1.98,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 59%.",
+   "somiglianza": 0.75
+  },
+  "b754bd933d1e": {
+   "file": "SV-106-aria-sessanta-per-cento",
+   "tipo": "aria",
+   "inizio": 124.6,
+   "fine": 126.44,
+   "durata": 1.84,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 60%.",
+   "somiglianza": 0.75
+  },
+  "d5218740a9d5": {
+   "file": "SV-107-aria-sessantuno-per-cento",
+   "tipo": "aria",
+   "inizio": 127.01,
+   "fine": 128.78,
+   "durata": 1.77,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 61%.",
+   "somiglianza": 0.75
+  },
+  "8a4646a5c2b6": {
+   "file": "SV-108-aria-sessantadue-per-cento",
+   "tipo": "aria",
+   "inizio": 129.33,
+   "fine": 131.24,
+   "durata": 1.91,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 62%.",
+   "somiglianza": 0.75
+  },
+  "25ba663782cb": {
+   "file": "SV-109-aria-sessantatre-per-cento",
+   "tipo": "aria",
+   "inizio": 131.81,
+   "fine": 133.75,
+   "durata": 1.94,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 63%.",
+   "somiglianza": 0.75
+  },
+  "6e0d56485fe3": {
+   "file": "SV-110-aria-sessantaquattro-per-cento",
+   "tipo": "aria",
+   "inizio": 134.23,
+   "fine": 136.37,
+   "durata": 2.14,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 64%.",
+   "somiglianza": 0.75
+  },
+  "e0a9cc250c65": {
+   "file": "SV-111-aria-sessantacinque-per-cento",
+   "tipo": "aria",
+   "inizio": 136.81,
+   "fine": 138.83,
+   "durata": 2.02,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 65%.",
+   "somiglianza": 0.75
+  },
+  "66fc9c0f387c": {
+   "file": "SV-112-aria-sessantasei-per-cento",
+   "tipo": "aria",
+   "inizio": 139.29,
+   "fine": 141.21,
+   "durata": 1.92,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 66%.",
+   "somiglianza": 0.75
+  },
+  "0c35e17d2bc3": {
+   "file": "SV-113-aria-sessantasette-per-cento",
+   "tipo": "aria",
+   "inizio": 141.73,
+   "fine": 143.65,
+   "durata": 1.92,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 67%.",
+   "somiglianza": 0.75
+  },
+  "183c11a83e90": {
+   "file": "SV-114-aria-sessantotto-per-cento",
+   "tipo": "aria",
+   "inizio": 144.15,
+   "fine": 146.1,
+   "durata": 1.95,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 68%.",
+   "somiglianza": 0.75
+  },
+  "720bbe99cfdb": {
+   "file": "SV-115-aria-sessantanove-per-cento",
+   "tipo": "aria",
+   "inizio": 146.7,
+   "fine": 148.6,
+   "durata": 1.9,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 69%.",
+   "somiglianza": 0.75
+  },
+  "b92536c0284c": {
+   "file": "SV-116-aria-settanta-per-cento",
+   "tipo": "aria",
+   "inizio": 149.04,
+   "fine": 150.85,
+   "durata": 1.81,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 70%.",
+   "somiglianza": 0.75
+  },
+  "dcde1bc88641": {
+   "file": "SV-117-aria-settantuno-per-cento",
+   "tipo": "aria",
+   "inizio": 151.29,
+   "fine": 153.03,
+   "durata": 1.74,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 71%.",
+   "somiglianza": 0.75
+  },
+  "b4542c58f2af": {
+   "file": "SV-118-aria-settantadue-per-cento",
+   "tipo": "aria",
+   "inizio": 153.5,
+   "fine": 155.39,
+   "durata": 1.89,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 72%.",
+   "somiglianza": 0.75
+  },
+  "b2136f043881": {
+   "file": "SV-119-aria-settantatre-per-cento",
+   "tipo": "aria",
+   "inizio": 155.96,
+   "fine": 157.82,
+   "durata": 1.86,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 73%.",
+   "somiglianza": 0.75
+  },
+  "ed2bafc80431": {
+   "file": "SV-120-aria-settantaquattro-per-cento",
+   "tipo": "aria",
+   "inizio": 158.33,
+   "fine": 160.46,
+   "durata": 2.13,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 74%.",
+   "somiglianza": 0.75
+  },
+  "37676022b0ba": {
+   "file": "SV-121-aria-settantacinque-per-cento",
+   "tipo": "aria",
+   "inizio": 160.9,
+   "fine": 162.89,
+   "durata": 1.99,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 75%.",
+   "somiglianza": 1.0
+  },
+  "f2c828bcb5e8": {
+   "file": "SV-122-aria-settantasei-per-cento",
+   "tipo": "aria",
+   "inizio": 163.38,
+   "fine": 165.31,
+   "durata": 1.93,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 76%.",
+   "somiglianza": 0.75
+  },
+  "ea634d346473": {
+   "file": "SV-123-aria-settantasette-per-cento",
+   "tipo": "aria",
+   "inizio": 165.79,
+   "fine": 167.85,
+   "durata": 2.06,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 77%.",
+   "somiglianza": 0.75
+  },
+  "8d65b4200537": {
+   "file": "SV-124-aria-settantotto-per-cento",
+   "tipo": "aria",
+   "inizio": 168.33,
+   "fine": 170.24,
+   "durata": 1.91,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 78%.",
+   "somiglianza": 0.75
+  },
+  "e996cb796863": {
+   "file": "SV-125-aria-settantanove-per-cento",
+   "tipo": "aria",
+   "inizio": 170.73,
+   "fine": 172.67,
+   "durata": 1.94,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 79%.",
+   "somiglianza": 0.75
+  },
+  "74f6a9e20d70": {
+   "file": "SV-126-aria-ottanta-per-cento",
+   "tipo": "aria",
+   "inizio": 173.08,
+   "fine": 174.76,
+   "durata": 1.68,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 80%.",
+   "somiglianza": 0.75
+  },
+  "2095a47560f8": {
+   "file": "SV-127-aria-ottantuno-per-cento",
+   "tipo": "aria",
+   "inizio": 175.25,
+   "fine": 176.95,
+   "durata": 1.7,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 81%.",
+   "somiglianza": 0.75
+  },
+  "8b45cdc66831": {
+   "file": "SV-128-aria-ottantadue-per-cento",
+   "tipo": "aria",
+   "inizio": 177.47,
+   "fine": 179.28,
+   "durata": 1.81,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 82%.",
+   "somiglianza": 0.75
+  },
+  "d9924c49147a": {
+   "file": "SV-129-aria-ottantatre-per-cento",
+   "tipo": "aria",
+   "inizio": 179.73,
+   "fine": 181.62,
+   "durata": 1.89,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 83%.",
+   "somiglianza": 0.75
+  },
+  "0833ca68ffd0": {
+   "file": "SV-130-aria-ottantaquattro-per-cento",
+   "tipo": "aria",
+   "inizio": 182.09,
+   "fine": 184.01,
+   "durata": 1.92,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 84%.",
+   "somiglianza": 0.75
+  },
+  "f3d65843e2e4": {
+   "file": "SV-131-aria-ottantacinque-per-cento",
+   "tipo": "aria",
+   "inizio": 184.51,
+   "fine": 186.35,
+   "durata": 1.84,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 85%.",
+   "somiglianza": 0.75
+  },
+  "615e912f3acc": {
+   "file": "SV-132-aria-ottantasei-per-cento",
+   "tipo": "aria",
+   "inizio": 186.95,
+   "fine": 188.67,
+   "durata": 1.72,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 86%.",
+   "somiglianza": 0.75
+  },
+  "be872a1e3e57": {
+   "file": "SV-133-aria-ottantasette-per-cento",
+   "tipo": "aria",
+   "inizio": 189.21,
+   "fine": 191.1,
+   "durata": 1.89,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 87%.",
+   "somiglianza": 0.75
+  },
+  "d137e1bbe545": {
+   "file": "SV-134-aria-ottantotto-per-cento",
+   "tipo": "aria",
+   "inizio": 191.62,
+   "fine": 193.48,
+   "durata": 1.86,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 88%.",
+   "somiglianza": 0.75
+  },
+  "a44ed8aa87f3": {
+   "file": "SV-135-aria-ottantanove-per-cento",
+   "tipo": "aria",
+   "inizio": 193.93,
+   "fine": 195.88,
+   "durata": 1.95,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 89%.",
+   "somiglianza": 0.75
+  },
+  "d012e77a6b35": {
+   "file": "SV-136-aria-novanta-per-cento",
+   "tipo": "aria",
+   "inizio": 196.44,
+   "fine": 198.18,
+   "durata": 1.74,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 90%.",
+   "somiglianza": 0.75
+  },
+  "0c51f8f43622": {
+   "file": "SV-137-aria-novantuno-per-cento",
+   "tipo": "aria",
+   "inizio": 198.67,
+   "fine": 200.34,
+   "durata": 1.67,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 91%.",
+   "somiglianza": 0.75
+  },
+  "8832609405c8": {
+   "file": "SV-138-aria-novantadue-per-cento",
+   "tipo": "aria",
+   "inizio": 200.83,
+   "fine": 202.63,
+   "durata": 1.8,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 92%.",
+   "somiglianza": 0.75
+  },
+  "523e282c3a09": {
+   "file": "SV-139-aria-novantatre-per-cento",
+   "tipo": "aria",
+   "inizio": 203.17,
+   "fine": 204.97,
+   "durata": 1.8,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 93%.",
+   "somiglianza": 0.75
+  },
+  "9079963fc7f3": {
+   "file": "SV-140-aria-novantaquattro-per-cento",
+   "tipo": "aria",
+   "inizio": 205.47,
+   "fine": 207.33,
+   "durata": 1.86,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Arian 94%.",
+   "somiglianza": 0.63
+  },
+  "8bc5f3e20ff6": {
+   "file": "SV-141-aria-novantacinque-per-cento",
+   "tipo": "aria",
+   "inizio": 207.88,
+   "fine": 209.71,
+   "durata": 1.83,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 95%.",
+   "somiglianza": 0.75
+  },
+  "63e634e8b2f0": {
+   "file": "SV-142-aria-novantasei-per-cento",
+   "tipo": "aria",
+   "inizio": 210.22,
+   "fine": 211.97,
+   "durata": 1.75,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 96%.",
+   "somiglianza": 0.75
+  },
+  "c2ec806c938d": {
+   "file": "SV-143-aria-novantasette-per-cento",
+   "tipo": "aria",
+   "inizio": 212.47,
+   "fine": 214.39,
+   "durata": 1.92,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 97%.",
+   "somiglianza": 0.75
+  },
+  "f06dca059032": {
+   "file": "SV-144-aria-novantotto-per-cento",
+   "tipo": "aria",
+   "inizio": 214.9,
+   "fine": 216.68,
+   "durata": 1.78,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 98%.",
+   "somiglianza": 0.75
+  },
+  "80defe83d2a6": {
+   "file": "SV-145-aria-novantanove-per-cento",
+   "tipo": "aria",
+   "inizio": 217.07,
+   "fine": 218.93,
+   "durata": 1.86,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "aria 99%.",
+   "somiglianza": 0.75
+  },
+  "5d145a62fce3": {
+   "file": "SV-146-aria-cento-per-cento",
+   "tipo": "aria",
+   "inizio": 219.14,
+   "fine": 220.91,
+   "durata": 1.77,
+   "presa": "servizio-kira-nuove-2026-11-19.wav",
+   "whisper": "Aria 100%",
+   "somiglianza": 1.0
   }
  }
 }

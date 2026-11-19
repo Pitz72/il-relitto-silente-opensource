@@ -462,6 +462,8 @@ mod prove {
         assert_eq!(Pezzo::della_battuta("SV-01-protezione-vitale"), Some(Pezzo::Sv01));
         assert_eq!(Pezzo::della_battuta("SV-41-usala"), Some(Pezzo::Sv41));
         assert_eq!(Pezzo::della_battuta("SV-45-registro-carico-nessuno"), Some(Pezzo::Sv45));
+        assert_eq!(Pezzo::della_battuta("SV-74-aria-ventotto-per-cento"), Some(Pezzo::Sv74));
+        assert_eq!(Pezzo::della_battuta("SV-146-aria-cento-per-cento"), Some(Pezzo::Sv146));
         assert!(Pezzo::Sv12.servizio() && Pezzo::Sv12.parlato() && !Pezzo::Sv12.asciutta() && !Pezzo::Nv01.servizio());
         assert!(Pezzo::Yu03a.yusuf() && Pezzo::Yu03a.parlato() && Pezzo::Yu03b.segue() && !Pezzo::Yu03a.segue() && !Pezzo::Nv01.yusuf() && !Pezzo::An10.parlato());
         // ogni battuta ha il suo file nella cartella, e la tabella le ha tutte

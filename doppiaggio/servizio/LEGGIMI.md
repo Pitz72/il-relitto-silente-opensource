@@ -59,4 +59,5 @@ descrizione, e si taglia con
 Le altre parti restano come sono. Quando sono tagliate tutte, `voce_servizio.py` toglie `servizio-nuove.txt`. Il 7 novembre 2026: le quattro righe del registro di bordo che chiudono i finali,
 dette dal computer di bordo (documento 35, §11): lo strumento le passa da un altoparlante piccolo di plancia, non dal
 casco. Il 19 novembre 2026: la cifra dell’aria sul visore, «Aria zero per cento.» … «Aria cento per cento.», 101
-parti, circa quattro minuti e mezzo: una generazione sola.
+parti, circa quattro minuti e mezzo: una generazione sola. Generate dall’autore lo stesso giorno (una presa, 3:41),
+tagliate al primo colpo: Whisper ci sente in ognuna il suo numero.
