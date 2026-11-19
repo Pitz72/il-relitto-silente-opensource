@@ -121,7 +121,7 @@ dell’aria lette «sospese», da 0 a 100 a passi di dieci: fuori dal gioco, in 
 Controllo con Whisper (`consegne/controllo-2026-11-19.json`): il testo è quello del copione; le differenze sono di
 Whisper (le cifre in numeri, «soia» per «soglia», «magnati» per «magneti»). In `SM-056` Whisper non può dire se la
 firma è «vu ti» o «doppia vu, ti», e prima di «novantasei anni» c’è un piccolo suono: da sentire per l’autore
-(`consegne/Ascolto SM-056 2026-11-19/`). Fra `SM-083` e `SM-112` non mancano che `SM-094` e `SM-095`, le due frasi
+(`consegne/Ascolto SM-056 2026-11-19/`). **Ascoltata dall’autore il 19 novembre 2026**: «sm-056 dice doppiavu ti come gli avevo chiesto». Approvata. Fra `SM-083` e `SM-112` non mancano che `SM-094` e `SM-095`, le due frasi
 del faro con la cifra dell’aria: Leonardo le ha lasciate, e con ragione (qui sotto).
 
 **La cifra dell’aria non è di William.** Leonardo l’ha fatto notare, e l’autore, 19 novembre 2026: «ci sono le
