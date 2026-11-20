@@ -32,6 +32,10 @@ DATA = "19 novembre 2026"
 # Le prese già consegnate e nel gioco (strumenti/audio/voce_william.py): non si stampano più. L'autore, 19 novembre
 # 2026: «togli le cose che ha già doppiato».
 FATTE = set(json.load(open(os.path.join(RADICE, "audio", "musica-ia", "WI", "prese.json"), encoding="utf-8")))
+# Le prese consegnate da rifare: restano nel gioco finché non arriva quella nuova, e tornano nel copione con la nota.
+# IN-013, l'autore, 20 novembre 2026, ascoltata: «se deve essere dalla, deve essere dalla».
+DA_RIFARE = {"IN-013": "Nella presa consegnata il 20 novembre hai detto «sul tratto della grana diversa»: il testo dice «dalla grana diversa». Da rifare intera."}
+FATTE -= set(DA_RIFARE)
 
 FONT = r"C:\Windows\Fonts"
 for nome, file in [("Testo", "georgia.ttf"), ("Testo-B", "georgiab.ttf"), ("Testo-I", "georgiai.ttf"),
@@ -259,6 +263,9 @@ def pagine_davanti(tot):
              f"{tot['consegnate']} prese che hai già consegnato sono nel gioco e qui non ci sono più; le sigle delle "
              "altre non sono cambiate. Le cifre dell’aria non sono più da registrare: le legge la voce della tuta "
              "(vedi «Le decisioni», in fondo).")]
+    if DA_RIFARE:
+        st += [p("<b>Da rifare</b> (sono di nuovo nel copione, al loro posto, con la nota sopra il testo): "
+                 + "; ".join(f"<font name='Segno-B' color='#1F5C73'>{k}</font>, {escape(v)}" for k, v in DA_RIFARE.items()))]
     st.append(tabella([
         ["In numeri", ""],
         ["Blocchi di contesto", str(tot["blocchi"])],
@@ -460,6 +467,10 @@ def presa(q):
     # l'intestazione della presa sta nella stessa riga del primo pezzo: la tabella si può spezzare fra un pezzo e
     # l'altro, mai fra l'intestazione e il suo testo
     righe[0][1] = [Paragraph(escape(descrivi_presa(q)), S["quando"])] + righe[0][1]
+    for z in q["pezzi"]:
+        if z.get("id") in DA_RIFARE:
+            righe[0][1].insert(1, Paragraph(f"<font color='#B00020'><b>DA RIFARE</b> · {escape(DA_RIFARE[z['id']])}</font>",
+                                            S["quando"]))
     t = Table(righe, colWidths=[2.0 * cm, 14.6 * cm])
     t.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0),
                            ("RIGHTPADDING", (0, 0), (-1, -1), 2), ("TOPPADDING", (0, 0), (-1, -1), 1),

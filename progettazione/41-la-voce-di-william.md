@@ -118,7 +118,7 @@ scafo, il taglio della giuntura, la discesa nel varco, la camera tonda. Fra `IN-
 `IN-007` («È agganciato alla cintura. Lo lascio pendere.»); le altre sigle senza file sono uguali a una presa
 consegnata. Whisper (`consegne/controllo-2026-11-20.json`): il testo è quello del copione, tranne `IN-013`, dove
 Leonardo dice «sul tratto della grana diversa» e il testo dice «dalla»: da sentire per l’autore
-(`consegne/Ascolto IN-013 2026-11-20/`). Il resto è di Whisper («scavo», «150»). Il 20,9 % delle sigle (126 su
+(`consegne/Ascolto IN-013 2026-11-20/`). **Ascoltata dall’autore il 20 novembre 2026**: «nel file dice della, ma se deve essere dalla, deve essere dalla». Da rifare: resta nel gioco finché non arriva la nuova, e torna nel copione di Leonardo con la nota (`DA_RIFARE` in `copione_pdf.py`). Il resto è di Whisper («scavo», «150»). Il 20,9 % delle sigle (126 su
 604), il 19,2 % delle parole; il copione per Leonardo si rifà con le 478 prese che restano (94 pagine).
 
 **Cento, dal 19 novembre 2026.** La consegna del 19 novembre (`TransferNow-20261119c7HrKROE.zip`, 27 file): `SM-083`…
