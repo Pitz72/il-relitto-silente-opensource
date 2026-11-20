@@ -13,6 +13,7 @@ documenti di `progettazione/`.
 - **William ha venticinque battute nuove** (Leonardo Tomassetti): l’accostata al relitto, la telefonata a Yusuf con le risposte che gli dai, la cuccetta e il registro di bordo.
 - **William ha altre venticinque battute nuove** (Leonardo Tomassetti): la sala macchine, con il reattore, la cassetta di ferraglia, il bengala e l’amplificatore, e la stiva, con la tuta, il kit, i ganci, il lettore di ebook e il boccaporto.
 - **William ha altre ventiquattro battute** (Leonardo Tomassetti): la stiva con la tuta, il faro del casco e la cella di riserva, il boccaporto, i primi passi sullo scafo nero; e la frase che mancava in sala macchine, quando ascolti il reattore per la prima volta.
+- **William racconta anche i primi passi nel relitto** (Leonardo Tomassetti): lo scafo nero sotto gli stivali, la giuntura, il taglio, la discesa nel varco e la camera tonda.
 - **La cifra dell’aria è una scritta del visore**, «ARIA 28%», come PROTEZIONE VITALE: la legge la voce della tuta, non William, e le sue frasi non dicono più il numero.
 - **Alla radio Yusuf e William parlano nell’ordine del testo**: Yusuf dice una frase, William racconta, Yusuf continua. La voce di Yusuf è un poco più alta, e quando William dice che Yusuf conta fino a dieci il conto non si sente più.
 

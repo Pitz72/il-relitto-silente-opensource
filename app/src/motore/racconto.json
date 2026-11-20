@@ -926,6 +926,127 @@
 ]
 },
 {
+"id": "IN-003",
+"file": "IN-003",
+"tipo": "descrizione",
+"parti": [
+"liscio anche attraverso il guanto e freddo in un modo che il guanto non dovrebbe lasciar passare il faro ci scivola sopra senza trovare un appiglio da qualche parte chi l ha costruito avrà lasciato un punto più debole e il multiscanner lo troverebbe"
+]
+},
+{
+"id": "IN-004",
+"file": "IN-004",
+"tipo": "descrizione",
+"parti": [
+"tese fra la prua della santa maria e lo scafo nero finché tengono loro le due navi restano una"
+]
+},
+{
+"id": "IN-005",
+"file": "IN-005",
+"tipo": "descrizione",
+"parti": [
+"il mio cavo di sicurezza agganciato alla cintura e srotolato dal boccaporto finché c è la strada di casa è una linea"
+]
+},
+{
+"id": "IN-006",
+"file": "IN-006",
+"tipo": "descrizione",
+"parti": [
+"un metro di cavo tranciato di netto che mi pende dalla cintura il resto è rimasto fuori con la strada di casa"
+]
+},
+{
+"id": "IN-008",
+"file": "IN-008",
+"tipo": "descrizione",
+"parti": [
+"una linea sottilissima che anche col faro si vede appena una giuntura sigillata con una precisione che non ha niente di umano lungo un tratto il materiale ha una grana diversa più giovane"
+]
+},
+{
+"id": "IN-009",
+"file": "IN-009",
+"tipo": "descrizione",
+"parti": [
+"il lembo tagliato si è piegato verso l interno e ha lasciato un apertura buia larga quanto le mie spalle si scende giù"
+]
+},
+{
+"id": "IN-010",
+"file": "IN-010",
+"tipo": "risposta",
+"parti": [
+"il multiscanner non si decide una lettura dice organico la successiva minerale la terza rinuncia e scrive di nuovo",
+"poi a tre passi da me trova quello che cercavo una giuntura più sottile del resto dello scafo sigillata dall interno fatta per essere tagliata e per richiudersi"
+]
+},
+{
+"id": "IN-011",
+"file": "IN-011",
+"tipo": "risposta",
+"parti": [
+"organico minerale non in archivio il multiscanner continua a cambiare idea l unico punto debole è la giuntura"
+]
+},
+{
+"id": "IN-012",
+"file": "IN-012",
+"tipo": "risposta",
+"parti": [
+"appoggio il guanto sullo scafo non vibra non scalda non mi restituisce niente quando tolgo la mano non resta nemmeno l alone della condensa"
+]
+},
+{
+"id": "IN-013",
+"file": "IN-013",
+"tipo": "risposta",
+"parti": [
+"il multiscanner segue la linea e si ferma sul tratto dalla grana diversa è un taglio rifatto qualcuno ha già aperto qui e la nave ha richiuso datazione della saldatura centocinquant anni con un margine d errore che lo scanner stesso definisce imbarazzante per scrupolo allargo il raggio della scansione intorno alla massa non c è nessun altra nave nemmeno un rottame chi ha tagliato qui non ha lasciato niente ad aspettarlo centocinquant anni fa e di una cosa così in centocinquant anni non mi è mai arrivata una parola"
+]
+},
+{
+"id": "IN-014",
+"file": "IN-014",
+"tipo": "risposta",
+"parti": [
+"un taglio di centocinquant anni fa richiuso dalla nave lo scanner non ha altro da aggiungere"
+]
+},
+{
+"id": "IN-015",
+"file": "IN-015",
+"tipo": "risposta",
+"parti": [
+"tagliare alla cieca uno scafo che non conosco senza sapere cosa c è dietro no prima devo trovare dove"
+]
+},
+{
+"id": "IN-016",
+"file": "IN-016",
+"tipo": "risposta",
+"parti": [
+"non qui il punto debole è la giuntura"
+]
+},
+{
+"id": "IN-017",
+"file": "IN-015",
+"tipo": "risposta",
+"parti": [
+"tagliare alla cieca uno scafo che non conosco senza sapere cosa c è dietro no prima devo trovare dove"
+]
+},
+{
+"id": "IN-018",
+"file": "IN-016",
+"tipo": "risposta",
+"parti": [
+"non qui il punto debole è la giuntura"
+]
+},
+{
 "id": "IN-019",
 "file": "SM-066",
 "tipo": "risposta",
@@ -934,11 +1055,139 @@
 ]
 },
 {
+"id": "IN-020",
+"file": "IN-020",
+"tipo": "risposta",
+"parti": [
+"regolo la taglierina e l appoggio alla giuntura nessuna scintilla il materiale si ritira dal getto come carne da una brace e dal taglio esce un odore che il casco non dovrebbe lasciar passare vecchio di chiuso chiudo il giro un lembo si piega verso l interno senza un suono e lascia un apertura buia si scende giù"
+]
+},
+{
 "id": "IN-021",
 "file": "SM-066",
 "tipo": "risposta",
 "parti": [
 "è già aperta"
+]
+},
+{
+"id": "IN-022",
+"file": "IN-022",
+"tipo": "risposta",
+"parti": [
+"con cosa mi serve la taglierina"
+]
+},
+{
+"id": "IN-023",
+"file": "IN-020",
+"tipo": "risposta",
+"parti": [
+"regolo la taglierina e l appoggio alla giuntura nessuna scintilla il materiale si ritira dal getto come carne da una brace e dal taglio esce un odore che il casco non dovrebbe lasciar passare vecchio di chiuso chiudo il giro un lembo si piega verso l interno senza un suono e lascia un apertura buia si scende giù"
+]
+},
+{
+"id": "IN-024",
+"file": "IN-024",
+"tipo": "risposta",
+"parti": [
+"sotto gli stivali c è solo scafo nero per scendere prima bisogna aprirlo"
+]
+},
+{
+"id": "IN-025",
+"file": "IN-025",
+"tipo": "risposta",
+"parti": [
+"prima bisogna aprirla"
+]
+},
+{
+"id": "IN-026",
+"file": "IN-026",
+"tipo": "risposta",
+"parti": [
+"metto un piede oltre il bordo poi l altro e mi lascio scendere il tremito del reattore che mi saliva dalle suole non c è più"
+]
+},
+{
+"id": "IN-027",
+"file": "IN-027",
+"tipo": "risposta",
+"parti": [
+"non c è un ingresso non ancora"
+]
+},
+{
+"id": "IN-028",
+"file": "IN-026",
+"tipo": "risposta",
+"parti": [
+"metto un piede oltre il bordo poi l altro e mi lascio scendere il tremito del reattore che mi saliva dalle suole non c è più"
+]
+},
+{
+"id": "IN-029",
+"file": "IN-029",
+"tipo": "risposta",
+"parti": [
+"mi tiro lungo il cavo fino al boccaporto e richiudo il portello esterno alle mie spalle"
+]
+},
+{
+"id": "IN-030",
+"file": "IN-030",
+"tipo": "risposta",
+"parti": [
+"il boccaporto porta fuori nel vuoto si esce non si entra"
+]
+},
+{
+"id": "IN-031",
+"file": "IN-029",
+"tipo": "risposta",
+"parti": [
+"mi tiro lungo il cavo fino al boccaporto e richiudo il portello esterno alle mie spalle"
+]
+},
+{
+"id": "IN-032",
+"file": "IN-032",
+"tipo": "risposta",
+"parti": [
+"la strada è quella su fino allo scafo e poi dentro"
+]
+},
+{
+"id": "IN-033",
+"file": "IN-033",
+"tipo": "risposta",
+"parti": [
+"la strada per tornare a bordo è dall altra parte di una parete che si è richiusa"
+]
+},
+{
+"id": "IN-034",
+"file": "IN-034",
+"tipo": "risposta",
+"parti": [
+"sono a bordo"
+]
+},
+{
+"id": "IN-035",
+"file": "IN-035",
+"tipo": "descrizione",
+"parti": [
+"una camera bassa e tonda senza un angolo le pareti curvano con la grana fine di qualcosa che è cresciuto invece di essere montato fredde senza odore sopra di me dove c era il varco solo parete a ovest nello stesso nero dello scafo il profilo di una porta sopra la porta un incisione"
+]
+},
+{
+"id": "IN-036",
+"file": "IN-036",
+"tipo": "descrizione",
+"parti": [
+"una camera bassa e tonda senza un angolo le pareti curvano con la grana fine di qualcosa che è cresciuto invece di essere montato fredde senza odore sopra di me il varco e in fondo al varco la luce gialla del boccaporto a ovest nello stesso nero dello scafo il profilo di una porta sopra la porta un incisione"
 ]
 },
 {
@@ -1068,9 +1317,6 @@
 "appoggio il guanto sulla linea ambrata del pannello con un sibilo appena percepibile la porta si ritira nella parete di là c è una sala bassa e un brusio che mi arriva nelle cuffie prima ancora che io entri"
 ],
 [
-"appoggio il guanto sullo scafo non vibra non scalda non mi restituisce niente quando tolgo la mano non resta nemmeno l alone della condensa"
-],
-[
 "appoggio la mano guantata sulla depressione e la console reagisce a quello che voglio anche se non sono uno di loro le postazioni si accendono una dopo l altra lungo la sala senza un suono e la struttura centrale proietta sulla cupola una mappa stellare a tre dimensioni la rotta è chiara e il punto d arrivo inconfondibile il mio sole"
 ],
 [
@@ -1156,9 +1402,6 @@
 ],
 [
 "colonne di simboli e di numeri ordinate tracciate con cura senza la matrice non dicono niente"
-],
-[
-"con cosa mi serve la taglierina"
 ],
 [
 "con il faro al massimo lungo le pareti il groviglio mi viene dietro"
@@ -1292,9 +1535,6 @@
 "il bengala sfrigola si fa arancione poi si spegne il groviglio resta un momento dov era poi torna a cercare"
 ],
 [
-"il boccaporto porta fuori nel vuoto si esce non si entra"
-],
-[
 "il brusio e sotto il brusio un ritmo lento con la cadenza di un elenco"
 ],
 [
@@ -1388,12 +1628,6 @@
 "il groviglio mi si stringe davanti verso la luce così non passo"
 ],
 [
-"il lembo tagliato si è piegato verso l interno e ha lasciato un apertura buia larga quanto le mie spalle si scende giù"
-],
-[
-"il mio cavo di sicurezza agganciato alla cintura e srotolato dal boccaporto finché c è la strada di casa è una linea"
-],
-[
 "il mio segno è già lì quattro tacche adesso"
 ],
 [
@@ -1407,17 +1641,10 @@
 "il multiscanner misura i solchi la punta che li ha fatti era una punta da carotatore attrezzatura terrestre di serie un modello di un secolo e mezzo fa chi ha inciso qui veniva da dove vengo io"
 ],
 [
-"il multiscanner non si decide una lettura dice organico la successiva minerale la terza rinuncia e scrive di nuovo",
-"poi a tre passi da me trova quello che cercavo una giuntura più sottile del resto dello scafo sigillata dall interno fatta per essere tagliata e per richiudersi"
-],
-[
 "il multiscanner registra confronta e non trova niente da segnalare"
 ],
 [
 "il multiscanner rinuncia a capire cosa sia dice soltanto che dentro ci sono registrazioni una quantità che non sa contare una sopra l altra"
-],
-[
-"il multiscanner segue la linea e si ferma sul tratto dalla grana diversa è un taglio rifatto qualcuno ha già aperto qui e la nave ha richiuso datazione della saldatura centocinquant anni con un margine d errore che lo scanner stesso definisce imbarazzante per scrupolo allargo il raggio della scansione intorno alla massa non c è nessun altra nave nemmeno un rottame chi ha tagliato qui non ha lasciato niente ad aspettarlo centocinquant anni fa e di una cosa così in centocinquant anni non mi è mai arrivata una parola"
 ],
 [
 "il multiscanner sta sulla spalla della tuta e la tuta non ce l ho addosso"
@@ -1724,12 +1951,6 @@
 "la stiva della santa maria vuota con la sua luce gialla di servizio"
 ],
 [
-"la strada per tornare a bordo è dall altra parte di una parete che si è richiusa"
-],
-[
-"la strada è quella su fino allo scafo e poi dentro"
-],
-[
 "la superficie cristallina è tiepida una scintilla ambrata risponde al tocco piccola e si spegne"
 ],
 [
@@ -1807,9 +2028,6 @@
 "libero il disco di pietra incastrato nel meccanismo del proiettore il proiettore non lo ripari ma il disco coperto di incisioni come quelle dell altare adesso ce l ho io"
 ],
 [
-"liscio anche attraverso il guanto e freddo in un modo che il guanto non dovrebbe lasciar passare il faro ci scivola sopra senza trovare un appiglio da qualche parte chi l ha costruito avrà lasciato un punto più debole e il multiscanner lo troverebbe"
-],
-[
 "lo riconosco è l ultimo punto della rotta sulla mappa del ponte il mio sole chi ha disegnato qui non aveva mai visto i tre soli disegnava quello verso cui andava"
 ],
 [
@@ -1848,9 +2066,6 @@
 ],
 [
 "metto la spalla contro le teche chiuse e mi tengo lì dove il freddo tiene fermi i filamenti passo corto il faro basso puntato sulle suole uno mi cerca all altezza del fianco e trova solo vetro gelato adesso so dove sono la parete mi porta verso la gola di mezzo su"
-],
-[
-"metto un piede oltre il bordo poi l altro e mi lascio scendere il tremito del reattore che mi saliva dalle suole non c è più"
 ],
 [
 "mi accorgo che ragiono più piano e che la cosa non mi spaventa è così che comincia"
@@ -1893,9 +2108,6 @@
 ],
 [
 "mi siedo sullo scafo nero e i magneti degli stivali mi tengono giù a pochi metri il boccaporto della santa maria fa la sua luce gialla"
-],
-[
-"mi tiro lungo il cavo fino al boccaporto e richiudo il portello esterno alle mie spalle"
 ],
 [
 "millenni di storia scienza arte filosofia di una civiltà che ha attraversato una galassia ne resta una parola su centomila e non so quale"
@@ -1966,9 +2178,6 @@
 "non c è più nessun indietro c è soltanto la figura luminosa e quello che ha da dirmi"
 ],
 [
-"non c è un ingresso non ancora"
-],
-[
 "non ha maniglie né serrature si apre soltanto con quello che va nei tre incavi"
 ],
 [
@@ -1976,9 +2185,6 @@
 ],
 [
 "non qui"
-],
-[
-"non qui il punto debole è la giuntura"
 ],
 [
 "non rispondo il fiato mi serve per arrivarci"
@@ -1996,9 +2202,6 @@
 ],
 [
 "non vedo nessuna stele l altare è ancora chiuso"
-],
-[
-"organico minerale non in archivio il multiscanner continua a cambiare idea l unico punto debole è la giuntura"
 ],
 [
 "organico vivo cresciuto su se stesso per un tempo che lo scanner non sa datare senza un mondo in cui attecchire cerca calore e luce è quello che gli era stato promesso un sole e una terra e non è mai arrivato"
@@ -2047,9 +2250,6 @@
 ],
 [
 "prendo la stele del ricordo dallo scomparto è leggera più di quanto mi aspettassi e tiepida la seconda chiave"
-],
-[
-"prima bisogna aprirla"
 ],
 [
 "prima di prenderle molte le hai ascoltate una per una"
@@ -2128,9 +2328,6 @@
 "regolo la taglierina al minimo l ultima volta e la porto allo scafo accanto alla mano incido una lettera piano poi la seconda il nome intero a chi lo direi"
 ],
 [
-"regolo la taglierina e l appoggio alla giuntura nessuna scintilla il materiale si ritira dal getto come carne da una brace e dal taglio esce un odore che il casco non dovrebbe lasciar passare vecchio di chiuso chiudo il giro un lembo si piega verso l interno senza un suono e lascia un apertura buia si scende giù"
-],
-[
 "restano sei settimane di stiva vuota e yusuf da chiamare l aria della plancia è buona per oggi basta quella"
 ],
 [
@@ -2194,9 +2391,6 @@
 "soltanto una voce giovane impressa nella culla che il sintonizzatore tiene agganciata fa sempre la stessa domanda"
 ],
 [
-"sono a bordo"
-],
-[
 "sono fuori lo scafo nero trema sotto i magneti degli stivali e le funi degli arpioni vibrano come corde tese il boccaporto della santa maria è lì con la sua luce gialla dentro"
 ],
 [
@@ -2210,9 +2404,6 @@
 ],
 [
 "sotto di me nella gola la voce dei nomi tace a metà di un nome"
-],
-[
-"sotto gli stivali c è solo scafo nero per scendere prima bisogna aprirlo"
 ],
 [
 "sotto il pavimento il reattore tiene il suo re e per la prima volta lo sento è lo stesso del sonaglio nella cella del piccolo"
@@ -2285,16 +2476,10 @@
 "oltre quella porta se c è un ritorno sarà lungo"
 ],
 [
-"tagliare alla cieca uno scafo che non conosco senza sapere cosa c è dietro no prima devo trovare dove"
-],
-[
 "teche alte il doppio di me il vetro spinto in fuori da dentro una semina riuscita troppo bene e poi lasciata sola"
 ],
 [
 "teche il groviglio sveglio le pareti fredde su"
-],
-[
-"tese fra la prua della santa maria e lo scafo nero finché tengono loro le due navi restano una"
 ],
 [
 "tiepido più leggero di quanto pensassi il brusio viene da lì e finché lo porto la cifra dell aria scende a ogni passo vale sei mesi di stive vuote forse un anno"
@@ -2351,9 +2536,6 @@
 "un locale basso e tiepido il primo posto caldo da quando sono entrato banchi di semina in file ordinate ognuno sotto la sua lampada spenta qui la semina era ancora sotto controllo niente è scappato niente è cresciuto storto al centro un germinatoio lavora ancora a malapena sui banchi colonne di simboli le tabelle di chi seminava a est si torna fra le teche"
 ],
 [
-"un metro di cavo tranciato di netto che mi pende dalla cintura il resto è rimasto fuori con la strada di casa"
-],
-[
 "un piccolo cilindro di metallo freddo e liscio un registratore personale lo scanner saprebbe leggerlo"
 ],
 [
@@ -2369,9 +2551,6 @@
 "un sostegno sottile cresciuto dal pavimento come tutto il resto sul bordo una riga di glifi"
 ],
 [
-"un taglio di centocinquant anni fa richiuso dalla nave lo scanner non ha altro da aggiungere"
-],
-[
 "un terminale d accesso al pilastro spento non ha corrente sulla superficie un pannello di bypass per le emergenze"
 ],
 [
@@ -2382,12 +2561,6 @@
 ],
 [
 "una biblioteca circolare senza libri dalle nicchie delle pareti i proiettori fanno girare a mezz aria globi di testo alieno illeggibili e bellissimi al centro una lastra scura e inclinata i bordi consumati intorno utensili dalle punte di misure diverse messi in ordine come li mette chi sa di aver finito in una nicchia a nord il proiettore è spento a est si torna al santuario una porta sottile a nord porta più in fondo"
-],
-[
-"una camera bassa e tonda senza un angolo le pareti curvano con la grana fine di qualcosa che è cresciuto invece di essere montato fredde senza odore sopra di me dove c era il varco solo parete a ovest nello stesso nero dello scafo il profilo di una porta sopra la porta un incisione"
-],
-[
-"una camera bassa e tonda senza un angolo le pareti curvano con la grana fine di qualcosa che è cresciuto invece di essere montato fredde senza odore sopra di me il varco e in fondo al varco la luce gialla del boccaporto a ovest nello stesso nero dello scafo il profilo di una porta sopra la porta un incisione"
 ],
 [
 "una caverna di cristallo nero pilastri di dati alti come monoliti salgono verso un soffitto che non si vede quasi tutti spenti molti incrinati in fondo un pilastro solo pulsa ancora d una luce ambrata intermittente come se aspettasse corrente il terminale accanto è spento e non ne ha è l unica luce qui dentro a sud si torna allo scriptorium"
@@ -2403,9 +2576,6 @@
 ],
 [
 "una lastra sottile e levigata fredda che somiglia all onice se la muovi nella luce sotto la superficie scorrono deboli circuiti perlescenti lo scanner saprebbe leggerla"
-],
-[
-"una linea sottilissima che anche col faro si vede appena una giuntura sigillata con una precisione che non ha niente di umano lungo un tratto il materiale ha una grana diversa più giovane"
 ],
 [
 "una pausa e dietro di lui il magazzino"

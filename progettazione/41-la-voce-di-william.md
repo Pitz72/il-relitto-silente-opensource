@@ -112,6 +112,15 @@ scheda Audio delle opzioni, **«Voce di William»: recitata o nessuna** (di base
 
 ## 5. Le prese, a oggi
 
+**Centoventisei, dal 20 novembre 2026.** La consegna del 20 novembre (`TransferNow-20261120SNNCr65K.zip`, 26 file,
+48 kHz, 24 bit, mono; picchi fra −9,9 e −2,3 dBFS, nessun campione pieno): `IN-003`…`IN-036`, l’atto II sullo
+scafo, il taglio della giuntura, la discesa nel varco, la camera tonda. Fra `IN-001` e `IN-036` manca soltanto
+`IN-007` («È agganciato alla cintura. Lo lascio pendere.»); le altre sigle senza file sono uguali a una presa
+consegnata. Whisper (`consegne/controllo-2026-11-20.json`): il testo è quello del copione, tranne `IN-013`, dove
+Leonardo dice «sul tratto della grana diversa» e il testo dice «dalla»: da sentire per l’autore
+(`consegne/Ascolto IN-013 2026-11-20/`). Il resto è di Whisper («scavo», «150»). Il 20,9 % delle sigle (126 su
+604), il 19,2 % delle parole; il copione per Leonardo si rifà con le 478 prese che restano (94 pagine).
+
 **Cento, dal 19 novembre 2026.** La consegna del 19 novembre (`TransferNow-20261119c7HrKROE.zip`, 27 file): `SM-083`…
 `SM-112` (la batteria, la cella di riserva, il faro del casco, il kit, la tuta, il boccaporto), `IN-001` e `IN-002`
 (le prime due dell’atto II, sullo scafo), `SM-062` che mancava (giusta: «Sto fermo e lo ascolto davvero…») e
