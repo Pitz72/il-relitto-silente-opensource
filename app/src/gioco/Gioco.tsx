@@ -38,6 +38,7 @@ import Vene from "./vene/Vene";
 import Grana from "./Grana";
 import { Avviso, Conferma, PannelloOpzioni, PannelloTasti, Pausa, Salvataggi, useAvviso, type Domanda } from "./pannelli/Pannelli";
 import { archivio, type IdPosto, type Posto } from "./salvataggi";
+import { ATTO_OLTRE_LA_DEMO, DEMO } from "../demo";
 import { salvaUscendo } from "./uscita";
 import { useTastiera, type Pannello } from "./tastiera";
 import { useSonde } from "./sonde";
@@ -67,6 +68,8 @@ interface Props {
   alFinale?: (finale: string, riga: string | null) => void;
   /** dopo un finale, «Titoli di coda»: li fa partire l'app, e poi si torna al menu */
   aiTitoli?: () => void;
+  /** la demo dell'atto I (app/src/demo.ts): William ha messo piede sullo scafo, e la demo finisce */
+  alFineDemo?: () => void;
 }
 
 const ARTICOLO = /^(?:il|lo|la|i|gli|le|l['’]|un|uno|una|dei|degli|delle)\s*/i;
@@ -126,7 +129,7 @@ function Inceppo({ dettaglio, alMenu }: { dettaglio: string; alMenu?: Props["alM
   );
 }
 
-export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFinale, aiTitoli }: Props = {}) {
+export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFinale, aiTitoli, alFineDemo }: Props = {}) {
   const [opzioni, cambiaOpzioni] = useOpzioni();
   const ridotto = useMovimentoRidotto(opzioni.movimento);
   const motoreRef = useRef<Motore | null>(null);
@@ -337,6 +340,11 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
         mostraAvviso("Questo comando non è andato a buon fine: la partita è rimasta com’era.", true);
         return;
       }
+      // la demo dell'atto I: il primo passo nell'atto II non si mostra né si salva, la demo finisce lì
+      if (DEMO && t.stato.atto >= ATTO_OLTRE_LA_DEMO) {
+        alFineDemo?.();
+        return;
+      }
       passi.current += 1;
       stanzaRef.current = t.stato.stanza;
       // il primo contatto: la membrana entra dai bordi (§3)
@@ -367,7 +375,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
         alFinale?.(finale.finale, rigaDelRegistro(t.eventi));
       }
     },
-    [opzioni.nomiToccabili, scritti, salvaNel, alFinale, mostraAvviso, momentiAccesi],
+    [opzioni.nomiToccabili, scritti, salvaNel, alFinale, mostraAvviso, momentiAccesi, alFineDemo],
   );
 
   // solo nello sviluppo: un clic sulla lente del visore rifà il momento di quella stanza (sul Ponte con la

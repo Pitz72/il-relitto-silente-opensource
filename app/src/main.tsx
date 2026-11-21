@@ -1,4 +1,4 @@
-import { lazy, StrictMode, Suspense } from "react";
+import { lazy, StrictMode, Suspense, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { comando, dentroTauri, type InfoSistema } from "./lib/tauri";
 
@@ -45,6 +45,14 @@ const Galleria = import.meta.env.DEV ? lazy(() => import("./gioco/visore/scansio
 // la console di regia (Ctrl+Maiusc+M): i livelli dei canali del suono, in qualunque schermata
 const ConsoleMix = __REGIA__ ? lazy(() => import("./console/ConsoleMix")) : null;
 
+const FineDemo = lazy(() => import("./riconoscimenti/FineDemo"));
+
+/** ?gioco nella demo (vite --mode demo): il gioco subito e, sullo scafo, la fine della demo, come nell'app. */
+function GiocoDemo() {
+  const [finita, setFinita] = useState(false);
+  return finita ? <FineDemo onFine={() => setFinita(false)} /> : <Gioco alFineDemo={() => setFinita(true)} />;
+}
+
 const parametri = new URLSearchParams(location.search);
 
 async function pagina() {
@@ -53,7 +61,7 @@ async function pagina() {
   if (Galleria && parametri.has("scansioni")) return <Galleria />;
   if (parametri.get("prova") === "finali") return <Relitto prova="finali" />;
   if (parametri.has("prova")) return <Prova />;
-  if (parametri.has("gioco")) return <Gioco />;
+  if (parametri.has("gioco")) return import.meta.env.MODE === "demo" ? <GiocoDemo /> : <Gioco />;
   // le prove automatiche: quella dei salvataggi sul gioco, le altre della fase 1 sulla pagina di prova
   if (dentroTauri()) {
     try {

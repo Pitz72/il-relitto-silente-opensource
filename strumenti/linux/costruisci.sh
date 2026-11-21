@@ -8,6 +8,8 @@
 #      strumenti/linux/costruisci.sh --senza-node
 #  In più, dopo la build:
 #      --prova       avvia l'app con la prova completa (RELITTO_PROVA=esci)
+#      --demo        la demo dell'atto I (strumenti/demo/configura.py), soltanto l'AppImage;
+#                    con --senza-node, app/dist dev'essere quello della demo (vite --mode demo)
 #  Il rapporto della prova va in $RELITTO_RAPPORTI (predefinita: ./rapporti).
 #
 #  Si costruisce in una copia nel filesystem Linux (~/relitto-build): cargo su
@@ -20,10 +22,12 @@ RADICE="$(cd "$QUI/../.." && pwd)"
 COPIA="${RELITTO_COPIA:-$HOME/relitto-build}"
 SENZA_NODE=0
 PROVA=0
+DEMO=0
 for a in "$@"; do
   case "$a" in
     --senza-node) SENZA_NODE=1 ;;
     --prova) PROVA=1 ;;
+    --demo) DEMO=1 ;;
     *) echo "Opzione sconosciuta: $a" >&2; exit 2 ;;
   esac
 done
@@ -51,24 +55,35 @@ rsync -a --delete "$RADICE/motore/" "$COPIA/motore/"
 rsync -a --delete "$RADICE/relitto-silente/" "$COPIA/relitto-silente/"
 rsync -a --delete --exclude 'trascrizione-*' "$RADICE/collaudo/" "$COPIA/collaudo/"
 cp "$RADICE/versione.json" "$COPIA/"
+# la musica e le voci stanno fra le risorse dell'app (../../audio/musica-ia)
+mkdir -p "$COPIA/audio"
+rsync -a --delete "$RADICE/audio/musica-ia/" "$COPIA/audio/musica-ia/"
 
 cd "$COPIA/app"
 export CARGO_TARGET_DIR="$COPIA/target"
 export APPIMAGE_EXTRACT_AND_RUN=1   # l'AppImage di linuxdeploy gira anche senza FUSE (WSL)
 T0=$(date +%s)
+PACCHETTI=deb,appimage
+EXTRA=()
+BINARIO=il-relitto-silente
+if ((DEMO)); then
+  PACCHETTI=appimage
+  EXTRA=(--config src-tauri/tauri.demo.conf.json)
+  BINARIO=il-relitto-silente-demo
+fi
 if ((SENZA_NODE)); then
   [[ -f dist/index.html ]] || { echo "Manca app/dist: costruisci il frontend su Windows (npm run build)." >&2; exit 1; }
-  cargo tauri build --bundles deb,appimage --config '{"build":{"beforeBuildCommand":""}}'
+  cargo tauri build --bundles "$PACCHETTI" "${EXTRA[@]}" --config '{"build":{"beforeBuildCommand":""}}'
 else
   npm ci
-  cargo tauri build --bundles deb,appimage
+  cargo tauri build --bundles "$PACCHETTI" "${EXTRA[@]}"
 fi
 echo "Build in $(( $(date +%s) - T0 )) s"
-ls -la "$CARGO_TARGET_DIR/release/il-relitto-silente" "$CARGO_TARGET_DIR/release/bundle/deb/"*.deb "$CARGO_TARGET_DIR/release/bundle/appimage/"*.AppImage
+ls -la "$CARGO_TARGET_DIR/release/$BINARIO" "$CARGO_TARGET_DIR/release/bundle/"*/*
 
 if ((PROVA)); then
   mkdir -p "${RELITTO_RAPPORTI:=$PWD/rapporti}"
   echo "Prova completa: il rapporto andrà in $RELITTO_RAPPORTI"
-  RELITTO_PROVA=esci RELITTO_RAPPORTI="$RELITTO_RAPPORTI" "$CARGO_TARGET_DIR/release/il-relitto-silente"
+  RELITTO_PROVA=esci RELITTO_RAPPORTI="$RELITTO_RAPPORTI" "$CARGO_TARGET_DIR/release/$BINARIO"
   ls -la "$RELITTO_RAPPORTI"
 fi

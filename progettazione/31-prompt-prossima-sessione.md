@@ -80,7 +80,13 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   più verosimile il fatto che ce la possano fare»; e «se così vincono sempre tutti, dove sta la sfida?»):
   `collaudo/verosimili.py`, con la fuga giocata da principianti veri.
 
-## Dove siamo (20 novembre 2026)
+## Dove siamo (21 novembre 2026)
+
+- **21 novembre 2026: la demo dell’atto I** (documento 42), chiesta dall’autore per Leonardo e forse per il sito:
+  Windows (installatore) e Linux (AppImage) in `consegne/Demo atto I 2026-11-21/`, provate con la prova dei
+  salvataggi; da giocare dall’autore. Le prese a oggi: 138 (22,8 %), l’atto I completo.
+
+## Prima (20 novembre 2026)
 
 - **20 novembre 2026, alla chiusura.** Fatto dal 19: le 101 cifre di Kira nel gioco (`0691cd2`), `SM-056` approvata
   all’ascolto, le 26 prese dell’atto II (`IN-003`…`IN-036`) nel gioco: 126 prese, il 20,7 % senza `IN-013`, da

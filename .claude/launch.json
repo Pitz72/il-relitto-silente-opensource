@@ -27,6 +27,23 @@
       "port": 5275
     },
     {
+      "name": "app-demo",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "app",
+        "run",
+        "dev",
+        "--",
+        "--mode",
+        "demo",
+        "--port",
+        "5277",
+        "--strictPort"
+      ],
+      "port": 5277
+    },
+    {
       "name": "app-anteprima",
       "runtimeExecutable": "npm",
       "runtimeArgs": [

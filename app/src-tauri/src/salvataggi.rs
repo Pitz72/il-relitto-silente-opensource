@@ -63,7 +63,9 @@ fn cartella(app: &AppHandle) -> Result<PathBuf, String> {
         return Ok(c.clone());
     }
     let candidati: Vec<PathBuf> = [
-        app.path().document_dir().ok().map(|d| d.join("Il Relitto Silente").join("salvataggi")),
+        // la demo dell'atto I (tauri.demo.conf.json) ha la sua cartella: le sue partite non si mescolano con quelle
+        // del gioco intero
+        app.path().document_dir().ok().map(|d| d.join(cartella_documenti(&app.config().identifier)).join("salvataggi")),
         app.path().app_data_dir().ok().map(|d| d.join("salvataggi")),
     ]
     .into_iter()
@@ -245,9 +247,24 @@ pub fn registro_finali_scrivi(app: AppHandle, testo: String) -> Result<(), Strin
     registro_in(&cartella(&app)?, &testo)
 }
 
+/// Il nome della cartella dei salvataggi in Documenti: quella della demo ha il suo (identificatore «….demo»).
+fn cartella_documenti(identificatore: &str) -> &'static str {
+    if identificatore.ends_with(".demo") {
+        "Il Relitto Silente - Demo"
+    } else {
+        "Il Relitto Silente"
+    }
+}
+
 #[cfg(test)]
 mod prove {
     use super::*;
+
+    #[test]
+    fn la_demo_ha_la_sua_cartella() {
+        assert_eq!(cartella_documenti("it.runtimeradio.relittosilente"), "Il Relitto Silente");
+        assert_eq!(cartella_documenti("it.runtimeradio.relittosilente.demo"), "Il Relitto Silente - Demo");
+    }
 
     fn cartella_di_prova(nome: &str) -> PathBuf {
         let c = std::env::temp_dir().join(format!("relitto-salvataggi-{nome}-{}", std::process::id()));

@@ -20,6 +20,7 @@ documenti di `progettazione/`.
 
 ### Aggiunto
 
+- **La demo dell’atto I** (documento 42): lo stesso gioco, che finisce quando William mette piede sullo scafo nero, come app a sé (salvataggi suoi, niente aggiornamenti), per Windows e per Linux (`strumenti/demo/configura.py`, `tauri.demo.conf.json`, `costruisci.sh --demo`).
 - **Le prese del 18 novembre** (documento 41, §5): `SM-059`…`SM-061`, `SM-063`…`SM-082`, con le due varianti di `SM-074` (la stiva in tuta, accostati o no) e di `SM-078` (il boccaporto, spia verde o rossa); settantasei in tutto. Il file `sm-062.wav` della consegna conteneva la frase di `SM-063` («Il re del reattore. Sempre quello.»): è entrato come `SM-063`, e `SM-062` resta da registrare.
 
 ### Corretto

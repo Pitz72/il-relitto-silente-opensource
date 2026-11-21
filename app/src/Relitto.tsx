@@ -30,6 +30,7 @@ import { comando, dentroTauri } from "./lib/tauri";
 import { ricordaSchermoIntero, schermoIntero } from "./lib/finestra";
 import { salvaUscendo } from "./gioco/uscita";
 import { cercaAggiornamento, FINTO, FIRMA } from "./aggiornamenti";
+import { DEMO } from "./demo";
 import Aggiornamento from "./menu/Aggiornamento";
 import FinestraNovita from "./menu/FinestraNovita";
 import { daMostrare, leggiVista, ricordaVista, righeDalleNote, type Novita as NovitaVersione } from "./menu/novita";
@@ -54,6 +55,7 @@ const Titoli = lazy(() => import("./riconoscimenti/Titoli"));
 const Loghi = lazy(() => import("./loghi/Loghi"));
 const Cartello = lazy(() => import("./loghi/Cartello"));
 const Dichiarazione = lazy(() => import("./riconoscimenti/Dichiarazione"));
+const FineDemo = lazy(() => import("./riconoscimenti/FineDemo"));
 
 /** Il nero prima del cartello: «avvii il gioco, va in fullscreen nero; dopo un secondo…» */
 const NERO = 400;
@@ -72,6 +74,7 @@ type Schermata =
   | { tipo: "nero" }
   | { tipo: "cartello" }
   | { tipo: "titoli" }
+  | { tipo: "finedemo" }
   | { tipo: "dichiarazione" }
   | { tipo: "menu" }
   | { tipo: "intro" }
@@ -135,7 +138,7 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   useEffect(() => {
     if (schermata.tipo !== "menu" || novitaDecise || posti === null) return;
     setNovitaDecise(true);
-    if (prova !== undefined) return;
+    if (prova !== undefined || DEMO) return;
     if (PROVA_NOVITA) {
       setNovita([{ versione: "non ancora rilasciata", data: "", righe: NOVITA.prossima }]);
       setPannello("novita");
@@ -222,6 +225,12 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   const aiTitoli = useCallback(() => {
     setInCorso(false);
     setSchermata({ tipo: "titoli" });
+  }, []);
+
+  // la demo dell'atto I (demo.ts): finita, la partita non si riprende; dalla lastra si va ai titoli
+  const alFineDemo = useCallback(() => {
+    setInCorso(false);
+    setSchermata({ tipo: "finedemo" });
   }, []);
 
   // ---- il suono del menu (documento 21): un mondo sonoro suo, con la musica del menu e il
@@ -340,7 +349,7 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   // (dopo le novità: prima si legge che cosa è arrivato, poi si sente se c'è altro)
   const cercatoAvvio = useRef(false);
   useEffect(() => {
-    if (schermata.tipo !== "menu" || cercatoAvvio.current || !opzioni.cercaAggiornamenti || !(dentroTauri() || FINTO) || prova !== undefined) return;
+    if (schermata.tipo !== "menu" || cercatoAvvio.current || !opzioni.cercaAggiornamenti || !(dentroTauri() || FINTO) || prova !== undefined || DEMO) return;
     if (!novitaDecise || pannello === "novita") return;
     cercatoAvvio.current = true;
     void cercaNuova(false);
@@ -369,7 +378,7 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   voci.push({ id: "opzioni", etichetta: "Opzioni", azione: () => setPannello("opzioni") });
   voci.push({ id: "registro", etichetta: "Registro dei finali", azione: () => setPannello("registro") });
   voci.push({ id: "riconoscimenti", etichetta: "Riconoscimenti", azione: () => setSchermata({ tipo: "titoli" }) });
-  if (dentroTauri()) voci.push({ id: "aggiorna", etichetta: "Cerca aggiornamenti", azione: () => void cercaNuova(true) });
+  if (dentroTauri() && !DEMO) voci.push({ id: "aggiorna", etichetta: "Cerca aggiornamenti", azione: () => void cercaNuova(true) });
   // uscendo, la partita in corso va nel posto automatico (M6): niente da confermare, Continua la riprende
   if (dentroTauri()) voci.push({ id: "esci", etichetta: "Esci", azione: () => void salvaUscendo().then(() => comando("esci", { codice: 0 })) });
 
@@ -400,7 +409,7 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
       <>
         {schermata.tipo === "gioco" ? (
           <Suspense key="gioco" fallback={null}>
-            <Gioco key={schermata.chiave} prova={prova} inizio={schermata.inizio} alMenu={alMenu} alFinale={alFinale} aiTitoli={aiTitoli} />
+            <Gioco key={schermata.chiave} prova={prova} inizio={schermata.inizio} alMenu={alMenu} alFinale={alFinale} aiTitoli={aiTitoli} alFineDemo={alFineDemo} />
           </Suspense>
         ) : null}
         {schermata.tipo === "intro" || introSopra ? (
@@ -444,7 +453,7 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
             <Menu
               voci={voci}
               ridotto={ridotto}
-              identita={`${VERSIONE.gioco} · ${VERSIONE.commit} · Favella1 ${VERSIONE.motore}`}
+              identita={`${DEMO ? "Demo dell’atto I · " : ""}${VERSIONE.gioco} · ${VERSIONE.commit} · Favella1 ${VERSIONE.motore}`}
               caricamento={caricamento}
               problema={passo === MOTORE_FALLITO ? "Il motore del gioco non è partito." : null}
               coperto={!!pannello || !!domanda || !!aggiornamento}
@@ -480,6 +489,11 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
         {schermata.tipo === "titoli" && (
           <Suspense fallback={null}>
             <Titoli ridotto={ridotto} onFine={() => setSchermata({ tipo: "menu" })} />
+          </Suspense>
+        )}
+        {schermata.tipo === "finedemo" && (
+          <Suspense fallback={null}>
+            <FineDemo onFine={() => setSchermata({ tipo: "titoli" })} />
           </Suspense>
         )}
         {schermata.tipo === "dichiarazione" && (
