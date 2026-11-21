@@ -33,8 +33,8 @@ DATA = "19 novembre 2026"
 # 2026: «togli le cose che ha già doppiato».
 FATTE = set(json.load(open(os.path.join(RADICE, "audio", "musica-ia", "WI", "prese.json"), encoding="utf-8")))
 # Le prese consegnate da rifare: restano nel gioco finché non arriva quella nuova, e tornano nel copione con la nota.
-# IN-013, l'autore, 20 novembre 2026, ascoltata: «se deve essere dalla, deve essere dalla».
-DA_RIFARE = {"IN-013": "Nella presa consegnata il 20 novembre hai detto «sul tratto della grana diversa»: il testo dice «dalla grana diversa». Da rifare intera."}
+# IN-013 (l'autore, 20 novembre 2026: «se deve essere dalla, deve essere dalla») è arrivata rifatta il 21 novembre.
+DA_RIFARE = {}
 FATTE -= set(DA_RIFARE)
 
 FONT = r"C:\Windows\Fonts"

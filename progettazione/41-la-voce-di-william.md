@@ -112,6 +112,16 @@ scheda Audio delle opzioni, **«Voce di William»: recitata o nessuna** (di base
 
 ## 5. Le prese, a oggi
 
+**Centotrentotto, dal 21 novembre 2026.** La consegna del 21 novembre (`TransferNow-20261121vVc3UTpu.zip`, 13 file,
+48 kHz, 24 bit, mono, nessun campione pieno): `IN-007` e `SM-094` che mancavano (`SM-094` nel testo nuovo, senza la
+cifra dell’aria), `IN-013` rifatta e `IN-037`…`IN-046`. In `IN-013` c’è «dalla grana», ma in fondo al file
+Leonardo aveva riletto la prima frase: tagliata a 41,0 s, a metà di un silenzio digitale fra «…una parola.» e la
+ripetizione (l’originale resta in `Downloads`, la presa del 20 novembre in `consegne/2026-11-20-sostituite/`).
+`IN-007` ha 22 s di silenzio digitale in coda: lo strumento lo toglie. Whisper (`consegne/controllo-2026-11-21.json`):
+il testo è quello del copione («bruseo», «barco» sono di Whisper). **L’atto I è completo** (99 su 99); l’atto II
+39 su 73. In tutto 138 su 604, il 22,8 % (il 20,7 % delle parole); il copione per Leonardo ha 466 prese, il rapporto
+è in `doppiaggio/william/resoconti/`.
+
 **Centoventisei, dal 20 novembre 2026.** La consegna del 20 novembre (`TransferNow-20261120SNNCr65K.zip`, 26 file,
 48 kHz, 24 bit, mono; picchi fra −9,9 e −2,3 dBFS, nessun campione pieno): `IN-003`…`IN-036`, l’atto II sullo
 scafo, il taglio della giuntura, la discesa nel varco, la camera tonda. Fra `IN-001` e `IN-036` manca soltanto

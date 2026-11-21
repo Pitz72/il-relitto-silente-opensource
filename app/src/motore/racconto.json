@@ -774,6 +774,22 @@
 ]
 },
 {
+"id": "SM-094",
+"file": "SM-094",
+"tipo": "risposta",
+"parti": [
+"la tuta non mi ridà il faro anche la luce per lei è un canale secondario"
+]
+},
+{
+"id": "SM-095",
+"file": "SM-094",
+"tipo": "risposta",
+"parti": [
+"la tuta non mi ridà il faro anche la luce per lei è un canale secondario"
+]
+},
+{
 "id": "SM-096",
 "file": "SM-096",
 "tipo": "risposta",
@@ -955,6 +971,14 @@
 "tipo": "descrizione",
 "parti": [
 "un metro di cavo tranciato di netto che mi pende dalla cintura il resto è rimasto fuori con la strada di casa"
+]
+},
+{
+"id": "IN-007",
+"file": "IN-007",
+"tipo": "risposta",
+"parti": [
+"è agganciato alla cintura lo lascio pendere"
 ]
 },
 {
@@ -1188,6 +1212,86 @@
 "tipo": "descrizione",
 "parti": [
 "una camera bassa e tonda senza un angolo le pareti curvano con la grana fine di qualcosa che è cresciuto invece di essere montato fredde senza odore sopra di me il varco e in fondo al varco la luce gialla del boccaporto a ovest nello stesso nero dello scafo il profilo di una porta sopra la porta un incisione"
+]
+},
+{
+"id": "IN-037",
+"file": "IN-037",
+"tipo": "descrizione",
+"parti": [
+"la camera bassa e tonda ormai attraversata a ovest la porta interna è aperta su una sala bassa da cui sale un brusio sopra di me dove c era il varco solo parete"
+]
+},
+{
+"id": "IN-038",
+"file": "IN-038",
+"tipo": "evento",
+"parti": [
+"sopra di me il lembo si richiude non lo vedo muoversi un momento c è l apertura con la luce gialla del boccaporto in fondo e il momento dopo c è parete il cavo di sicurezza tranciato di netto mi pende dalla cintura un metro e basta"
+]
+},
+{
+"id": "IN-039",
+"file": "IN-039",
+"tipo": "risposta",
+"parti": [
+"sopra di me c è solo parete liscia come se nessuno l avesse mai tagliata"
+]
+},
+{
+"id": "IN-040",
+"file": "IN-040",
+"tipo": "risposta",
+"parti": [
+"la porta non ha maniglia né fessura né niente da spingere sta chiusa"
+]
+},
+{
+"id": "IN-041",
+"file": "IN-041",
+"tipo": "descrizione",
+"parti": [
+"una stella stilizzata da cui parte una linea che finisce in una piccola spirale come un seme che germoglia quasi una dichiarazione d intenti"
+]
+},
+{
+"id": "IN-042",
+"file": "IN-042",
+"tipo": "descrizione",
+"parti": [
+"una piccola superficie liscia incassata nella parete accanto alla porta niente pulsanti sembra morta"
+]
+},
+{
+"id": "IN-043",
+"file": "IN-043",
+"tipo": "descrizione",
+"parti": [
+"sul pannello brilla una linea di luce ambrata"
+]
+},
+{
+"id": "IN-044",
+"file": "IN-044",
+"tipo": "descrizione",
+"parti": [
+"una porta dello stesso nero dello scafo nessuna maniglia nessuna fessura"
+]
+},
+{
+"id": "IN-045",
+"file": "IN-045",
+"tipo": "descrizione",
+"parti": [
+"la porta si è ritirata nella parete di là una sala bassa e un brusio"
+]
+},
+{
+"id": "IN-046",
+"file": "IN-046",
+"tipo": "risposta",
+"parti": [
+"sotto la superficie il multiscanner trova una rete di fibre pressurizzazione e apertura tutto addormentato e un ingresso per una fonte esterna a bassa tensione la batteria d emergenza del kit oppure in mancanza d altro la mia tuta che di corrente ne ha e ne darebbe"
 ]
 },
 {
@@ -1815,9 +1919,6 @@
 "l ultimo pilastro è spento l ho spento io con il plasma per arrivare prima"
 ],
 [
-"la camera bassa e tonda ormai attraversata a ovest la porta interna è aperta su una sala bassa da cui sale un brusio sopra di me dove c era il varco solo parete"
-],
-[
 "la camera trema sopra di me la parete si è riaperta il varco e in fondo al varco la luce gialla del boccaporto dal bordo pende ancora il resto del mio cavo di sicurezza"
 ],
 [
@@ -1903,12 +2004,6 @@
 "la nave trema sotto i miei piedi le linee del pavimento si spengono una dopo l altra e accanto al sostegno il pavimento si è aperto su una gola che scende sul visore la cifra dell aria ha cominciato a scendere da sola"
 ],
 [
-"la porta non ha maniglia né fessura né niente da spingere sta chiusa"
-],
-[
-"la porta si è ritirata nella parete di là una sala bassa e un brusio"
-],
-[
 "la porta tonda è aperta su un buio pieno a ovest l anticamera"
 ],
 [
@@ -1961,9 +2056,6 @@
 ],
 [
 "la tuta non mi lascia ascoltare niente che non sia il mio fiato mi serve una ricarica"
-],
-[
-"la tuta non mi ridà il faro anche la luce per lei è un canale secondario"
 ],
 [
 "la tuta tiene spento il traduttore ogni canale che non mi serve per respirare resta chiuso mi serve una ricarica"
@@ -2394,12 +2486,6 @@
 "sono fuori lo scafo nero trema sotto i magneti degli stivali e le funi degli arpioni vibrano come corde tese il boccaporto della santa maria è lì con la sua luce gialla dentro"
 ],
 [
-"sopra di me c è solo parete liscia come se nessuno l avesse mai tagliata"
-],
-[
-"sopra di me il lembo si richiude non lo vedo muoversi un momento c è l apertura con la luce gialla del boccaporto in fondo e il momento dopo c è parete il cavo di sicurezza tranciato di netto mi pende dalla cintura un metro e basta"
-],
-[
 "sotto di me la nave trema e poi dopo tanto tempo si muove mi porta con sé"
 ],
 [
@@ -2414,9 +2500,6 @@
 ],
 [
 "sotto la pietra c è un suono non una voce e il sintonizzatore non riesce a fissarlo forse mi manca qualcosa con cui confrontarlo"
-],
-[
-"sotto la superficie il multiscanner trova una rete di fibre pressurizzazione e apertura tutto addormentato e un ingresso per una fonte esterna a bassa tensione la batteria d emergenza del kit oppure in mancanza d altro la mia tuta che di corrente ne ha e ne darebbe"
 ],
 [
 "sotto la voce dell ingegnere il sintonizzatore aggancia un secondo strato una voce più bassa quasi un canto sottovoce"
@@ -2467,9 +2550,6 @@
 ],
 [
 "sul bordo del visore la cifra passa all ambra"
-],
-[
-"sul pannello brilla una linea di luce ambrata"
 ],
 [
 "sul visore la tuta mi mette davanti un conto che non le ho chiesto",
@@ -2584,12 +2664,6 @@
 "una pausa lunga"
 ],
 [
-"una piccola superficie liscia incassata nella parete accanto alla porta niente pulsanti sembra morta"
-],
-[
-"una porta dello stesso nero dello scafo nessuna maniglia nessuna fessura"
-],
-[
 "una porta tonda esatta senza maniglie al centro un meccanismo con cinque punte luminose retrattili"
 ],
 [
@@ -2657,9 +2731,6 @@
 "una stanza tonda più piccola del ponte con un silenzio da chiesa vuota le pareti sono divise in alcove a nido d ape su più livelli non letti nicchie lisce che fanno la stessa luce azzurrina del resto della nave in una delle alcove più basse riposa una forma immobile alta e sottile a sudovest si torna al corridoio a nord c è una porta più piccola delle altre"
 ],
 [
-"una stella stilizzata da cui parte una linea che finisce in una piccola spirale come un seme che germoglia quasi una dichiarazione d intenti"
-],
-[
 "una tavoletta rettangolare di pietra scura con tre simboli botanici e una sequenza di linee gli stessi tre simboli sono sotto la teca della serra"
 ],
 [
@@ -2679,9 +2750,6 @@
 ],
 [
 "yusuf aspetta la mia chiamata non lo chiamo"
-],
-[
-"è agganciato alla cintura lo lascio pendere"
 ],
 [
 "è chiuso dentro il terminale"

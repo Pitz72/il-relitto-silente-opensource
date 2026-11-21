@@ -27,6 +27,9 @@ USCITA = os.path.join(cp.CARTELLA, "resoconti", f"Il Relitto Silente - A che pun
 # Le prese che sono cambiate dopo che Leonardo le aveva già nel copione: il 19 novembre 2026 la cifra dell'aria è
 # passata alla voce della tuta, e le frasi di William che la contenevano sono state riscritte senza.
 CAMBIATE = "le frasi che contenevano la cifra dell’aria"
+# Le note sulle consegne dell'ultima volta: che cosa abbiamo sistemato noi, perché Leonardo lo sappia.
+NOTE = {"IN-013": "Arrivata giusta, con «dalla grana». In fondo al file avevi riletto la prima frase: l’ho tolta io, "
+                  "la presa resta intera."}
 
 
 def numero(x, decimali=1):
@@ -71,6 +74,9 @@ def main():
                "novembre le cifre dell’aria non sono più tue: le legge la voce della tuta, e le frasi dove c’era la "
                "cifra sono state riscritte senza. Quelle che avevi registrato non servono: grazie lo stesso.")]
 
+    if NOTE:
+        st += [Paragraph("Dall’ultima consegna", cp.S["h2"])]
+        st += cp.punti([f"<b>{k}</b> · {escape(v)}" for k, v in NOTE.items()])
     if cp.DA_RIFARE:
         st += [Paragraph("Da rifare", cp.S["h2"])]
         st += cp.punti([f"<b>{k}</b> · {escape(v)}" for k, v in cp.DA_RIFARE.items()])

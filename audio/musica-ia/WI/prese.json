@@ -47,6 +47,14 @@
    1.47
   ]
  },
+ "IN-007": {
+  "sorgente": "193d7220c8859c1a5284645c51aa4425550b6d68f1e2140c078419b92b1c2dc6",
+  "secondi": 3.56,
+  "tolti": [
+   0.94,
+   22.65
+  ]
+ },
  "IN-008": {
   "sorgente": "da463f4089da1e0e51d7931edcbfbfad5927ac34145f1f3497cde9eef698fbdb",
   "secondi": 12.98,
@@ -88,11 +96,11 @@
   ]
  },
  "IN-013": {
-  "sorgente": "0c8b89fe01283d1ba71c9634d4613070ee10ae03d3adc655ca131e6f7d7650cc",
+  "sorgente": "f0d849542ecbceea816ab5a51539200ddd47f5a4c7b64057da511d3d61ef09de",
   "secondi": 39.68,
   "tolti": [
-   0.94,
-   1.41
+   0.96,
+   0.36
   ]
  },
  "IN-014": {
@@ -221,6 +229,86 @@
   "tolti": [
    1.12,
    1.47
+  ]
+ },
+ "IN-037": {
+  "sorgente": "eda54fd114f74a58902c193e11ccba7e64caf41891ebcf89105af85d020b431f",
+  "secondi": 13.28,
+  "tolti": [
+   0.94,
+   1.35
+  ]
+ },
+ "IN-038": {
+  "sorgente": "4663db8b97c65038fe5ef8b9547bd836580af8acf72b1bd1aa3cca45513987be",
+  "secondi": 17.82,
+  "tolti": [
+   0.94,
+   1.54
+  ]
+ },
+ "IN-039": {
+  "sorgente": "c2af669aeb8f2c841e25b54717149b5ced5746d8c7b299de1d3cf6b08651e343",
+  "secondi": 6.1,
+  "tolti": [
+   0.94,
+   1.28
+  ]
+ },
+ "IN-040": {
+  "sorgente": "2efc21ca366260d062e830b453528b4fe113a41171333231e68ee765707ee27e",
+  "secondi": 6.12,
+  "tolti": [
+   0.94,
+   1.36
+  ]
+ },
+ "IN-041": {
+  "sorgente": "264385ed156f9dae968647d15bda4044682de20d56051fded0decd2bab5c4b58",
+  "secondi": 10.16,
+  "tolti": [
+   0.94,
+   1.22
+  ]
+ },
+ "IN-042": {
+  "sorgente": "ac79bf8cd39fcf4a083dcb911a2a8ed457708813c8f3e5c2561650920b29834f",
+  "secondi": 8.14,
+  "tolti": [
+   0.94,
+   1.48
+  ]
+ },
+ "IN-043": {
+  "sorgente": "b404fd281a494461ea9713e46a062645553614d7070bc075d3ecd667fc09de17",
+  "secondi": 3.18,
+  "tolti": [
+   0.94,
+   1.16
+  ]
+ },
+ "IN-044": {
+  "sorgente": "ee41228357382b1a76cf912f705630603423c50511c976029698a82a0266bcc5",
+  "secondi": 6.1,
+  "tolti": [
+   0.94,
+   1.22
+  ]
+ },
+ "IN-045": {
+  "sorgente": "0ee287d899d7884ee551fa7fa3bebb89425bf6b8cb493e32dcadc205a6491b1d",
+  "secondi": 5.78,
+  "tolti": [
+   0.94,
+   1.52
+  ]
+ },
+ "IN-046": {
+  "sorgente": "e9a488e10aff77ddffaa876d116e9ca06d37dd8c20ff54729fdbf22226aa975f",
+  "secondi": 18.88,
+  "tolti": [
+   1.1,
+   0.93
   ]
  },
  "SM-001": {
@@ -909,6 +997,14 @@
   "tolti": [
    1.08,
    1.58
+  ]
+ },
+ "SM-094": {
+  "sorgente": "0c99104a59c3bd6d82a65f96291450178ad7502fc38427c4a93fce2efff30a2a",
+  "secondi": 5.7,
+  "tolti": [
+   0.94,
+   1.32
   ]
  },
  "SM-096": {
