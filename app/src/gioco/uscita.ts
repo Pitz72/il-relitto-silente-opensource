@@ -8,6 +8,7 @@
 import { motoreSePronto } from "../motore/condiviso";
 import type { Salvataggio } from "../motore/tipi";
 import { archivio } from "./salvataggi";
+import { DEMO } from "../demo";
 
 const VERSIONE = __VERSIONE__;
 
@@ -16,6 +17,8 @@ const PAZIENZA = 2000;
 
 /** Scrive la partita in corso nel posto automatico. Vero se l'ha scritta; mai un errore. */
 export async function salvaUscendo(): Promise<boolean> {
+  // la demo dell'atto I non salva (documento 42): nel suo menu non c'è niente da riprendere
+  if (DEMO) return false;
   try {
     const m = motoreSePronto();
     if (!m) return false;

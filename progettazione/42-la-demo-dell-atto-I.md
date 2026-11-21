@@ -46,3 +46,29 @@ Sul gioco 0.2.5-beta.15 (`93d6200`), in `consegne/Demo atto I 2026-11-21/` con u
 - La fine della demo provata nella pagina di sviluppo: «fuori» dalla stiva porta alla lastra.
 
 Non ancora: un ascolto o una partita dell’autore nella demo installata; la decisione sul sito.
+
+## 5. Le note dell’autore sulla prima demo (21 novembre 2026)
+
+L’autore, giocata la demo: «Ottima la demo». Le sue note, fatte lo stesso giorno:
+
+- **«l’unica frase che dice se provi ad entrare nel boccaporto»**: «Il boccaporto porta fuori, nel vuoto: si esce, non
+  si entra.» non mancava al copione: è `IN-030`, consegnata da Leonardo il 20 novembre. La regola sta in
+  `ingresso.fav` ma vale anche nella stiva, e la demo aveva tolto tutte le prese che non erano dell’atto I. Ora
+  restano anche le prese dell’ingresso (IN): si sentono soltanto se a schermo c’è la loro frase.
+- **Un cartello prima di ogni cosa**: «Devi mettere un messaggio prima di ogni cosa che questa è una demo, non
+  corrisponde necessariamente alla versione finale e molte cose, comprese voci, potranno essere diverse nella versione
+  finale. Rappresenta solo il primissimo pezzo del gioco e che serve per valutare la tipologia di gioco e la qualità
+  del lavoro.» All’avvio, prima del cartello e della dichiarazione: «Questa è una demo del Relitto Silente. Non
+  corrisponde necessariamente alla versione finale del gioco: molte cose, comprese le voci, potranno essere diverse.
+  È soltanto il primissimo pezzo del gioco, e serve a farsi un’idea del tipo di gioco e della qualità del lavoro.»
+  (`FineDemo.tsx`, `quando="avvio"`).
+- **«il menu deve avere solo gioca, vai al sito, esci. Niente carica, niente continua»**: così. «Vai al sito» apre
+  `https://thesantamaria.it` nel browser (il comando `apri_sito` in `lib.rs`, con l’indirizzo fisso). Di
+  conseguenza la demo non salva più: niente salvataggio automatico, niente «Salva» e «Carica» nella pausa, F5 e F9
+  muti, niente salvataggio uscendo. La prova dei salvataggi, nella demo, non pretende il posto automatico.
+- **«Togli anche i titoli di coda, si finisce con il cartello che dice che è una demo ecc ecc e poi menu
+  principale»**: alla fine lo stesso avviso, aperto da «Qui finisce la demo: l’atto I, la Santa Maria.», con «Grazie
+  di aver giocato.» e «menu principale».
+
+Ricostruite: Windows 78,6 MB, Linux 162 MB (319 file audio: le 99 prese dell’atto I, le 39 dell’ingresso, nessuna
+voce degli atti dopo). La prova dei salvataggi riesce nell’eseguibile Windows e nell’AppImage avviata in WSL.

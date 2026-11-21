@@ -12,6 +12,7 @@ import type { Turno } from "../motore/tipi";
 import type { Domanda } from "./pannelli/Pannelli";
 import type { Selezione } from "./ramo/azioni";
 import type { Filo } from "./ramo/geometria";
+import { DEMO } from "../demo";
 
 /** Il pannello aperto sopra il gioco. */
 export type Pannello = null | "pausa" | "diario" | "salva" | "carica" | "opzioni" | "tasti";
@@ -61,7 +62,7 @@ export function useTastiera({ modello, selezione, altri, pannello, domanda, turn
       // F5 e F9 non ricaricano la pagina: salvano e caricano
       if (e.key === "F5" || e.key === "F9") {
         e.preventDefault();
-        if (!domanda && turno) void apriSalvataggi(e.key === "F5" ? "salva" : "carica");
+        if (!domanda && turno && !DEMO) void apriSalvataggi(e.key === "F5" ? "salva" : "carica");
         return;
       }
       if (e.key === "F11") {

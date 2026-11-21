@@ -222,6 +222,25 @@ fn esci(app: AppHandle, codice: i32) {
     app.exit(codice);
 }
 
+/// Il sito del progetto, dal menu della demo (documento 42): l'indirizzo è fisso, la pagina non ne può chiedere altri.
+const SITO: &str = "https://thesantamaria.it";
+
+/// Apre il sito nel browser di chi gioca.
+#[tauri::command]
+fn apri_sito() -> Result<(), String> {
+    #[cfg(target_os = "windows")]
+    let r = {
+        use std::os::windows::process::CommandExt;
+        // senza finestra della console
+        std::process::Command::new("rundll32").args(["url.dll,FileProtocolHandler", SITO]).creation_flags(0x0800_0000).spawn()
+    };
+    #[cfg(target_os = "macos")]
+    let r = std::process::Command::new("open").arg(SITO).spawn();
+    #[cfg(all(unix, not(target_os = "macos")))]
+    let r = std::process::Command::new("xdg-open").arg(SITO).spawn();
+    r.map(|_| ()).map_err(|e| format!("il sito non si apre: {e}"))
+}
+
 /// Su Linux, con i driver NVIDIA proprietari, il renderer DMABUF di WebKitGTK
 /// può lasciare la finestra bianca: lo si spegne prima che la WebView parta.
 /// RELITTO_GRAFICA=compatibile lo spegne sempre, =normale mai.
@@ -283,6 +302,7 @@ pub fn run() {
             scrivi_rapporto,
             finestra_ricorda,
             esci,
+            apri_sito,
             salvataggi::salvataggi_elenco,
             salvataggi::salvataggio_scrivi,
             salvataggi::salvataggio_leggi,

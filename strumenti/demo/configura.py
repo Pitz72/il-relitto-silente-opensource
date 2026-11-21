@@ -10,7 +10,8 @@
 #     della pagina in una cartella sua), la finestra con il suo titolo;
 #   - la pagina costruita in modalità «demo» (vite --mode demo): il gioco finisce sullo scafo nero;
 #   - niente pacchetti per l'aggiornamento automatico (e la pagina non lo cerca);
-#   - fra le risorse, niente voci degli atti dopo il primo: le prese di William che non sono dell'atto I (sigle SM),
+#   - fra le risorse, niente voci degli atti dopo il primo: le prese di William che non sono dell'atto I (sigle SM)
+#     né dell'ingresso (IN),
 #     l'Anziano, le voci della nave, L.V. nella serra e Yusuf nella fuga. Il motore audio prende i file che trova: un
 #     pezzo che non c'è resta muto. La musica resta tutta: le regie dell'atto I la usano, e la demo resta il gioco vero.
 # La configurazione si unisce a quella del gioco come una «merge patch» (RFC 7396): una risorsa con il valore null
@@ -27,8 +28,11 @@ USCITA = os.path.join(RADICE, "app", "src-tauri", "tauri.demo.conf.json")
 NOME = "Il Relitto Silente - Demo"
 # le voci che nell'atto I non si sentono
 FUORI = [
-    # William: delle prese del copione soltanto quelle dell'atto I (SM); il registro di bordo dell'intro (WI-01) resta
-    re.compile(r"/WI/WI-(?!SM-)[A-Z]{2}-\d"),
+    # William: delle prese del copione restano quelle dell'atto I (SM) e quelle dell'ingresso (IN), perché qualche
+    # regola dell'ingresso vale già nella stiva: «entra nel boccaporto» è IN-030 (l'autore, 21 novembre 2026, nella
+    # prima demo era muta). Una presa si sente soltanto se a schermo c'è la sua frase. Il registro dell'intro (WI-01)
+    # resta.
+    re.compile(r"/WI/WI-(?!SM-|IN-)[A-Z]{2}-\d"),
     re.compile(r"/AN/"),                    # l'Anziano (atto IV)
     re.compile(r"/NV/"),                    # le voci della nave (dall'atto II)
     re.compile(r"/LV/LV-02"),               # L.V. nella serra (atto III); LV-01, la traccia del prologo, resta

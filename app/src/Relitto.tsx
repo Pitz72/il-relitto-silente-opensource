@@ -75,6 +75,7 @@ type Schermata =
   | { tipo: "cartello" }
   | { tipo: "titoli" }
   | { tipo: "finedemo" }
+  | { tipo: "avvisodemo" }
   | { tipo: "dichiarazione" }
   | { tipo: "menu" }
   | { tipo: "intro" }
@@ -108,7 +109,7 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
 
   // all'avvio: il nero, poi il cartello; il registro dei finali si legge
   useEffect(() => {
-    const t = setTimeout(() => setSchermata((s) => (s.tipo === "nero" ? (PROVA_NUOVA ? { tipo: "intro" } : { tipo: "cartello" }) : s)), NERO);
+    const t = setTimeout(() => setSchermata((s) => (s.tipo === "nero" ? (PROVA_NUOVA ? { tipo: "intro" } : DEMO ? { tipo: "avvisodemo" } : { tipo: "cartello" }) : s)), NERO);
     if (PROVA_NUOVA) void avviaMotore().catch(() => undefined);
     void leggiRegistro().then((r) => {
       registroRef.current = r;
@@ -358,11 +359,11 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   // ---- le voci del menu ---------------------------------------------------------
   const salvato = daContinuare(posti);
   const voci: VoceMenu[] = [];
-  if (inCorso) voci.push({ id: "continua", etichetta: "Continua", dettaglio: "la partita in corso", azione: () => gioca({ tipo: "riprendi" }) });
-  else if (salvato) voci.push({ id: "continua", etichetta: "Continua", dettaglio: dettaglioDi(salvato), azione: () => gioca({ tipo: "carica", posto: salvato.posto }) });
+  if (inCorso && !DEMO) voci.push({ id: "continua", etichetta: "Continua", dettaglio: "la partita in corso", azione: () => gioca({ tipo: "riprendi" }) });
+  else if (salvato && !DEMO) voci.push({ id: "continua", etichetta: "Continua", dettaglio: dettaglioDi(salvato), azione: () => gioca({ tipo: "carica", posto: salvato.posto }) });
   voci.push({
     id: "nuova",
-    etichetta: "Nuova partita",
+    etichetta: DEMO ? "Gioca" : "Nuova partita",
     azione: () => {
       const via = () => {
         setIntroPronta(false);
@@ -374,11 +375,16 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
       else via();
     },
   });
-  if (posti?.some((p) => p.presente)) voci.push({ id: "carica", etichetta: "Carica", azione: () => setPannello("carica") });
-  voci.push({ id: "opzioni", etichetta: "Opzioni", azione: () => setPannello("opzioni") });
-  voci.push({ id: "registro", etichetta: "Registro dei finali", azione: () => setPannello("registro") });
-  voci.push({ id: "riconoscimenti", etichetta: "Riconoscimenti", azione: () => setSchermata({ tipo: "titoli" }) });
-  if (dentroTauri() && !DEMO) voci.push({ id: "aggiorna", etichetta: "Cerca aggiornamenti", azione: () => void cercaNuova(true) });
+  if (!DEMO) {
+    if (posti?.some((p) => p.presente)) voci.push({ id: "carica", etichetta: "Carica", azione: () => setPannello("carica") });
+    voci.push({ id: "opzioni", etichetta: "Opzioni", azione: () => setPannello("opzioni") });
+    voci.push({ id: "registro", etichetta: "Registro dei finali", azione: () => setPannello("registro") });
+    voci.push({ id: "riconoscimenti", etichetta: "Riconoscimenti", azione: () => setSchermata({ tipo: "titoli" }) });
+    if (dentroTauri()) voci.push({ id: "aggiorna", etichetta: "Cerca aggiornamenti", azione: () => void cercaNuova(true) });
+  } else {
+    // la demo (documento 42), l'autore: «il menu deve avere solo gioca, vai al sito, esci»
+    voci.push({ id: "sito", etichetta: "Vai al sito", dettaglio: "thesantamaria.it", azione: () => void comando("apri_sito").catch(() => mostraAvviso("Il sito non si apre: thesantamaria.it", true)) });
+  }
   // uscendo, la partita in corso va nel posto automatico (M6): niente da confermare, Continua la riprende
   if (dentroTauri()) voci.push({ id: "esci", etichetta: "Esci", azione: () => void salvaUscendo().then(() => comando("esci", { codice: 0 })) });
 
@@ -491,9 +497,14 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
             <Titoli ridotto={ridotto} onFine={() => setSchermata({ tipo: "menu" })} />
           </Suspense>
         )}
+        {schermata.tipo === "avvisodemo" && (
+          <Suspense fallback={null}>
+            <FineDemo quando="avvio" onFine={() => setSchermata({ tipo: "cartello" })} />
+          </Suspense>
+        )}
         {schermata.tipo === "finedemo" && (
           <Suspense fallback={null}>
-            <FineDemo onFine={() => setSchermata({ tipo: "titoli" })} />
+            <FineDemo quando="fine" onFine={() => setSchermata({ tipo: "menu" })} />
           </Suspense>
         )}
         {schermata.tipo === "dichiarazione" && (

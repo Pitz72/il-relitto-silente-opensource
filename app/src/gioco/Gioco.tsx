@@ -367,7 +367,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
       const c = t.cronaca;
       if (c) setCronaca((v) => [...v.slice(0, c.lunghezza - (c.nuova ? 1 : 0)), ...(c.nuova ? [c.nuova] : [])]);
       // il salvataggio automatico, a ogni cambio di stanza (§4.6)
-      if (t.stato.stanza !== prima && t.esito === "in_corso" && t.pulsanti.fase === "gioco") void salvaNel("automatico", true);
+      if (!DEMO && t.stato.stanza !== prima && t.esito === "in_corso" && t.pulsanti.fase === "gioco") void salvaNel("automatico", true);
       // un finale: la sua riga nel registro dei finali (§4.6)
       const finale = t.suono.eventi.find((e) => e.evento === "finale");
       if (finale && typeof finale.finale === "string") {
@@ -754,8 +754,8 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
             voci={{
               riprendi: () => setPannello(null),
               diario: () => setPannello("diario"),
-              salva: () => void apriSalvataggi("salva"),
-              carica: () => void apriSalvataggi("carica"),
+              salva: DEMO ? null : () => void apriSalvataggi("salva"),
+              carica: DEMO ? null : () => void apriSalvataggi("carica"),
               annulla: turno && turno.stato.turno > 0 ? () => (setPannello(null), gioca("annulla", "annulla l’ultima mossa")) : null,
               opzioni: () => setPannello("opzioni"),
               tasti: () => setPannello("tasti"),

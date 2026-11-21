@@ -13,6 +13,7 @@ import { comando } from "../lib/tauri";
 import type { Motore } from "../motore/runtime";
 import type { Turno, VoceCronaca } from "../motore/tipi";
 import { archivio, type Posto } from "./salvataggi";
+import { DEMO } from "../demo";
 
 const VERSIONE = __VERSIONE__;
 
@@ -75,7 +76,7 @@ export function useSonde({ prova, turno, modello, motoreRef, passi, finaleRef, g
         esito.letto_uguale = letto === testo;
         esito.caricamento = r.ok ? { esito: r.esito, ms: r.ms } : { rifiuto: r.motivo, messaggio: r.messaggio };
         esito.impronta_uguale = r.ok && m.impronta() === impronta;
-        esito.ok = esito.letto_uguale === true && r.ok && r.esito === "identica" && esito.impronta_uguale === true && !!(esito.automatico as Posto | undefined)?.presente;
+        esito.ok = esito.letto_uguale === true && r.ok && r.esito === "identica" && esito.impronta_uguale === true && (DEMO || !!(esito.automatico as Posto | undefined)?.presente); // la demo non salva da sola (documento 42)
       } catch (e) {
         esito.errore = String(e instanceof Error ? e.message : e);
       }

@@ -10,6 +10,7 @@ import { romano } from "../../lib/italiano";
 import { POSTI, quando, type IdPosto, type Posto } from "../salvataggi";
 import RigheNovita from "../../menu/RigheNovita";
 import "./pannelli.css";
+import { DEMO } from "../../demo";
 
 /** Il fuoco entra nel pannello all'apertura, e ci resta (Tab gira dentro). Un pannello che si apre
  *  da solo, senza un gesto di chi gioca (le novità, la domanda dell'aggiornamento all'avvio), non
@@ -129,8 +130,9 @@ export function Conferma({ domanda, forma, chiudi }: { domanda: Domanda; forma: 
 export interface VociPausa {
   riprendi: () => void;
   diario: () => void;
-  salva: () => void;
-  carica: () => void;
+  /** null nella demo dell'atto I: niente salvataggi (documento 42) */
+  salva: (() => void) | null;
+  carica: (() => void) | null;
   annulla: (() => void) | null;
   opzioni: () => void;
   tasti: () => void;
@@ -152,12 +154,16 @@ export function Pausa({ forma, voci }: { forma: Forma; voci: VociPausa }) {
         <button type="button" onClick={voci.diario}>
           Diario <span className="tasto">D</span>
         </button>
-        <button type="button" onClick={voci.salva}>
-          Salva <span className="tasto">F5</span>
-        </button>
-        <button type="button" onClick={voci.carica}>
-          Carica <span className="tasto">F9</span>
-        </button>
+        {voci.salva && (
+          <button type="button" onClick={voci.salva}>
+            Salva <span className="tasto">F5</span>
+          </button>
+        )}
+        {voci.carica && (
+          <button type="button" onClick={voci.carica}>
+            Carica <span className="tasto">F9</span>
+          </button>
+        )}
         {voci.annulla && (
           <button type="button" onClick={voci.annulla}>
             Annulla l’ultima mossa
@@ -469,7 +475,7 @@ const TASTI: readonly { gruppo: string; righe: readonly { tasti: readonly string
     righe: [
       { tasti: ["D"], fa: "il diario; le pagine con ← →" },
       { tasti: ["Esc"], fa: "la pausa" },
-      { tasti: ["F5", "F9"], fa: "salva, carica" },
+      ...(DEMO ? [] : [{ tasti: ["F5", "F9"], fa: "salva, carica" }]),
       { tasti: ["F11"], fa: "schermo intero, o in una finestra" },
     ],
   },
@@ -505,7 +511,7 @@ const TASTI_SCRITTI: typeof TASTI = [
   {
     gruppo: "La partita",
     righe: [
-      { tasti: ["F5", "F9"], fa: "salva, carica" },
+      ...(DEMO ? [] : [{ tasti: ["F5", "F9"], fa: "salva, carica" }]),
       { tasti: ["F11"], fa: "schermo intero, o in una finestra" },
     ],
   },
