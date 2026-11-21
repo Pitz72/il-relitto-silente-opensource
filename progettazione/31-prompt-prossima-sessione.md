@@ -82,6 +82,9 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 
 ## Dove siamo (21 novembre 2026)
 
+- **21 novembre 2026, poi: la demo è pubblica** (documento 42, §6): release `demo-atto-1` su GitHub, articolo di lancio e
+  pulsanti sul sito thesantamaria.it (v1.1.12). Dopo una consegna di Leonardo, se si vuole aggiornare la demo:
+  `configura.py`, le due build, `gh release upload demo-atto-1 … --clobber`.
 - **21 novembre 2026: la demo dell’atto I** (documento 42), chiesta dall’autore per Leonardo e forse per il sito:
   Windows (installatore) e Linux (AppImage) in `consegne/Demo atto I 2026-11-21/`, provate con la prova dei
   salvataggi; da giocare dall’autore. Le prese a oggi: 138 (22,8 %), l’atto I completo.

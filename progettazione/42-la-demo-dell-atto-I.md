@@ -77,3 +77,17 @@ voce degli atti dopo). La prova dei salvataggi riesce nell’eseguibile Windows 
 di NSIS (il programma installato aveva già la sua): la configurazione non ne indicava una. Ora `tauri.conf.json` ha
 `bundle.windows.nsis.installerIcon` = `icons/icon.ico`, per la demo e per il gioco intero (anche gli installatori
 delle beta l’avevano generica). Demo per Windows ricostruita, 78,6 MB; l’icona estratta dal file è quella del gioco.
+
+## 6. L’uscita pubblica (21 novembre 2026)
+
+L’autore: «rilasciamo pubblicamente la demo»; i file «ok per github», l’articolo di lancio con «un po’ di enfasi»
+(Leonardo Tomassetti «non è un attore ma uno speaker, usa il termine doppiatore»), il pulsante in home come
+proposto.
+
+- **GitHub**: la release `demo-atto-1` (non pre-release, non «Latest»: l’ultima resta `v1.5.3`; il tag non è `v…`,
+  quindi né `rilascio.yml` né `canale.yml` partono), con `Il-Relitto-Silente-Demo-atto-I-Windows.exe` e
+  `Il-Relitto-Silente-Demo-atto-I-Linux.AppImage`: https://github.com/Pitz72/il-relitto-silente-opensource/releases/tag/demo-atto-1
+- **Il sito** (thesantamaria.it, v1.1.12): l’articolo «Il Relitto Silente: è uscita la demo ufficiale, in italiano»
+  (`la-demo-ufficiale`, it/en), la sezione «La demo» nella pagina del Relitto (`/relitto/#demo`) con i due pulsanti
+  e la riga nella scheda, in home l’invito «Gioca la demo del Relitto Silente» sotto il titolo e la carta del
+  Relitto con «la demo è uscita». Caricato con `carica-diff.mjs` (103 file su 307).
