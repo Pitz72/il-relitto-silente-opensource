@@ -48,6 +48,7 @@
   "bundle": {
     "active": true,
     "targets": ["nsis", "deb", "appimage"],
+    "windows": { "nsis": { "installerIcon": "icons/icon.ico" } },
     "category": "Game",
     "shortDescription": "Avventura testuale",
     "publisher": "Simone Pizzi",

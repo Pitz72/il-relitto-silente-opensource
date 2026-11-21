@@ -72,3 +72,8 @@ L’autore, giocata la demo: «Ottima la demo». Le sue note, fatte lo stesso gi
 
 Ricostruite: Windows 78,6 MB, Linux 162 MB (319 file audio: le 99 prese dell’atto I, le 39 dell’ingresso, nessuna
 voce degli atti dopo). La prova dei salvataggi riesce nell’eseguibile Windows e nell’AppImage avviata in WSL.
+
+**L’icona dell’installatore.** L’autore: «IL FILE DELLA DEMO NON HA IL LOGO». L’installatore aveva l’icona generica
+di NSIS (il programma installato aveva già la sua): la configurazione non ne indicava una. Ora `tauri.conf.json` ha
+`bundle.windows.nsis.installerIcon` = `icons/icon.ico`, per la demo e per il gioco intero (anche gli installatori
+delle beta l’avevano generica). Demo per Windows ricostruita, 78,6 MB; l’icona estratta dal file è quella del gioco.
