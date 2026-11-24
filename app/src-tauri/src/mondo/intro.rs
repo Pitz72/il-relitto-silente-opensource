@@ -536,6 +536,12 @@ impl Intro {
         }
     }
 
+    /// Il mondo è fermo e muto: la voce e il tema decodificati lasciano la memoria (revisione 37, M15).
+    pub fn sgombra(&mut self) {
+        self.voce.sgombra();
+        self.tema.sgombra();
+    }
+
     /// Fa andare il tempo dell'intro (a ogni blocco).
     pub fn passo(&mut self, dt: f32) {
         if !self.attiva {

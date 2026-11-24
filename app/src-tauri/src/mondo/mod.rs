@@ -530,6 +530,8 @@ pub struct Mondo {
     /// e quello della voce di servizio (vedi LIV_SERVIZIO)
     tetto_servizio: Inseguitore,
     fermo: bool,
+    /// fermo e muto, ha lasciato i pezzi decodificati (revisione 37, M15)
+    sgombro: bool,
     // --- il prototipo
     cammina: bool,
     piede: bool,
@@ -675,6 +677,7 @@ impl Mondo {
             tetto_william: Inseguitore::nuovo(0.0008, 0.12, sr),
             tetto_servizio: Inseguitore::nuovo(0.0008, 0.12, sr),
             fermo: false,
+            sgombro: false,
             cammina: false,
             piede: false,
             t_stivali: 0.0,
@@ -694,8 +697,21 @@ impl Mondo {
         (m, tx, stato)
     }
 
+    /// Il mondo è fermo, ha finito di sfumare e ha lasciato i suoi pezzi: si può togliere.
     pub fn finito(&self) -> bool {
-        self.fermo && self.volume.v < 1e-4
+        self.fermo && self.volume.v < 1e-4 && self.sgombro
+    }
+
+    /// Fermo e muto, il mondo lascia quello che aveva decodificato: i brani, le voci, le prese, il tema
+    /// dell’intro (revisione 37, M15). Chi lo ospita lo toglie al blocco dopo, ma la sua memoria restava presa
+    /// fino all’avvio del mondo successivo: da 60 a 100 MB del menu per tutta la partita, e quelli della
+    /// partita per tutto il menu. A questo punto non si sente più niente: le voci si tolgono e basta.
+    fn sgombra(&mut self) {
+        self.musica.sgombra();
+        self.voci_nave.sgombra();
+        self.voci_radio.sgombra();
+        self.racconto.sgombra();
+        self.intro.sgombra();
     }
 
     /// Un colpo nella sua strada, sul canale degli effetti.
@@ -941,6 +957,10 @@ impl Mondo {
         while let Ok(c) = self.rx.try_recv() {
             self.comando(c);
         }
+        if self.fermo && !self.sgombro && self.volume.v < 1e-4 {
+            self.sgombra();
+            self.sgombro = true;
+        }
         let dtf = dt as f32;
         self.passo_blocco(out.len() as f32 * dtf);
         // i colpi di un momento sfumato del tutto non servono più
@@ -1170,7 +1190,9 @@ impl Mondo {
             let cr = self.cuffia_lp.elabora(self.cuffia_hp.elabora(est.1 * wc + em.1 * we, 1), 1);
             let e = self.compressore.segui(cl.abs().max(cr.abs()));
             let gc = if e > soglia { (soglia / e).powf(2.0 / 3.0) } else { 1.0 } * ricarica;
-            let rumore = self.fruscio_lp.elabora(self.caso.bianco(), 0) * fruscio_g * self.w_fruscio.passo() * s_fruscio;
+            // il fruscio è un suono del mondo: segue il cursore degli ambienti come gli altri, non soltanto il
+            // volume generale (revisione 37, L22: con «Effetti» a zero restava)
+            let rumore = self.fruscio_lp.elabora(self.caso.bianco(), 0) * fruscio_g * self.w_fruscio.passo() * s_fruscio * ga;
             l += cl * gc + rumore;
             r += cr * gc + rumore;
             // il casco: la bolla; nell’anticamera perde anche i suoi riflessi
@@ -1409,30 +1431,36 @@ struct Ricampionatore {
     fonte: Vec<Frame>,
     /// dove si legge nella fonte, in frame del mondo (sempre almeno 1)
     pos: f64,
+    /// sta ricampionando: la fonte ha il suo frame «prima» (può anche essere vuota, quando la posizione è già
+    /// oltre i frame resi: revisione 37, M14)
+    avviato: bool,
 }
 
 const PEZZO: usize = 64;
 
 impl Ricampionatore {
     fn nuovo() -> Self {
-        Ricampionatore { fonte: Vec::with_capacity(4096), pos: 1.0 }
+        Ricampionatore { fonte: Vec::with_capacity(4096), pos: 1.0, avviato: false }
     }
 
     /// Tornati alla frequenza del mondo: quello che restava non serve più.
     fn azzera(&mut self) {
-        if !self.fonte.is_empty() {
+        if self.avviato {
             self.fonte.clear();
             self.pos = 1.0;
+            self.avviato = false;
         }
     }
 
     /// `passo`: quanti frame del mondo per ogni frame del dispositivo.
     fn rendi(&mut self, mondo: &mut Mondo, out: &mut [Frame], passo: f64) {
         let dt = 1.0 / mondo.sr as f64;
-        if self.fonte.is_empty() {
+        if !self.avviato {
             // il primo frame «prima» è silenzio: si comincia da lì
+            self.fonte.clear();
             self.fonte.push(Frame::ZERO);
             self.pos = 1.0;
+            self.avviato = true;
         }
         for f in out.iter_mut() {
             let i = self.pos as usize;
@@ -1446,8 +1474,11 @@ impl Ricampionatore {
             *f = Frame { left: hermite(a.left, b.left, c.left, d.left, t), right: hermite(a.right, b.right, c.right, d.right, t) };
             self.pos += passo;
         }
-        // si tiene un frame prima della posizione, e quelli dopo
-        let via = (self.pos as usize).saturating_sub(1);
+        // si tiene un frame prima della posizione, e quelli dopo. Con più di quattro frame del mondo per ogni
+        // frame del dispositivo (un vivavoce a 8 kHz) la posizione può stare oltre i frame già resi: se ne tolgono
+        // quanti ce ne sono, e la posizione resta giusta rispetto a quelli che verranno (revisione 37, M14: senza
+        // questo limite il thread audio cadeva, e il gioco restava muto fino al riavvio)
+        let via = (self.pos as usize).saturating_sub(1).min(self.fonte.len());
         if via > 0 {
             self.fonte.drain(..via);
             self.pos -= via as f64;
@@ -1557,5 +1588,129 @@ mod prove_mix {
         }
         let z = &z[(2.0 * sr_disp) as usize..];
         assert!(goertzel(z, 440.0 * sr_disp / sr_mondo, sr_disp) > goertzel(z, 440.0, sr_disp) * 20.0, "senza ricampionare il la dovrebbe calare");
+    }
+
+    #[test]
+    fn il_fruscio_della_cuffia_segue_il_cursore_degli_ambienti() {
+        // revisione 37, L22: nel relitto, con la cuffia accesa, il fruscio seguiva solo il volume generale
+        let livello = |ambienti: f32| {
+            let (mut m, tx, _) = Mondo::nuovo(48000.0, 7);
+            tx.send(Comando::Turno(serde_json::from_str(
+                r#"{"stati": {"stanza": "vestibolo delle gole", "tuta": true, "aria": 80, "fuga": "lontana", "porta_interna": "aperta",
+                    "contatto": "avvenuto", "atto": 2, "esito": "in_corso"}, "eventi": [{"evento": "caricamento"}]}"#,
+            ).unwrap()))
+            .unwrap();
+            tx.send(Comando::Solo(Some("fruscio".into()))).unwrap();
+            tx.send(Comando::Mix(Mix { ambienti, ..Mix::default() })).unwrap();
+            let mut buf = vec![Frame::ZERO; 256];
+            let (mut somma, mut n) = (0.0f64, 0usize);
+            for k in 0..(8.0 * 48000.0 / 256.0) as usize {
+                m.rendi(&mut buf, 1.0 / 48000.0);
+                if k > 750 {
+                    somma += buf.iter().map(|f| (f.left * f.left) as f64).sum::<f64>();
+                    n += buf.len();
+                }
+            }
+            10.0 * (somma / n as f64 + 1e-20).log10()
+        };
+        let (pieno, spento) = (livello(1.0), livello(0.0));
+        assert!(pieno > -90.0, "nel relitto il fruscio della cuffia dovrebbe sentirsi: {pieno:.1} dB");
+        assert!(spento < pieno - 40.0, "con gli ambienti a zero il fruscio resta: {spento:.1} dB contro {pieno:.1}");
+    }
+
+    #[test]
+    fn un_mondo_fermo_lascia_i_pezzi_decodificati() {
+        // revisione 37, M15: il mondo del menu, fermato quando comincia la partita, teneva in memoria i suoi
+        // brani decodificati fino all’avvio del mondo successivo. Qui: un brano che suona e uno soltanto decodificato
+        use super::musica_file::{Biblioteca, Pcm, Pezzo};
+        let sr = 48000.0f32;
+        let (mut m, tx, _) = Mondo::nuovo(sr, 7);
+        let seno = |secondi: f32| Pcm::da_frame(sr, (0..(sr * secondi) as usize).map(|i| {
+            let v = 0.3 * (std::f32::consts::TAU * 440.0 * i as f32 / sr).sin();
+            (v, v)
+        }));
+        let mut b = Biblioteca::nuova(std::path::PathBuf::from("non-esiste"));
+        b.inserisci(Pezzo::S2, seno(30.0));
+        let suona = std::sync::Arc::downgrade(&b.pronto(Pezzo::S2).unwrap());
+        m.musica.lettore().biblioteca = Some(b);
+        // una battuta dell’Anziano già decodificata, che non sta suonando
+        let mut voci = Biblioteca::nuova(std::path::PathBuf::from("non-esiste"));
+        voci.inserisci(Pezzo::AN1, seno(10.0));
+        let ferma = std::sync::Arc::downgrade(&voci.pronto(Pezzo::AN1).unwrap());
+        m.musica.lettore_voce().biblioteca = Some(voci);
+        tx.send(Comando::Musica(Brano::Atto2)).unwrap();
+        let mut buf = vec![Frame::ZERO; 256];
+        let mut rendi = |m: &mut Mondo, secondi: f32| {
+            let mut picco = 0.0f32;
+            for _ in 0..(secondi * sr / 256.0) as usize {
+                m.rendi(&mut buf, 1.0 / sr as f64);
+                picco = buf.iter().fold(picco, |p, f| p.max(f.left.abs()));
+            }
+            picco
+        };
+        assert!(rendi(&mut m, 2.0) > 0.01, "la musica dovrebbe suonare");
+        assert!(suona.upgrade().is_some() && ferma.upgrade().is_some());
+        // il mondo si ferma: sfuma come sempre (un secondo e mezzo), e finché si sente non lascia niente
+        tx.send(Comando::Ferma).unwrap();
+        assert!(rendi(&mut m, 0.5) > 0.001, "mezzo secondo dopo il mondo sfuma ancora");
+        assert!(!m.finito() && suona.upgrade().is_some());
+        rendi(&mut m, 6.0);
+        assert!(m.finito(), "il mondo fermo dovrebbe aver finito");
+        // i pezzi li libera il thread di lavoro: gli si dà il tempo
+        for _ in 0..200 {
+            if suona.upgrade().is_none() && ferma.upgrade().is_none() {
+                break;
+            }
+            std::thread::sleep(std::time::Duration::from_millis(10));
+        }
+        assert!(suona.upgrade().is_none(), "il brano che suonava è ancora in memoria");
+        assert!(ferma.upgrade().is_none(), "la battuta decodificata è ancora in memoria");
+    }
+
+    #[test]
+    fn il_ricampionatore_regge_un_dispositivo_quattro_volte_piu_lento_o_piu_veloce() {
+        // revisione 37, M14: le cuffie Bluetooth che passano al vivavoce a 8 kHz con un mondo nato a 44,1 kHz
+        // (cinque frame e mezzo del mondo per ogni frame del dispositivo), o un mondo nato a 192 kHz e cuffie
+        // normali collegate dopo. Alla fine di un blocco la posizione può stare oltre i frame resi, e toglierne
+        // «fino alla posizione» faceva cadere il thread audio: il gioco restava muto fino al riavvio. Il conto del
+        // documento: mondo a 44,1 kHz, dispositivo a 8 kHz, primo blocco di 47 frame, 257 in memoria e 259 da togliere.
+        for (sr_mondo, sr_disp, blocco) in [(44100.0f32, 8000.0f32, 47usize), (44100.0, 8000.0, 80), (192000.0, 44100.0, 441), (48000.0, 8000.0, 160)] {
+            let passo = (sr_mondo / sr_disp) as f64;
+            assert!(passo > 4.0);
+            let mut m = mondo_con_un_la(sr_mondo);
+            let mut r = Ricampionatore::nuovo();
+            let mut buf = vec![Frame::ZERO; blocco];
+            let mut x = Vec::new();
+            for _ in 0..(6.0 * sr_disp / blocco as f32) as usize {
+                r.rendi(&mut m, &mut buf, passo);
+                assert!(buf.iter().all(|f| f.left.is_finite() && f.right.is_finite()));
+                assert!(r.pos >= 1.0, "la posizione deve restare dopo il frame di prima: {}", r.pos);
+                x.extend(buf.iter().map(|f| f.left));
+            }
+            // la musica c’è ancora, e il la è rimasto un la
+            let x = &x[(2.0 * sr_disp) as usize..];
+            let giusto = goertzel(x, 440.0, sr_disp);
+            let calante = goertzel(x, 440.0 * sr_disp / sr_mondo, sr_disp);
+            assert!(giusto > 1e-4, "da {sr_mondo} a {sr_disp} Hz la musica non suona: {giusto}");
+            assert!(giusto > calante * 20.0, "da {sr_mondo} a {sr_disp} Hz il la non è più a 440 Hz: {giusto} contro {calante}");
+        }
+        // e dall’altra parte: un dispositivo più di quattro volte più veloce del mondo
+        for (sr_mondo, sr_disp, blocco) in [(44100.0f32, 192000.0f32, 512usize), (8000.0, 48000.0, 480)] {
+            let passo = (sr_mondo / sr_disp) as f64;
+            assert!(passo < 0.25);
+            let mut m = mondo_con_un_la(sr_mondo);
+            let mut r = Ricampionatore::nuovo();
+            let mut buf = vec![Frame::ZERO; blocco];
+            let mut x = Vec::new();
+            for _ in 0..(6.0 * sr_disp / blocco as f32) as usize {
+                r.rendi(&mut m, &mut buf, passo);
+                assert!(buf.iter().all(|f| f.left.is_finite() && f.right.is_finite()));
+                x.extend(buf.iter().map(|f| f.left));
+            }
+            let x = &x[(2.0 * sr_disp) as usize..];
+            let giusto = goertzel(x, 440.0, sr_disp);
+            assert!(giusto > 1e-4, "da {sr_mondo} a {sr_disp} Hz la musica non suona: {giusto}");
+            assert!(giusto > goertzel(x, 440.0 * sr_disp / sr_mondo, sr_disp) * 20.0, "da {sr_mondo} a {sr_disp} Hz il la non è più a 440 Hz");
+        }
     }
 }

@@ -928,6 +928,11 @@ impl Colpo {
         self
     }
 
+    /// Il colpo aspetta ancora il suo ritardo: non ha cominciato a suonare.
+    pub fn in_attesa(&self) -> bool {
+        self.ritardo > 0
+    }
+
     /// `None` quando è finito.
     #[inline]
     pub fn campione(&mut self, caso: &mut Caso) -> Option<(f32, f32)> {

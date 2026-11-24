@@ -605,6 +605,12 @@ impl Musica {
         &mut self.file
     }
 
+    /// Per le prove: il canto del primo contatto non si sentirà più.
+    #[cfg(test)]
+    pub fn canto_gia_sentito(&self) -> bool {
+        self.canto_sentito
+    }
+
     pub fn brano(&self) -> Brano {
         self.brano
     }
@@ -926,6 +932,25 @@ impl Musica {
     /// Una partita nuova: il canto del primo contatto torna a sentirsi.
     pub fn nuova_partita(&mut self) {
         self.canto_sentito = false;
+    }
+
+    /// Il ponte dice se il colloquio con l’Anziano si apre per la prima volta in questa partita: il canto è di
+    /// quella volta, e di nessun’altra. Senza, il canto si ricordava per mondo sonoro: dopo «Continua» poteva
+    /// tornare, dopo un «annulla» poteva mancare (revisione 37, M13).
+    pub fn primo_contatto(&mut self, primo: bool) {
+        self.canto_sentito = !primo;
+    }
+
+    /// Il mondo è fermo e muto: i brani e le battute decodificati lasciano la memoria (revisione 37, M15).
+    pub fn sgombra(&mut self) {
+        self.file.sgombra();
+        self.voce.sgombra();
+    }
+
+    /// La battuta dell’Anziano che sta parlando tace in `s` secondi: una partita che si carica non la porta con
+    /// sé (revisione 37, M13).
+    pub fn taci_voce(&mut self, s: f32) {
+        self.voce.tace(s);
     }
 
     /// L’Anziano comincia a parlare: la musica entra piano, sulla scena del nodo. `voce`: la sua

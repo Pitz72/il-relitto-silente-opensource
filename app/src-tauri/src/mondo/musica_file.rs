@@ -913,7 +913,7 @@ impl Pcm {
     /// 50 ms che stanno entro 30 dB dal più forte (i silenzi e i vuoti di una battuta non contano,
     /// come nell’ascolto approvato, documento 35, §7).
     pub fn da_frame_con(sr: f32, frame: impl Iterator<Item = (f32, f32)>, parlato: bool) -> Pcm {
-        let mut campioni = Vec::new();
+        let mut campioni = Vec::with_capacity(frame.size_hint().0 * 2);
         let mut energia = 0.0f64;
         let mut n = 0usize;
         for (l, r) in frame {
@@ -922,6 +922,9 @@ impl Pcm {
             campioni.push((l.clamp(-1.0, 1.0) * 32767.0) as i16);
             campioni.push((r.clamp(-1.0, 1.0) * 32767.0) as i16);
         }
+        // un vettore che cresce raddoppiando può riservare quasi il doppio di quello che tiene: per un brano di
+        // tre minuti, decine di megabyte in più. Qui si è nel thread di lavoro: si restituiscono (revisione 37, L22)
+        campioni.shrink_to_fit();
         let rms_db = 10.0 * ((energia / n.max(1) as f64) + 1e-12).log10() as f32;
         let livello = if parlato { livello_del_parlato(sr, &campioni).unwrap_or(rms_db) } else { rms_db };
         Pcm { sr, campioni, norma: db(OBIETTIVO_DB - livello) }
@@ -1048,7 +1051,7 @@ impl Biblioteca {
         let (lavori, coda) = channel::<Lavoro>();
         let (tx, rx) = channel();
         let dove = percorsi.clone();
-        std::thread::Builder::new()
+        let partito = std::thread::Builder::new()
             .name("relitto-musica".into())
             .spawn(move || {
                 // finisce quando la biblioteca se ne va e la coda si chiude
@@ -1064,7 +1067,11 @@ impl Biblioteca {
                     }
                 }
             })
-            .expect("il thread della musica non parte");
+            .is_ok();
+        // Se il sistema non concede il thread, la biblioteca non ha file: ogni pezzo risulta mancante, e il
+        // motore suona quello che sa sintetizzare. Prima qui c'era un `expect`, e il gioco cadeva all'avvio del
+        // mondo sonoro (revisione 37, L22)
+        let percorsi = if partito { percorsi } else { HashMap::new() };
         Biblioteca { percorsi, caselle: HashMap::with_capacity(quanti), lavori, rx }
     }
 
@@ -1293,6 +1300,23 @@ impl Lettore {
         }
     }
 
+    /// Il mondo è fermo e muto, e aspetta soltanto di essere tolto: le voci se ne vanno adesso, e tutti i pezzi
+    /// decodificati lasciano la memoria (li libera il thread di lavoro, non il thread audio). Senza, restavano
+    /// con il mondo fermo fino all’avvio del mondo successivo: i brani del menu per tutta la partita, quelli
+    /// della partita per tutto il menu (revisione 37, M15).
+    pub fn sgombra(&mut self) {
+        self.attese.clear();
+        match self.biblioteca.as_mut() {
+            Some(b) => {
+                for v in self.voci.drain(..) {
+                    b.butta(v.pcm);
+                }
+                b.tieni(&[]);
+            }
+            None => self.voci.clear(),
+        }
+    }
+
     /// Comincia a decodificare un pezzo, senza farlo suonare (i letti dell’Anziano, che servono presto).
     pub fn precarica(&mut self, p: Pezzo) {
         if let Some(b) = self.biblioteca.as_mut() {
@@ -1436,6 +1460,19 @@ pub fn prova_decodifica(percorso: &Path) -> Result<String, String> {
 #[cfg(test)]
 mod prove {
     use super::*;
+
+    #[test]
+    fn un_pezzo_decodificato_non_riserva_piu_memoria_di_quella_che_tiene() {
+        // revisione 37, L22: 100.001 frame da una fonte che non dice quanti sono (come la decodifica vera sa dirlo,
+        // ma non sempre): il vettore cresceva raddoppiando e teneva riservati 262.144 campioni per 200.002
+        let frame = (0..100_001).filter(|_| true).map(|i| {
+            let v = 0.2 * (i as f32 * 0.01).sin();
+            (v, v)
+        });
+        let pcm = Pcm::da_frame(48000.0, frame);
+        assert_eq!(pcm.campioni.len(), 200_002);
+        assert_eq!(pcm.campioni.capacity(), pcm.campioni.len(), "il pezzo riserva più memoria di quella che tiene");
+    }
 
     fn silenzio(secondi: f32) -> Pcm {
         Pcm::da_frame(48000.0, (0..(secondi * 48000.0) as usize).map(|_| (0.0, 0.0)))

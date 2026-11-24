@@ -183,6 +183,13 @@ impl VociNave {
         self.servizio.tace(s);
     }
 
+    /// Il mondo è fermo e muto: le voci decodificate lasciano la memoria (revisione 37, M15).
+    pub fn sgombra(&mut self) {
+        self.fila.clear();
+        self.lettore.sgombra();
+        self.servizio.sgombra();
+    }
+
     /// Le sue battute finite da quando la fila è cominciata.
     pub fn finite(&self) -> u8 {
         self.finite

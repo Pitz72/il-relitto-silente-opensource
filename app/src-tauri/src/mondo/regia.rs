@@ -110,8 +110,17 @@ impl Mondo {
         // «ripresa»: un ANNULLA che riporta la partita a uno stato di prima, anche dopo un
         // finale (revisione 25, G2). Per il suono vale come un caricamento.
         let carica = primo || inizio || ha("caricamento") || ha("ripresa");
+        // La partita lascia lo schermo (i titoli di coda dopo un finale, il menu): la pagina manda una stanza
+        // vuota, senza eventi (`taciSuono` in app/src/gioco/suono.ts). Il mondo sfuma come ha sempre fatto, ma
+        // quello che era programmato non deve più arrivare (revisione 37, M12: scegliendo «Titoli di coda» entro
+        // quattordici secondi dal finale tornavano sotto i titoli la plancia del risveglio, a 12 s, e la musica
+        // del finale, a 14 s, al posto della canzone dei titoli)
+        let esce = !carica && self.gioco.stanza.is_empty() && t.eventi.is_empty();
         if inizio {
             self.musica.nuova_partita();
+        }
+        if carica || esce {
+            self.dimentica_il_programmato();
         }
         if carica {
             // una partita che comincia o si riprende: niente di quello che restava della fine
@@ -121,19 +130,10 @@ impl Mondo {
             self.ventola_spenta = false;
             self.ventola.giri = Scorrevole::nuovo(1.0);
             self.fiato.riprendi();
-            // e niente di quello che le automazioni svuotate qui sotto avrebbero rimesso a posto:
-            // la radio della plancia, i fondi abbassati, il re toccato, il fiato in ascolto, il filo
-            self.radio_accesa = false;
-            self.fondi_mul.verso(1.0, 0.5, sr);
-            self.fondo_mul.verso(1.0, 0.5, sr);
-            self.re_tocco.verso(1.0, 0.5, sr);
-            self.fiato.ascolto = false;
-            self.anello = None;
-            self.voci_nave.tace(0.3);
-            self.voci_radio.tace(0.3);
-            self.dopo_le_voci = super::DopoLeVoci::default();
-            self.filo_g.verso(0.0, 0.3, sr);
-            self.automazioni.clear();
+            // la voce registrata dell’Anziano non continua sopra la stanza caricata (revisione 37, M13)
+            self.musica.taci_voce(0.3);
+            // l’urto dell’aggancio non c’è appena stato: i ganci della stiva non tintinnano per quello di prima
+            self.t_aggancio = 1e9;
             self.ingresso = Scorrevole::nuovo(0.0);
             self.ingresso.verso(1.0, if inizio { 3.0 } else { 1.5 }, sr);
         }
@@ -169,12 +169,17 @@ impl Mondo {
         // la stanza
         let nuova = stanze::stanza(&self.gioco.stanza);
         let cambia = nuova.map(|s| s.id) != self.stanza.map(|s| s.id);
-        if cambia {
-            let da = self.stanza.map(|s| s.id);
-            self.stanza = nuova;
-            self.t_stanza = 0.0;
-            self.cuore.g.verso(0.0, 1.0, sr);
-            self.acufene.g.verso(0.0, 1.0, sr);
+        // A un caricamento non si arriva da nessuna parte, nemmeno se la stanza ha lo stesso nome di quella di
+        // prima: il re sullo scafo è quello di chi ci sta, non quello di chi esce adesso dal boccaporto (revisione
+        // 37, M13: la discesa programmata si perdeva con il caricamento, e il re restava pieno per tutto lo scafo)
+        if cambia || carica {
+            let da = if carica { None } else { self.stanza.map(|s| s.id) };
+            if cambia {
+                self.stanza = nuova;
+                self.t_stanza = 0.0;
+                self.cuore.g.verso(0.0, 1.0, sr);
+                self.acufene.g.verso(0.0, 1.0, sr);
+            }
             // il re della rampa: sullo scafo si sente solo vicino al boccaporto
             match (da, nuova.map(|s| s.id)) {
                 (_, Some("scafo")) if self.gioco.in_fuga() => {
@@ -244,6 +249,29 @@ impl Mondo {
             self.evento_gioco(e, &prima, taglio);
         }
         self.registrazioni();
+    }
+
+    /// Quello che era programmato per dopo non arriva più: una partita che si carica, un «annulla» che la
+    /// riporta indietro, il gioco che lascia lo schermo (revisione 37, M12 e M13). Le cose rimandate (la plancia
+    /// del risveglio e la musica di un finale, il brusio che torna), i colpi che aspettavano il loro ritardo (il
+    /// crollo e la nave che sale di «Due lettere», i tic del traduttore: quelli che suonano già finiscono la
+    /// loro coda), le voci in fila e l’anello del Piccolo. E quello che le cose rimandate avrebbero rimesso a
+    /// posto, perché non resti a metà: la radio della plancia, i fondi abbassati, il re toccato, il fiato in
+    /// ascolto, il filo.
+    fn dimentica_il_programmato(&mut self) {
+        let sr = self.sr;
+        self.automazioni.clear();
+        self.colpi.retain(|c| !c.in_attesa());
+        self.anello = None;
+        self.voci_nave.tace(0.3);
+        self.voci_radio.tace(0.3);
+        self.dopo_le_voci = super::DopoLeVoci::default();
+        self.radio_accesa = false;
+        self.fondi_mul.verso(1.0, 0.5, sr);
+        self.fondo_mul.verso(1.0, 0.5, sr);
+        self.re_tocco.verso(1.0, 0.5, sr);
+        self.fiato.ascolto = false;
+        self.filo_g.verso(0.0, 0.3, sr);
     }
 
     /// La nascita della mappa stellare (documento 30, §9.4; l’autore, 11 novembre 2026: «andrebbe sonorizzato
@@ -831,6 +859,10 @@ impl Mondo {
     pub(super) fn cambia_protezione(&mut self, on: bool, suoni: bool) {
         let sr = self.sr;
         self.protezione = on;
+        // un cambio di prima che aspetta ancora i suoi relè non vale più: accesa e spenta in meno di 0,6 s, lo
+        // spegnimento della cuffia programmato per primo arrivava per ultimo, e la protezione restava accesa per
+        // il suono (revisione 37, L21)
+        self.automazioni.retain(|a| !matches!(a.azione, Azione::Protezione(_)));
         if !(suoni && self.tuta && !self.casa) {
             self.protezione_eff = on;
             self.applica(1.2);
@@ -1436,6 +1468,11 @@ impl Mondo {
                 // «L’Anziano»: la musica, sul nodo da cui parte; al primo contatto il canto, e la voce
                 Some("anziano") => {
                     let voce = e.voce.as_deref().and_then(Pezzo::della_voce);
+                    // il canto è del primo colloquio della partita: se il ponte lo dice, vale quello, anche in
+                    // un mondo sonoro nuovo (dopo «Continua») o dopo un «annulla» (revisione 37, M13)
+                    if let Some(primo) = e.primo {
+                        self.musica.primo_contatto(primo);
+                    }
                     self.musica.anziano_entra(e.nodo.as_deref().unwrap_or("benvenuto"), voce, true);
                 }
                 _ => {}
@@ -1947,6 +1984,193 @@ mod prove {
         tx.send(Comando::Solo(Some("fiato".to_string()))).unwrap();
         let fiato = livello(&mut m, 12.0);
         assert!(fiato > -70.0, "dopo annulla il fiato dovrebbe sentirsi: {fiato:.1} dB");
+    }
+
+    /// La stiva alla fine della fuga, con il casco appena tolto: da qui partono i finali che si svegliano in plancia.
+    const STIVA_ALLA_FINE: &str = r#""stanza": "stiva", "tuta": true, "aria": 22, "fuga": "iniziata", "aggancio": "fatto",
+        "contatto": "avvenuto", "seme_con_te": true, "atto": 5"#;
+
+    /// Il finale «Vivi», dalla stiva: il casco tolto, e il finale.
+    fn finale_vivi(seme: u64) -> (Mondo, std::sync::mpsc::Sender<Comando>) {
+        let (mut m, tx, _) = Mondo::nuovo(48000.0, seme);
+        tx.send(turno(&format!(r#"{{"stati": {{{STIVA_ALLA_FINE}, "esito": "in_corso"}}, "eventi": [{{"evento": "caricamento"}}]}}"#))).unwrap();
+        livello(&mut m, 3.0);
+        tx.send(turno(&format!(
+            r#"{{"stati": {{{STIVA_ALLA_FINE}, "esito": "vinta"}}, "eventi": [{{"evento": "casco_tolto"}}, {{"evento": "finale", "finale": "vivi", "esito": "vinta"}}]}}"#
+        )))
+        .unwrap();
+        (m, tx)
+    }
+
+    #[test]
+    fn dal_finale_ai_titoli_non_tornano_la_plancia_ne_la_musica_del_finale() {
+        // revisione 37, M12. Chi legge il finale per intero: il silenzio a 4 s, il risveglio sulla plancia a 12 s,
+        // la musica del finale a 14 s (la prova che lo scenario è quello vero)
+        let (mut m, _tx) = finale_vivi(5);
+        livello(&mut m, 16.0);
+        assert_eq!(m.stanza.map(|s| s.id), Some("plancia"), "senza uscire ci si sveglia in plancia");
+        assert_eq!(m.musica.brano(), Brano::Vivi, "senza uscire suona la musica del finale");
+        let plancia = livello(&mut m, 6.0);
+        assert!(plancia > -60.0, "la plancia del risveglio dovrebbe sentirsi: {plancia:.1} dB");
+
+        // Chi sceglie «Titoli di coda» cinque secondi dopo il finale: la pagina manda la stanza vuota (`taciSuono`),
+        // e i titoli chiedono la loro canzone. Né la plancia né la musica del finale devono tornare
+        let (mut m, tx) = finale_vivi(5);
+        livello(&mut m, 5.0);
+        tx.send(turno(r#"{"stati": {"stanza": "", "esito": "in_corso"}, "eventi": []}"#)).unwrap();
+        tx.send(Comando::Musica(Brano::Titoli)).unwrap();
+        livello(&mut m, 12.0);
+        assert!(m.automazioni.is_empty(), "uscendo dal gioco quello che era programmato non deve più arrivare: {:?}", m.automazioni);
+        assert_eq!(m.stanza.map(|s| s.id), None, "sotto i titoli è tornata una stanza");
+        assert_eq!(m.musica.brano(), Brano::Titoli, "la musica del finale ha preso il posto della canzone dei titoli");
+        // il mondo, senza la musica: silenzio, per tutto il tempo in cui prima tornava la plancia
+        tx.send(Comando::Solo(Some("senza musica".to_string()))).unwrap();
+        let mondo = livello(&mut m, 12.0);
+        assert!(mondo < -80.0, "sotto i titoli di coda il mondo dovrebbe tacere: {mondo:.1} dB");
+        assert_eq!(m.musica.brano(), Brano::Titoli);
+    }
+
+    #[test]
+    fn un_caricamento_ferma_la_voce_dell_anziano_e_i_colpi_che_aspettavano() {
+        use super::super::musica_file::{Biblioteca, Pcm, Pezzo};
+        // revisione 37, M13. (a) La voce registrata dell’Anziano: un caricamento in un’altra stanza la fa tacere
+        let santuario = r#""stanza": "santuario centrale", "tuta": true, "aria": 60, "fuga": "lontana", "porta_interna": "aperta",
+            "energia": "ripristinata", "contatto": "avvenuto", "atto": 4"#;
+        let (mut m, tx, _) = Mondo::nuovo(48000.0, 9);
+        let mut b = Biblioteca::nuova(std::path::PathBuf::from("non-esiste"));
+        b.inserisci(Pezzo::AN1, Pcm::da_frame(48000.0, (0..(48000.0 * 20.0) as usize).map(|n| {
+            let v = 0.3 * (n as f32 * 0.05).sin();
+            (v, v)
+        })));
+        m.musica.lettore_voce().biblioteca = Some(b);
+        tx.send(turno(&format!(r#"{{"stati": {{{santuario}, "esito": "in_corso"}}, "eventi": [{{"evento": "caricamento"}}]}}"#))).unwrap();
+        livello(&mut m, 2.0);
+        tx.send(turno(&format!(
+            r#"{{"stati": {{{santuario}, "dialogo": "anziano", "nodo": "benvenuto", "esito": "in_corso"}}, "eventi": [{{"evento": "dialogo", "con": "anziano", "nodo": "benvenuto", "voce": "benvenuto"}}]}}"#
+        )))
+        .unwrap();
+        livello(&mut m, 5.0);
+        assert!(m.musica.voce_viva(), "l’Anziano dovrebbe parlare (la prova che lo scenario è quello vero)");
+        tx.send(turno(&format!(r#"{{"stati": {{{VESTIBOLO}, "esito": "in_corso"}}, "eventi": [{{"evento": "caricamento"}}]}}"#))).unwrap();
+        livello(&mut m, 1.0);
+        assert!(!m.musica.voce_viva(), "dopo un caricamento l’Anziano parla ancora sopra la stanza caricata");
+
+        // (b) I colpi programmati con ritardo: «Due lettere» nella fuga ha il crollo a due secondi e la nave che
+        // sale a tre. Un «annulla» subito dopo non deve portarli nella partita ripresa
+        let in_fuga = r#""stanza": "vestibolo delle gole", "tuta": true, "aria": 3, "fuga": "iniziata", "porta_interna": "aperta",
+            "contatto": "avvenuto", "atto": 5"#;
+        let (mut m, tx, _) = Mondo::nuovo(48000.0, 9);
+        tx.send(turno(&format!(r#"{{"stati": {{{in_fuga}, "esito": "in_corso"}}, "eventi": [{{"evento": "caricamento"}}]}}"#))).unwrap();
+        livello(&mut m, 2.0);
+        // lo stato da cui «annulla» riporta: non deve avere colpi suoi che aspettano
+        assert!(m.colpi.iter().all(|c| !c.in_attesa()));
+        tx.send(turno(&format!(
+            r#"{{"stati": {{{in_fuga}, "esito": "persa"}}, "eventi": [{{"evento": "finale", "finale": "due-lettere", "esito": "persa"}}]}}"#
+        )))
+        .unwrap();
+        livello(&mut m, 0.5);
+        assert!(m.colpi.iter().filter(|c| c.in_attesa()).count() >= 2, "il crollo e la salita dovrebbero aspettare il loro momento");
+        tx.send(turno(&format!(r#"{{"stati": {{{in_fuga}, "esito": "in_corso"}}, "eventi": [{{"evento": "ripresa"}}]}}"#))).unwrap();
+        livello(&mut m, 0.2);
+        assert!(m.colpi.iter().all(|c| !c.in_attesa()), "dopo «annulla» il crollo arriva nella partita ripresa");
+    }
+
+    #[test]
+    fn un_caricamento_rimette_a_posto_i_ganci_della_stiva_e_il_re_sullo_scafo() {
+        use super::super::stanze::Specie;
+        // revisione 37, M13 (c). I ganci della stiva tintinnano per un minuto e mezzo dopo l’urto dell’aggancio:
+        // in una partita caricata l’urto non c’è appena stato
+        let in_nave = |stanza: &str, aggancio: &str| format!(r#""stanza": "{stanza}", "tuta": false, "fuga": "lontana", "aggancio": "{aggancio}", "atto": 1"#);
+        let ganci = |m: &Mondo| m.piogge.iter().any(|p| p.attiva && p.specie == Specie::Gancio);
+        let (mut m, tx, _) = Mondo::nuovo(48000.0, 11);
+        tx.send(turno(&format!(r#"{{"stati": {{{}, "esito": "in_corso"}}, "eventi": [{{"evento": "caricamento"}}]}}"#, in_nave("stiva", "accostato")))).unwrap();
+        livello(&mut m, 1.0);
+        assert!(!ganci(&m), "senza l’aggancio i ganci non tintinnano");
+        // l’aggancio dalla plancia, e poi giù in stiva: i ganci tintinnano
+        tx.send(turno(&format!(r#"{{"stati": {{{}, "esito": "in_corso"}}, "eventi": [{{"evento": "stanza", "da": "stiva", "a": "plancia"}}]}}"#, in_nave("plancia", "accostato")))).unwrap();
+        livello(&mut m, 1.0);
+        tx.send(turno(&format!(r#"{{"stati": {{{}, "esito": "in_corso"}}, "eventi": [{{"evento": "arpioni"}}]}}"#, in_nave("plancia", "fatto")))).unwrap();
+        livello(&mut m, 1.0);
+        tx.send(turno(&format!(r#"{{"stati": {{{}, "esito": "in_corso"}}, "eventi": [{{"evento": "stanza", "da": "plancia", "a": "stiva"}}]}}"#, in_nave("stiva", "fatto")))).unwrap();
+        livello(&mut m, 1.0);
+        assert!(ganci(&m), "dopo l’urto dell’aggancio i ganci tintinnano (la prova che lo scenario è quello vero)");
+        // un salvataggio di prima dell’aggancio, caricato adesso, nella stessa stiva
+        tx.send(turno(&format!(r#"{{"stati": {{{}, "esito": "in_corso"}}, "eventi": [{{"evento": "caricamento"}}]}}"#, in_nave("stiva", "accostato")))).unwrap();
+        livello(&mut m, 1.0);
+        assert!(!ganci(&m), "in una partita caricata i ganci tintinnano ancora per l’aggancio di prima");
+
+        // Il re sullo scafo: uscendo dal boccaporto è pieno, e scende dopo cinque secondi. Un caricamento sullo scafo
+        // in quei cinque secondi toglieva la discesa programmata, e il re restava pieno per tutto lo scafo
+        let scafo = r#""stanza": "scafo", "tuta": true, "aria": 96, "fuga": "lontana", "aggancio": "fatto", "atto": 2"#;
+        let (mut m, tx, _) = Mondo::nuovo(48000.0, 11);
+        tx.send(turno(&format!(r#"{{"stati": {{{}, "tuta": true, "aria": 100, "esito": "in_corso"}}, "eventi": [{{"evento": "caricamento"}}]}}"#, r#""stanza": "stiva", "fuga": "lontana", "aggancio": "fatto", "atto": 1"#))).unwrap();
+        livello(&mut m, 1.0);
+        tx.send(turno(&format!(r#"{{"stati": {{{scafo}, "esito": "in_corso"}}, "eventi": [{{"evento": "stanza", "da": "stiva", "a": "scafo"}}, {{"evento": "boccaporto"}}]}}"#))).unwrap();
+        livello(&mut m, 1.0);
+        assert_eq!(m.re_rampa.meta(), 1.0, "appena fuori dal boccaporto il re è ancora pieno");
+        tx.send(turno(&format!(r#"{{"stati": {{{scafo}, "esito": "in_corso"}}, "eventi": [{{"evento": "caricamento"}}]}}"#))).unwrap();
+        livello(&mut m, 12.0);
+        assert!(m.re_rampa.meta() < 0.5 && m.re_rampa.v < 0.5, "dopo un caricamento sullo scafo il re resta pieno: {} (verso {})", m.re_rampa.v, m.re_rampa.meta());
+    }
+
+    #[test]
+    fn il_colloquio_con_l_anziano_dice_se_e_il_primo_della_partita() {
+        // revisione 37, M13 (d). Il canto del primo contatto si ricordava per mondo sonoro e non per partita. Se il
+        // ponte dice nell’evento «dialogo» se il colloquio si apre per la prima volta in questa partita (`primo`),
+        // vale quello; se non lo dice, resta il ricordo del mondo sonoro
+        let santuario = r#""stanza": "santuario centrale", "tuta": true, "aria": 60, "fuga": "lontana", "porta_interna": "aperta",
+            "energia": "ripristinata", "contatto": "avvenuto", "atto": 4"#;
+        let apre = |primo: &str| {
+            turno(&format!(
+                r#"{{"stati": {{{santuario}, "dialogo": "anziano", "nodo": "benvenuto", "esito": "in_corso"}}, "eventi": [{{"evento": "dialogo", "con": "anziano", "nodo": "benvenuto"{primo}}}]}}"#
+            ))
+        };
+        // un mondo nuovo (dopo «Continua»), in una partita dove l’Anziano ha già parlato: il canto non deve tornare
+        let (mut m, tx, _) = Mondo::nuovo(48000.0, 13);
+        tx.send(turno(&format!(r#"{{"stati": {{{santuario}, "esito": "in_corso"}}, "eventi": [{{"evento": "caricamento"}}]}}"#))).unwrap();
+        livello(&mut m, 0.5);
+        assert!(!m.musica.canto_gia_sentito());
+        tx.send(apre(r#", "primo": false"#)).unwrap();
+        livello(&mut m, 0.5);
+        assert!(m.musica.canto_gia_sentito(), "il ponte dice che non è il primo colloquio: il canto non deve tornare");
+        // dopo un «annulla» che riporta a prima del primo colloquio: il canto deve poterci essere di nuovo
+        tx.send(turno(&format!(r#"{{"stati": {{{santuario}, "esito": "in_corso"}}, "eventi": [{{"evento": "ripresa"}}]}}"#))).unwrap();
+        livello(&mut m, 0.5);
+        tx.send(apre(r#", "primo": true"#)).unwrap();
+        livello(&mut m, 0.5);
+        assert!(!m.musica.canto_gia_sentito(), "il ponte dice che è il primo colloquio: il canto deve poter tornare");
+        // un ponte che non lo dice: come prima
+        tx.send(apre("")).unwrap();
+        livello(&mut m, 0.5);
+        assert!(!m.musica.canto_gia_sentito());
+    }
+
+    #[test]
+    fn la_protezione_vitale_accesa_e_spenta_in_fretta_non_resta_accesa() {
+        // revisione 37, L21. La cuffia si spegne 0,75 s dopo l’allarme e si riaccende 0,15 s dopo i relè: se la
+        // protezione si accende e si spegne in meno di 0,6 s, lo spegnimento programmato prima arrivava dopo
+        let in_tuta = |protezione: bool, aria: u32| {
+            turno(&format!(
+                r#"{{"stati": {{"stanza": "vestibolo delle gole", "tuta": true, "aria": {aria}, "protezione": {protezione}, "fuga": "lontana",
+                "porta_interna": "aperta", "contatto": "avvenuto", "atto": 2, "esito": "in_corso"}}, "eventi": []}}"#
+            ))
+        };
+        let (mut m, tx, _) = Mondo::nuovo(48000.0, 17);
+        tx.send(turno(&format!(r#"{{"stati": {{{VESTIBOLO}, "esito": "in_corso"}}, "eventi": [{{"evento": "caricamento"}}]}}"#))).unwrap();
+        livello(&mut m, 1.0);
+        // con i suoi tempi: accesa, e dopo i relè la cuffia è spenta
+        tx.send(in_tuta(true, 29)).unwrap();
+        livello(&mut m, 1.5);
+        assert!(m.protezione_eff, "la protezione dovrebbe essere accesa anche per il suono");
+        tx.send(in_tuta(false, 31)).unwrap();
+        livello(&mut m, 1.5);
+        assert!(!m.protezione_eff);
+        // in fretta: accesa, e spenta tre decimi dopo (una ricarica, un «annulla» che non è una ripresa)
+        tx.send(in_tuta(true, 29)).unwrap();
+        livello(&mut m, 0.3);
+        tx.send(in_tuta(false, 31)).unwrap();
+        livello(&mut m, 3.0);
+        assert!(!m.protezione && !m.protezione_eff, "la protezione è spenta per il gioco e resta accesa per il suono");
     }
 
     /// Il Ponte con l’energia, in tuta: dove la postazione si usa.

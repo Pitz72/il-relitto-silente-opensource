@@ -133,6 +133,14 @@ impl Racconto {
         self.anteprima = false;
     }
 
+    /// Il mondo è fermo e muto: le prese decodificate lasciano la memoria (revisione 37, M15).
+    pub fn sgombra(&mut self) {
+        self.fila.clear();
+        self.poi.clear();
+        self.ultime.clear();
+        self.lettore.sgombra();
+    }
+
     /// Una partita che comincia o si carica: F2 non ha più niente da ridire.
     pub fn dimentica(&mut self) {
         self.ultime.clear();

@@ -80,6 +80,10 @@ pub struct EventoGioco {
     /// la battuta dell’Anziano con la voce («dialogo», «nodo»): il ponte la manda solo se a schermo
     /// ci sono proprio le parole registrate (`VOCI_ANZIANO` in ponte.py)
     pub voce: Option<String>,
+    /// il colloquio con l’Anziano si apre per la prima volta in questa partita («dialogo»): allora, e solo
+    /// allora, il canto del primo contatto (revisione 37, M13). Un ponte che non lo dice lascia decidere al
+    /// ricordo del mondo sonoro, come prima
+    pub primo: Option<bool>,
     /// le battute delle voci della nave («voci», documento 35), nell’ordine in cui stanno a
     /// schermo: il ponte le manda solo se ci sono proprio le parole registrate (`VOCI_NAVE`)
     pub battute: Vec<String>,

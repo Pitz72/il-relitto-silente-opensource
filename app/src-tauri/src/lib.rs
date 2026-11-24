@@ -160,20 +160,35 @@ fn info_sistema(app: AppHandle) -> InfoSistema {
 /// Il nome di un rapporto (revisione 25, L11): `prova-` e poi solo lettere, cifre, punti e
 /// trattini. Niente separatori né `..`, e niente `:` (su Windows `C:nome` e i flussi alternativi
 /// `nome:flusso`); il prefisso esclude anche i nomi riservati di Windows (CON, NUL, COM1…).
+/// Solo `.json` (revisione 37, L24): il comando resta nell'eseguibile di rilascio, e la pagina non deve
+/// poter scrivere un file di un altro tipo.
 fn nome_di_rapporto_valido(nome: &str) -> bool {
     nome.len() <= 120
-        && nome.strip_prefix("prova-").is_some_and(|resto| !resto.is_empty())
+        && nome.strip_prefix("prova-").and_then(|resto| resto.strip_suffix(".json")).is_some_and(|resto| !resto.is_empty())
         && nome.chars().all(|c| c.is_ascii_alphanumeric() || matches!(c, '.' | '-' | '_'))
         && !nome.contains("..")
+}
+
+/// Quanto può pesare un rapporto (revisione 37, L24): i rapporti veri sono poche decine di kilobyte (i sei
+/// finali, le misure della fase 1, il suono); oltre un megabyte non è un rapporto.
+const MASSIMO_RAPPORTO: usize = 1024 * 1024;
+
+/// Un rapporto che si può scrivere: il nome di un rapporto, e non più di un megabyte.
+fn rapporto_valido(nome: &str, contenuto: &str) -> Result<(), &'static str> {
+    if !nome_di_rapporto_valido(nome) {
+        return Err("nome non valido");
+    }
+    if contenuto.len() > MASSIMO_RAPPORTO {
+        return Err("rapporto troppo grande");
+    }
+    Ok(())
 }
 
 /// Scrive il rapporto della prova: nella cartella di RELITTO_RAPPORTI se c'è,
 /// altrimenti nella cartella dei dati dell'app.
 #[tauri::command(async)]
 fn scrivi_rapporto(app: AppHandle, nome: String, contenuto: String) -> Result<String, String> {
-    if !nome_di_rapporto_valido(&nome) {
-        return Err("nome non valido".into());
-    }
+    rapporto_valido(&nome, &contenuto)?;
     let cartella = match std::env::var("RELITTO_RAPPORTI") {
         Ok(c) => std::path::PathBuf::from(c),
         Err(_) => app.path().app_data_dir().map_err(|e| e.to_string())?.join("rapporti"),
@@ -316,7 +331,7 @@ pub fn run() {
 
 #[cfg(test)]
 mod prove {
-    use super::nome_di_rapporto_valido;
+    use super::{nome_di_rapporto_valido, rapporto_valido, MASSIMO_RAPPORTO};
 
     #[test]
     fn i_nomi_dei_rapporti() {
@@ -334,10 +349,25 @@ mod prove {
             "C:prova-x.json",
             "prova-è.json",
             "prova- spazio.json",
+            // revisione 37, L24: solo .json
+            "prova-x.exe",
+            "prova-x.txt",
+            "prova-x",
+            "prova-x.json.bat",
+            "prova-.json",
             "CON.json",
             "NUL",
         ] {
             assert!(!nome_di_rapporto_valido(cattivo), "{cattivo}");
         }
+    }
+
+    #[test]
+    fn un_rapporto_non_pesa_piu_di_un_megabyte() {
+        // revisione 37, L24: la pagina poteva scrivere file di qualunque misura nella cartella dei dati
+        assert_eq!(rapporto_valido("prova-finali-1.json", "{}"), Ok(()));
+        assert_eq!(rapporto_valido("prova-finali-1.json", &"x".repeat(MASSIMO_RAPPORTO)), Ok(()));
+        assert_eq!(rapporto_valido("prova-finali-1.json", &"x".repeat(MASSIMO_RAPPORTO + 1)), Err("rapporto troppo grande"));
+        assert_eq!(rapporto_valido("rapporto.json", "{}"), Err("nome non valido"));
     }
 }
