@@ -1,5 +1,5 @@
 // ============================================================================
-//  L'aggiornamento automatico (documento 06, fase 9; sviluppo/VERSIONI.md §2.1 e §7).
+//  L'aggiornamento automatico (documento 06, fase 9; sviluppo/VERSIONI.md §2.1 e §9).
 //  Le release del remake su GitHub portano un latest.json e i pacchetti firmati; il flusso
 //  canale.yml copia il latest.json di ogni versione pubblicata nella release fissa
 //  «aggiornamenti», che l'app legge (non la «Latest» di GitHub: revisione 25, G3). L'app

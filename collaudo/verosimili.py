@@ -17,7 +17,7 @@
 # le venature o allungare la mano sull'arnese, «reagisce» abbassare il faro appena
 # il groviglio lo sente, «pazienza» aspettare il pilastro invece della taglierina.
 # Nella fuga, dove ogni turno costa aria: «spreco» è un passo perso prima di ogni mossa
-# (guardarsi intorno, esaminare: le uscite sbagliate non costano), «deviazione» entrare
+# (guardarsi intorno, esaminare: le uscite che non esistono non costano; tre uscite offerte e sbagliate sì, 4), «deviazione» entrare
 # nel vivaio dalla sala delle teche e tornare indietro, «ignora» passare oltre l'avviso
 # del Ponte senza andare a ricaricare.
 # Il «maldestro» è un curioso che fa quasi tutti gli errori: serve a vedere i più sfortunati.

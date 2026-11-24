@@ -24,7 +24,7 @@ tuta`, `rientra`, `entra`.
 
 Ascoltare e tradurre costano aria: la cifra è sul visore (`esamina il visore`). Sotto il 30%, prima
 della fuga, la tuta entra in protezione vitale: niente ascolti né traduzioni, e il faro resta al
-minimo finché non le dai altra aria. Prima della fuga si muore solo portando il risuonatore.
+minimo finché non le dai altra aria. Prima della fuga si muore solo per il risuonatore: portandolo, o insistendo decine di volte a staccarlo.
 
 ## Mappa
 

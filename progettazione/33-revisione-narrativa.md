@@ -662,7 +662,7 @@ Fatta il 5 novembre 2026, a tavolino, sul gioco già riscritto (blocchi dalla A 
   ricava dalle tre partite centinaia di partite diverse per sei caratteri: ogni voce, traduzione ed errore si fa
   oppure no, con le probabilità del carattere (scritte nel file); il curioso, chi vuole tutto, il medio e il
   maldestro partono dalla partita del curioso, lo sperduto e il frettoloso dalla loro.
-- **La fuga decide quasi tutto.** Ogni turno costa 4, anche guardarsi intorno o esaminare (le uscite sbagliate no).
+- **La fuga decide quasi tutto.** Ogni turno costa 4, anche guardarsi intorno o esaminare (le uscite che non esistono no; tre uscite offerte e sbagliate sì: revisione 37, L38).
   Le prime misure davano una fuga perfetta, e tornavano tutti; l’autore: «ma se così vincono sempre tutti, dove sta
   la sfida?». Nella fuga un principiante esita, guarda, entra nel vivaio e torna, a volte ignora l’avviso del Ponte:
   quanto, non si sa. Si misura con due livelli di errore, a metà e pieno (`--fuga 0.5` e `--fuga 1`).

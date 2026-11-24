@@ -158,7 +158,7 @@ note vanno anche in inglese, come chiede lo standard di distribuzione Runtime (�
 `### Per chi gioca`: un elenco di poche righe semplici, che dicono a chi gioca che cosa c’è di nuovo
 (non come è fatto), con l’inizio in grassetto. Le scrivo io, senza la sua approvazione (decisione
 dell’autore). Sono le righe che il gioco mostra dopo un aggiornamento, nella finestra delle novità, e
-che la release porta nel suo corpo (§7 dell’aggiornamento automatico, più sotto). Lo strumento le legge
+che la release porta nel suo corpo (§9, l’aggiornamento automatico, più sotto). Lo strumento le legge
 con `strumenti/changelog.mjs`; `verifica --rilascio` non lascia rilasciare una versione che non le ha, e
 `corpo` stampa il corpo della release. Una versione senza niente per chi gioca non si rilascia (la
 regola dell’autore: niente release solo tecniche).
@@ -205,10 +205,10 @@ release li crea il flusso di rilascio della fase 9 (CI su GitHub Actions, come i
 standard Runtime), che rifiuta di partire se il tag esiste già. Un tag creato a mano prima di allora
 lo bloccherebbe.
 
-## 7. L'aggiornamento automatico e il rilascio (16 ottobre 2026)
+## 9. L'aggiornamento automatico e il rilascio (16 ottobre 2026)
 
 - **Il flusso.** Si prepara la versione (`node strumenti/versione.mjs prepara …`), si fa il commit «chore(versioni)», si spinge
-  il tag `v` + versione: `.github/workflows/rilascio.yml` costruisce Windows e Linux, firma i pacchetti e prepara una release **in
+  il tag `v` + versione: `.github/workflows/rilascio.yml` costruisce Windows (e Linux, quando la variabile `LINUX_PROVATO` del repository dirà che è stato provato su una macchina vera), firma i pacchetti e prepara una release **in
   bozza** con il suo `latest.json`; l'autore la pubblica a mano. Finché è bozza nessun gioco installato la vede.
 - **Il gioco** controlla un indirizzo fisso, `https://github.com/Pitz72/il-relitto-silente-opensource/releases/download/aggiornamenti/latest.json`
   (`app/src-tauri/tauri.conf.json`, `app/src/aggiornamenti.ts`): all'avvio, se l'opzione «Aggiornamenti» lo vuole (di base sì), e a mano dal menu («Cerca aggiornamenti»).
@@ -217,11 +217,11 @@ lo bloccherebbe.
 - **La chiave privata** non sta nel repository. Chi ce l'ha può firmare un «aggiornamento» che ogni gioco installato accetta; chi la
   perde non può più aggiornare i giochi già installati (andrebbero reinstallati a mano). La chiave di oggi è del **19 ottobre 2026**
   (revisione 25, G4; identificativo `26304917F4709F8A`), cifrata con una password a caso di 40 caratteri, come per PixelDebh:
-  - `C:\Users\Utente\.relitto-signing\`: la chiave privata, la pubblica, un `LEGGIMI.txt` e `carica-i-segreti.ps1`; **non** la password;
-  - `F:\Backup\Relitto-chiavi-firma-2026-10-19\`: la copia della chiave e la **password**, che esiste solo lì (così chi copia la
-    cartella dal PC non porta via anche la password);
+  - due copie fuori dal repository, sul computer dell'autore e su un disco di backup: dove stanno non si scrive qui, perché
+    il repository è pubblico (revisione 37, L29). La password esiste soltanto nella copia di backup, così chi copiasse la
+    cartella dal computer non porterebbe via anche lei;
   - i Secrets del repository `TAURI_SIGNING_PRIVATE_KEY` (il contenuto della chiave) e `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`, che
-    mette lo script, con F: collegato: `& "C:\Users\Utente\.relitto-signing\carica-i-segreti.ps1"`;
+    mette lo script `carica-i-segreti.ps1`, che sta accanto alla chiave, con il disco di backup collegato;
   - la chiave pubblica in `app/src-tauri/tauri.conf.json`, `plugins.updater.pubkey`.
   La prima chiave, del 16 ottobre, era senza password e in una copia sola: è nel Cestino. Le consegne di prova 0.2.2 e 0.2.3 la
   portano e non si aggiorneranno da sole; non importa, sono copie di prova.
