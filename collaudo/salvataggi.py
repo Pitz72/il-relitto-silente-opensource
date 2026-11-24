@@ -159,7 +159,21 @@ def rifiuti():
         carica(dati, False, motivo)
         if ponte._mondo.impronta_stato() != prima:
             problemi.append(f"il rifiuto «{motivo}» ha cambiato la partita in corso")
-    carica(con(impronta_storia="0" * 64), True, "ricostruita")
+    r = carica(con(impronta_storia="0" * 64), True, "ricostruita")
+    if "non si riapre" in r.get("messaggio", ""):
+        problemi.append(f"una partita ricostruita nello stesso punto dice di essersi riaperta altrove: {r.get('messaggio')}")
+    # una partita di una versione di prima che si riapre in un altro punto (revisione 37, M25): il riassunto del
+    # salvataggio dice un'altra stanza, un altro turno o un'altra aria, e il messaggio lo deve dire
+    for cambi, frammento in (({"riassunto.stanza": "scafo", "riassunto.nome_stanza": "Lo scafo", "riassunto.turno": 70},
+                              "era «Lo scafo», turno 70"),
+                             ({"riassunto.turno": buono["riassunto"]["turno"] + 9}, "era al turno"),
+                             ({"riassunto.aria": 41}, "l’aria era al 41%")):
+        if "riassunto.aria" in cambi and buono["riassunto"]["aria"] is None:
+            continue
+        r = carica(con(impronta_storia="0" * 64, **cambi), True, "ricostruita")
+        m = r.get("messaggio", "")
+        if "non si riapre dove l’avevi lasciata" not in m or frammento not in m:
+            problemi.append(f"la partita ricostruita altrove non lo dice ({frammento}): {m}")
     carica(con(**{"partita.impronta": "0" * 64}), True, "diversa")
     # gli stessi .fav con un motore di prima (un salvataggio della 0.2.0, motore
     # 1.4.4): identica se la partita torna, ricostruita se no

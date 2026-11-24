@@ -52,6 +52,7 @@ _indice = None    # le regole dell'autore, per cosa e per verbo (vedi _indicizza
 _versione = {}    # versione.json: la versione del gioco e il formato dei salvataggi
 _ultimi = None    # i pulsanti dell'ultimo turno: servono a scomporre il comando dopo
 _cronaca = []     # il diario: una voce per comando della sequenza effettiva (vedi _voce_di_cronaca)
+_voci_prima = 0   # quante voci aveva la cronaca prima del comando in corso (rel_comando)
 _apertura = []    # il diario: gli eventi del prologo e della prima stanza
 _chiave = 0       # il numero dell'ultima voce di cronaca, unico nella sessione
 
@@ -196,7 +197,7 @@ def _elabora_analizzando(m, comando, analisi):
 
 
 def rel_comando(comando):
-    global _ultimi
+    global _ultimi, _voci_prima
     t0 = time.perf_counter()
     # La partita com'è prima del comando. Il motore rende già atomico il comando (una regola che
     # cade a metà non lascia il mondo a metà); se cade qualcos'altro (un demone, il turno, il
@@ -216,6 +217,8 @@ def rel_comando(comando):
         # finale lasciava suonare la sua chiusura e poi spegneva il mondo)
         ripresa = len(_mondo._registro_comandi) < n0
         nuova = _aggiorna_cronaca(_mondo, comando, analisi, prima_diario, uscita.eventi)
+        # le voci della cronaca che c'erano prima di questo comando (per chi chiede che cosa era già successo)
+        _voci_prima = len(_cronaca) - (1 if nuova else 0)
         return _turno(uscita.eventi, t0, t1, prima=prima, comando=analisi, ripresa=ripresa,
                       extra={"cronaca": {"lunghezza": len(_cronaca), "nuova": nuova}})
     except Exception as e:                                  # noqa: BLE001
@@ -1214,6 +1217,16 @@ def _finale(m):
     return "stiva-piena" if risuonatore else "mani-vuote"
 
 
+def _anziano_gia_sentito():
+    """L'Anziano ha già parlato in questa partita, prima di questo turno."""
+    return any(e.get("tipo") == "dialogo" and (e.get("dati") or {}).get("personaggio") == "anziano"
+               for voce in _cronaca[:_voci_prima] for e in voce["eventi"])
+
+
+# le prime parole della presa del groviglio (vita.fav)
+_PRESA_DEL_GROVIGLIO = "Un filamento mi trova il fianco"
+
+
 def _rileva(prima, dopo, comando, eventi):
     if prima is None:
         # la partita comincia: la plancia, e William che la racconta (documento 41)
@@ -1226,7 +1239,11 @@ def _rileva(prima, dopo, comando, eventi):
                 ("scafo", "camera di compensazione"): "discesa"}.get(coppia)
         if nome:
             out.append({"evento": nome})
-        if coppia == ("sala delle teche", "gola di mezzo") and prima["minaccia"] == "vicina":
+        # la presa del groviglio (vita.fav: «Un filamento mi trova il fianco…», e William si ritrova nella gola di
+        # mezzo). Soltanto se il gioco la racconta: chi con il groviglio vicino risale da solo fa lo stesso
+        # cammino, e prima sentiva le frustate e gli stivali di una presa che non c'era (revisione 37, L40)
+        if (coppia == ("sala delle teche", "gola di mezzo") and prima["minaccia"] == "vicina"
+                and any(_PRESA_DEL_GROVIGLIO in (e.get("testo") or "") for e in eventi)):
             out.append({"evento": "groviglio_prende"})
         if dopo["stanza"] == "stiva" and dopo["fuga"] == "iniziata":
             out.append({"evento": "casco_tolto"})
@@ -1246,6 +1263,11 @@ def _rileva(prima, dopo, comando, eventi):
         voce = _voce_anziano(eventi) if dopo["dialogo"] == "anziano" else None
         if voce:
             nodo["voce"] = voce
+        # il canto del primo contatto è del primo colloquio della partita: lo dice la cronaca, che segue i
+        # caricamenti e gli «annulla» (revisione 37, M13: il motore audio se lo ricordava per mondo sonoro, e dopo
+        # «Continua» poteva tornare, dopo un «annulla» poteva mancare)
+        if nodo["evento"] == "dialogo" and dopo["dialogo"] == "anziano":
+            nodo["primo"] = not _anziano_gia_sentito()
         out.append(nodo)
     # i contatori
     for chiave in ("chiavi", "echi", "risonanze", "tracce", "taglio"):
@@ -1269,8 +1291,10 @@ def _rileva(prima, dopo, comando, eventi):
                 out.append({"evento": nome})
     if prima["protezione"] != dopo["protezione"]:
         out.append({"evento": "protezione" if dopo["protezione"] else "protezione_fine"})
-    if (a0 is not None and a1 is not None and a0 >= 30 > a1 and dopo["fuga"] == "iniziata"
-            and prima["fuga"] == "iniziata"):
+    # nella fuga la tuta non protegge più: le tre note d'allarme quando l'aria scende sotto il 30, o subito, se la
+    # fuga comincia con l'aria già sotto (prima, in quel caso, non arrivavano mai: revisione 37, L40)
+    if a1 is not None and a1 < 30 and dopo["fuga"] == "iniziata" and (
+            prima["fuga"] != "iniziata" or (a0 is not None and a0 >= 30)):
         out.append({"evento": "protezione_fuga"})
     # la voce di William (documento 41): le sue prese, quelle prima delle altre voci e quelle dopo
     out += _evento_racconto(eventi, anziano=bool(nodo and nodo.get("voce")))
@@ -1495,6 +1519,12 @@ def _num(m, nome):
     return _intero(m.variabili.get(nome)) or 0
 
 
+def _la_nave_trema(m):
+    """La regola della fuga che fa tremare la nave è scattata: è lei che chiude la gola larga del vestibolo."""
+    vestibolo = m.trova_stanza("vestibolo delle gole")
+    return vestibolo is not None and "ovest" not in vestibolo.uscite
+
+
 APPUNTI = (
     ("massa", lambda m: _var(m, "scansione") == "completa",
      "Una massa nera, trecentoquaranta metri. Il computer di bordo non la trova in archivio."),
@@ -1536,12 +1566,16 @@ APPUNTI = (
      "Sul Ponte, la mappa delle stelle. La rotta parte da tre soli e finisce sul mio."),
     ("figura", lambda m: _vista(m, "santuario centrale"),
      "In fondo alla nave c’è una figura di luce, e mi guarda."),
-    ("fuga", lambda m: _fuga(m) == "iniziata",
+    # quando il gioco l'ha detto (fuga.fav, «Quando la fuga è iniziata diventa vera: "La nave trema…"», che con la
+    # stessa regola chiude la gola larga del vestibolo): prima l'appunto entrava un turno prima (revisione 37, L39)
+    ("fuga", lambda m: _fuga(m) == "iniziata" and _la_nave_trema(m),
      "La nave trema. Ho l’aria che mi resta per tornare alla Santa Maria."),
 )
 _TESTO_APPUNTO = {nome: testo for nome, _, testo in APPUNTI}
 
 _INCAVI = ("Sono vuoti.", "Uno è pieno.", "Due sono pieni.")
+# le parole con cui il gioco descrive gli incavi della porta grande (corridoio.fav)
+_INCAVI_DELLA_PORTA = "tre incavi scuri di forma diversa"
 
 
 def _porta_grande(m):
@@ -1564,7 +1598,10 @@ def _strato(nome, chi):
 SOSPESI = (
     (lambda m: _var(m, "scansione") != "completa" and _var(m, "aggancio") == "lontano",
      "La massa nera non so che cos’è. Per saperlo serve una scansione lunga."),
-    (lambda m: _vista(m, "corridoio principale") and _prop(m, "grande porta", "aperta") is None, _porta_grande),
+    # i tre incavi e le loro forme si sanno guardando la porta, o mettendoci una chiave: il corridoio parla
+    # soltanto di «una parete più scura delle altre» (revisione 37, L39)
+    (lambda m: _vista(m, "corridoio principale") and _prop(m, "grande porta", "aperta") is None
+     and (getattr(m, "_porta_grande_guardata", False) or _num(m, "chiavi") > 0), _porta_grande),
     (lambda m: _vista(m, "serra morente") and _prop(m, "teca", "sigillata") is not None
      and "tavoletta" not in _portati(m), _teca),
     (lambda m: _vista(m, "laboratorio di risonanza") and _var(m, "energia") != "ripristinata",
@@ -1634,6 +1671,10 @@ def _voce_di_cronaca(m, comando, analisi, prima, dopo, eventi):
         lettura = {"cosa": cosa, "nome": _nome_di(m, cosa), "matrice": prima["traduzione"]}
     a0, a1 = prima["aria"], dopo["aria"]
     stanza = m.trova_stanza(m.posizione_giocatore)
+    # la porta grande è stata guardata: lo si ricorda sul mondo (non nella partita: l'impronta non cambia), e la
+    # cronaca ricostruita dopo un caricamento lo ritrova rigiocando
+    if any(_INCAVI_DELLA_PORTA in (e.get("testo") or "") for e in _eventi(eventi)):
+        m._porta_grande_guardata = True
     return {
         "chiave": _chiave,
         # come lo si legge: una scelta del dialogo con le sue parole
@@ -1700,6 +1741,9 @@ def _ricostruisci_cronaca(seme, comandi):
             cronaca.append(_voce_di_cronaca(m, c, analisi, prima, _diario_stati(m), uscita.eventi))
     finally:
         _mondo, _ultimi = vero, ultimi
+    # quello che la cronaca ha ritrovato rigiocando vale anche per la partita vera
+    if vero is not None and getattr(m, "_porta_grande_guardata", False):
+        vero._porta_grande_guardata = True
     return [e.come_dizionario() for e in apertura + stanza], cronaca
 
 
@@ -1770,6 +1814,24 @@ def _migra(dati):
     return dati
 
 
+def _altrove(riassunto, m):
+    """In che cosa la partita ricostruita non è quella del salvataggio, a parole; None se torna. Guarda quello che
+    il salvataggio dice di sé: la stanza, il turno, l'aria."""
+    if not isinstance(riassunto, dict):
+        return None
+    stanza = m.trova_stanza(m.posizione_giocatore)
+    qui = stanza.nome_visualizzato if stanza is not None else m.posizione_giocatore
+    aria = _intero(m.variabili.get("aria"))
+    era = riassunto.get("nome_stanza") or riassunto.get("stanza")
+    if riassunto.get("stanza") not in (None, m.posizione_giocatore):
+        return f"era «{era}», turno {riassunto.get('turno')}, e adesso è «{qui}», turno {m.turno_corrente}"
+    if isinstance(riassunto.get("turno"), int) and riassunto["turno"] != m.turno_corrente:
+        return f"era al turno {riassunto['turno']}, e adesso è al turno {m.turno_corrente}"
+    if isinstance(riassunto.get("aria"), int) and aria is not None and riassunto["aria"] != aria:
+        return f"l’aria era al {riassunto['aria']}%, e adesso è al {aria}%"
+    return None
+
+
 def rel_carica(testo):
     global _mondo, _seme, _ultimi, _apertura, _cronaca
     t0 = time.perf_counter()
@@ -1811,9 +1873,17 @@ def rel_carica(testo):
     elif not stessa_storia:
         esito = "ricostruita"
         perche = "il motore del gioco è cambiato" if solo_il_motore else "la storia è cambiata"
-        messaggio = (f"La partita è stata ricostruita sulla versione nuova del gioco (turno "
-                     f"{m.turno_corrente}): {perche} dopo il salvataggio. "
-                     f"Controlla che tutto sia come lo ricordi.")
+        # Caricare vuol dire rigiocare i comandi sulla storia di oggi: se un comando non vale più, quelli dopo si
+        # rigiocano alla cieca, e la partita può riaprirsi in un altro punto (revisione 37, M25: dalla beta.8, 167
+        # salvataggi su 433). Il riassunto scritto nel salvataggio dice dov'era: se non torna, lo si dice.
+        altrove = _altrove(dati.get("riassunto"), m)
+        if altrove:
+            messaggio = (f"{perche[0].upper()}{perche[1:]} dopo il salvataggio, e la partita non si riapre dove "
+                         f"l’avevi lasciata: {altrove}. Guarda dove sei e che cosa porti, prima di andare avanti.")
+        else:
+            messaggio = (f"La partita è stata ricostruita sulla versione nuova del gioco (turno "
+                         f"{m.turno_corrente}): {perche} dopo il salvataggio. "
+                         f"Controlla che tutto sia come lo ricordi.")
     else:
         esito = "diversa"
         messaggio = (f"Partita caricata (turno {m.turno_corrente}), ma non è identica a quella "

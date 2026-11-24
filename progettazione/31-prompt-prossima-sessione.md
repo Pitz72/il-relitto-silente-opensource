@@ -2,7 +2,8 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 16 novembre 2026, nel pomeriggio: la revisione della cinematica e le sue correzioni (documento 09, §19–20), dodici prese nuove di Leonardo, la beta 15 pubblicata. Alla prossima: le sue note sulla beta 15, e le tre domande sulle prese (in «Dove siamo»).
+Aggiornato l’ultima volta il 24 novembre 2026: il punto della situazione, la scansione lunga con il computer di bordo in mezzo a William, e la revisione 37 (le medie e le lievi che non toccano la storia). Alla prossima: le sue risposte sulle proposte di testo (M22, M23, M24), e una beta.
+Prima, il 16 novembre 2026, nel pomeriggio: la revisione della cinematica e le sue correzioni (documento 09, §19–20), dodici prese nuove di Leonardo, la beta 15 pubblicata.
 Prima, lo stesso giorno, di giorno: le note dell’autore sulla beta 13 (documento 09, §18:
 il cartello fermo all’avvio, il logo nero, la «cupola nera» sul muso, il passaggio, i due dettagli, il quadro largo
 che si allarga fino al titolo, Elio voce TTS di Google; la voce di William più alta, documento 41) e la beta 14,
@@ -73,6 +74,13 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   La copia del motore in `motore/` non si corregge mai a mano: si rifà da un tag di Favella1.
 - **Il nome del motore è «Favella1».** La musica è fantascienza, mai giallo. Il gioco è da scrivania:
   niente impaginazioni da telefono, nessun testo sotto i 12 px.
+- **Quando entra una presa nuova** (una consegna di Leonardo, una voce generata, un brano) si rifà la copia sul disco di
+  backup: `audio/sorgenti/`, `doppiaggio/william/consegne/` e gli originali della musica, in una cartella con la data
+  (revisione 37, M19; l’ultima è del 24 novembre 2026).
+- **Le sue parole sul lavoro** (24 novembre 2026): sull’interfaccia non ha chiesto di cambiare niente, ha chiesto «una
+  revisione estetica per individuare in cosa, tra animazioni, look e quant’altro, potesse essere migliorato»: si
+  individua e gli si propone, non si fa. Il finale «è un tema che dovremo affrontare seriamente ma non ora». Gli effetti
+  e i suoni d’ambiente «li possiamo rifare da zero con 11labs e il connettore». I media da regalare «non sono urgenti».
 - Le prove su GitHub (`prove.yml`) devono restare verdi. A fine sessione guardo l’esito dell’ultimo flusso
   (`gh run list`): non si chiude con le prove rosse (revisione 37, M20: dal 7 all’11 novembre lo erano, e
   nessuno lo sapeva).
@@ -80,7 +88,36 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   più verosimile il fatto che ce la possano fare»; e «se così vincono sempre tutti, dove sta la sfida?»):
   `collaudo/verosimili.py`, con la fuga giocata da principianti veri.
 
-## Dove siamo (21 novembre 2026)
+## Dove siamo (24 novembre 2026)
+
+- **24 novembre 2026: il punto della situazione, e la revisione 37.** L’autore ha chiesto il punto, e ha risposto punto per
+  punto. **Il cerchio verde nel menu**: nella demo non c’è; la causa era la dichiarazione d’apertura che se ne andava da
+  sola dopo venti secondi (chi non aveva ancora toccato il mouse arrivava al menu con il contorno intorno a
+  «Continua»; nella demo il primo cartello vuole un clic). Corretto alla radice: il contorno si disegna solo dopo un
+  tasto che sposta il fuoco, e mai sulle voci del menu (`app/src/stile/fuoco.ts`). **«Havela»**: nel gioco, in «Ascolta
+  il canto», c’è la versione di ElevenLabs (la più corta, scelta da lui il 13 novembre); quella di Suno è da parte.
+  **La scansione lunga** (`SM-030`): «va sistemato». Fatto: la presa divisa nelle pause di Leonardo, il computer di
+  bordo in mezzo (documento 41, §5); l’ascolto approvato: «l’audio è giusto come ordine. Ottimo». Lo stesso per `IN-010`.
+- **La revisione 37**: «Occupati, nell’ordine che ritieni sensato e logico, delle 26 medie e 40 lievi». Fatte in sette
+  lotti, ognuno con le sue prove e il suo commit (documento 37, §9, «Le medie e le lievi, dal 24 novembre 2026»): chi
+  gioca con il mouse e vede poco; le lievi della pagina e la modalità scritta; l’intro; i documenti e le licenze; i
+  flussi di GitHub e la copia delle voci; il motore audio e i salvataggi (una sessione parallela, riletta e riprovata);
+  il ponte e il collaudo. Le prove: 166 in node, 134 in Rust, 20 percorsi di collaudo (erano 17), le 20 partite nel
+  motore audio. **Niente è stato guardato né ascoltato nell’eseguibile, e niente è in una beta.**
+- **Che cosa aspetta lui** (in fondo al §9 del documento 37): le proposte di testo per **M22, M23, M24** (scritte per
+  intero il 24 novembre: i segni della fuga che non escono più dentro la Santa Maria; le tre chiavi in qualunque
+  ordine; «Est» nel santuario durante la fuga); poi **L35, L36, L37** e il commento di `aria.fav`, da proporgli frase
+  per frase; le scelte **L8, L12, L26, L31**; le tre impostazioni del repository su GitHub (gli avvisi sulle
+  dipendenze, la scansione dei segreti, la protezione dei push) e la sua descrizione, che dice ancora «FAVELLA 1».
+- **Da decidere con lui**: una **beta 16** (c’è molto per chi gioca: 112 prese in più, la cifra dell’aria con la voce
+  della tuta, la scansione lunga, tutta la revisione), e se **rifare la demo** con le stesse correzioni
+  (`configura.py`, le due build, `gh release upload demo-atto-1 … --clobber`). Nella nuova beta va guardato per
+  primo: il menu senza cerchio, l’aggiornamento con «Annulla», il finale e subito i titoli di coda.
+- **Aperte, sue parole del 24 novembre**: la revisione estetica dell’interfaccia (individuare, non fare); il finale,
+  «seriamente ma non ora»; gli effetti e i suoni d’ambiente da rifare con ElevenLabs; un brano audio fra i media da
+  regalare, «ci penseremo poi».
+
+## Prima (21 novembre 2026)
 
 - **21 novembre 2026, poi: la demo è pubblica** (documento 42, §6): release `demo-atto-1` su GitHub, articolo di lancio e
   pulsanti sul sito thesantamaria.it (v1.1.12). Dopo una consegna di Leonardo, se si vuole aggiornare la demo:
@@ -540,7 +577,10 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 
 1. **Le sue note sulle beta, dalla 5 alla 10.** Prima cosa: chiedergli come gli sono sembrate nel gioco vero,
    con il suono, la prima persona, l’intro con la voce di L.V. e le voci registrate, e correggere quello che dice.
-2. **Il resto dell’interfaccia** (documento 30):
+2. **Il resto dell’interfaccia** (documento 30). *L’autore, 24 novembre 2026: «Io non avevo chiesto di cambiare
+   l’interfaccia, avevo chiesto a Fable di fare una revisione estetica per individuare in cosa, tra animazioni, look e
+   quant’altro, potesse essere migliorato». Quello che segue è quindi una lista di proposte da mostrargli, non di
+   lavori da fare:*
    - **i momenti con un’animazione loro** (30, §9; l’11 novembre l’autore ha chiesto un’analisi e una proposta
      di miglioramenti estetici): **l’apparizione dell’Anziano è fatta e approvata** («l’animazione è bellissima»,
      e con le parole che compaiono solo alla fine: «perfetto così»), **e anche la sua dissolvenza nel seme**
@@ -587,7 +627,8 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
      beta. Le altre 28 battute restano scritte finché non ci sono i crediti (circa 4.700 per una presa).
      «Voice in the Deep» di Lyria, riascoltata, è approvata di nuovo.
 4. **Il finale** (revisione 25, E2): una schermata vera per il finale, invece della casella che scorre.
-   L’autore ha detto «una eventuale finale»: si propone, e decide lui.
+   L’autore ha detto «una eventuale finale»: si propone, e decide lui. *24 novembre 2026: «il finale è un tema che
+   dovremo affrontare seriamente ma non ora».*
 5. **Il resto**, dopo:
    - **la canzone dei titoli di coda, rifatta con ElevenLabs** (l’autore, 11 novembre 2026, a notte: «sarebbe
      meraviglioso se rifacessimo la canzone dei titoli di coda con 11labs e il suo connettore magari come se
@@ -599,7 +640,9 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
      Suno V6, di 4:03, «bellissima», da parte anche lei («domani decideremo il futuro di questi brani»);
    - **gli effetti e i suoni d’ambiente, rifatti** (l’autore, 7 novembre 2026: «ora teniamo buono questo
      environment sound ma credo che poi fx e suoni vadano rifatti, ma ci penseremo più in là»): dopo il blocco H
-     e la beta, se ne riparla con lui (documento 35, §9);
+     e la beta, se ne riparla con lui (documento 35, §9). *24 novembre 2026: «Effetti sonori e ambientali li
+     possiamo rifare da zero con 11labs e il connettore». Prima di generare: un piano stanza per stanza dalla bibbia
+     sonora, e il conto dei crediti; si comincia quando lo dice lui;*
    - la colonna sonora ufficiale: le sue sette idee e le decisioni da prendere stanno nel documento 28,
      §1, ancora valide;
    - il logo nel menu (E3), la regola delle immagini (E8), la copertina (D42–D44 del documento 24);
@@ -614,7 +657,7 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 | Documento | Che cosa |
 |---|---|
 | `sviluppo/STRUTTURA.md` | la mappa del progetto e i comandi |
-| `sviluppo/VERSIONI.md` | le versioni, il CHANGELOG, l’aggiornamento automatico e il rilascio (§7) |
+| `sviluppo/VERSIONI.md` | le versioni, il CHANGELOG, l’aggiornamento automatico e il rilascio (§9) |
 | `CHANGELOG.md` | le modifiche, versione per versione |
 | `progettazione/25-revisione-totale.md` | la revisione totale; il §9 è il registro delle correzioni |
 | `progettazione/29-favella-1-6-0.md` | Favella1 1.6 nel Relitto, la 1.6.1, l’aria fra 0 e 100 |

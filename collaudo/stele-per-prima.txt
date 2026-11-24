@@ -1,0 +1,108 @@
+# Le tre chiavi nella Grande Porta in un altro ordine: la Stele, il Nucleo, il
+# seme (revisione 37, M26 e M23). La Stele è la chiave più facile, e spesso è
+# la prima; tutti gli altri percorsi le mettono nell'ordine seme, Stele,
+# Nucleo. La porta si deve aprire lo stesso, e la partita finire in «Vivi».
+# Le frasi che presuppongono l'ordine (M23: «si aggiunge alla prima», «La
+# seconda chiave.») aspettano la decisione dell'autore: quando saranno
+# corrette, qui si aggiunge l'attesa che non compaiano.
+#   python collaudo/regressioni.py collaudo/stele-per-prima.txt
+# atteso: esito vinta
+# atteso: finale «Rotta ripresa. Carico: nessuno.»
+# atteso: mai «Non puoi prender»
+
+# --- Atto I: la Santa Maria ---
+analizza la nave aliena
+accosta
+spara gli arpioni
+ovest
+prendi la tuta
+indossa la tuta
+apri il kit
+prendi la taglierina
+prendi la batteria
+prendi la cella di riserva
+fuori
+
+# --- Atto II: l'ingresso ---
+analizza lo scafo nero
+usa la taglierina sulla giuntura
+giù
+usa la batteria sul pannello
+apri la porta interna
+ovest
+
+# --- Atto III, ala della Vita: la tavoletta oltre le teche ---
+giù
+abbassa il faro
+giù
+segui la parete
+ovest
+prendi la tavoletta
+est
+segui la parete
+su
+su
+ovest
+sud
+usa la tavoletta sulla teca
+prendi il seme
+ovest
+prendi il dispositivo medico
+prendi il cristallo
+usa il dispositivo medico sul cristallo
+est
+nord
+
+# --- Ala Tecnica: l'energia ---
+giù
+prendi il sintonizzatore
+usa il cristallo sul generatore
+su
+
+# --- Ala della Memoria: il disco e il nucleo (con l'energia, la pazienza) ---
+nord
+ovest
+prendi il disco
+nord
+aspetta
+aspetta
+aspetta
+prendi il nucleo
+sud
+est
+gira il disco
+gira il disco
+usa il disco sull'altare
+prendi la stele
+sud
+
+# --- La Grande Porta ---
+usa la stele sulla grande porta
+usa il nucleo sulla grande porta
+usa il seme sulla grande porta
+
+# --- Atto IV: il Ponte e l'Anziano ---
+ovest
+usa la postazione
+analizza la mappa stellare
+tocca le punte
+ovest
+ovest
+parla con l'anziano
+Chi eravate?
+E io che c'entro?
+[Guarda la cifra dell'aria.]
+[Chiudi gli occhi e lascia andare.]
+[Resta.]
+[Apri gli occhi.]
+
+# --- Atto V: la fuga ---
+prendi il seme
+giù
+ovest
+segui la parete
+su
+su
+est
+su
+dentro

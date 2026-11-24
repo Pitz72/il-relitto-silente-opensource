@@ -167,6 +167,50 @@ def racconto():
     return problemi
 
 
+def il_ponte_e_il_motore():
+    """Le tre cose che il ponte legge dal motore con un valore di ripiego (revisione 37, L40): se Favella1 cambiasse
+    loro il nome, l'atto, la mappa e gli appunti si guasterebbero in silenzio. E le due correzioni del suono: la
+    presa del groviglio soltanto quando il gioco la racconta, le note d'allarme anche se la fuga comincia con
+    l'aria già sotto il 30."""
+    problemi = []
+    ponte.rel_avvia(1)
+    m = ponte._mondo
+    for nome in ("stanze_visitate", "_in_conferma", "_ambiguita"):
+        if not hasattr(m, nome):
+            problemi.append(f"il motore non ha più «{nome}», che il ponte legge")
+    # gli stati veri di una partita appena cominciata, con sopra quello che serve alla scena
+    base = dict(ponte._suono_stati(), stanza="sala delle teche", minaccia="vicina", fuga="lontana", protezione=False, aria=50)
+    su = dict(base, stanza="gola di mezzo", minaccia="lontana")
+    nomi = lambda prima, dopo, testo: [e["evento"] for e in ponte._rileva(prima, dopo, None, [{"tipo": "testo", "testo": testo}])]
+    if "groviglio_prende" in nomi(base, su, "Risalgo la gola."):
+        problemi.append("chi risale da solo con il groviglio vicino sente la presa")
+    if "groviglio_prende" not in nomi(base, dict(su, aria=42), "Un filamento mi trova il fianco, dove la tuta scalda di più."):
+        problemi.append("la presa del groviglio non manda più il suo suono")
+    quieta = dict(base, stanza="santuario centrale", minaccia="lontana", aria=24, protezione=True)
+    if "protezione_fuga" not in nomi(quieta, dict(quieta, fuga="iniziata", protezione=False), "Apro gli occhi."):
+        problemi.append("la fuga che comincia con l'aria sotto il 30 non manda le note d'allarme")
+    in_fuga = dict(quieta, fuga="iniziata", protezione=False, aria=33)
+    if "protezione_fuga" not in nomi(in_fuga, dict(in_fuga, aria=29), "Scendo."):
+        problemi.append("nella fuga l'aria che scende sotto il 30 non manda le note d'allarme")
+    if "protezione_fuga" in nomi(dict(in_fuga, aria=29), dict(in_fuga, aria=25), "Scendo."):
+        problemi.append("le note d'allarme della fuga si ripetono a ogni turno")
+    # il canto del primo contatto (revisione 37, M13): il ponte dice se il colloquio con l'Anziano è il primo della
+    # partita. La prima volta sì; chiusa la conversazione e riaperta, no
+    ponte.rel_avvia(1)
+    aperture = []
+    for c in (r for r in open(os.path.join(QUI, "vivi.txt"), encoding="utf-8").read().splitlines() if r.strip() and not r.startswith("#")):
+        t = json.loads(ponte.rel_comando(c))
+        aperture += [e.get("primo") for e in t["suono"]["eventi"] if e["evento"] == "dialogo" and e.get("con") == "anziano"]
+        if c == "parla con l'anziano":
+            ponte.rel_comando("esci")
+            t = json.loads(ponte.rel_comando("parla con l'anziano"))
+            aperture += [e.get("primo") for e in t["suono"]["eventi"] if e["evento"] == "dialogo" and e.get("con") == "anziano"]
+            break
+    if aperture != [True, False]:
+        problemi.append(f"il primo colloquio con l'Anziano e il secondo dovrebbero dire primo = sì e no, e dicono {aperture}")
+    return problemi
+
+
 def gioca(percorso, conta):
     """Gioca un percorso dal ponte; restituisce (problemi, eventi in ordine, finale, esito, il testo
     dell'ultimo turno)."""
@@ -439,6 +483,11 @@ def main():
     for p in addio:
         print(f"     {p}")
 
+    motore = il_ponte_e_il_motore()
+    print(f"[{'NO' if motore else 'OK'}] il ponte e il motore: i tre nomi letti, la presa del groviglio, le note d'allarme della fuga")
+    for p in motore:
+        print(f"     {p}")
+
     mondo = compila_mondo(STORIA)
     divergenze = [d for d in (indisturbato(mondo, os.path.join(QUI, f"{n}.txt")) for n in ponte.FINALI) if d]
     print(f"[{'NO' if divergenze else 'OK'}] il ponte non cambia la partita (i sei finali)")
@@ -449,7 +498,7 @@ def main():
         print()
         for nome, n in sorted(conta.items()):
             print(f"  {n:5}  {nome}")
-    sbagli = falliti + bool(frasi) + bool(rami) + bool(mai or ignoti) + bool(persi) + bool(perse) + bool(servizio) + bool(william) + bool(addio) + bool(divergenze)
+    sbagli = falliti + bool(frasi) + bool(rami) + bool(mai or ignoti) + bool(persi) + bool(perse) + bool(servizio) + bool(william) + bool(addio) + bool(motore) + bool(divergenze)
     print(f"\nPercorsi: {len(percorsi)}; falliti: {falliti}. Eventi diversi: {len(conta)}; "
           f"eventi in tutto: {sum(conta.values())}.")
     return 1 if sbagli else 0
