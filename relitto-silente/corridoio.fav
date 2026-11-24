@@ -15,7 +15,7 @@ Il solco è uno stato.
 Il solco è ignoto.
 
 Il corridoio principale è una stanza.
-La descrizione del corridoio principale è "Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.".
+La descrizione del corridoio principale è "Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. [se le tacche è segnata]A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, le quattro tacche.[altrimenti]A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.[fine]".
 La descrizione del corridoio principale se la grande porta è aperta è "Il cuore del relitto, sotto la sua luce fredda. A ovest, dove c'era la Grande Porta, adesso si apre il passaggio verso il Ponte. A nord e a sud gli altri passaggi, giù il montacarichi, a nordest gli alloggi, a est la gola larga verso il vestibolo. Accanto all'imbocco, alla base della parete, le [se le tacche è segnata]quattro[altrimenti]tre[fine] tacche.".
 
 # --- Sfondo -----------------------------------------------------------------
@@ -57,14 +57,14 @@ La grande porta si chiama anche "porta ovest".
 La grande porta si chiama anche "incavi".
 La grande porta si chiama anche "incavo".
 La grande porta si chiama anche "diagramma".
-La descrizione della grande porta è "Massiccia, con un diagramma stellare a più punte inciso al centro. Alla base, tre incavi scuri di forma diversa: uno ovoidale, uno rettangolare e piatto, uno cristallino a molte facce. Per aprirla servono tre chiavi.".
+La descrizione della grande porta è "Massiccia, con un diagramma stellare a più punte inciso al centro. Alla base, tre incavi scuri di forma diversa: uno ovoidale, uno rettangolare e piatto, uno cristallino a molte facce.[se le chiavi è meno di 1] Per aprirla servono tre chiavi.[fine][se le chiavi è 1] Uno è pieno.[fine][se le chiavi è almeno 2] Due sono pieni.[fine]".
 La descrizione della grande porta se la grande porta è aperta è "Dove c'era la Grande Porta adesso c'è un varco netto, senza stipiti: il passaggio a ovest dà sul Ponte.".
 
 # --- Le tre chiavi (il demone in relitto.fav apre la porta alla terza) -------
 # «Le chiavi» conta i depositi sulla porta, non le prese.
 Invece di usa il seme sulla grande porta se il giocatore ha il seme: dire "Avvicino il seme all'incavo ovoidale: viene attratto e si incastra con un clic delicato. La sua luce verde corre lungo il bordo della porta e ci resta. In mano, del seme, non ho più niente." e adesso il seme è nel nulla e adesso aumenta le chiavi.
-Invece di usa la stele sulla grande porta se il giocatore ha la stele: dire "Inserisco la Stele del Ricordo nell'incavo rettangolare. Si adatta. Una linea di luce bianca si aggiunge alla prima." e adesso la stele è nel nulla e adesso aumenta le chiavi.
-Invece di usa il nucleo sulla grande porta se il giocatore ha il nucleo: dire "Posiziono il Nucleo di Memoria nell'incavo a molte facce: una linea di luce ambrata chiude il circuito, e un ronzio profondo, armonico, riempie il corridoio." e adesso il nucleo è nel nulla e adesso aumenta le chiavi.
+Invece di usa la stele sulla grande porta se il giocatore ha la stele: dire "Inserisco la Stele del Ricordo nell'incavo rettangolare. Si adatta. Una linea di luce bianca corre lungo il bordo della porta e ci resta." e adesso la stele è nel nulla e adesso aumenta le chiavi.
+Invece di usa il nucleo sulla grande porta se il giocatore ha il nucleo: dire "Posiziono il Nucleo di Memoria nell'incavo a molte facce: una linea di luce ambrata corre lungo il bordo della porta e ci resta." e adesso il nucleo è nel nulla e adesso aumenta le chiavi.
 Invece di apri la grande porta se la grande porta è chiusa: dire "Non ha maniglie né serrature. Si apre soltanto con quello che va nei tre incavi.".
 
 # --- Gating ------------------------------------------------------------------

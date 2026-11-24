@@ -39,8 +39,8 @@ Invece di vai giù se il giocatore è nel santuario centrale e la fuga è inizia
 Invece di entra il buio se il giocatore è nel santuario centrale e la fuga è iniziata: dire "Mi calo nell'apertura accanto al sostegno, e la gola mi prende. [se le alcove è svelata]Davanti a me, una dopo l'altra, le venature delle pareti si accendono: una luce fredda, azzurra, senza calore, che corre giù e mi aspetta. Aveva tenuto le luci accese, il Navarca, perché qualcuno trovasse la strada.[altrimenti]È ripida, nera, e trema: il faro mi apre davanti un metro alla volta, e dalle pareti cade una polvere fine.[fine] In fondo, a ovest, sento un fruscio che conosco: il groviglio." e adesso il giocatore è nella gola del ritorno.
 
 # (Il calo di 4 a turno è in aria.fav, prima delle soglie.)
-Ogni turno se la fuga è iniziata e l'aria è più di 15 e càpita (1 su 4): dire "Da qualche parte dietro di me qualcosa crolla, con un rumore che non arriva: lo sento nelle suole.".
-Ogni turno se la fuga è iniziata e l'aria è più di 15 e càpita (1 su 4): dire "Le pareti si incrinano in lunghe linee verdi, come vene che si accendono per l'ultima volta.".
+Ogni turno se la fuga è iniziata e l'aria è più di 15 e il giocatore non è nella stiva e càpita (1 su 4): dire "Da qualche parte dietro di me qualcosa crolla, con un rumore che non arriva: lo sento nelle suole.".
+Ogni turno se la fuga è iniziata e l'aria è più di 15 e il giocatore non è nella stiva e il giocatore non è nello scafo e càpita (1 su 4): dire "Le pareti si incrinano in lunghe linee verdi, come vene che si accendono per l'ultima volta.".
 
 # ============================================================================
 # GOLA DEL RITORNO

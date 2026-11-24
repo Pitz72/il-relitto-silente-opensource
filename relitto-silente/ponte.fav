@@ -135,7 +135,7 @@ L'anziano si chiama anche "ologramma".
 La descrizione dell'anziano è "Una proiezione di uno di loro, ma più vecchio del Navarca, con paramenti da cerimonia e un'espressione di calma profonda. Tace, e lascia a me la prima parola. (PARLA CON L'ANZIANO.)".
 La descrizione dell'anziano se la fuga è iniziata è "Non c'è più. La sua luce è dentro il seme.".
 
-Invece di vai est se il giocatore è nel santuario centrale: dire "Non c'è più nessun indietro. C'è soltanto la figura luminosa, e quello che ha da dirmi.".
+Invece di vai est se il giocatore è nel santuario centrale: dire "Non c'è più nessun indietro. [se la fuga è iniziata]C'è soltanto l'apertura accanto al sostegno, e la gola che scende.[altrimenti]C'è soltanto la figura luminosa, e quello che ha da dirmi.[fine]".
 
 # --- Il seme, tornato scuro (al congedo) -------------------------------------
 Invece di prendi il seme se il seme è nel santuario centrale: dire "Il sostegno lo lascia andare appena lo tocco. Me lo infilo nella tasca sul petto della tuta, dove lo sento premere a ogni respiro." e adesso il seme è in inventario.

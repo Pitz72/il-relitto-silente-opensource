@@ -251,7 +251,7 @@ Il tempo passa.
 L'ultimo pilastro si accende per intero, e la sua luce ambrata arriva fino alle pareti. La cifra smette di scendere. Il terminale si sveglia: sullo schermo scorre una riga sola, e la matrice la rende al primo colpo: «Sei arrivato. Puoi prenderlo.» Lo scomparto alla base si apre piano, come una mano.
 
 > prendi il nucleo
-Prendo il Nucleo di Memoria dallo scomparto del terminale. La terza chiave.
+Prendo il Nucleo di Memoria dallo scomparto del terminale. Una delle chiavi.
 
 > sud
 
@@ -277,7 +277,7 @@ Giro il disco di un terzo: il sole più grande adesso è in alto.
 Appoggio il disco nell'incavo, con il sole più grande verso la tacca. Questa volta scende fino in fondo. Per un istante non succede niente, poi dall'interno della pietra arriva un colpo profondo, e una sezione dell'altare si ritira senza rumore. Nello scomparto, sollevata di un dito dal fondo senza niente che la regga, c'è la Stele del Ricordo.
 
 > prendi la stele
-Prendo la Stele del Ricordo dallo scomparto. È leggera, più di quanto mi aspettassi, e tiepida. La seconda chiave.
+Prendo la Stele del Ricordo dallo scomparto. È leggera, più di quanto mi aspettassi, e tiepida. Una delle chiavi.
 
 > sud
 
@@ -290,12 +290,12 @@ Uscite: Est (Il vestibolo delle gole), Nord (Il santuario del silenzio), Sud (La
 Avvicino il seme all'incavo ovoidale: viene attratto e si incastra con un clic delicato. La sua luce verde corre lungo il bordo della porta e ci resta. In mano, del seme, non ho più niente.
 
 > usa la stele sulla grande porta
-Inserisco la Stele del Ricordo nell'incavo rettangolare. Si adatta. Una linea di luce bianca si aggiunge alla prima.
+Inserisco la Stele del Ricordo nell'incavo rettangolare. Si adatta. Una linea di luce bianca corre lungo il bordo della porta e ci resta.
 Nella cuffia il brusio cala fino quasi a sparire, come una sala piena che smette di parlare quando entro. Poi riprende.
 
 > usa il nucleo sulla grande porta
-Posiziono il Nucleo di Memoria nell'incavo a molte facce: una linea di luce ambrata chiude il circuito, e un ronzio profondo, armonico, riempie il corridoio.
-Le tre luci — verde, bianca e ambrata — pulsano all'unisono. La loro frequenza accelera, il ronzio diventa un gong risonante che vibra in tutta la nave. Il simbolo a stella si accende una punta dopo l'altra, e la Grande Porta, a ovest, si fa trasparente e sempre più sottile, finché al suo posto resta un varco aperto.
+Posiziono il Nucleo di Memoria nell'incavo a molte facce: una linea di luce ambrata corre lungo il bordo della porta e ci resta.
+Il circuito si chiude, e un ronzio profondo, armonico, riempie il corridoio. Le tre luci — verde, bianca e ambrata — pulsano all'unisono. La loro frequenza accelera, il ronzio diventa un gong risonante che vibra in tutta la nave. Il simbolo a stella si accende una punta dopo l'altra, e la Grande Porta, a ovest, si fa trasparente e sempre più sottile, finché al suo posto resta un varco aperto.
 
 > ovest
 

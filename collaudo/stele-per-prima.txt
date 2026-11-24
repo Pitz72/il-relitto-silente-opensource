@@ -2,12 +2,18 @@
 # seme (revisione 37, M26 e M23). La Stele è la chiave più facile, e spesso è
 # la prima; tutti gli altri percorsi le mettono nell'ordine seme, Stele,
 # Nucleo. La porta si deve aprire lo stesso, e la partita finire in «Vivi».
-# Le frasi che presuppongono l'ordine (M23: «si aggiunge alla prima», «La
-# seconda chiave.») aspettano la decisione dell'autore: quando saranno
-# corrette, qui si aggiunge l'attesa che non compaiano.
+# Le frasi che presupponevano l'ordine (M23: «si aggiunge alla prima», «La
+# seconda chiave.», «chiude il circuito» detto dal Nucleo) sono corrette dal
+# 24 novembre 2026, con il sì dell'autore: qui non devono più comparire, e il
+# circuito si chiude alla terza chiave, qualunque sia.
 #   python collaudo/regressioni.py collaudo/stele-per-prima.txt
 # atteso: esito vinta
 # atteso: finale «Rotta ripresa. Carico: nessuno.»
+# atteso: compare «Il circuito si chiude, e un ronzio profondo»
+# atteso: compare «Una delle chiavi.»
+# atteso: mai «si aggiunge alla prima»
+# atteso: mai «La seconda chiave.»
+# atteso: mai «La terza chiave.»
 # atteso: mai «Non puoi prender»
 
 # --- Atto I: la Santa Maria ---

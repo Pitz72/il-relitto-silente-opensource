@@ -2,7 +2,7 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 24 novembre 2026: il punto della situazione, la scansione lunga con il computer di bordo in mezzo a William, e la revisione 37 (le medie e le lievi che non toccano la storia). Alla prossima: le sue risposte sulle proposte di testo (M22, M23, M24), e una beta.
+Aggiornato l’ultima volta il 24 novembre 2026: il punto della situazione, la scansione lunga con il computer di bordo in mezzo a William, e la revisione 37 (le medie e le lievi che non toccano la storia). Le tre medie della storia (M22, M23, M24) sono applicate con il suo sì. Alla prossima: le frasi lievi della storia (L35, L36, L37), le sue scelte, e una beta.
 Prima, il 16 novembre 2026, nel pomeriggio: la revisione della cinematica e le sue correzioni (documento 09, §19–20), dodici prese nuove di Leonardo, la beta 15 pubblicata.
 Prima, lo stesso giorno, di giorno: le note dell’autore sulla beta 13 (documento 09, §18:
 il cartello fermo all’avvio, il logo nero, la «cupola nera» sul muso, il passaggio, i due dettagli, il quadro largo
@@ -104,10 +104,13 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   flussi di GitHub e la copia delle voci; il motore audio e i salvataggi (una sessione parallela, riletta e riprovata);
   il ponte e il collaudo. Le prove: 166 in node, 134 in Rust, 20 percorsi di collaudo (erano 17), le 20 partite nel
   motore audio. **Niente è stato guardato né ascoltato nell’eseguibile, e niente è in una beta.**
-- **Che cosa aspetta lui** (in fondo al §9 del documento 37): le proposte di testo per **M22, M23, M24** (scritte per
-  intero il 24 novembre: i segni della fuga che non escono più dentro la Santa Maria; le tre chiavi in qualunque
-  ordine; «Est» nel santuario durante la fuga); poi **L35, L36, L37** e il commento di `aria.fav`, da proporgli frase
-  per frase; le scelte **L8, L12, L26, L31**; le tre impostazioni del repository su GitHub (gli avvisi sulle
+- **Le tre medie della storia sono applicate** (M22, M23, M24: «Sì, applicale», 24 novembre; documento 37, §9, in
+  fondo): i segni della fuga non escono più dentro la Santa Maria; le tre chiavi in qualunque ordine; «Est» nel
+  santuario durante la fuga. Nessuna sigla del copione di William si è spostata; le prese sono 611, il PDF e il
+  rapporto per Leonardo sono rifatti (`doppiaggio/william/`) e **vanno mandati a Leonardo** al posto di quelli del
+  21 novembre.
+- **Che cosa aspetta lui** (in fondo al §9 del documento 37): **L35, L36, L37** e il commento di `aria.fav`, da
+  proporgli frase per frase (sette sono pronte, quattro da studiare); le scelte **L8, L12, L26, L31**; le tre impostazioni del repository su GitHub (gli avvisi sulle
   dipendenze, la scansione dei segreti, la protezione dei push) e la sua descrizione, che dice ancora «FAVELLA 1».
 - **Da decidere con lui**: una **beta 16** (c’è molto per chi gioca: 112 prese in più, la cifra dell’aria con la voce
   della tuta, la scansione lunga, tutta la revisione), e se **rifare la demo** con le stesse correzioni

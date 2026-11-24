@@ -64,7 +64,7 @@ Invece di metti il disco sull'altare: dire "Appoggio il disco nell'incavo, con i
 
 Invece di prendi la stele se l'altare è serrato: dire "Non vedo nessuna stele: l'altare è ancora chiuso.".
 Invece di prendi la stele se il giocatore ha la stele: dire "Ce l'ho già.".
-Invece di prendi la stele se la stele è incastrata: dire "Prendo la Stele del Ricordo dallo scomparto. È leggera, più di quanto mi aspettassi, e tiepida. La seconda chiave." e adesso la stele è staccata e adesso la stele è in inventario.
+Invece di prendi la stele se la stele è incastrata: dire "Prendo la Stele del Ricordo dallo scomparto. È leggera, più di quanto mi aspettassi, e tiepida. Una delle chiavi." e adesso la stele è staccata e adesso la stele è in inventario.
 
 # ============================================================================
 # SCRIPTORIUM
@@ -171,4 +171,4 @@ Ogni turno se il giocatore è nell'arca della memoria e l'energia è ripristinat
 
 Invece di prendi il nucleo se il terminale è spento: dire "È chiuso dentro il terminale.".
 Invece di prendi il nucleo se il giocatore ha il nucleo: dire "Ce l'ho già.".
-Invece di prendi il nucleo se il nucleo è incastrato: dire "Prendo il Nucleo di Memoria dallo scomparto del terminale. La terza chiave." e adesso il nucleo è staccato e adesso il nucleo è in inventario.
+Invece di prendi il nucleo se il nucleo è incastrato: dire "Prendo il Nucleo di Memoria dallo scomparto del terminale. Una delle chiavi." e adesso il nucleo è staccato e adesso il nucleo è in inventario.

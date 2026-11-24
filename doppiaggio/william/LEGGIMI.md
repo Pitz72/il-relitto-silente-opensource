@@ -51,3 +51,9 @@ Rifatto l’11 novembre 2026, dopo la correzione del congedo dell’Anziano (rev
 La sua luce è dentro il seme.» la dice anche chi parla all’Anziano nella fuga, ed è la stessa presa. Lo strumento
 riconosce ora come una presa sola una frase scritta con e senza le parentesi (così anche «Una pausa.»): 604 prese
 da registrare (più 132 uguali), 111 pagine. Le sigle delle prese del Ponte dopo `PO-038` sono salite di uno.
+
+Rifatto il 24 novembre 2026, dopo tre correzioni alla storia approvate dall’autore (revisione 37: M22, M23, M24).
+Le varianti nuove stanno dentro le regole che c’erano già, e **nessuna sigla si è spostata**: tre prese sono
+diventate pezzi (`CO-001a`…`c`, `CO-012a`…`d`, `PO-035a`…`c`), cinque hanno il testo nuovo (`CO-015`, `CO-016`,
+`ME-019`, `ME-056`, `RE-009`). Nessuna era registrata. Le prese sono 611 (più 132 uguali); nel PDF le 473 ancora da
+registrare, 92 pagine. È questo il PDF da mandare a Leonardo, con il rapporto del 24 novembre.

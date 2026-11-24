@@ -1,12 +1,12 @@
 {
- "impronta_fav": "4eba9a0f4847b7141813b998a2d612938854fa9798db5a3a07d8a47007d7f0cd",
+ "impronta_fav": "4c4442778656ad9a7182f2ef574e91348e9811984bd511377588b0cedb5fe0cf",
  "totali": {
-  "prese": 604,
+  "prese": 611,
   "uguali": 132,
-  "parole": 15976,
+  "parole": 16031,
   "parlato": 23,
   "citazione": 252,
-  "william": 581
+  "william": 588
  },
  "capitoli": [
   {
@@ -4826,12 +4826,36 @@
          "segmenti": [
           [
            "william",
-           "Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.",
+           "Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. ",
            ""
           ]
          ],
-         "william": "Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.",
-         "id": "CO-001"
+         "william": "Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto.",
+         "id": "CO-001a"
+        },
+        {
+         "condizione": "se le tacche è segnata",
+         "segmenti": [
+          [
+           "william",
+           "A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, le quattro tacche.",
+           ""
+          ]
+         ],
+         "william": "A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, le quattro tacche.",
+         "id": "CO-001b"
+        },
+        {
+         "condizione": "altrimenti (se non: le tacche è segnata)",
+         "segmenti": [
+          [
+           "william",
+           "A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.",
+           ""
+          ]
+         ],
+         "william": "A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.",
+         "id": "CO-001c"
         }
        ]
       },
@@ -5128,12 +5152,48 @@
          "segmenti": [
           [
            "william",
-           "Massiccia, con un diagramma stellare a più punte inciso al centro. Alla base, tre incavi scuri di forma diversa: uno ovoidale, uno rettangolare e piatto, uno cristallino a molte facce. Per aprirla servono tre chiavi.",
+           "Massiccia, con un diagramma stellare a più punte inciso al centro. Alla base, tre incavi scuri di forma diversa: uno ovoidale, uno rettangolare e piatto, uno cristallino a molte facce.",
            ""
           ]
          ],
-         "william": "Massiccia, con un diagramma stellare a più punte inciso al centro. Alla base, tre incavi scuri di forma diversa: uno ovoidale, uno rettangolare e piatto, uno cristallino a molte facce. Per aprirla servono tre chiavi.",
-         "id": "CO-012"
+         "william": "Massiccia, con un diagramma stellare a più punte inciso al centro. Alla base, tre incavi scuri di forma diversa: uno ovoidale, uno rettangolare e piatto, uno cristallino a molte facce.",
+         "id": "CO-012a"
+        },
+        {
+         "condizione": "se le chiavi è sotto 1",
+         "segmenti": [
+          [
+           "william",
+           " Per aprirla servono tre chiavi.",
+           ""
+          ]
+         ],
+         "william": "Per aprirla servono tre chiavi.",
+         "id": "CO-012b"
+        },
+        {
+         "condizione": "se le chiavi è 1",
+         "segmenti": [
+          [
+           "william",
+           " Uno è pieno.",
+           ""
+          ]
+         ],
+         "william": "Uno è pieno.",
+         "id": "CO-012c"
+        },
+        {
+         "condizione": "se le chiavi è almeno 2",
+         "segmenti": [
+          [
+           "william",
+           " Due sono pieni.",
+           ""
+          ]
+         ],
+         "william": "Due sono pieni.",
+         "id": "CO-012d"
         }
        ]
       },
@@ -5202,11 +5262,11 @@
          "segmenti": [
           [
            "william",
-           "Inserisco la Stele del Ricordo nell'incavo rettangolare. Si adatta. Una linea di luce bianca si aggiunge alla prima.",
+           "Inserisco la Stele del Ricordo nell'incavo rettangolare. Si adatta. Una linea di luce bianca corre lungo il bordo della porta e ci resta.",
            ""
           ]
          ],
-         "william": "Inserisco la Stele del Ricordo nell'incavo rettangolare. Si adatta. Una linea di luce bianca si aggiunge alla prima.",
+         "william": "Inserisco la Stele del Ricordo nell'incavo rettangolare. Si adatta. Una linea di luce bianca corre lungo il bordo della porta e ci resta.",
          "id": "CO-015"
         }
        ]
@@ -5223,11 +5283,11 @@
          "segmenti": [
           [
            "william",
-           "Posiziono il Nucleo di Memoria nell'incavo a molte facce: una linea di luce ambrata chiude il circuito, e un ronzio profondo, armonico, riempie il corridoio.",
+           "Posiziono il Nucleo di Memoria nell'incavo a molte facce: una linea di luce ambrata corre lungo il bordo della porta e ci resta.",
            ""
           ]
          ],
-         "william": "Posiziono il Nucleo di Memoria nell'incavo a molte facce: una linea di luce ambrata chiude il circuito, e un ronzio profondo, armonico, riempie il corridoio.",
+         "william": "Posiziono il Nucleo di Memoria nell'incavo a molte facce: una linea di luce ambrata corre lungo il bordo della porta e ci resta.",
          "id": "CO-016"
         }
        ]
@@ -9377,11 +9437,11 @@
          "segmenti": [
           [
            "william",
-           "Prendo la Stele del Ricordo dallo scomparto. È leggera, più di quanto mi aspettassi, e tiepida. La seconda chiave.",
+           "Prendo la Stele del Ricordo dallo scomparto. È leggera, più di quanto mi aspettassi, e tiepida. Una delle chiavi.",
            ""
           ]
          ],
-         "william": "Prendo la Stele del Ricordo dallo scomparto. È leggera, più di quanto mi aspettassi, e tiepida. La seconda chiave.",
+         "william": "Prendo la Stele del Ricordo dallo scomparto. È leggera, più di quanto mi aspettassi, e tiepida. Una delle chiavi.",
          "id": "ME-019"
         }
        ]
@@ -10257,11 +10317,11 @@
          "segmenti": [
           [
            "william",
-           "Prendo il Nucleo di Memoria dallo scomparto del terminale. La terza chiave.",
+           "Prendo il Nucleo di Memoria dallo scomparto del terminale. Una delle chiavi.",
            ""
           ]
          ],
-         "william": "Prendo il Nucleo di Memoria dallo scomparto del terminale. La terza chiave.",
+         "william": "Prendo il Nucleo di Memoria dallo scomparto del terminale. Una delle chiavi.",
          "id": "ME-056"
         }
        ]
@@ -11137,12 +11197,36 @@
          "segmenti": [
           [
            "william",
-           "Non c'è più nessun indietro. C'è soltanto la figura luminosa, e quello che ha da dirmi.",
+           "Non c'è più nessun indietro. ",
            ""
           ]
          ],
-         "william": "Non c'è più nessun indietro. C'è soltanto la figura luminosa, e quello che ha da dirmi.",
-         "id": "PO-035"
+         "william": "Non c'è più nessun indietro.",
+         "id": "PO-035a"
+        },
+        {
+         "condizione": "se la fuga è iniziata",
+         "segmenti": [
+          [
+           "william",
+           "C'è soltanto l'apertura accanto al sostegno, e la gola che scende.",
+           ""
+          ]
+         ],
+         "william": "C'è soltanto l'apertura accanto al sostegno, e la gola che scende.",
+         "id": "PO-035b"
+        },
+        {
+         "condizione": "altrimenti (se non: la fuga è iniziata)",
+         "segmenti": [
+          [
+           "william",
+           "C'è soltanto la figura luminosa, e quello che ha da dirmi.",
+           ""
+          ]
+         ],
+         "william": "C'è soltanto la figura luminosa, e quello che ha da dirmi.",
+         "id": "PO-035c"
         }
        ]
       }
@@ -12711,7 +12795,7 @@
        "id": "FU-004",
        "tipo": "demone",
        "soggetto": "ogni turno",
-       "condizione": "la fuga è iniziata e l'aria è sopra 15 e a caso, 1 volta su 4",
+       "condizione": "la fuga è iniziata e l'aria è sopra 15 e non sono nella stiva e a caso, 1 volta su 4",
        "riga": "fuga.fav:42",
        "pezzi": [
         {
@@ -12732,7 +12816,7 @@
        "id": "FU-005",
        "tipo": "demone",
        "soggetto": "ogni turno",
-       "condizione": "la fuga è iniziata e l'aria è sopra 15 e a caso, 1 volta su 4",
+       "condizione": "la fuga è iniziata e l'aria è sopra 15 e non sono nella stiva e non sono nello scafo e a caso, 1 volta su 4",
        "riga": "fuga.fav:43",
        "pezzi": [
         {
@@ -18080,11 +18164,11 @@
          "segmenti": [
           [
            "william",
-           "Le tre luci — verde, bianca e ambrata — pulsano all'unisono. La loro frequenza accelera, il ronzio diventa un gong risonante che vibra in tutta la nave. Il simbolo a stella si accende una punta dopo l'altra, e la Grande Porta, a ovest, si fa trasparente e sempre più sottile, finché al suo posto resta un varco aperto.",
+           "Il circuito si chiude, e un ronzio profondo, armonico, riempie il corridoio. Le tre luci — verde, bianca e ambrata — pulsano all'unisono. La loro frequenza accelera, il ronzio diventa un gong risonante che vibra in tutta la nave. Il simbolo a stella si accende una punta dopo l'altra, e la Grande Porta, a ovest, si fa trasparente e sempre più sottile, finché al suo posto resta un varco aperto.",
            ""
           ]
          ],
-         "william": "Le tre luci — verde, bianca e ambrata — pulsano all'unisono. La loro frequenza accelera, il ronzio diventa un gong risonante che vibra in tutta la nave. Il simbolo a stella si accende una punta dopo l'altra, e la Grande Porta, a ovest, si fa trasparente e sempre più sottile, finché al suo posto resta un varco aperto.",
+         "william": "Il circuito si chiude, e un ronzio profondo, armonico, riempie il corridoio. Le tre luci — verde, bianca e ambrata — pulsano all'unisono. La loro frequenza accelera, il ronzio diventa un gong risonante che vibra in tutta la nave. Il simbolo a stella si accende una punta dopo l'altra, e la Grande Porta, a ovest, si fa trasparente e sempre più sottile, finché al suo posto resta un varco aperto.",
          "id": "RE-009"
         }
        ]

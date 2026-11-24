@@ -181,6 +181,6 @@ Ogni turno se l'ingresso è richiuso e la fuga è lontana e càpita (1 su 36): d
 # 8. DEMONI — if-then autonomi, valutati a fine turno
 # ============================================================================
 # Fronte di salita: scattano una volta sulla transizione falso→vero.
-Quando le chiavi è almeno 3: dire "Le tre luci — verde, bianca e ambrata — pulsano all'unisono. La loro frequenza accelera, il ronzio diventa un gong risonante che vibra in tutta la nave. Il simbolo a stella si accende una punta dopo l'altra, e la Grande Porta, a ovest, si fa trasparente e sempre più sottile, finché al suo posto resta un varco aperto." e adesso la grande porta è aperta.
+Quando le chiavi è almeno 3: dire "Il circuito si chiude, e un ronzio profondo, armonico, riempie il corridoio. Le tre luci — verde, bianca e ambrata — pulsano all'unisono. La loro frequenza accelera, il ronzio diventa un gong risonante che vibra in tutta la nave. Il simbolo a stella si accende una punta dopo l'altra, e la Grande Porta, a ovest, si fa trasparente e sempre più sottile, finché al suo posto resta un varco aperto." e adesso la grande porta è aperta.
 Quando l'energia è ripristinata diventa vera: dire "Lo scafo mi vibra sotto i piedi, una volta sola. Lontano, dietro le pareti, sistemi spenti da sempre tornano a respirare uno dopo l'altro, e per la prima volta sento la nave lavorare.".
 Quando la traduzione è almeno 100 diventa vera: dire "(MATRICE DI TRADUZIONE: [traduzione]% — DECODIFICA COMPLETATA) Per un momento leggo i loro glifi senza più accorgermi che sono glifi.".

@@ -282,7 +282,7 @@ Uscite: Nord (Il corridoio principale), Ovest (L'arca biologica).
 > nord
 
 --- Il corridoio principale ---
-Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.
+Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, le quattro tacche.
 Puoi vedere qui: una lastra dati, una grande porta.
 Uscite: Est (Il vestibolo delle gole), Nord, Sud (La serra morente), Giù, Nordest, Ovest.
 
@@ -307,7 +307,7 @@ Lo scafo mi vibra sotto i piedi, una volta sola. Lontano, dietro le pareti, sist
 > su
 
 --- Il corridoio principale ---
-Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.
+Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, le quattro tacche.
 Puoi vedere qui: una lastra dati, una grande porta.
 Uscite: Est (Il vestibolo delle gole), Nord, Sud (La serra morente), Giù (Il laboratorio di risonanza), Nordest, Ovest.
 
@@ -348,7 +348,7 @@ Il Sintonizzatore separa il brusio in fili, e due restano. Una voce che chiede, 
 > ovest
 
 --- Il corridoio principale ---
-Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.
+Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, le quattro tacche.
 Puoi vedere qui: una lastra dati, una grande porta.
 Uscite: Est (Il vestibolo delle gole), Nord, Sud (La serra morente), Giù (Il laboratorio di risonanza), Nordest, Ovest.
 
@@ -395,7 +395,7 @@ Uscite: Sudovest (Il corridoio principale), Nord (Il nido).
 > sudovest
 
 --- Il corridoio principale ---
-Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.
+Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, le quattro tacche.
 Puoi vedere qui: una lastra dati, una grande porta.
 Uscite: Est (Il vestibolo delle gole), Nord, Sud (La serra morente), Giù (Il laboratorio di risonanza), Nordest (L'alloggio dell'equipaggio), Ovest.
 
@@ -454,7 +454,7 @@ Il tempo passa.
 L'ultimo pilastro si accende per intero, e la sua luce ambrata arriva fino alle pareti. La cifra smette di scendere. Il terminale si sveglia: sullo schermo scorre una riga sola, e la matrice la rende al primo colpo: «Sei arrivato. Puoi prenderlo.» Lo scomparto alla base si apre piano, come una mano.
 
 > prendi il nucleo
-Prendo il Nucleo di Memoria dallo scomparto del terminale. La terza chiave.
+Prendo il Nucleo di Memoria dallo scomparto del terminale. Una delle chiavi.
 
 > analizza il nucleo
 Il cristallo non contiene storia. In testa c'è una registrazione breve, l'ultima prima che l'archivio crollasse; dietro, qualcosa che la matrice non sa aprire. Una voce calma, stanca fino in fondo: «Registro dell'Archivista, ciclo… non ha più importanza. Le matrici si sfaldano più in fretta di quanto riesca a copiarle. In questo cristallo c'è posto per una cosa sola. Ho scelto. Fine della registrazione.»
@@ -484,7 +484,7 @@ Giro il disco di un terzo: il sole più grande adesso è in alto.
 Appoggio il disco nell'incavo, con il sole più grande verso la tacca. Questa volta scende fino in fondo. Per un istante non succede niente, poi dall'interno della pietra arriva un colpo profondo, e una sezione dell'altare si ritira senza rumore. Nello scomparto, sollevata di un dito dal fondo senza niente che la regga, c'è la Stele del Ricordo.
 
 > prendi la stele
-Prendo la Stele del Ricordo dallo scomparto. È leggera, più di quanto mi aspettassi, e tiepida. La seconda chiave.
+Prendo la Stele del Ricordo dallo scomparto. È leggera, più di quanto mi aspettassi, e tiepida. Una delle chiavi.
 
 > analizza la stele
 La voce della stele, malinconica, quasi perfetta: «Quando i tre soli sanguinarono, sapemmo che il tempo era cenere. Lo affidammo al Grande Vuoto, perché un seme nuovo potesse attecchire in una terra non ancora scritta. Il nostro corpo è polvere, ma il nostro ricordo è una stella.» (I tre soli, adesso, hanno un nome.)
@@ -498,7 +498,7 @@ Il fregio si apre del tutto. «Vedemmo i tre soli sanguinare e non maledicemmo i
 > sud
 
 --- Il corridoio principale ---
-Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.
+Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, le quattro tacche.
 Puoi vedere qui: una lastra dati, una grande porta.
 Uscite: Est (Il vestibolo delle gole), Nord (Il santuario del silenzio), Sud (La serra morente), Giù (Il laboratorio di risonanza), Nordest (L'alloggio dell'equipaggio), Ovest.
 
@@ -523,7 +523,7 @@ Soltanto un residuo statico: questa eco l'ho già sentita fino in fondo.
 > su
 
 --- Il corridoio principale ---
-Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.
+Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, le quattro tacche.
 Puoi vedere qui: una lastra dati, una grande porta.
 Uscite: Est (Il vestibolo delle gole), Nord (Il santuario del silenzio), Sud (La serra morente), Giù (Il laboratorio di risonanza), Nordest (L'alloggio dell'equipaggio), Ovest.
 
@@ -565,7 +565,7 @@ La matrice non si accende nemmeno: è stampatello, la mia lingua. Nessun alieno,
 > nord
 
 --- Il corridoio principale ---
-Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, qualcuno ha inciso tre tacche orizzontali.
+Il cuore del relitto: un corridoio immenso, le pareti curve che salgono fino a perdersi nel buio. Nessuna lampada, eppure le pareti stesse fanno una luce fredda, azzurrina. L'aria non si muove. A nord e a sud si aprono due passaggi; a ovest il corridoio finisce contro una parete più scura delle altre, segnata da un diagramma di stelle. Un montacarichi scende giù, verso il settore tecnico, e a nordest una porta socchiusa dà su un silenzio più raccolto. A est c'è la gola larga da cui sono salito; accanto all'imbocco, alla base della parete, le quattro tacche.
 Puoi vedere qui: una lastra dati, una grande porta.
 Uscite: Est (Il vestibolo delle gole), Nord (Il santuario del silenzio), Sud (La serra morente), Giù (Il laboratorio di risonanza), Nordest (L'alloggio dell'equipaggio), Ovest.
 
@@ -573,11 +573,11 @@ Uscite: Est (Il vestibolo delle gole), Nord (Il santuario del silenzio), Sud (La
 Avvicino il seme all'incavo ovoidale: viene attratto e si incastra con un clic delicato. La sua luce verde corre lungo il bordo della porta e ci resta. In mano, del seme, non ho più niente.
 
 > usa la stele sulla grande porta
-Inserisco la Stele del Ricordo nell'incavo rettangolare. Si adatta. Una linea di luce bianca si aggiunge alla prima.
+Inserisco la Stele del Ricordo nell'incavo rettangolare. Si adatta. Una linea di luce bianca corre lungo il bordo della porta e ci resta.
 
 > usa il nucleo sulla grande porta
-Posiziono il Nucleo di Memoria nell'incavo a molte facce: una linea di luce ambrata chiude il circuito, e un ronzio profondo, armonico, riempie il corridoio.
-Le tre luci — verde, bianca e ambrata — pulsano all'unisono. La loro frequenza accelera, il ronzio diventa un gong risonante che vibra in tutta la nave. Il simbolo a stella si accende una punta dopo l'altra, e la Grande Porta, a ovest, si fa trasparente e sempre più sottile, finché al suo posto resta un varco aperto.
+Posiziono il Nucleo di Memoria nell'incavo a molte facce: una linea di luce ambrata corre lungo il bordo della porta e ci resta.
+Il circuito si chiude, e un ronzio profondo, armonico, riempie il corridoio. Le tre luci — verde, bianca e ambrata — pulsano all'unisono. La loro frequenza accelera, il ronzio diventa un gong risonante che vibra in tutta la nave. Il simbolo a stella si accende una punta dopo l'altra, e la Grande Porta, a ovest, si fa trasparente e sempre più sottile, finché al suo posto resta un varco aperto.
 
 > ovest
 

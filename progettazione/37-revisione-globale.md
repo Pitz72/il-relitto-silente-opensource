@@ -506,14 +506,14 @@ Prova: una in `app/prove/pannelli.test.ts`; node 166 su 166. Viste nel browser d
 
 **Quello che resta, e di chi è** (24 novembre 2026):
 
-- **All’autore, perché tocca i `.fav`**: M22, M23, M24 (le proposte, frase per frase, gli sono state scritte il 24 novembre); L35 (nove risposte che non seguono lo stato), L36 (tre regole che non scattano mai), L37 (quattro frasi in seconda persona), e il commento di `aria.fav` di L38: da proporgli dopo le tre medie.
+- **All’autore, perché tocca i `.fav`**: ~~M22, M23, M24~~ (applicate il 24 novembre, con il suo sì); L35 (nove risposte che non seguono lo stato), L36 (tre regole che non scattano mai), L37 (quattro frasi in seconda persona), e il commento di `aria.fav` di L38: da proporgli adesso.
 - **All’autore, perché sono scelte sue**: L8 (il testo grande sui pulsanti, sul dialogo e sul riquadro a destra), L12 (l’avviso su «Nuova partita»), L26 (le due righe scritte di Alirio Bruni), L31 (i due brani del tema che il gioco non suona), le tre impostazioni del repository di M18 e la sua descrizione (L25).
 - **Lasciate, con il perché**: M15 e L22 nelle parti dette sopra; M9 nella parte del movimento ridotto; L1 per le scritte del radar; L5 per la misura dei pulsanti al cambio di carattere; L20 per la pagina di prova e i percorsi nel pacchetto (una scelta dichiarata in ottobre); L34 (solo da sapere).
 - **Non verificato**: niente di questo è stato guardato né ascoltato nell’eseguibile; l’aggiornamento con «Annulla» si vedrà alla prossima beta.
 
 ### Le proposte di testo per l’autore (24 novembre 2026)
 
-Tutto quello che tocca i `.fav`. **Niente di questo è applicato.** Le tre medie sono state provate su una copia della storia (`relitto-silente/` copiata fuori dal progetto, modificata, compilata e giocata con il percorso `stele-per-prima`, più «esamina la grande porta» dopo ogni chiave ed «est» nel santuario durante la fuga): la partita si vince, e i testi sono quelli scritti qui.
+Tutto quello che tocca i `.fav`. **Le tre medie (M22, M23, M24) sono applicate dal 24 novembre 2026**, con il sì dell’autore («Sì, applicale»): come sono entrate nei `.fav` è detto in fondo a questa sezione. Il resto non è applicato. Prima di proporle, le tre medie sono state provate su una copia della storia (`relitto-silente/` copiata fuori dal progetto, modificata, compilata e giocata con il percorso `stele-per-prima`, più «esamina la grande porta» dopo ogni chiave ed «est» nel santuario durante la fuga): la partita si vince, e i testi sono quelli scritti qui.
 
 **M22 · i segni della fuga dentro la Santa Maria** (`fuga.fav`, le due regole a sorte). Nessuna parola cambia: si aggiunge una condizione.
 
@@ -545,3 +545,11 @@ Tutto quello che tocca i `.fav`. **Niente di questo è applicato.** Le tre medie
 - **L37**, la prima persona: «Se la muovo nella luce…» (`corridoio.fav`), «Quando ci passo sopra il guanto…» e «Dove la tocco, si accende.» (`ingresso.fav`), «Prima devo prenderlo.» (`memoria.fav`). Le prime tre possono essere un «tu» impersonale voluto: decide lui.
 
 Da studiare ancora, prima di proporre: la voce dei nomi ascoltata una seconda volta o dopo che tace (`fuga.fav`: serve una frase nuova); «ricarica la tuta» e «togli la tuta» fuori posto (`tecnica.fav`, `santamaria.fav`); «prendi il seme» scritto davanti alla teca chiusa, che risponde «Non vedo ‘il seme’ qui.» (`vita.fav`); le tre regole che non scattano mai e la battuta di base del nodo «piccolo» (L36); il commento di `aria.fav` (L38).
+
+**Come sono entrate nei `.fav` (24 novembre 2026, «Sì, applicale»).** Le parole sono quelle proposte. La forma è cambiata in due punti, per non spostare le sigle del copione di William (lo strumento numera le prese nell’ordine delle regole: una regola nuova a metà di un file avrebbe spostato tutte quelle dopo, e Leonardo ha già il PDF con le sigle di oggi): le varianti stanno **dentro le regole che c’erano già**, come rami a frasi intere, e non in regole nuove.
+
+- **La porta grande guardata**: la descrizione resta com’era fino a «…uno cristallino a molte facce.», e l’ultima frase cambia con le chiavi: «Per aprirla servono tre chiavi.» (nessuna), «Uno è pieno.» (una), «Due sono pieni.» (due). Gli incavi restano «scuri» in tutti e tre i casi: è la frase di sempre.
+- **Il corridoio a porta chiusa, dopo la quarta tacca**: l’ultima frase diventa «A est c’è la gola larga da cui sono salito; accanto all’imbocco, alla base della parete, le quattro tacche.», con le parole che la descrizione a porta aperta usava già («le quattro tacche»). «Qualcuno ha inciso quattro tacche» sarebbe stato falso: la quarta è di William.
+- **«Est» nel santuario**: una frase fissa («Non c’è più nessun indietro.») e due rami.
+
+Il copione rifatto, confrontato sigla per sigla con quello di prima: nessuna sigla spostata; `CO-001`, `CO-012` e `PO-035` diventano pezzi (`CO-001a`…`c`, `CO-012a`…`d`, `PO-035a`…`c`); cambiano il testo `CO-015`, `CO-016`, `ME-019`, `ME-056`, `RE-009` e la sola condizione `FU-004` e `FU-005`. Le prese sono 611 (erano 604), nessuna di quelle toccate era registrata. Rifatti `racconto.json`, la tabella delle prese del motore audio, il copione in PDF (473 prese da registrare) e il rapporto del 24 novembre (138 su 611, il 22,6 %). Il percorso `stele-per-prima` ha le attese nuove («Il circuito si chiude…», «Una delle chiavi.», mai «si aggiunge alla prima», «La seconda chiave.», «La terza chiave.»). Le trascrizioni di «vivi» e «tutto» sono rifatte. I salvataggi di prima si caricano «ricostruita».
