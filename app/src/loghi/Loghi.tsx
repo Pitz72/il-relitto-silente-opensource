@@ -10,7 +10,11 @@
 //  programma tutto all'inizio sul clock dell'audio, e l'orologio delle
 //  immagini parte con lui. Si parte a caratteri caricati, perché scritta e
 //  motto di FAVELLA si misurano su Sora e Inter.
-//  Esc salta i loghi. Con «riduci movimento» non si mostrano.
+//  Esc o un clic saltano i loghi (il clic non nel primo secondo: il secondo
+//  clic di un doppio clic su «Nuova partita» cadrebbe qui). Con il movimento
+//  ridotto non si mostrano: quello delle Opzioni del gioco, o quello del sistema
+//  se il gioco non dice niente. Il suono segue il «Volume generale» (revisione
+//  37, M3).
 //  Dal 14 novembre 2026 i loghi sono l'inizio della cinematica d'apertura
 //  (documento 09, §16): stanno nello stesso formato largo dell'intro, con le
 //  bande nere sopra e sotto, e sotto la stessa pellicola (pellicola/). I due
@@ -45,7 +49,10 @@ const fermo = (() => {
 })();
 if (import.meta.env.DEV) import("../loghi/esporta").then((m) => m.installa());
 
-export default function Loghi({ onFine, grana = "mossa", pellicola = true, parti = true }: { onFine: () => void; grana?: "mossa" | "ferma" | "no"; pellicola?: boolean; parti?: boolean }) {
+/** Per quanti millisecondi dalla comparsa un clic non salta i loghi. */
+const GUARDIA_DEL_CLIC = 1000;
+
+export default function Loghi({ onFine, grana = "mossa", pellicola = true, parti = true, ridotto, volume = 1 }: { onFine: () => void; grana?: "mossa" | "ferma" | "no"; pellicola?: boolean; parti?: boolean; /** il movimento ridotto come lo vuole il gioco (le Opzioni, o il sistema) */ ridotto?: boolean; /** il «Volume generale» delle Opzioni, da 0 a 1 */ volume?: number }) {
   const film = useRef<PellicolaViva>(null);
   const runtime = useRef<Animabile>(null);
   const favella = useRef<Animabile>(null);
@@ -56,9 +63,12 @@ export default function Loghi({ onFine, grana = "mossa", pellicola = true, parti
   const fine = useRef(onFine);
   fine.current = onFine;
   const chiudi = () => { if (!fatto.current && fermo === null) { fatto.current = true; fine.current(); } };
+  const nato = useRef(performance.now());
+  const livello = useRef(volume);
+  livello.current = volume;
 
   useEffect(() => {
-    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) { chiudi(); return; }
+    if (ridotto ?? window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) { chiudi(); return; }
     let vivo = true;
     const caratteri = Promise.all(CARATTERI.map((f) => document.fonts?.load(f).catch(() => null)));
     Promise.race([caratteri, new Promise((r) => setTimeout(r, 1500))])
@@ -71,7 +81,7 @@ export default function Loghi({ onFine, grana = "mossa", pellicola = true, parti
 
   useEffect(() => {
     if (!pronti) return;
-    const suono = fermo === null ? SuonoLoghi.avvia() : null;
+    const suono = fermo === null ? SuonoLoghi.avvia(livello.current) : null;
     let raf = 0;
     const t0 = performance.now() + (suono?.anticipo ?? 0) * 1000;
     const passo = (ora: number) => {
@@ -91,7 +101,8 @@ export default function Loghi({ onFine, grana = "mossa", pellicola = true, parti
 
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 60, background: "#000", cursor: "none", overflow: "hidden", userSelect: "none", display: "grid", placeItems: "center" }}
-      aria-label="Loghi di apertura">
+      aria-label="Loghi di apertura"
+      onClick={() => { if (performance.now() - nato.current > GUARDIA_DEL_CLIC) chiudi(); }}>
       {/* il palco 16:9, come quello dell'intro; dentro, l'immagine sotto la pellicola, e le due bande nere sopra a tutto */}
       <div style={{ position: "relative", aspectRatio: "16 / 9", width: "min(100vw, calc(100vh * 16 / 9))", overflow: "hidden" }}>
         <Pellicola ref={film} grana={grana} spenta={!pellicola} banda={BANDA} fondo="#000">

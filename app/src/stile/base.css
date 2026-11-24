@@ -92,14 +92,18 @@
 }
 :where(.tema) button:disabled { cursor: default; }
 
-/* Il fuoco sempre visibile, con lo stile del visore (§6.2): nell'acciaio un
-   filo squadrato, nella membrana un alone che segue la forma. */
+/* Il fuoco visibile per chi usa la tastiera, con lo stile del visore (§6.2):
+   nell'acciaio un filo squadrato, nella membrana un alone che segue la forma.
+   Si disegna dopo un tasto che sposta il fuoco, e sparisce quando si tocca il
+   mouse (stile/fuoco.ts mette `data-tastiera` sulla radice): a chi gioca con il
+   mouse non compare mai un contorno che non ha chiesto (l'autore, 16 novembre
+   2026: il cerchio verde intorno alle voci del menu «NON DEVE ESSERCI»). */
 .tema :focus { outline: none; }
-.tema :focus-visible {
+:root[data-tastiera] .tema :focus-visible {
   outline: 2px solid var(--fuoco);
   outline-offset: 3px;
 }
-.tema[data-forma="membrana"] :focus-visible {
+:root[data-tastiera] .tema[data-forma="membrana"] :focus-visible {
   outline-offset: 4px;
   box-shadow: 0 0 0 1px var(--fondo-2), 0 0 18px color-mix(in srgb, var(--fuoco) 45%, transparent);
 }

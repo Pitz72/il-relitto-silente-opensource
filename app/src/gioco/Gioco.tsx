@@ -152,7 +152,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
   const [domanda, setDomanda] = useState<Domanda | null>(null);
   const [posti, setPosti] = useState<Posto[] | null>(null);
   const [dove, setDove] = useState("");
-  const [avviso, mostraAvviso] = useAvviso();
+  const [avviso, mostraAvviso, chiudiAvviso] = useAvviso();
   const contatore = useRef(0);
   const ultimoPosto = useRef<IdPosto>("1");
   /** la stanza dell'ultimo turno: il salvataggio automatico scatta quando cambia */
@@ -165,6 +165,10 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
   const finaleRef = useRef<string | null>(null);
   /** il baccello su cui torna il fuoco dopo il comando partito dal ramo (la tastiera, 06 §6.2) */
   const ritornoRef = useRef<string | null>(null);
+
+  /** il turno di adesso, per chi lo deve leggere senza ricrearsi a ogni turno */
+  const turnoRef = useRef<Turno | null>(null);
+  turnoRef.current = turno;
 
   const modello = useMemo(() => (turno ? costruisciModello(turno) : null), [turno]);
   /** la modalità a solo testo (documento 18): la riga di comando al posto del ramo */
@@ -295,7 +299,9 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
         }
         mostra(r.turno, r.diario);
         if (r.esito === "identica") mostraAvviso(posto === "automatico" ? "Partita ripresa dall’ultima stanza." : `Partita caricata dal posto ${posto}.`);
-        else mostraAvviso(r.messaggio, r.esito === "diversa");
+        // la partita ricostruita su una storia cambiata, o diversa da com'era: è l'unico segno che può non essere
+        // quella di prima, e resta a schermo finché non lo si chiude (revisione 37, M5: restava 3,2 secondi)
+        else mostraAvviso(r.messaggio, r.esito === "diversa", true);
         return null;
       } catch (e) {
         const motivo = `Il caricamento non è riuscito: ${String(e instanceof Error ? e.message : e)}`;
@@ -304,6 +310,25 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
       }
     },
     [mostraAvviso, mostra],
+  );
+
+  /** Caricare a partita in corso la sostituisce: lo si chiede, come nel menu principale (revisione 37, M1:
+   *  «Salva» e «Carica» sono due voci vicine e due pannelli quasi uguali, e un clic sbagliato perdeva la partita). */
+  const caricaChiedendo = useCallback(
+    (posto: IdPosto) => {
+      const carica = () => void caricaDa(posto);
+      const t = turnoRef.current;
+      if (t && t.esito === "in_corso" && t.stato.turno > 0)
+        setDomanda({
+          testo: posto === "automatico" ? "Caricare il posto automatico?" : `Caricare il posto ${posto}?`,
+          sotto: "La partita in corso si perde, se non l’hai salvata.",
+          si: "Carica",
+          no: "Lascia stare",
+          allora: carica,
+        });
+      else carica();
+    },
+    [caricaDa],
   );
 
   const apriSalvataggi = useCallback(async (modo: "salva" | "carica") => {
@@ -521,7 +546,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
           break;
         case "carica":
           if (!c.capito) mostraAvviso("Nell’app i posti sono sei: scrivi CARICA 3, per esempio.", true);
-          else if (c.posto) void caricaDa(c.posto);
+          else if (c.posto) caricaChiedendo(c.posto);
           else void apriSalvataggi("carica");
           break;
         case "ricomincia":
@@ -546,7 +571,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
           break;
       }
     },
-    [salvaScritto, apriSalvataggi, caricaDa, ricomincia, gioca, mostraAvviso],
+    [salvaScritto, apriSalvataggi, caricaChiedendo, ricomincia, gioca, mostraAvviso],
   );
 
   /** Una riga scritta: o una parola dell'app, o un comando per il motore. */
@@ -777,7 +802,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
             scegli={(p) => {
               if (pannello === "carica") {
                 setPannello(null);
-                void caricaDa(p.posto);
+                caricaChiedendo(p.posto);
                 return;
               }
               const salva = () => {
@@ -804,7 +829,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
         {pannello === "opzioni" && <PannelloOpzioni forma={forma} opzioni={opzioni} cambia={cambiaOpzioni} chiudi={() => setPannello("pausa")} />}
         {pannello === "tasti" && <PannelloTasti forma={forma} chiudi={() => setPannello("pausa")} scritti={scritti} />}
         {(domanda ?? domandaDelMotore) && <Conferma domanda={(domanda ?? domandaDelMotore)!} forma={forma} chiudi={() => setDomanda(null)} />}
-        {avviso && <Avviso testo={avviso.testo} grave={avviso.grave} />}
+        {avviso && <Avviso testo={avviso.testo} grave={avviso.grave} chiudi={avviso.resta ? chiudiAvviso : undefined} />}
         {!turno && !errore && <div className="avvio">{passo}</div>}
         {errore && <Inceppo dettaglio={errore} alMenu={alMenu} />}
       </main>

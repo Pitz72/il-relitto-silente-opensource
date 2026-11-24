@@ -11,13 +11,15 @@
 //  ?aggiornamento-finto, solo nello sviluppo, si finge un aggiornamento per vedere la barra.
 // ============================================================================
 import { dentroTauri } from "./lib/tauri";
-import type { Avanzamento } from "./menu/avanzamento";
+import { ANNULLATO, sorveglia, TETTO_CONTROLLO, type Avanzamento, type Segnale } from "./menu/avanzamento";
+
+export { ANNULLATO, FERMO, type Segnale } from "./menu/avanzamento";
 
 /** Lo sviluppo, con ?aggiornamento-finto: un aggiornamento finto, per vedere il pannello. */
 export const FINTO = import.meta.env.DEV && new URLSearchParams(location.search).has("aggiornamento-finto");
 
 export type Esito =
-  | { tipo: "nuova"; versione: string; note: string; installa: (avanza?: (a: Avanzamento) => void) => Promise<void> }
+  | { tipo: "nuova"; versione: string; note: string; installa: (avanza?: (a: Avanzamento) => void, segnale?: Segnale) => Promise<void> }
   | { tipo: "aggiornato" }
   /** il canale risponde ma non ha ancora un latest.json: nessuna versione pubblicata */
   | { tipo: "nessuna" }
@@ -35,18 +37,22 @@ export async function cercaAggiornamento(): Promise<Esito> {
   if (!dentroTauri()) return { tipo: "errore", testo: "L'aggiornamento c'è solo nell'app installata." };
   try {
     const { check } = await import("@tauri-apps/plugin-updater");
-    const u = await check();
+    const u = await check({ timeout: TETTO_CONTROLLO });
     if (!u) return { tipo: "aggiornato" };
     return {
       tipo: "nuova",
       versione: u.version,
       note: u.body ?? "",
-      installa: async (avanza) => {
+      installa: async (avanza, segnale = { annullato: false }) => {
         // l'avanzamento arriva a pezzi di pochi kB: alla pagina se ne dice al più uno ogni decimo di secondo
         let totale: number | null = null;
         let scaricati = 0;
         let ultimo = 0;
-        await u.downloadAndInstall((ev) => {
+        // quando è arrivato l'ultimo pezzo: se la rete cade in silenzio, non ne arrivano più
+        let ultimoPezzo = performance.now();
+        // prima si scarica, poi si installa: fra l'uno e l'altro si guarda se chi gioca ha annullato
+        const scarico = u.download((ev) => {
+          ultimoPezzo = performance.now();
           if (ev.event === "Started") {
             totale = ev.data.contentLength ?? null;
             avanza?.({ fase: "scarica", scaricati: 0, totale });
@@ -57,10 +63,18 @@ export async function cercaAggiornamento(): Promise<Esito> {
               ultimo = ora;
               avanza?.({ fase: "scarica", scaricati, totale });
             }
-          } else if (ev.event === "Finished") {
-            avanza?.({ fase: "installa" });
           }
         });
+        try {
+          await sorveglia(scarico, () => ultimoPezzo, segnale);
+        } catch (e) {
+          // lo scaricamento lasciato a metà non deve più installare niente
+          void scarico.catch(() => undefined);
+          void u.close().catch(() => undefined);
+          throw e;
+        }
+        avanza?.({ fase: "installa" });
+        await u.install();
         const { relaunch } = await import("@tauri-apps/plugin-process");
         await relaunch();
       },
@@ -79,11 +93,15 @@ function finto(): Esito {
     versione: "9.9.9-finta",
     // le righe della prossima versione, come le porterebbe il corpo della release
     note: ["Per chi gioca:", "", ...__NOVITA__.prossima.map((r) => `- ${r}`)].join("\n"),
-    installa: async (avanza) => {
+    installa: async (avanza, segnale = { annullato: false }) => {
       const totale = 44 * 1024 * 1024;
       avanza?.({ fase: "scarica", scaricati: 0, totale });
+      // con &fermo lo scaricamento finto si ferma a metà, per vedere l'«Annulla»
+      const fermo = new URLSearchParams(location.search).has("fermo");
       for (let k = 1; k <= 80; k++) {
         await new Promise((r) => setTimeout(r, 100));
+        if (segnale.annullato) throw new Error(ANNULLATO);
+        if (fermo && k === 40) await new Promise<void>((_, no) => setInterval(() => segnale.annullato && no(new Error(ANNULLATO)), 200));
         avanza?.({ fase: "scarica", scaricati: (totale * k) / 80, totale });
       }
       avanza?.({ fase: "installa" });

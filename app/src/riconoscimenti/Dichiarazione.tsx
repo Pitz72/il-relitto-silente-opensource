@@ -4,9 +4,12 @@
 //  sullo stesso fondo: le scritte dei riconoscimenti sfumano e compare questa.
 //  Il comportamento è quello dell'avviso del Viaggiatore (components/Avviso.tsx):
 //  a ogni avvio, anche con il movimento ridotto (è una comunicazione, non un
-//  effetto); si legge in una ventina di secondi, poi prosegue da sé, oppure
-//  subito con Invio, Spazio, Esc o un clic. Lo stile è quello del Relitto.
-//  Il testo è dell'autore: si cambia solo qui.
+//  effetto); prosegue con Invio, Spazio, Esc o un clic. Lo stile è quello del
+//  Relitto. Il testo è dell'autore: si cambia solo qui.
+//  Non se ne va più da sola (revisione 37, M4): la scadenza di venti secondi era
+//  del 15 ottobre, quando il testo aveva una quarantina di parole; con le voci
+//  ne ha più di centoventi, e a chi legge piano o con la lente spariva a metà.
+//  Resta finché chi gioca non dice «continua».
 // ============================================================================
 import { useEffect, useRef, useState } from "react";
 import "./dichiarazione.css";
@@ -21,8 +24,6 @@ export const TESTO_DICHIARAZIONE =
   "William ha la voce dell’attore Leonardo Tomassetti. Ogni altro suono del gioco è sintetizzato dal suo motore audio.";
 /** L'ultima frase sta a sé, come un saluto (come nel Viaggiatore). */
 export const SALUTO = "Buon divertimento.";
-
-const ATTESA_MASSIMA = 20_000; // ms: poi prosegue da solo
 
 export default function Dichiarazione({ onFine }: { onFine: () => void }) {
   const [visibile, setVisibile] = useState(false);
@@ -41,7 +42,6 @@ export default function Dichiarazione({ onFine }: { onFine: () => void }) {
     // il fuoco su «continua» (Invio lo prende), senza contorno: nessuno l'ha scelto
     pulsante.current?.focus({ preventScroll: true, focusVisible: false });
     const comparsa = window.setTimeout(() => setVisibile(true), 120);
-    const scadenza = window.setTimeout(prosegui, ATTESA_MASSIMA);
     const tasto = (e: KeyboardEvent) => {
       if (e.key === "Escape" || e.key === "Enter" || e.key === " ") {
         e.preventDefault();
@@ -51,7 +51,6 @@ export default function Dichiarazione({ onFine }: { onFine: () => void }) {
     window.addEventListener("keydown", tasto);
     return () => {
       window.clearTimeout(comparsa);
-      window.clearTimeout(scadenza);
       window.removeEventListener("keydown", tasto);
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps

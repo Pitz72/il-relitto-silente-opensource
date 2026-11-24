@@ -99,6 +99,10 @@
 }
 .menu-voci button:hover, .menu-voci button:focus-visible { color: var(--testo); }
 .menu-voci button:hover::before, .menu-voci button:focus-visible::before { height: 1.1em; }
+/* Le voci del menu non hanno mai un contorno, nemmeno dalla tastiera: il loro segno è il filo che si accende
+   accanto (l'autore, 16 novembre 2026: «NON DEVONO ESSERCI»). Più forte della regola generale di base.css. */
+:root .tema[data-forma] .menu-voci button:focus,
+:root[data-tastiera] .tema[data-forma] .menu-voci button:focus-visible { outline: none; box-shadow: none; }
 [data-movimento="ridotto"] .menu-voci button::before { transition: none; }
 .menu-dettaglio {
   font-family: var(--mono);

@@ -308,7 +308,10 @@ export function scriviPartitura(ac: BaseAudioContext, uscita: AudioNode, parti: 
 export class SuonoLoghi {
   private constructor(private ac: AudioContext, private b: Banco, readonly anticipo: number) {}
 
-  static avvia(): SuonoLoghi | null {
+  /** `volume`: il «Volume generale» delle Opzioni, da 0 a 1 (revisione 37, M3: i loghi suonavano a un livello
+   *  fisso, anche con il volume spento). A zero non parte niente. */
+  static avvia(volume = 1): SuonoLoghi | null {
+    if (volume <= 0) return null;
     const sbloccato = !!(navigator as Navigator & { userActivation?: { hasBeenActive: boolean } }).userActivation?.hasBeenActive;
     if (!inDesktop() && !sbloccato) return null;
     try {
@@ -316,7 +319,11 @@ export class SuonoLoghi {
       if (ac.state !== "running") ac.resume().catch(() => {});
       const anticipo = 0.12;                                   // il tempo di programmare tutto
       const t0 = ac.currentTime + anticipo;
-      const b = scriviPartitura(ac, ac.destination, { runtime: t0, favella: t0 + DURATA_RUNTIME });
+      // il volume sta dopo i due compressori: abbassa tutto senza cambiare come suona
+      const uscita = ac.createGain();
+      uscita.gain.value = Math.min(1, volume);
+      uscita.connect(ac.destination);
+      const b = scriviPartitura(ac, uscita, { runtime: t0, favella: t0 + DURATA_RUNTIME });
       const ritardo = (ac.outputLatency || ac.baseLatency || 0);
       return new SuonoLoghi(ac, b, anticipo + ritardo);
     } catch {

@@ -5,6 +5,9 @@
 //  si chiude mentre lavora: la versione che arriva, una barra che si riempie con i
 //  megabyte scaricati, poi «Installo»: su Windows parte l'installatore, il gioco si
 //  chiude e si riapre da solo. Se qualcosa va storto lo dice, e allora si chiude.
+//  Mentre scarica c'è sempre «Annulla» (revisione 37, M2): se la rete cade in
+//  silenzio la barra resta ferma, e chi gioca con il solo mouse, a schermo intero,
+//  non aveva nessun modo di tornare al menu.
 // ============================================================================
 import { Pannello } from "../gioco/pannelli/Pannelli";
 import { frazione, testoAvanzamento, type Avanzamento } from "./avanzamento";
@@ -15,9 +18,11 @@ interface Props {
   /** se l'aggiornamento non è andato: la frase da dire, e il pannello si può chiudere */
   errore: string | null;
   chiudi: () => void;
+  /** lascia perdere lo scaricamento e torna al menu: il gioco resta com'era */
+  annulla: () => void;
 }
 
-export default function Aggiornamento({ versione, avanzamento, errore, chiudi }: Props) {
+export default function Aggiornamento({ versione, avanzamento, errore, chiudi, annulla }: Props) {
   const f = frazione(avanzamento);
   return (
     <Pannello forma="membrana" classe="conferma aggiornamento" etichetta={`Aggiornamento alla versione ${versione}`}>
@@ -48,6 +53,13 @@ export default function Aggiornamento({ versione, avanzamento, errore, chiudi }:
           <p className="sotto" aria-live="polite">
             {testoAvanzamento(avanzamento)}
           </p>
+          {avanzamento.fase !== "installa" && (
+            <div className="scelte-conferma">
+              <button type="button" data-primo="" data-tocco="annulla" onClick={annulla}>
+                Annulla
+              </button>
+            </div>
+          )}
         </>
       )}
     </Pannello>

@@ -29,7 +29,7 @@ import { attributiSchermo, opzioniRicordate, useMovimentoRidotto, useOpzioni } f
 import { comando, dentroTauri } from "./lib/tauri";
 import { ricordaSchermoIntero, schermoIntero } from "./lib/finestra";
 import { salvaUscendo } from "./gioco/uscita";
-import { cercaAggiornamento, FINTO, FIRMA } from "./aggiornamenti";
+import { ANNULLATO, cercaAggiornamento, FERMO, FINTO, FIRMA, type Segnale } from "./aggiornamenti";
 import { DEMO } from "./demo";
 import Aggiornamento from "./menu/Aggiornamento";
 import FinestraNovita from "./menu/FinestraNovita";
@@ -99,9 +99,11 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   const [dove, setDove] = useState("");
   const [pannello, setPannello] = useState<PannelloMenu>(null);
   const [domanda, setDomanda] = useState<Domanda | null>(null);
-  const [avviso, mostraAvviso] = useAvviso();
+  const [avviso, mostraAvviso, chiudiAvviso] = useAvviso();
   /** l'aggiornamento in corso: il pannello con la barra (menu/Aggiornamento.tsx) */
   const [aggiornamento, setAggiornamento] = useState<{ versione: string; avanzamento: Avanzamento; errore: string | null } | null>(null);
+  /** l'«Annulla» dello scaricamento in corso (revisione 37, M2) */
+  const segnaleAggiornamento = useRef<Segnale | null>(null);
   /** le novità da mostrare (menu/FinestraNovita.tsx), e se si è già deciso, in questo avvio */
   const [novita, setNovita] = useState<NovitaVersione[]>([]);
   const [novitaDecise, setNovitaDecise] = useState(false);
@@ -321,17 +323,24 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
             const v = e.versione;
             setAggiornamento({ versione: v, avanzamento: { fase: "prepara" }, errore: null });
             const avanza = (a: Avanzamento) => setAggiornamento((s) => (s && !s.errore ? { ...s, avanzamento: a } : s));
+            const segnale: Segnale = { annullato: false };
+            segnaleAggiornamento.current = segnale;
             void salvaUscendo()
-              .then(() => e.installa(avanza))
-              .catch((err) =>
+              .then(() => e.installa(avanza, segnale))
+              .catch((err) => {
+                const testo = String(err instanceof Error ? err.message : err);
+                // annullato da chi gioca: il pannello è già chiuso, e non c'è niente da dire di più
+                if (testo === ANNULLATO) return;
                 setAggiornamento((s) => ({
                   versione: v,
                   avanzamento: s?.avanzamento ?? { fase: "prepara" },
-                  errore: FIRMA.test(String(err instanceof Error ? err.message : err))
+                  errore: FIRMA.test(testo)
                     ? "L’aggiornamento non porta la firma dell’autore: non lo installo."
-                    : "L’aggiornamento non è andato a buon fine. Il gioco resta com’era.",
-                })),
-              );
+                    : testo === FERMO
+                      ? "Lo scaricamento si è fermato: la rete non risponde. Il gioco resta com’era; puoi riprovare più tardi, da «Cerca aggiornamenti»."
+                      : "L’aggiornamento non è andato a buon fine. Il gioco resta com’era.",
+                }));
+              });
           },
         });
       } else if (aMano) {
@@ -434,7 +443,7 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
         ) : null}
         {schermata.tipo === "intro" && loghiPrima ? (
           <Suspense key="loghi-intro" fallback={<div className="nero-avvio" aria-hidden="true" />}>
-            <Loghi onFine={finitiILoghi} grana={opzioni.grana} pellicola={opzioni.pellicola} parti={introPronta} />
+            <Loghi onFine={finitiILoghi} grana={opzioni.grana} pellicola={opzioni.pellicola} parti={introPronta} ridotto={ridotto} volume={opzioni.volume} />
           </Suspense>
         ) : null}
       </>
@@ -488,6 +497,11 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
                 avanzamento={aggiornamento.avanzamento}
                 errore={aggiornamento.errore}
                 chiudi={() => setAggiornamento(null)}
+                annulla={() => {
+                  if (segnaleAggiornamento.current) segnaleAggiornamento.current.annullato = true;
+                  setAggiornamento(null);
+                  mostraAvviso("Aggiornamento annullato: il gioco resta com’era.");
+                }}
               />
             )}
           </>
@@ -512,7 +526,7 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
             <Dichiarazione onFine={() => setSchermata({ tipo: "menu" })} />
           </Suspense>
         )}
-        {avviso && <Avviso testo={avviso.testo} grave={avviso.grave} />}
+        {avviso && <Avviso testo={avviso.testo} grave={avviso.grave} chiudi={avviso.resta ? chiudiAvviso : undefined} />}
       </main>
     </div>
   );

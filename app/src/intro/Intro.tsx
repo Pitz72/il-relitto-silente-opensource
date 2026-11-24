@@ -14,7 +14,7 @@
 //    H  la camera entra nel nero del fuso ed esce dal vetro dell'oblò; arretra
 //       fino alla plancia intera, che diventa la telecamera di bordo e va nella
 //       lente del gioco. Il gioco parte sotto, e l'intro si apre su di lui
-//  Si salta con Esc, Spazio o un clic. Con il movimento ridotto ogni scena ha
+//  Si salta con Esc, Spazio o un clic (il clic non nel primo secondo). Con il movimento ridotto ogni scena ha
 //  la sua versione (§2.5 e scena per scena nello storyboard).
 //  Ogni fotogramma si disegna fuori da React: lo stato di React serve solo
 //  alla barra di revisione.
@@ -151,6 +151,9 @@ function livelloTraccia(τ: number): number {
   if (τ < M.spia || τ > BATTITI_A[3] + 0.9) return 0;
   return Math.min(1, 0.12 + livelloVoce(τ) * 1.05 + impulso(τ, BATTITI_A) * 1.1);
 }
+
+/** Per quanti secondi dell'intro un clic non la salta (revisione 37, M6). */
+const GUARDIA_DEL_CLIC = 1.0;
 
 export default function Intro({
   revisione = false,
@@ -863,6 +866,20 @@ export default function Intro({
     finita.current = true;
     onFine?.();
   }, [vai, onFine, revisione]);
+  // Un clic salta l'intro, ma non un clic qualunque (revisione 37, M6): non finché l'intro non è pronta e non nel
+  // suo primo secondo (il secondo clic di un doppio clic, un clic dato ai loghi che stavano sopra), e non il clic
+  // che riporta davanti la finestra del gioco. Esc e Spazio saltano sempre.
+  const tornataDavanti = useRef(-Infinity);
+  useEffect(() => {
+    const fuoco = () => void (tornataDavanti.current = performance.now());
+    addEventListener("focus", fuoco);
+    return () => removeEventListener("focus", fuoco);
+  }, []);
+  const saltaColClic = useCallback(() => {
+    if (revisione || !pronta || inAttesa.current) return;
+    if (tempo.current < GUARDIA_DEL_CLIC || performance.now() - tornataDavanti.current < 400) return;
+    saltaAllaFine();
+  }, [revisione, pronta, saltaAllaFine]);
   const alterna = useCallback(() => {
     if (finita.current) vai(0);
     pausa.current = !pausa.current;
@@ -937,15 +954,14 @@ export default function Intro({
   );
 
   return (
-    <div ref={radice} className={`intro${!revisione && pronta ? " in-corso" : ""}${conPartita ? " sopra" : ""}`} style={{ ["--barra" as string]: revisione ? "112px" : "0px", visibility: attesa ? "hidden" : undefined }}>
-      <div
-        className="palco"
-        ref={palco}
-        aria-label="L’intro del Relitto Silente"
-        onClick={() => {
-          if (!revisione) saltaAllaFine();
-        }}
-      >
+    <div
+      ref={radice}
+      className={`intro${!revisione && pronta ? " in-corso" : ""}${conPartita ? " sopra" : ""}`}
+      style={{ ["--barra" as string]: revisione ? "112px" : "0px", visibility: attesa ? "hidden" : undefined }}
+      // il clic salta da tutta la finestra, anche dalle fasce nere di uno schermo 16:10 (revisione 37, L15)
+      onClick={saltaColClic}
+    >
+      <div className="palco" ref={palco} aria-label="L’intro del Relitto Silente">
         <Pellicola ref={film} grana={grana} spenta={!pellicola} ridotto={opzioni.ridotto} banda={BANDA}>
           <canvas ref={spazio} aria-hidden="true" />
           <canvas ref={canvasPlancia} className="plancia" aria-hidden="true" />
@@ -971,7 +987,7 @@ export default function Intro({
         <div className="banda giu" ref={(el) => void (bande.current[1] = el)} />
         <div className="suono" ref={suono} aria-hidden="true" />
         <div className="salta" ref={salta} aria-hidden="true">
-          Esc · salta
+          clic o Esc · salta
         </div>
         <div className="solo-lettori" ref={annuncio} aria-live="polite" />
         {!pronta && <div className={`preparazione${errore ? " errore" : ""}`}>{errore ?? "Preparazione…"}</div>}

@@ -58,14 +58,16 @@
 .comandi-app {
   position: absolute;
   right: 42cqw;
-  top: 1.15cqw;
+  top: max(.3cqw, calc(1.15cqw - 5px));
   z-index: 3;
   display: flex;
   gap: .5cqw;
 }
 .comandi-app button {
-  min-height: 28px;
-  padding: .2em .8em;
+  /* un bersaglio da 38 px: per chi gioca con il solo mouse sono l'unica strada verso la pausa, i salvataggi e
+     le opzioni (revisione 37, L9: erano alti 28) */
+  min-height: 38px;
+  padding: .2em .9em;
   font-family: var(--mono);
   font-size: max(12px, .7cqw);
   letter-spacing: .14em;

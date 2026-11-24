@@ -11,6 +11,10 @@ import { POSTI, quando, type IdPosto, type Posto } from "../salvataggi";
 import RigheNovita from "../../menu/RigheNovita";
 import "./pannelli.css";
 import { DEMO } from "../../demo";
+import { durataAvviso } from "./avviso";
+
+/** Dove si ferma il Tab dentro un pannello: i pulsanti, i cursori, e quello che ha `tabindex="0"`. */
+export const TAPPE_DEL_TAB = "button:not(:disabled):not([tabindex='-1']), input:not(:disabled):not([tabindex='-1']), [tabindex='0']";
 
 /** Il fuoco entra nel pannello all'apertura, e ci resta (Tab gira dentro). Un pannello che si apre
  *  da solo, senza un gesto di chi gioca (le novità, la domanda dell'aggiornamento all'avvio), non
@@ -23,8 +27,9 @@ function useTrappola(ref: React.RefObject<HTMLElement | null>, daSolo = false) {
     el.querySelector<HTMLElement>("[data-primo], button:not(:disabled):not([tabindex='-1'])")?.focus({ preventScroll: true, focusVisible: daSolo ? false : undefined });
     const tab = (e: KeyboardEvent) => {
       if (e.key !== "Tab") return;
-      // le schede non scelte (tabindex −1) si raggiungono con le frecce, non con Tab
-      const tutti = [...el.querySelectorAll<HTMLElement>("button:not(:disabled):not([tabindex='-1']), [tabindex='0']")];
+      // le schede non scelte (tabindex −1) si raggiungono con le frecce, non con Tab; i cursori dei volumi sono
+      // controlli come i pulsanti (revisione 37, M11: il Tab li saltava, e dalla tastiera nessun volume si cambiava)
+      const tutti = [...el.querySelectorAll<HTMLElement>(TAPPE_DEL_TAB)];
       if (!tutti.length) return;
       const i = tutti.indexOf(document.activeElement as HTMLElement);
       const prossimo = e.shiftKey ? (i <= 0 ? tutti.length - 1 : i - 1) : i === tutti.length - 1 ? 0 : i + 1;
@@ -75,6 +80,8 @@ export interface Domanda {
 export function Conferma({ domanda, forma, chiudi }: { domanda: Domanda; forma: Forma; chiudi: () => void }) {
   useEffect(() => {
     const tasto = (e: KeyboardEvent) => {
+      // con Ctrl, Alt o Meta non è una risposta (revisione 37, L4)
+      if (e.ctrlKey || e.altKey || e.metaKey) return;
       const k = e.key.toLowerCase();
       if (k === "s") {
         e.preventDefault();
@@ -96,9 +103,11 @@ export function Conferma({ domanda, forma, chiudi }: { domanda: Domanda; forma: 
       {domanda.righe && domanda.righe.length > 0 && <RigheNovita righe={domanda.righe} />}
       {domanda.sotto && <p className="sotto">{domanda.sotto}</p>}
       <div className="scelte-conferma">
+        {/* una domanda che arriva da sola (l'aggiornamento all'avvio) ha il fuoco sul «no»: un Invio dato al menu
+            un attimo prima non deve far partire niente (revisione 37, L4) */}
         <button
           type="button"
-          data-primo=""
+          data-primo={domanda.daSolo ? undefined : ""}
           data-risposta="si"
           data-comando={domanda.comandoSi}
           onClick={() => {
@@ -110,6 +119,7 @@ export function Conferma({ domanda, forma, chiudi }: { domanda: Domanda; forma: 
         </button>
         <button
           type="button"
+          data-primo={domanda.daSolo ? "" : undefined}
           data-risposta="no"
           data-comando={domanda.comandoNo}
           onClick={() => {
@@ -558,23 +568,42 @@ export function PannelloTasti({ forma, chiudi, scritti = false }: { forma: Forma
 }
 
 // ----------------------------------------------------------------------------
-//  L'avviso: due o tre secondi, in alto
+//  L'avviso, in alto: resta il tempo di leggerlo; quello che conta resta finché
+//  non lo si chiude (revisione 37, M5)
 // ----------------------------------------------------------------------------
-export function Avviso({ testo, grave = false }: { testo: string; grave?: boolean }) {
+export interface AvvisoMostrato {
+  testo: string;
+  grave: boolean;
+  /** resta finché chi gioca non lo chiude: la partita ricostruita, o diversa da come era stata salvata */
+  resta: boolean;
+}
+
+export function Avviso({ testo, grave = false, chiudi }: { testo: string; grave?: boolean; chiudi?: () => void }) {
   return (
-    <div className={`avviso${grave ? " grave" : ""}`} role={grave ? "alert" : "status"}>
-      {testo}
+    <div className={`avviso${grave ? " grave" : ""}${chiudi ? " resta" : ""}`} role={grave ? "alert" : "status"}>
+      <span>{testo}</span>
+      {chiudi && (
+        <button type="button" className="chiudi-avviso" onClick={chiudi}>
+          ho capito
+        </button>
+      )}
     </div>
   );
 }
 
-export function useAvviso(): [{ testo: string; grave: boolean } | null, (testo: string, grave?: boolean) => void] {
-  const [avviso, setAvviso] = useState<{ testo: string; grave: boolean } | null>(null);
+export function useAvviso(): [AvvisoMostrato | null, (testo: string, grave?: boolean, resta?: boolean) => void, () => void] {
+  const [avviso, setAvviso] = useState<AvvisoMostrato | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const mostra = (testo: string, grave = false) => {
+  const chiudi = useCallback(() => {
     if (timer.current) clearTimeout(timer.current);
-    setAvviso({ testo, grave });
-    timer.current = setTimeout(() => setAvviso(null), grave ? 6000 : 3200);
-  };
-  return [avviso, mostra];
+    timer.current = null;
+    setAvviso(null);
+  }, []);
+  const mostra = useCallback((testo: string, grave = false, resta = false) => {
+    if (timer.current) clearTimeout(timer.current);
+    setAvviso({ testo, grave, resta });
+    timer.current = resta ? null : setTimeout(() => setAvviso(null), durataAvviso(testo, grave));
+  }, []);
+  useEffect(() => () => void (timer.current && clearTimeout(timer.current)), []);
+  return [avviso, mostra, chiudi];
 }

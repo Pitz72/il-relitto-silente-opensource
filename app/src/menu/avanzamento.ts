@@ -30,3 +30,41 @@ export function testoAvanzamento(a: Avanzamento): string {
     ? `Scarico l’aggiornamento: ${mega(a.scaricati)} MB.`
     : `Scarico l’aggiornamento: ${mega(a.scaricati)} di ${mega(a.totale!)} MB (${Math.floor(f * 100)} %).`;
 }
+
+/** Chi gioca ha detto «Annulla», o lo scaricamento si è fermato: quello che arriva dopo non si installa. */
+export interface Segnale {
+  annullato: boolean;
+}
+
+// I tetti di tempo (revisione 37, M2): senza, se la rete cadeva in silenzio la barra restava ferma per sempre, sopra
+// il menu, senza un pulsante: a schermo intero e con il solo mouse il gioco si poteva chiudere solo da fuori.
+/** Quanto si aspetta la risposta del canale degli aggiornamenti (ms). */
+export const TETTO_CONTROLLO = 20_000;
+/** Dopo quanto tempo senza un pezzo nuovo lo scaricamento è fermo (ms). */
+export const TETTO_SENZA_PEZZI = 45_000;
+/** Gli errori che `installa` solleva da sé: lo scaricamento fermo, e l'«Annulla» di chi gioca. */
+export const FERMO = "scaricamento fermo";
+export const ANNULLATO = "aggiornamento annullato";
+
+/** Aspetta uno scaricamento tenendolo d'occhio: se per `tetto` ms non arriva un pezzo (`ultimoPezzo` dice quando è
+ *  arrivato l'ultimo), o se chi gioca annulla, smette di aspettare con l'errore giusto. A parte, perché le prove la
+ *  leggano senza Tauri. */
+export function sorveglia(scarico: Promise<void>, ultimoPezzo: () => number, segnale: Segnale, tetto = TETTO_SENZA_PEZZI, ogni = 500): Promise<void> {
+  return new Promise<void>((riuscito, fallito) => {
+    const guardia = setInterval(() => {
+      if (segnale.annullato) finisci(() => fallito(new Error(ANNULLATO)));
+      else if (performance.now() - ultimoPezzo() > tetto) {
+        segnale.annullato = true;
+        finisci(() => fallito(new Error(FERMO)));
+      }
+    }, ogni);
+    const finisci = (poi: () => void) => {
+      clearInterval(guardia);
+      poi();
+    };
+    scarico.then(
+      () => finisci(() => (segnale.annullato ? fallito(new Error(ANNULLATO)) : riuscito())),
+      (e) => finisci(() => fallito(e)),
+    );
+  });
+}

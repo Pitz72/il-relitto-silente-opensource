@@ -1,6 +1,10 @@
 import { lazy, StrictMode, Suspense, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { comando, dentroTauri, type InfoSistema } from "./lib/tauri";
+import { seguiLaTastiera } from "./stile/fuoco";
+
+// Il contorno del fuoco solo per chi usa la tastiera (stile/fuoco.ts).
+seguiLaTastiera();
 
 // Niente menu contestuale del browser e niente zoom col tasto Ctrl (§2.5 del 06).
 addEventListener("contextmenu", (e) => e.preventDefault());
