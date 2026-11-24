@@ -83,8 +83,12 @@ Invece di traduci le tabelle di semina se la traduzione è almeno 100: dire "«M
 
 # --- Il sostegno (santuario centrale) ----------------------------------------
 Invece di traduci il sostegno se l'aria è meno di 30 e la fuga è lontana: dire "PROTEZIONE VITALE. ARIA [aria]%. La tuta tiene spento il traduttore: ogni canale che non mi serve per respirare resta chiuso. Mi serve una ricarica.".
-Invece di traduci il sostegno se la traduzione è meno di 75: dire "Una riga sola di glifi, sul bordo. La matrice ne riconosce la forma, non il senso." e adesso diminuisci l'aria di 1.
-Invece di traduci il sostegno: dire "Una riga sola, sul bordo: «Per chi raccoglie.»" e adesso diminuisci l'aria di 1.
+Invece di traduci il sostegno se la traduzione è almeno 18 e la traduzione è meno di 75: dire "Una riga sola di glifi, sul bordo. La matrice ne riconosce la forma, non il senso." e adesso diminuisci l'aria di 1.
+Invece di traduci il sostegno se la traduzione è almeno 75: dire "Una riga sola, sul bordo: «Per chi raccoglie.»" e adesso diminuisci l'aria di 1.
 
 # --- I disegni del nido: non c'è niente da tradurre --------------------------
 Invece di traduci i disegni: dire "La matrice cerca un testo, e non lo trova. Non c'è niente da tradurre: è un sole.".
+
+# --- Il sostegno, con la matrice sotto il 18: come le altre traduzioni, non costa aria ---
+# (in fondo al file, perché le sigle del copione di William non si spostino: revisione 37, L35)
+Invece di traduci il sostegno se la traduzione è meno di 18: dire "Una riga sola di glifi, sul bordo. La matrice ne riconosce la forma, non il senso.".

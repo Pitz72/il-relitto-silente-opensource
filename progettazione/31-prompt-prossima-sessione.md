@@ -2,7 +2,8 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 24 novembre 2026: il punto della situazione, la scansione lunga con il computer di bordo in mezzo a William, e la revisione 37 (le medie e le lievi che non toccano la storia). Le tre medie della storia (M22, M23, M24) sono applicate con il suo sì. Alla prossima: le frasi lievi della storia (L35, L36, L37), le sue scelte, e una beta.
+Aggiornato l’ultima volta il 25 novembre 2026: sette frasi piccole della storia applicate con il suo sì, e la prima persona dappertutto («questo è assoluto, non si torna indietro»). Alla prossima: le sue scelte, le quattro frasi ancora da studiare, e una beta.
+Prima, il 24 novembre 2026: il punto della situazione, la scansione lunga con il computer di bordo in mezzo a William, e la revisione 37 (le medie e le lievi che non toccano la storia). Le tre medie della storia (M22, M23, M24) sono applicate con il suo sì.
 Prima, il 16 novembre 2026, nel pomeriggio: la revisione della cinematica e le sue correzioni (documento 09, §19–20), dodici prese nuove di Leonardo, la beta 15 pubblicata.
 Prima, lo stesso giorno, di giorno: le note dell’autore sulla beta 13 (documento 09, §18:
 il cartello fermo all’avvio, il logo nero, la «cupola nera» sul muso, il passaggio, i due dettagli, il quadro largo
@@ -67,10 +68,14 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 - **Le misure** si fanno senza la lente di Windows: quando gioca la toglie.
 - **Prima di aprire l’eseguibile** lo avviso: il gioco gli si apre sullo schermo e gioca da solo.
 - **I `.fav` sono congelati**: toccarli è una sua decisione (il 27 ottobre l’aria fra 0 e 100; il 29 tutto il testo
-  in prima persona). **William racconta in prima persona**; ogni indizio per chi gioca va fra parentesi
+  in prima persona). **William racconta in prima persona**, e dal 25 novembre è una regola senza eccezioni («tutto
+  il racconto è in prima persona, questo è assoluto, non si torna indietro»): nemmeno il «tu» impersonale; lo
+  tiene `app/prove/prima-persona.test.ts`. Ogni indizio per chi gioca va fra parentesi
   («Lo scanner saprebbe leggerla. (ANALIZZALA.)»), e le voci degli altri, le scelte e i messaggi del motore
   restano come sono. Una frase cambiata va cercata anche in `app/src/motore/ponte.py` (`SEGNI_A_SORTE`) e nelle
-  righe `# atteso` di `collaudo/`.
+  righe `# atteso` di `collaudo/`. **Una variante nuova entra dentro una regola che c’è già, o in fondo al file**:
+  il copione di William numera le prese nell’ordine delle regole, e una regola nuova a metà sposterebbe le sigle
+  che Leonardo ha già (dopo, confrontare il copione nuovo con quello di prima, sigla per sigla).
   La copia del motore in `motore/` non si corregge mai a mano: si rifà da un tag di Favella1.
 - **Il nome del motore è «Favella1».** La musica è fantascienza, mai giallo. Il gioco è da scrivania:
   niente impaginazioni da telefono, nessun testo sotto i 12 px.
@@ -88,7 +93,22 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   più verosimile il fatto che ce la possano fare»; e «se così vincono sempre tutti, dove sta la sfida?»):
   `collaudo/verosimili.py`, con la fuga giocata da principianti veri.
 
-## Dove siamo (24 novembre 2026)
+## Dove siamo (25 novembre 2026)
+
+- **25 novembre 2026: la prima persona è assoluta, e sette frasi piccole.** L’autore, letta la proposta: «intanto tutto il
+  racconto è in prima persona, questo è assoluto, non si torna indietro. Poi sì, applica anche le sette piccole
+  sperando non siano cose già registrate». Applicate (documento 37, §9, in fondo: «Come sono entrate le sette
+  frasi»): le quattro frasi che dicevano «tu» (L37), e sei risposte che non seguivano lo stato (L35: il sostegno, il
+  bassorilievo inciso, la voce del piccolo dopo la risposta vera e con il risuonatore addosso, la cella nella fuga,
+  «[Accendi il Sintonizzatore.]»). **Nessuna presa registrata è toccata, nessuna sigla si è spostata.** Le prese
+  sono **616**; il PDF (478 da registrare) e il rapporto del 25 novembre sono in `doppiaggio/william/` e **vanno
+  mandati a Leonardo** al posto di quelli di prima. Due prove nuove: `app/prove/prima-persona.test.ts` e
+  `frasi_di_stato()` in `collaudo/eventi.py`. Le prove: 168 in node, 134 in Rust, 20 percorsi.
+- **Restano dei `.fav`, da studiare prima di proporgliele**: la voce dei nomi riascoltata (serve una frase nuova, sua),
+  «ricarica la tuta» e «togli la tuta» fuori posto, «prendi il seme» davanti alla teca chiusa, L36 (tre regole che
+  non scattano mai), il commento di `aria.fav` (L38).
+
+### Il 24 novembre 2026
 
 - **24 novembre 2026: il punto della situazione, e la revisione 37.** L’autore ha chiesto il punto, e ha risposto punto per
   punto. **Il cerchio verde nel menu**: nella demo non c’è; la causa era la dichiarazione d’apertura che se ne andava da
@@ -109,8 +129,8 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   santuario durante la fuga. Nessuna sigla del copione di William si è spostata; le prese sono 611, il PDF e il
   rapporto per Leonardo sono rifatti (`doppiaggio/william/`) e **vanno mandati a Leonardo** al posto di quelli del
   21 novembre.
-- **Che cosa aspetta lui** (in fondo al §9 del documento 37): **L35, L36, L37** e il commento di `aria.fav`, da
-  proporgli frase per frase (sette sono pronte, quattro da studiare); le scelte **L8, L12, L26, L31**; le tre impostazioni del repository su GitHub (gli avvisi sulle
+- **Che cosa aspetta lui** (in fondo al §9 del documento 37): le quattro frasi dei `.fav` ancora da studiare (le
+  sette pronte sono applicate dal 25 novembre, qui sopra); le scelte **L8, L12, L26, L31**; le tre impostazioni del repository su GitHub (gli avvisi sulle
   dipendenze, la scansione dei segreti, la protezione dei push) e la sua descrizione, che dice ancora «FAVELLA 1».
 - **Da decidere con lui**: una **beta 16** (c’è molto per chi gioca: 112 prese in più, la cifra dell’aria con la voce
   della tuta, la scansione lunga, tutta la revisione), e se **rifare la demo** con le stesse correzioni

@@ -506,7 +506,7 @@ Prova: una in `app/prove/pannelli.test.ts`; node 166 su 166. Viste nel browser d
 
 **Quello che resta, e di chi è** (24 novembre 2026):
 
-- **All’autore, perché tocca i `.fav`**: ~~M22, M23, M24~~ (applicate il 24 novembre, con il suo sì); L35 (nove risposte che non seguono lo stato), L36 (tre regole che non scattano mai), L37 (quattro frasi in seconda persona), e il commento di `aria.fav` di L38: da proporgli adesso.
+- **All’autore, perché tocca i `.fav`**: ~~M22, M23, M24~~ (applicate il 24 novembre, con il suo sì); ~~L37 (quattro frasi in seconda persona) e sei delle nove risposte di L35~~ (applicate il 25 novembre, con il suo sì: in fondo a questa sezione). Restano, da studiare e poi da proporgli: le altre tre risposte di L35 (la voce dei nomi riascoltata, «ricarica la tuta» e «togli la tuta» fuori posto, «prendi il seme» davanti alla teca chiusa), L36 (tre regole che non scattano mai) e il commento di `aria.fav` di L38.
 - **All’autore, perché sono scelte sue**: L8 (il testo grande sui pulsanti, sul dialogo e sul riquadro a destra), L12 (l’avviso su «Nuova partita»), L26 (le due righe scritte di Alirio Bruni), L31 (i due brani del tema che il gioco non suona), le tre impostazioni del repository di M18 e la sua descrizione (L25).
 - **Lasciate, con il perché**: M15 e L22 nelle parti dette sopra; M9 nella parte del movimento ridotto; L1 per le scritte del radar; L5 per la misura dei pulsanti al cambio di carattere; L20 per la pagina di prova e i percorsi nel pacchetto (una scelta dichiarata in ottobre); L34 (solo da sapere).
 - **Non verificato**: niente di questo è stato guardato né ascoltato nell’eseguibile; l’aggiornamento con «Annulla» si vedrà alla prossima beta.
@@ -534,7 +534,7 @@ Tutto quello che tocca i `.fav`. **Le tre medie (M22, M23, M24) sono applicate d
 
 **M24 · «Est» nel santuario durante la fuga** (`ponte.fav`): una variante per la fuga. Prima, sempre: «Non c’è più nessun indietro. C’è soltanto la figura luminosa, e quello che ha da dirmi.» Dopo, nella fuga: «Non c’è più nessun indietro. C’è soltanto l’apertura accanto al sostegno, e la gola che scende.» Il turno costa aria come ogni turno della fuga: non l’ho toccato.
 
-**L35, L36, L37 e L38 · da proporgli dopo le tre medie.** Pronte:
+**L35, L36, L37 e L38 · proposte dopo le tre medie.** Queste sette **sono applicate dal 25 novembre 2026**, con il sì dell’autore (più sotto, «Come sono entrate le sette frasi»):
 
 - **il sostegno sotto il 18 %** (`traduci.fav`): la stessa frase («Una riga sola di glifi, sul bordo. La matrice ne riconosce la forma, non il senso.») senza il punto d’aria, come le altre traduzioni sotto il 18;
 - **il bassorilievo inciso** (`memoria.fav`): nella descrizione, al posto di «…resta un palmo di pietra nuda.», «…c’è la mia: storta, accanto alla loro precisione.» (le parole di quando William incide);
@@ -542,7 +542,7 @@ Tutto quello che tocca i `.fav`. **Le tre medie (M22, M23, M24) sono applicate d
 - **parlare all’eco con il risuonatore addosso** (`equipaggio.fav`): la frase delle echi («…con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovrei posarlo.»), invece del colloquio;
 - **la cella usata nella fuga** (`aria.fav`): «La cifra torna sopra il rosso: ARIA [aria]%.», senza «La tuta riapre i canali secondari, e mi restituisce il faro.», che nella fuga nessuno ha tolto;
 - **«[Accendi il Sintonizzatore.]»** davanti all’Anziano (`ponte.fav`, due nodi): solo a chi il Sintonizzatore ce l’ha;
-- **L37**, la prima persona: «Se la muovo nella luce…» (`corridoio.fav`), «Quando ci passo sopra il guanto…» e «Dove la tocco, si accende.» (`ingresso.fav`), «Prima devo prenderlo.» (`memoria.fav`). Le prime tre possono essere un «tu» impersonale voluto: decide lui.
+- **L37**, la prima persona: «Se la muovo nella luce…» (`corridoio.fav`), «Quando ci passo sopra il guanto…» e «Dove la tocco, si accende.» (`ingresso.fav`), «Prima devo prenderlo.» (`memoria.fav`). Le prime tre potevano essere un «tu» impersonale voluto: ha deciso lui, tutte e quattro in prima persona.
 
 Da studiare ancora, prima di proporre: la voce dei nomi ascoltata una seconda volta o dopo che tace (`fuga.fav`: serve una frase nuova); «ricarica la tuta» e «togli la tuta» fuori posto (`tecnica.fav`, `santamaria.fav`); «prendi il seme» scritto davanti alla teca chiusa, che risponde «Non vedo ‘il seme’ qui.» (`vita.fav`); le tre regole che non scattano mai e la battuta di base del nodo «piccolo» (L36); il commento di `aria.fav` (L38).
 
@@ -553,3 +553,23 @@ Da studiare ancora, prima di proporre: la voce dei nomi ascoltata una seconda vo
 - **«Est» nel santuario**: una frase fissa («Non c’è più nessun indietro.») e due rami.
 
 Il copione rifatto, confrontato sigla per sigla con quello di prima: nessuna sigla spostata; `CO-001`, `CO-012` e `PO-035` diventano pezzi (`CO-001a`…`c`, `CO-012a`…`d`, `PO-035a`…`c`); cambiano il testo `CO-015`, `CO-016`, `ME-019`, `ME-056`, `RE-009` e la sola condizione `FU-004` e `FU-005`. Le prese sono 611 (erano 604), nessuna di quelle toccate era registrata. Rifatti `racconto.json`, la tabella delle prese del motore audio, il copione in PDF (473 prese da registrare) e il rapporto del 24 novembre (138 su 611, il 22,6 %). Il percorso `stele-per-prima` ha le attese nuove («Il circuito si chiude…», «Una delle chiavi.», mai «si aggiunge alla prima», «La seconda chiave.», «La terza chiave.»). Le trascrizioni di «vivi» e «tutto» sono rifatte. I salvataggi di prima si caricano «ricostruita».
+
+**Come sono entrate le sette frasi (25 novembre 2026).** L’autore, letta la proposta: «intanto tutto il racconto è in prima persona, questo è assoluto, non si torna indietro. Poi sì, applica anche le sette piccole sperando non siano cose già registrate». Nessuna lo era: delle prese toccate, nessuna è fra le 138 che Leonardo ha consegnato. Le parole sono quelle proposte; la forma, come per le tre medie, tiene ferme le sigle del copione.
+
+- **Il sostegno** (`traduci.fav`): le due regole di prima hanno ora condizioni che non si toccano (dal 18 al 74, e dal 75 in su), e la regola nuova, sotto il 18 e senza il punto d’aria, sta **in fondo al file**: prende la sigla dopo l’ultima (`TR-044`, uguale a `TR-041`).
+- **Il bassorilievo** (`memoria.fav`) e **la voce del piccolo guardata** (`equipaggio.fav`): un ramo a frasi intere dentro la descrizione che c’era (`ME-003a`…`c`, `EQ-015a`…`c`).
+- **La voce del piccolo con il risuonatore addosso** (`equipaggio.fav`): le tre risposte del nodo «domanda» si offrono solo a chi non lo porta, e una battuta in più del nodo, in fondo al file, dice la frase delle echi (`EQ-026`, uguale a `IN-078`). Resta «Lascia stare.».
+- **La cella nella fuga** (`aria.fav`): la frase sul faro è un ramo (`AR-009a` e `b`), detto solo fuori dalla fuga.
+- **«[Accendi il Sintonizzatore.]»** (`ponte.fav`): una condizione in più sui due nodi; nessuna parola cambia.
+- **La prima persona** (L37): quattro frasi (`CO-011`, `IN-062`, `IN-082`, `ME-030`). Ho riletto tutte le stringhe dei `.fav` cercando altro «tu» nel racconto: non ce n’è. Resta, com’è giusto, nelle parole degli altri (fra «»), negli indizi per chi gioca (fra parentesi) e nelle risposte che William dice a qualcuno.
+
+Il copione rifatto, confrontato sigla per sigla con quello del 24 novembre: nessuna sigla spostata, lo stesso ordine; tre prese diventano pezzi (`ME-003`, `EQ-015`, `AR-009`), quattro cambiano il testo (`CO-011`, `IN-062`, `IN-082`, `ME-030`), quattro la sola condizione (`EQ-021`, `EQ-022`, `TR-041`, `TR-042`), due sono nuove in fondo al loro capitolo e uguali a una che c’è già (`EQ-026`, `TR-044`). **Le prese sono 616** (erano 611), più 134 uguali. Rifatti `racconto.json`, la tabella delle prese del motore audio, i contesti dei due blocchi nuovi (`EQ-05`, `TR-10`), il copione in PDF (478 prese da registrare, 92 pagine) e il rapporto del 25 novembre (138 su 616, il 22,4 %), che prende il posto di quello del 24. I salvataggi di prima si caricano «ricostruita».
+
+Due prove nuove, perché nessun percorso di collaudo passa da queste frasi:
+
+- `app/prove/prima-persona.test.ts`: nessun «tu» nel racconto, in nessuno dei `.fav`; le quattro frasi di prima non devono tornare.
+- `frasi_di_stato()` in `collaudo/eventi.py`: gioca «tutto», «vivi» e «stiva-al-limite» fino al punto giusto e prova le sei frasi, prima e dopo (il risuonatore e il Sintonizzatore messi e tolti dall’inventario per la sola prova). Lanciata sulla storia del commit di prima, cade su tutte e sei.
+
+Tutto il resto rilanciato sulla storia nuova: 168 prove in node, 134 in Rust, i 20 percorsi nelle regressioni con le riprese, con i pulsanti, con i menu (i sei finali), nel diario, nei comandi scritti, nei salvataggi, la tipografia (1200 stringhe), le 20 partite nel motore audio. **Niente è stato guardato nell’eseguibile, e niente è in una beta.**
+
+**Che cosa resta dei `.fav`**, da studiare prima di proporre: la voce dei nomi ascoltata una seconda volta o dopo che tace (`fuga.fav`: serve una frase nuova, quindi parole sue); «ricarica la tuta» e «togli la tuta» fuori posto (`tecnica.fav`, `santamaria.fav`); «prendi il seme» scritto davanti alla teca chiusa (`vita.fav`); le tre regole che non scattano mai e la battuta di base del nodo «piccolo» (L36); il commento di `aria.fav` (L38).

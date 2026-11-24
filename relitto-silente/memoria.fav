@@ -34,7 +34,7 @@ Il bassorilievo è vergine.
 Il bassorilievo si chiama anche "bassorilievi".
 Il bassorilievo si chiama anche "scene".
 Il bassorilievo si chiama anche "fregio".
-La descrizione del bassorilievo è "Scene incise con una precisione che fa male agli occhi. La prima, la più consumata: tre soli a triangolo sopra un orizzonte, il più grande in alto, e sotto una folla che guarda in su. Poi semi di luce piantati su un mondo fertile, navi immense in partenza. L'ultima: le creature entrano nelle navi, e nessuna si volta indietro. La storia di un esodo, con i suoi glifi accanto a ogni scena. In basso, al margine, sotto una riga più piccola delle altre, resta un palmo di pietra nuda. (TRADUCILI.)".
+La descrizione del bassorilievo è "Scene incise con una precisione che fa male agli occhi. La prima, la più consumata: tre soli a triangolo sopra un orizzonte, il più grande in alto, e sotto una folla che guarda in su. Poi semi di luce piantati su un mondo fertile, navi immense in partenza. L'ultima: le creature entrano nelle navi, e nessuna si volta indietro. La storia di un esodo, con i suoi glifi accanto a ogni scena. [se il bassorilievo è segnata]In basso, al margine, sotto una riga più piccola delle altre, c'è la mia: storta, accanto alla loro precisione.[altrimenti]In basso, al margine, sotto una riga più piccola delle altre, resta un palmo di pietra nuda.[fine] (TRADUCILI.)".
 Invece di tocca il bassorilievo: dire "Le dita seguono i solchi. Creature che guardano tre soli, semi che germogliano fra le stelle, navi che partono: un epitaffio inciso per durare più di chi l'ha inciso.".
 Invece di incidi il bassorilievo se il giocatore non ha la taglierina: dire "Mi servirebbe qualcosa con cui incidere.".
 Invece di incidi il bassorilievo se il bassorilievo è segnata: dire "La mia riga è già lì, in basso, dove il fregio lasciava un palmo di pietra nuda.".
@@ -110,7 +110,7 @@ La descrizione del disco se la rotazione è almeno 2 è "Un disco di pietra nera
 La descrizione del disco se la rotazione è almeno 1 è "Un disco di pietra nera, spesso una decina di centimetri. Sulla faccia superiore, tre soli incisi a triangolo; il più grande adesso è a sinistra.".
 Invece di prendi il disco se il giocatore ha il disco: dire "Ce l'ho già.".
 Invece di prendi il disco se il disco è incastrato: dire "Libero il disco di pietra incastrato nel meccanismo del proiettore. Il proiettore non lo ripari, ma il disco, coperto di incisioni come quelle dell'altare, adesso ce l'ho io." e adesso il disco è staccato e adesso il disco è in inventario.
-Invece di gira il disco se il giocatore non ha il disco: dire "Prima prendilo.".
+Invece di gira il disco se il giocatore non ha il disco: dire "Prima devo prenderlo.".
 Invece di gira il disco se la rotazione è almeno 2: dire "Giro il disco di un terzo: il sole più grande adesso è in basso." e adesso la rotazione diventa 0.
 Invece di gira il disco se la rotazione è almeno 1: dire "Giro il disco di un terzo: il sole più grande adesso è in alto." e adesso la rotazione diventa 2.
 Invece di gira il disco: dire "Giro il disco di un terzo: il sole più grande adesso è a sinistra." e adesso la rotazione diventa 1.

@@ -89,7 +89,7 @@ L'eco è di scena.
 L'eco si chiama anche "eco del piccolo".
 L'eco si chiama anche "piccolo".
 L'eco si chiama anche "voce giovane".
-La descrizione dell'eco è "Soltanto una voce giovane, impressa nella culla, che il Sintonizzatore tiene agganciata. Fa sempre la stessa domanda.".
+La descrizione dell'eco è "Soltanto una voce giovane, impressa nella culla, che il Sintonizzatore tiene agganciata. [se la risposta è vera]La domanda non ricomincia più.[altrimenti]Fa sempre la stessa domanda.[fine]".
 
 Il dialogo dell'eco comincia con "domanda".
 
@@ -98,9 +98,9 @@ L'eco al nodo "domanda" dice "La voce c'è, ma la tuta tiene chiusi i canali sec
 L'eco al nodo "domanda" dice "La registrazione è ferma. La domanda non ricomincia più." se la risposta è vera.
 L'eco al nodo "domanda" dice "«…perché non si muove… perché nessuno…» Ricomincia, uguale. Le ho già detto che non lo so." se la risposta è incerta.
 L'eco al nodo "domanda" dice "Il resto della registrazione l'ho già sentito. Dormi. Domani te lo dico." se la risposta è taciuta.
-Al nodo "domanda" l'opzione "Perché siete arrivati." se la proiezione è attiva e la risposta è nessuna e l'aria è almeno 30 conduce al nodo "arrivati" e adesso la risposta è vera e adesso aumenta le risonanze e adesso diminuisci l'aria di 6.
-Al nodo "domanda" l'opzione "Non lo so." se la risposta è nessuna e l'aria è almeno 30 conduce al nodo "nonso" e adesso la risposta è incerta e adesso aumenta le risonanze e adesso diminuisci l'aria di 6.
-Al nodo "domanda" l'opzione "[Resta in silenzio.]" se la risposta è nessuna e l'aria è almeno 30 conduce al nodo "taciuto" e adesso la risposta è taciuta e adesso aumenta le risonanze e adesso diminuisci l'aria di 6.
+Al nodo "domanda" l'opzione "Perché siete arrivati." se la proiezione è attiva e la risposta è nessuna e l'aria è almeno 30 e il giocatore non ha il risuonatore conduce al nodo "arrivati" e adesso la risposta è vera e adesso aumenta le risonanze e adesso diminuisci l'aria di 6.
+Al nodo "domanda" l'opzione "Non lo so." se la risposta è nessuna e l'aria è almeno 30 e il giocatore non ha il risuonatore conduce al nodo "nonso" e adesso la risposta è incerta e adesso aumenta le risonanze e adesso diminuisci l'aria di 6.
+Al nodo "domanda" l'opzione "[Resta in silenzio.]" se la risposta è nessuna e l'aria è almeno 30 e il giocatore non ha il risuonatore conduce al nodo "taciuto" e adesso la risposta è taciuta e adesso aumenta le risonanze e adesso diminuisci l'aria di 6.
 Al nodo "domanda" l'opzione "Lascia stare." chiude il dialogo.
 
 L'eco al nodo "arrivati" dice "La domanda gira ancora una volta. «…perché non si muove…» Poi, per la prima volta, non ricomincia. Nella cuffia resta il fruscio della registrazione, che va avanti a vuoto. Non so se mi ha sentito. Non so nemmeno se una registrazione può sentire.".
@@ -111,3 +111,7 @@ Al nodo "nonso" l'opzione "Lascia stare." chiude il dialogo.
 
 L'eco al nodo "taciuto" dice "Sto zitto, e ascolto la registrazione fino in fondo. Dopo l'ultima domanda c'è un'altra voce, più vecchia, stanca, vicinissima: «Dormi. Domani te lo dico.» Poi più niente.[se le alcove è risuonata] È la voce del Navarca.[fine]".
 Al nodo "taciuto" l'opzione "Lascia stare." chiude il dialogo.
+
+# --- La voce del piccolo, con il risuonatore addosso: il coro la copre, come copre ogni eco ---
+# (in fondo al file, perché le sigle del copione di William non si spostino: revisione 37, L35)
+L'eco al nodo "domanda" dice "Il Sintonizzatore cerca una voce e ne trova cento: con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovrei posarlo." se il giocatore ha il risuonatore.

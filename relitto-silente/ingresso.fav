@@ -198,7 +198,7 @@ Le venature spente si chiama anche "venature".
 Le venature spente si chiama anche "rete".
 Le venature spente si chiama anche "parete".
 Le venature spente si chiama anche "pareti".
-La descrizione delle venature spente è "Una rete fine sotto la superficie, spenta. Quando ci passi sopra il guanto, il brusio risale.".
+La descrizione delle venature spente è "Una rete fine sotto la superficie, spenta. Quando ci passo sopra il guanto, il brusio risale.".
 Invece di tocca le venature spente se l'aria è meno di 30 e la fuga è lontana: dire "Il brusio risale sotto il guanto e si ferma lì: con la PROTEZIONE VITALE la tuta non gli cede niente. La cifra non si muove.".
 Invece di tocca le venature spente: dire "Il brusio risale sotto il guanto, e la cifra sul visore scende di un punto. Tolgo la mano." e adesso diminuisci l'aria di 1.
 
@@ -244,7 +244,7 @@ Le venature verdi sono di scena.
 Le venature verdi si chiama anche "venature".
 Le venature verdi si chiama anche "venatura".
 Le venature verdi si chiama anche "pareti".
-La descrizione delle venature verdi è "Una rete fine sotto la superficie. Dove la tocchi, si accende.".
+La descrizione delle venature verdi è "Una rete fine sotto la superficie. Dove la tocco, si accende.".
 Invece di tocca le venature verdi: dire "Una venatura si accende sotto il guanto, verde, e mi corre davanti per un palmo, giù per la gola, come se mi indicasse la strada. Poi si spegne.".
 
 # La voce dei nomi: il Sintonizzatore non si lascia spegnere. Il costo è fisso.

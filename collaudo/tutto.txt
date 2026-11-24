@@ -10,6 +10,7 @@
 # atteso: traduzione = 100
 # atteso: aria > 0
 # atteso: compare «SOTTO 30, PROTEZIONE VITALE»
+# atteso: compare «La tuta riapre i canali secondari, e mi restituisce il faro.»
 # atteso: compare «un conto che non le ho chiesto»
 
 # --- Atto I ---

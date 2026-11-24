@@ -1,12 +1,12 @@
 {
- "impronta_fav": "4c4442778656ad9a7182f2ef574e91348e9811984bd511377588b0cedb5fe0cf",
+ "impronta_fav": "5e16e5b96d3e6e0c0a2335cd72f774f7530d0ff24302d246bd269507ed6cdd3d",
  "totali": {
-  "prese": 611,
-  "uguali": 132,
-  "parole": 16031,
+  "prese": 616,
+  "uguali": 134,
+  "parole": 16057,
   "parlato": 23,
   "citazione": 252,
-  "william": 588
+  "william": 593
  },
  "capitoli": [
   {
@@ -4207,11 +4207,11 @@
          "segmenti": [
           [
            "william",
-           "Una rete fine sotto la superficie, spenta. Quando ci passi sopra il guanto, il brusio risale.",
+           "Una rete fine sotto la superficie, spenta. Quando ci passo sopra il guanto, il brusio risale.",
            ""
           ]
          ],
-         "william": "Una rete fine sotto la superficie, spenta. Quando ci passi sopra il guanto, il brusio risale.",
+         "william": "Una rete fine sotto la superficie, spenta. Quando ci passo sopra il guanto, il brusio risale.",
          "id": "IN-062"
         }
        ]
@@ -4704,11 +4704,11 @@
          "segmenti": [
           [
            "william",
-           "Una rete fine sotto la superficie. Dove la tocchi, si accende.",
+           "Una rete fine sotto la superficie. Dove la tocco, si accende.",
            ""
           ]
          ],
-         "william": "Una rete fine sotto la superficie. Dove la tocchi, si accende.",
+         "william": "Una rete fine sotto la superficie. Dove la tocco, si accende.",
          "id": "IN-082"
         }
        ]
@@ -5126,7 +5126,7 @@
          "segmenti": [
           [
            "william",
-           "Una lastra sottile e levigata, fredda, che somiglia all'onice. Se la muovi nella luce, sotto la superficie scorrono deboli circuiti perlescenti. Lo scanner saprebbe leggerla. ",
+           "Una lastra sottile e levigata, fredda, che somiglia all'onice. Se la muovo nella luce, sotto la superficie scorrono deboli circuiti perlescenti. Lo scanner saprebbe leggerla. ",
            ""
           ],
           [
@@ -5135,7 +5135,7 @@
            "SV-19-analizzala"
           ]
          ],
-         "william": "Una lastra sottile e levigata, fredda, che somiglia all'onice. Se la muovi nella luce, sotto la superficie scorrono deboli circuiti perlescenti. Lo scanner saprebbe leggerla.",
+         "william": "Una lastra sottile e levigata, fredda, che somiglia all'onice. Se la muovo nella luce, sotto la superficie scorrono deboli circuiti perlescenti. Lo scanner saprebbe leggerla.",
          "id": "CO-011"
         }
        ]
@@ -8717,12 +8717,36 @@
          "segmenti": [
           [
            "william",
-           "Soltanto una voce giovane, impressa nella culla, che il Sintonizzatore tiene agganciata. Fa sempre la stessa domanda.",
+           "Soltanto una voce giovane, impressa nella culla, che il Sintonizzatore tiene agganciata. ",
            ""
           ]
          ],
-         "william": "Soltanto una voce giovane, impressa nella culla, che il Sintonizzatore tiene agganciata. Fa sempre la stessa domanda.",
-         "id": "EQ-015"
+         "william": "Soltanto una voce giovane, impressa nella culla, che il Sintonizzatore tiene agganciata.",
+         "id": "EQ-015a"
+        },
+        {
+         "condizione": "se la risposta è vera",
+         "segmenti": [
+          [
+           "william",
+           "La domanda non ricomincia più.",
+           ""
+          ]
+         ],
+         "william": "La domanda non ricomincia più.",
+         "id": "EQ-015b"
+        },
+        {
+         "condizione": "altrimenti (se non: la risposta è vera)",
+         "segmenti": [
+          [
+           "william",
+           "Fa sempre la stessa domanda.",
+           ""
+          ]
+         ],
+         "william": "Fa sempre la stessa domanda.",
+         "id": "EQ-015c"
         }
        ]
       },
@@ -8865,7 +8889,7 @@
        "id": "EQ-021",
        "tipo": "opzione",
        "soggetto": "nodo domanda",
-       "condizione": "la proiezione è attiva e la risposta è nessuna e l'aria è almeno 30",
+       "condizione": "la proiezione è attiva e la risposta è nessuna e l'aria è almeno 30 e non ho il risuonatore",
        "riga": "equipaggio.fav:101",
        "pezzi": [
         {
@@ -8886,7 +8910,7 @@
        "id": "EQ-022",
        "tipo": "opzione",
        "soggetto": "nodo domanda",
-       "condizione": "la risposta è nessuna e l'aria è almeno 30",
+       "condizione": "la risposta è nessuna e l'aria è almeno 30 e non ho il risuonatore",
        "riga": "equipaggio.fav:102",
        "pezzi": [
         {
@@ -9009,6 +9033,39 @@
        ]
       }
      ]
+    },
+    {
+     "id": "EQ-05",
+     "titolo": "NIDO · La voce del piccolo, con il risuonatore addosso: il coro la copre, come copre ogni eco",
+     "sezione": "NIDO",
+     "sotto": "La voce del piccolo, con il risuonatore addosso: il coro la copre, come copre ogni eco",
+     "note": [
+      "(in fondo al file, perché le sigle del copione di William non si spostino: revisione 37, L35)"
+     ],
+     "prese": [
+      {
+       "id": "EQ-026",
+       "tipo": "battuta",
+       "soggetto": "L'eco · domanda",
+       "condizione": "ho il risuonatore",
+       "riga": "equipaggio.fav:117",
+       "pezzi": [
+        {
+         "condizione": null,
+         "segmenti": [
+          [
+           "william",
+           "Il Sintonizzatore cerca una voce e ne trova cento: con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovrei posarlo.",
+           ""
+          ]
+         ],
+         "william": "Il Sintonizzatore cerca una voce e ne trova cento: con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovrei posarlo.",
+         "uguale": "IN-078",
+         "id": "EQ-026"
+        }
+       ]
+      }
+     ]
     }
    ]
   },
@@ -9078,7 +9135,43 @@
          "segmenti": [
           [
            "william",
-           "Scene incise con una precisione che fa male agli occhi. La prima, la più consumata: tre soli a triangolo sopra un orizzonte, il più grande in alto, e sotto una folla che guarda in su. Poi semi di luce piantati su un mondo fertile, navi immense in partenza. L'ultima: le creature entrano nelle navi, e nessuna si volta indietro. La storia di un esodo, con i suoi glifi accanto a ogni scena. In basso, al margine, sotto una riga più piccola delle altre, resta un palmo di pietra nuda. ",
+           "Scene incise con una precisione che fa male agli occhi. La prima, la più consumata: tre soli a triangolo sopra un orizzonte, il più grande in alto, e sotto una folla che guarda in su. Poi semi di luce piantati su un mondo fertile, navi immense in partenza. L'ultima: le creature entrano nelle navi, e nessuna si volta indietro. La storia di un esodo, con i suoi glifi accanto a ogni scena. ",
+           ""
+          ]
+         ],
+         "william": "Scene incise con una precisione che fa male agli occhi. La prima, la più consumata: tre soli a triangolo sopra un orizzonte, il più grande in alto, e sotto una folla che guarda in su. Poi semi di luce piantati su un mondo fertile, navi immense in partenza. L'ultima: le creature entrano nelle navi, e nessuna si volta indietro. La storia di un esodo, con i suoi glifi accanto a ogni scena.",
+         "id": "ME-003a"
+        },
+        {
+         "condizione": "se il bassorilievo è segnata",
+         "segmenti": [
+          [
+           "william",
+           "In basso, al margine, sotto una riga più piccola delle altre, c'è la mia: storta, accanto alla loro precisione.",
+           ""
+          ]
+         ],
+         "william": "In basso, al margine, sotto una riga più piccola delle altre, c'è la mia: storta, accanto alla loro precisione.",
+         "id": "ME-003b"
+        },
+        {
+         "condizione": "altrimenti (se non: il bassorilievo è segnata)",
+         "segmenti": [
+          [
+           "william",
+           "In basso, al margine, sotto una riga più piccola delle altre, resta un palmo di pietra nuda.",
+           ""
+          ]
+         ],
+         "william": "In basso, al margine, sotto una riga più piccola delle altre, resta un palmo di pietra nuda.",
+         "id": "ME-003c"
+        },
+        {
+         "condizione": null,
+         "segmenti": [
+          [
+           "spazio",
+           " ",
            ""
           ],
           [
@@ -9087,8 +9180,7 @@
            "SV-40-traducili"
           ]
          ],
-         "william": "Scene incise con una precisione che fa male agli occhi. La prima, la più consumata: tre soli a triangolo sopra un orizzonte, il più grande in alto, e sotto una folla che guarda in su. Poi semi di luce piantati su un mondo fertile, navi immense in partenza. L'ultima: le creature entrano nelle navi, e nessuna si volta indietro. La storia di un esodo, con i suoi glifi accanto a ogni scena. In basso, al margine, sotto una riga più piccola delle altre, resta un palmo di pietra nuda.",
-         "id": "ME-003"
+         "william": ""
         }
        ]
       },
@@ -9700,11 +9792,11 @@
          "segmenti": [
           [
            "william",
-           "Prima prendilo.",
+           "Prima devo prenderlo.",
            ""
           ]
          ],
-         "william": "Prima prendilo.",
+         "william": "Prima devo prenderlo.",
          "id": "ME-030"
         }
        ]
@@ -17513,7 +17605,7 @@
        "id": "TR-041",
        "tipo": "risposta",
        "soggetto": "traduci il sostegno",
-       "condizione": "la traduzione è sotto 75",
+       "condizione": "la traduzione è almeno 18 e la traduzione è sotto 75",
        "riga": "traduci.fav:86",
        "pezzi": [
         {
@@ -17534,7 +17626,7 @@
        "id": "TR-042",
        "tipo": "risposta",
        "soggetto": "traduci il sostegno",
-       "condizione": null,
+       "condizione": "la traduzione è almeno 75",
        "riga": "traduci.fav:87",
        "pezzi": [
         {
@@ -17583,6 +17675,39 @@
          ],
          "william": "La matrice cerca un testo, e non lo trova. Non c'è niente da tradurre: è un sole.",
          "id": "TR-043"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "TR-10",
+     "titolo": "LA MATRICE DI TRADUZIONE · Il sostegno, con la matrice sotto il 18: come le altre traduzioni, non costa aria",
+     "sezione": "LA MATRICE DI TRADUZIONE",
+     "sotto": "Il sostegno, con la matrice sotto il 18: come le altre traduzioni, non costa aria",
+     "note": [
+      "(in fondo al file, perché le sigle del copione di William non si spostino: revisione 37, L35)"
+     ],
+     "prese": [
+      {
+       "id": "TR-044",
+       "tipo": "risposta",
+       "soggetto": "traduci il sostegno",
+       "condizione": "la traduzione è sotto 18",
+       "riga": "traduci.fav:94",
+       "pezzi": [
+        {
+         "condizione": null,
+         "segmenti": [
+          [
+           "william",
+           "Una riga sola di glifi, sul bordo. La matrice ne riconosce la forma, non il senso.",
+           ""
+          ]
+         ],
+         "william": "Una riga sola di glifi, sul bordo. La matrice ne riconosce la forma, non il senso.",
+         "uguale": "TR-041",
+         "id": "TR-044"
         }
        ]
       }
@@ -17866,15 +17991,22 @@
            "servizio",
            "ARIA [aria]%.",
            "la cifra dell'aria"
-          ],
+          ]
+         ],
+         "william": "La cifra torna sopra il rosso:",
+         "id": "AR-009a"
+        },
+        {
+         "condizione": "se la fuga è lontana",
+         "segmenti": [
           [
            "william",
            " La tuta riapre i canali secondari, e mi restituisce il faro.",
            ""
           ]
          ],
-         "william": "La cifra torna sopra il rosso:  La tuta riapre i canali secondari, e mi restituisce il faro.",
-         "id": "AR-009"
+         "william": "La tuta riapre i canali secondari, e mi restituisce il faro.",
+         "id": "AR-009b"
         }
        ]
       },

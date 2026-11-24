@@ -3,7 +3,7 @@
 //! il nome del loro file in `audio/musica-ia/WI/`. Una presa che non è ancora arrivata ha la sua sigla e
 //! nessun file: resta muta. In fondo, le parti delle prese con la voce di servizio in mezzo (`-p1`, `-p2`…).
 
-pub const PRESE: [(&str, &str); 616] = [
+pub const PRESE: [(&str, &str); 621] = [
     ("SM-001", "WI-SM-001.mp3"),
     ("SM-002", "WI-SM-002.mp3"),
     ("SM-003", "WI-SM-003.mp3"),
@@ -320,7 +320,9 @@ pub const PRESE: [(&str, &str); 616] = [
     ("EQ-012", "WI-EQ-012.mp3"),
     ("EQ-013", "WI-EQ-013.mp3"),
     ("EQ-014", "WI-EQ-014.mp3"),
-    ("EQ-015", "WI-EQ-015.mp3"),
+    ("EQ-015a", "WI-EQ-015a.mp3"),
+    ("EQ-015b", "WI-EQ-015b.mp3"),
+    ("EQ-015c", "WI-EQ-015c.mp3"),
     ("EQ-016", "WI-EQ-016.mp3"),
     ("EQ-017", "WI-EQ-017.mp3"),
     ("EQ-018", "WI-EQ-018.mp3"),
@@ -334,7 +336,9 @@ pub const PRESE: [(&str, &str); 616] = [
     ("EQ-025b", "WI-EQ-025b.mp3"),
     ("ME-001", "WI-ME-001.mp3"),
     ("ME-002", "WI-ME-002.mp3"),
-    ("ME-003", "WI-ME-003.mp3"),
+    ("ME-003a", "WI-ME-003a.mp3"),
+    ("ME-003b", "WI-ME-003b.mp3"),
+    ("ME-003c", "WI-ME-003c.mp3"),
     ("ME-004", "WI-ME-004.mp3"),
     ("ME-006", "WI-ME-006.mp3"),
     ("ME-007", "WI-ME-007.mp3"),
@@ -600,7 +604,8 @@ pub const PRESE: [(&str, &str); 616] = [
     ("AR-006", "WI-AR-006.mp3"),
     ("AR-007", "WI-AR-007.mp3"),
     ("AR-008", "WI-AR-008.mp3"),
-    ("AR-009", "WI-AR-009.mp3"),
+    ("AR-009a", "WI-AR-009a.mp3"),
+    ("AR-009b", "WI-AR-009b.mp3"),
     ("AR-010", "WI-AR-010.mp3"),
     ("RE-001a", "WI-RE-001a.mp3"),
     ("RE-001b", "WI-RE-001b.mp3"),

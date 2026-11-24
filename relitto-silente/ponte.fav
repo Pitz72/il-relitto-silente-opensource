@@ -201,13 +201,13 @@ Al nodo "piccolo" l'opzione "E io che c'entro?" conduce al nodo "sangue".
 
 L'anziano al nodo "sangue" dice "«Abbiamo seminato in un mondo scelto perché la vita ci attecchisse. Se abbia attecchito, da qui non potevamo saperlo. Non lo sappiamo nemmeno adesso, che sei qui.» (Una pausa.) «Ma tu sei qui.»".
 Al nodo "sangue" l'opzione "Ho lasciato dei segni, là dietro." se le tacche è segnata oppure il bassorilievo è segnata oppure le capsule è segnata oppure il segno non è assente conduce al nodo "tracce".
-Al nodo "sangue" l'opzione "[Accendi il Sintonizzatore.]" se le risonanze è almeno 4 conduce al nodo "musica".
+Al nodo "sangue" l'opzione "[Accendi il Sintonizzatore.]" se le risonanze è almeno 4 e il giocatore ha il sintonizzatore conduce al nodo "musica".
 Al nodo "sangue" l'opzione "[Guarda la cifra dell'aria.]" conduce al nodo "congedo".
 
 L'anziano al nodo "tracce" dice "«Lo so. Ho sentito la tua mano sulla pietra, goffa accanto alla nostra. Non cambierà niente: forse diventeranno polvere insieme alla nave. Ma li hai fatti lo stesso, per la stessa ragione per cui qualcuno, prima di te, incise tre tacche in una parete che nessuno avrebbe più letto.»".
 L'anziano al nodo "tracce" dice "«Lo so. Hai firmato accanto a lui, sulla sua placca: adesso lì non c'è più un uomo solo. Non cambierà niente, forse. Ma l'hai fatto per la stessa ragione per cui lui incise tre tacche in una parete che nessuno avrebbe più letto.»" se il segno è firma.
 L'anziano al nodo "tracce" dice "«Lo so. Hai finito la sua frase: aveva ragione, e adesso è scritto. Non cambierà niente, forse. Ma l'hai fatto per la stessa ragione per cui lui incise tre tacche in una parete che nessuno avrebbe più letto.»" se il segno è parola.
-Al nodo "tracce" l'opzione "[Accendi il Sintonizzatore.]" se le risonanze è almeno 4 conduce al nodo "musica".
+Al nodo "tracce" l'opzione "[Accendi il Sintonizzatore.]" se le risonanze è almeno 4 e il giocatore ha il sintonizzatore conduce al nodo "musica".
 Al nodo "tracce" l'opzione "[Guarda la cifra dell'aria.]" conduce al nodo "congedo".
 
 L'anziano al nodo "musica" dice "(Accendo il Sintonizzatore. Non aggancia parole: aggancia quello che c'è sotto la sua voce, il canto del primo momento, basso, che non si era mai fermato.) «Lo senti. Le tue macchine traducono le parole, e le parole erano la parte più piccola.»".

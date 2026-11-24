@@ -57,3 +57,11 @@ Le varianti nuove stanno dentro le regole che c’erano già, e **nessuna sigla 
 diventate pezzi (`CO-001a`…`c`, `CO-012a`…`d`, `PO-035a`…`c`), cinque hanno il testo nuovo (`CO-015`, `CO-016`,
 `ME-019`, `ME-056`, `RE-009`). Nessuna era registrata. Le prese sono 611 (più 132 uguali); nel PDF le 473 ancora da
 registrare, 92 pagine. È questo il PDF da mandare a Leonardo, con il rapporto del 24 novembre.
+
+Rifatto il 25 novembre 2026, dopo sette frasi piccole approvate dall’autore (revisione 37: L35 in parte, L37), con
+la sua regola: tutto il racconto è in prima persona. Anche stavolta **nessuna sigla si è spostata**: tre prese sono
+diventate pezzi (`ME-003a`…`c`, `EQ-015a`…`c`, `AR-009a` e `b`), quattro hanno il testo nuovo (`CO-011`, `IN-062`,
+`IN-082`, `ME-030`: dicevano «tu», ora dice William), due sono nuove in fondo al loro capitolo e uguali a una che
+c’è già (`EQ-026` come `IN-078`, `TR-044` come `TR-041`). Nessuna era registrata. Le prese sono 616 (più 134
+uguali); nel PDF le 478 ancora da registrare, 92 pagine. È questo il PDF da mandare a Leonardo, con il rapporto del
+25 novembre (138 su 616, il 22,4 %).

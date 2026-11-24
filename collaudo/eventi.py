@@ -211,6 +211,110 @@ def il_ponte_e_il_motore():
     return problemi
 
 
+def frasi_di_stato():
+    """Sei risposte che seguono lo stato della partita (revisione 37, L35; applicate il 25 novembre 2026 con il sì
+    dell'autore). Nessun percorso ci passa da solo: qui si gioca un percorso fino al punto giusto e si prova la
+    frase, prima e dopo. Dove serve una cosa che il percorso non ha addosso (il risuonatore davanti alla culla, il
+    Sintonizzatore lasciato indietro) la si mette o la si toglie dall'inventario del motore, per la sola prova."""
+    problemi = []
+
+    def comandi(nome):
+        with open(os.path.join(QUI, nome), encoding="utf-8") as f:
+            return [r for r in f.read().splitlines() if r.strip() and not r.startswith("#")]
+
+    def dice(comando):
+        t = json.loads(ponte.rel_comando(comando))
+        return t, " ".join(str(e.get("testo", "")) for e in t["eventi"] if isinstance(e, dict))
+
+    def scelte(t):
+        return [s.get("etichetta") for s in t["pulsanti"].get("scelte", [])]
+
+    def fino_a(nome, fermati, compreso=True):
+        ponte.rel_avvia(1)
+        for c in comandi(nome):
+            if c == fermati and not compreso:
+                return True
+            ponte.rel_comando(c)
+            if c == fermati:
+                return True
+        problemi.append(f"il percorso {nome} non ha più il comando «{fermati}»: la prova delle frasi di stato non parte")
+        return False
+
+    def addosso(cosa, si):
+        m = ponte._mondo
+        tipo = type(m.inventario)
+        m.inventario = tipo(list(m.inventario) + [cosa]) if si else tipo(x for x in m.inventario if x != cosa)
+
+    # il bassorilievo, prima e dopo la riga di William
+    if fino_a("tutto.txt", "traduci il bassorilievo"):
+        _, prima = dice("esamina il bassorilievo")
+        dice("incidi il bassorilievo")
+        _, dopo = dice("esamina il bassorilievo")
+        if "resta un palmo di pietra nuda" not in prima or "c'è la mia" in prima:
+            problemi.append("il bassorilievo non ancora inciso non dice più «resta un palmo di pietra nuda»")
+        if "c'è la mia: storta, accanto alla loro precisione." not in dopo or "pietra nuda" in dopo:
+            problemi.append("il bassorilievo inciso non dice «c'è la mia: storta, accanto alla loro precisione.»")
+
+    # la voce del piccolo: la domanda, il coro che la copre con il risuonatore addosso, e dopo la risposta vera
+    if fino_a("tutto.txt", "sintonizza la culla"):
+        _, eco = dice("esamina l'eco")
+        if "Fa sempre la stessa domanda." not in eco:
+            problemi.append("la voce del piccolo, prima della risposta, non dice più «Fa sempre la stessa domanda.»")
+        addosso("risuonatore", True)
+        t, coro = dice("parla con l'eco")
+        risposte = {"Perché siete arrivati.", "Non lo so.", "[Resta in silenzio.]"} & set(scelte(t))
+        if "il coro intero copre ogni eco" not in coro or risposte or "Lascia stare." not in scelte(t):
+            problemi.append(f"con il risuonatore addosso la voce del piccolo si lascia interrogare (risposte: {scelte(t)})")
+        addosso("risuonatore", False)
+    if fino_a("tutto.txt", "Perché siete arrivati."):
+        t, _ = dice("Lascia stare.")
+        if t["stato"].get("dialogo"):
+            dice("esci")
+        _, eco = dice("esamina l'eco")
+        if "La domanda non ricomincia più." not in eco or "Fa sempre la stessa domanda." in eco:
+            problemi.append("la voce del piccolo, avuta la risposta vera, fa ancora «sempre la stessa domanda»")
+
+    # il sostegno tradotto con la matrice sotto il 18: la frase, e nessun punto d'aria
+    if fino_a("vivi.txt", "parla con l'anziano", compreso=False):
+        t, _ = dice("guarda")
+        matrice, aria = t["suono"]["stati"].get("traduzione"), t["stato"].get("aria")
+        t, sostegno = dice("traduci il sostegno")
+        if not isinstance(matrice, (int, float)) or matrice >= 18:
+            problemi.append(f"«vivi» arriva al santuario con la matrice a {matrice}: il sostegno sotto il 18 non è più provato")
+        elif "La matrice ne riconosce la forma, non il senso." not in sostegno or t["stato"].get("aria") != aria:
+            problemi.append(f"il sostegno tradotto con la matrice a {matrice} costa aria ({aria} → {t['stato'].get('aria')}) o dice altro")
+
+    # «[Accendi il Sintonizzatore.]» davanti all'Anziano: solo a chi il Sintonizzatore ce l'ha
+    ponte.rel_avvia(1)
+    t = None
+    for c in comandi("tutto.txt"):
+        if c == "[Accendi il Sintonizzatore.]":
+            break
+        t = json.loads(ponte.rel_comando(c))
+    if t is None or "[Accendi il Sintonizzatore.]" not in scelte(t):
+        problemi.append("«tutto» non arriva più alla risposta «[Accendi il Sintonizzatore.]»")
+    else:
+        addosso("sintonizzatore", False)
+        senza = scelte(json.loads(ponte.rel_riprendi())["turno"])
+        if "[Accendi il Sintonizzatore.]" in senza or not senza:
+            problemi.append(f"senza il Sintonizzatore addosso l'Anziano offre ancora di accenderlo ({senza})")
+
+    # la cella di riserva usata nella fuga: la cifra torna, ma nessuno aveva tolto il faro
+    ponte.rel_avvia(1)
+    cella = None
+    for c in comandi("stiva-al-limite.txt"):
+        s = json.loads(ponte.rel_comando(c))["suono"]["stati"]
+        if s.get("fuga") == "iniziata" and (s.get("aria") or 100) < 30 and s.get("cella"):
+            _, cella = dice("usa la cella di riserva")
+            break
+    if cella is None:
+        problemi.append("«stiva-al-limite» non ha più un turno della fuga con l'aria sotto il 30 e la cella da usare")
+    elif "La cifra torna sopra il rosso" not in cella or "mi restituisce il faro" in cella:
+        problemi.append("la cella usata nella fuga restituisce un faro che nessuno aveva tolto, o non dice la cifra")
+    ponte.rel_avvia(1)
+    return problemi
+
+
 def gioca(percorso, conta):
     """Gioca un percorso dal ponte; restituisce (problemi, eventi in ordine, finale, esito, il testo
     dell'ultimo turno)."""
@@ -488,6 +592,11 @@ def main():
     for p in motore:
         print(f"     {p}")
 
+    stato = frasi_di_stato()
+    print(f"[{'NO' if stato else 'OK'}] le frasi che seguono lo stato: il bassorilievo inciso, la voce del piccolo, il sostegno, il Sintonizzatore, la cella nella fuga")
+    for p in stato:
+        print(f"     {p}")
+
     mondo = compila_mondo(STORIA)
     divergenze = [d for d in (indisturbato(mondo, os.path.join(QUI, f"{n}.txt")) for n in ponte.FINALI) if d]
     print(f"[{'NO' if divergenze else 'OK'}] il ponte non cambia la partita (i sei finali)")
@@ -498,7 +607,7 @@ def main():
         print()
         for nome, n in sorted(conta.items()):
             print(f"  {n:5}  {nome}")
-    sbagli = falliti + bool(frasi) + bool(rami) + bool(mai or ignoti) + bool(persi) + bool(perse) + bool(servizio) + bool(william) + bool(addio) + bool(motore) + bool(divergenze)
+    sbagli = falliti + bool(frasi) + bool(rami) + bool(mai or ignoti) + bool(persi) + bool(perse) + bool(servizio) + bool(william) + bool(addio) + bool(motore) + bool(stato) + bool(divergenze)
     print(f"\nPercorsi: {len(percorsi)}; falliti: {falliti}. Eventi diversi: {len(conta)}; "
           f"eventi in tutto: {sum(conta.values())}.")
     return 1 if sbagli else 0
