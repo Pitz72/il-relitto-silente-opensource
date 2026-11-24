@@ -510,3 +510,38 @@ Prova: una in `app/prove/pannelli.test.ts`; node 166 su 166. Viste nel browser d
 - **All’autore, perché sono scelte sue**: L8 (il testo grande sui pulsanti, sul dialogo e sul riquadro a destra), L12 (l’avviso su «Nuova partita»), L26 (le due righe scritte di Alirio Bruni), L31 (i due brani del tema che il gioco non suona), le tre impostazioni del repository di M18 e la sua descrizione (L25).
 - **Lasciate, con il perché**: M15 e L22 nelle parti dette sopra; M9 nella parte del movimento ridotto; L1 per le scritte del radar; L5 per la misura dei pulsanti al cambio di carattere; L20 per la pagina di prova e i percorsi nel pacchetto (una scelta dichiarata in ottobre); L34 (solo da sapere).
 - **Non verificato**: niente di questo è stato guardato né ascoltato nell’eseguibile; l’aggiornamento con «Annulla» si vedrà alla prossima beta.
+
+### Le proposte di testo per l’autore (24 novembre 2026)
+
+Tutto quello che tocca i `.fav`. **Niente di questo è applicato.** Le tre medie sono state provate su una copia della storia (`relitto-silente/` copiata fuori dal progetto, modificata, compilata e giocata con il percorso `stele-per-prima`, più «esamina la grande porta» dopo ogni chiave ed «est» nel santuario durante la fuga): la partita si vince, e i testi sono quelli scritti qui.
+
+**M22 · i segni della fuga dentro la Santa Maria** (`fuga.fav`, le due regole a sorte). Nessuna parola cambia: si aggiunge una condizione.
+
+- «Da qualche parte dietro di me qualcosa crolla…»: non esce più nella stiva (`e il giocatore non è nella stiva`).
+- «Le pareti si incrinano in lunghe linee verdi…»: non esce più nella stiva né sullo scafo, dove pareti non ce ne sono (`e il giocatore non è nella stiva e il giocatore non è nello scafo`).
+
+**M23 · le tre chiavi in qualunque ordine** (`corridoio.fav`, `relitto.fav`, `memoria.fav`).
+
+| Dove | Prima | Dopo |
+|---|---|---|
+| la Stele nella porta | «…Si adatta. Una linea di luce bianca si aggiunge alla prima.» | «…Si adatta. Una linea di luce bianca corre lungo il bordo della porta e ci resta.» (le parole del seme) |
+| il Nucleo nella porta | «…nell’incavo a molte facce: una linea di luce ambrata chiude il circuito, e un ronzio profondo, armonico, riempie il corridoio.» | «…nell’incavo a molte facce: una linea di luce ambrata corre lungo il bordo della porta e ci resta.» |
+| la porta che si apre, alla terza chiave qualunque sia | «Le tre luci — verde, bianca e ambrata — pulsano all’unisono. La loro frequenza accelera, il ronzio diventa un gong…» | «Il circuito si chiude, e un ronzio profondo, armonico, riempie il corridoio. Le tre luci — verde, bianca e ambrata — pulsano all’unisono. La loro frequenza accelera, il ronzio diventa un gong…» (le parole tolte al Nucleo, spostate qui) |
+| la porta guardata con una o due chiavi dentro | «…Alla base, tre incavi scuri di forma diversa: uno ovoidale, uno rettangolare e piatto, uno cristallino a molte facce. Per aprirla servono tre chiavi.» | «…Alla base, tre incavi di forma diversa: uno ovoidale, uno rettangolare e piatto, uno cristallino a molte facce. Uno è pieno.» / «…Due sono pieni.» (le parole del diario, approvate il 5 novembre) |
+| la Stele presa | «…e tiepida. La seconda chiave.» | «…e tiepida. Una delle chiavi.» |
+| il Nucleo preso | «…dallo scomparto del terminale. La terza chiave.» | «…dallo scomparto del terminale. Una delle chiavi.» |
+| il corridoio, a porta chiusa, dopo la quarta tacca | «…qualcuno ha inciso tre tacche orizzontali.» | «…qualcuno ha inciso [quattro o tre] tacche orizzontali.» (come già fa la descrizione a porta aperta) |
+
+**M24 · «Est» nel santuario durante la fuga** (`ponte.fav`): una variante per la fuga. Prima, sempre: «Non c’è più nessun indietro. C’è soltanto la figura luminosa, e quello che ha da dirmi.» Dopo, nella fuga: «Non c’è più nessun indietro. C’è soltanto l’apertura accanto al sostegno, e la gola che scende.» Il turno costa aria come ogni turno della fuga: non l’ho toccato.
+
+**L35, L36, L37 e L38 · da proporgli dopo le tre medie.** Pronte:
+
+- **il sostegno sotto il 18 %** (`traduci.fav`): la stessa frase («Una riga sola di glifi, sul bordo. La matrice ne riconosce la forma, non il senso.») senza il punto d’aria, come le altre traduzioni sotto il 18;
+- **il bassorilievo inciso** (`memoria.fav`): nella descrizione, al posto di «…resta un palmo di pietra nuda.», «…c’è la mia: storta, accanto alla loro precisione.» (le parole di quando William incide);
+- **l’eco dopo la risposta vera** (`equipaggio.fav`): al posto di «Fa sempre la stessa domanda.», «La domanda non ricomincia più.» (le parole del nodo);
+- **parlare all’eco con il risuonatore addosso** (`equipaggio.fav`): la frase delle echi («…con il risuonatore addosso, il coro intero copre ogni eco. Per sentirne una sola dovrei posarlo.»), invece del colloquio;
+- **la cella usata nella fuga** (`aria.fav`): «La cifra torna sopra il rosso: ARIA [aria]%.», senza «La tuta riapre i canali secondari, e mi restituisce il faro.», che nella fuga nessuno ha tolto;
+- **«[Accendi il Sintonizzatore.]»** davanti all’Anziano (`ponte.fav`, due nodi): solo a chi il Sintonizzatore ce l’ha;
+- **L37**, la prima persona: «Se la muovo nella luce…» (`corridoio.fav`), «Quando ci passo sopra il guanto…» e «Dove la tocco, si accende.» (`ingresso.fav`), «Prima devo prenderlo.» (`memoria.fav`). Le prime tre possono essere un «tu» impersonale voluto: decide lui.
+
+Da studiare ancora, prima di proporre: la voce dei nomi ascoltata una seconda volta o dopo che tace (`fuga.fav`: serve una frase nuova); «ricarica la tuta» e «togli la tuta» fuori posto (`tecnica.fav`, `santamaria.fav`); «prendi il seme» scritto davanti alla teca chiusa, che risponde «Non vedo ‘il seme’ qui.» (`vita.fav`); le tre regole che non scattano mai e la battuta di base del nodo «piccolo» (L36); il commento di `aria.fav` (L38).
