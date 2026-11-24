@@ -17,6 +17,7 @@ documenti di `progettazione/`.
 - **William racconta anche i primi passi nel relitto** (Leonardo Tomassetti): lo scafo nero sotto gli stivali, la giuntura, il taglio, la discesa nel varco e la camera tonda.
 - **La cifra dell’aria è una scritta del visore**, «ARIA 28%», come PROTEZIONE VITALE: la legge la voce della tuta, non William, e le sue frasi non dicono più il numero.
 - **Alla radio Yusuf e William parlano nell’ordine del testo**: Yusuf dice una frase, William racconta, Yusuf continua. La voce di Yusuf è un poco più alta, e quando William dice che Yusuf conta fino a dieci il conto non si sente più.
+- **Nella scansione lunga il computer di bordo parla in mezzo al racconto di William**, dove sta il suo testo: William lancia la scansione, il computer dice la lunghezza e la massa, William commenta, il computer scrive «MATERIALE NON IN ARCHIVIO». Lo stesso sullo scafo, quando il multiscanner non si decide.
 
 ### Aggiunto
 
@@ -25,6 +26,7 @@ documenti di `progettazione/`.
 
 ### Corretto
 
+- **William diceva tutta la scansione lunga, e il computer di bordo parlava soltanto dopo** (documento 41, §5; l’autore, 24 novembre 2026: «va sistemato»). Le prese con la voce di servizio in mezzo (`SM-030`, `IN-010`) si dividono nelle pause che Leonardo ha lasciato (`strumenti/audio/voce_william.py`, `TAGLI`: niente è tolto alle parole), il ponte manda le parti dove sta il loro testo e quante parti di servizio le precedono (`dopo_servizio`), e la fila delle voci cede a William quando tocca a lui (`VociNave::passo_con`, `Racconto::soglia_servizio`). Due prove nuove in Rust, una nel collaudo.
 - **La cifra dell’aria era nel copione di William** (documento 41, §5; documento 35, §11): ora è della voce di servizio, una parte per valore da 0 a 100 da generare (`servizio-nuove.txt`). Il copione per Leonardo ha soltanto le prese ancora da registrare, e la firma «W. T.» si legge «doppia vu, ti».
 - **Le prese in due parti non venivano riconosciute** (`strumenti/audio/voce_william.py`): il nome del file si confrontava in maiuscolo con la sigla del copione, che per le parti ha la lettera minuscola (`SM-074a`). Ora il confronto è in maiuscolo da entrambe le parti, e la chiave resta quella del copione.
 

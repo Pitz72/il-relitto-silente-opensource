@@ -1,9 +1,9 @@
 //! Scritto da `strumenti/audio/voce_william.py`: non si corregge a mano.
 //! Le prese di William (documento 41): tutte le sigle del copione (`doppiaggio/william/copione.json`), con
 //! il nome del loro file in `audio/musica-ia/WI/`. Una presa che non è ancora arrivata ha la sua sigla e
-//! nessun file: resta muta.
+//! nessun file: resta muta. In fondo, le parti delle prese con la voce di servizio in mezzo (`-p1`, `-p2`…).
 
-pub const PRESE: [(&str, &str); 604] = [
+pub const PRESE: [(&str, &str); 609] = [
     ("SM-001", "WI-SM-001.mp3"),
     ("SM-002", "WI-SM-002.mp3"),
     ("SM-003", "WI-SM-003.mp3"),
@@ -608,4 +608,9 @@ pub const PRESE: [(&str, &str); 604] = [
     ("RE-009", "WI-RE-009.mp3"),
     ("RE-010", "WI-RE-010.mp3"),
     ("RE-011", "WI-RE-011.mp3"),
+    ("IN-010-p1", "WI-IN-010-p1.mp3"),
+    ("IN-010-p2", "WI-IN-010-p2.mp3"),
+    ("SM-030-p1", "WI-SM-030-p1.mp3"),
+    ("SM-030-p2", "WI-SM-030-p2.mp3"),
+    ("SM-030-p3", "WI-SM-030-p3.mp3"),
 ];

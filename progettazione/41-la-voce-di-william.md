@@ -96,7 +96,8 @@ scheda Audio delle opzioni, **«Voce di William»: recitata o nessuna** (di base
   ancora il racconto, in una presa sola) suona intera e poi lascia parlare l’altro: Leonardo registra una presa per
   pezzo, e dentro non si taglia. Il contrario, una battuta di Yusuf con il racconto in mezzo, dal 17 novembre si
   divide nelle sue frasi (§5). Con le prime quattordici non succedeva; succede con `SM-030`, la scansione lunga
-  (§5).
+  (§5). **Dal 24 novembre 2026 non è più così per la voce di servizio**: l’autore ha detto che «va sistemato», e
+  una presa con il computer di bordo o la tuta in mezzo si divide nelle pause che Leonardo ha lasciato (§5).
 
 ## 4. Le prove
 
@@ -207,6 +208,43 @@ tre parti (7,3 s, 1,9 s, 1,4 s): chi ascolta sente William dire «si arrende e s
 soltanto alla fine il computer, con la lunghezza e con «MATERIALE NON IN ARCHIVIO.». Nella prima pausa la parte del
 computer non ci sta (7,3 s contro 1,6), e dentro una presa non si taglia. Da far sentire all’autore, che decide:
 tenerla così, o chiedere a Leonardo le tre parti in tre prese.
+
+**Sistemata il 24 novembre 2026.** L’autore, al punto della situazione: «la questione […] voce William e Computer,
+va sistemato». Fatto senza chiedere niente a Leonardo, come per Yusuf il 17 novembre: la presa si divide nelle due
+pause che lui stesso ha lasciato dove parla il computer, e il computer parla in mezzo.
+
+- **I file** (`strumenti/audio/voce_william.py`, `TAGLI`): la presa si lavora intera, come le altre, e poi si
+  divide a metà di quelle pause (8,41 s e 17,57 s nel file di Leonardo; verificate con Whisper parola per parola:
+  «…comoda.» 7,36 | 8,93 «Il calcolo…»; «…scrive.» 16,02 | 18,32 «Una cosa…»). Tre parti, `WI-SM-030-p1.mp3`,
+  `-p2`, `-p3` (6,9 s, 7,6 s, 10,7 s), ognuna con i suoi capi e il suo respiro, tutte con il guadagno della presa
+  intera: niente è tolto alle parole. Il file intero resta accanto, fuori dal gioco. Lo stesso per **`IN-010`**
+  (il multiscanner sullo scafo: «…rinuncia e scrive di nuovo» | «MATERIALE NON IN ARCHIVIO.» | «Poi, a tre passi da
+  me…»): un taglio a 9,49 s, due parti. `python strumenti/audio/voce_william.py --pause <sigla>` elenca i silenzi
+  di una consegna, per scegliere i tagli; una presa con un’altra voce in mezzo e senza tagli suona intera, e lo
+  strumento lo dice (oggi `SM-048`, con Yusuf, approvata così il 17 novembre).
+- **Il ponte**: `racconto.json` porta, per una presa divisa, il nome della parte di ogni suo pezzo di testo
+  (`file_parti`); il ponte manda le parti, ognuna dove comincia il suo testo, e per ogni presa «poi» anche quante
+  parti della voce di servizio stanno prima di lei (`dopo_servizio` nell’evento «racconto»).
+- **Il motore audio**: la fila delle voci della nave conta le parti di servizio finite nel turno; finite quelle che
+  stanno prima della parte di William, cede a lui (`VociNave::passo_con`, `Racconto::soglia_servizio`). Dopo William
+  il computer aspetta la pausa fra le voci (1,4 s, approvata il 7 novembre); dopo il computer William riprende con
+  la sua (0,55 s). Senza la voce di William il computer dice le sue parti in fila, come prima. Se a una parte del
+  computer manca il file, William non resta muto ad aspettarla; una parte che parlava ancora dal turno di prima
+  non si conta.
+- **Le prove**: `william_racconta_fra_le_parti_del_computer_di_bordo` (il mondo intero, i quattro casi) e
+  `una_presa_fra_due_parti_della_voce_di_servizio_aspetta_la_sua` in Rust; in node la tabella e le risorse; nel
+  collaudo (`eventi.py`) la scansione giocata dal ponte.
+- **L’ascolto**, reso dal motore con i tempi del gioco e riletto con Whisper (l’ordine è quello del testo):
+  `consegne/Ascolto scansione lunga 2026-11-24/` (42 s). **Ascoltato dall’autore lo stesso giorno e approvato:**
+  «l’audio è giusto come ordine. Ottimo». Non ancora in una beta.
+
+**Per le prese che verranno.** Nel copione le prese con un’altra voce in mezzo sono 31 (tre arrivate: `SM-030`,
+`SM-048`, `IN-010`). Dove in mezzo c’è la voce di servizio (`IN-084`, `VI-007`, `VI-049`, `EQ-017`, `PO-026a`,
+`AR-002`, `AR-006`, `AR-007`, `AR-009`) basta aggiungere i tagli alla tabella quando la presa arriva: a Leonardo
+conviene dire di lasciare, come ha fatto, un secondo e mezzo di pausa dove parla l’altra voce. Dove in mezzo ci
+sono le voci della nave, l’Anziano o L.V. (`EC-…`, `TR-…`, `PO-038a`, `PO-078`, `PO-079`, `VI-032`, `EQ-023`…)
+il motore oggi fa suonare la presa intera e poi l’altra voce: lo stesso lavoro andrà fatto per quelle file, quando
+arrivano le prese.
 
 **Le venticinque del 17 novembre** (`SM-032`…`SM-042`, `SM-044`…`SM-048`, `SM-050`…`SM-058`): la manovra
 (accostare, la scansione lunga chiesta prima, l’accostata a cinquanta metri); Yusuf alla radio (la descrizione, il

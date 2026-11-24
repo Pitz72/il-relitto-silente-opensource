@@ -46,6 +46,13 @@ pub struct VociNave {
     /// le sue battute finite da quando la fila è cominciata (`sostituisci`): il racconto di William che nel testo sta
     /// dopo la battuta n entra quando ne sono finite n (documento 41, §5)
     finite: u8,
+    /// la voce di servizio suonava al passo di prima
+    servizio_viva: bool,
+    /// le parti della voce di servizio finite nel turno (`scarta_servizio` le azzera): il racconto di William che
+    /// nel testo sta dopo la parte n entra quando ne sono finite n (la scansione lunga, documento 41, §5)
+    finite_servizio: u8,
+    /// la parte di servizio che parlava quando il turno è cominciato: è del turno di prima, e non si conta
+    servizio_di_prima: bool,
 }
 
 impl VociNave {
@@ -59,6 +66,9 @@ impl VociNave {
             muto_da: 0.0,
             mia: false,
             finite: 0,
+            servizio_viva: false,
+            finite_servizio: 0,
+            servizio_di_prima: false,
         }
     }
 
@@ -117,9 +127,12 @@ impl VociNave {
     }
 
     /// Le parti della voce di servizio che aspettano ancora il loro turno non servono più: chi gioca è già
-    /// andato avanti (un comando nuovo). Quella che parla finisce la frase.
+    /// andato avanti (un comando nuovo). Quella che parla finisce la frase. Con il turno ricomincia il conto delle
+    /// parti finite.
     pub fn scarta_servizio(&mut self) {
         self.fila.retain(|p| !p.servizio());
+        self.finite_servizio = 0;
+        self.servizio_di_prima = self.servizio.vivo();
     }
 
     /// Mette in fila le battute. Se nessuno parla e la fila è vuota, la prima entra fra `ritardo`
@@ -175,17 +188,38 @@ impl VociNave {
         self.finite
     }
 
+    /// Le parti della voce di servizio finite nel turno. Se di parti non ce ne sono più, né che parlano né in
+    /// fila, chi le aspetta non aspetta più (una parte senza il suo file non entra in fila: William non deve
+    /// restare muto per lei).
+    pub fn finite_servizio(&self) -> u8 {
+        if self.servizio.vivo() || self.fila.iter().any(|p| p.servizio()) {
+            self.finite_servizio
+        } else {
+            u8::MAX
+        }
+    }
+
     /// Fa andare il tempo, una volta per blocco.
     pub fn passo(&mut self, dt: f32) {
-        self.passo_con(dt, false, None);
+        self.passo_con(dt, false, None, None);
     }
 
     /// Come `passo`; con `altri` un’altra voce parla fuori da questa fila (Yusuf, la scatola nera): la fila
     /// aspetta che finisca, e poi la pausa, come per le sue. `william`: dopo quante battute di questa fila entra la
     /// prossima presa di William che aspetta una voce (documento 41, §5): finite quelle, la fila cede a lui.
-    pub fn passo_con(&mut self, dt: f32, altri: bool, william: Option<u8>) {
+    /// `william_servizio`: lo stesso, contando soltanto le parti della voce di servizio finite nel turno.
+    pub fn passo_con(&mut self, dt: f32, altri: bool, william: Option<u8>, william_servizio: Option<u8>) {
         self.lettore.passo(dt);
         self.servizio.passo(dt);
+        let servizio = self.servizio.vivo();
+        if self.servizio_viva && !servizio {
+            if self.servizio_di_prima {
+                self.servizio_di_prima = false;
+            } else {
+                self.finite_servizio = self.finite_servizio.saturating_add(1);
+            }
+        }
+        self.servizio_viva = servizio;
         // quello che sta sfumando via non conta: la fila non lo aspetta
         let mia = self.lettore.vivo() || self.servizio.vivo();
         let finita_mia = self.mia && !mia;
@@ -193,7 +227,7 @@ impl VociNave {
             self.finite = self.finite.saturating_add(1);
         }
         self.mia = mia;
-        let cede = william.is_some_and(|n| n <= self.finite);
+        let cede = william.is_some_and(|n| n <= self.finite) || william_servizio.is_some_and(|n| n <= self.finite_servizio);
         let parla = mia || altri || cede;
         if self.parlava && !parla {
             // una voce è finita: la prossima aspetta la pausa. La frase che continua una battuta di Yusuf entra
@@ -426,7 +460,7 @@ mod prove {
         let mut sentita = Vec::new();
         for k in 0..500 {
             // un'altra voce (Yusuf) parla per i primi due secondi
-            v.passo_con(0.01, k < 200, None);
+            v.passo_con(0.01, k < 200, None, None);
             let e: f32 = (0..blocco).map(|_| v.campione_servizio().0.powi(2)).sum();
             sentita.push(e > 1e-6);
         }

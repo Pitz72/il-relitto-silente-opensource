@@ -143,7 +143,9 @@ def racconto():
     if tabella.get("impronta_fav") != copione["impronta_fav"]:
         problemi.append("le prese di William non sono del copione di adesso: python strumenti/audio/voce_william.py")
     cartella = os.path.join(RADICE, "audio", "musica-ia", "WI")
-    senza = sorted({z["file"] for z in tabella["pezzi"] if not os.path.isfile(os.path.join(cartella, f"WI-{z['file']}.mp3"))})
+    # una presa divisa (la voce di servizio in mezzo) suona con le sue parti: sono quelle a dover avere il file
+    senza = sorted({f for z in tabella["pezzi"] for f in z.get("file_parti", [z["file"]])
+                    if not os.path.isfile(os.path.join(cartella, f"WI-{f}.mp3"))})
     if senza:
         problemi.append(f"prese senza file: {', '.join(senza)}")
     ponte.rel_avvia(1)
@@ -151,6 +153,17 @@ def racconto():
     dette = [s for e in primo["suono"]["eventi"] if e["evento"] == "racconto" for s in e["prese"]]
     if any(z["file"] == "SM-001" for z in tabella["pezzi"]) and dette != ["SM-001"]:
         problemi.append(f"all'inizio William dovrebbe raccontare la plancia (SM-001), e dice {dette}")
+    # la scansione lunga (documento 41, §5; l'autore, 24 novembre 2026: «va sistemato»): William, il computer di
+    # bordo, William, il computer, William. La presa è divisa in tre parti, e ognuna sa dopo quante parti della voce
+    # di servizio entra
+    if any(z["id"] == "SM-030" and z.get("file_parti") for z in tabella["pezzi"]):
+        scansione = json.loads(ponte.rel_comando("analizza la nave aliena"))["suono"]["eventi"]
+        w = next((e for e in scansione if e["evento"] == "racconto"), {})
+        voci = [b for e in scansione if e["evento"] == "voci" for b in e["battute"]]
+        atteso = {"prese": ["SM-030-p1"], "poi": ["SM-030-p2", "SM-030-p3"], "dopo_servizio": [1, 2]}
+        if {k: w.get(k) for k in atteso} != atteso or [b[:5] for b in voci] != ["SV-11", "SV-04", "SV-17"]:
+            problemi.append(f"la scansione lunga: William e il computer non sono nell'ordine del testo ({w}, {voci})")
+        ponte.rel_avvia(1)
     return problemi
 
 

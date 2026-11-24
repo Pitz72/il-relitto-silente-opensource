@@ -791,6 +791,101 @@ mod prove {
         assert!((radio[0].1 - radio[0].0 - 3.0).abs() < 0.05, "le due frasi durano {:.2} s", radio[0].1 - radio[0].0);
     }
 
+    /// La voce di servizio e William in un turno: (i tratti della voce di servizio, i tratti di William), in secondi.
+    fn servizio_e_william(m: &mut Mondo, secondi: f32) -> (Vec<(f32, f32)>, Vec<(f32, f32)>) {
+        let (mut servizio, mut william) = (Vec::new(), Vec::new());
+        let (mut da_s, mut da_w): (Option<f32>, Option<f32>) = (None, None);
+        let blocco = 128usize;
+        for i in 0..(secondi * SR / blocco as f32) as usize {
+            let mut buf = vec![kira::Frame::ZERO; blocco];
+            m.rendi(&mut buf, 1.0 / SR as f64);
+            let t = i as f32 * blocco as f32 / SR;
+            for (parla, da, out) in [(m.voci_nave.parla(), &mut da_s, &mut servizio), (m.racconto.occupato(), &mut da_w, &mut william)] {
+                match (parla, *da) {
+                    (true, None) => *da = Some(t),
+                    (false, Some(a)) => {
+                        out.push((a, t));
+                        *da = None;
+                    }
+                    _ => {}
+                }
+            }
+        }
+        (servizio, william)
+    }
+
+    #[test]
+    fn william_racconta_fra_le_parti_del_computer_di_bordo() {
+        // La scansione lunga (documento 41, §5; l’autore, 24 novembre 2026: «va sistemato»): William, «Lunghezza:
+        // trecentoquaranta metri…», William, «MATERIALE NON IN ARCHIVIO.», William, «(Adesso puoi ACCOSTARE.)».
+        // La presa di Leonardo è divisa nelle sue tre parti, e il computer parla in mezzo, dove sta il suo testo.
+        use super::super::racconto::PAUSA;
+        let parti = ["SM-030-p1", "SM-030-p2", "SM-030-p3"].map(|s| Pezzo::della_presa(s).expect("la parte non è nella tabella"));
+        let prepara = |m: &mut Mondo, servizio: &[(Pezzo, f32)]| {
+            m.voci_nave.con_biblioteca_servizio(biblioteca(servizio));
+            let mut b = Biblioteca::nuova(std::path::PathBuf::from("non-esiste"));
+            for p in parti {
+                b.inserisci(p, Pcm::da_frame(SR, (0..(1.5 * SR) as usize).map(|n| {
+                    let v = 0.3 * (n as f32 * 0.05).sin();
+                    (v, v)
+                })));
+            }
+            m.racconto.con_biblioteca(b);
+        };
+        let scansione = |m: &mut Mondo, tx: &std::sync::mpsc::Sender<Comando>, secondi: f32| {
+            tx.send(turno(&format!(
+                r#"{{"stati": {}, "eventi": [{{"evento": "racconto", "prese": ["SM-030-p1"], "poi": ["SM-030-p2", "SM-030-p3"], "dopo_voci": [0, 0], "dopo_servizio": [1, 2]}}, {{"evento": "voci", "battute": ["SV-11-lunghezza-trecentoquaranta-metri-massa", "SV-04-materiale-non-in-archivio", "SV-17-adesso-puoi-accostare"]}}]}}"#,
+                stati("plancia", "", "")
+            )))
+            .unwrap();
+            servizio_e_william(m, secondi)
+        };
+        let (mut m, tx) = mondo_in("plancia", "");
+        prepara(&mut m, &[(Pezzo::Sv11, 2.0), (Pezzo::Sv04, 1.0), (Pezzo::Sv17, 1.0)]);
+        let (servizio, william) = scansione(&mut m, &tx, 16.0);
+        assert_eq!(servizio.len(), 3, "il computer: {servizio:?}");
+        assert_eq!(william.len(), 3, "William: {william:?}");
+        // l’ordine del testo: William, il computer, William, il computer, William, il suggerimento
+        let ordine = [william[0], servizio[0], william[1], servizio[1], william[2], servizio[2]];
+        for (k, c) in ordine.windows(2).enumerate() {
+            let pausa = c[1].0 - c[0].1;
+            // dopo William il computer aspetta la pausa fra le voci; dopo il computer William riprende con la sua
+            let attesa = if k % 2 == 0 { PAUSA_FRA_VOCI } else { PAUSA };
+            assert!((pausa - attesa).abs() < 0.06, "fra il tratto {k} e il successivo {pausa:.2} s, attesi {attesa:.2}: {ordine:?}");
+        }
+        // senza la voce di William il computer dice le sue tre parti in fila, come prima
+        suona(&mut m, 1.0);
+        m.racconto.accesa = false;
+        let (servizio, william) = scansione(&mut m, &tx, 9.0);
+        assert!(william.is_empty(), "{william:?}");
+        assert_eq!(servizio.len(), 3, "{servizio:?}");
+        assert!((servizio[1].0 - servizio[0].1 - PAUSA_FRA_VOCI).abs() < 0.06 && (servizio[2].0 - servizio[1].1 - PAUSA_FRA_VOCI).abs() < 0.06, "{servizio:?}");
+        // se a una parte del computer manca il file, William non resta muto ad aspettarla: finita quella che c’è, e
+        // la sua seconda parte, dice anche la terza
+        let (mut m, tx) = mondo_in("plancia", "");
+        prepara(&mut m, &[(Pezzo::Sv11, 2.0)]);
+        let (servizio, william) = scansione(&mut m, &tx, 12.0);
+        assert_eq!(servizio.len(), 1, "{servizio:?}");
+        assert_eq!(william.len(), 3, "William non deve aspettare una parte che non c’è: {william:?}");
+        assert!(william[1].0 > servizio[0].1 && (william[2].0 - william[1].1 - PAUSA).abs() < 0.06, "{servizio:?} {william:?}");
+        // una parte di servizio che parlava ancora dal turno di prima non si conta: la seconda parte di William
+        // aspetta la parte di questo turno
+        let (mut m, tx) = mondo_in("plancia", "");
+        prepara(&mut m, &[(Pezzo::Sv11, 2.0), (Pezzo::Sv04, 1.0), (Pezzo::Sv17, 4.0)]);
+        tx.send(turno(&format!(
+            r#"{{"stati": {}, "eventi": [{{"evento": "voci", "battute": ["SV-17-adesso-puoi-accostare"]}}]}}"#,
+            stati("plancia", "", "")
+        )))
+        .unwrap();
+        suona(&mut m, 2.5);
+        assert!(m.voci_nave.parla(), "la parte del turno di prima deve parlare ancora");
+        let (servizio, william) = scansione(&mut m, &tx, 22.0);
+        assert_eq!(william.len(), 3, "{william:?}");
+        // i tratti del computer: quella di prima che finisce, poi le tre di questo turno
+        assert_eq!(servizio.len(), 4, "{servizio:?}");
+        assert!(william[1].0 > servizio[1].1, "la seconda parte di William è entrata prima di «Lunghezza…»: {servizio:?} {william:?}");
+    }
+
     #[test]
     fn la_scatola_nera_della_serra_non_e_il_secondo_strato_e_parla_dal_nastro() {
         // le piante hanno già risuonato: la risonanza della scatola nera non deve far parlare lo xeno-botanico

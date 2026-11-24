@@ -8,7 +8,7 @@ import { parole, presaDellaRisposta, risposteDa, SOSTA } from "../src/gioco/racc
 
 const tabella = JSON.parse(readFileSync(new URL("../src/motore/racconto.json", import.meta.url), "utf8")) as {
   impronta_fav: string;
-  pezzi: { id: string; file: string; tipo: string; parti: string[] }[];
+  pezzi: { id: string; file: string; tipo: string; parti: string[]; file_parti?: string[] }[];
 };
 
 test("le parole si contano come le conta il ponte: minuscole, senza punteggiatura, con l'apostrofo dritto", () => {
@@ -21,12 +21,20 @@ test("ogni presa della tabella ha il suo file, e la tabella viene dal copione di
   const copione = JSON.parse(readFileSync(new URL("../../doppiaggio/william/copione.json", import.meta.url), "utf8")) as { impronta_fav: string };
   assert.equal(tabella.impronta_fav, copione.impronta_fav);
   assert.ok(tabella.pezzi.length > 0);
+  const risorse = readFileSync(new URL("../src-tauri/tauri.conf.json", import.meta.url), "utf8");
   for (const p of tabella.pezzi) {
-    assert.ok(existsSync(new URL(`../../audio/musica-ia/WI/WI-${p.file}.mp3`, import.meta.url)), `${p.id}: manca WI-${p.file}.mp3`);
+    // una presa divisa (la voce di servizio in mezzo) suona con le sue parti: un nome per ogni pezzo di testo
+    assert.ok(!p.file_parti || p.file_parti.length === p.parti.length, `${p.id}: le parti non combaciano con il testo`);
+    for (const f of p.file_parti ?? [p.file]) {
+      assert.ok(existsSync(new URL(`../../audio/musica-ia/WI/WI-${f}.mp3`, import.meta.url)), `${p.id}: manca WI-${f}.mp3`);
+      assert.ok(risorse.includes(`"musica/WI-${f}.mp3"`), `${p.id}: WI-${f}.mp3 non è fra le risorse dell'app`);
+    }
     assert.ok(p.parti.every((x) => x === parole(x)), `${p.id}: le parole non sono normalizzate`);
   }
   // all'inizio della partita la plancia
   assert.ok(tabella.pezzi.some((p) => p.id === "SM-001" && p.tipo === "descrizione"));
+  // la scansione lunga: tre parti, e il computer di bordo in mezzo (documento 41, §5)
+  assert.deepEqual(tabella.pezzi.find((p) => p.id === "SM-030")?.file_parti, ["SM-030-p1", "SM-030-p2", "SM-030-p3"]);
 });
 
 test("le risposte dei dialoghi: la presa giusta per la risposta a schermo, niente per quelle non registrate", () => {

@@ -143,7 +143,7 @@ impl Mondo {
         if carica {
             self.racconto.dimentica();
         }
-        let (mut prima_w, mut poi_w) = ([Pezzo::Wi(0); 16], [(Pezzo::Wi(0), 0u8); 16]);
+        let (mut prima_w, mut poi_w) = ([Pezzo::Wi(0); 16], [(Pezzo::Wi(0), 0u8, 0u8); 16]);
         let (mut n_prima, mut n_poi) = (0, 0);
         for e in t.eventi.iter().filter(|e| e.evento == "racconto") {
             for p in e.prese.iter().filter_map(|s| Pezzo::della_presa(s)) {
@@ -152,12 +152,13 @@ impl Mondo {
                     n_prima += 1;
                 }
             }
-            // ogni presa «poi» con quante voci asciutte stanno prima di lei (documento 41, §5)
+            // ogni presa «poi» con quante voci asciutte, e quante parti della voce di servizio, stanno prima di lei
+            // (documento 41, §5)
             for (i, s) in e.poi.iter().enumerate() {
                 if let Some(p) = Pezzo::della_presa(s)
                     && n_poi < poi_w.len()
                 {
-                    poi_w[n_poi] = (p, e.dopo_voci.get(i).copied().unwrap_or(0));
+                    poi_w[n_poi] = (p, e.dopo_voci.get(i).copied().unwrap_or(0), e.dopo_servizio.get(i).copied().unwrap_or(0));
                     n_poi += 1;
                 }
             }
@@ -347,11 +348,13 @@ impl Mondo {
         let william = self.racconto.occupato();
         let nave = self.voci_nave.viva();
         // la presa di William che nel testo sta fra due frasi di Yusuf: finita la prima, la radio cede a lui
-        self.voci_radio.passo_con(dt, nave || william, self.racconto.soglia());
+        self.voci_radio.passo_con(dt, nave || william, self.racconto.soglia(), None);
         let radio = self.voci_radio.viva();
-        self.voci_nave.passo_con(dt, radio || william, None);
+        // e quella che sta fra due parti della voce di servizio (il computer di bordo nella scansione lunga):
+        // finita la parte che la precede, la fila della nave cede a lui
+        self.voci_nave.passo_con(dt, radio || william, None, self.racconto.soglia_servizio());
         let altri = self.voci_nave.viva() || self.voci_radio.viva() || self.musica.voce_viva();
-        self.racconto.passo(dt, altri, self.voci_radio.finite());
+        self.racconto.passo(dt, altri, self.voci_radio.finite(), self.voci_nave.finite_servizio());
         if self.voci_nave.nave_occupate() || self.anello.is_some() {
             return;
         }
