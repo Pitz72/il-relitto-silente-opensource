@@ -37,6 +37,10 @@ export interface Opzioni {
   /** la voce di William (documento 41): il racconto letto da Leonardo Tomassetti mentre compare. Spenta, si legge in
    *  silenzio; le altre voci restano */
   voceWilliam: boolean;
+  /** i sottotitoli della cinematica d'apertura: le parole delle voci e le didascalie dei suoni, anche scritte
+   *  (revisione 37, M8). Spenti di base: con le voci che si sentono i loro testi non compaiono (l'autore, 30 ottobre
+   *  2026); senza suono compaiono comunque */
+  sottotitoli: boolean;
   mono: boolean;
   dinamicaRidotta: boolean;
   suoniIntensiRidotti: boolean;
@@ -94,6 +98,7 @@ export const OPZIONI_DI_BASE: Opzioni = {
   volumeMusica: 1,
   volumeParlato: 1,
   voceWilliam: true,
+  sottotitoli: false,
   mono: false,
   dinamicaRidotta: false,
   suoniIntensiRidotti: false,

@@ -95,6 +95,18 @@ export const ridiciWilliam = () => manda({ tipo: "racconto", valore: "ridici" })
 export const zittisciWilliam = () => manda({ tipo: "racconto", valore: "zitto" });
 export const anteprimaWilliam = (sigla: string) => manda({ tipo: "racconto", valore: { anteprima: sigla } });
 
+/** Il motore audio suona davvero: c'è un dispositivo, e un mondo sonoro avviato. Fuori da Tauri no. L'intro lo
+ *  chiede per sapere se le voci si sentono: se no, le loro parole compaiono scritte (revisione 37, M8). */
+export async function suonoVivo(): Promise<boolean> {
+  if (!dentroTauri() || !avviato) return false;
+  try {
+    await avviato;
+    return (await comando<IstantaneaMondo | null>("audio_mondo_stato")) !== null;
+  } catch {
+    return false;
+  }
+}
+
 /** William sta parlando? Con Esc la pagina lo zittisce invece di aprire la pausa. Fuori da Tauri, mai. */
 export async function williamParla(): Promise<boolean> {
   if (!dentroTauri() || !avviato) return false;

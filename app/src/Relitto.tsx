@@ -25,7 +25,7 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { avviaMotore, MOTORE_FALLITO, usaPassoMotore } from "./motore/condiviso";
 import { tavolozza, variabiliCss } from "./stile/atmosfere";
-import { attributiSchermo, opzioniRicordate, useMovimentoRidotto, useOpzioni } from "./stile/opzioni";
+import { attributiSchermo, opzioniRicordate, qualitaDi, useMovimentoRidotto, useOpzioni } from "./stile/opzioni";
 import { comando, dentroTauri } from "./lib/tauri";
 import { ricordaSchermoIntero, schermoIntero } from "./lib/finestra";
 import { salvaUscendo } from "./gioco/uscita";
@@ -35,7 +35,7 @@ import Aggiornamento from "./menu/Aggiornamento";
 import FinestraNovita from "./menu/FinestraNovita";
 import { daMostrare, leggiVista, ricordaVista, righeDalleNote, type Novita as NovitaVersione } from "./menu/novita";
 import type { Avanzamento } from "./menu/avanzamento";
-import { avviaSuono, menuSuono, mixSuono, suonaTocco } from "./gioco/suono";
+import { avviaSuono, menuSuono, mixSuono, suonaTocco, suonoVivo } from "./gioco/suono";
 import { gestoDelClic } from "./gioco/tocco";
 import { archivio, type Posto } from "./gioco/salvataggi";
 import type { Inizio } from "./gioco/Gioco";
@@ -175,9 +175,18 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   // non è finita»). Prima, qualche istante di nero
   const [introPronta, setIntroPronta] = useState(false);
   const pronteLeImmagini = useCallback(() => setIntroPronta(true), []);
+  // e quando il motore del gioco ha finito di caricarsi: i suoi due blocchi (più di mezzo secondo l'uno, misurati
+  // in ottobre) cadevano sui loghi o sull'inizio dell'intro, se si sceglieva «Nuova partita» subito dopo la
+  // dichiarazione (revisione 37, M7). Nell'uno e nell'altro caso, non oltre ATTESA_INTRO
+  const [attesaFinita, setAttesaFinita] = useState(false);
+  const motorePronto = passo === "pronto" || passo === MOTORE_FALLITO;
   useEffect(() => {
     if (!loghiPrima) return;
-    const t = setTimeout(() => setIntroPronta(true), ATTESA_INTRO);
+    setAttesaFinita(false);
+    const t = setTimeout(() => {
+      setIntroPronta(true);
+      setAttesaFinita(true);
+    }, ATTESA_INTRO);
     return () => clearTimeout(t);
   }, [loghiPrima]);
   const partitaSotto = useRef(false);
@@ -240,11 +249,18 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
   // tocco dei pulsanti (l'intro e il gioco sfumano la musica: il gioco avvia un mondo suo;
   // i titoli suonano la loro nel mondo che trovano)
   const nelMenu = schermata.tipo === "menu";
+  /** il motore audio suona davvero (c'è un dispositivo): se no, nell'intro le parole delle voci compaiono scritte */
+  const [audioVivo, setAudioVivo] = useState(true);
   useEffect(() => {
     if (!nelMenu) return;
     avviaSuono(prova !== undefined);
     void menuSuono(true);
-    return () => void menuSuono(false);
+    let vivo = true;
+    void suonoVivo().then((v) => vivo && setAudioVivo(v));
+    return () => {
+      vivo = false;
+      void menuSuono(false);
+    };
   }, [nelMenu, prova]);
   useEffect(() => {
     if (nelMenu && prova === undefined) void mixSuono(opzioni);
@@ -435,7 +451,16 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
               pellicola={opzioni.pellicola}
               attesa={loghiPrima && schermata.tipo === "intro"}
               onPronta={pronteLeImmagini}
-              voce={dentroTauri() && opzioni.volume > 0 && opzioni.volumeParlato > 0}
+              // le voci si sentono, e nessuno ha chiesto i sottotitoli: allora le loro parole non compaiono scritte
+              // (l'autore, 30 ottobre 2026). Senza suono, o con «Sottotitoli della cinematica», compaiono (M8)
+              voce={dentroTauri() && audioVivo && opzioni.volume > 0 && opzioni.volumeParlato > 0 && !opzioni.sottotitoli}
+              sottotitoli={opzioni.sottotitoli || (dentroTauri() && (!audioVivo || opzioni.volume <= 0))}
+              leggera={(() => {
+                const q = qualitaDi(opzioni);
+                return q === "leggera" || q === "essenziale";
+              })()}
+              carattere={opzioni.carattere}
+              testoGrande={opzioni.testoGrande}
               onPartita={partitaDallIntro}
               onFine={fineIntro}
             />
@@ -443,7 +468,7 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
         ) : null}
         {schermata.tipo === "intro" && loghiPrima ? (
           <Suspense key="loghi-intro" fallback={<div className="nero-avvio" aria-hidden="true" />}>
-            <Loghi onFine={finitiILoghi} grana={opzioni.grana} pellicola={opzioni.pellicola} parti={introPronta} ridotto={ridotto} volume={opzioni.volume} />
+            <Loghi onFine={finitiILoghi} grana={opzioni.grana} pellicola={opzioni.pellicola} parti={introPronta && (motorePronto || attesaFinita)} ridotto={ridotto} volume={opzioni.volume} />
           </Suspense>
         ) : null}
       </>

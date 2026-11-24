@@ -60,6 +60,13 @@
 /* i testi */
 .intro .blocco { opacity: 0; visibility: hidden; text-align: center; left: 20cqw; width: 60cqw; }
 .intro .blocco.lv, .intro .blocco.william, .intro .blocco.yusuf { font-family: var(--serif); font-style: italic; font-weight: 300; font-size: 1.77cqw; line-height: 1.42; color: var(--voce); }
+/* «Testo: grande» nelle Opzioni: le parole che si leggono, non i titoli di testa (revisione 37, L18). Il carattere
+   Atkinson va detto qui: l'intro ha il suo `--serif`, per i titoli di testa, che restano come sono. */
+.intro[data-testo="grande"] .blocco.lv, .intro[data-testo="grande"] .blocco.william, .intro[data-testo="grande"] .blocco.yusuf { font-size: 2.02cqw; line-height: 1.36; }
+.intro[data-testo="grande"] .suono { font-size: max(15px, 1.32cqw); }
+.intro[data-carattere="atkinson"] .blocco.lv, .intro[data-carattere="atkinson"] .blocco.william, .intro[data-carattere="atkinson"] .blocco.yusuf, .intro[data-carattere="atkinson"] .suono { font-family: "Atkinson Hyperlegible Next", Verdana, sans-serif; font-style: normal; font-weight: 400; }
+.intro[data-carattere="atkinson"] .blocco.lv, .intro[data-carattere="atkinson"] .blocco.william, .intro[data-carattere="atkinson"] .blocco.yusuf { font-size: 1.62cqw; }
+.intro[data-carattere="atkinson"][data-testo="grande"] .blocco.lv, .intro[data-carattere="atkinson"][data-testo="grande"] .blocco.william, .intro[data-carattere="atkinson"][data-testo="grande"] .blocco.yusuf { font-size: 1.86cqw; }
 .intro .blocco.apparecchio { font-family: var(--mono); font-size: max(12px, 1.02cqw); letter-spacing: .2em; text-transform: uppercase; color: var(--tenue); line-height: 1.7; }
 .intro .blocco.apparecchio .cursore { color: var(--verde); opacity: 0; margin-left: .05em; letter-spacing: 0; }
 .intro .blocco.apparecchio .resto { visibility: hidden; }

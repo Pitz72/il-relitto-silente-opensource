@@ -426,6 +426,7 @@ export function PannelloOpzioni({ forma, opzioni, cambia, chiudi }: { forma: For
             {cursore("Musica", "volumeMusica", "Il menu, la soglia degli atti, l’Anziano, la fine.")}
             {cursore("Parlato", "volumeParlato", "Le voci registrate: William, le voci della nave, l’Anziano, Yusuf, la tuta.")}
             {riga("Voce di William", "voceWilliam", [[true, "recitata"], [false, "nessuna"]], "Recitata: Leonardo Tomassetti legge il racconto mentre compare, e le risposte dei dialoghi quando ti fermi sopra. Tace al primo comando o tasto; F2 la ridice. Le parti non ancora registrate restano scritte.")}
+            {riga("Sottotitoli della cinematica", "sottotitoli", [[false, "no"], [true, "sì"]], "Sì: nella cinematica d’apertura le parole di L.V., di William e di Yusuf compaiono anche scritte, con le didascalie dei suoni. Se il suono non c’è, o il volume è a zero, compaiono da sole.")}
             {riga("Suono", "mono", [[false, "stereo"], [true, "mono"]], "Mono: i due canali insieme, per chi sente da un orecchio solo.")}
             {riga("Dinamica", "dinamicaRidotta", [[false, "piena"], [true, "ridotta"]], "Ridotta: i suoni piccoli più alti e i grandi più bassi, per giocare piano o di notte.")}
             {riga("Suoni intensi", "suoniIntensiRidotti", [[false, "come sono"], [true, "ridotti"]], "Ridotti: meno bassi profondi, niente picchi, niente battito né fischio nell’anticamera.")}

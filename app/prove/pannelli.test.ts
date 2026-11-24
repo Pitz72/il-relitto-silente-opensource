@@ -163,3 +163,24 @@ test("le lievi della pagina: il cartello d'atto, il tasto tenuto premuto, l'intr
   assert.match(leggi("gioco/dialogo/dialogo.css"), /\.dialogo \.semi \.numero \{[^}]*font-size: max\(12px, \.78em\)/);
   assert.match(leggi("intro/intro.css"), /\.intro \.blocco\.apparecchio \{[^}]*font-size: max\(12px, 1\.02cqw\)/);
 });
+
+test("l'intro: il tempo dell'orologio, i sottotitoli, la qualità della scheda Grafica, il carattere", () => {
+  const i = leggi("intro/Intro.tsx");
+  // M7: fuori dalla revisione il tempo dell'immagine non ha più il tetto di un decimo di secondo per fotogramma
+  assert.match(i, /const dt = revisione \? Math\.min\(0\.1, passato\) : passato;/);
+  const r = leggi("Relitto.tsx");
+  // e i loghi prima dell'intro aspettano anche il motore del gioco, ma non per sempre
+  assert.match(r, /parti=\{introPronta && \(motorePronto \|\| attesaFinita\)\}/);
+  // M8: i sottotitoli sono spenti di base; le voci scritte compaiono se il suono non c'è, o se li si chiede
+  assert.equal(OPZIONI_DI_BASE.sottotitoli, false);
+  assert.match(r, /voce=\{dentroTauri\(\) && audioVivo && opzioni\.volume > 0 && opzioni\.volumeParlato > 0 && !opzioni\.sottotitoli\}/);
+  assert.match(leggi("gioco/pannelli/Pannelli.tsx"), /riga\("Sottotitoli della cinematica", "sottotitoli"/);
+  // M9: «leggera» ed «essenziale» alleggeriscono lo spazio dell'intro
+  assert.match(r, /return q === "leggera" \|\| q === "essenziale";/);
+  assert.match(i, /ridotta: leggera, voce \}\)\);/);
+  // L18: il carattere e il testo grande arrivano all'intro, e valgono per le parole che si leggono
+  assert.match(i, /data-carattere=\{carattere\}\s+data-testo=\{testoGrande \? "grande" : undefined\}/);
+  const css = senzaCommenti(leggi("intro/intro.css"));
+  assert.match(css, /\.intro\[data-testo="grande"\] \.blocco\.lv/);
+  assert.match(css, /\.intro\[data-carattere="atkinson"\] \.blocco\.lv[^{]*\{ font-family: "Atkinson Hyperlegible Next"/);
+});

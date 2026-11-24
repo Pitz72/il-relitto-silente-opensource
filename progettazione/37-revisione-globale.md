@@ -457,3 +457,12 @@ Prove: `app/prove/pannelli.test.ts` (dieci, nuove); node 162 su 162, i tipi puli
 Restano all’autore, fra le lievi della pagina: **L8** («Testo: grande» non ingrandisce i pulsanti in basso, il dialogo e il riquadro a destra: ingrandirli sposta le misure di tutta la schermata, e va deciso guardandola) e **L12** («Nuova partita» non avvisa che il salvataggio automatico di prima verrà sostituito). **L18** (l’intro non riceve il carattere né il testo grande) è con l’intro, qui sotto.
 
 Prove: tre nuove in `app/prove/pannelli.test.ts` e una in `scritti.test.ts`; node 165 su 165; `collaudo/eventi.py`, `diario.py` e `scritti.py` verdi sui 17 percorsi.
+
+**L’intro** (M7, M8, M9, L18):
+
+- **M7**: il tempo dell’immagine è quello dell’orologio, come per i loghi e i titoli di coda: un fotogramma lungo non lascia più l’immagine indietro rispetto al suono. Il tetto di un decimo di secondo resta nella sola revisione (`?intro&revisione`), che non ha suono. In più i loghi prima dell’intro aspettano che il motore del gioco abbia finito di caricarsi (al più otto secondi, come per le immagini): i suoi due blocchi non cadono più sull’intro. **Di quanto si sfasava davvero non l’ho misurato nell’eseguibile**; la correzione toglie la causa.
+- **M8**: nelle Opzioni, scheda Audio, «Sottotitoli della cinematica», **spenta di base** (con le voci che si sentono i loro testi non compaiono, come l’autore ha deciso il 30 ottobre). Accesa, le parole di L.V., di William e di Yusuf compaiono anche scritte, con le didascalie dei suoni. Senza un dispositivo audio, o con il «Volume generale» a zero, compaiono da sole. La pagina continua a non sapere se è muto il volume di Windows: quello resta fuori.
+- **M9**: con la scheda «Grafica» su «leggera» o «essenziale» lo spazio dell’intro si disegna a metà risoluzione, con il cielo più semplice (era la «qualità ridotta» della barra di revisione). Con «piena», o con gli effetti scelti uno per uno, niente cambia. **Non fatto**: con il movimento ridotto una scena ridisegna ancora due quadri per un’immagine ferma (costa, ma non si vede). **Nessuna misura nell’eseguibile.**
+- **L18**: il carattere Atkinson e il «testo grande» valgono per le parole dell’intro che si leggono (le voci scritte e le didascalie), non per i titoli di testa. Misurati nel browser i ventidue blocchi a 1280 × 720: nessuno esce dal quadro.
+
+Prova: una in `app/prove/pannelli.test.ts`; node 166 su 166. Viste nel browser dello sviluppo le parole con il testo grande e con Atkinson.

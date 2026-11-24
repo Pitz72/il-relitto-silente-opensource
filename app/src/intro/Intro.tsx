@@ -165,6 +165,10 @@ export default function Intro({
   pellicola = true,
   attesa = false,
   onPronta,
+  sottotitoli = false,
+  leggera = false,
+  carattere,
+  testoGrande = false,
 }: {
   revisione?: boolean;
   onFine?: () => void;
@@ -183,6 +187,13 @@ export default function Intro({
   attesa?: boolean;
   /** l'intro è pronta (la nave, i cieli, le immagini): i loghi sopra possono partire (Relitto.tsx) */
   onPronta?: () => void;
+  /** le didascalie dei suoni («Sottotitoli della cinematica» nelle Opzioni, o il suono che non c'è): revisione 37, M8 */
+  sottotitoli?: boolean;
+  /** la scheda «Grafica» è su «leggera» o «essenziale»: lo spazio si disegna a metà risoluzione (M9) */
+  leggera?: boolean;
+  /** il carattere e il testo grande delle Opzioni, per le parole che si leggono (L18) */
+  carattere?: string;
+  testoGrande?: boolean;
 }) {
   const avvisaPronta = useRef(onPronta);
   avvisaPronta.current = onPronta;
@@ -220,9 +231,14 @@ export default function Intro({
   const giocoPronto = useRef<number | null>(null);
   const conPartita = !!onPartita && !revisione;
   // il movimento ridotto: l'opzione dell'app, se arriva dal gioco; se no, il sistema
-  const [opzioni, setOpzioni] = useState<Opzioni>(() => ({ ridotto: ridotto ?? preferisceMenoMovimento(), sottotitoli: revisione, ridotta: false, voce }));
+  const [opzioni, setOpzioni] = useState<Opzioni>(() => ({ ridotto: ridotto ?? preferisceMenoMovimento(), sottotitoli: revisione || sottotitoli, ridotta: leggera, voce }));
   const opz = useRef(opzioni);
   opz.current = opzioni;
+  // quello che l'app sa dopo che l'intro è nata (il suono che non è partito) arriva anche a intro montata
+  useEffect(() => {
+    if (revisione) return;
+    setOpzioni((o) => (o.voce === voce && o.sottotitoli === sottotitoli && o.ridotta === leggera ? o : { ...o, voce, sottotitoli, ridotta: leggera }));
+  }, [revisione, voce, sottotitoli, leggera]);
   const [pronta, setPronta] = useState(false);
   const [errore, setErrore] = useState<string | null>(null);
   const [mostrato, setMostrato] = useState(0);
@@ -830,7 +846,13 @@ export default function Intro({
     const limite = conPartita ? S.durata + 6 : S.durata;
     const ciclo = (ora: number) => {
       if (ultimo !== null && !pausa.current && !finita.current && !inAttesa.current) {
-        const dt = Math.min(0.1, (ora - ultimo) / 1000);
+        // Il tempo dell'immagine è quello dell'orologio, come per i loghi e i titoli di coda (revisione 37, M7). Il
+        // suono parte una volta e va con l'orologio del motore audio: con un tetto di un decimo di secondo per
+        // fotogramma, ogni fotogramma più lungo (il motore del gioco che si carica, la finestra nascosta, una scheda
+        // video lenta) lasciava l'immagine indietro, e la voce, il relè del faro e i colpi del cuore non cadevano più
+        // sull'immagine fino alla fine. Il tetto resta soltanto nella revisione, che non ha suono.
+        const passato = (ora - ultimo) / 1000;
+        const dt = revisione ? Math.min(0.1, passato) : passato;
         tempo.current = Math.min(limite, tempo.current + dt);
         campioni.push(dt);
         if (campioni.length > 90) campioni = campioni.slice(-90);
@@ -865,7 +887,7 @@ export default function Intro({
     };
     id = requestAnimationFrame(ciclo);
     return () => cancelAnimationFrame(id);
-  }, [pronta, fotogramma, onFine, onPartita, conPartita]);
+  }, [pronta, fotogramma, onFine, onPartita, conPartita, revisione]);
 
   const vai = useCallback(
     (t: number) => {
@@ -973,6 +995,8 @@ export default function Intro({
     <div
       ref={radice}
       className={`intro${!revisione && pronta ? " in-corso" : ""}${conPartita ? " sopra" : ""}`}
+      data-carattere={carattere}
+      data-testo={testoGrande ? "grande" : undefined}
       style={{ ["--barra" as string]: revisione ? "112px" : "0px", visibility: attesa ? "hidden" : undefined }}
       // il clic salta da tutta la finestra, anche dalle fasce nere di uno schermo 16:10 (revisione 37, L15)
       onClick={saltaColClic}
