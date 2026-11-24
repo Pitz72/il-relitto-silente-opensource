@@ -1,0 +1,35 @@
+# Le dipendenze con una vulnerabilità nota (revisione 37, M18). L'11 novembre 2026 `cargo audit` ne trovava due nelle
+# librerie dell'aggiornamento automatico, e niente lo diceva: le prove non guardano le dipendenze. Questo flusso le
+# guarda ogni lunedì mattina e ogni volta che cambia uno dei due elenchi delle versioni; se trova qualcosa diventa
+# rosso, e GitHub lo scrive all'autore. Sta a sé, fuori dalle prove: un avviso uscito oggi su una libreria non deve
+# fermare un rilascio che ieri passava.
+name: Dipendenze
+
+on:
+  schedule:
+    - cron: "17 6 * * 1"
+  push:
+    branches: [main]
+    paths: ["app/src-tauri/Cargo.lock", "app/package-lock.json", ".github/workflows/dipendenze.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  controllo:
+    name: Vulnerabilità note (Rust e npm)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version: 22 }
+      - uses: taiki-e/install-action@fe3acb53a98b62c772db35de75ce0e4595e7ca8c # v2.90.8
+        with: { tool: cargo-audit }
+      - name: Le librerie Rust
+        working-directory: app/src-tauri
+        run: cargo audit
+      - name: I pacchetti npm (quelli che entrano nel gioco)
+        if: always()
+        working-directory: app
+        run: npm audit --omit=dev

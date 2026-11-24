@@ -13,21 +13,27 @@
 # mondo), che aprono una finestra e il dispositivo audio: si fanno in locale, prima di ogni consegna.
 name: Prove
 
+# Il CHANGELOG entra nel gioco (la finestra delle novità legge le righe «Per chi gioca»): un cambio al solo
+# CHANGELOG fa partire le prove, gli altri documenti no (revisione 37, L30).
 on:
   push:
     branches: [main]
-    paths-ignore: ["**/*.md", "progettazione/**", "grafica/**", "old_version/**", "consegne/**"]
+    paths: ["**", "!**/*.md", "!progettazione/**", "!grafica/**", "!old_version/**", "!consegne/**", "CHANGELOG.md"]
   pull_request:
-    paths-ignore: ["**/*.md", "progettazione/**", "grafica/**", "old_version/**", "consegne/**"]
+    paths: ["**", "!**/*.md", "!progettazione/**", "!grafica/**", "!old_version/**", "!consegne/**", "CHANGELOG.md"]
   workflow_dispatch:
   workflow_call:
 
 permissions:
   contents: read
 
+# Un push nuovo annulla le prove del push di prima; le prove chiamate dal rilascio non si annullano mai. Dentro un
+# flusso chiamato `github.event_name` è l'evento di chi chiama (il push del tag), non «workflow_call»: la condizione
+# di prima non scattava mai (revisione 37, L30). `github.workflow` invece è il nome del flusso che ha cominciato:
+# «Prove» qui, «Rilascio» quando le chiama il rilascio.
 concurrency:
-  group: prove-${{ github.ref }}
-  cancel-in-progress: ${{ github.event_name != 'workflow_call' }}
+  group: prove-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.workflow == 'Prove' }}
 
 jobs:
   motore-audio:
@@ -39,16 +45,19 @@ jobs:
       CARGO_PROFILE_RELEASE_LTO: "false"
       CARGO_PROFILE_RELEASE_CODEGEN_UNITS: "16"
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with: { node-version: 22, cache: npm, cache-dependency-path: app/package-lock.json }
-      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with: { python-version: "3.12" }
       - name: lark, dalla ruota del repository (la stessa che usa l'app)
         run: python -m pip install app/vendor/lark-1.3.1-py3-none-any.whl
       # fissata all'impronta (revisione 25, L14): con l'impronta il canale va detto a parte
+      # il compilatore è fissato alla versione con cui il gioco si prova in locale (revisione 37, L30): con «stable»
+      # l'eseguibile pubblicato nasceva con il compilatore del giorno. Si alza qui e in rilascio.yml insieme, dopo aver
+      # rifatto le prove in locale con la versione nuova
       - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
-        with: { toolchain: stable }
+        with: { toolchain: "1.95.0" }
       - uses: swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
         with: { workspaces: "app/src-tauri -> target" }
       - name: L'app (la pagina serve anche a cargo, che la incorpora)
@@ -77,10 +86,10 @@ jobs:
     name: Il gioco (prove e collaudi)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with: { node-version: 22, cache: npm, cache-dependency-path: app/package-lock.json }
-      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with: { python-version: "3.12" }
       - name: lark, dalla ruota del repository
         run: python -m pip install app/vendor/lark-1.3.1-py3-none-any.whl

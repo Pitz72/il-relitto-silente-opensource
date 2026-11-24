@@ -164,7 +164,10 @@ try {
     if (giaRilasciata ? confronta(nuova, gioco) <= 0 : confronta(nuova, gioco) < 0) {
       throw new Error(`La nuova versione ${nuova} deve seguire la ${gioco}.`);
     }
-    const oggi = new Date().toISOString().slice(0, 10);
+    // la data del posto in cui si rilascia, non quella di Greenwich: fra mezzanotte e l'una (le due d'estate) era il
+    // giorno prima (revisione 37, L33)
+    const ora = new Date();
+    const oggi = `${ora.getFullYear()}-${String(ora.getMonth() + 1).padStart(2, "0")}-${String(ora.getDate()).padStart(2, "0")}`;
     const righe = cl.split("\n");
     righe.splice(nr.inizio, nr.fine - nr.inizio, INTESTAZIONE_NR, "", `## [${nuova}] - ${oggi}`, "", nr.corpo, "");
     fs.writeFileSync(P(CL), righe.join("\n"));

@@ -26,8 +26,8 @@ jobs:
   controllo:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with: { node-version: 22 }
       - name: Il tag è la versione
         run: |
@@ -50,12 +50,15 @@ jobs:
         sistema: ${{ fromJSON(vars.LINUX_PROVATO == 'true' && '["windows-latest", "ubuntu-22.04"]' || '["windows-latest"]') }}
     runs-on: ${{ matrix.sistema }}
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with: { node-version: 22, cache: npm, cache-dependency-path: app/package-lock.json }
       # fissata all'impronta (revisione 25, L14): con l'impronta il canale va detto a parte
+      # il compilatore è fissato alla versione con cui il gioco si prova in locale (revisione 37, L30): con «stable»
+      # l'eseguibile pubblicato nasceva con il compilatore del giorno. Si alza qui e in prove.yml insieme, dopo aver
+      # rifatto le prove in locale con la versione nuova
       - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
-        with: { toolchain: stable }
+        with: { toolchain: "1.95.0" }
       - uses: swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
         with: { workspaces: "app/src-tauri -> target" }
       - name: Le librerie di Linux
