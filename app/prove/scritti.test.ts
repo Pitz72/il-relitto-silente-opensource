@@ -32,6 +32,31 @@ test("tutto il resto è del motore: i verbi, i movimenti, 'esci' (che in una sta
     assert.equal(interpreta(c), null, `«${c}» dovrebbe andare al motore`);
 });
 
+test("le parole che il motore prenderebbe per sé: quit, riavvia, esci dove non è un passo, e i titoli a partita finita", () => {
+  // revisione 37, L6 e M10: il motore chiedeva conferma e rispondeva «A presto!» senza che succedesse niente, o
+  // ricominciava la partita senza che l'app lo sapesse
+  const stanza = { dialogo: false, fuori: false, finita: false };
+  assert.deepEqual(interpreta("quit", stanza), { tipo: "menu" });
+  assert.deepEqual(interpreta("riavvia", stanza), { tipo: "ricomincia" });
+  assert.deepEqual(interpreta("ricominciare", stanza), { tipo: "ricomincia" });
+  assert.deepEqual(interpreta("esci", stanza), { tipo: "menu" });
+  // dove c'è un'uscita «fuori», «esci» è un passo; nel dialogo chiude la conversazione
+  assert.equal(interpreta("esci", { ...stanza, fuori: true }), null);
+  assert.equal(interpreta("esci", { ...stanza, dialogo: true }), null);
+  assert.equal(interpreta("quit", { ...stanza, dialogo: true }), null);
+  assert.equal(interpreta("riavvia", { ...stanza, dialogo: true }), null);
+  // «fine» e «basta» sono parole qualunque finché la partita non è finita
+  assert.equal(interpreta("fine", stanza), null);
+  assert.equal(interpreta("titoli", stanza), null);
+  const finita = { dialogo: false, fuori: true, finita: true };
+  assert.deepEqual(interpreta("fine", finita), { tipo: "menu" });
+  assert.deepEqual(interpreta("basta", finita), { tipo: "menu" });
+  assert.deepEqual(interpreta("esci", finita), { tipo: "menu" });
+  assert.deepEqual(interpreta("titoli", finita), { tipo: "titoli" });
+  assert.deepEqual(interpreta("Titoli di coda.", finita), { tipo: "titoli" });
+  assert.equal(interpreta("titoli di testa", finita), null);
+});
+
 const ev = (tipo: Evento["tipo"], testo: string): Evento => ({ tipo, testo });
 
 test("a solo testo l'elenco, le risposte e le domande del motore restano nel testo", () => {

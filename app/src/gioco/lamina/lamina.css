@@ -68,7 +68,8 @@
 /* corto: in fondo; lungo: dall'alto, e si scorre */
 .lamina-colonna { margin-top: auto; max-width: 34em; }
 
-.turno.passato { font-size: .86em; line-height: 1.5; transition: opacity .6s; }
+/* mai sotto i 12 px (revisione 37, L1: i turni passati scendevano fino a 10,5) */
+.turno.passato { font-size: max(12px, .86em); line-height: 1.5; transition: opacity .6s; }
 .turno.passato + .turno { margin-top: .4em; }
 .turno.attuale { padding-bottom: .2em; }
 
@@ -261,8 +262,8 @@
 .turno.passato .s-suggerimento { pointer-events: none; animation: none; }
 .attenuato { color: var(--tenue); }
 
-.s-protezione { font-family: var(--mono); font-size: .86em; letter-spacing: .06em; color: var(--rosso); }
-.s-schermo, .s-maiuscolo { font-family: var(--mono); font-size: .86em; letter-spacing: .06em; }
+.s-protezione { font-family: var(--mono); font-size: max(12px, .86em); letter-spacing: .06em; color: var(--rosso); }
+.s-schermo, .s-maiuscolo { font-family: var(--mono); font-size: max(12px, .86em); letter-spacing: .06em; }
 .b-lettura .s-schermo { font-size: 1em; color: var(--testo); font-weight: 500; letter-spacing: .08em; }
 .s-etichetta { font-family: var(--mono); font-size: .86em; color: var(--accento); }
 .b-lettura .s-etichetta { font-size: 1em; }

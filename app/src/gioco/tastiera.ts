@@ -36,6 +36,8 @@ export interface Tastiera {
   completa: () => void;
   gioca: (comando: string) => void;
   scegli: (s: SceltaModello) => void;
+  /** l'intro è ancora sopra il gioco: i tasti non sono suoi */
+  coperto?: boolean;
 }
 
 /** I tasti che non fanno tacere William: non sono un gesto (documento 41, come nel Viaggiatore). */
@@ -46,10 +48,20 @@ function pausaOZitto(altrimenti: () => void) {
   void williamParla().then((parla) => (parla ? void zittisciWilliam() : altrimenti()));
 }
 
-export function useTastiera({ modello, selezione, altri, pannello, domanda, turno, scritti, apriSalvataggi, schermoIntero, setPannello, chiudi, completa, gioca, scegli }: Tastiera) {
+export function useTastiera({ modello, selezione, altri, pannello, domanda, turno, scritti, apriSalvataggi, schermoIntero, setPannello, chiudi, completa, gioca, scegli, coperto = false }: Tastiera) {
   useEffect(() => {
     const giu = (e: KeyboardEvent) => {
       if (e.ctrlKey || e.altKey || e.metaKey) return;
+      // sotto l'intro che si sta aprendo sul gioco i tasti non sono ancora del gioco (revisione 37, L11: una
+      // freccia giocava un turno che non si vedeva)
+      if (coperto) return;
+      // un tasto tenuto premuto vale una volta sola (L13: più stanze attraversate, più aria spesa)
+      // (con un pannello aperto, sulla riga di comando e con Tab la ripetizione resta del browser: scorrere il
+      // diario, muovere un cursore, passare da un pulsante all'altro)
+      if (e.repeat) {
+        if (!pannello && !domanda && e.key !== "Tab" && !(e.target instanceof HTMLInputElement)) e.preventDefault();
+        return;
+      }
       // la voce di William (documento 41), come nel Viaggiatore: F2 la ridice; ogni altro tasto la fa tacere, tranne
       // quelli che non sono un gesto (Maiusc, Tab per passare da un pulsante all'altro) ed Esc, che la zittisce e
       // basta solo se sta parlando (più sotto)
@@ -146,5 +158,5 @@ export function useTastiera({ modello, selezione, altri, pannello, domanda, turn
     };
     addEventListener("keydown", giu);
     return () => removeEventListener("keydown", giu);
-  }, [modello, selezione, altri, gioca, chiudi, scegli, pannello, domanda, turno, apriSalvataggi, schermoIntero, scritti, setPannello, completa]);
+  }, [modello, selezione, altri, gioca, chiudi, scegli, pannello, domanda, turno, apriSalvataggi, schermoIntero, scritti, setPannello, completa, coperto]);
 }

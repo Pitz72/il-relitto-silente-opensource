@@ -31,7 +31,8 @@ export function MarchioRuntime({ className, colore = BIANCO_TITOLI }: { classNam
         <path d={TRIANGOLO_ESTERNO} fill="none" stroke={BIANCO} strokeWidth={7} strokeLinejoin="round" />
         <path d={TRIANGOLO_INTERNO} fill={BIANCO} />
         {PIXEL.map((p, i) => (
-          <rect key={i} x={p.x - p.l / 2} y={p.y - p.l / 2} width={p.l} height={p.l} rx={3} fill={BIANCO} />
+          // dove li mette il logo d'apertura: `x` e `y` sono l'angolo, non il centro (revisione 37, L16)
+          <rect key={i} x={p.x} y={p.y} width={p.l} height={p.l} rx={3} fill={BIANCO} />
         ))}
       </g>
     </svg>

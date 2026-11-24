@@ -7,6 +7,7 @@ import { readFileSync } from "node:fs";
 import { effettoSulContorno, TASTI_CHE_SPOSTANO } from "../src/stile/fuoco.ts";
 import { durataAvviso } from "../src/gioco/pannelli/avviso.ts";
 import { ANNULLATO, FERMO, sorveglia, TETTO_CONTROLLO, TETTO_SENZA_PEZZI } from "../src/menu/avanzamento.ts";
+import { OPZIONI_DI_BASE, ripulisci } from "../src/stile/opzioni.ts";
 
 const leggi = (f: string) => readFileSync(new URL(`../src/${f}`, import.meta.url), "utf8");
 const senzaCommenti = (css: string) => css.replace(/\/\*[\s\S]*?\*\//g, "");
@@ -119,4 +120,46 @@ test("i bersagli piccoli: «diario», «menu» e «continua ↓» sono alti alme
   const alto = (css: string, selettore: string) => Number(new RegExp(`${selettore.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")} \\{[^}]*min-height: (\\d+)px`).exec(css)?.[1] ?? 0);
   assert.ok(alto(gioco, ".comandi-app button") >= 36);
   assert.ok(alto(senzaCommenti(leggi("gioco/pannelli/pannelli.css")), ".pannello .continua-opzioni") >= 36);
+});
+
+test("le opzioni lette dal disco: solo i valori del tipo giusto, i volumi fra 0 e 1", () => {
+  // revisione 37, L7: un volume scritto come testo faceva rifiutare al motore audio tutto il mix
+  const o = ripulisci({ volume: "0.5", volumeMusica: 0.4, volumeEffetti: 7, volumeParlato: Number.NaN, mono: "sì", carattere: "comic", movimento: "ridotto", grana: "ferma", voceWilliam: false, sconosciuta: 3 });
+  assert.equal(o.volume, OPZIONI_DI_BASE.volume);
+  assert.equal(o.volumeMusica, 0.4);
+  assert.equal(o.volumeEffetti, 1);
+  assert.equal(o.volumeParlato, OPZIONI_DI_BASE.volumeParlato);
+  assert.equal(o.mono, OPZIONI_DI_BASE.mono);
+  assert.equal(o.carattere, OPZIONI_DI_BASE.carattere);
+  assert.equal(o.movimento, "ridotto");
+  assert.equal(o.grana, "ferma");
+  assert.equal(o.voceWilliam, false);
+  assert.ok(!("sconosciuta" in o));
+  assert.deepEqual(ripulisci(null), OPZIONI_DI_BASE);
+  assert.deepEqual(ripulisci("rotto"), OPZIONI_DI_BASE);
+  // quello che il gioco scrive si rilegge uguale
+  assert.deepEqual(ripulisci(JSON.parse(JSON.stringify(OPZIONI_DI_BASE))), OPZIONI_DI_BASE);
+});
+
+test("le lievi della pagina: il cartello d'atto, il tasto tenuto premuto, l'intro sopra il gioco, i titoli, i testi piccoli", () => {
+  // L3: la funzione che chiude il cartello è sempre la stessa, e una partita caricata non lo mostra
+  const v = leggi("gioco/visore/Visore.tsx");
+  assert.match(v, /const chiudi = useCallback\(\(\) => setMostra\(null\), \[\]\);/);
+  assert.match(v, /if \(p\.partita !== partita\) setMostra\(null\);/);
+  assert.match(leggi("gioco/Gioco.tsx"), /useCartelloAtto\(turno\?\.stato\.atto, partita\)/);
+  // L11 e L13: sotto l'intro i tasti non sono del gioco; un tasto tenuto premuto vale una volta
+  const t = leggi("gioco/tastiera.ts");
+  assert.match(t, /if \(coperto\) return;/);
+  assert.match(t, /if \(e\.repeat\) \{/);
+  assert.match(leggi("Relitto.tsx"), /coperto=\{introSopra\}/);
+  // L14: il motore grafico dell'intro si spegne quando l'intro se ne va
+  assert.match(leggi("intro/Intro.tsx"), /motore\.current\?\.distruggi\(\);/);
+  // L16: i pixel del marchio dove li mette il logo d'apertura
+  assert.match(leggi("loghi/Marchi.tsx"), /<rect key=\{i\} x=\{p\.x\} y=\{p\.y\}/);
+  // L19: «salta» taglia anche la sfumatura finale dei titoli
+  assert.match(leggi("riconoscimenti/Titoli.tsx"), /if \(!lenta && lentaInCorso\.current\)/);
+  // L1: nessun corpo in em sotto i 12 px nei turni passati, nei numeri delle risposte, nella scritta dell'apparecchio
+  assert.match(senzaCommenti(leggi("gioco/lamina/lamina.css")), /\.turno\.passato \{ font-size: max\(12px, \.86em\)/);
+  assert.match(leggi("gioco/dialogo/dialogo.css"), /\.dialogo \.semi \.numero \{[^}]*font-size: max\(12px, \.78em\)/);
+  assert.match(leggi("intro/intro.css"), /\.intro \.blocco\.apparecchio \{[^}]*font-size: max\(12px, 1\.02cqw\)/);
 });

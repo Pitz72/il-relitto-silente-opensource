@@ -264,7 +264,7 @@ function vestibolo(s: Stati): Strato[] {
   // la terza è crollata su se stessa: materia schiacciata, piegata come carta bagnata
   sc.massa(arcata(cz, R, aC, 0, 0.7, 1.8), 0.45);
   sc.linee("vena", Array.from({ length: 8 }, () => Array.from({ length: 6 }, (_, i) => suParete(0, cz, R - 0.05, aC, 0.15 + sc.r() * 1.5, [[-0.65 + i * 0.26, (sc.r() - 0.5) * 0.35]])[0])), { forza: 0.45 });
-  // la nicchia all'altezza della mano: il risuonatore, già schedato; staccato, i tuoi tagli
+  // la nicchia all'altezza della mano: il risuonatore, già schedato; staccato, i tagli di William
   const nicchia = suParete(0, cz, R, aN, 1.0, [[-0.28, 0], [0.28, 0], [0.28, 0.42], [-0.28, 0.42], [-0.28, 0]]);
   sc.massa(nicchia, 0.6);
   const c = suParete(0, cz, R - 0.12, aN, 1.2, [[0, 0]])[0];
@@ -305,7 +305,7 @@ function golaDiMezzo(s: Stati): Strato[] {
   return sc.strati;
 }
 
-/** La sala delle teche: file di teche alte il doppio di te, forzate da dentro; il groviglio. */
+/** La sala delle teche: file di teche alte il doppio di William, forzate da dentro; il groviglio. */
 function salaDelleTeche(s: Stati): Strato[] {
   const basso = s.faro === "basso";
   const sc = new Scena(cam({ h: 2.6, beccheggio: -0.1 }), 404, [6, 14]);
@@ -760,7 +760,7 @@ function arcaDellaMemoria(s: Stati): Strato[] {
 }
 
 /** L'alloggio dell'equipaggio: le alcove a nido d'ape, il Navarca che riposa in una delle più basse. */
-function alloggio(_s: Stati): Strato[] {
+function alloggio(s: Stati): Strato[] {
   const sc = new Scena(cam({ beccheggio: 0.12, cy: 160 }), 1414, [4, 7]);
   const cz = 4.9, R = 4.7;
   stanzaTonda(sc, { cz, R, h: 4.6, volta: 1.1, pavimento: 650, parete: 1300, cupola: 500 });
@@ -787,9 +787,12 @@ function alloggio(_s: Stati): Strato[] {
   }, 800, { forza: 1 });
   sc.nuvola("osso", ellissoide(su(base.s - 0.9, base.t - 0.06, 0.15), 0.1, 0.08, 0.08), 120, { forza: 1 });
   sc.alone(su(base.s, base.t - 0.1, 0.15), 0.9, "osso", 0.2);
-  const mano = su(base.s + 0.05, base.t + 0.02, 0.2);
-  sc.alone(mano, 0.12, "caldo", 0.8);
-  sc.marca(mano, 0.25, 0.2);
+  // nella mano il cilindro, finché William non lo prende (revisione 37, L17: restava disegnato)
+  if (s.cilindro !== "preso") {
+    const mano = su(base.s + 0.05, base.t + 0.02, 0.2);
+    sc.alone(mano, 0.12, "caldo", 0.8);
+    sc.marca(mano, 0.25, 0.2);
+  }
   // a nord, una porta più piccola delle altre
   sc.massa(arcata(cz, R, FRONTE + 0.02, 0, 0.32, 1.25), 0.5);
   return sc.strati;
@@ -838,7 +841,8 @@ function nido(s: Stati): Strato[] {
     const rx = k ? Math.abs(k.x - q.x) : 30;
     sc.segno("vena", `M${(q.x - rx).toFixed(1)} ${q.y.toFixed(1)}a${rx.toFixed(1)} ${(rx * 0.82).toFixed(1)} 0 1 0 ${(2 * rx).toFixed(1)} 0a${rx.toFixed(1)} ${(rx * 0.82).toFixed(1)} 0 1 0 ${(-2 * rx).toFixed(1)} 0`, { forza: 0.6 });
   }
-  sc.linea("caldo", suPiano([-0.35, 0.02, 3.0], [1, 0, 0], [0, 0, 1], spirale(2.2, 0.09)), { forza: 0.9, spessore: 1.1 });
+  // il sonaglio a conchiglia, finché William non lo prende
+  if (s.sonaglio !== "preso") sc.linea("caldo", suPiano([-0.35, 0.02, 3.0], [1, 0, 0], [0, 0, 1], spirale(2.2, 0.09)), { forza: 0.9, spessore: 1.1 });
   sc.alone([0, 1.0, 3.5], 2.2, "caldo", 0.14);
   return sc.strati;
 }
@@ -1004,7 +1008,7 @@ export const STANZE: Readonly<Record<string, DefStanza>> = {
   },
   "vestibolo delle gole": {
     descrizione: (s) =>
-      `la sala bassa e tonda con tre gole: la larga ${fuga(s) ? "crollata" : "che sale verso una luce azzurrina"}, quella di mezzo che scende, la terza crollata; ${s.risuonatore === "staccato" ? "la nicchia vuota, con i tuoi tagli" : "nella nicchia, il risuonatore schedato"}`,
+      `la sala bassa e tonda con tre gole: la larga ${fuga(s) ? "crollata" : "che sale verso una luce azzurrina"}, quella di mezzo che scende, la terza crollata; ${s.risuonatore === "staccato" ? "la nicchia vuota, con i miei tagli" : "nella nicchia, il risuonatore schedato"}`,
     chiave: (s) => k(s.risuonatore, s.fuga),
     disegna: vestibolo,
     varianti: { "risuonatore incastrato": { risuonatore: "incastrato" }, "nicchia vuota": { risuonatore: "staccato" }, fuga: { fuga: "iniziata", risuonatore: "staccato" } },
@@ -1017,7 +1021,7 @@ export const STANZE: Readonly<Record<string, DefStanza>> = {
   },
   "sala delle teche": {
     descrizione: (s) =>
-      `file di teche alte il doppio di te, molte forzate da dentro, e il groviglio di filamenti pallidi${s.bengala === "acceso" ? " ammassato intorno al bengala rosso" : s.energia === "ripristinata" ? ", piegato sotto la luce azzurrina del campo" : ""}; lungo le pareti le teche chiuse, bianche di brina`,
+      `file di teche alte il doppio di me, molte forzate da dentro, e il groviglio di filamenti pallidi${s.bengala === "acceso" ? (fuga(s) || s.groviglio === "desto" ? ", sveglio, ammassato intorno al bengala rosso" : " ammassato intorno al bengala rosso") : fuga(s) || s.groviglio === "desto" ? ", sveglio, che si muove dappertutto" : s.energia === "ripristinata" ? ", piegato sotto la luce azzurrina del campo" : ""}; lungo le pareti le teche chiuse, bianche di brina`,
     chiave: (s) => k(s.bengala, s.energia, s.fuga, s.groviglio, s.faro),
     disegna: salaDelleTeche,
     varianti: { quieta: {}, bengala: { bengala: "acceso" }, energia: { energia: "ripristinata" }, "faro basso": { faro: "basso" }, fuga: { fuga: "iniziata", groviglio: "desto" } },
@@ -1083,16 +1087,16 @@ export const STANZE: Readonly<Record<string, DefStanza>> = {
     varianti: { intatto: { archivio: "intatto" }, salutato: { archivio: "salutato" }, forzato: { archivio: "forzato" } },
   },
   "alloggio dell'equipaggio": {
-    descrizione: () => "la stanza tonda dalle alcove a nido d’ape; in una delle più basse riposa il Navarca, il cilindro di metallo nella mano",
-    chiave: () => "",
+    descrizione: (s) => `la stanza tonda dalle alcove a nido d’ape; in una delle più basse riposa il Navarca, ${s.cilindro === "preso" ? "la mano a tre dita aperta" : "il cilindro di metallo nella mano"}`,
+    chiave: (s) => k(s.cilindro),
     disegna: alloggio,
-    varianti: { sempre: {} },
+    varianti: { "con il cilindro": {}, "la mano vuota": { cilindro: "preso" } },
   },
   nido: {
-    descrizione: () => "la cella piccola: cento soli gialli disegnati sulle pareti, in un angolo il bozzolo grande la metà degli altri, e il sonaglio",
-    chiave: (s) => k(s.proiezione),
+    descrizione: (s) => `la cella piccola: cento soli gialli disegnati sulle pareti, in un angolo il bozzolo grande la metà degli altri${s.sonaglio === "preso" ? "" : ", e il sonaglio"}`,
+    chiave: (s) => k(s.proiezione, s.sonaglio),
     disegna: nido,
-    varianti: { sempre: {}, proiezione: { proiezione: "attiva" } },
+    varianti: { sempre: {}, proiezione: { proiezione: "attiva" }, "senza il sonaglio": { sonaglio: "preso" } },
   },
   "ponte di comando": {
     descrizione: (s) =>

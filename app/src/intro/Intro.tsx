@@ -230,6 +230,22 @@ export default function Intro({
   const [fps, setFps] = useState<string>("");
   const glifi = useMemo(() => glifiDelTitolo(TITOLO), []);
 
+  // Il motore grafico si spegne quando l'intro se ne va davvero (revisione 37, L14: ogni intro lasciava in memoria
+  // un contesto WebGL con la nave, i cieli e le immagini). Un attimo dopo lo smontaggio: nello sviluppo React
+  // smonta e rimonta subito, e il motore deve restare quello.
+  const montata = useRef(false);
+  useEffect(() => {
+    montata.current = true;
+    return () => {
+      montata.current = false;
+      setTimeout(() => {
+        if (montata.current) return;
+        motore.current?.distruggi();
+        motore.current = null;
+      }, 0);
+    };
+  }, []);
+
   // ---- la preparazione: il motore, le immagini, i cieli --------------------------
   useEffect(() => {
     let vivo = true;

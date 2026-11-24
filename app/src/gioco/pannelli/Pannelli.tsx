@@ -154,7 +154,7 @@ export interface VociPausa {
   menu: (() => void) | null;
 }
 
-export function Pausa({ forma, voci }: { forma: Forma; voci: VociPausa }) {
+export function Pausa({ forma, voci, scritti = false }: { forma: Forma; voci: VociPausa; /** la modalità scritta: lì la D è una lettera della riga, e il diario si apre scrivendo DIARIO */ scritti?: boolean }) {
   return (
     <Pannello forma={forma} titolo="In pausa" classe="pausa">
       <nav className="voci-pausa">
@@ -162,7 +162,7 @@ export function Pausa({ forma, voci }: { forma: Forma; voci: VociPausa }) {
           Riprendi <span className="tasto">Esc</span>
         </button>
         <button type="button" onClick={voci.diario}>
-          Diario <span className="tasto">D</span>
+          Diario {!scritti && <span className="tasto">D</span>}
         </button>
         {voci.salva && (
           <button type="button" onClick={voci.salva}>
@@ -515,6 +515,7 @@ const TASTI_SCRITTI: typeof TASTI = [
       { tasti: ["DIARIO"], fa: "il diario, la trascrizione" },
       { tasti: ["OPZIONI", "MENU", "TASTI"], fa: "le opzioni, la pausa, questa pagina" },
       { tasti: ["RICOMINCIA"], fa: "da capo, con una conferma" },
+      { tasti: ["TITOLI"], fa: "a partita finita, i titoli di coda" },
       { tasti: ["AIUTO"], fa: "i verbi del gioco e le parole dell'app" },
     ],
   },

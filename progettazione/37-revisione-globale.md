@@ -438,3 +438,22 @@ L’autore, 24 novembre 2026, al punto della situazione: «Occupati, nell’ordi
 - **L9**: «diario» e «menu» sono alti 38 px (erano 28), «continua ↓» nelle Opzioni 38. Misurati nel browser a 1280 × 720: non toccano la lastra del testo (finiscono a 48 px, la lastra comincia a 56).
 
 Prove: `app/prove/pannelli.test.ts` (dieci, nuove); node 162 su 162, i tipi puliti.
+
+**Le lievi della pagina, e la modalità scritta** (L1, L3, L5, L6, L7, L10, L11, L13, L14, L16, L17, L19; M10):
+
+- **L1**: `max(12px, …)` sui turni passati della lastra, sui numeri delle risposte nel dialogo, sulle scritte in maiuscoletto dentro i turni passati e sulla scritta dell’apparecchio nell’intro. **Le scritte del radar disegnate nell’intro** (da 7 a 10 px) restano come sono: stanno dentro lo schermo del radar, sono parte dell’immagine e non testo da leggere; se l’autore le vuole più grandi, è una riga in `intro/plancia.ts`.
+- **L3**: il cartello d’atto. La funzione che lo chiude era nuova a ogni ridisegno, e il conto dei 2,6 secondi ripartiva ogni volta: ora è sempre la stessa. Una partita caricata, ripresa o ricominciata non lo mostra (`useCartelloAtto(atto, partita)`).
+- **L5**: «Nomi toccabili» cambiato a metà partita ricompone il turno in corso. Il cambio di carattere passa già dal foglio di stile; i pulsanti del ramo si rimisurano al turno dopo (non l’ho toccato: lo scarto è di pochi pixel e dura un turno).
+- **L6**: nella modalità scritta la pausa non mostra più il tasto D. «quit» ed «exit» aprono la pausa; «riavvia» e «ricominciare» la conferma dell’app; «esci» resta del motore dove è un passo (una stanza con l’uscita «fuori») o chiude una conversazione, e altrove apre la pausa. Verificato nel motore che cosa faceva prima: «quit» chiedeva «Vuoi davvero chiudere la partita?» e poi «A presto!», senza che succedesse niente; «riavvia» ricominciava la partita senza che l’app lo sapesse.
+- **M10**: AIUTO è una voce sola (l’aiuto del motore e sotto le parole dell’app); a partita finita «titoli» (o «titoli di coda») porta ai titoli, e «fine», «basta», «esci» alla pausa; nel dialogo scritto la battuta sta sopra le sue risposte numerate. **Non provato con un lettore di schermo vero.**
+- **L7**: le opzioni lette dal disco si tengono solo se del tipo giusto e, per le scelte, fra i valori possibili; i volumi fra 0 e 1 (`ripulisci`, con la sua prova).
+- **L10**: un suggerimento che il modello conosce ma che adesso non ha un comando resta scritto, attenuato come gli altri, e non è un pulsante.
+- **L11**: finché l’intro è sopra il gioco i tasti non arrivano al gioco. **L13**: un tasto tenuto premuto vale una volta (con un pannello aperto, sulla riga di comando e con Tab la ripetizione resta: scorrere il diario, muovere un cursore).
+- **L14**: il contesto WebGL dell’intro si rilascia quando l’intro se ne va.
+- **L16**: nei titoli di coda i pixel del marchio Runtime stanno dove li mette il logo d’apertura.
+- **L17**: il ponte manda due stati in più (`cilindro`, `sonaglio`: «al suo posto» o «preso»); la stanza del Navarca non disegna e non nomina più il cilindro dopo che William l’ha preso («la mano a tre dita aperta», come dice `equipaggio.fav`), il nido non disegna più il sonaglio; nella fuga la sala delle teche dice il groviglio «sveglio, che si muove dappertutto» (le parole di `fuga.fav`); «alte il doppio di me», «con i miei tagli». Viste nella galleria dello sviluppo le due varianti della stanza del Navarca.
+- **L19**: durante la sfumatura finale dei titoli «salta», Esc e Invio portano subito al menu.
+
+Restano all’autore, fra le lievi della pagina: **L8** («Testo: grande» non ingrandisce i pulsanti in basso, il dialogo e il riquadro a destra: ingrandirli sposta le misure di tutta la schermata, e va deciso guardandola) e **L12** («Nuova partita» non avvisa che il salvataggio automatico di prima verrà sostituito). **L18** (l’intro non riceve il carattere né il testo grande) è con l’intro, qui sotto.
+
+Prove: tre nuove in `app/prove/pannelli.test.ts` e una in `scritti.test.ts`; node 165 su 165; `collaudo/eventi.py`, `diario.py` e `scritti.py` verdi sui 17 percorsi.

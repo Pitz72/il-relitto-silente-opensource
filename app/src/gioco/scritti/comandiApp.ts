@@ -16,7 +16,19 @@ export type ComandoApp =
   | { tipo: "opzioni" }
   | { tipo: "menu" }
   | { tipo: "tasti" }
-  | { tipo: "aiuto" };
+  | { tipo: "aiuto" }
+  /** a partita finita: i titoli di coda (revisione 37, M10) */
+  | { tipo: "titoli" };
+
+/** Quello che l'app sa della partita quando legge una riga: serve a capire le parole che cambiano senso. */
+export interface Contesto {
+  /** si sta parlando con qualcuno: lì «esci» chiude la conversazione, ed è del motore */
+  dialogo?: boolean;
+  /** la stanza ha un'uscita «fuori»: lì «esci» è un movimento, ed è del motore */
+  fuori?: boolean;
+  /** la partita è finita */
+  finita?: boolean;
+}
 
 const POSTI_VALIDI = new Set(["1", "2", "3", "4", "5", "6", "automatico"]);
 
@@ -38,8 +50,11 @@ function postoDi(resto: string[]): IdPosto | null | undefined {
   return undefined; // un'altra cosa: non è un comando dell'app
 }
 
-/** Il comando dell'app che chi gioca ha scritto, o null se è una riga per il motore. */
-export function interpreta(testo: string): ComandoApp | null {
+/** Il comando dell'app che chi gioca ha scritto, o null se è una riga per il motore.
+ *  «quit», «riavvia» e, dove non è un movimento, «esci» il motore li prende per sé: chiede conferma, risponde
+ *  «A presto!» e non succede niente, o ricomincia la partita senza che l'app lo sappia (revisione 37, L6). Qui
+ *  aprono la pausa, o la conferma dell'app. */
+export function interpreta(testo: string, contesto: Contesto = {}): ComandoApp | null {
   const p = parole(testo);
   if (p.length === 0) return null;
   const [verbo, ...resto] = p;
@@ -52,6 +67,24 @@ export function interpreta(testo: string): ComandoApp | null {
     }
     case "ricomincia":
       return resto.length === 0 ? { tipo: "ricomincia" } : null;
+    case "ricominciare":
+    case "riavvia":
+      return resto.length === 0 && !contesto.dialogo ? { tipo: "ricomincia" } : null;
+    case "esci":
+      // nel dialogo chiude la conversazione; dove c'è un'uscita «fuori» è un passo. Dell'app soltanto quando si
+      // sa che qui «fuori» non c'è, o a partita finita
+      if (resto.length || contesto.dialogo) return null;
+      return contesto.finita || contesto.fuori === false ? { tipo: "menu" } : null;
+    case "quit":
+    case "exit":
+      return resto.length === 0 && !contesto.dialogo ? { tipo: "menu" } : null;
+    case "fine":
+    case "basta":
+      // a partita finita il motore direbbe «A presto!»: qui si torna alla pausa, da dove si va al menu
+      return resto.length === 0 && contesto.finita ? { tipo: "menu" } : null;
+    case "titoli":
+    case "riconoscimenti":
+      return contesto.finita && (resto.length === 0 || resto.join(" ") === "di coda") ? { tipo: "titoli" } : null;
     case "diario":
     case "trascrizione":
       return resto.length === 0 ? { tipo: "diario" } : null;
@@ -74,6 +107,6 @@ export function interpreta(testo: string): ComandoApp | null {
 /** Il testo che AIUTO aggiunge, sotto quello del motore: i verbi propri del gioco, e le parole dell'app. */
 export const AIUTO_DELL_APP = [
   "Oltre ai comandi di sempre, nel Relitto si può: ANALIZZARE, TRADURRE, SINTONIZZARE, INCIDERE.",
-  "Le parole dell'app: SALVA e CARICA (anche con un numero, «salva 3»), DIARIO, OPZIONI, MENU, TASTI, RICOMINCIA.",
+  "Le parole dell'app: SALVA e CARICA (anche con un numero, «salva 3»), DIARIO, OPZIONI, MENU, TASTI, RICOMINCIA; a partita finita, TITOLI.",
   "Con le frecce su e giù si ritrovano i comandi già dati. Esc svuota la riga, e a riga vuota apre la pausa.",
 ].join("\n");

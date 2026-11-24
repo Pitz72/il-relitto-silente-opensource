@@ -499,6 +499,12 @@ def _prop(m, id_ogg, *valori):
     return None
 
 
+def _al_suo_posto(m, nome, stanza):
+    """«al suo posto» se la cosa sta ancora nella stanza dove la storia la mette, «preso» se no."""
+    o = m.oggetti.get(nome)
+    return "al suo posto" if o is not None and o.posizione == stanza else "preso"
+
+
 def _suono_stati():
     m = _mondo
     v = m.variabili
@@ -555,6 +561,10 @@ def _suono_stati():
         "registro": _prop(m, "registro di bordo", "intonso", "sfogliato"),
         "tacche": _prop(m, "tacche", "vergine", "segnata"),
         "cella": "cella di riserva" in portati,
+        # il cilindro nella mano del Navarca e il sonaglio nel nido: presi, le viste delle due stanze non li
+        # mostrano più (revisione 37, L17)
+        "cilindro": _al_suo_posto(m, "cilindro mnemonico", "alloggio dell'equipaggio"),
+        "sonaglio": _al_suo_posto(m, "sonaglio", "nido"),
         "chiavi": _intero(v.get("chiavi")),
         "traduzione": _intero(v.get("traduzione")),
         "echi": _intero(v.get("echi")),

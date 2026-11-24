@@ -63,13 +63,26 @@ export default function Titoli({ ridotto, onFine }: Props) {
   fine.current = onFine;
 
   /** Chiude i titoli: lenta alla fine, svelta se si salta. Il nero e la musica sfumano insieme. */
+  const lentaInCorso = useRef(false);
+  const timerFine = useRef<ReturnType<typeof setTimeout> | null>(null);
   const chiudi = (lenta = false) => {
-    if (fatto.current) return;
+    if (fatto.current) {
+      // la sfumatura finale è già partita: «salta», Esc e Invio la tagliano (revisione 37, L19: per sette
+      // secondi non facevano più niente)
+      if (!lenta && lentaInCorso.current) {
+        lentaInCorso.current = false;
+        if (timerFine.current) clearTimeout(timerFine.current);
+        void sfumaSuono(0.3);
+        fine.current();
+      }
+      return;
+    }
     fatto.current = true;
+    lentaInCorso.current = lenta;
     const ms = lenta ? SFUMATURA_MS : ridotto ? 300 : SALTO_MS;
     setChiusura(ms);
     void sfumaSuono(ms / 1000);
-    setTimeout(() => fine.current(), ms);
+    timerFine.current = setTimeout(() => fine.current(), ms);
   };
   const chiudiRef = useRef(chiudi);
   chiudiRef.current = chiudi;

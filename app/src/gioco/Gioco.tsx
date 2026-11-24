@@ -25,6 +25,7 @@ import { blocchiDelTurno, segnaNomi, type Blocco } from "./lamina/grammatica";
 import Lamina, { type VoceDiario } from "./lamina/Lamina";
 import Ramo from "./ramo/Ramo";
 import { accesiDa, attrezzoDelVerbo, bersagli, COMANDO_TITOLI, NESSUNA, type Azione, type Selezione } from "./ramo/azioni";
+import type { Suggerimento } from "../azione/suggerimenti";
 import type { Filo } from "./ramo/geometria";
 import Visore, { CartelloAtto, useCartelloAtto } from "./visore/Visore";
 import Dialogo from "./dialogo/Dialogo";
@@ -70,6 +71,8 @@ interface Props {
   aiTitoli?: () => void;
   /** la demo dell'atto I (app/src/demo.ts): William ha messo piede sullo scafo, e la demo finisce */
   alFineDemo?: () => void;
+  /** l'intro è ancora sopra il gioco, e si sta aprendo su di lui: i tasti non sono ancora del gioco */
+  coperto?: boolean;
 }
 
 const ARTICOLO = /^(?:il|lo|la|i|gli|le|l['’]|un|uno|una|dei|degli|delle)\s*/i;
@@ -77,11 +80,19 @@ const ARTICOLO = /^(?:il|lo|la|i|gli|le|l['’]|un|uno|una|dei|degli|delle)\s*/i
 /** Quanto restano accesi i pulsanti di un suggerimento (§6.1: «per qualche secondo»). */
 const ACCESI_PER = 6000;
 
+/** Un suggerimento che toccato fa qualcosa: ha il suo comando, o un attrezzo da prendere in mano. */
+const siPuoToccare = (s: Suggerimento | undefined, m: ModelloAzione) => !!s && (!!s.comando || (s.dove === "attrezzo" && !!attrezzoDelVerbo(m.attrezzi, s.verbo)));
+
 /** I blocchi di un turno, con i nomi toccabili se l'opzione è accesa. */
 function blocchiDi(t: Turno, m: ModelloAzione, nomi: boolean, soloTesto = false): Blocco[] {
   const verbi = new Set([...t.pulsanti.verbi.map((v) => v.verbo), ...AZIONI_DI_SITUAZIONE.map((a) => a.comando.split(" ")[0])]);
   // a solo testo i suggerimenti restano nel testo (in maiuscolo, per chi scrive) ma non sono pulsanti
-  const blocchi = blocchiDelTurno(t.eventi, { suggerimenti: soloTesto ? [] : m.suggerimenti, verbi, soloTesto });
+  const blocchi = blocchiDelTurno(t.eventi, { suggerimenti: soloTesto ? [] : m.suggerimenti, verbi, soloTesto }).map((b): Blocco => {
+    // un suggerimento che il modello conosce ma che adesso non ha un comando resta scritto, e non è un pulsante
+    // acceso che non fa niente (revisione 37, L10)
+    if (!("segmenti" in b) || !b.segmenti.some((x) => (x.suggerimento ?? -1) >= 0 && !siPuoToccare(m.suggerimenti[x.suggerimento!], m))) return b;
+    return { ...b, segmenti: b.segmenti.map((x) => ((x.suggerimento ?? -1) >= 0 && !siPuoToccare(m.suggerimenti[x.suggerimento!], m) ? { ...x, suggerimento: -1 } : x)) };
+  });
   if (!nomi || soloTesto) return blocchi;
   return segnaNomi(
     blocchi,
@@ -129,7 +140,7 @@ function Inceppo({ dettaglio, alMenu }: { dettaglio: string; alMenu?: Props["alM
   );
 }
 
-export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFinale, aiTitoli, alFineDemo }: Props = {}) {
+export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFinale, aiTitoli, alFineDemo, coperto = false }: Props = {}) {
   const [opzioni, cambiaOpzioni] = useOpzioni();
   const ridotto = useMovimentoRidotto(opzioni.movimento);
   const motoreRef = useRef<Motore | null>(null);
@@ -153,6 +164,8 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
   const [posti, setPosti] = useState<Posto[] | null>(null);
   const [dove, setDove] = useState("");
   const [avviso, mostraAvviso, chiudiAvviso] = useAvviso();
+  /** cresce quando la partita è un'altra (nuova, caricata, ripresa): il cartello d'atto non è per lei */
+  const [partita, setPartita] = useState(0);
   const contatore = useRef(0);
   const ultimoPosto = useRef<IdPosto>("1");
   /** la stanza dell'ultimo turno: il salvataggio automatico scatta quando cambia */
@@ -198,6 +211,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
       const m = costruisciModello(primo);
       stanzaRef.current = primo.stato.stanza;
       contattoRef.current = primo.stato.contatto;
+      setPartita((n) => n + 1);
       setTurno(primo);
       setSelezione(NESSUNA);
       setAltri(null);
@@ -275,6 +289,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
       const mod = costruisciModello(t);
       stanzaRef.current = t.stato.stanza;
       contattoRef.current = t.stato.contatto;
+      setPartita((n) => n + 1);
       setTurno(t);
       setSelezione(NESSUNA);
       setAltri(null);
@@ -420,11 +435,12 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
     return () => removeEventListener("click", rivedi);
   }, [daRivedere, momentiAccesi]);
 
-  // cambiando modo a metà partita lo stato è lo stesso: il turno di adesso si ricompone
-  const modoPrima = useRef(scritti);
+  // cambiando modo a metà partita lo stato è lo stesso: il turno di adesso si ricompone. Lo stesso per i nomi
+  // toccabili (revisione 37, L5: «no» valeva dal turno dopo)
+  const modoPrima = useRef(`${scritti}${opzioni.nomiToccabili}`);
   useEffect(() => {
-    if (modoPrima.current === scritti) return;
-    modoPrima.current = scritti;
+    if (modoPrima.current === `${scritti}${opzioni.nomiToccabili}`) return;
+    modoPrima.current = `${scritti}${opzioni.nomiToccabili}`;
     if (!turno || !modello) return;
     setDiario((d) => (d.length ? [...d.slice(0, -1), { ...d[d.length - 1], blocchi: blocchiDi(turno, modello, opzioni.nomiToccabili, scritti) }] : d));
     setSelezione(NESSUNA);
@@ -565,20 +581,34 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
           setPannello("tasti");
           break;
         case "aiuto":
-          // il testo d'aiuto del motore, e sotto i verbi del gioco e le parole dell'app
+          // il testo d'aiuto del motore, e sotto i verbi del gioco e le parole dell'app: nella stessa voce (revisione
+          // 37, M10: l'aggiunta dell'app era un turno a sé, e l'aiuto del motore finiva subito fra i turni passati,
+          // spento e nascosto al lettore di schermo)
           gioca("aiuto");
-          setDiario((d) => [...d, { chiave: contatore.current++, comando: null, differenza: null, blocchi: blocchiDelTurno([{ tipo: "sistema", testo: AIUTO_DELL_APP }], { soloTesto: true }) }]);
+          setDiario((d) => {
+            const ultimo = d[d.length - 1];
+            if (!ultimo) return d;
+            return [...d.slice(0, -1), { ...ultimo, blocchi: [...ultimo.blocchi, ...blocchiDelTurno([{ tipo: "sistema", testo: AIUTO_DELL_APP }], { soloTesto: true })] }];
+          });
+          break;
+        case "titoli":
+          aiTitoli?.();
           break;
       }
     },
-    [salvaScritto, apriSalvataggi, caricaChiedendo, ricomincia, gioca, mostraAvviso],
+    [salvaScritto, apriSalvataggi, caricaChiedendo, ricomincia, gioca, mostraAvviso, aiTitoli],
   );
 
   /** Una riga scritta: o una parola dell'app, o un comando per il motore. */
   const inviaScritto = useCallback(
     (testo: string) => {
       storiaScritti.current = [...storiaScritti.current.filter((x) => x !== testo), testo].slice(-60);
-      const app = interpreta(testo);
+      const t = turnoRef.current;
+      const app = interpreta(testo, {
+        dialogo: !!t?.stato.dialogo,
+        fuori: !!t?.pulsanti.uscite?.some((u) => u.comando === "fuori"),
+        finita: !!t && t.esito !== "in_corso",
+      });
       if (app) eseguiApp(app);
       else gioca(testo);
     },
@@ -637,12 +667,12 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
 
   // ---- la tastiera (§6.2): gioco/tastiera.ts ---------------------------------
   const avanzaCompleta = useCallback(() => setCompleta((n) => n + 1), []);
-  useTastiera({ modello, selezione, altri, pannello, domanda, turno, scritti, apriSalvataggi, schermoIntero, setPannello, chiudi, completa: avanzaCompleta, gioca, scegli });
+  useTastiera({ modello, selezione, altri, pannello, domanda, turno, scritti, apriSalvataggi, schermoIntero, setPannello, chiudi, completa: avanzaCompleta, gioca, scegli, coperto });
 
   // le sonde delle prove (gioco/sonde.ts): non fanno niente se nessuna prova le chiede
   useSonde({ prova, turno, modello, motoreRef, passi, finaleRef, gioca, comincia, setCronaca });
 
-  const [cartello, chiudiCartello] = useCartelloAtto(turno?.stato.atto);
+  const [cartello, chiudiCartello] = useCartelloAtto(turno?.stato.atto, partita);
   const clima = turno ? climaDi(turno.stato) : null;
   const forma = clima?.forma ?? "acciaio";
   const stile = (clima ? variabiliCss(tavolozza(clima), turno!.stato.aria) : {}) as CSSProperties;
@@ -722,7 +752,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
             suSuggerimento={scritti ? undefined : suSuggerimento}
           />
           {modello && turno && !inDialogo && scritti && (
-            <RigaComando invia={inviaScritto} completa={() => setCompleta((n) => n + 1)} storia={storiaScritti.current} bloccata={!!pannello || !!domanda || cartello !== null} chiave={turno} />
+            <RigaComando invia={inviaScritto} completa={() => setCompleta((n) => n + 1)} storia={storiaScritti.current} bloccata={!!pannello || !!domanda || cartello !== null || coperto} chiave={turno} />
           )}
           {modello && turno && !inDialogo && !scritti && modello.fase !== "conferma" && (
             <Ramo
@@ -776,6 +806,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
         {pannello === "pausa" && (
           <Pausa
             forma={forma}
+            scritti={scritti}
             voci={{
               riprendi: () => setPannello(null),
               diario: () => setPannello("diario"),

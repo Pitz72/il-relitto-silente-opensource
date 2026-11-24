@@ -151,16 +151,35 @@ export default function Dialogo({ personaggio, blocchi, detto, scelte, forma, ri
         <div className="chi">{CHI[personaggio] ?? personaggio}</div>
         {detto && <div className="detto">› {detto}</div>}
         <div className="battute" aria-live="polite">
-          {narrazione.map((b, i) => (
-            <p key={`n${i}`} className="narrazione">
-              <Segmenti s={b.tipo === "paragrafo" ? b.segmenti : []} />
-            </p>
-          ))}
-          {battute.map((b, i) => (
-            <p key={i} className="battuta">
-              <Segmenti s={b.tipo === "dialogo" ? b.segmenti : []} />
-            </p>
-          ))}
+          {riga
+            ? // nella modalità scritta le risposte numerate stanno nel testo: i blocchi nell'ordine in cui arrivano,
+              // la battuta e sotto le sue risposte (revisione 37, M10: stavano sopra, e il lettore di schermo le
+              // leggeva prima della battuta a cui rispondono)
+              blocchi.map((b, i) =>
+                b.tipo === "paragrafo" ? (
+                  <p key={`o${i}`} className="narrazione">
+                    <Segmenti s={b.segmenti} />
+                  </p>
+                ) : b.tipo === "dialogo" ? (
+                  <p key={`o${i}`} className="battuta">
+                    <Segmenti s={b.segmenti} />
+                  </p>
+                ) : null,
+              )
+            : (
+              <>
+                {narrazione.map((b, i) => (
+                  <p key={`n${i}`} className="narrazione">
+                    <Segmenti s={b.tipo === "paragrafo" ? b.segmenti : []} />
+                  </p>
+                ))}
+                {battute.map((b, i) => (
+                  <p key={i} className="battuta">
+                    <Segmenti s={b.tipo === "dialogo" ? b.segmenti : []} />
+                  </p>
+                ))}
+              </>
+            )}
         </div>
       </div>
       {personaggio === "anziano" && nodo === "musica" && (

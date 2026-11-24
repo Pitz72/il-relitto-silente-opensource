@@ -102,10 +102,35 @@ export const OPZIONI_DI_BASE: Opzioni = {
 
 const CHIAVE = "relitto.opzioni";
 
+/** I valori che un'opzione può avere, dove non è un sì o un no né un numero. */
+const SCELTE: Partial<Record<keyof Opzioni, readonly string[]>> = {
+  movimento: ["sistema", "ridotto", "pieno"],
+  carattere: ["newsreader", "atkinson"],
+  comandi: ["pulsanti", "scritti"],
+  grana: ["mossa", "ferma", "no"],
+};
+
+/** Delle opzioni lette dal disco si tengono soltanto i valori del tipo giusto; per gli altri vale la base
+ *  (revisione 37, L7: un volume scritto come testo faceva rifiutare al motore audio tutto il mix, in silenzio).
+ *  I volumi stanno fra 0 e 1. */
+export function ripulisci(dati: unknown): Opzioni {
+  const out: Record<string, unknown> = { ...OPZIONI_DI_BASE };
+  if (typeof dati !== "object" || dati === null) return out as unknown as Opzioni;
+  for (const [chiave, base] of Object.entries(OPZIONI_DI_BASE)) {
+    const v = (dati as Record<string, unknown>)[chiave];
+    if (typeof v !== typeof base) continue;
+    if (typeof base === "number") {
+      if (Number.isFinite(v)) out[chiave] = Math.min(1, Math.max(0, v as number));
+    } else if (typeof base === "string") {
+      if (SCELTE[chiave as keyof Opzioni]?.includes(v as string)) out[chiave] = v;
+    } else out[chiave] = v;
+  }
+  return out as unknown as Opzioni;
+}
+
 function leggi(): Opzioni {
   try {
-    const dati = JSON.parse(localStorage.getItem(CHIAVE) ?? "{}");
-    return { ...OPZIONI_DI_BASE, ...(typeof dati === "object" && dati ? dati : {}) };
+    return ripulisci(JSON.parse(localStorage.getItem(CHIAVE) ?? "{}"));
   } catch {
     return { ...OPZIONI_DI_BASE };
   }

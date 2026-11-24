@@ -156,6 +156,9 @@ export interface StatiSuono {
   registro: "intonso" | "sfogliato" | null;
   tacche: "vergine" | "segnata" | null;
   cella: boolean;
+  /** il cilindro nella mano del Navarca e il sonaglio nel nido: al loro posto, o presi (le viste delle due stanze) */
+  cilindro: "al suo posto" | "preso" | null;
+  sonaglio: "al suo posto" | "preso" | null;
   chiavi: number | null;
   traduzione: number | null;
   echi: number | null;

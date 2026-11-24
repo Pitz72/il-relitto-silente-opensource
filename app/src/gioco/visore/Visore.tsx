@@ -10,7 +10,7 @@
 //  composto in codice: strumenti/viste/scafo.py); nel relitto le scansioni del
 //  multiscanner, disegnate in codice stanza per stanza (scansioni/).
 // ============================================================================
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { cicloA, FOTOGRAMMI } from "../ritmo";
 import { romano } from "../../lib/italiano";
 import type { Turno } from "../../motore/tipi";
@@ -437,13 +437,20 @@ export function CartelloAtto({ atto, titolo, acciaio, chiudi }: { atto: number; 
   );
 }
 
-/** Il cartello si mostra quando l'atto cresce, non al caricamento. */
-export function useCartelloAtto(atto: number | undefined): [number | null, () => void] {
+/** Il cartello si mostra quando l'atto cresce giocando, non al caricamento: `partita` cambia quando la partita
+ *  è un'altra (caricata, ripresa, ricominciata), e allora l'atto in cui si apre non è un atto che comincia
+ *  (revisione 37, L3: caricando un salvataggio di un atto più avanti il cartello compariva). La funzione che
+ *  lo chiude è sempre la stessa: prima cambiava a ogni ridisegno, il conto dei 2,6 secondi ripartiva ogni
+ *  volta, e il cartello restava invisibile sopra tutto, a prendersi il primo clic. */
+export function useCartelloAtto(atto: number | undefined, partita = 0): [number | null, () => void] {
   const [mostra, setMostra] = useState<number | null>(null);
-  const prima = useRef<number | undefined>(undefined);
+  const prima = useRef<{ atto: number | undefined; partita: number }>({ atto: undefined, partita });
   useEffect(() => {
-    if (atto !== undefined && prima.current !== undefined && atto > prima.current) setMostra(atto);
-    prima.current = atto;
-  }, [atto]);
-  return [mostra, () => setMostra(null)];
+    const p = prima.current;
+    if (p.partita !== partita) setMostra(null);
+    else if (atto !== undefined && p.atto !== undefined && atto > p.atto) setMostra(atto);
+    prima.current = { atto, partita };
+  }, [atto, partita]);
+  const chiudi = useCallback(() => setMostra(null), []);
+  return [mostra, chiudi];
 }

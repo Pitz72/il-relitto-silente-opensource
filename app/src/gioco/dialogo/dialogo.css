@@ -74,7 +74,7 @@
 .dialogo .narrazione { margin: 0; font-size: max(16px, 1.1cqw); line-height: 1.55; color: var(--tenue); }
 .dialogo .s-didascalia { font-style: italic; color: var(--tenue); }
 .dialogo .battuta .racconto { color: color-mix(in srgb, var(--testo) 82%, var(--tenue)); }
-.dialogo .s-intraducibile { font-family: var(--mono); font-size: .78em; color: var(--tenue); }
+.dialogo .s-intraducibile { font-family: var(--mono); font-size: max(12px, .78em); color: var(--tenue); }
 
 .dialogo .semi { flex: none; display: flex; flex-direction: column; align-items: flex-start; gap: .7cqw; }
 .dialogo .semi button {
@@ -94,7 +94,7 @@
   transition: border-color .3s, box-shadow .3s;
 }
 .dialogo .semi button:hover { border-color: var(--accento-2); box-shadow: 0 0 2.4cqw color-mix(in srgb, var(--accento-2) 30%, transparent); }
-.dialogo .semi .numero { font-family: var(--mono); font-size: .78em; color: var(--accento); }
+.dialogo .semi .numero { font-family: var(--mono); font-size: max(12px, .78em); color: var(--accento); }
 .dialogo .semi button.esci { color: var(--tenue); font-style: italic; }
 .dialogo[data-forma="acciaio"] .semi button { border-radius: .2em; font-family: var(--mono); font-size: max(13px, .9cqw); background: linear-gradient(var(--lamina-1), var(--lamina-2)); box-shadow: none; border-color: var(--bordo); }
 .dialogo[data-forma="acciaio"] .semi button:hover { border-color: var(--accento-2); }

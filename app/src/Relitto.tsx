@@ -424,7 +424,7 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
       <>
         {schermata.tipo === "gioco" ? (
           <Suspense key="gioco" fallback={null}>
-            <Gioco key={schermata.chiave} prova={prova} inizio={schermata.inizio} alMenu={alMenu} alFinale={alFinale} aiTitoli={aiTitoli} alFineDemo={alFineDemo} />
+            <Gioco key={schermata.chiave} prova={prova} inizio={schermata.inizio} alMenu={alMenu} alFinale={alFinale} aiTitoli={aiTitoli} alFineDemo={alFineDemo} coperto={introSopra} />
           </Suspense>
         ) : null}
         {schermata.tipo === "intro" || introSopra ? (
