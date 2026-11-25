@@ -120,7 +120,8 @@ sono (`IN-050`, `IN-051`, `IN-052`, `IN-054`) sono uguali a prese già registrat
 `SM-066`) e suonano quelle. `IN-062` è nel testo nuovo, in prima persona, del 25 novembre. Whisper
 (`consegne/controllo-2026-11-25.json`, senza suggerirgli il testo): il testo è quello del copione; «bruseo» è di
 Whisper, e in `IN-058` sente «faccia era» per «fa c’era» e non sente la «e» di «e mi restituisce» (detta leggera, o
-di Whisper: il senso non cambia). L’atto II è a 57 su 73; in tutto 156 su 616, il 25,3 % (il 24,9 % delle parole).
+di Whisper: il senso non cambia). **Ascoltati dall’autore** i quattro punti dubbi (`consegne/Ascolto dubbi
+Whisper 2026-11-25/`): «gli audio sono tutti e quattro corretti». L’atto II è a 57 su 73; in tutto 156 su 616, il 25,3 % (il 24,9 % delle parole).
 Il copione per Leonardo ha 460 prese, 90 pagine; il rapporto è in `doppiaggio/william/resoconti/`. Rigiocati i venti
 percorsi del collaudo (eventi, regressioni con le riprese) e le venti partite nel motore audio: tutto come prima.
 
