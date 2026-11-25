@@ -8,6 +8,8 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+## [0.2.5-beta.17] - 2026-11-25
+
 ### Per chi gioca
 
 - **«Testo: grande» ingrandisce anche i dialoghi e il riquadro a destra**: le battute e le risposte dei dialoghi, le scritte sotto l’ovale, accanto alla cifra dell’aria e sotto la mappa, «diario» e «menu» in alto, le scritte piccole dentro il testo. I pulsanti in basso restano della loro misura, e **quello sotto il mouse si ingrandisce di un terzo**, lì dov’è, sopra i vicini: gli altri non si spostano. Vale anche per le voci del fiore che si apre sopra di loro.
