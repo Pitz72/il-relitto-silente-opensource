@@ -361,7 +361,7 @@ cfg-if 1.0.5
   Copyright (c) 2014 Alex Crichton
   https://github.com/rust-lang/cfg-if
 
-cookie 0.18.2
+cookie 0.18.3
   Licenza: MIT (dichiarata: MIT OR Apache-2.0)
   Copyright 2017 Sergio Benitez
   Copyright 2014 Alex Chricton
@@ -543,7 +543,7 @@ foldhash 0.2.0
   Copyright (c) 2024 Orson Peters
   https://github.com/orlp/foldhash
 
-form_urlencoded 1.2.2
+form_urlencoded 1.2.3
   Licenza: MIT (dichiarata: MIT OR Apache-2.0)
   Copyright (c) 2013-2016 The rust-url developers
   https://github.com/servo/rust-url
@@ -1039,7 +1039,7 @@ rustls-platform-verifier 0.7.1
   Copyright (c) 2022 1Password
   https://github.com/rustls/rustls-platform-verifier
 
-rustls-webpki 0.103.15
+rustls-webpki 0.103.17
   Licenza: ISC
   Copyright 2015 Brian Smith.
   https://github.com/rustls/webpki
@@ -1462,7 +1462,7 @@ untrusted 0.9.0
   © Brian Smith
   https://github.com/briansmith/untrusted
 
-url 2.5.8
+url 2.5.9
   Licenza: MIT (dichiarata: MIT OR Apache-2.0)
   Copyright (c) 2013-2025 The rust-url developers
   https://github.com/servo/rust-url

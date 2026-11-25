@@ -944,7 +944,7 @@
    },
    {
     "nome": "cookie",
-    "versione": "0.18.2",
+    "versione": "0.18.3",
     "licenza": "MIT OR Apache-2.0",
     "usata": [
      "MIT"
@@ -1385,7 +1385,7 @@
    },
    {
     "nome": "form_urlencoded",
-    "versione": "1.2.2",
+    "versione": "1.2.3",
     "licenza": "MIT OR Apache-2.0",
     "usata": [
      "MIT"
@@ -2552,7 +2552,7 @@
    },
    {
     "nome": "rustls-webpki",
-    "versione": "0.103.15",
+    "versione": "0.103.17",
     "licenza": "ISC",
     "usata": [
      "ISC"
@@ -3579,7 +3579,7 @@
    },
    {
     "nome": "url",
-    "versione": "2.5.8",
+    "versione": "2.5.9",
     "licenza": "MIT OR Apache-2.0",
     "usata": [
      "MIT"

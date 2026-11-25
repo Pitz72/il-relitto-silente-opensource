@@ -2,7 +2,7 @@
 //  La prova dei finali attraverso l'interfaccia (RELITTO_PROVA=finali
 //  nell'eseguibile; ?prova=finali nel browser dello sviluppo).
 //  Gioca i sei finali come chi gioca con il mouse: dal menu principale «Nuova
-//  partita», l'intro saltata con Esc, poi ogni passo cliccando nel DOM il
+//  partita», i loghi e l'intro saltati con Esc, poi ogni passo cliccando nel DOM il
 //  pulsante che lo manda (un'uscita, un'azione, un seme del dialogo, il baccello
 //  di una cosa e il petalo del suo fiore, «Usa con…» e la cosa accesa, le cose
 //  in più dietro «+N», la conferma); a fine partita la pausa e «Menu
@@ -201,6 +201,23 @@ async function unFinale(id: string, r: Riferimento): Promise<EsitoFinale> {
     const dopo = await finche(() => pulsante(".pannello.conferma [data-risposta='si']") || document.querySelector<HTMLElement>(".intro"), "l'intro", 10000);
     if (dopo.matches("[data-risposta='si']")) await tocca(dopo, "Comincia");
     await finche(() => document.querySelector(".intro"), "l'intro", 10000);
+    // prima dell'intro passano i loghi (documento 09, §16), con l'intro nascosta sotto: un Esc li salta. Poi,
+    // quando l'intro è in corso e si vede, un altro Esc la salta. Uno solo per ciascuno: un Esc di troppo, nel
+    // gioco, aprirebbe la pausa
+    const inCorso = () => {
+      const i = document.querySelector<HTMLElement>(".intro.in-corso");
+      return i && i.style.visibility !== "hidden" ? i : null;
+    };
+    const t0Intro = performance.now();
+    let loghiSaltati = false;
+    while (!inCorso()) {
+      if (performance.now() - t0Intro > 60000) throw new Error("tempo scaduto: l'intro in corso, dopo i loghi");
+      if (!loghiSaltati && document.querySelector("[aria-label='Loghi di apertura']")) {
+        esc();
+        loghiSaltati = true;
+      }
+      await aspetta(100);
+    }
     await aspetta(300);
     esc();
     await finche(() => document.querySelector(".gioco"), "il gioco dopo l'intro", 60000);
