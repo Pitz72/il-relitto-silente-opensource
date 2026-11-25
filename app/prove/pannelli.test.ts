@@ -3,7 +3,7 @@
 //   node --test prove/pannelli.test.ts        (da app/)
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { effettoSulContorno, TASTI_CHE_SPOSTANO } from "../src/stile/fuoco.ts";
 import { durataAvviso } from "../src/gioco/pannelli/avviso.ts";
 import { ANNULLATO, FERMO, sorveglia, TETTO_CONTROLLO, TETTO_SENZA_PEZZI } from "../src/menu/avanzamento.ts";
@@ -105,8 +105,14 @@ test("i loghi e l'intro: un clic li salta, ma non nel primo secondo; i loghi seg
   const l = leggi("loghi/Loghi.tsx");
   assert.match(l, /onClick=\{\(\) => \{ if \(performance\.now\(\) - nato\.current > GUARDIA_DEL_CLIC\) chiudi\(\); \}\}/);
   assert.match(l, /if \(ridotto \?\? window\.matchMedia/);
-  assert.match(l, /SuonoLoghi\.avvia\(livello\.current\)/);
-  assert.match(leggi("loghi/suono.ts"), /static avvia\(volume = 1\): SuonoLoghi \| null \{\s+if \(volume <= 0\) return null;/);
+  assert.match(l, /SuonoLoghi\.avvia\(livello\.current, sf\)/);
+  assert.match(leggi("loghi/suono.ts"), /static avvia\(volume = 1, filmato\?: SuonoFilmato\): SuonoLoghi \| null \{\s+if \(volume <= 0\) return null;/);
+  // il logo di Runtime Multimedia è il filmato dell'autore (25 novembre 2026), muto, con il suo suono nella partitura;
+  // dove non si può suonare, il logo animato di prima
+  assert.match(l, /const FILMATO = "\.\/loghi\/runtime-multimedia\.webm";/);
+  assert.match(l, /<video ref=\{video\} src=\{FILMATO\} muted /);
+  assert.match(l, /<LogoRuntime ref=\{runtime\} \/>/);
+  for (const f of ["runtime-multimedia.webm", "runtime-multimedia.mp3"]) assert.ok(existsSync(new URL(`../public/loghi/${f}`, import.meta.url)), `manca public/loghi/${f}`);
   assert.match(leggi("Relitto.tsx"), /<Loghi [^>]*ridotto=\{ridotto\} volume=\{opzioni\.volume\}/);
   const i = leggi("intro/Intro.tsx");
   assert.match(i, /if \(revisione \|\| !pronta \|\| inAttesa\.current\) return;\s+if \(tempo\.current < GUARDIA_DEL_CLIC/);

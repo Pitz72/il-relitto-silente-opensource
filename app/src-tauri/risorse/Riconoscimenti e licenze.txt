@@ -156,6 +156,8 @@ La Santa Maria di tre quarti dal davanti, su fondo trasparente: il ritratto per 
   Simone Pizzi · dell’autore · reso in Blender da strumenti/nave/ritratto.py sul modello di strumenti/nave/modello.py (documento 40); **nessuna immagine generata da strumenti di IA**
 Il marchio ufficiale di Runtime Multimedia (a colori e in bianco, con la trasparenza), per i credits del poster
   Simone Pizzi · dell’autore · il kit dei loghi dell’autore (J:/PODCAST/ASSETS/LOGO 2025/RUNTIME MULTIMEDIA/PNG/)
+Il logo di Runtime Multimedia all’apertura: il filmato (8,5 s, 1920 × 804, muto) e il suo suono
+  Simone Pizzi · dell’autore · RuntimeMultimedia_Intro_1080p_21x9_Muto.mp4 e RuntimeMultimedia_SoundDesign_48kHz_24bit.wav dell’autore (25 novembre 2026), convertiti in WebM (VP9) e in MP3
 
 
 I CARATTERI

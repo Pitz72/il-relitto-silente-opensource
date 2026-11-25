@@ -304,13 +304,27 @@ export function scriviPartitura(ac: BaseAudioContext, uscita: AudioNode, parti: 
   return b;
 }
 
+/** Il suono del filmato di Runtime Multimedia (Loghi.tsx), già decodificato: si suona com'è, fuori dai compressori
+ *  della partitura, perché è già missato. `durata`: quanti secondi passano prima del logo di Favella1. */
+export interface SuonoFilmato { suono: AudioBuffer | null; durata: number }
+
+/** Decodifica il suono del filmato, o null se non c'è o non si legge (allora il filmato resta muto). */
+export async function caricaSuonoFilmato(indirizzo: string): Promise<AudioBuffer | null> {
+  try {
+    const dati = await (await fetch(indirizzo)).arrayBuffer();
+    return await new OfflineAudioContext(2, 1, 48000).decodeAudioData(dati);
+  } catch {
+    return null;
+  }
+}
+
 /** Il suono dal vivo dei loghi. `avvia` restituisce null se qui l'audio non può partire da solo. */
 export class SuonoLoghi {
-  private constructor(private ac: AudioContext, private b: Banco, readonly anticipo: number) {}
+  private constructor(private ac: AudioContext, private b: Banco, private filmato: GainNode | null, readonly anticipo: number) {}
 
   /** `volume`: il «Volume generale» delle Opzioni, da 0 a 1 (revisione 37, M3: i loghi suonavano a un livello
    *  fisso, anche con il volume spento). A zero non parte niente. */
-  static avvia(volume = 1): SuonoLoghi | null {
+  static avvia(volume = 1, filmato?: SuonoFilmato): SuonoLoghi | null {
     if (volume <= 0) return null;
     const sbloccato = !!(navigator as Navigator & { userActivation?: { hasBeenActive: boolean } }).userActivation?.hasBeenActive;
     if (!inDesktop() && !sbloccato) return null;
@@ -323,9 +337,20 @@ export class SuonoLoghi {
       const uscita = ac.createGain();
       uscita.gain.value = Math.min(1, volume);
       uscita.connect(ac.destination);
-      const b = scriviPartitura(ac, uscita, { runtime: t0, favella: t0 + DURATA_RUNTIME });
+      // con il filmato di Runtime Multimedia, il suo suono al posto di quello sintetizzato; poi FAVELLA, com'era
+      const b = scriviPartitura(ac, uscita, { runtime: filmato ? null : t0, favella: t0 + (filmato?.durata ?? DURATA_RUNTIME) });
+      let g: GainNode | null = null;
+      if (filmato?.suono) {
+        g = ac.createGain();
+        g.gain.value = LIVELLO;
+        g.connect(uscita);
+        const s = ac.createBufferSource();
+        s.buffer = filmato.suono;
+        s.connect(g);
+        s.start(t0);
+      }
       const ritardo = (ac.outputLatency || ac.baseLatency || 0);
-      return new SuonoLoghi(ac, b, anticipo + ritardo);
+      return new SuonoLoghi(ac, b, g, anticipo + ritardo);
     } catch {
       return null;
     }
@@ -336,9 +361,12 @@ export class SuonoLoghi {
     const { ac, b } = this;
     if (ac.state === "closed") return;
     const ora = ac.currentTime;
-    b.master.gain.cancelScheduledValues(ora);
-    b.master.gain.setValueAtTime(b.master.gain.value, ora);
-    b.master.gain.linearRampToValueAtTime(0, ora + secondi);
+    for (const g of [b.master.gain, this.filmato?.gain]) {
+      if (!g) continue;
+      g.cancelScheduledValues(ora);
+      g.setValueAtTime(g.value, ora);
+      g.linearRampToValueAtTime(0, ora + secondi);
+    }
     setTimeout(() => { ac.close().catch(() => {}); }, (secondi + 0.1) * 1000);
   }
 }

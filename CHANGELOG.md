@@ -14,6 +14,7 @@ documenti di `progettazione/`.
 - **«Nuova partita» chiede conferma** quando la partita di prima è salvata soltanto nel posto automatico: dice dov’eri rimasto e come tenerla.
 - **Quando si apre la Grande Porta suona «Held by the Dark»**, un brano del tema: parte piano sotto il gong e cresce, fino all’atto IV.
 - **Sul Ponte la musica dell’atto IV sfuma quando si accendono le postazioni**: non resta più sotto le note della mappa stellare.
+- **Il logo di Runtime Multimedia è un filmato nuovo**, con il suo suono: le lettere in rilievo, il triangolo e i quadratini, nel formato largo dell’apertura. Poi, come prima, il logo di Favella1.
 
 ### Aggiunto
 
@@ -26,6 +27,7 @@ documenti di `progettazione/`.
 - A 1280 × 720 i petali di un fiore toccavano di due o tre pixel i baccelli sotto di loro, dove il filo sale, e la scritta sotto la mappa toccava l’etichetta «azioni»: lo hanno detto le misure. `disponiFiore()` tiene conto dell’altezza dei baccelli, spezza in più file un fiore troppo largo invece di farlo uscire a destra, e la barra «tocca una cosa accesa» sale se i petali arrivano fin lì.
 - **Revisione 37, L31** (l’autore: «i due brani vanno nel gioco», e poi «Sì, così» ai posti proposti): `Brano::GrandePorta` (`T-02`, intero, che la regia fa partire con l’evento `grande_porta` e sfumare in 3 s all’evento `postazione`, dove comincia la mappa stellare; caricando una partita non riparte), senza il file, il motivo del tema sintetizzato, una volta. Approvata dall’autore ascoltandola nell’eseguibile («Ho aperto la grande porta ed è partito il brano. Ok»). `T-01` nel menu è stato provato, in testa al giro con i due brani del menu, e tolto: «il brano del menu mi piaceva quello di prima. Più evocativo e riflessivo e adatto al menu». Il menu è com’era; «Hull of the Ancient» aspetta un posto suo.
 - All’evento `postazione` sfuma (3 s) anche `Brano::Atto4`: la soglia dell’atto IV parte entrando nel Ponte e dura quasi un minuto, e l’autore l’ha sentita sovrapporsi alle note della mappa stellare.
+- **Il logo di Runtime Multimedia all’apertura** (l’autore, 25 novembre 2026: «al posto dell’animazione svg di Runtime Multimedia, possiamo mettere questa»): il suo filmato in `app/public/loghi/` (WebM VP9, 1,9 MB, muto) e il suo suono (MP3), che `suono.ts` suona nella partitura dei loghi al posto di quello sintetizzato, fuori dai compressori e con il «Volume generale». L’orologio dei loghi tiene il filmato al passo; FAVELLA comincia a 8,5 s invece che a 5,6. Si aspetta che filmato e suono siano pronti, e l’attesa si conta da quando l’intro, sotto, ha finito di prepararsi (contata prima, scadeva a vuoto mentre la pagina era ferma); se il filmato non si legge resta il logo animato di prima (`LogoRuntime.tsx`, con `esporta.ts` per i video dei loghi).
 - `strumenti/misure/salvataggi_brani.py`: il salvataggio subito prima della terza chiave della Grande Porta, per sentire il suo tema nell’eseguibile (con `RELITTO_SALVATAGGI`).
 - **GitHub** (revisione 37, M18 e L25, con il sì dell’autore): accesi gli avvisi sulle librerie, la scansione dei segreti e la protezione dei push; la descrizione del repository dice «Favella1».
 
