@@ -108,8 +108,11 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   3. Le due righe di Alirio Bruni: «no, già ce l’ho». Non c’è niente da chiedere: lo scritto lo tiene lui.
   4. I due brani del tema: «i due brani vanno nel gioco, solo che per ora dobbiamo trovargli una collocazione».
      **Non si tolgono** né dal pacchetto né dai titoli. Proposti due posti, e lui: «Sì, così». **Fatto**: «Held by the
-     Dark» quando si apre la Grande Porta, fino alle postazioni del Ponte; «Hull of the Ancient» nel menu, dopo i
-     suoi due brani. **Non l’ha ancora sentito**: va ascoltato nel gioco, nella prossima beta.
+     Dark» quando si apre la Grande Porta, fino alle postazioni del Ponte; «Hull of the Ancient» apre il giro del
+     menu, prima dei suoi due brani (dopo, arrivava a più di cinque minuti). Prima della beta ha chiesto una prova
+     da sentire («No aspetta prima di fare nuova beta»): l’eseguibile costruito sul computer, con il salvataggio
+     davanti alla terza chiave in `consegne/Prova brani 2026-11-25/salvataggi/` (`strumenti/misure/salvataggi_brani.py`).
+     **Aspetta la sua approvazione**; poi, come ha chiesto, «un resoconto globale di cosa resta del grande piano».
   5. GitHub: «certo». **Fatto**: i tre controlli sono accesi, la descrizione dice «Favella1», nessun avviso aperto.
 - **Che cosa non è stato fatto, di questa sessione**: le prove di GitHub sul commit di questo lavoro vanno guardate
   (`gh run list --limit 3`); l’eseguibile non è stato ricostruito né provato (va fatto prima di una beta, come

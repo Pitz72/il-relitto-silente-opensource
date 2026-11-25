@@ -503,7 +503,7 @@ Scritto in `app/src-tauri/src/mondo/musica_file.rs` e collegato in `musica.rs`. 
 
 | Brano | File | Come |
 |---|---|---|
-| Menu | `M1-01`, `M1-02` e `T-01` | un giro senza fine: i due del menu in un ordine che cambia a ogni avvio, poi il tema «Hull of the Ancient» (l’autore, 25 novembre 2026), con un incrocio di 8 s fra la fine di uno e l'inizio dell'altro; se `T-01` manca, i due si alternano come prima |
+| Menu | `T-01`, `M1-01` e `M1-02` | un giro senza fine: prima il tema «Hull of the Ancient» (l’autore, 25 novembre 2026), poi i due del menu in un ordine che cambia a ogni avvio, con un incrocio di 8 s fra la fine di uno e l'inizio dell'altro; il tema per primo perché dopo i due (2:55 e 2:40) arrivava a più di cinque minuti; se `T-01` manca, i due si alternano come prima |
 | Atto II | `S2` | i primi 18 s, dissolvenza di 4 s |
 | Atto III | `S3` | i primi 20 s, dissolvenza di 4 s |
 | Atto IV | `S4` | intero (56 s), dissolvenza finale di 5 s |
