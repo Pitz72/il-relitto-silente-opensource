@@ -1322,6 +1322,8 @@ impl Mondo {
                 self.suona(c, Bus::Ossa, -14.0, 0.0, 1.6);
                 let c = colpi::granelli_acuti(&mut self.caso, sr);
                 self.suona(c, Bus::Esterno, -22.0, 0.0, 4.0);
+                // e il tema, «Held by the Dark», fino al Ponte (l’autore, 25 novembre 2026)
+                self.musica.avvia(Brano::GrandePorta);
             }
             "energia" => {
                 // «Con un rombo che sale, i macchinari si svegliano»; gli archi fra le bobine;
@@ -1400,6 +1402,10 @@ impl Mondo {
                 // svuota, e resta vuoto finché la carta sta sulla cupola
                 self.fondo_mul.verso(db(-6.0), 0.4, sr);
                 self.dopo(MAPPA_RITIRO - 0.5, Azione::Fondo(1.0, 2.5));
+                // il tema della Grande Porta, se suona ancora, lascia il posto alle note della mappa
+                if self.musica.brano() == Brano::GrandePorta {
+                    self.musica.sfuma(3.0);
+                }
                 self.mappa_stellare();
             }
             "sistema" => {
@@ -2227,6 +2233,21 @@ mod prove {
             livello(&mut m, 4.0);
             assert!(!m.colpi.iter().any(|c| c.momento), "le note della mappa finiscono da sole");
         }
+    }
+
+    #[test]
+    fn la_grande_porta_fa_partire_il_suo_tema_e_le_postazioni_lo_fanno_sfumare() {
+        let (mut m, tx) = sul_ponte(5);
+        tx.send(turno(&format!(r#"{{"stati": {{{PONTE}}}, "eventi": [{{"evento": "grande_porta"}}]}}"#))).unwrap();
+        livello(&mut m, 1.0);
+        assert_eq!(m.musica.brano(), Brano::GrandePorta, "con la porta che si apre suona il tema");
+        usa_la_postazione(&tx);
+        livello(&mut m, 0.5);
+        assert_eq!(m.musica.brano(), Brano::Silenzio, "alle postazioni il tema lascia il posto alla mappa");
+        // caricando una partita con la porta già aperta il tema non riparte
+        tx.send(turno(&format!(r#"{{"stati": {{{PONTE}}}, "eventi": [{{"evento": "caricamento"}}, {{"evento": "grande_porta"}}]}}"#))).unwrap();
+        livello(&mut m, 1.0);
+        assert_ne!(m.musica.brano(), Brano::GrandePorta);
     }
 
     #[test]

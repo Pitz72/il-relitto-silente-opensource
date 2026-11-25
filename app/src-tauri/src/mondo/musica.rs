@@ -106,6 +106,10 @@ pub enum Brano {
     StivaPiena,
     DoppioFondo,
     DueLettere,
+    /// la Grande Porta che si apre, fino al Ponte: «Held by the Dark», il secondo brano del tema (l’autore, 25
+    /// novembre 2026). Parte dal silenzio e cresce sotto il gong della porta; la regia la fa sfumare quando si
+    /// accendono le postazioni, dove comincia la mappa stellare con le sue note
+    GrandePorta,
     /// i titoli di coda (decisione dell’autore, 19 ottobre 2026): la canzone «Voice in the
     /// Deep» (22, §5.9), intera; la pagina la fa sfumare quando i titoli finiscono
     Titoli,
@@ -478,7 +482,7 @@ fn letto_del_nodo(nodo: &str) -> Option<Pezzo> {
 /// Quali file suonano un brano (compresi quelli che si alternano).
 fn pezzi_del_brano(brano: Brano) -> Vec<Pezzo> {
     match brano {
-        Brano::Menu => vec![Pezzo::M1a, Pezzo::M1b],
+        Brano::Menu => vec![Pezzo::M1a, Pezzo::M1b, Pezzo::T1],
         Brano::Atto2 => vec![Pezzo::S2],
         Brano::Atto3 => vec![Pezzo::S3],
         Brano::Atto4 => vec![Pezzo::S4],
@@ -490,7 +494,16 @@ fn pezzi_del_brano(brano: Brano) -> Vec<Pezzo> {
         Brano::DoppioFondo => vec![Pezzo::C4],
         Brano::DueLettere => vec![Pezzo::C5],
         Brano::Titoli => vec![Pezzo::CT],
+        Brano::GrandePorta => vec![Pezzo::T2],
         Brano::Silenzio => vec![],
+    }
+}
+
+/// I file senza i quali un brano suona sintetizzato: al menu bastano i suoi due, e il tema entra nel giro se c’è.
+fn pezzi_necessari(brano: Brano) -> Vec<Pezzo> {
+    match brano {
+        Brano::Menu => vec![Pezzo::M1a, Pezzo::M1b],
+        _ => pezzi_del_brano(brano),
     }
 }
 
@@ -501,8 +514,10 @@ fn piano_file(brano: Brano, primo: bool) -> Option<Vec<Richiesta>> {
     let r = |p: Pezzo| Richiesta { livello, ..Richiesta::intero(p) };
     Some(vec![match brano {
         Brano::Menu => {
+            // i due brani del menu, in un ordine che cambia, e dopo il secondo il tema, «Hull of the Ancient»
+            // (l’autore, 25 novembre 2026: «i due brani vanno nel gioco»); poi da capo
             let (a, b) = if primo { (Pezzo::M1a, Pezzo::M1b) } else { (Pezzo::M1b, Pezzo::M1a) };
-            Richiesta { entra: 4.0, dopo: Dopo::Alterna(b), incrocio: 8.0, esce: 0.0, ..r(a) }
+            Richiesta { entra: 4.0, dopo: Dopo::Giro { poi: b, e_poi: Pezzo::T1 }, incrocio: 8.0, esce: 0.0, ..r(a) }
         }
         // le soglie sono brevi: si tengono i primi secondi, con la dissolvenza in uscita
         Brano::Atto2 => Richiesta { a: Some(18.0), entra: 0.3, esce: 4.0, ..r(Pezzo::S2) },
@@ -519,6 +534,8 @@ fn piano_file(brano: Brano, primo: bool) -> Option<Vec<Richiesta>> {
         // i titoli: la canzone, dall’inizio, com’è (ha il suo attacco e la sua coda); i titoli
         // sono tarati su di lei (Titoli.tsx), e quando finiscono la fanno sfumare (`sfuma`)
         Brano::Titoli => Richiesta { entra: 0.2, esce: 0.0, ..r(Pezzo::CT) },
+        // intero: comincia quasi muto, cresce, e si spegne da solo su un re diesis
+        Brano::GrandePorta => Richiesta { entra: 1.0, esce: 5.0, ..r(Pezzo::T2) },
         Brano::Anziano | Brano::Silenzio => return None,
     }])
 }
@@ -680,7 +697,7 @@ impl Musica {
         let quale = self.caso.f() < 0.5;
         let Some(piano) = piano_file(brano, quale) else { return false };
         let pezzi = pezzi_del_brano(brano);
-        if !self.file.disponibile(&pezzi) {
+        if !self.file.disponibile(&pezzi_necessari(brano)) {
             return false;
         }
         // il brano vecchio, sintetizzato o da file, sfuma sotto il nuovo
@@ -727,6 +744,8 @@ impl Musica {
             Brano::DoppioFondo => self.doppio_fondo(),
             Brano::DueLettere => self.due_lettere(),
             Brano::Titoli => self.titoli(),
+            // senza il file: il motivo del tema, una volta, dopo il gong
+            Brano::GrandePorta => self.tema_dopo(4.0, -20.0),
             Brano::Anziano | Brano::Silenzio => {}
         }
     }
@@ -1831,6 +1850,33 @@ mod prove_file {
         assert!(goertzel(sec(&x, 62.0, 72.0), primo) > 1e-6, "il primo non ritorna");
         assert!(rms_db(sec(&x, 80.0, 99.0)) > -45.0, "il menu si è fermato");
         assert_eq!(m.brano(), Brano::Menu);
+    }
+
+    #[test]
+    fn il_menu_fa_il_giro_dei_suoi_due_pezzi_e_del_tema() {
+        // «Hull of the Ancient» entra nel giro dopo i due del menu, e poi si ricomincia
+        let mut m = con_pezzi(&[(Pezzo::M1a, 220.0, 30.0), (Pezzo::M1b, 330.0, 30.0), (Pezzo::T1, 440.0, 30.0)]);
+        m.avvia(Brano::Menu);
+        let x = rendi(&mut m, 100.0);
+        let forte = |da: f32, a: f32, hz: f32| goertzel(sec(&x, da, a), hz) > 1e-6;
+        let (primo, secondo) = if goertzel(sec(&x, 8.0, 18.0), 220.0) > goertzel(sec(&x, 8.0, 18.0), 330.0) { (220.0, 330.0) } else { (330.0, 220.0) };
+        // ognuno dura 30 s, e il successivo entra 8 s prima della fine: a 0, a 22, a 44, a 66
+        assert!(forte(8.0, 18.0, primo), "il primo pezzo non suona");
+        assert!(forte(30.0, 40.0, secondo) && !forte(30.0, 40.0, 440.0), "dopo il primo deve entrare l'altro del menu");
+        assert!(forte(52.0, 62.0, 440.0) && !forte(52.0, 62.0, primo), "dopo i due del menu deve entrare il tema");
+        assert!(forte(76.0, 86.0, primo) && !forte(76.0, 86.0, 440.0), "dopo il tema si ricomincia dal primo");
+        assert_eq!(m.brano(), Brano::Menu);
+    }
+
+    #[test]
+    fn la_grande_porta_suona_il_tema_intero_e_sfuma() {
+        let mut m = con_pezzi(&[(Pezzo::T2, 220.0, 58.0)]);
+        m.avvia(Brano::GrandePorta);
+        let x = rendi(&mut m, 64.0);
+        assert!(goertzel(sec(&x, 2.0, 10.0), 220.0) > 1e-6, "il tema non comincia");
+        assert!(goertzel(sec(&x, 44.0, 50.0), 220.0) > 1e-6, "il tema non arriva in fondo");
+        assert!(rms_db(sec(&x, 56.5, 57.5)) < rms_db(sec(&x, 44.0, 50.0)) - 6.0, "il tema non sfuma alla fine");
+        assert!(rms_db(sec(&x, 60.0, 64.0)) < -80.0, "il tema non finisce");
     }
 
     #[test]

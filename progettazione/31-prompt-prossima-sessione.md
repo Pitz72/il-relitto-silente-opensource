@@ -107,7 +107,9 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   2. La conferma su «Nuova partita»: «ok». **Fatta.**
   3. Le due righe di Alirio Bruni: «no, già ce l’ho». Non c’è niente da chiedere: lo scritto lo tiene lui.
   4. I due brani del tema: «i due brani vanno nel gioco, solo che per ora dobbiamo trovargli una collocazione».
-     **Non si tolgono** né dal pacchetto né dai titoli. Da proporgli dove farli suonare.
+     **Non si tolgono** né dal pacchetto né dai titoli. Proposti due posti, e lui: «Sì, così». **Fatto**: «Held by the
+     Dark» quando si apre la Grande Porta, fino alle postazioni del Ponte; «Hull of the Ancient» nel menu, dopo i
+     suoi due brani. **Non l’ha ancora sentito**: va ascoltato nel gioco, nella prossima beta.
   5. GitHub: «certo». **Fatto**: i tre controlli sono accesi, la descrizione dice «Favella1», nessun avviso aperto.
 - **Che cosa non è stato fatto, di questa sessione**: le prove di GitHub sul commit di questo lavoro vanno guardate
   (`gh run list --limit 3`); l’eseguibile non è stato ricostruito né provato (va fatto prima di una beta, come

@@ -503,16 +503,17 @@ Scritto in `app/src-tauri/src/mondo/musica_file.rs` e collegato in `musica.rs`. 
 
 | Brano | File | Come |
 |---|---|---|
-| Menu | `M1-01` e `M1-02` | si alternano senza fine, in un ordine che cambia a ogni avvio, con un incrocio di 8 s fra la fine di uno e l'inizio dell'altro (entrambi finiscono in silenzio) |
+| Menu | `M1-01`, `M1-02` e `T-01` | un giro senza fine: i due del menu in un ordine che cambia a ogni avvio, poi il tema «Hull of the Ancient» (l’autore, 25 novembre 2026), con un incrocio di 8 s fra la fine di uno e l'inizio dell'altro; se `T-01` manca, i due si alternano come prima |
 | Atto II | `S2` | i primi 18 s, dissolvenza di 4 s |
 | Atto III | `S3` | i primi 20 s, dissolvenza di 4 s |
 | Atto IV | `S4` | intero (56 s), dissolvenza finale di 5 s |
+| La Grande Porta | `T-02` | «Held by the Dark», intero, quando la porta si apre (l’evento `grande_porta`), sotto il gong; sfuma in 3 s se sul Ponte si accendono le postazioni prima della fine, dove comincia la mappa stellare (l’autore, 25 novembre 2026: «Sì, così») |
 | Atto V, la fuga | `S5` | fino a 65,1 s e **di colpo** (il suono del file cade a 65,06 s), +3 dB come il brano sintetizzato |
 | Anziano | `A1`–`A4` | i quattro letti della mappa del §5.3, in ripetizione con incrocio di 6 s; al cambio di nodo il letto nuovo entra in 4 s mentre il vecchio sfuma; «silenzio» è silenzio vero (1,2 s di discesa, poi 8 s di niente), poi torna `A1` |
 | Finali | `C1`–`C5` | interi; `C5` («Due lettere») parte da **31 s**, la parte che somiglia alla scheda (§5.7) |
 | «Mani vuote» | nessuno | il reattore, e basta |
 | Titoli di coda | `CT-01` («Voice in the Deep», §5.9) | intera, dall’inizio; quando i titoli finiscono sfuma in 7 s insieme al nero (1,2 s se si saltano) |
 
-**Che cosa non c’è ancora.** Il tema (`T-01`, `T-02`) non suona da nessuna parte (nei titoli di coda c’è la canzone, §5.9); il motivo di quattro note in codice da sovrapporre (§7.1) non è stato scritto. Nemmeno le integrazioni sintetizzate del §7.1 (battito di `C1`, seconda onda di `C2`, vetri di `C4`, tritono di `A2`): **prima l'ascolto dell'autore**, nel gioco vero.
+**Che cosa non c’è ancora.** ~~Il tema (`T-01`, `T-02`) non suona da nessuna parte~~ (dal 25 novembre 2026 `T-01` nel giro del menu e `T-02` alla Grande Porta, qui sopra); il motivo di quattro note in codice da sovrapporre (§7.1) non è stato scritto. Nemmeno le integrazioni sintetizzate del §7.1 (battito di `C1`, seconda onda di `C2`, vetri di `C4`, tritono di `A2`): **prima l'ascolto dell'autore**, nel gioco vero.
 
 **Dove stanno i file nell'app.** In sviluppo si leggono da `audio/musica-ia/<sigla>/`; nell'installazione sono risorse (`musica/` accanto all'eseguibile, vedi `tauri.conf.json`); la variabile `RELITTO_MUSICA` può indicare un'altra cartella.
