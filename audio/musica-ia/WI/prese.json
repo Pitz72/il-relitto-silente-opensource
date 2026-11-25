@@ -318,6 +318,150 @@
    0.93
   ]
  },
+ "IN-047": {
+  "sorgente": "8888a51515fbe1a0ec15241f1dfa550113ce4405272d1822dff588ec817102ce",
+  "secondi": 11.06,
+  "tolti": [
+   0.94,
+   0.24
+  ]
+ },
+ "IN-048": {
+  "sorgente": "70f89c6dac13550803512a98be58988d17e7aa584b87e0b1d0072ec8cd7ca42e",
+  "secondi": 2.1,
+  "tolti": [
+   1.12,
+   1.49
+  ]
+ },
+ "IN-049": {
+  "sorgente": "ed63cd96f6300b39b8615bcd5fb64ee970079fae07825bf0eb34f08b81fbc727",
+  "secondi": 18.48,
+  "tolti": [
+   1.04,
+   1.66
+  ]
+ },
+ "IN-053": {
+  "sorgente": "243e633b4cabf7296285e0b53cde784b46a63f96c2b10fa52bc0e79cf9bfd876",
+  "secondi": 5.88,
+  "tolti": [
+   0.94,
+   1.4
+  ]
+ },
+ "IN-055": {
+  "sorgente": "d7f33d93658c47f19502d00554f68f228abd1bb1b22c17d10e9e74ea727ae1a6",
+  "secondi": 14.36,
+  "tolti": [
+   0.94,
+   1.51
+  ]
+ },
+ "IN-056": {
+  "sorgente": "cb77961a168214da6efdb13f484fad6d5476f699e70573a1ae8347638e0882d2",
+  "secondi": 38.8,
+  "tolti": [
+   1.06,
+   1.33
+  ]
+ },
+ "IN-057": {
+  "sorgente": "0d1bcd56af6e04066990944473da44f85a5708a493a926e2350b2c2d65efe993",
+  "secondi": 29.7,
+  "tolti": [
+   1.12,
+   1.18
+  ]
+ },
+ "IN-058": {
+  "sorgente": "6725773d896d5c46a1f36f04a4aabecc9ddef08e418f7d2cb4c197e844ec5c01",
+  "secondi": 37.12,
+  "tolti": [
+   1.02,
+   1.55
+  ]
+ },
+ "IN-059": {
+  "sorgente": "368854aa607e1cf38f1afc9aa7a4ab92c837d3eba24c82cddd9563d7f20a949f",
+  "secondi": 4.62,
+  "tolti": [
+   1.1,
+   1.33
+  ]
+ },
+ "IN-060": {
+  "sorgente": "280aa9a19f3199e8c9334c38cd7460e8c2945e5392cce6961f6ab2ed13ae979c",
+  "secondi": 6.74,
+  "tolti": [
+   0.94,
+   1.03
+  ]
+ },
+ "IN-061": {
+  "sorgente": "516ea7c661370395c2bb247067340c1de5ab1ed3d34b227ee1e00adfa4ef226b",
+  "secondi": 16.38,
+  "tolti": [
+   0.94,
+   0.36
+  ]
+ },
+ "IN-062": {
+  "sorgente": "2eeaab1ba42807708f4591df85b311f79dba119d4f9ef73b3199ac95be211f85",
+  "secondi": 7.1,
+  "tolti": [
+   1.16,
+   1.4
+  ]
+ },
+ "IN-063": {
+  "sorgente": "e0cd0e6e3f9b9e1a1d25080a046a7c0f862fb73ddc5c79bd5f44411ef00b5390",
+  "secondi": 9.38,
+  "tolti": [
+   0.94,
+   1.6
+  ]
+ },
+ "IN-064": {
+  "sorgente": "1d6440203b361a6631e1663d4530a3a825c0a426b5a8dd37f31d501e719e19d4",
+  "secondi": 6.04,
+  "tolti": [
+   1.14,
+   1.49
+  ]
+ },
+ "IN-065": {
+  "sorgente": "b2141e96d0516b990345d9c7b4a8ff4e00dd10c6801591200d440fcc5481c539",
+  "secondi": 29.38,
+  "tolti": [
+   0.94,
+   1.58
+  ]
+ },
+ "IN-066": {
+  "sorgente": "b9daf53d9f1cc61d06e87101b8ee0ba0edb79106e352c63075ad730ff8a29bc6",
+  "secondi": 13.36,
+  "tolti": [
+   0.94,
+   1.4
+  ]
+ },
+ "IN-067": {
+  "sorgente": "a66a6358d8289c79667003953a416fc99cafed1fc3a3c8b2fa5935c9283ee72d",
+  "secondi": 15.82,
+  "tolti": [
+   0.94,
+   1.22
+  ]
+ },
+ "IN-068": {
+  "sorgente": "14b4350c784eb4f934390d9370215413aaf350ae35c3bea569201ecabbe0b621",
+  "secondi": 4.9,
+  "tolti": [
+   0.94,
+   1.6
+  ]
+ },
  "SM-001": {
   "sorgente": "ac128895aa97b8d8c1bd0e0f50d43cc6654b574342bda0b20564f929048f116a",
   "secondi": 35.3,

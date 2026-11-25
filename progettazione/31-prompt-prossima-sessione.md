@@ -97,6 +97,11 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 
 ## Dove siamo (25 novembre 2026)
 
+- **Diciotto prese nuove di Leonardo nel gioco** (25 novembre, dopo la beta 17; l’autore: «Importale e implementale,
+  poi fai la trafila ma senza rilasciare niente»): `IN-047`…`IN-068`, controllate con Whisper; ora 156 su 616 (25,3 %),
+  l’atto II a 57 su 73. Il copione (460 prese) e il rapporto sono rifatti, anche in `Downloads` con la data: da
+  mandare a Leonardo. **Non sono in una beta**: entreranno nella prossima. Poi l’autore è andato in pausa, «prima di
+  riprendere i punti del grande programma».
 - **La beta 0.2.5-beta.17 è pubblicata** (25 novembre, canale di prova; su suo ordine: «Salva tutto, versiona, committa,
   pusha, verifica sync locale e git, togli la cartella del vecchio gioco e rilascia beta nuova»). Porta il testo grande
   su dialoghi e riquadro a destra, il pulsante che si ingrandisce sotto il mouse, la conferma su «Nuova partita»,

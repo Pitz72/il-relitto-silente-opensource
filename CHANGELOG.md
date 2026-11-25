@@ -8,6 +8,14 @@ documenti di `progettazione/`.
 
 ## [Non rilasciato]
 
+### Per chi gioca
+
+- **William racconta anche la camera di compensazione e il vestibolo delle gole** (Leonardo Tomassetti), con 18 battute nuove: il pannello e la porta interna, il primo brusio nella cuffia, le venature spente, il risuonatore.
+
+### Aggiunto
+
+- La consegna di Leonardo del 25 novembre 2026: `IN-047`…`IN-068` (18 prese), controllate con Whisper e preparate da `strumenti/audio/voce_william.py`. Le prese nel gioco sono 156 su 616; il copione per Leonardo (460 prese da registrare) e il rapporto sono rifatti (documento 41, §5).
+
 ## [0.2.5-beta.17] - 2026-11-25
 
 ### Per chi gioca

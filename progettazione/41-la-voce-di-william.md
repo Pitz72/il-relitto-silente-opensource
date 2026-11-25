@@ -113,6 +113,17 @@ scheda Audio delle opzioni, **«Voce di William»: recitata o nessuna** (di base
 
 ## 5. Le prese, a oggi
 
+**Centocinquantasei, dal 25 novembre 2026.** La consegna del 25 novembre (`TransferNow-20261125h0HV5Tvc.zip`, 18 file,
+48 kHz, 24 bit, mono, nessun campione pieno, nessun silenzio lungo né rilettura, nessuna coda muta): `IN-047`…`IN-068`,
+la camera di compensazione e il vestibolo delle gole, con il risuonatore. Le quattro sigle che nella serie non ci
+sono (`IN-050`, `IN-051`, `IN-052`, `IN-054`) sono uguali a prese già registrate (`IN-048`, `IN-047`, `IN-049`,
+`SM-066`) e suonano quelle. `IN-062` è nel testo nuovo, in prima persona, del 25 novembre. Whisper
+(`consegne/controllo-2026-11-25.json`, senza suggerirgli il testo): il testo è quello del copione; «bruseo» è di
+Whisper, e in `IN-058` sente «faccia era» per «fa c’era» e non sente la «e» di «e mi restituisce» (detta leggera, o
+di Whisper: il senso non cambia). L’atto II è a 57 su 73; in tutto 156 su 616, il 25,3 % (il 24,9 % delle parole).
+Il copione per Leonardo ha 460 prese, 90 pagine; il rapporto è in `doppiaggio/william/resoconti/`. Rigiocati i venti
+percorsi del collaudo (eventi, regressioni con le riprese) e le venti partite nel motore audio: tutto come prima.
+
 **Centotrentotto, dal 21 novembre 2026.** La consegna del 21 novembre (`TransferNow-20261121vVc3UTpu.zip`, 13 file,
 48 kHz, 24 bit, mono, nessun campione pieno): `IN-007` e `SM-094` che mancavano (`SM-094` nel testo nuovo, senza la
 cifra dell’aria), `IN-013` rifatta e `IN-037`…`IN-046`. In `IN-013` c’è «dalla grana», ma in fondo al file

@@ -1304,11 +1304,181 @@
 ]
 },
 {
+"id": "IN-047",
+"file": "IN-047",
+"tipo": "risposta",
+"parti": [
+"trovo l incavo sotto il bordo del pannello e ci premo il connettore della batteria si accende una linea di luce ambrata e dalla porta arriva un clac sordo"
+]
+},
+{
+"id": "IN-048",
+"file": "IN-048",
+"tipo": "risposta",
+"parti": [
+"il pannello è già acceso"
+]
+},
+{
+"id": "IN-049",
+"file": "IN-049",
+"tipo": "risposta",
+"parti": [
+"stacco il cavo di servizio dal fianco della tuta e lo premo nell incavo del pannello una linea ambrata si accende e dalla porta arriva un clac sordo sul bordo del visore la cifra dell aria scende di dieci punti in un colpo la tuta ha dato al pannello quello che teneva per me"
+]
+},
+{
+"id": "IN-050",
+"file": "IN-048",
+"tipo": "risposta",
+"parti": [
+"il pannello è già acceso"
+]
+},
+{
+"id": "IN-051",
+"file": "IN-047",
+"tipo": "risposta",
+"parti": [
+"trovo l incavo sotto il bordo del pannello e ci premo il connettore della batteria si accende una linea di luce ambrata e dalla porta arriva un clac sordo"
+]
+},
+{
+"id": "IN-052",
+"file": "IN-049",
+"tipo": "risposta",
+"parti": [
+"stacco il cavo di servizio dal fianco della tuta e lo premo nell incavo del pannello una linea ambrata si accende e dalla porta arriva un clac sordo sul bordo del visore la cifra dell aria scende di dieci punti in un colpo la tuta ha dato al pannello quello che teneva per me"
+]
+},
+{
+"id": "IN-053",
+"file": "IN-053",
+"tipo": "risposta",
+"parti": [
+"non c è niente da tirare né da spingere e il meccanismo se c è non ha corrente"
+]
+},
+{
 "id": "IN-054",
 "file": "SM-066",
 "tipo": "risposta",
 "parti": [
 "è già aperta"
+]
+},
+{
+"id": "IN-055",
+"file": "IN-055",
+"tipo": "risposta",
+"parti": [
+"appoggio il guanto sulla linea ambrata del pannello con un sibilo appena percepibile la porta si ritira nella parete di là c è una sala bassa e un brusio che mi arriva nelle cuffie prima ancora che io entri"
+]
+},
+{
+"id": "IN-056",
+"file": "IN-056",
+"tipo": "descrizione",
+"parti": [
+"una sala bassa e tonda la prima vera sala della nave tre gole si aprono nella parete verso il buio quella larga a ovest sale verso una luminescenza azzurrina quella di mezzo scende ed è da lì che il brusio sale più forte la terza è crollata su se stessa le pareti sono percorse da venature spente una rete fine che un tempo doveva fare luce in una nicchia all altezza esatta della mia mano qualcuno ha posato qualcosa e il multiscanner l ha già schedato a est la porta interna e la camera"
+]
+},
+{
+"id": "IN-057",
+"file": "IN-057",
+"tipo": "descrizione",
+"parti": [
+"una sala bassa e tonda la prima vera sala della nave tre gole si aprono nella parete verso il buio quella larga a ovest sale verso una luminescenza azzurrina quella di mezzo scende la terza è crollata su se stessa le pareti sono percorse da venature spente la nicchia è vuota dove l arnese si saldava alla parete restano i miei tagli a est la porta interna e la camera"
+]
+},
+{
+"id": "IN-058",
+"file": "IN-058",
+"tipo": "evento",
+"parti": [
+"appoggio il guanto alla parete per orientarmi e il multiscanner sulla spalla si impenna il display si riempie di righe che si scavalcano nella cuffia dove fino a un attimo fa c era soltanto il mio fiato entra un brusio tante voci una sopra l altra nessuna intera la tuta prova a tradurre e mi restituisce una sillaba poi niente e intanto sul bordo del visore la cifra dell aria scende di un punto poi di un altro stacco la mano il brusio si abbassa la cifra si ferma qualunque cosa sia per farsi sentire beve dalla mia stessa batteria"
+]
+},
+{
+"id": "IN-059",
+"file": "IN-059",
+"tipo": "descrizione",
+"parti": [
+"scavata all altezza giusta perché qualcuno ci posasse le cose apposta"
+]
+},
+{
+"id": "IN-060",
+"file": "IN-060",
+"tipo": "descrizione",
+"parti": [
+"vuota dove l arnese si saldava alla parete restano i miei tagli netti già meno netti"
+]
+},
+{
+"id": "IN-061",
+"file": "IN-061",
+"tipo": "descrizione",
+"parti": [
+"tre bocche nella parete la gola larga sale verso ovest verso una luce azzurrina quella di mezzo scende la terza è crollata su se stessa dentro si vede solo materia schiacciata piegata come carta bagnata"
+]
+},
+{
+"id": "IN-062",
+"file": "IN-062",
+"tipo": "descrizione",
+"parti": [
+"una rete fine sotto la superficie spenta quando ci passo sopra il guanto il brusio risale"
+]
+},
+{
+"id": "IN-063",
+"file": "IN-063",
+"tipo": "risposta",
+"parti": [
+"il brusio risale sotto il guanto e si ferma lì con la protezione vitale la tuta non gli cede niente la cifra non si muove"
+]
+},
+{
+"id": "IN-064",
+"file": "IN-064",
+"tipo": "risposta",
+"parti": [
+"il brusio risale sotto il guanto e la cifra sul visore scende di un punto tolgo la mano"
+]
+},
+{
+"id": "IN-065",
+"file": "IN-065",
+"tipo": "descrizione",
+"parti": [
+"non somiglia a niente che io conosca eppure è un attrezzo ha un davanti un dietro un punto dove la mano lo prenderebbe il multiscanner che non sa come chiamarlo l ha schedato come",
+"risuonatore",
+"il brusio viene da lui una cosa che parla ancora dopo tutto questo tempo è una cosa che funziona e una cosa che funziona si vende staccato intero e portato a yusuf varrebbe sei mesi di stive vuote forse un anno"
+]
+},
+{
+"id": "IN-066",
+"file": "IN-066",
+"tipo": "descrizione",
+"parti": [
+"tiepido più leggero di quanto pensassi il brusio viene da lì e finché lo porto la cifra dell aria scende a ogni passo vale sei mesi di stive vuote forse un anno"
+]
+},
+{
+"id": "IN-067",
+"file": "IN-067",
+"tipo": "risposta",
+"parti": [
+"allungo la mano il brusio sale la cifra sul visore riprende a scendere e mi fermo con il guanto a un palmo dall arnese è saldato alla nicchia cresciuto insieme alla parete per portarlo via dovrei staccarlo"
+]
+},
+{
+"id": "IN-068",
+"file": "IN-068",
+"tipo": "risposta",
+"parti": [
+"il brusio sale sotto il guanto la cifra scende tolgo la mano"
 ]
 },
 {
@@ -1418,9 +1588,6 @@
 "al buio fra le teche aperte perdo l orientamento le mani cercano qualcosa di freddo a cui tenersi"
 ],
 [
-"allungo la mano il brusio sale la cifra sul visore riprende a scendere e mi fermo con il guanto a un palmo dall arnese è saldato alla nicchia cresciuto insieme alla parete per portarlo via dovrei staccarlo"
-],
-[
 "appena entro l ultimo pilastro smette di pulsare una fascia alla base si accende ambrata e resta accesa la corrente che ho ridato alla nave arriva fin qui ma è poca e il resto il terminale lo cerca addosso a me sul visore la cifra trema come quando ho toccato il risuonatore se resto il pilastro salirà una fascia alla volta e la tuta pagherà oppure la taglierina apre il bypass adesso"
 ],
 [
@@ -1428,12 +1595,6 @@
 ],
 [
 "appoggio il disco nell incavo scende di un dito e si ferma i solchi non combaciano qualcosa nella disposizione dei tre soli incisi è sbagliato"
-],
-[
-"appoggio il guanto alla parete per orientarmi e il multiscanner sulla spalla si impenna il display si riempie di righe che si scavalcano nella cuffia dove fino a un attimo fa c era soltanto il mio fiato entra un brusio tante voci una sopra l altra nessuna intera la tuta prova a tradurre e mi restituisce una sillaba poi niente e intanto sul bordo del visore la cifra dell aria scende di un punto poi di un altro stacco la mano il brusio si abbassa la cifra si ferma qualunque cosa sia per farsi sentire beve dalla mia stessa batteria"
-],
-[
-"appoggio il guanto sulla linea ambrata del pannello con un sibilo appena percepibile la porta si ritira nella parete di là c è una sala bassa e un brusio che mi arriva nelle cuffie prima ancora che io entri"
 ],
 [
 "appoggio la mano guantata sulla depressione e la console reagisce a quello che voglio anche se non sono uno di loro le postazioni si accendono una dopo l altra lungo la sala senza un suono e la struttura centrale proietta sulla cupola una mappa stellare a tre dimensioni la rotta è chiara e il punto d arrivo inconfondibile il mio sole"
@@ -1672,15 +1833,6 @@
 "il brusio nella mano sale di colpo e l arnese tira verso le pareti come se le voci volessero tornarci"
 ],
 [
-"il brusio risale sotto il guanto e la cifra sul visore scende di un punto tolgo la mano"
-],
-[
-"il brusio risale sotto il guanto e si ferma lì con la protezione vitale la tuta non gli cede niente la cifra non si muove"
-],
-[
-"il brusio sale sotto il guanto la cifra scende tolgo la mano"
-],
-[
 "il brusio se mi concentro su una voce ne arrivano altre dieci a coprirla"
 ],
 [
@@ -1785,9 +1937,6 @@
 ],
 [
 "il pannello della porta è morto nessuna punta risponde finché il ponte non ha energia e la console non è sveglia"
-],
-[
-"il pannello è già acceso"
 ],
 [
 "il passaggio si stringe le pareti non fanno più luce qui è tutto scuro di un buio denso che assorbe ogni riflesso i miei passi non fanno rumore e non so se è il pavimento o se ho smesso di farne io davanti a ovest una soglia aperta"
@@ -2296,9 +2445,6 @@
 "non c è niente da strappare"
 ],
 [
-"non c è niente da tirare né da spingere e il meccanismo se c è non ha corrente"
-],
-[
 "non c è niente da tradurre qui è tutto nella mia lingua"
 ],
 [
@@ -2324,11 +2470,6 @@
 ],
 [
 "non so come finisce o credo di saperlo e non mi basta"
-],
-[
-"non somiglia a niente che io conosca eppure è un attrezzo ha un davanti un dietro un punto dove la mano lo prenderebbe il multiscanner che non sa come chiamarlo l ha schedato come",
-"risuonatore",
-"il brusio viene da lui una cosa che parla ancora dopo tutto questo tempo è una cosa che funziona e una cosa che funziona si vende staccato intero e portato a yusuf varrebbe sei mesi di stive vuote forse un anno"
 ],
 [
 "non vedo nessuna stele l altare è ancora chiuso"
@@ -2479,9 +2620,6 @@
 "sblocco i comandi rimetto in asse i giroscopi do mezza spinta di prua il reattore ricomincia a cantare il suo re sotto il pavimento e la santa maria si allontana"
 ],
 [
-"scavata all altezza giusta perché qualcuno ci posasse le cose apposta"
-],
-[
 "scene incise con una precisione che fa male agli occhi la prima la più consumata tre soli a triangolo sopra un orizzonte il più grande in alto e sotto una folla che guarda in su poi semi di luce piantati su un mondo fertile navi immense in partenza l ultima le creature entrano nelle navi e nessuna si volta indietro la storia di un esodo con i suoi glifi accanto a ogni scena"
 ],
 [
@@ -2564,9 +2702,6 @@
 "stacco il cavo di servizio dal fianco della tuta e lo innesto nella presa del generatore un ronzio la cifra sul visore che risale la nave mi dà un po della sua corrente e io la trasformo in aria"
 ],
 [
-"stacco il cavo di servizio dal fianco della tuta e lo premo nell incavo del pannello una linea ambrata si accende e dalla porta arriva un clac sordo sul bordo del visore la cifra dell aria scende di dieci punti in un colpo la tuta ha dato al pannello quello che teneva per me"
-],
-[
 "sto zitto e ascolto la registrazione fino in fondo dopo l ultima domanda c è un altra voce più vecchia stanca vicinissima",
 "poi più niente"
 ],
@@ -2603,19 +2738,10 @@
 "teche il groviglio sveglio le pareti fredde su"
 ],
 [
-"tiepido più leggero di quanto pensassi il brusio viene da lì e finché lo porto la cifra dell aria scende a ogni passo vale sei mesi di stive vuote forse un anno"
-],
-[
 "tiepido sotto il coperchio i germogli si piegano appena verso il guanto"
 ],
 [
-"tre bocche nella parete la gola larga sale verso ovest verso una luce azzurrina quella di mezzo scende la terza è crollata su se stessa dentro si vede solo materia schiacciata piegata come carta bagnata"
-],
-[
 "tre tacche orizzontali parallele alla base della parete accanto all imbocco troppo regolari per essere usura qualcuno le ha fatte apposta forse per segnare un posto già visto e non perdersi"
-],
-[
-"trovo l incavo sotto il bordo del pannello e ci premo il connettore della batteria si accende una linea di luce ambrata e dalla porta arriva un clac sordo"
 ],
 [
 "un apparecchio portatile un display a frequenza d onda e due manopole di calibrazione un rilevatore di anomalie ascolta gli echi che restano impressi nella materia"
@@ -2729,20 +2855,11 @@
 "una rete fine sotto la superficie spenta"
 ],
 [
-"una rete fine sotto la superficie spenta quando ci passo sopra il guanto il brusio risale"
-],
-[
 "una riga sola di glifi sul bordo la matrice ne riconosce la forma non il senso"
 ],
 [
 "una riga sola sul bordo",
 "per chi raccoglie"
-],
-[
-"una sala bassa e tonda la prima vera sala della nave tre gole si aprono nella parete verso il buio quella larga a ovest sale verso una luminescenza azzurrina quella di mezzo scende ed è da lì che il brusio sale più forte la terza è crollata su se stessa le pareti sono percorse da venature spente una rete fine che un tempo doveva fare luce in una nicchia all altezza esatta della mia mano qualcuno ha posato qualcosa e il multiscanner l ha già schedato a est la porta interna e la camera"
-],
-[
-"una sala bassa e tonda la prima vera sala della nave tre gole si aprono nella parete verso il buio quella larga a ovest sale verso una luminescenza azzurrina quella di mezzo scende la terza è crollata su se stessa le pareti sono percorse da venature spente la nicchia è vuota dove l arnese si saldava alla parete restano i miei tagli a est la porta interna e la camera"
 ],
 [
 "una sala circolare il soffitto così alto che il faro non lo trova una luce bianca e fredda sale dai disegni geometrici del pavimento le pareti sono coperte di bassorilievi da terra fino al buio creature alte e sottili sotto un cielo a tre soli semi di luce piantati su un mondo fertile navi immense in partenza al centro un blocco cilindrico di pietra nera a sud si torna al corridoio a ovest si apre un altro passaggio"
@@ -2788,9 +2905,6 @@
 ],
 [
 "vestibolo la nicchia est"
-],
-[
-"vuota dove l arnese si saldava alla parete restano i miei tagli netti già meno netti"
 ],
 [
 "yusuf aspetta la mia chiamata non lo chiamo"

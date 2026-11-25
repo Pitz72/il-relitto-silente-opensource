@@ -65,3 +65,7 @@ diventate pezzi (`ME-003a`…`c`, `EQ-015a`…`c`, `AR-009a` e `b`), quattro han
 c’è già (`EQ-026` come `IN-078`, `TR-044` come `TR-041`). Nessuna era registrata. Le prese sono 616 (più 134
 uguali); nel PDF le 478 ancora da registrare, 92 pagine. È questo il PDF da mandare a Leonardo, con il rapporto del
 25 novembre (138 su 616, il 22,4 %).
+
+Lo stesso giorno sono arrivate diciotto prese nuove (`IN-047`…`IN-068`; documento 41, §5): ora sono 156 su 616, il
+25,3 %. Il PDF ha le 460 ancora da registrare, 90 pagine, e il rapporto è quello del 25 novembre rifatto: sono questi
+da mandare a Leonardo.
