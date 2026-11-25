@@ -2,7 +2,7 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 25 novembre 2026: sette frasi piccole della storia applicate con il suo sì, e la prima persona dappertutto («questo è assoluto, non si torna indietro»). Alla prossima: le sue scelte, le quattro frasi ancora da studiare, e una beta.
+Aggiornato l’ultima volta il 25 novembre 2026: sette frasi piccole della storia applicate con il suo sì, la prima persona dappertutto («questo è assoluto, non si torna indietro»), e **la beta 16 pubblicata** su suo ordine. Alla prossima: le sue note sulla beta 16, le sue cinque risposte (in «Dove siamo»), le quattro frasi ancora da studiare.
 Prima, il 24 novembre 2026: il punto della situazione, la scansione lunga con il computer di bordo in mezzo a William, e la revisione 37 (le medie e le lievi che non toccano la storia). Le tre medie della storia (M22, M23, M24) sono applicate con il suo sì.
 Prima, il 16 novembre 2026, nel pomeriggio: la revisione della cinematica e le sue correzioni (documento 09, §19–20), dodici prese nuove di Leonardo, la beta 15 pubblicata.
 Prima, lo stesso giorno, di giorno: le note dell’autore sulla beta 13 (documento 09, §18:
@@ -104,6 +104,23 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   sono **616**; il PDF (478 da registrare) e il rapporto del 25 novembre sono in `doppiaggio/william/` e **vanno
   mandati a Leonardo** al posto di quelli di prima. Due prove nuove: `app/prove/prima-persona.test.ts` e
   `frasi_di_stato()` in `collaudo/eventi.py`. Le prove: 168 in node, 134 in Rust, 20 percorsi.
+- **25 novembre 2026, poi: la beta 0.2.5-beta.16 è pubblicata** (canale di prova), su suo ordine: «sì, fai la nuova
+  beta. Aggiorna il versioning mi raccomando». Porta tutto quello che c’è dalla beta 15: le 112 battute nuove di
+  William (138 in tutto), la cifra dell’aria con la voce della tuta, la scansione lunga con il computer di bordo,
+  la revisione 37, le frasi della storia. Prima di pubblicarla l’eseguibile costruito sul computer ha giocato i
+  **sei finali** e la prova dei **salvataggi** (riuscite; la prova dei finali era ferma al 14 novembre, premeva
+  Esc una volta sola e non saltava più l’intro dopo i loghi: aggiornata). **Nessuna persona l’ha ancora guardata
+  né ascoltata**: alla prossima, le sue note, e per primo il menu senza cerchio, l’aggiornamento con «Annulla»
+  (lo vedrà chi aggiorna dalla 16 alla 17), il finale e subito i titoli di coda.
+- **La demo non si rifà** (25 novembre: «no non rifaremo la demo»): resta quella del 21 novembre.
+- **Le sigle non gli dicono niente** (25 novembre: «Non ho capito cosa ti serve da me. Non mi è chiaro»): quello che
+  aspetta lui va scritto come domande semplici, sul gioco come lo vede, con il mio consiglio; il lavoro che è mio
+  (le cose da studiare) non va nella stessa lista. Le cinque domande aperte, come gliele ho scritte: 1) «Testo:
+  grande» deve ingrandire anche i pulsanti in basso, il dialogo e il riquadro a destra? 2) «Nuova partita» deve
+  chiedere conferma quando c’è solo il salvataggio automatico? 3) chiedere ad Alirio Bruni due righe scritte sul
+  dono del tema? 4) i due brani brevi del tema («Hull of the Ancient», «Held by the Dark»), che il gioco non
+  suona: ricollegarli o toglierli dal pacchetto? 5) accendere su GitHub i tre controlli di sicurezza e correggere
+  la descrizione («Favella1»)?
 - **Restano dei `.fav`, da studiare prima di proporgliele**: la voce dei nomi riascoltata (serve una frase nuova, sua),
   «ricarica la tuta» e «togli la tuta» fuori posto, «prendi il seme» davanti alla teca chiusa, L36 (tre regole che
   non scattano mai), il commento di `aria.fav` (L38).
@@ -132,10 +149,8 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 - **Che cosa aspetta lui** (in fondo al §9 del documento 37): le quattro frasi dei `.fav` ancora da studiare (le
   sette pronte sono applicate dal 25 novembre, qui sopra); le scelte **L8, L12, L26, L31**; le tre impostazioni del repository su GitHub (gli avvisi sulle
   dipendenze, la scansione dei segreti, la protezione dei push) e la sua descrizione, che dice ancora «FAVELLA 1».
-- **Da decidere con lui**: una **beta 16** (c’è molto per chi gioca: 112 prese in più, la cifra dell’aria con la voce
-  della tuta, la scansione lunga, tutta la revisione), e se **rifare la demo** con le stesse correzioni
-  (`configura.py`, le due build, `gh release upload demo-atto-1 … --clobber`). Nella nuova beta va guardato per
-  primo: il menu senza cerchio, l’aggiornamento con «Annulla», il finale e subito i titoli di coda.
+- ~~Da decidere con lui: una beta 16, e se rifare la demo~~: decisi il 25 novembre (la beta sì, pubblicata; la demo
+  no).
 - **Aperte, sue parole del 24 novembre**: la revisione estetica dell’interfaccia (individuare, non fare); il finale,
   «seriamente ma non ora»; gli effetti e i suoni d’ambiente da rifare con ElevenLabs; un brano audio fra i media da
   regalare, «ci penseremo poi».
