@@ -92,6 +92,19 @@ function larghezzaFilo(gruppi: Gruppo[], mostrati: number[], scala: number, u: n
   return tot + Math.max(0, gruppiVisti - 1) * MISURE.spazioGruppo * u;
 }
 
+/** Quanto cresce, con «Testo: grande», il pulsante sotto il mouse (ramo.css): un terzo. */
+export const INGRANDITO = 1.33;
+
+/** Da dove cresce il pulsante sotto il mouse: dal centro, ma se così toccherebbe il bordo dello schermo, dal lato
+ *  che resta dentro (revisione 37, L8: il primo pulsante a sinistra arrivava al bordo). `x` è il centro, in pixel;
+ *  il risultato va nella `transform-origin`, e niente se il centro va bene. */
+export function origineIngrandimento(x: number, larghezza: number, W: number, bordo = 6): string | undefined {
+  const cresce = (larghezza * (INGRANDITO - 1)) / 2;
+  if (x - larghezza / 2 - cresce < bordo) return "0% 50%";
+  if (x + larghezza / 2 + cresce > W - bordo) return "100% 50%";
+  return undefined;
+}
+
 /** Il corpo più piccolo che si legge e si tocca (revisione 25, M3). */
 export const CORPO_MINIMO = 12;
 

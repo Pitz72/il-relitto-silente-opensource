@@ -84,6 +84,12 @@
 }
 .baccello:hover, .baccello.aperto { border-color: var(--vena-2); box-shadow: 0 0 2.2cqw color-mix(in srgb, var(--vena-2) 32%, transparent); }
 [data-movimento="pieno"] .baccello:hover, [data-movimento="pieno"] .baccello.aperto { transform: translate(-50%, -58%); }
+/* «Testo: grande» (revisione 37, L8; l'autore, 25 novembre 2026): i pulsanti in basso restano della loro misura,
+   e quello sotto il mouse si ingrandisce di un terzo, lì dov'è, sopra i vicini. Niente altro si sposta: è una
+   trasformazione, e la disposizione del ramo non la vede. Vicino al bordo dello schermo cresce verso l'interno
+   (--origine, da Ramo.tsx). Soltanto con il testo grande: l'aspetto di sempre resta com'era (l'autore, 25 novembre) */
+[data-testo="grande"] .baccello:is(:hover, :focus-visible) { z-index: 5; transform: translate(-50%, -50%) scale(1.33); transform-origin: var(--origine, 50% 50%); }
+[data-testo="grande"][data-movimento="pieno"] .baccello:is(:hover, :focus-visible) { transform: translate(-50%, -58%) scale(1.33); }
 .baccello .tasto { font-family: var(--mono); font-size: max(12px, .68em); color: var(--tenue); letter-spacing: .04em; }
 
 /* le uscite: bocche, con il loro segno scuro */
@@ -194,6 +200,8 @@
 .fiore.aperto .petalo { transform: translate(-50%, -50%) scale(1); opacity: 1; }
 [data-movimento="ridotto"] .petalo { transform: translate(-50%, -50%); transition: opacity .2s; }
 .petalo:hover { border-color: var(--vena); }
+/* lo stesso per i petali del fiore, con il testo grande; subito, senza il ritardo con cui i petali si aprono */
+[data-testo="grande"] .fiore.aperto .petalo:is(:hover, :focus-visible) { z-index: 5; transform: translate(-50%, -50%) scale(1.33); transform-origin: var(--origine, 50% 50%); transition-duration: .2s; transition-delay: 0s !important; }
 .petalo small { font-family: var(--mono); font-size: max(12px, .7em); color: var(--tenue); letter-spacing: .04em; }
 .petalo.anello-2 { font-size: max(13px, .88cqw); }
 .ramo[data-forma="acciaio"] .petalo { border-radius: .2em; font-family: var(--mono); font-size: max(12.5px, .82cqw); background: var(--lamina-1); box-shadow: none; }

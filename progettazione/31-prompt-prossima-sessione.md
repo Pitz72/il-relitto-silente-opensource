@@ -100,11 +100,10 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   1. «Testo: grande»: «ok», poi, vista la prova: «ingrandire il testo è giusto ma ingrandire il testo dei pulsanti
      incasina troppo secondo me. Forse dovremmo trovare un’altra soluzione per l’accessibilità?». **Fatto**: crescono
      le battute e le risposte dei dialoghi, le scritte del riquadro a destra, l’atto, «diario» e «menu», le scritte
-     piccole dentro il testo; i pulsanti in basso sono tornati com’erano. **Da proporgli, e deve scegliere lui**,
-     un’altra strada per i pulsanti. Le mie tre idee, con il consiglio sulla prima: (a) il pulsante sotto il mouse
-     si ingrandisce di un terzo, lì dov’è, sopra i vicini, e nient’altro si sposta; (b) pulsanti più grandi soltanto
-     quando la finestra è larga (a 1920 × 1080 ci stanno quasi sempre: 12 schermate su cento con qualcosa dietro
-     «+N»; a 1280 × 720 erano 72 contro le 53 di adesso); (c) lasciarli come sono.
+     piccole dentro il testo; i pulsanti in basso sono tornati com’erano. Al loro posto ha scelto, fra tre strade,
+     **il pulsante sotto il mouse che si ingrandisce di un terzo, lì dov’è, sopra i vicini** («mi piace molto»), e
+     **soltanto con «Testo: grande»** («Solo testo grande»). **Fatto**, con le fotografie viste da lui; vicino al bordo
+     dello schermo il pulsante cresce verso l’interno. Non l’ha ancora provato con il mouse nel gioco.
   2. La conferma su «Nuova partita»: «ok». **Fatta.**
   3. Le due righe di Alirio Bruni: «no, già ce l’ho». Non c’è niente da chiedere: lo scritto lo tiene lui.
   4. I due brani del tema: «i due brani vanno nel gioco, solo che per ora dobbiamo trovargli una collocazione».

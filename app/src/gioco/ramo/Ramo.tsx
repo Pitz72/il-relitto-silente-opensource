@@ -13,7 +13,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEve
 import type { Forma } from "../../stile/atmosfere";
 import type { Cosa } from "../../motore/tipi";
 import type { ModelloAzione } from "../../azione/modello";
-import { disponiFilo, disponiFiore, gambo, MISURE, percorsoDelFilo, quantiStanno, scalaMinimaPer, type Disposizione, type Filo, type PostoPetalo } from "./geometria";
+import { disponiFilo, disponiFiore, gambo, MISURE, origineIngrandimento, percorsoDelFilo, quantiStanno, scalaMinimaPer, type Disposizione, type Filo, type PostoPetalo } from "./geometria";
 import { baccelliDi, bersagli, CANALI_SECONDARI, GLIFO_TASTO, MOTIVO_CANALI, petaliDi, type Azione, type Baccello, type Fili, type Selezione, type VocePetalo } from "./azioni";
 import "./ramo.css";
 
@@ -306,7 +306,11 @@ export default function Ramo({ modello, cose, forma, selezione, accesi, costi, p
                     data-comando={scegliendo ? (b.cosa ? possibili.get(b.cosa) : undefined) : b.azione.tipo === "comando" ? b.azione.comando : undefined}
                     data-avvia={!scegliendo && b.azione.tipo !== "comando" ? b.azione.tipo : undefined}
                     className={classeBaccello(b)}
-                    style={p ? { left: p.x, top: p.y, ["--scala" as string]: p.scala } : { visibility: "hidden", left: -9999, top: 0 }}
+                    style={
+                      p
+                        ? { left: p.x, top: p.y, ["--scala" as string]: p.scala, ["--origine" as string]: origineIngrandimento(p.x, misure.current.get(b.chiave)?.offsetWidth ?? 0, W) }
+                        : { visibility: "hidden", left: -9999, top: 0 }
+                    }
                     data-scala={p?.scala ?? 1}
                     tabIndex={p && (!scegliendo || (b.cosa && possibili.has(b.cosa))) ? 0 : -1}
                     aria-hidden={p ? undefined : true}
@@ -405,7 +409,11 @@ export default function Ramo({ modello, cose, forma, selezione, accesi, costi, p
                 disabled={chiuso}
                 title={chiuso ? MOTIVO_CANALI : undefined}
                 aria-label={chiuso ? `${p.etichetta}: ${MOTIVO_CANALI.toLowerCase()}` : undefined}
-                style={posto ? { left: posto.x, top: posto.y, transitionDelay: `${i * 35}ms` } : { visibility: "hidden", left: -9999, top: 0 }}
+                style={
+                  posto
+                    ? { left: posto.x, top: posto.y, transitionDelay: `${i * 35}ms`, ["--origine" as string]: origineIngrandimento(posto.x, misurePetali.current.get(p.chiave)?.offsetWidth ?? 0, W) }
+                    : { visibility: "hidden", left: -9999, top: 0 }
+                }
                 onClick={(e) => {
                   e.stopPropagation();
                   azione(p.azione);

@@ -179,8 +179,14 @@ test("«Testo: grande» ingrandisce anche il dialogo e il riquadro a destra, non
   assert.match(v, /\.satellite \.numero \{[^}]*font-size: calc\(max\(12px, \.86cqw\) \* var\(--grande, 1\)\)/);
   // i pulsanti del ramo restano della loro misura: più grandi, troppe cose finivano dietro «+N» e lo schermo si
   // riempiva (l'autore, 25 novembre 2026)
-  assert.doesNotMatch(senzaCommenti(leggi("gioco/ramo/ramo.css")), /--grande/);
-  assert.match(senzaCommenti(leggi("gioco/ramo/ramo.css")), /--corpo-ramo: max\(15px, \.9cqw\);/);
+  const r = senzaCommenti(leggi("gioco/ramo/ramo.css"));
+  assert.doesNotMatch(r, /--grande/);
+  assert.match(r, /--corpo-ramo: max\(15px, \.9cqw\);/);
+  // al loro posto, il pulsante e il petalo sotto il mouse si ingrandiscono di un terzo, lì dove sono; soltanto con
+  // il testo grande (l'autore, 25 novembre 2026: «Solo testo grande»)
+  assert.match(r, /\[data-testo="grande"\] \.baccello:is\(:hover, :focus-visible\) \{[^}]*scale\(1\.33\)/);
+  assert.match(r, /\[data-testo="grande"\] \.fiore\.aperto \.petalo:is\(:hover, :focus-visible\) \{[^}]*scale\(1\.33\)/);
+  for (const riga of r.split("\n").filter((x) => x.includes("scale(1.33)"))) assert.match(riga, /^\[data-testo="grande"\]/, `ingrandito anche senza il testo grande: ${riga}`);
 });
 
 test("l'intro: il tempo dell'orologio, i sottotitoli, la qualità della scheda Grafica, il carattere", () => {

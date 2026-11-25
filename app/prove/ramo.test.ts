@@ -2,7 +2,7 @@
 //   node --test prove/ramo.test.ts        (da app/)
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { disponiFilo, disponiFiore, MISURE, quotaDelFilo, scalaMinimaPer, type Gruppo } from "../src/gioco/ramo/geometria.ts";
+import { disponiFilo, disponiFiore, INGRANDITO, MISURE, origineIngrandimento, quotaDelFilo, scalaMinimaPer, type Gruppo } from "../src/gioco/ramo/geometria.ts";
 
 const W = 1280;
 const u = W / 100;
@@ -117,6 +117,18 @@ test("i petali non scendono sui baccelli, nemmeno dove il filo sale", () => {
   const prima = disponiFiore({ x: W / 2, y: 610 }, petali.slice(0, 3), W, "acciaio");
   const dopo = disponiFiore({ x: W / 2, y: 610 }, petali.slice(0, 3), W, "acciaio", mezzo);
   assert.deepEqual(prima, dopo, "dove non toccano niente i petali restano dove stavano");
+});
+
+test("il pulsante sotto il mouse cresce dal centro, ma vicino al bordo verso l'interno (revisione 37, L8)", () => {
+  // in mezzo: dal centro
+  assert.equal(origineIngrandimento(640, 200, W), undefined);
+  // il primo a sinistra, largo 222 px con il centro a 149: dal centro arriverebbe a 1 px dal bordo
+  assert.equal(origineIngrandimento(149, 222, W), "0% 50%");
+  // l'ultimo a destra
+  assert.equal(origineIngrandimento(W - 149, 222, W), "100% 50%");
+  // e dal lato scelto resta dentro: cresce tutto verso l'interno
+  const x = 149, w = 222;
+  assert.ok(x - w / 2 >= 6 && x - w / 2 + w * INGRANDITO <= W - 6);
 });
 
 test("un fiore senza attrezzi sta su un anello solo", () => {

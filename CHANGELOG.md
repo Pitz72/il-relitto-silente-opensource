@@ -10,7 +10,7 @@ documenti di `progettazione/`.
 
 ### Per chi gioca
 
-- **«Testo: grande» ingrandisce anche i dialoghi e il riquadro a destra**: le battute e le risposte dei dialoghi, le scritte sotto l’ovale, accanto alla cifra dell’aria e sotto la mappa, «diario» e «menu» in alto, le scritte piccole dentro il testo. I pulsanti in basso restano della loro misura.
+- **«Testo: grande» ingrandisce anche i dialoghi e il riquadro a destra**: le battute e le risposte dei dialoghi, le scritte sotto l’ovale, accanto alla cifra dell’aria e sotto la mappa, «diario» e «menu» in alto, le scritte piccole dentro il testo. I pulsanti in basso restano della loro misura, e **quello sotto il mouse si ingrandisce di un terzo**, lì dov’è, sopra i vicini: gli altri non si spostano. Vale anche per le voci del fiore che si apre sopra di loro.
 - **«Nuova partita» chiede conferma** quando la partita di prima è salvata soltanto nel posto automatico: dice dov’eri rimasto e come tenerla.
 
 ### Aggiunto
@@ -19,7 +19,7 @@ documenti di `progettazione/`.
 
 ### Corretto
 
-- **Revisione 37, L8** (deciso dall’autore il 25 novembre 2026): «Testo: grande» vale anche per il dialogo, il visore, l’atto, «diario» e «menu», con un fattore solo (`--grande`, in `gioco.css`), e i corpi minimi delle scritte piccole della lamina crescono con il testo. **Non i pulsanti del ramo**: provati più grandi e misurati, a 1280 × 720 le schermate con qualcosa dietro «+N» passavano da 53 a 72 su cento, e l’autore li ha voluti com’erano («ingrandire il testo dei pulsanti incasina troppo»); per loro si cerca un’altra strada.
+- **Revisione 37, L8** (deciso dall’autore il 25 novembre 2026): «Testo: grande» vale anche per il dialogo, il visore, l’atto, «diario» e «menu», con un fattore solo (`--grande`, in `gioco.css`), e i corpi minimi delle scritte piccole della lamina crescono con il testo. **Non i pulsanti del ramo**: provati più grandi e misurati, a 1280 × 720 le schermate con qualcosa dietro «+N» passavano da 53 a 72 su cento, e l’autore li ha voluti com’erano («ingrandire il testo dei pulsanti incasina troppo»). Al loro posto, sempre con il testo grande e soltanto con quello («Solo testo grande»), il baccello o il petalo sotto il mouse (o con il fuoco della tastiera) si ingrandisce di un terzo con una trasformazione, che la disposizione del ramo non vede; vicino al bordo dello schermo cresce verso l’interno (`origineIngrandimento()` in `geometria.ts`).
 - **Revisione 37, L12**: `automaticoDaPerdere()` in `menu/continua.ts`, e la domanda in `Relitto.tsx`.
 - A 1280 × 720 i petali di un fiore toccavano di due o tre pixel i baccelli sotto di loro, dove il filo sale, e la scritta sotto la mappa toccava l’etichetta «azioni»: lo hanno detto le misure. `disponiFiore()` tiene conto dell’altezza dei baccelli, spezza in più file un fiore troppo largo invece di farlo uscire a destra, e la barra «tocca una cosa accesa» sale se i petali arrivano fin lì.
 - **GitHub** (revisione 37, M18 e L25, con il sì dell’autore): accesi gli avvisi sulle librerie, la scansione dei segreti e la protezione dei push; la descrizione del repository dice «Favella1».
