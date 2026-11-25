@@ -108,11 +108,14 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   3. Le due righe di Alirio Bruni: «no, già ce l’ho». Non c’è niente da chiedere: lo scritto lo tiene lui.
   4. I due brani del tema: «i due brani vanno nel gioco, solo che per ora dobbiamo trovargli una collocazione».
      **Non si tolgono** né dal pacchetto né dai titoli. Proposti due posti, e lui: «Sì, così». **Fatto**: «Held by the
-     Dark» quando si apre la Grande Porta, fino alle postazioni del Ponte; «Hull of the Ancient» apre il giro del
-     menu, prima dei suoi due brani (dopo, arrivava a più di cinque minuti). Prima della beta ha chiesto una prova
+     Dark» quando si apre la Grande Porta, e «Hull of the Ancient» nel menu. Prima della beta ha chiesto una prova
      da sentire («No aspetta prima di fare nuova beta»): l’eseguibile costruito sul computer, con il salvataggio
      davanti alla terza chiave in `consegne/Prova brani 2026-11-25/salvataggi/` (`strumenti/misure/salvataggi_brani.py`).
-     **Aspetta la sua approvazione**; poi, come ha chiesto, «un resoconto globale di cosa resta del grande piano».
+     **Sentita**: la Grande Porta «Ok»; il menu no, «il brano del menu mi piaceva quello di prima. Più evocativo e
+     riflessivo e adatto al menu»: **il menu è tornato com’era**, e «Hull of the Ancient» aspetta ancora un posto.
+     Entrando nel Ponte comincia l’atto IV con la sua musica, e alla mappa stellare l’ha sentita sovrapporsi alle
+     note della mappa: corretto, alle postazioni sfuma. Le sue parole: «questa cosa dei brani e dei suoni
+     richiederà una sessione specifica» (vedi «L’ordine del lavoro», punto 5).
   5. GitHub: «certo». **Fatto**: i tre controlli sono accesi, la descrizione dice «Favella1», nessun avviso aperto.
 - **Che cosa non è stato fatto, di questa sessione**: le prove di GitHub sul commit di questo lavoro vanno guardate
   (`gh run list --limit 3`); l’eseguibile non è stato ricostruito né provato (va fatto prima di una beta, come
@@ -713,7 +716,11 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
    - la colonna sonora ufficiale: le sue sette idee e le decisioni da prendere stanno nel documento 28,
      §1, ancora valide;
    - il logo nel menu (E3), la regola delle immagini (E8), la copertina (D42–D44 del documento 24);
-   - il tema `T-01`/`T-02` da ricollegare;
+   - **una sessione specifica per i brani e i suoni** (l’autore, 25 novembre 2026: «questa cosa dei brani e dei suoni
+     richiederà una sessione specifica»): un posto per «Hull of the Ancient» (`T-01`; nel menu provato e tolto);
+     ascoltare nel gioco come la musica si incontra con i momenti (le soglie degli atti, la Grande Porta, la mappa
+     stellare, l’Anziano, i finali) e con le voci; insieme agli effetti e agli ambienti da rifare qui sopra, e alle
+     due versioni di «Havela»;
    - Linux su una macchina vera;
    - la partita intera giocata a mano;
    - il primo rilascio pubblico, la 1.0: su GitHub prenderebbe il posto della `v1.5.3` del gioco originale;

@@ -1402,8 +1402,10 @@ impl Mondo {
                 // svuota, e resta vuoto finché la carta sta sulla cupola
                 self.fondo_mul.verso(db(-6.0), 0.4, sr);
                 self.dopo(MAPPA_RITIRO - 0.5, Azione::Fondo(1.0, 2.5));
-                // il tema della Grande Porta, se suona ancora, lascia il posto alle note della mappa
-                if self.musica.brano() == Brano::GrandePorta {
+                // la musica che suona ancora (il tema della Grande Porta, o la soglia dell’atto IV, che parte
+                // entrando nel Ponte e dura quasi un minuto) lascia il posto alle note della mappa: l’autore le ha
+                // sentite sovrapporsi (25 novembre 2026)
+                if matches!(self.musica.brano(), Brano::GrandePorta | Brano::Atto4) {
                     self.musica.sfuma(3.0);
                 }
                 self.mappa_stellare();
@@ -2233,6 +2235,17 @@ mod prove {
             livello(&mut m, 4.0);
             assert!(!m.colpi.iter().any(|c| c.momento), "le note della mappa finiscono da sole");
         }
+    }
+
+    #[test]
+    fn alle_postazioni_la_soglia_dell_atto_quattro_sfuma() {
+        let (mut m, tx) = sul_ponte(9);
+        m.musica.avvia(Brano::Atto4);
+        livello(&mut m, 1.0);
+        assert_eq!(m.musica.brano(), Brano::Atto4);
+        usa_la_postazione(&tx);
+        livello(&mut m, 0.5);
+        assert_eq!(m.musica.brano(), Brano::Silenzio, "la musica dell'atto IV non deve stare sotto le note della mappa");
     }
 
     #[test]

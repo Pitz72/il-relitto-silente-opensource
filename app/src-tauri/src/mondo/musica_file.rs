@@ -1161,9 +1161,6 @@ pub enum Dopo {
     Ripeti,
     /// lascia il posto all’altro pezzo, che a sua volta lascerà il posto a questo
     Alterna(Pezzo),
-    /// un giro di tre: lascia il posto a `poi`, che lo lascerà a `e_poi`, che lo lascerà a questo (il menu con il
-    /// tema, l’autore, 25 novembre 2026). Se `poi` non c’è, si alternano gli altri due; se non c’è nessuno, ricomincia
-    Giro { poi: Pezzo, e_poi: Pezzo },
 }
 
 /// Quello che serve per far partire un pezzo.
@@ -1285,13 +1282,8 @@ impl Lettore {
     pub fn avvia(&mut self, r: Richiesta) {
         if let Some(b) = self.biblioteca.as_mut() {
             b.chiedi(r.pezzo);
-            match r.dopo {
-                Dopo::Alterna(altro) => b.chiedi(altro),
-                Dopo::Giro { poi, e_poi } => {
-                    b.chiedi(poi);
-                    b.chiedi(e_poi);
-                }
-                Dopo::Niente | Dopo::Ripeti => {}
+            if let Dopo::Alterna(altro) = r.dopo {
+                b.chiedi(altro);
             }
         }
         self.attese.push((r, ATTESA_MASSIMA));
@@ -1397,21 +1389,6 @@ impl Lettore {
                         nuove.push((r, pcm));
                     } else if self.biblioteca.as_ref().is_some_and(|b| b.mancante(altro)) {
                         // l'altro pezzo non c'è: questo ricomincia da solo
-                        v.ceduta = true;
-                        v.g.verso(0.0, v.r.incrocio.max(0.05), sr);
-                        nuove.push((Richiesta { entra: v.r.incrocio, dopo: Dopo::Ripeti, ..v.r }, v.pcm.clone()));
-                    }
-                }
-                Dopo::Giro { poi, e_poi } if resta <= v.r.incrocio => {
-                    let b = self.biblioteca.as_ref();
-                    let manca = |p: Pezzo| b.is_none_or(|b| !b.esiste(p) || b.mancante(p));
-                    // il pezzo che viene, e quello che verrà dopo di lui; senza `poi` restano gli altri due
-                    let (prossimo, dopo) = if manca(poi) { (e_poi, Dopo::Alterna(v.r.pezzo)) } else { (poi, Dopo::Giro { poi: e_poi, e_poi: v.r.pezzo }) };
-                    if let Some(pcm) = b.and_then(|b| b.pronto(prossimo)) {
-                        v.ceduta = true;
-                        v.g.verso(0.0, v.r.incrocio.max(0.05), sr);
-                        nuove.push((Richiesta { pezzo: prossimo, entra: v.r.incrocio, dopo, da: 0.0, a: None, ..v.r }, pcm));
-                    } else if manca(prossimo) {
                         v.ceduta = true;
                         v.g.verso(0.0, v.r.incrocio.max(0.05), sr);
                         nuove.push((Richiesta { entra: v.r.incrocio, dopo: Dopo::Ripeti, ..v.r }, v.pcm.clone()));

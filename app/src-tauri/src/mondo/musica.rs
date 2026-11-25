@@ -482,7 +482,7 @@ fn letto_del_nodo(nodo: &str) -> Option<Pezzo> {
 /// Quali file suonano un brano (compresi quelli che si alternano).
 fn pezzi_del_brano(brano: Brano) -> Vec<Pezzo> {
     match brano {
-        Brano::Menu => vec![Pezzo::M1a, Pezzo::M1b, Pezzo::T1],
+        Brano::Menu => vec![Pezzo::M1a, Pezzo::M1b],
         Brano::Atto2 => vec![Pezzo::S2],
         Brano::Atto3 => vec![Pezzo::S3],
         Brano::Atto4 => vec![Pezzo::S4],
@@ -499,28 +499,18 @@ fn pezzi_del_brano(brano: Brano) -> Vec<Pezzo> {
     }
 }
 
-/// I file senza i quali un brano suona sintetizzato: al menu bastano i suoi due, e il tema entra nel giro se c’è.
-fn pezzi_necessari(brano: Brano) -> Vec<Pezzo> {
-    match brano {
-        Brano::Menu => vec![Pezzo::M1a, Pezzo::M1b],
-        _ => pezzi_del_brano(brano),
-    }
-}
-
 /// Che cosa suona un brano da file, e come (22, §5 e §7). `primo` sceglie quale dei due pezzi
 /// del menu comincia: il menu alterna i suoi due, sempre in un ordine che cambia.
-fn piano_file(brano: Brano, primo: bool, tema: bool) -> Option<Vec<Richiesta>> {
+fn piano_file(brano: Brano, primo: bool) -> Option<Vec<Richiesta>> {
     let livello = brano.livello();
     let r = |p: Pezzo| Richiesta { livello, ..Richiesta::intero(p) };
     Some(vec![match brano {
         Brano::Menu => {
-            // il tema, «Hull of the Ancient», apre il giro (l’autore, 25 novembre 2026: «i due brani vanno nel
-            // gioco»), poi i due brani del menu in un ordine che cambia, e da capo. Il tema per primo: dopo i due
-            // (2:55 e 2:40) arrivava a più di cinque minuti, e quasi nessuno l’avrebbe sentito. Se non c’è, i due
-            // del menu si alternano come prima
+            // i suoi due brani, e basta: provato il tema in testa al giro, l’autore ha voluto il menu com’era («il
+            // brano del menu mi piaceva quello di prima. Più evocativo e riflessivo e adatto al menu», 25 novembre
+            // 2026). «Hull of the Ancient» aspetta un posto suo (documento 31)
             let (a, b) = if primo { (Pezzo::M1a, Pezzo::M1b) } else { (Pezzo::M1b, Pezzo::M1a) };
-            let giro = Richiesta { entra: 4.0, incrocio: 8.0, esce: 0.0, ..r(a) };
-            if tema { Richiesta { pezzo: Pezzo::T1, dopo: Dopo::Giro { poi: a, e_poi: b }, ..giro } } else { Richiesta { dopo: Dopo::Alterna(b), ..giro } }
+            Richiesta { entra: 4.0, dopo: Dopo::Alterna(b), incrocio: 8.0, esce: 0.0, ..r(a) }
         }
         // le soglie sono brevi: si tengono i primi secondi, con la dissolvenza in uscita
         Brano::Atto2 => Richiesta { a: Some(18.0), entra: 0.3, esce: 4.0, ..r(Pezzo::S2) },
@@ -698,10 +688,9 @@ impl Musica {
 
     fn avvia_da_file(&mut self, brano: Brano) -> bool {
         let quale = self.caso.f() < 0.5;
-        let tema = brano == Brano::Menu && self.file.disponibile(&[Pezzo::T1]);
-        let Some(piano) = piano_file(brano, quale, tema) else { return false };
+        let Some(piano) = piano_file(brano, quale) else { return false };
         let pezzi = pezzi_del_brano(brano);
-        if !self.file.disponibile(&pezzi_necessari(brano)) {
+        if !self.file.disponibile(&pezzi) {
             return false;
         }
         // il brano vecchio, sintetizzato o da file, sfuma sotto il nuovo
@@ -1853,22 +1842,6 @@ mod prove_file {
         assert!(goertzel(sec(&x, 36.0, 46.0), secondo) > 1e-6, "dopo il primo pezzo non entra l'altro");
         assert!(goertzel(sec(&x, 62.0, 72.0), primo) > 1e-6, "il primo non ritorna");
         assert!(rms_db(sec(&x, 80.0, 99.0)) > -45.0, "il menu si è fermato");
-        assert_eq!(m.brano(), Brano::Menu);
-    }
-
-    #[test]
-    fn il_menu_fa_il_giro_del_tema_e_dei_suoi_due_pezzi() {
-        // «Hull of the Ancient» apre il giro, poi i due del menu, e si ricomincia dal tema
-        let mut m = con_pezzi(&[(Pezzo::M1a, 220.0, 30.0), (Pezzo::M1b, 330.0, 30.0), (Pezzo::T1, 440.0, 30.0)]);
-        m.avvia(Brano::Menu);
-        let x = rendi(&mut m, 100.0);
-        let forte = |da: f32, a: f32, hz: f32| goertzel(sec(&x, da, a), hz) > 1e-6;
-        let (primo, secondo) = if goertzel(sec(&x, 30.0, 40.0), 220.0) > goertzel(sec(&x, 30.0, 40.0), 330.0) { (220.0, 330.0) } else { (330.0, 220.0) };
-        // ognuno dura 30 s, e il successivo entra 8 s prima della fine: a 0, a 22, a 44, a 66
-        assert!(forte(8.0, 18.0, 440.0) && !forte(8.0, 18.0, 220.0) && !forte(8.0, 18.0, 330.0), "il menu deve cominciare dal tema");
-        assert!(forte(30.0, 40.0, primo) && !forte(30.0, 40.0, 440.0), "dopo il tema deve entrare un brano del menu");
-        assert!(forte(52.0, 62.0, secondo) && !forte(52.0, 62.0, primo), "poi l'altro brano del menu");
-        assert!(forte(76.0, 86.0, 440.0) && !forte(76.0, 86.0, secondo), "poi si ricomincia dal tema");
         assert_eq!(m.brano(), Brano::Menu);
     }
 
