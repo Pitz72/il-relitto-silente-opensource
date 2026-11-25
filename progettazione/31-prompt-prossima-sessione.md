@@ -2,7 +2,8 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 25 novembre 2026: sette frasi piccole della storia applicate con il suo sì, la prima persona dappertutto («questo è assoluto, non si torna indietro»), e **la beta 16 pubblicata** su suo ordine. Alla prossima: le sue note sulla beta 16, le sue cinque risposte (in «Dove siamo»), le quattro frasi ancora da studiare.
+Aggiornato l’ultima volta il 25 novembre 2026, più tardi: le sue cinque risposte e quello che ne è seguito (in «Dove siamo», la prima voce); **sessione sospesa a metà su sua richiesta, per passare a un altro modello**: si riparte da lì.
+Prima, lo stesso giorno: sette frasi piccole della storia applicate con il suo sì, la prima persona dappertutto («questo è assoluto, non si torna indietro»), e **la beta 16 pubblicata** su suo ordine. Alla prossima: le sue note sulla beta 16, le sue cinque risposte (in «Dove siamo»), le quattro frasi ancora da studiare.
 Prima, il 24 novembre 2026: il punto della situazione, la scansione lunga con il computer di bordo in mezzo a William, e la revisione 37 (le medie e le lievi che non toccano la storia). Le tre medie della storia (M22, M23, M24) sono applicate con il suo sì.
 Prima, il 16 novembre 2026, nel pomeriggio: la revisione della cinematica e le sue correzioni (documento 09, §19–20), dodici prese nuove di Leonardo, la beta 15 pubblicata.
 Prima, lo stesso giorno, di giorno: le note dell’autore sulla beta 13 (documento 09, §18:
@@ -94,6 +95,30 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   `collaudo/verosimili.py`, con la fuga giocata da principianti veri.
 
 ## Dove siamo (25 novembre 2026)
+
+- **Le sue cinque risposte** (25 novembre, dopo la beta 16), e dove siamo rimasti:
+  1. «Testo: grande»: «ok», poi, vista la prova: «ingrandire il testo è giusto ma ingrandire il testo dei pulsanti
+     incasina troppo secondo me. Forse dovremmo trovare un’altra soluzione per l’accessibilità?». **Fatto**: crescono
+     le battute e le risposte dei dialoghi, le scritte del riquadro a destra, l’atto, «diario» e «menu», le scritte
+     piccole dentro il testo; i pulsanti in basso sono tornati com’erano. **Da proporgli, e deve scegliere lui**,
+     un’altra strada per i pulsanti. Le mie tre idee, con il consiglio sulla prima: (a) il pulsante sotto il mouse
+     si ingrandisce di un terzo, lì dov’è, sopra i vicini, e nient’altro si sposta; (b) pulsanti più grandi soltanto
+     quando la finestra è larga (a 1920 × 1080 ci stanno quasi sempre: 12 schermate su cento con qualcosa dietro
+     «+N»; a 1280 × 720 erano 72 contro le 53 di adesso); (c) lasciarli come sono.
+  2. La conferma su «Nuova partita»: «ok». **Fatta.**
+  3. Le due righe di Alirio Bruni: «no, già ce l’ho». Non c’è niente da chiedere: lo scritto lo tiene lui.
+  4. I due brani del tema: «i due brani vanno nel gioco, solo che per ora dobbiamo trovargli una collocazione».
+     **Non si tolgono** né dal pacchetto né dai titoli. Da proporgli dove farli suonare.
+  5. GitHub: «certo». **Fatto**: i tre controlli sono accesi, la descrizione dice «Favella1», nessun avviso aperto.
+- **Che cosa non è stato fatto, di questa sessione**: le prove di GitHub sul commit di questo lavoro vanno guardate
+  (`gh run list --limit 3`); l’eseguibile non è stato ricostruito né provato (va fatto prima di una beta, come
+  sempre); nessuna persona ha guardato il testo grande nel gioco. **Niente beta**: non l’ha chiesta.
+- **Per misurare lo schermo**: `node strumenti/misure/schermo.mjs 1280 720 --grande --foto <cartella>`, con il server
+  di sviluppo acceso. Attenzione: se un foglio di stile cambia con `git checkout`, il server può servire la copia
+  vecchia; riavviarlo. Il riquadro del browser dentro l’app, quando è nascosto, fa andare la pagina al rallentatore:
+  per questo le misure girano in Edge senza finestra.
+- **La quota** (25 novembre: «stiamo sprecando la quota di fable inutilmente»): per un ritocco dell’interfaccia non
+  servono giri lunghi di misure; prima una prova piccola da fargli vedere, poi il resto.
 
 - **25 novembre 2026: la prima persona è assoluta, e sette frasi piccole.** L’autore, letta la proposta: «intanto tutto il
   racconto è in prima persona, questo è assoluto, non si torna indietro. Poi sì, applica anche le sette piccole

@@ -13,7 +13,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEve
 import type { Forma } from "../../stile/atmosfere";
 import type { Cosa } from "../../motore/tipi";
 import type { ModelloAzione } from "../../azione/modello";
-import { disponiFilo, disponiFiore, gambo, percorsoDelFilo, quantiStanno, scalaMinimaPer, type Disposizione, type Filo, type PostoPetalo } from "./geometria";
+import { disponiFilo, disponiFiore, gambo, MISURE, percorsoDelFilo, quantiStanno, scalaMinimaPer, type Disposizione, type Filo, type PostoPetalo } from "./geometria";
 import { baccelliDi, bersagli, CANALI_SECONDARI, GLIFO_TASTO, MOTIVO_CANALI, petaliDi, type Azione, type Baccello, type Fili, type Selezione, type VocePetalo } from "./azioni";
 import "./ramo.css";
 
@@ -34,6 +34,8 @@ interface Props {
   altri: { filo: Filo; gruppo: string } | null;
   /** la protezione vitale: l'ascolto e la traduzione sono spenti */
   canaliChiusi?: boolean;
+  /** il carattere scelto nelle opzioni: quando cambia i baccelli si rimisurano */
+  scrittura?: string;
 }
 
 interface Pezzo extends Baccello {
@@ -43,7 +45,7 @@ interface Pezzo extends Baccello {
 
 const STRINGI = "+";
 
-export default function Ramo({ modello, cose, forma, selezione, accesi, costi, palco, azione, apriAltri, altri, canaliChiusi = false }: Props) {
+export default function Ramo({ modello, cose, forma, selezione, accesi, costi, palco, azione, apriAltri, altri, canaliChiusi = false, scrittura = "" }: Props) {
   const fili = useMemo(() => baccelliDi(modello, cose), [modello, cose]);
   const pezzi: Pezzo[] = useMemo(
     () => (["alto", "basso"] as Filo[]).flatMap((filo) => fili[filo].flatMap((g) => g.baccelli.map((b) => ({ ...b, filo, gruppo: g.nome })))),
@@ -82,7 +84,7 @@ export default function Ramo({ modello, cose, forma, selezione, accesi, costi, p
       fili: { alto, basso },
       d: { alto: disponiFilo(gruppi(alto), W, "alto", forma, piu, minima), basso: disponiFilo(gruppi(basso), W, "basso", forma, piu, minima) },
     });
-  }, [fili, W, forma]);
+  }, [fili, W, forma, scrittura]);
   const disposizione = stato?.d ?? null;
   const disposti = stato?.fili ?? fili;
 
@@ -192,8 +194,27 @@ export default function Ramo({ modello, cose, forma, selezione, accesi, costi, p
       const el = misurePetali.current.get(x.chiave);
       return { larghezza: el?.offsetWidth ?? 90, altezza: el?.offsetHeight ?? 32, anello: x.anello };
     });
-    setPostiPetali(disponiFiore(ancora, p, W, forma));
-  }, [petali, ancora?.x, ancora?.y, W, forma]); // eslint-disable-line react-hooks/exhaustive-deps
+    // la mezza altezza dei baccelli, com'è adesso: i petali non scendono a toccarli
+    const mezzo = Math.max(0, ...[...misure.current.values()].map((el) => el.offsetHeight)) / 2;
+    setPostiPetali(disponiFiore(ancora, p, W, forma, mezzo));
+  }, [petali, ancora?.x, ancora?.y, W, forma, scrittura]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // «tocca una cosa accesa» sta sotto il testo, sopra i petali: se i petali salgono fin lì (quando sono su due
+  // file) la barra sale quanto serve, e non resta sotto di loro. Il suo posto solito è quello del foglio di stile
+  // (ramo.css: il fondo della lamina più 0,6); quello nuovo si calcola dai petali soltanto, mai da dove sta lei
+  const barra = useRef<HTMLDivElement>(null);
+  const [cimaBarra, setCimaBarra] = useState<number | null>(null);
+  useLayoutEffect(() => {
+    const el = barra.current;
+    let cima: number | null = null;
+    if (el && postiPetali?.length) {
+      const solita = ((MISURE.fondoLamina + 0.6) * W) / 100;
+      const petaloPiuAlto = Math.min(...postiPetali.map((p, i) => p.y - (misurePetali.current.get(petali[i]?.chiave ?? "")?.offsetHeight ?? 34) / 2));
+      const sopra = Math.floor(petaloPiuAlto - el.offsetHeight - 4);
+      if (sopra < solita) cima = sopra;
+    }
+    setCimaBarra(cima);
+  }, [scegliendo, postiPetali, W, scrittura]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // il primo petalo prende il fuoco quando il fiore si apre
   const fioreRef = useRef<HTMLDivElement>(null);
@@ -342,7 +363,7 @@ export default function Ramo({ modello, cose, forma, selezione, accesi, costi, p
 
       {/* «Usa con…» e l'attrezzo in mano: che cosa si sta facendo */}
       {scegliendo && (
-        <div className="scelta-in-corso" role="status">
+        <div className="scelta-in-corso" role="status" ref={barra} style={cimaBarra !== null ? { top: cimaBarra } : undefined}>
           {selezione.tipo === "usaCon"
             ? `${selezione.voce.etichetta.replace(/\s*con…$|…$/, "")} ${nomeDiCosa(selezione.cosa, cose)} ${/con…$/.test(selezione.voce.etichetta) || selezione.voce.comando !== null ? "con" : ""}… tocca una cosa accesa`.replace(/ +…/, "…")
             : `${selezione.etichetta} in mano: tocca una cosa accesa`}

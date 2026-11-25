@@ -159,9 +159,28 @@ test("le lievi della pagina: il cartello d'atto, il tasto tenuto premuto, l'intr
   // L19: «salta» taglia anche la sfumatura finale dei titoli
   assert.match(leggi("riconoscimenti/Titoli.tsx"), /if \(!lenta && lentaInCorso\.current\)/);
   // L1: nessun corpo in em sotto i 12 px nei turni passati, nei numeri delle risposte, nella scritta dell'apparecchio
-  assert.match(senzaCommenti(leggi("gioco/lamina/lamina.css")), /\.turno\.passato \{ font-size: max\(12px, \.86em\)/);
-  assert.match(leggi("gioco/dialogo/dialogo.css"), /\.dialogo \.semi \.numero \{[^}]*font-size: max\(12px, \.78em\)/);
+  // (con «Testo: grande» il minimo cresce con il testo: 12 px per il fattore, che vale uno se il testo è normale)
+  assert.match(senzaCommenti(leggi("gioco/lamina/lamina.css")), /\.turno\.passato \{ font-size: max\(calc\(12px \* var\(--grande, 1\)\), \.86em\)/);
+  assert.match(leggi("gioco/dialogo/dialogo.css"), /\.dialogo \.semi \.numero \{[^}]*font-size: max\(calc\(12px \* var\(--grande, 1\)\), \.78em\)/);
   assert.match(leggi("intro/intro.css"), /\.intro \.blocco\.apparecchio \{[^}]*font-size: max\(12px, 1\.02cqw\)/);
+});
+
+test("«Testo: grande» ingrandisce anche il dialogo e il riquadro a destra, non i pulsanti in basso (revisione 37, L8)", () => {
+  // il fattore sta in un posto solo, sul palco: uno con il testo normale
+  const g = senzaCommenti(leggi("gioco/gioco.css"));
+  assert.match(g, /\.palco \{[^}]*--grande: 1;/);
+  assert.match(g, /\[data-testo="grande"\] \.palco \{ --corpo: max\(19px, 1\.32cqw\); --grande: 1\.2; \}/);
+  // le battute, la narrazione e le risposte del dialogo; le scritte del visore
+  const d = leggi("gioco/dialogo/dialogo.css");
+  assert.match(d, /\.dialogo \.battuta \{[^}]*font-size: calc\(max\(18px, 1\.5cqw\) \* var\(--grande, 1\)\)/);
+  assert.match(d, /\.dialogo \.semi button \{[^}]*font-size: calc\(max\(16px, 1\.15cqw\) \* var\(--grande, 1\)\)/);
+  const v = leggi("gioco/visore/visore.css");
+  assert.match(v, /\.lente figcaption \{[^}]*font-size: calc\(max\(12px, \.66cqw\) \* var\(--grande, 1\)\)/);
+  assert.match(v, /\.satellite \.numero \{[^}]*font-size: calc\(max\(12px, \.86cqw\) \* var\(--grande, 1\)\)/);
+  // i pulsanti del ramo restano della loro misura: più grandi, troppe cose finivano dietro «+N» e lo schermo si
+  // riempiva (l'autore, 25 novembre 2026)
+  assert.doesNotMatch(senzaCommenti(leggi("gioco/ramo/ramo.css")), /--grande/);
+  assert.match(senzaCommenti(leggi("gioco/ramo/ramo.css")), /--corpo-ramo: max\(15px, \.9cqw\);/);
 });
 
 test("l'intro: il tempo dell'orologio, i sottotitoli, la qualità della scheda Grafica, il carattere", () => {

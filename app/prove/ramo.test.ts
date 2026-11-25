@@ -79,6 +79,46 @@ test("il fiore: due anelli, dentro lo schermo, mai sopra il testo", () => {
     }
 });
 
+test("un fiore troppo largo si spezza in più file, dentro lo schermo, con le prime voci in alto", () => {
+  // undici cose dietro «+N», larghe: su una fila sola uscivano a destra dello schermo
+  const petali = Array.from({ length: 11 }, (_, i) => ({ larghezza: 150 + (i % 3) * 20, altezza: 34, anello: 1 as const }));
+  for (const forma of ["acciaio", "membrana"] as const) {
+    const posti = disponiFiore({ x: 0.9 * W, y: quotaDelFilo("basso", 0.9, forma) * u }, petali, W, forma, 17);
+    posti.forEach((p, i) => {
+      assert.ok(p.x - petali[i].larghezza / 2 >= MISURE.margine * u - 0.5, `fuori a sinistra: ${p.x}`);
+      assert.ok(p.x + petali[i].larghezza / 2 <= W - MISURE.margine * u + 0.5, `fuori a destra: ${p.x}`);
+      assert.ok(p.y - 17 >= MISURE.fondoLamina * u - 0.5, `petalo sopra il testo: ${p.y}`);
+    });
+    const quote = [...new Set(posti.map((p) => Math.round(p.y / 30)))];
+    assert.ok(quote.length >= 2, "più di una fila");
+    // nessun petalo ne tocca un altro
+    for (let i = 0; i < posti.length; i++)
+      for (let j = i + 1; j < posti.length; j++) {
+        const dx = Math.abs(posti[i].x - posti[j].x) - (petali[i].larghezza + petali[j].larghezza) / 2;
+        const dy = Math.abs(posti[i].y - posti[j].y) - 34;
+        assert.ok(dx >= -0.5 || dy >= -0.5, `i petali ${i} e ${j} si toccano`);
+      }
+    // come si legge: il primo sta in alto a sinistra, l'ultimo nella fila più bassa
+    assert.ok(posti[0].y < posti[posti.length - 1].y, "le prime voci in alto");
+    assert.ok(posti.every((p) => p.anello === 1), "è un anello solo, spezzato: lo stesso corpo");
+  }
+});
+
+test("i petali non scendono sui baccelli, nemmeno dove il filo sale", () => {
+  // il fiore di «Usa con…» parte dal centro, dove il filo è più basso: ai lati i baccelli stanno più in alto
+  const petali = Array.from({ length: 6 }, () => ({ larghezza: 170, altezza: 34, anello: 1 as const }));
+  const mezzo = 17;
+  const posti = disponiFiore({ x: W / 2, y: quotaDelFilo("alto", 0.5, "membrana") * u }, petali, W, "membrana", mezzo);
+  posti.forEach((p, i) => {
+    for (const x of [p.x - petali[i].larghezza / 2, p.x, p.x + petali[i].larghezza / 2])
+      assert.ok(p.y + 17 <= quotaDelFilo("alto", x / W, "membrana") * u - mezzo, `il petalo ${i} tocca i baccelli sotto di lui`);
+  });
+  // senza la mezza altezza dei baccelli la disposizione è quella di sempre
+  const prima = disponiFiore({ x: W / 2, y: 610 }, petali.slice(0, 3), W, "acciaio");
+  const dopo = disponiFiore({ x: W / 2, y: 610 }, petali.slice(0, 3), W, "acciaio", mezzo);
+  assert.deepEqual(prima, dopo, "dove non toccano niente i petali restano dove stavano");
+});
+
 test("un fiore senza attrezzi sta su un anello solo", () => {
   const posti = disponiFiore({ x: 640, y: 610 }, [{ larghezza: 100, altezza: 34, anello: 2 }, { larghezza: 100, altezza: 34, anello: 2 }], W, "membrana");
   assert.ok(posti.every((p) => p.anello === 1));

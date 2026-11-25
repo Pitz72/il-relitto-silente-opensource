@@ -102,11 +102,14 @@
   margin-top: .55cqw;
   text-align: center;
   font-family: var(--mono);
-  font-size: max(12px, .66cqw);
+  font-size: calc(max(12px, .66cqw) * var(--grande, 1));
   letter-spacing: .2em;
   text-transform: uppercase;
   color: var(--tenue);
 }
+/* con il testo grande la didascalia più lunga deve restare su una riga, sopra gli strumenti: le lettere
+   crescono e si avvicinano */
+[data-testo="grande"] .lente figcaption { letter-spacing: .04em; white-space: nowrap; }
 
 /* gli strumenti: l'aria e i satelliti */
 .strumenti { position: absolute; left: 0; top: 18.4cqw; width: 100%; height: 13.6cqw; display: flex; gap: 1.6cqw; align-items: center; }
@@ -139,7 +142,7 @@
   right: -.4cqw;
   top: 2.4cqw;
   font-family: var(--mono);
-  font-size: max(13px, 1cqw);
+  font-size: calc(max(13px, 1cqw) * var(--grande, 1));
   color: var(--aria);
   animation: differenza 2.4s ease-out both;
   pointer-events: none;
@@ -168,20 +171,23 @@
 .cellula .cifra i, .satellite .etichetta, .mappa figcaption, .di-bordo dt {
   font-style: normal;
   font-family: var(--mono);
-  font-size: max(12px, .64cqw);
+  font-size: calc(max(12px, .64cqw) * var(--grande, 1));
   letter-spacing: .2em;
   text-transform: uppercase;
   color: var(--tenue);
 }
-.di-bordo dd { margin: 0; font-family: var(--mono); font-size: max(12px, .78cqw); color: var(--testo); }
+.di-bordo dd { margin: 0; font-family: var(--mono); font-size: calc(max(12px, .78cqw) * var(--grande, 1)); color: var(--testo); }
 .di-bordo dd.rosso { color: var(--rosso); }
 .di-bordo + .satelliti:empty { display: none; }
 
 /* i satelliti */
 .satelliti { flex: 1; display: flex; flex-direction: column; gap: 1.1cqw; min-width: 0; }
+[data-testo="grande"] .satelliti { gap: .7cqw; }
+/* «protezione vitale», più grande, toccava il bordo della cellula: le lettere si avvicinano */
+[data-testo="grande"] .cellula .cifra i { letter-spacing: .1em; }
 .satellite { display: flex; flex-wrap: wrap; align-items: center; gap: .3cqw .6cqw; }
 .satellite .etichetta { flex-basis: 100%; }
-.satellite .numero { font-family: var(--mono); font-size: max(12px, .86cqw); color: var(--testo); font-variant-numeric: tabular-nums; }
+.satellite .numero { font-family: var(--mono); font-size: calc(max(12px, .86cqw) * var(--grande, 1)); color: var(--testo); font-variant-numeric: tabular-nums; }
 .satellite.spento { opacity: .55; }
 .matrice .glifi { display: inline-flex; gap: .22cqw; }
 .matrice .glifi svg { width: 1.05cqw; height: 1.85cqw; overflow: visible; }
@@ -190,7 +196,7 @@
 .voci .spore { display: inline-flex; align-items: center; gap: .5cqw; min-height: 1.2cqw; flex-wrap: wrap; }
 .voci .eco { width: .62cqw; height: .62cqw; border-radius: 50%; background: var(--vena); box-shadow: 0 0 .7cqw var(--vena); }
 .voci .risonanza { width: .8cqw; height: .8cqw; transform: rotate(45deg); background: var(--vena-2); box-shadow: 0 0 .9cqw var(--vena-2); }
-.voci .nessuna { font-family: var(--mono); font-size: max(12px, .7cqw); color: var(--tenue); }
+.voci .nessuna { font-family: var(--mono); font-size: calc(max(12px, .7cqw) * var(--grande, 1)); color: var(--tenue); }
 .chiavi .incavi { display: inline-flex; gap: .6cqw; }
 .chiavi svg { width: 1.6cqw; height: 1.6cqw; overflow: visible; }
 .chiavi path { fill: none; stroke: var(--tenue); stroke-width: 1.6; }
@@ -213,7 +219,9 @@
 .visore[data-forma="acciaio"] .mappa .moncone { stroke: var(--bordo); stroke-opacity: 1; }
 .visore[data-forma="acciaio"] .mappa .stanza { fill: color-mix(in srgb, var(--lamina-1) 85%, #000); stroke: var(--targa); stroke-width: 1; filter: none; }
 .visore[data-forma="acciaio"] .mappa .stanza.qui { fill: var(--accento-2); stroke: var(--accento-2); }
-.mappa figcaption { margin-top: .35cqw; text-align: right; }
+/* la scritta sta stretta sotto la mappa: più in basso toccava l'etichetta «azioni» del ramo, a 1280 × 720
+   (revisione 37, L8: si è visto misurando il testo grande, ma c'era anche con il testo normale) */
+.mappa figcaption { margin-top: 0; line-height: 1.2; text-align: right; }
 
 /* il cartello d'atto (§4.5): due secondi, sopra il gioco, saltabile */
 .cartello-atto {
@@ -246,13 +254,14 @@
   align-items: center;
   justify-content: center;
   font-family: var(--mono);
-  font-size: max(12px, .72cqw);
+  font-size: calc(max(12px, .72cqw) * var(--grande, 1));
   letter-spacing: .34em;
   text-transform: uppercase;
   color: var(--rosso);
   background: linear-gradient(transparent, color-mix(in srgb, var(--rosso) 14%, transparent), transparent);
   pointer-events: none;
 }
+[data-testo="grande"] .velo-protezione { align-items: flex-start; padding-top: .1cqw; line-height: 1.15; }
 
 /* il bordo del visore, con la tuta: un vetro sottile che respira (§5) */
 .vetro {

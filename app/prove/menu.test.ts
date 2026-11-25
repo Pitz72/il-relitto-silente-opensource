@@ -4,7 +4,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { conFinale, FINALI, giorno, pulisci, rigaDelRegistro } from "../src/menu/registro.ts";
-import { daContinuare, dettaglioDi } from "../src/menu/continua.ts";
+import { automaticoDaPerdere, daContinuare, dettaglioDi } from "../src/menu/continua.ts";
 import { nomiDelleLibrerie, type Elenco } from "../src/riconoscimenti/elenco.ts";
 import { frazione, testoAvanzamento } from "../src/menu/avanzamento.ts";
 import { confronta, daMostrare, pezzi, righeDalleNote, type Novita } from "../src/menu/novita.ts";
@@ -58,6 +58,18 @@ test("Continua riprende dal salvataggio più recente che si legge e non è finit
   ]);
   assert.equal(scelto?.posto, "automatico");
   assert.equal(dettaglioDi(scelto!), "La stiva · atto I · turno 9");
+});
+
+test("«Nuova partita» chiede prima di scrivere sopra il salvataggio automatico di una partita non finita (revisione 37, L12)", () => {
+  assert.equal(automaticoDaPerdere(null), null);
+  assert.equal(automaticoDaPerdere([posto({ posto: "1", creato: "2026-10-15T10:00:00Z", riassunto: riassunto("in_corso") })]), null, "i salvataggi fatti a mano restano: niente da chiedere");
+  assert.equal(automaticoDaPerdere([posto({ posto: "automatico", presente: false })]), null);
+  assert.equal(automaticoDaPerdere([posto({ posto: "automatico", leggibile: false })]), null, "un file che non si legge non si può riprendere");
+  assert.equal(automaticoDaPerdere([posto({ posto: "automatico", riassunto: riassunto("vinta") })]), null, "una partita finita non ha niente da perdere");
+  const a = automaticoDaPerdere([posto({ posto: "2", riassunto: riassunto("in_corso") }), posto({ posto: "automatico", creato: "2026-10-15T11:00:00Z", riassunto: riassunto("in_corso", 9) })]);
+  assert.equal(a?.posto, "automatico");
+  assert.equal(dettaglioDi(a!), "La stiva · atto I · turno 9", "la domanda dice dov'era rimasta");
+  assert.equal(automaticoDaPerdere([posto({ posto: "automatico" })])?.posto, "automatico", "senza riassunto: nel dubbio si chiede");
 });
 
 test("nei titoli di coda le librerie sono nomi, una volta sola e in ordine", () => {

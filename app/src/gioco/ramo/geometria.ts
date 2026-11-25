@@ -181,32 +181,62 @@ export interface PostoPetalo extends Posto {
 
 /** I petali del fiore di una cosa, in due anelli sopra il filo alto. Il fiore
  *  sta sempre nella fascia fra la lamina e il filo alto: non copre mai il
- *  testo, e il gambo di una cosa del filo basso passa fra i baccelli. */
-export function disponiFiore(ancora: Posto, petali: Petalo[], W: number, forma: Forma): PostoPetalo[] {
+ *  testo, e il gambo di una cosa del filo basso passa fra i baccelli.
+ *  Un anello che non sta nella larghezza del palco si spezza in più file, una sopra l'altra, con le prime
+ *  voci in alto, invece di uscire a destra. `mezzoBaccello`, se c'è, è la mezza altezza dei baccelli in
+ *  pixel: dove il filo sale il petalo sale con lui, e non tocca i baccelli né la fila che ha sotto (a
+ *  1280 × 720 li toccava di due o tre pixel: lo hanno detto le misure di strumenti/misure/schermo.mjs). */
+export function disponiFiore(ancora: Posto, petali: Petalo[], W: number, forma: Forma, mezzoBaccello = 0): PostoPetalo[] {
   const u = W / 100;
   const sopra = quotaDelFilo("alto", ancora.x / W, forma) * u;
   const out: PostoPetalo[] = new Array(petali.length);
-  const anelli: (1 | 2)[] = petali.some((p) => p.anello === 2) && petali.some((p) => p.anello === 1) ? [1, 2] : [1];
-  for (const anello of anelli) {
-    const indici = petali.map((p, i) => [p, i] as const).filter(([p]) => (anelli.length === 1 ? true : p.anello === anello));
-    if (!indici.length) continue;
-    const tot = indici.reduce((a, [p]) => a + p.larghezza, 0) + (indici.length - 1) * MISURE.spazio * u;
+  const dueAnelli = petali.some((p) => p.anello === 2) && petali.some((p) => p.anello === 1);
+  const utile = W - 2 * MISURE.margine * u;
+  const spazio = MISURE.spazio * u;
+  type Voce = readonly [Petalo, number];
+  const larga = (f: Voce[]) => f.reduce((a, [p]) => a + p.larghezza, 0) + Math.max(0, f.length - 1) * spazio;
+  // le file, dal basso: prima quelle dell'anello vicino, poi quelle dell'anello fuori
+  const file: { voci: Voce[]; anello: 1 | 2 }[] = [];
+  for (const anello of (dueAnelli ? [1, 2] : [1]) as (1 | 2)[]) {
+    const suoi: Voce[] = petali.map((p, i) => [p, i] as const).filter(([p]) => !dueAnelli || p.anello === anello);
+    if (!suoi.length) continue;
+    // quante file servono, e quanto è larga ognuna se si dividono alla pari
+    const quante = Math.max(1, Math.ceil(larga(suoi) / utile));
+    const meta = larga(suoi) / quante;
+    const sue: Voce[][] = [[]];
+    for (const v of suoi) {
+      const f = sue[sue.length - 1];
+      if (f.length && (larga([...f, v]) > utile || (sue.length < quante && larga(f) + v[0].larghezza / 2 > meta))) sue.push([v]);
+      else f.push(v);
+    }
+    for (const f of sue.reverse()) file.push({ voci: f, anello: dueAnelli ? anello : 1 });
+  }
+  // il punto più alto del filo sotto un petalo e un poco oltre: lì stanno i baccelli che potrebbe toccare
+  const filoSotto = (da: number, a: number) =>
+    Math.min(...[0, 0.25, 0.5, 0.75, 1].map((t) => quotaDelFilo("alto", Math.max(0, Math.min(1, (da + (a - da) * t) / W)), forma))) * u;
+  // quanto occupano, sopra i baccelli, le file più in basso
+  let sotto = 0;
+  file.forEach((fila, k) => {
+    const tot = larga(fila.voci);
     const min = MISURE.margine * u;
     const max = W - MISURE.margine * u - tot;
     let x = Math.max(min, Math.min(max, ancora.x - tot / 2));
-    const quota = sopra - (anello === 1 ? MISURE.anello1 : MISURE.anello2) * u;
+    const distanza = k === 0 ? MISURE.anello1 : MISURE.anello2 + (k - 1) * (MISURE.anello2 - MISURE.anello1);
     // l'anello non scende sotto il fondo della lamina
-    const alto = Math.max(...indici.map(([p]) => p.altezza));
-    const y0 = Math.max(quota, MISURE.fondoLamina * u + alto / 2 + 0.3 * u);
-    for (const [p, i] of indici) {
+    const alto = Math.max(...fila.voci.map(([p]) => p.altezza));
+    const y0 = Math.max(sopra - distanza * u, MISURE.fondoLamina * u + alto / 2 + 0.3 * u);
+    for (const [p, i] of fila.voci) {
       const cx = x + p.larghezza / 2;
       // un arco basso: i petali al centro più in alto di quelli ai lati
       const rel = (cx - ancora.x) / (tot / 2 + u);
       const arco = 0.6 * u * (1 - Math.min(1, rel * rel));
-      out[i] = { x: cx, y: Math.max(MISURE.fondoLamina * u + p.altezza / 2 + 0.2 * u, y0 - arco), anello: anelli.length === 1 ? 1 : anello };
-      x += p.larghezza + MISURE.spazio * u;
+      let y = y0 - arco;
+      if (mezzoBaccello > 0) y = Math.min(y, filoSotto(x - 4 * u, x + p.larghezza + 4 * u) - mezzoBaccello - sotto - p.altezza / 2 - 0.15 * u);
+      out[i] = { x: cx, y: Math.max(MISURE.fondoLamina * u + p.altezza / 2 + 0.2 * u, y), anello: fila.anello };
+      x += p.larghezza + spazio;
     }
-  }
+    sotto += alto + 0.15 * u;
+  });
   return out;
 }
 

@@ -18,8 +18,12 @@
   container-type: size;
   /* il corpo del testo: 21 px a 1920, mai sotto 16 */
   --corpo: max(16px, 1.1cqw);
+  /* quanto crescono, con «Testo: grande», le scritte fuori dalla lamina (il dialogo, il visore, l'atto, «diario»
+     e «menu») e i corpi minimi delle scritte piccole (revisione 37, L8). Uno, se il testo è normale. I pulsanti
+     del ramo no: più grandi, troppe cose finivano dietro «+N» (l'autore, 25 novembre 2026) */
+  --grande: 1;
 }
-[data-testo="grande"] .palco { --corpo: max(19px, 1.32cqw); }
+[data-testo="grande"] .palco { --corpo: max(19px, 1.32cqw); --grande: 1.2; }
 
 /* l'esplorazione tiene insieme ciò che il dialogo e i pannelli nascondono al lettore di schermo: non è
    un riquadro. Resta nel flusso, alta zero, e i suoi figli (l'atto, «diario» e «menu», la lamina, il
@@ -38,7 +42,7 @@
   top: 1.7cqw;
   z-index: 3;
   font-style: italic;
-  font-size: max(13px, .95cqw);
+  font-size: calc(max(13px, .95cqw) * var(--grande, 1));
   color: var(--tenue);
   letter-spacing: .02em;
 }
@@ -46,7 +50,7 @@
   font-style: normal;
   font-family: var(--stencil);
   font-weight: 700;
-  font-size: max(13px, 1.05cqw);
+  font-size: calc(max(13px, 1.05cqw) * var(--grande, 1));
   letter-spacing: .24em;
   text-transform: uppercase;
 }
@@ -69,7 +73,7 @@
   min-height: 38px;
   padding: .2em .9em;
   font-family: var(--mono);
-  font-size: max(12px, .7cqw);
+  font-size: calc(max(12px, .7cqw) * var(--grande, 1));
   letter-spacing: .14em;
   color: var(--tenue);
   border: 1px solid transparent;
@@ -78,7 +82,7 @@
   transition: color .25s, border-color .25s;
 }
 .comandi-app button:hover { color: var(--testo); border-color: var(--bordo); }
-.comandi-app .tasto { margin-left: .5em; font-size: max(12px, .9em); opacity: .8; }
+.comandi-app .tasto { margin-left: .5em; font-size: max(calc(12px * var(--grande, 1)), .9em); opacity: .8; }
 .gioco[data-forma="acciaio"] .comandi-app button { border-radius: .2em; text-transform: uppercase; }
 
 .avvio {

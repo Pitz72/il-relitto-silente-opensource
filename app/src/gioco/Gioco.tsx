@@ -766,6 +766,7 @@ export default function Gioco({ prova, inizio = { tipo: "nuova" }, alMenu, alFin
               azione={azione}
               altri={altri}
               canaliChiusi={clima?.protezione}
+              scrittura={opzioni.carattere}
               apriAltri={(filo, gruppo) => {
                 setSelezione(NESSUNA);
                 setAltri({ filo, gruppo });

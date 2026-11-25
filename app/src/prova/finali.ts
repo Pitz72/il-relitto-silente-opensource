@@ -57,6 +57,11 @@ export interface Rapporto {
 const RIFERIMENTI = riferimenti as Record<string, Riferimento>;
 const aspetta = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const sonda = () => (window as unknown as { __sondaGioco?: Sonda }).__sondaGioco ?? null;
+/** Un gancio per le misure (strumenti/misure/schermo.js): se la pagina ne ha messo uno, la prova lo chiama a ogni
+ *  schermata ferma, prima di toccare: al turno nuovo («turno») e con il fiore aperto («bersaglio»). */
+const gancio = async (quando: "turno" | "bersaglio") => {
+  await (window as unknown as { __aOgniPasso?: (quando: string) => unknown }).__aOgniPasso?.(quando);
+};
 
 /** Aspetta che `f` dia qualcosa (o fallisce dopo `ms`, dicendo che cosa aspettava). */
 async function finche<T>(f: () => T | null | undefined | false, che: string, ms = 20000): Promise<T> {
@@ -141,6 +146,7 @@ async function gioca(c: string): Promise<string> {
   const prima = s.passi;
   const fatto = () => (sonda()?.passi ?? 0) > prima;
   const m = s.modello!;
+  await gancio("turno");
   const p = piano(m, c);
   if (!p) throw new Error(`«${c}» non è in nessun menu di questo turno (fase ${m.fase})`);
   let modo: string = p.via;
@@ -153,6 +159,7 @@ async function gioca(c: string): Promise<string> {
   }
   // il congedo dell'Anziano chiede conferma all'app: il seme, poi «Chiudi gli occhi»
   const bersaglio = await finche(() => conComando(c), `il pulsante di «${c}» (${modo})`, 3000);
+  if (modo !== "diretto") await gancio("bersaglio");
   await tocca(bersaglio, c);
   await finche(() => fatto() || pulsante(".pannello.conferma [data-risposta='si']:not([data-comando])"), `la risposta a «${c}»`, 8000);
   if (!fatto()) {

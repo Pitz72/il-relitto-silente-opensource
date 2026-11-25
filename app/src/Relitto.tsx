@@ -42,7 +42,7 @@ import type { Inizio } from "./gioco/Gioco";
 import { Avviso, Conferma, PannelloOpzioni, Salvataggi, useAvviso, type Domanda } from "./gioco/pannelli/Pannelli";
 import Menu, { type VoceMenu } from "./menu/Menu";
 import RegistroFinali from "./menu/RegistroFinali";
-import { daContinuare, dettaglioDi } from "./menu/continua";
+import { automaticoDaPerdere, daContinuare, dettaglioDi } from "./menu/continua";
 import { conFinale, type VoceRegistro } from "./menu/registro";
 import { leggiRegistro, scriviRegistro } from "./menu/registroSuDisco";
 import "./stile/base.css";
@@ -395,8 +395,19 @@ export default function Relitto({ prova }: { prova?: "finali" } = {}) {
         setLoghiPrima(true);
         setSchermata({ tipo: "intro" });
       };
+      // la partita di prima sta soltanto nel posto automatico, e la nuova ci scriverà sopra al primo cambio di
+      // stanza: prima lo si dice, con il rimedio (revisione 37, L12)
+      const automatico = DEMO ? null : automaticoDaPerdere(posti);
       if (inCorso)
         setDomanda({ testo: "Cominciare una partita nuova?", sotto: "La partita in corso si perde, se non l’hai salvata.", si: "Comincia", no: "Lascia stare", allora: via });
+      else if (automatico)
+        setDomanda({
+          testo: "Cominciare una partita nuova?",
+          sotto: `La partita di prima è salvata nel posto automatico (${dettaglioDi(automatico)}), e una partita nuova ci scrive sopra al primo cambio di stanza. Per tenerla: «Lascia stare», poi «Carica», e salvala in uno dei sei posti.`,
+          si: "Comincia",
+          no: "Lascia stare",
+          allora: via,
+        });
       else via();
     },
   });
