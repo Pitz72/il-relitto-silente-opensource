@@ -18,9 +18,9 @@ name: Prove
 on:
   push:
     branches: [main]
-    paths: ["**", "!**/*.md", "!progettazione/**", "!grafica/**", "!old_version/**", "!consegne/**", "CHANGELOG.md"]
+    paths: ["**", "!**/*.md", "!progettazione/**", "!grafica/**", "!consegne/**", "CHANGELOG.md"]
   pull_request:
-    paths: ["**", "!**/*.md", "!progettazione/**", "!grafica/**", "!old_version/**", "!consegne/**", "CHANGELOG.md"]
+    paths: ["**", "!**/*.md", "!progettazione/**", "!grafica/**", "!consegne/**", "CHANGELOG.md"]
   workflow_dispatch:
   workflow_call:
 

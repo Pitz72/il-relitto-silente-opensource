@@ -20,6 +20,10 @@ documenti di `progettazione/`.
 
 - `strumenti/misure/schermo.mjs` (con `schermo.js`): le misure dello schermo di gioco in Edge senza finestra, alla misura che si vuole e con il testo grande o normale. La prova dei finali gioca da sola e a ogni schermata ferma (821 in sei finali) si guarda che cosa esce dalla finestra, quali pulsanti si toccano, se le parole del dialogo stanno nel loro spazio, le scritte del riquadro a destra; `--foto` fotografa le schermate che contano. `app/src/prova/finali.ts` chiama `window.__aOgniPasso`, se la pagina ne ha messo uno.
 
+### Rimosso
+
+- **La cartella `old_version/`**, il gioco originale (Electron e React), esce dal ramo principale (l’autore, 25 novembre 2026: «togli la cartella del vecchio gioco»). Resta nella storia del repository, con i suoi tag `v1.2.6`, `v1.5.1`, `v1.5.3` e `old-version-final`; `README.md`, `LICENZE.md`, `sviluppo/` e il filtro di `prove.yml` dicono dove trovarlo. Con lei se ne vanno anche gli avvisi di GitHub sulle sue librerie di sviluppo (114 su 115).
+
 ### Corretto
 
 - **Revisione 37, L8** (deciso dall’autore il 25 novembre 2026): «Testo: grande» vale anche per il dialogo, il visore, l’atto, «diario» e «menu», con un fattore solo (`--grande`, in `gioco.css`), e i corpi minimi delle scritte piccole della lamina crescono con il testo. **Non i pulsanti del ramo**: provati più grandi e misurati, a 1280 × 720 le schermate con qualcosa dietro «+N» passavano da 53 a 72 su cento, e l’autore li ha voluti com’erano («ingrandire il testo dei pulsanti incasina troppo»). Al loro posto, sempre con il testo grande e soltanto con quello («Solo testo grande»), il baccello o il petalo sotto il mouse (o con il fuoco della tastiera) si ingrandisce di un terzo con una trasformazione, che la disposizione del ramo non vede; vicino al bordo dello schermo cresce verso l’interno (`origineIngrandimento()` in `geometria.ts`).

@@ -24,7 +24,7 @@ insieme al motore che la fa girare.
 
 Non sono stati importati Favella Studio (l’IDE di Favella1), il sito e il branding del repo.
 
-Nella radice: `README.md` (la facciata pubblica), `LICENSE` (MIT) e `LICENZE.md` (la divisione delle licenze: MIT per il codice, CC BY-NC-SA 4.0 per storia, testi, immagini e musica), `versione.json` (la versione del gioco, unica fonte), `CHANGELOG.md` (il registro delle modifiche) e `old_version/` (il gioco originale, con la sua storia e i suoi tag).
+Nella radice: `README.md` (la facciata pubblica), `LICENSE` (MIT) e `LICENZE.md` (la divisione delle licenze: MIT per il codice, CC BY-NC-SA 4.0 per storia, testi, immagini e musica), `versione.json` (la versione del gioco, unica fonte), `CHANGELOG.md` (il registro delle modifiche). Il gioco originale è stato in `old_version/` fino al 25 novembre 2026: ora sta nella storia, con i suoi tag (`git checkout old-version-final`).
 
 La copia in `motore/esempi/demo/relitto-silente/` è identica a `relitto-silente/` al momento
 dell’importazione: resta lì come riferimento intatto dell’originale, mentre il remake si fa

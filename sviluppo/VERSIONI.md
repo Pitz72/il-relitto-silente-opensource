@@ -52,7 +52,8 @@ usare le pre-release (0.3.0-alpha.1). Il numero non promette niente a nessuno fi
 
 ### 2.1 Il remake è un programma a sé (decisione dell’autore, 16 ottobre 2026)
 
-Il repository GitHub ospita anche il vecchio gioco (`old_version/`, Electron e React), che ha le sue
+Il repository GitHub ospita anche il vecchio gioco (Electron e React: fino al 25 novembre 2026 nella cartella
+`old_version/`, ora nella storia e nei suoi tag), che ha le sue
 release: `v1.2.6`, `v1.5.1` e `v1.5.3`. **Il remake non ne è l’evoluzione: è un altro programma, con un altro
 sviluppo, e comincia la sua numerazione da capo**: il primo rilascio pubblico è la **1.0.0**, come scritto sopra.
 Ne vengono tre conseguenze:

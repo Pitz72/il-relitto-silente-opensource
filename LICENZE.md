@@ -20,7 +20,6 @@ Per citare l’autore: «© 2026 Simone Pizzi — Il Relitto Silente», con un l
 - `app/src/`, `app/src-tauri/` (esclusa la musica e le immagini che l’app porta con sé), `app/scripts/`, `app/prove/`
 - `strumenti/`, `collaudo/`, `sviluppo/` (gli strumenti, le prove e le regole di lavoro)
 - `motore/`: il motore Favella1, copiato dal repository [Pitz72/FAVELLA1](https://github.com/Pitz72/FAVELLA1), con la sua licenza MIT (`motore/LICENSE`)
-- il codice di `old_version/` (la versione originale, in Electron e React)
 
 Le stringhe dell’interfaccia stanno nel codice e seguono il codice.
 
@@ -30,7 +29,6 @@ Le stringhe dell’interfaccia stanno nel codice e seguono il codice.
 - `progettazione/` e `grafica/`: i documenti di progetto
 - `app/public/`: le immagini
 - `audio/musica-ia/`: la musica e le voci generate, **tranne** quello che è scritto qui sotto in «Che cosa non è coperto»
-- i testi e i contenuti di `old_version/`
 
 ## Che cosa non è coperto
 
@@ -51,7 +49,7 @@ L’autore concede in licenza il contenuto generato **per quanto di sua spettanz
 
 ## Il vecchio gioco
 
-`old_version/` è il gioco originale, con tutta la sua storia (tag `v1.2.6`, `v1.5.1`, `v1.5.3`, `old-version-final`). **Non aveva una licenza**: la scelta di questo file vale dal commit che la introduce in avanti, e si applica allo stesso modo al vecchio gioco.
+Il gioco originale (Electron e React) è stato nella cartella `old_version/` fino al 25 novembre 2026; da allora non sta più nel ramo principale, e resta nella storia del repository con i suoi tag (`v1.2.6`, `v1.5.1`, `v1.5.3`, `old-version-final`). **Non aveva una licenza**: la scelta di questo file vale per il suo codice (MIT) e per i suoi testi e contenuti (CC BY-NC-SA 4.0) dal commit che la introduce in avanti, come quando stava in `old_version/`.
 
 ## Il testo completo della licenza dei contenuti
 

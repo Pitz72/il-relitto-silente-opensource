@@ -13,7 +13,7 @@ Questo è il **remake desktop** del gioco: la storia è scritta in [Favella1](ht
 | | Che cos’è | Dove sta | Numeri di versione |
 |---|---|---|---|
 | **Il remake** | Il gioco di oggi: Favella1 dentro un’app Tauri, con musica e suoni nuovi | questa cartella | 0.x in sviluppo, poi 1.0.0 |
-| **La versione originale** | Il primo Relitto Silente (Electron e React), tutto com’era | [`old_version/`](old_version/), con la sua storia e i suoi tag | 1.x (`v1.2.6`, `v1.5.1`, `v1.5.3`) |
+| **La versione originale** | Il primo Relitto Silente (Electron e React), tutto com’era nella storia del repository, con i suoi tag (non più nel ramo principale dal 25 novembre 2026) | 1.x (`v1.2.6`, `v1.5.1`, `v1.5.3`) |
 
 Sono due programmi diversi, con due sviluppi diversi: **la numerazione del remake comincia da capo**. Il vecchio gioco si recupera sempre: `git checkout v1.5.3`, oppure il tag `old-version-final`.
 
