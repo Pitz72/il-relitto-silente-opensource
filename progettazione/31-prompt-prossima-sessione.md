@@ -2,7 +2,8 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 25 novembre 2026, più tardi: le sue cinque risposte e quello che ne è seguito (in «Dove siamo», la prima voce); **sessione sospesa a metà su sua richiesta, per passare a un altro modello**: si riparte da lì.
+Aggiornato l’ultima volta il 25 novembre 2026, in mattinata (con Opus 5.5: Fable l’ha lasciato lui, per la quota): le sue cinque risposte fatte, il nuovo logo di Runtime Multimedia, la cartella del gioco vecchio fuori dal ramo principale, e **la beta 17 pubblicata** su suo ordine (in «Dove siamo», le prime voci). Alla prossima: le sue note sulle beta 16 e 17, poi quello che sceglie dal resoconto che gli ho dato (la sessione dei brani e dei suoni, le quattro frasi della storia, la revisione estetica…).
+Prima, lo stesso giorno, più tardi: le sue cinque risposte e quello che ne è seguito; la sessione sospesa a metà su sua richiesta, per passare a un altro modello.
 Prima, lo stesso giorno: sette frasi piccole della storia applicate con il suo sì, la prima persona dappertutto («questo è assoluto, non si torna indietro»), e **la beta 16 pubblicata** su suo ordine. Alla prossima: le sue note sulla beta 16, le sue cinque risposte (in «Dove siamo»), le quattro frasi ancora da studiare.
 Prima, il 24 novembre 2026: il punto della situazione, la scansione lunga con il computer di bordo in mezzo a William, e la revisione 37 (le medie e le lievi che non toccano la storia). Le tre medie della storia (M22, M23, M24) sono applicate con il suo sì.
 Prima, il 16 novembre 2026, nel pomeriggio: la revisione della cinematica e le sue correzioni (documento 09, §19–20), dodici prese nuove di Leonardo, la beta 15 pubblicata.
@@ -96,6 +97,25 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 
 ## Dove siamo (25 novembre 2026)
 
+- **La beta 0.2.5-beta.17 è pubblicata** (25 novembre, canale di prova; su suo ordine: «Salva tutto, versiona, committa,
+  pusha, verifica sync locale e git, togli la cartella del vecchio gioco e rilascia beta nuova»). Porta il testo grande
+  su dialoghi e riquadro a destra, il pulsante che si ingrandisce sotto il mouse, la conferma su «Nuova partita»,
+  «Held by the Dark» alla Grande Porta, la musica dell’atto IV che sfuma alle postazioni, il nuovo logo. Prima di
+  uscire l’eseguibile ha giocato i sei finali con i titoli di coda e la prova dei salvataggi; su GitHub tutto verde.
+  Le prove che ha guardato lui, nell’eseguibile costruito sul computer: i due brani (la Grande Porta «Ok», il menu no),
+  l’ingrandimento (dalle fotografie), il logo («Approvo»). **Le beta 16 e 17 non le ha ancora giocate.**
+- **Il logo di Runtime Multimedia è il suo filmato** (25 novembre: «al posto dell’animazione svg di Runtime
+  Multimedia, possiamo mettere questa»; dopo la prova, «Approvo»): `app/public/loghi/`, WebM muto e il suono a parte
+  nella partitura dei loghi (`Loghi.tsx`, `suono.ts`). La sorgente è in `J:\PODCAST\ASSETS\LOGO 2025\RUNTIME
+  MULTIMEDIA\intro_cinematografica\render\` (quattro versioni; si usa la 21:9 a 1080p). Il logo animato di prima resta
+  come ripiego, se il filmato non si legge.
+- **La cartella `old_version/` non c’è più nel ramo principale** (25 novembre, su sua richiesta): il gioco originale sta
+  nella storia, con i tag `v1.2.6`, `v1.5.1`, `v1.5.3`, `old-version-final` (il tag punta al gioco quando stava nella
+  radice). Con lei sono spariti 114 dei 115 avvisi di GitHub; resta `glib` 0.18.5, che arriva da Tauri (solo Linux).
+- **Il resoconto di quello che resta**, dato a lui il 25 novembre (le sue note sulle beta; le quattro frasi della storia;
+  la voce di William, 138 battute su 616; la sessione dei brani e dei suoni; la revisione estetica dell’interfaccia;
+  l’intro; il finale; il sito e i media; Linux, la partita a mano, la firma per Windows, la licenza, la 1.0; l’inglese):
+  è l’ordine del lavoro qui sotto, punto per punto.
 - **Le sue cinque risposte** (25 novembre, dopo la beta 16), e dove siamo rimasti:
   1. «Testo: grande»: «ok», poi, vista la prova: «ingrandire il testo è giusto ma ingrandire il testo dei pulsanti
      incasina troppo secondo me. Forse dovremmo trovare un’altra soluzione per l’accessibilità?». **Fatto**: crescono
@@ -117,9 +137,7 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
      note della mappa: corretto, alle postazioni sfuma. Le sue parole: «questa cosa dei brani e dei suoni
      richiederà una sessione specifica» (vedi «L’ordine del lavoro», punto 5).
   5. GitHub: «certo». **Fatto**: i tre controlli sono accesi, la descrizione dice «Favella1», nessun avviso aperto.
-- **Che cosa non è stato fatto, di questa sessione**: le prove di GitHub sul commit di questo lavoro vanno guardate
-  (`gh run list --limit 3`); l’eseguibile non è stato ricostruito né provato (va fatto prima di una beta, come
-  sempre); nessuna persona ha guardato il testo grande nel gioco. **Niente beta**: non l’ha chiesta.
+- ~~Che cosa non è stato fatto, di questa sessione~~: fatto tutto con la beta 17 (qui sopra).
 - **Per misurare lo schermo**: `node strumenti/misure/schermo.mjs 1280 720 --grande --foto <cartella>`, con il server
   di sviluppo acceso. Attenzione: se un foglio di stile cambia con `git checkout`, il server può servire la copia
   vecchia; riavviarlo. Il riquadro del browser dentro l’app, quando è nascosto, fa andare la pagina al rallentatore:
