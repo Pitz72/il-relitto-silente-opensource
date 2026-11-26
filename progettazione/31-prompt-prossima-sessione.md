@@ -2,7 +2,8 @@
 
 Sostituisce il 28. Scritto il 27 ottobre 2026, nel pomeriggio, quando l’autore ha chiuso la sessione:
 «per ora ci fermiamo un momento qui. Poi dalle prossime volte dovremmo riprendere con maggiore ordine».
-Aggiornato l’ultima volta il 25 novembre 2026, in mattinata (con Opus 5.5: Fable l’ha lasciato lui, per la quota): le sue cinque risposte fatte, il nuovo logo di Runtime Multimedia, la cartella del gioco vecchio fuori dal ramo principale, e **la beta 17 pubblicata** su suo ordine (in «Dove siamo», le prime voci). Alla prossima: le sue note sulle beta 16 e 17, poi quello che sceglie dal resoconto che gli ho dato (la sessione dei brani e dei suoni, le quattro frasi della storia, la revisione estetica…).
+Aggiornato l’ultima volta il 26 novembre 2026, a notte: trenta prese di Leonardo, le voci della nave alzate, l’avviso di GitHub studiato; chiusura su sua richiesta («quando le prove sono finite per ora allinea e salva tutto e poi nelle prossime sessioni ci occuperemo di eventuali problemi residui. Per ora, da me è tutto»). Tutto su GitHub, prove verdi, niente di rilasciato. Alla prossima: i **problemi residui** (in «Dove siamo», la prima voce).
+Prima, il 25 novembre 2026, in mattinata (con Opus 5.5: Fable l’ha lasciato lui, per la quota): le sue cinque risposte fatte, il nuovo logo di Runtime Multimedia, la cartella del gioco vecchio fuori dal ramo principale, e **la beta 17 pubblicata** su suo ordine (in «Dove siamo», le prime voci). Alla prossima: le sue note sulle beta 16 e 17, poi quello che sceglie dal resoconto che gli ho dato (la sessione dei brani e dei suoni, le quattro frasi della storia, la revisione estetica…).
 Prima, lo stesso giorno, più tardi: le sue cinque risposte e quello che ne è seguito; la sessione sospesa a metà su sua richiesta, per passare a un altro modello.
 Prima, lo stesso giorno: sette frasi piccole della storia applicate con il suo sì, la prima persona dappertutto («questo è assoluto, non si torna indietro»), e **la beta 16 pubblicata** su suo ordine. Alla prossima: le sue note sulla beta 16, le sue cinque risposte (in «Dove siamo»), le quattro frasi ancora da studiare.
 Prima, il 24 novembre 2026: il punto della situazione, la scansione lunga con il computer di bordo in mezzo a William, e la revisione 37 (le medie e le lievi che non toccano la storia). Le tre medie della storia (M22, M23, M24) sono applicate con il suo sì.
@@ -97,6 +98,19 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
 
 ## Dove siamo (26 novembre 2026)
 
+- **I residui, alla chiusura del 26 novembre:**
+  1. Mandare a Leonardo il copione e il rapporto del 26 (in `Downloads`); `CO-004` e `IN-083` da rifare.
+  2. Una beta quando la chiede: porta le 48 prese nuove del 25 e del 26, le voci della nave in mezzo a William e più
+     alte. **Le beta 16 e 17 non le ha ancora giocate**: le sue note.
+  3. L’avviso di GitHub su `glib` 0.18.5 (GHSA-wrw7-89jp-8q8g), studiato il 26 su sua richiesta: Windows non la
+     include; su Linux arriva con Tauri, e la parte difettosa (`VariantStrIter`) non la chiama nessuna delle 355
+     librerie né il nostro codice (controllo sui sorgenti). Oggi non si può aggiornare. La correzione è accolta in
+     Tauri il 25 novembre (richiesta 16170) per la **2.13.0**, non ancora uscita: quando esce, aggiornare, portare
+     `rust-version` a 1.92, controllare la versione Linux. Niente archiviazione né toppe. `cargo audit` segnala
+     anche `chrono`, `proc-macro-error` (abbandonate) e `rustix` (un difetto di memoria): non esaminati.
+  4. Il resto è nel resoconto del 25 e nell’«Ordine del lavoro».
+- Fuori dal gioco, il 25: l’articolo «Un quarto di William» pubblicato su thesantamaria.it e quello lungo su
+  simonepizzi.runtimeradio.it programmato per il 26 alle 9.
 - **Trenta prese nuove di Leonardo nel gioco** (26 novembre): `IN-069`…`IN-084` e `CO-001a`…`CO-010b`; ora 186 su
   616 (30,2 %), atto I e atto II completi. Le voci della nave in mezzo a una presa (il coro delle gole) parlano al
   loro posto e, ascoltate da lui la sera del 26, sono alzate di 4 dB (approvato). **Da rifare** (decisi da lui) `CO-004` («punto» per «posto») e `IN-083` (manca un «mi»), evidenziate
