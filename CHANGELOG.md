@@ -13,6 +13,7 @@ documenti di `progettazione/`.
 - **William racconta anche la camera di compensazione e il vestibolo delle gole** (Leonardo Tomassetti), con 18 battute nuove: il pannello e la porta interna, il primo brusio nella cuffia, le venature spente, il risuonatore.
 - **William racconta tutto l’ingresso nel relitto e arriva nel corridoio principale**, con altre 30 battute: il risuonatore staccato, il coro delle gole, la gola di mezzo con la voce che legge un elenco, il grande corridoio e le tacche sulla parete.
 - **Quando in mezzo al suo racconto parlano le voci della nave o la tuta, parlano al posto giusto**: William si ferma, le lascia dire, e riprende.
+- **Le voci della nave si sentono un po’ di più**: restano lontane, nella cuffia, ma non si perdono più fra una frase di William e l’altra.
 
 ### Aggiunto
 

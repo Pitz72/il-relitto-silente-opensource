@@ -151,8 +151,13 @@ servizio (`VociNave::finite_turno`, `Racconto::soglia_nave`). Non si contano que
 giro dell’anello del Piccolo. `IN-084`, con la tuta in mezzo («CHIUSURA RIFIUTATA. CANALE APERTO DA REMOTO.»), ha un
 taglio a 37,96 s. In `IN-077` la tuta parla prima, e William aspetta le sue due parti. Prove:
 `william_racconta_fra_le_voci_della_nave` in Rust, la tabella in node, la scena giocata dal ponte in `eventi.py`.
-L’ascolto reso dal motore, con l’ordine riletto con Whisper: `consegne/Ascolto voci in mezzo a William 2026-11-26/`
-(l’autore non l’ha ancora sentito).
+L’ascolto reso dal motore, con l’ordine riletto con Whisper: `consegne/Ascolto voci in mezzo a William 2026-11-26/`.
+
+**Ascoltato dall’autore il 26 novembre 2026.** Il coro è «allineata correttamente», ma «forse le voci non william
+sono leggermente piu basse di william»; nella voce dei nomi la tuta «va bene». Le voci della nave stavano circa 16 dB
+sotto di lui (−29 LUFS contro −13/−15). `LIV_VOCI_NAVE` passa da 0,75 a 3: dopo il compressore della cuffia sono
+4 dB in più (−25 LUFS), e vale per tutte le voci della nave nel gioco. La scena rifatta
+(`3 - il coro delle gole, voci della nave alzate.mp3`) è **approvata**: «Va bene, salva».
 
 **Centocinquantasei, dal 25 novembre 2026.** La consegna del 25 novembre (`TransferNow-20261125h0HV5Tvc.zip`, 18 file,
 48 kHz, 24 bit, mono, nessun campione pieno, nessun silenzio lungo né rilettura, nessuna coda muta): `IN-047`…`IN-068`,

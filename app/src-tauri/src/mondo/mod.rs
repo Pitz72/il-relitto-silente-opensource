@@ -1347,8 +1347,11 @@ const LIV_GEMITO: f32 = -18.0;
 const LIV_FILO: f32 = -12.0;
 /// Le voci della nave nella cuffia (lineare), sopra il livello delle parole a cui il lettore porta
 /// ogni battuta: tarato perché escano dove usciva il filo (la mediana delle parole a −31 dBFS,
-/// documento 35, §8): −2,5 dB, perché il compressore della cuffia ne toglie una parte
-const LIV_VOCI_NAVE: f32 = 0.75;
+/// documento 35, §8): −2,5 dB, perché il compressore della cuffia ne toglie una parte. Con William che racconta
+/// intorno a loro restavano indietro: l'autore, il 26 novembre 2026, «forse le voci non william sono leggermente
+/// piu basse di william»; alzate di 4 dB sentiti (il valore da 0,75 a 3; il resto
+/// lo toglie il compressore). Restano più lontane di lui
+const LIV_VOCI_NAVE: f32 = 3.0;
 /// Yusuf sopra il livello delle parole a cui il lettore porta ogni battuta (−27 dBFS): +9 dB, le parole a circa
 /// −18 dBFS, come William. Era +6 (documento 35, §8): con William fra le sue frasi (documento 41, §5) l'autore, il
 /// 17 novembre 2026: «la voce di Yusuf è lievemente più bassa rispetto a quella di Leo» (la radio ha la banda stretta:
