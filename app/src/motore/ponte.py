@@ -1128,14 +1128,21 @@ def _asciutta(nome):
     return nome is not None and nome.startswith(("YU-", "LV-"))
 
 
+def _in_fila_con_la_nave(nome):
+    """Una voce che il motore mette in fila con le voci della nave (le echi, le registrazioni, la voce di servizio).
+    Il giro dell'anello del Piccolo no: lo fa l'anello, fuori dalla fila."""
+    return nome is not None and nome.startswith(("NV-", "SV-")) and not nome.startswith("NV-08")
+
+
 def _racconto(eventi, anziano=False):
     """Le prese di William del turno, divise in due: quelle che vengono prima di ogni altra voce, e quelle che vengono
     dopo (un personaggio parla, e William racconta dopo di lui). L'ordine è quello del testo, come nel Viaggiatore.
     Per ogni presa «poi», quante voci asciutte (Yusuf, L.V.) vengono prima di lei: il motore la fa entrare dopo
     quella, e la voce che segue aspetta lei (le battute di Yusuf con il racconto in mezzo, documento 41, §5). E
-    quante parti della voce di servizio: il computer di bordo e la tuta parlano in mezzo al racconto, dove sta il
-    loro testo (la scansione lunga; l'autore, 24 novembre 2026: «va sistemato»)."""
-    prima, poi, dopo_voci, dopo_servizio, altri, asciutte, servizio = [], [], [], [], False, 0, 0
+    quante battute della nave e di servizio: il computer di bordo, la tuta e le voci della nave parlano in mezzo al
+    racconto, dove sta il loro testo (la scansione lunga; l'autore, 24 novembre 2026: «va sistemato»; il coro delle
+    gole, 26 novembre)."""
+    prima, poi, dopo_voci, dopo_nave, altri, asciutte, nave = [], [], [], [], False, 0, 0
     for e in eventi:
         if e.get("tipo") == "errore" or not isinstance(e.get("testo"), str):
             continue
@@ -1147,22 +1154,22 @@ def _racconto(eventi, anziano=False):
             if chi == "voce":
                 altri = True
                 asciutte += _asciutta(nome)
-                servizio += nome is not None and nome.startswith("SV-")
+                nave += _in_fila_con_la_nave(nome)
             elif altri:
                 poi.append(nome)
                 dopo_voci.append(asciutte)
-                dopo_servizio.append(servizio)
+                dopo_nave.append(nave)
             else:
                 prima.append(nome)
-    return prima, poi, dopo_voci, dopo_servizio
+    return prima, poi, dopo_voci, dopo_nave
 
 
 def _evento_racconto(eventi, anziano=False):
     """L'evento «racconto» del turno, o niente se William non ha prese sue."""
-    prima, poi, dopo_voci, dopo_servizio = _racconto(eventi, anziano)
+    prima, poi, dopo_voci, dopo_nave = _racconto(eventi, anziano)
     if not (prima or poi):
         return []
-    return [{"evento": "racconto", "prese": prima, "poi": poi, "dopo_voci": dopo_voci, "dopo_servizio": dopo_servizio}]
+    return [{"evento": "racconto", "prese": prima, "poi": poi, "dopo_voci": dopo_voci, "dopo_nave": dopo_nave}]
 
 
 def _parole_dette(testo):

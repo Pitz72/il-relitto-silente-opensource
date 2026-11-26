@@ -11,10 +11,18 @@ documenti di `progettazione/`.
 ### Per chi gioca
 
 - **William racconta anche la camera di compensazione e il vestibolo delle gole** (Leonardo Tomassetti), con 18 battute nuove: il pannello e la porta interna, il primo brusio nella cuffia, le venature spente, il risuonatore.
+- **William racconta tutto l’ingresso nel relitto e arriva nel corridoio principale**, con altre 30 battute: il risuonatore staccato, il coro delle gole, la gola di mezzo con la voce che legge un elenco, il grande corridoio e le tacche sulla parete.
+- **Quando in mezzo al suo racconto parlano le voci della nave o la tuta, parlano al posto giusto**: William si ferma, le lascia dire, e riprende.
 
 ### Aggiunto
 
+- La consegna di Leonardo del 26 novembre 2026: `IN-069`…`IN-084` e `CO-001a`…`CO-010b` (30 prese). Le prese nel gioco sono 186 su 616, con atto I e atto II completi; `CO-004` e `IN-083` sono da rifare (nel gioco restano quelle arrivate). Il copione per Leonardo (432 prese da registrare, le due da rifare con l’errore in evidenza) e il rapporto sono rifatti (documento 41, §5).
 - La consegna di Leonardo del 25 novembre 2026: `IN-047`…`IN-068` (18 prese), controllate con Whisper e preparate da `strumenti/audio/voce_william.py`. Le prese nel gioco sono 156 su 616; il copione per Leonardo (460 prese da registrare) e il rapporto sono rifatti (documento 41, §5).
+
+### Corretto
+
+- **Le voci della nave in mezzo a una presa di William** (documento 41, §5): quello che dal 24 novembre valeva per la voce di servizio vale per tutta la fila della nave. `IN-079` si divide in tre parti e `IN-084` in due (`TAGLI` in `voce_william.py`); l’evento «racconto» porta `dopo_nave` al posto di `dopo_servizio`, e `VociNave` conta le battute del turno finite, della nave e di servizio, senza quelle rimaste dal turno di prima né il giro dell’anello del Piccolo. Una presa che nel testo sta dopo due voci della nave non può più entrare nella pausa fra le due.
+- Il copione per Leonardo portava la data del 19 novembre: ora ha quella del giorno in cui si rifà.
 
 ## [0.2.5-beta.17] - 2026-11-25
 

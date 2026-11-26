@@ -28,8 +28,8 @@ USCITA = os.path.join(cp.CARTELLA, "resoconti", f"Il Relitto Silente - A che pun
 # passata alla voce della tuta, e le frasi di William che la contenevano sono state riscritte senza.
 CAMBIATE = "le frasi che contenevano la cifra dell’aria"
 # Le note sulle consegne dell'ultima volta: che cosa abbiamo sistemato noi, perché Leonardo lo sappia.
-NOTE = {"IN-013": "Arrivata giusta, con «dalla grana». In fondo al file avevi riletto la prima frase: l’ho tolta io, "
-                  "la presa resta intera."}
+NOTE = {"IN-079 e IN-084": "Hai lasciato le pause giuste dove parlano le altre voci: nel gioco ci entrano in mezzo. "
+                           "Continua così, un secondo e mezzo o poco più va benissimo."}
 
 
 def numero(x, decimali=1):

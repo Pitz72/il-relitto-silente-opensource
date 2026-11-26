@@ -6,6 +6,7 @@
 #
 # Ne esce doppiaggio/william/Il Relitto Silente - Il copione di William.pdf (A4, con l'indice e i segnalibri).
 # I caratteri sono quelli di Windows (Georgia per il testo da leggere, Segoe UI per le indicazioni).
+import datetime
 import json
 import os
 import re
@@ -28,13 +29,29 @@ RADICE = os.path.normpath(os.path.join(QUI, "..", ".."))
 CARTELLA = os.path.join(RADICE, "doppiaggio", "william")
 USCITA = os.path.join(CARTELLA, "Il Relitto Silente - Il copione di William.pdf")
 VERSIONE = json.load(open(os.path.join(RADICE, "versione.json"), encoding="utf-8"))["gioco"]
-DATA = "19 novembre 2026"
+# la data dell'edizione è quella del giorno in cui il PDF si rifà
+MESI = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre",
+        "novembre", "dicembre"]
+_OGGI = datetime.date.today()
+DATA = f"{_OGGI.day} {MESI[_OGGI.month - 1]} {_OGGI.year}"
 # Le prese già consegnate e nel gioco (strumenti/audio/voce_william.py): non si stampano più. L'autore, 19 novembre
 # 2026: «togli le cose che ha già doppiato».
 FATTE = set(json.load(open(os.path.join(RADICE, "audio", "musica-ia", "WI", "prese.json"), encoding="utf-8")))
 # Le prese consegnate da rifare: restano nel gioco finché non arriva quella nuova, e tornano nel copione con la nota.
 # IN-013 (l'autore, 20 novembre 2026: «se deve essere dalla, deve essere dalla») è arrivata rifatta il 21 novembre.
-DA_RIFARE = {}
+# CO-004 e IN-083: ascoltate dall'autore il 26 novembre 2026, «Sì, da rifare».
+DA_RIFARE = {
+    "CO-004": "si sente «segnare un punto già visto»: è «segnare un posto già visto».",
+    "IN-083": "manca un «mi»: è «come se mi indicasse la strada».",
+}
+# Dove sta l'errore, perché si veda a colpo d'occhio (l'autore, 26 novembre 2026: «evidenziagli dove ha sbagliato, nel
+# nuovo copione. Che gli sia chiaro»). Per ogni presa da rifare: quello che si sente e quello che va detto, con la
+# parola in questione fra [ ]. «giusto» è un tratto del testo della presa, parola per parola: lì si evidenzia.
+ERRORI = {
+    "CO-004": {"detto": "segnare un [punto] già visto", "giusto": "segnare un [posto] già visto"},
+    "IN-083": {"detto": "come se [___] indicasse la strada", "giusto": "come se [mi] indicasse la strada",
+               "nota": "manca «mi»"},
+}
 FATTE -= set(DA_RIFARE)
 
 FONT = r"C:\Windows\Fonts"
@@ -73,6 +90,10 @@ S = {
     "uguale": ParagraphStyle("uguale", fontName="Segno-I", fontSize=9, leading=12, textColor=GRIGIO),
     "toc0": ParagraphStyle("toc0", fontName="Segno-B", fontSize=11, leading=15, leftIndent=0, spaceBefore=6),
     "toc1": ParagraphStyle("toc1", fontName="Segno", fontSize=9, leading=11.5, leftIndent=16, textColor=GRIGIO_SCURO),
+    "rifare": ParagraphStyle("rifare", fontName="Segno-B", fontSize=15, leading=20, textColor=colors.HexColor("#B00020")),
+    "errore": ParagraphStyle("errore", fontName="Testo", fontSize=14.5, leading=22, textColor=INCHIOSTRO),
+    "avviso": ParagraphStyle("avviso", fontName="Segno-B", fontSize=13, leading=18, textColor=colors.HexColor("#B00020"),
+                             alignment=TA_CENTER),
 }
 
 CHI = {"servizio": "voce di servizio", "registro": "computer di bordo", "etichetta": "", "breve": "registrazione"}
@@ -141,6 +162,69 @@ def descrivi_presa(p):
     if p.get("condizione"):
         riga += f" · quando {p['condizione'].replace(chr(39), '’')}"
     return riga
+
+
+# ---------------------------------------------------------------------------------------------------------------
+#  Le prese da rifare
+# ---------------------------------------------------------------------------------------------------------------
+ROSSO = "#B00020"
+ROSA = colors.HexColor("#FDECEC")
+ROSA_SCURO = "#F6B8B8"
+
+
+def segna(frase, sfondo, colore):
+    """La frase con la parola fra [ ] evidenziata."""
+    return re.sub(r"\[([^\]]+)\]", lambda m: f'<font name="Testo-B" color="{colore}" backColor="{sfondo}">'
+                                              f'\u00a0{m.group(1)}\u00a0</font>', x(frase))
+
+
+def riquadro_errore(sigla, larghezza, titolo):
+    """«Hai detto» e «Devi dire», uno sotto l'altro, in un riquadro rosso."""
+    righe = [[Paragraph(titolo, S["rifare"])]]
+    if sigla in ERRORI:
+        e = ERRORI[sigla]
+        nota = f" <font name='Segno-B' color='{ROSSO}'>· {x(e['nota'])}</font>" if e.get("nota") else ""
+        righe += [[Paragraph(f"<font name='Segno-B' color='{ROSSO}'>HAI DETTO</font>{nota}<br/>"
+                             f"«…{segna(e['detto'], ROSA_SCURO, ROSSO)}…»", S["errore"])],
+                  [Paragraph(f"<font name='Segno-B' color='#1B1B1B'>DEVI DIRE</font><br/>"
+                             f"«…{segna(e['giusto'], EVIDENZA, '#1B1B1B')}…»", S["errore"])]]
+    else:
+        righe.append([Paragraph(x(DA_RIFARE[sigla]), S["errore"])])
+    t = Table(righe, colWidths=[larghezza], hAlign="LEFT")
+    t.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), ROSA), ("BOX", (0, 0), (-1, -1), 1.6, colors.HexColor(ROSSO)),
+                           ("LEFTPADDING", (0, 0), (-1, -1), 10), ("RIGHTPADDING", (0, 0), (-1, -1), 10),
+                           ("TOPPADDING", (0, 0), (-1, -1), 4), ("BOTTOMPADDING", (0, 0), (-1, -1), 6)]))
+    return t
+
+
+def battuta_segnata(pezzo):
+    """Il testo di una presa da rifare, con la parola giusta evidenziata al suo posto."""
+    testo = battuta(pezzo)
+    e = ERRORI.get(pezzo["id"])
+    if not e:
+        return testo
+    tratto = x(e["giusto"].replace("[", "").replace("]", ""))
+    if testo.count(tratto) != 1:
+        sys.exit(f"{pezzo['id']}: «{tratto}» non è nel testo della presa (ERRORI)")
+    return testo.replace(tratto, segna(e["giusto"], EVIDENZA, "#1B1B1B"))
+
+
+def pagina_da_rifare(blocchi):
+    """La pagina subito dopo la copertina: le prese da rifare, con l'errore e il blocco dove stanno."""
+    if not DA_RIFARE:
+        return []
+    st = [Voce(0, "Da rifare", "rifare"),
+          Paragraph(f"Da rifare: {len(DA_RIFARE)} prese" if len(DA_RIFARE) > 1 else "Da rifare: una presa", S["h1"]),
+          p("Queste le avevi già consegnate. Vanno registrate di nuovo, <b>intere</b>, con la stessa sigla. Nel "
+            "copione sono al loro posto, segnate in rosso."), Spacer(1, 10)]
+    for sigla in DA_RIFARE:
+        b = next((b for b in blocchi if any(z.get("id") == sigla for q in b["prese"] for z in q["pezzi"])), None)
+        if b is None:
+            sys.exit(f"{sigla}: è da rifare ma non è nel copione")
+        dove = f" · <a href='#{b['id']}' color='#1F5C73'><u>vai al blocco {b['id']}</u></a>"
+        st += [riquadro_errore(sigla, 16.4 * cm, f"{sigla}<font name='Segno' size='11'>{dove}</font>"), Spacer(1, 16)]
+    st.append(PageBreak())
+    return st
 
 
 # ---------------------------------------------------------------------------------------------------------------
@@ -231,7 +315,9 @@ def copertina(tot):
               f"circa {tot['parole_da_registrare']:,} parole".replace(",", "."), "copertina"),
             p(f"Il gioco alla versione {VERSIONE} · {DATA}", "copertina"),
             p(f"Soltanto le prese ancora da registrare: le {tot['consegnate']} già consegnate non ci sono più.",
-              "copertina"), Spacer(1, 2.2 * cm),
+              "copertina"),
+            *([Spacer(1, 0.7 * cm), p(f"ATTENZIONE · da rifare: {', '.join(DA_RIFARE)} (pagina 2)", "avviso"),
+               Spacer(1, 0.8 * cm)] if DA_RIFARE else [Spacer(1, 2.2 * cm)]),
             p("Simone Pizzi", "copertina"),
             p("Documento di lavoro per il doppiaggio: non è da diffondere.", "copertina"),
             NextPageTemplate("pagina"), PageBreak()]
@@ -265,7 +351,8 @@ def pagine_davanti(tot):
              "(vedi «Le decisioni», in fondo).")]
     if DA_RIFARE:
         st += [p("<b>Da rifare</b> (sono di nuovo nel copione, al loro posto, con la nota sopra il testo): "
-                 + "; ".join(f"<font name='Segno-B' color='#1F5C73'>{k}</font>, {escape(v)}" for k, v in DA_RIFARE.items()))]
+                 + "; ".join(f"<font name='Segno-B' color='#1F5C73'>{k}</font>, {escape(v.rstrip('.'))}" for k, v in DA_RIFARE.items())
+                     + ".")]
     st.append(tabella([
         ["In numeri", ""],
         ["Blocchi di contesto", str(tot["blocchi"])],
@@ -458,7 +545,8 @@ def presa(q):
             cella = [Paragraph(escape(sopra), S["quando"])] if sopra else []
             prefisso = ("<font name='Segno-B' size='7.5' color='#A0522D'>DETTO AD ALTA VOCE</font><br/>"
                         if opzione else "")
-            cella.append(Paragraph(prefisso + battuta(z), S["battuta"]))
+            cella.append(Paragraph(prefisso + (battuta_segnata(z) if z["id"] in DA_RIFARE else battuta(z)),
+                                   S["battuta"]))
         sigla = Paragraph(z["id"] if not z.get("uguale") else f"<font color='#9A9A9A'>{z['id']}</font>", S["sigla"])
         if not righe:
             # la sigla scende all'altezza del testo, sotto la riga dell'intestazione
@@ -467,14 +555,19 @@ def presa(q):
     # l'intestazione della presa sta nella stessa riga del primo pezzo: la tabella si può spezzare fra un pezzo e
     # l'altro, mai fra l'intestazione e il suo testo
     righe[0][1] = [Paragraph(escape(descrivi_presa(q)), S["quando"])] + righe[0][1]
-    for z in q["pezzi"]:
+    # una presa da rifare: il riquadro con l'errore sopra il suo testo, e la riga segnata in rosso
+    segnate = []
+    for i, z in enumerate(y for y in q["pezzi"] if y["william"]):
         if z.get("id") in DA_RIFARE:
-            righe[0][1].insert(1, Paragraph(f"<font color='#B00020'><b>DA RIFARE</b> · {escape(DA_RIFARE[z['id']])}</font>",
-                                            S["quando"]))
+            cella = righe[i][1]
+            cella[-1:-1] = [riquadro_errore(z["id"], 14.2 * cm, "DA RIFARE"), Spacer(1, 6)]
+            segnate.append(i)
     t = Table(righe, colWidths=[2.0 * cm, 14.6 * cm])
     t.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0),
                            ("RIGHTPADDING", (0, 0), (-1, -1), 2), ("TOPPADDING", (0, 0), (-1, -1), 1),
-                           ("BOTTOMPADDING", (0, 0), (-1, -1), 5), ("LINEABOVE", (0, 0), (-1, 0), 0.4, FILO)]))
+                           ("BOTTOMPADDING", (0, 0), (-1, -1), 5), ("LINEABOVE", (0, 0), (-1, 0), 0.4, FILO)]
+                          + [("LINEBEFORE", (0, i), (0, i), 4, colors.HexColor(ROSSO)) for i in segnate]
+                          + [("LEFTPADDING", (0, i), (0, i), 8) for i in segnate]))
     return t
 
 
@@ -567,6 +660,7 @@ def main():
     doc = Copione(USCITA)
     toc = TableOfContents(levelStyles=[S["toc0"], S["toc1"]], dotsMinLevel=0)
     storia = copertina(tot)
+    storia += pagina_da_rifare(blocchi)
     storia += [Paragraph("Indice", S["h1"]), toc, PageBreak()]
     storia += pagine_davanti(tot)
     for c in dati["capitoli"]:

@@ -95,8 +95,13 @@ messaggio finale, dopo la casella della domanda: mai «la proposta è quella sop
   più verosimile il fatto che ce la possano fare»; e «se così vincono sempre tutti, dove sta la sfida?»):
   `collaudo/verosimili.py`, con la fuga giocata da principianti veri.
 
-## Dove siamo (25 novembre 2026)
+## Dove siamo (26 novembre 2026)
 
+- **Trenta prese nuove di Leonardo nel gioco** (26 novembre): `IN-069`…`IN-084` e `CO-001a`…`CO-010b`; ora 186 su
+  616 (30,2 %), atto I e atto II completi. Le voci della nave in mezzo a una presa (il coro delle gole) parlano al
+  loro posto. **Da rifare** (decisi da lui) `CO-004` («punto» per «posto») e `IN-083` (manca un «mi»), evidenziate
+  nel copione. Copione (432 prese) e rapporto rifatti, anche in `Downloads` con la data: da mandare a Leonardo.
+  **Non sono in una beta.** Documento 41, §5.
 - **Diciotto prese nuove di Leonardo nel gioco** (25 novembre, dopo la beta 17; l’autore: «Importale e implementale,
   poi fai la trafila ma senza rilasciare niente»): `IN-047`…`IN-068`, controllate con Whisper; ora 156 su 616 (25,3 %),
   l’atto II a 57 su 73. Il copione (460 prese) e il rapporto sono rifatti, anche in `Downloads` con la data: da

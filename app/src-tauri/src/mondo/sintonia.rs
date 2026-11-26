@@ -834,7 +834,7 @@ mod prove {
         };
         let scansione = |m: &mut Mondo, tx: &std::sync::mpsc::Sender<Comando>, secondi: f32| {
             tx.send(turno(&format!(
-                r#"{{"stati": {}, "eventi": [{{"evento": "racconto", "prese": ["SM-030-p1"], "poi": ["SM-030-p2", "SM-030-p3"], "dopo_voci": [0, 0], "dopo_servizio": [1, 2]}}, {{"evento": "voci", "battute": ["SV-11-lunghezza-trecentoquaranta-metri-massa", "SV-04-materiale-non-in-archivio", "SV-17-adesso-puoi-accostare"]}}]}}"#,
+                r#"{{"stati": {}, "eventi": [{{"evento": "racconto", "prese": ["SM-030-p1"], "poi": ["SM-030-p2", "SM-030-p3"], "dopo_voci": [0, 0], "dopo_nave": [1, 2]}}, {{"evento": "voci", "battute": ["SV-11-lunghezza-trecentoquaranta-metri-massa", "SV-04-materiale-non-in-archivio", "SV-17-adesso-puoi-accostare"]}}]}}"#,
                 stati("plancia", "", "")
             )))
             .unwrap();
@@ -884,6 +884,66 @@ mod prove {
         // i tratti del computer: quella di prima che finisce, poi le tre di questo turno
         assert_eq!(servizio.len(), 4, "{servizio:?}");
         assert!(william[1].0 > servizio[1].1, "la seconda parte di William è entrata prima di «Lunghezza…»: {servizio:?} {william:?}");
+    }
+
+    #[test]
+    fn william_racconta_fra_le_voci_della_nave() {
+        // Il coro delle gole (documento 41, §5): William, «…il campo, tenetelo…», William, «…non tiene più…»,
+        // William. La presa di Leonardo è divisa nelle sue tre parti, e le due voci parlano in mezzo.
+        use super::super::racconto::PAUSA;
+        let parti = ["IN-079-p1", "IN-079-p2", "IN-079-p3"].map(|s| Pezzo::della_presa(s).expect("la parte non è nella tabella"));
+        let prepara = |m: &mut Mondo, nave: &[(Pezzo, f32)]| {
+            m.voci_nave.con_biblioteca(biblioteca(nave));
+            let mut b = Biblioteca::nuova(std::path::PathBuf::from("non-esiste"));
+            for p in parti {
+                b.inserisci(p, Pcm::da_frame(SR, (0..(1.5 * SR) as usize).map(|n| {
+                    let v = 0.3 * (n as f32 * 0.05).sin();
+                    (v, v)
+                })));
+            }
+            m.racconto.con_biblioteca(b);
+        };
+        let coro = |m: &mut Mondo, tx: &std::sync::mpsc::Sender<Comando>, secondi: f32| {
+            tx.send(turno(&format!(
+                r#"{{"stati": {}, "eventi": [{{"evento": "racconto", "prese": ["IN-079-p1"], "poi": ["IN-079-p2", "IN-079-p3"], "dopo_voci": [0, 0], "dopo_nave": [1, 2]}}, {{"evento": "voci", "battute": ["NV-12c-ingegnere-gole", "NV-03b-carico-gole"]}}]}}"#,
+                stati("vestibolo delle gole", "", "")
+            )))
+            .unwrap();
+            servizio_e_william(m, secondi)
+        };
+        let (mut m, tx) = mondo_in("vestibolo delle gole", "");
+        prepara(&mut m, &[(Pezzo::Nv12c, 2.0), (Pezzo::Nv03b, 1.0)]);
+        let (nave, william) = coro(&mut m, &tx, 15.0);
+        assert_eq!(nave.len(), 2, "le voci: {nave:?}");
+        assert_eq!(william.len(), 3, "William: {william:?}");
+        let ordine = [william[0], nave[0], william[1], nave[1], william[2]];
+        for (k, c) in ordine.windows(2).enumerate() {
+            let pausa = c[1].0 - c[0].1;
+            let attesa = if k % 2 == 0 { PAUSA_FRA_VOCI } else { PAUSA };
+            assert!((pausa - attesa).abs() < 0.06, "fra il tratto {k} e il successivo {pausa:.2} s, attesi {attesa:.2}: {ordine:?}");
+        }
+        // senza la voce di William le due voci stanno in fila, come prima
+        suona(&mut m, 1.0);
+        m.racconto.accesa = false;
+        let (nave, william) = coro(&mut m, &tx, 9.0);
+        assert!(william.is_empty(), "{william:?}");
+        assert_eq!(nave.len(), 2, "{nave:?}");
+        assert!((nave[1].0 - nave[0].1 - PAUSA_FRA_VOCI).abs() < 0.06, "{nave:?}");
+        // una voce della nave che parlava ancora dal turno di prima non si conta
+        let (mut m, tx) = mondo_in("vestibolo delle gole", "");
+        prepara(&mut m, &[(Pezzo::Nv01, 4.0), (Pezzo::Nv12c, 2.0), (Pezzo::Nv03b, 1.0)]);
+        tx.send(turno(&format!(
+            r#"{{"stati": {}, "eventi": [{{"evento": "voci", "battute": ["NV-01-senza-ruolo"]}}]}}"#,
+            stati("vestibolo delle gole", "", "")
+        )))
+        .unwrap();
+        suona(&mut m, 2.5);
+        assert!(m.voci_nave.parla(), "la voce del turno di prima deve parlare ancora");
+        let (nave, william) = coro(&mut m, &tx, 22.0);
+        assert_eq!(william.len(), 3, "{william:?}");
+        assert_eq!(nave.len(), 3, "{nave:?}");
+        assert!(william[1].0 > nave[1].1, "la seconda parte di William è entrata prima della sua voce: {nave:?} {william:?}");
+        assert!(william[2].0 > nave[2].1, "{nave:?} {william:?}");
     }
 
     #[test]

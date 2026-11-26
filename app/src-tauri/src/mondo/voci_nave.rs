@@ -46,13 +46,15 @@ pub struct VociNave {
     /// le sue battute finite da quando la fila è cominciata (`sostituisci`): il racconto di William che nel testo sta
     /// dopo la battuta n entra quando ne sono finite n (documento 41, §5)
     finite: u8,
-    /// la voce di servizio suonava al passo di prima
-    servizio_viva: bool,
-    /// le parti della voce di servizio finite nel turno (`scarta_servizio` le azzera): il racconto di William che
-    /// nel testo sta dopo la parte n entra quando ne sono finite n (la scansione lunga, documento 41, §5)
-    finite_servizio: u8,
-    /// la parte di servizio che parlava quando il turno è cominciato: è del turno di prima, e non si conta
-    servizio_di_prima: bool,
+    /// le battute di questo turno finite, della nave e di servizio (`scarta_servizio` le azzera): il racconto di
+    /// William che nel testo sta dopo la battuta n entra quando ne sono finite n (la scansione lunga e il coro delle
+    /// gole, documento 41, §5)
+    finite_turno: u8,
+    /// quante battute erano già in corso o in fila quando il turno è cominciato: sono del turno di prima, e non
+    /// si contano
+    da_saltare: u8,
+    /// quello che suona è venuto dalla fila (il giro dell’anello del Piccolo, `subito`, non si conta)
+    dalla_fila: bool,
 }
 
 impl VociNave {
@@ -66,9 +68,9 @@ impl VociNave {
             muto_da: 0.0,
             mia: false,
             finite: 0,
-            servizio_viva: false,
-            finite_servizio: 0,
-            servizio_di_prima: false,
+            finite_turno: 0,
+            da_saltare: 0,
+            dalla_fila: false,
         }
     }
 
@@ -128,11 +130,12 @@ impl VociNave {
 
     /// Le parti della voce di servizio che aspettano ancora il loro turno non servono più: chi gioca è già
     /// andato avanti (un comando nuovo). Quella che parla finisce la frase. Con il turno ricomincia il conto delle
-    /// parti finite.
+    /// battute finite: quelle che parlano o aspettano ancora dal turno di prima non si contano.
     pub fn scarta_servizio(&mut self) {
         self.fila.retain(|p| !p.servizio());
-        self.finite_servizio = 0;
-        self.servizio_di_prima = self.servizio.vivo();
+        self.finite_turno = 0;
+        let parla = (self.mia || self.viva()) && self.dalla_fila;
+        self.da_saltare = (self.fila.len() + usize::from(parla)) as u8;
     }
 
     /// Mette in fila le battute. Se nessuno parla e la fila è vuota, la prima entra fra `ritardo`
@@ -169,6 +172,7 @@ impl VociNave {
     pub fn subito(&mut self, p: Pezzo) {
         self.di(p).avvia(richiesta(p));
         self.parlava = true;
+        self.dalla_fila = false;
     }
 
     /// Comincia a decodificare una battuta che servirà presto.
@@ -181,6 +185,10 @@ impl VociNave {
         self.fila.clear();
         self.lettore.tace(s);
         self.servizio.tace(s);
+        // quello che sfuma non è una battuta finita
+        self.mia = false;
+        self.finite_turno = 0;
+        self.da_saltare = 0;
     }
 
     /// Il mondo è fermo e muto: le voci decodificate lasciano la memoria (revisione 37, M15).
@@ -195,12 +203,12 @@ impl VociNave {
         self.finite
     }
 
-    /// Le parti della voce di servizio finite nel turno. Se di parti non ce ne sono più, né che parlano né in
-    /// fila, chi le aspetta non aspetta più (una parte senza il suo file non entra in fila: William non deve
+    /// Le battute di questo turno finite, della nave e di servizio. Se non ce ne sono più, né che parlano né in
+    /// fila, chi le aspetta non aspetta più (una battuta senza il suo file non entra in fila: William non deve
     /// restare muto per lei).
-    pub fn finite_servizio(&self) -> u8 {
-        if self.servizio.vivo() || self.fila.iter().any(|p| p.servizio()) {
-            self.finite_servizio
+    pub fn finite_turno(&self) -> u8 {
+        if self.viva() || !self.fila.is_empty() {
+            self.finite_turno
         } else {
             u8::MAX
         }
@@ -214,27 +222,25 @@ impl VociNave {
     /// Come `passo`; con `altri` un’altra voce parla fuori da questa fila (Yusuf, la scatola nera): la fila
     /// aspetta che finisca, e poi la pausa, come per le sue. `william`: dopo quante battute di questa fila entra la
     /// prossima presa di William che aspetta una voce (documento 41, §5): finite quelle, la fila cede a lui.
-    /// `william_servizio`: lo stesso, contando soltanto le parti della voce di servizio finite nel turno.
-    pub fn passo_con(&mut self, dt: f32, altri: bool, william: Option<u8>, william_servizio: Option<u8>) {
+    /// `william_turno`: lo stesso, contando le battute di questo turno finite (la nave e la voce di servizio).
+    pub fn passo_con(&mut self, dt: f32, altri: bool, william: Option<u8>, william_turno: Option<u8>) {
         self.lettore.passo(dt);
         self.servizio.passo(dt);
-        let servizio = self.servizio.vivo();
-        if self.servizio_viva && !servizio {
-            if self.servizio_di_prima {
-                self.servizio_di_prima = false;
-            } else {
-                self.finite_servizio = self.finite_servizio.saturating_add(1);
-            }
-        }
-        self.servizio_viva = servizio;
         // quello che sta sfumando via non conta: la fila non lo aspetta
         let mia = self.lettore.vivo() || self.servizio.vivo();
         let finita_mia = self.mia && !mia;
         if finita_mia {
             self.finite = self.finite.saturating_add(1);
+            if self.dalla_fila {
+                if self.da_saltare > 0 {
+                    self.da_saltare -= 1;
+                } else {
+                    self.finite_turno = self.finite_turno.saturating_add(1);
+                }
+            }
         }
         self.mia = mia;
-        let cede = william.is_some_and(|n| n <= self.finite) || william_servizio.is_some_and(|n| n <= self.finite_servizio);
+        let cede = william.is_some_and(|n| n <= self.finite) || william_turno.is_some_and(|n| n <= self.finite_turno);
         let parla = mia || altri || cede;
         if self.parlava && !parla {
             // una voce è finita: la prossima aspetta la pausa. La frase che continua una battuta di Yusuf entra
@@ -258,6 +264,7 @@ impl VociNave {
                 let p = self.fila.remove(0);
                 self.di(p).avvia(richiesta(p));
                 self.parlava = true;
+                self.dalla_fila = true;
             }
         }
         if self.occupate() {

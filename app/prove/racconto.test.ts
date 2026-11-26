@@ -35,6 +35,8 @@ test("ogni presa della tabella ha il suo file, e la tabella viene dal copione di
   assert.ok(tabella.pezzi.some((p) => p.id === "SM-001" && p.tipo === "descrizione"));
   // la scansione lunga: tre parti, e il computer di bordo in mezzo (documento 41, §5)
   assert.deepEqual(tabella.pezzi.find((p) => p.id === "SM-030")?.file_parti, ["SM-030-p1", "SM-030-p2", "SM-030-p3"]);
+  // il coro delle gole: tre parti, e le due voci della nave in mezzo
+  assert.deepEqual(tabella.pezzi.find((p) => p.id === "IN-079")?.file_parti, ["IN-079-p1", "IN-079-p2", "IN-079-p3"]);
 });
 
 test("le risposte dei dialoghi: la presa giusta per la risposta a schermo, niente per quelle non registrate", () => {

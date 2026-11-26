@@ -69,3 +69,8 @@ uguali); nel PDF le 478 ancora da registrare, 92 pagine. È questo il PDF da man
 Lo stesso giorno sono arrivate diciotto prese nuove (`IN-047`…`IN-068`; documento 41, §5): ora sono 156 su 616, il
 25,3 %. Il PDF ha le 460 ancora da registrare, 90 pagine, e il rapporto è quello del 25 novembre rifatto: sono questi
 da mandare a Leonardo.
+
+Il 26 novembre sono arrivate trenta prese nuove (`IN-069`…`IN-084`, `CO-001a`…`CO-010b`; documento 41, §5): ora sono
+186 su 616. Due sono da rifare (`CO-004`, `IN-083`): senza di loro 184, il 29,9 %. Il PDF ha le 432 ancora da
+registrare, 86 pagine, con le due da rifare spiegate a pagina 2 e segnate in rosso al loro posto (`DA_RIFARE` ed
+`ERRORI` in `copione_pdf.py`); il rapporto è quello del 26 novembre. Sono questi da mandare a Leonardo.

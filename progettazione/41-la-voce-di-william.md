@@ -97,10 +97,12 @@ scheda Audio delle opzioni, **«Voce di William»: recitata o nessuna** (di base
   pezzo, e dentro non si taglia. Il contrario, una battuta di Yusuf con il racconto in mezzo, dal 17 novembre si
   divide nelle sue frasi (§5). Con le prime quattordici non succedeva; succede con `SM-030`, la scansione lunga
   (§5). **Dal 24 novembre 2026 non è più così per la voce di servizio**: l’autore ha detto che «va sistemato», e
-  una presa con il computer di bordo o la tuta in mezzo si divide nelle pause che Leonardo ha lasciato (§5).
+  una presa con il computer di bordo o la tuta in mezzo si divide nelle pause che Leonardo ha lasciato (§5). Dal
+  26 novembre lo stesso vale per le voci della nave.
 
 ## 4. Le prove
 
+- **In Rust** (`sintonia.rs`, il mondo intero): William fra le parti del computer di bordo e fra le voci della nave.
 - **In Rust** (`racconto.rs`): le prese partono con il testo, in fila con la pausa; un comando nuovo le fa tacere e F2
   le ridice; le prese `poi` aspettano le altre voci; l’anteprima non parla sopra il racconto, una prende il posto
   dell’altra; spenta, non parte niente; una presa che manca non ferma la fila. Le 17 partite nel motore audio
@@ -112,6 +114,45 @@ scheda Audio delle opzioni, **«Voce di William»: recitata o nessuna** (di base
   all’inizio della partita William racconta la plancia.
 
 ## 5. Le prese, a oggi
+
+**Centottantasei, dal 26 novembre 2026.** La consegna del 26 novembre (`TransferNow-202611260PCmLkHH.zip`, 30 file,
+48 kHz, 24 bit, mono; picchi fra −5,9 e −1,5 dBFS, nessun campione pieno, nessun silenzio lungo fuori dalle pause
+volute, nessuna rilettura; quello che lo strumento toglie ai capi sta sotto −55 dBFS): `IN-069`…`IN-084`, il
+risuonatore, il coro delle gole, la gola di mezzo e la voce dei nomi, e `CO-001a`…`CO-010b`, il corridoio principale
+e le tacche. **L’atto II è completo** (73 su 73, come l’atto I); il corridoio è a 14 su 27. In tutto 186 su 616, il
+30,2 % (il 30,7 % delle parole). Il rapporto è in `doppiaggio/william/resoconti/`. Giocate dal ponte, le trenta prese scattano tutte al loro comando. Rigiocati i venti
+percorsi del collaudo e le venti partite nel motore audio: tutto passa.
+
+Whisper (`consegne/controllo-2026-11-26.json`, senza suggerirgli il testo; i punti dubbi riascoltati con large-v3,
+large-v3-turbo e medium): «tretta che» per «tre tacche» in `CO-002b` e «bruseo» sono di Whisper. Quattro punti
+**ascoltati dall’autore** (`consegne/Ascolto dubbi Whisper 2026-11-26/`):
+
+- `CO-001a`, «dà su un silenzio»: va bene;
+- `CO-004`: Leonardo dice «segnare un **punto** già visto», il testo dice «un **posto**»;
+- `IN-083`: «come se indicasse la strada», manca il «**mi**» del testo («come se mi indicasse»);
+- `IN-080`, «e qualcuno che dice»: è la congiunzione, va bene.
+
+**Da rifare `CO-004` e `IN-083`** (l’autore, 26 novembre 2026: «Sì, da rifare»): restano nel gioco finché non
+arrivano le nuove, e tornano nel copione di Leonardo. Con le due fuori dal conto sono 184 su 616, il 29,9 % (il 30,4 %
+delle parole), l’atto II a 72 su 73 e il corridoio a 13 su 27; il copione ha 432 prese, 86 pagine. L’autore:
+«evidenziagli dove ha sbagliato, nel nuovo copione. Che gli sia chiaro»: la copertina avvisa, la pagina 2 ha per ogni
+presa un riquadro rosso con «Hai detto» e «Devi dire» e la parola evidenziata (con il collegamento al blocco), e lo
+stesso riquadro sta sopra la presa al suo posto, con la parola evidenziata anche nel testo (`DA_RIFARE` ed `ERRORI` in
+`copione_pdf.py`; `ERRORI` si ferma se il tratto non è più nel testo). Quando arrivano rifatte: le prese di prima in
+`consegne/<data>-sostituite/`, e le due voci si tolgono dalle due tabelle.
+
+**Le voci della nave in mezzo al racconto** (`IN-079`, il coro delle gole). William si ferma due volte, per «…il
+campo, tenetelo…» e per «…non tiene più…». Il motore faceva suonare la presa intera e poi le due voci (qui sotto,
+«Per le prese che verranno»). Ora quello che dal 24 novembre vale per la voce di servizio vale per tutta la fila
+della nave: la presa si divide in tre parti (tagli a 9,50 e 14,84 s, nelle pause di Leonardo; verificati con Whisper
+parola per parola: «…il campo» 8,26 | 9,36 «e un’altra…»; «…ascolta.» 13,44 | 15,66 «Poi le voci…»), l’evento
+«racconto» porta `dopo_nave` (era `dopo_servizio`) e il motore conta le battute del turno finite, della nave e di
+servizio (`VociNave::finite_turno`, `Racconto::soglia_nave`). Non si contano quelle rimaste dal turno di prima né il
+giro dell’anello del Piccolo. `IN-084`, con la tuta in mezzo («CHIUSURA RIFIUTATA. CANALE APERTO DA REMOTO.»), ha un
+taglio a 37,96 s. In `IN-077` la tuta parla prima, e William aspetta le sue due parti. Prove:
+`william_racconta_fra_le_voci_della_nave` in Rust, la tabella in node, la scena giocata dal ponte in `eventi.py`.
+L’ascolto reso dal motore, con l’ordine riletto con Whisper: `consegne/Ascolto voci in mezzo a William 2026-11-26/`
+(l’autore non l’ha ancora sentito).
 
 **Centocinquantasei, dal 25 novembre 2026.** La consegna del 25 novembre (`TransferNow-20261125h0HV5Tvc.zip`, 18 file,
 48 kHz, 24 bit, mono, nessun campione pieno, nessun silenzio lungo né rilettura, nessuna coda muta): `IN-047`…`IN-068`,
@@ -250,7 +291,8 @@ pause che lui stesso ha lasciato dove parla il computer, e il computer parla in 
   `consegne/Ascolto scansione lunga 2026-11-24/` (42 s). **Ascoltato dall’autore lo stesso giorno e approvato:**
   «l’audio è giusto come ordine. Ottimo». Non ancora in una beta.
 
-**Per le prese che verranno.** Nel copione le prese con un’altra voce in mezzo sono 31 (tre arrivate: `SM-030`,
+**Per le prese che verranno** (scritto il 24 novembre; dal 26 le voci della nave hanno già il loro posto, come la
+voce di servizio: restano l’Anziano, Yusuf e L.V.). Nel copione le prese con un’altra voce in mezzo sono 31 (tre arrivate: `SM-030`,
 `SM-048`, `IN-010`). Dove in mezzo c’è la voce di servizio (`IN-084`, `VI-007`, `VI-049`, `EQ-017`, `PO-026a`,
 `AR-002`, `AR-006`, `AR-007`, `AR-009`) basta aggiungere i tagli alla tabella quando la presa arriva: a Leonardo
 conviene dire di lasciare, come ha fatto, un secondo e mezzo di pausa dove parla l’altra voce. Dove in mezzo ci

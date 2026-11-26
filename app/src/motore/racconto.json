@@ -1482,11 +1482,315 @@
 ]
 },
 {
+"id": "IN-069",
+"file": "IN-069",
+"tipo": "risposta",
+"parti": [
+"il multiscanner rinuncia a capire cosa sia dice soltanto che dentro ci sono registrazioni una quantità che non sa contare una sopra l altra"
+]
+},
+{
+"id": "IN-070",
+"file": "IN-070",
+"tipo": "risposta",
+"parti": [
+"il brusio se mi concentro su una voce ne arrivano altre dieci a coprirla"
+]
+},
+{
+"id": "IN-071",
+"file": "IN-071",
+"tipo": "risposta",
+"parti": [
+"è già staccato"
+]
+},
+{
+"id": "IN-072",
+"file": "IN-072",
+"tipo": "risposta",
+"parti": [
+"a mani nude non viene è cresciuto insieme alla parete ci vorrebbe la taglierina"
+]
+},
+{
+"id": "IN-073",
+"file": "IN-073",
+"tipo": "risposta",
+"parti": [
+"regolo la taglierina al minimo e incido il bordo della nicchia dove l arnese si salda alla parete il brusio si alza di colpo e per un istante una voce si stacca dalle altre chiede qualcosa in fretta a qualcuno poi rientra nel coro servono altri due tagli"
+]
+},
+{
+"id": "IN-074",
+"file": "IN-074",
+"tipo": "risposta",
+"parti": [
+"secondo taglio la parete cede come cartilagine nella cuffia le voci adesso sono tante e vicine e una sembra contare ne manca uno"
+]
+},
+{
+"id": "IN-075",
+"file": "IN-075",
+"tipo": "risposta",
+"parti": [
+"l ultimo lembo si stacca e l arnese mi cade nel palmo più leggero di quanto pensassi e tiepido il brusio adesso viene da lì dalla mia mano sul bordo del visore la cifra scende di un punto poi di un altro e non smette"
+]
+},
+{
+"id": "IN-076",
+"file": "IN-076",
+"tipo": "risposta",
+"parti": [
+"mi serve il sintonizzatore di frequenza per separare il brusio in voci"
+]
+},
+{
+"id": "IN-077",
+"file": "IN-077",
+"tipo": "risposta",
+"parti": [
+"la tuta non mi lascia ascoltare niente che non sia il mio fiato mi serve una ricarica"
+]
+},
+{
+"id": "IN-078",
+"file": "IN-078",
+"tipo": "risposta",
+"parti": [
+"il sintonizzatore cerca una voce e ne trova cento con il risuonatore addosso il coro intero copre ogni eco per sentirne una sola dovrei posarlo"
+]
+},
+{
+"id": "IN-079",
+"file": "IN-079",
+"tipo": "risposta",
+"parti": [
+"il sintonizzatore separa il brusio in fili e due restano una voce che chiede con urgenza di tenere il campo",
+"e un altra più bassa che risponde a chi non la ascolta",
+"poi le voci tornano a sovrapporsi e il resto è coro"
+],
+"file_parti": [
+"IN-079-p1",
+"IN-079-p2",
+"IN-079-p3"
+]
+},
+{
+"id": "IN-080",
+"file": "IN-080",
+"tipo": "risposta",
+"parti": [
+"il campo da tenere e qualcuno che dice che non tiene più il resto è coro"
+]
+},
+{
+"id": "IN-081",
+"file": "IN-081",
+"tipo": "descrizione",
+"parti": [
+"la gola scende a scatti si stringe fino a sfiorarmi le spalle poi si riallarga senza una regola come se fosse cresciuta per conto suo qui le venature non sono spente del tutto dove passa il guanto una corre di un verde stanco per un palmo e si riaddormenta il brusio è più forte e dal basso sale un freddo diverso umido su si torna al vestibolo la gola continua a scendere"
+]
+},
+{
+"id": "IN-082",
+"file": "IN-082",
+"tipo": "descrizione",
+"parti": [
+"una rete fine sotto la superficie dove la tocco si accende"
+]
+},
+{
+"id": "IN-083",
+"file": "IN-083",
+"tipo": "risposta",
+"parti": [
+"una venatura si accende sotto il guanto verde e mi corre davanti per un palmo giù per la gola come se mi indicasse la strada poi si spegne"
+]
+},
+{
+"id": "IN-084",
+"file": "IN-084",
+"tipo": "evento",
+"parti": [
+"il sintonizzatore si accende da solo prima che io lo tocchi aggancia una voce una sola bassa che tiene un ritmo che le altre hanno perso dice una parola poi un altra con la pazienza di chi legge un elenco e per ogni parola il traduttore della tuta scrive la stessa riga",
+"nome proprio intraducibile",
+"poi la scrive ancora e ancora cerco l interruttore e premo niente premo di nuovo cerco il canale per chiuderlo a mano e sul bordo del visore compare una riga che non ho mai visto su un visore",
+"la voce va avanti e la cifra dell aria scende con lei poi com era venuta si interrompe a metà di un nome e il sintonizzatore mi torna in mano muto"
+],
+"file_parti": [
+"IN-084-p1",
+"IN-084-p1",
+"IN-084-p1",
+"IN-084-p2"
+]
+},
+{
+"id": "CO-001a",
+"file": "CO-001a",
+"tipo": "descrizione",
+"parti": [
+"il cuore del relitto un corridoio immenso le pareti curve che salgono fino a perdersi nel buio nessuna lampada eppure le pareti stesse fanno una luce fredda azzurrina l aria non si muove a nord e a sud si aprono due passaggi a ovest il corridoio finisce contro una parete più scura delle altre segnata da un diagramma di stelle un montacarichi scende giù verso il settore tecnico e a nordest una porta socchiusa dà su un silenzio più raccolto"
+]
+},
+{
+"id": "CO-001b",
+"file": "CO-001b",
+"tipo": "descrizione",
+"parti": [
+"a est c è la gola larga da cui sono salito accanto all imbocco alla base della parete le quattro tacche"
+]
+},
+{
+"id": "CO-001c",
+"file": "CO-001c",
+"tipo": "descrizione",
+"parti": [
+"a est c è la gola larga da cui sono salito accanto all imbocco alla base della parete qualcuno ha inciso tre tacche orizzontali"
+]
+},
+{
+"id": "CO-002a",
+"file": "CO-002a",
+"tipo": "descrizione",
+"parti": [
+"il cuore del relitto sotto la sua luce fredda a ovest dove c era la grande porta adesso si apre il passaggio verso il ponte a nord e a sud gli altri passaggi giù il montacarichi a nordest gli alloggi a est la gola larga verso il vestibolo accanto all imbocco alla base della parete le quattro tacche"
+]
+},
+{
+"id": "CO-002b",
+"file": "CO-002b",
+"tipo": "descrizione",
+"parti": [
+"il cuore del relitto sotto la sua luce fredda a ovest dove c era la grande porta adesso si apre il passaggio verso il ponte a nord e a sud gli altri passaggi giù il montacarichi a nordest gli alloggi a est la gola larga verso il vestibolo accanto all imbocco alla base della parete le tre tacche"
+]
+},
+{
+"id": "CO-003",
+"file": "CO-003",
+"tipo": "descrizione",
+"parti": [
+"sembrano cresciute con una trama fine come d osso o di madreperla senza una saldatura è da lì dentro che viene la luce azzurrina"
+]
+},
+{
+"id": "CO-004",
+"file": "CO-004",
+"tipo": "descrizione",
+"parti": [
+"tre tacche orizzontali parallele alla base della parete accanto all imbocco troppo regolari per essere usura qualcuno le ha fatte apposta forse per segnare un posto già visto e non perdersi"
+]
+},
+{
+"id": "CO-005",
+"file": "CO-005",
+"tipo": "descrizione",
+"parti": [
+"quattro tacche adesso tre di chi è passato prima di me e una mia"
+]
+},
+{
+"id": "CO-006",
+"file": "CO-006",
+"tipo": "risposta",
+"parti": [
+"il multiscanner misura i solchi la punta che li ha fatti era una punta da carotatore attrezzatura terrestre di serie un modello di un secolo e mezzo fa chi ha inciso qui veniva da dove vengo io"
+]
+},
+{
+"id": "CO-007",
+"file": "CO-007",
+"tipo": "risposta",
+"parti": [
+"una punta da carotatore terrestre di un secolo e mezzo fa"
+]
+},
+{
+"id": "CO-008",
+"file": "CO-008",
+"tipo": "risposta",
+"parti": [
+"mi servirebbe qualcosa con cui incidere"
+]
+},
+{
+"id": "CO-009",
+"file": "CO-009",
+"tipo": "risposta",
+"parti": [
+"il mio segno è già lì quattro tacche adesso"
+]
+},
+{
+"id": "CO-010a",
+"file": "CO-010a",
+"tipo": "risposta",
+"parti": [
+"regolo la taglierina al minimo e con un gesto lento incido una quarta linea accanto alle tre il materiale resiste poi cede in un solco netto e sottile quattro tacche"
+]
+},
+{
+"id": "CO-010b",
+"file": "CO-010b",
+"tipo": "risposta",
+"parti": [
+"chi ha fatto le prime tre veniva da dove vengo io e non so altro"
+]
+},
+{
+"id": "VI-015",
+"file": "CO-008",
+"tipo": "risposta",
+"parti": [
+"mi servirebbe qualcosa con cui incidere"
+]
+},
+{
+"id": "VI-019",
+"file": "CO-008",
+"tipo": "risposta",
+"parti": [
+"mi servirebbe qualcosa con cui incidere"
+]
+},
+{
+"id": "VI-022",
+"file": "CO-008",
+"tipo": "risposta",
+"parti": [
+"mi servirebbe qualcosa con cui incidere"
+]
+},
+{
+"id": "VI-050",
+"file": "CO-008",
+"tipo": "risposta",
+"parti": [
+"mi servirebbe qualcosa con cui incidere"
+]
+},
+{
 "id": "VI-088",
 "file": "SM-070",
 "tipo": "risposta",
 "parti": [
 "è l unico che ho lo tengo per quando servirà davvero"
+]
+},
+{
+"id": "EQ-026",
+"file": "IN-078",
+"tipo": "battuta",
+"parti": [
+"il sintonizzatore cerca una voce e ne trova cento con il risuonatore addosso il coro intero copre ogni eco per sentirne una sola dovrei posarlo"
+]
+},
+{
+"id": "ME-005",
+"file": "CO-008",
+"tipo": "risposta",
+"parti": [
+"mi servirebbe qualcosa con cui incidere"
 ]
 },
 {
@@ -1530,29 +1834,188 @@
 ]
 },
 {
+"id": "EC-004",
+"file": "IN-077",
+"tipo": "risposta",
+"parti": [
+"la tuta non mi lascia ascoltare niente che non sia il mio fiato mi serve una ricarica"
+]
+},
+{
+"id": "EC-005",
+"file": "IN-078",
+"tipo": "risposta",
+"parti": [
+"il sintonizzatore cerca una voce e ne trova cento con il risuonatore addosso il coro intero copre ogni eco per sentirne una sola dovrei posarlo"
+]
+},
+{
+"id": "EC-009",
+"file": "IN-077",
+"tipo": "risposta",
+"parti": [
+"la tuta non mi lascia ascoltare niente che non sia il mio fiato mi serve una ricarica"
+]
+},
+{
+"id": "EC-010",
+"file": "IN-078",
+"tipo": "risposta",
+"parti": [
+"il sintonizzatore cerca una voce e ne trova cento con il risuonatore addosso il coro intero copre ogni eco per sentirne una sola dovrei posarlo"
+]
+},
+{
+"id": "EC-016",
+"file": "IN-077",
+"tipo": "risposta",
+"parti": [
+"la tuta non mi lascia ascoltare niente che non sia il mio fiato mi serve una ricarica"
+]
+},
+{
+"id": "EC-017",
+"file": "IN-078",
+"tipo": "risposta",
+"parti": [
+"il sintonizzatore cerca una voce e ne trova cento con il risuonatore addosso il coro intero copre ogni eco per sentirne una sola dovrei posarlo"
+]
+},
+{
+"id": "EC-021",
+"file": "IN-077",
+"tipo": "risposta",
+"parti": [
+"la tuta non mi lascia ascoltare niente che non sia il mio fiato mi serve una ricarica"
+]
+},
+{
+"id": "EC-022",
+"file": "IN-078",
+"tipo": "risposta",
+"parti": [
+"il sintonizzatore cerca una voce e ne trova cento con il risuonatore addosso il coro intero copre ogni eco per sentirne una sola dovrei posarlo"
+]
+},
+{
+"id": "EC-028",
+"file": "IN-077",
+"tipo": "risposta",
+"parti": [
+"la tuta non mi lascia ascoltare niente che non sia il mio fiato mi serve una ricarica"
+]
+},
+{
+"id": "EC-029",
+"file": "IN-078",
+"tipo": "risposta",
+"parti": [
+"il sintonizzatore cerca una voce e ne trova cento con il risuonatore addosso il coro intero copre ogni eco per sentirne una sola dovrei posarlo"
+]
+},
+{
+"id": "EC-033",
+"file": "IN-077",
+"tipo": "risposta",
+"parti": [
+"la tuta non mi lascia ascoltare niente che non sia il mio fiato mi serve una ricarica"
+]
+},
+{
+"id": "EC-034",
+"file": "IN-078",
+"tipo": "risposta",
+"parti": [
+"il sintonizzatore cerca una voce e ne trova cento con il risuonatore addosso il coro intero copre ogni eco per sentirne una sola dovrei posarlo"
+]
+},
+{
+"id": "EC-038",
+"file": "IN-077",
+"tipo": "risposta",
+"parti": [
+"la tuta non mi lascia ascoltare niente che non sia il mio fiato mi serve una ricarica"
+]
+},
+{
+"id": "EC-039",
+"file": "IN-078",
+"tipo": "risposta",
+"parti": [
+"il sintonizzatore cerca una voce e ne trova cento con il risuonatore addosso il coro intero copre ogni eco per sentirne una sola dovrei posarlo"
+]
+},
+{
+"id": "EC-043",
+"file": "IN-077",
+"tipo": "risposta",
+"parti": [
+"la tuta non mi lascia ascoltare niente che non sia il mio fiato mi serve una ricarica"
+]
+},
+{
+"id": "EC-044",
+"file": "IN-078",
+"tipo": "risposta",
+"parti": [
+"il sintonizzatore cerca una voce e ne trova cento con il risuonatore addosso il coro intero copre ogni eco per sentirne una sola dovrei posarlo"
+]
+},
+{
+"id": "EC-049",
+"file": "IN-077",
+"tipo": "risposta",
+"parti": [
+"la tuta non mi lascia ascoltare niente che non sia il mio fiato mi serve una ricarica"
+]
+},
+{
+"id": "EC-050",
+"file": "IN-078",
+"tipo": "risposta",
+"parti": [
+"il sintonizzatore cerca una voce e ne trova cento con il risuonatore addosso il coro intero copre ogni eco per sentirne una sola dovrei posarlo"
+]
+},
+{
+"id": "EC-056",
+"file": "IN-077",
+"tipo": "risposta",
+"parti": [
+"la tuta non mi lascia ascoltare niente che non sia il mio fiato mi serve una ricarica"
+]
+},
+{
+"id": "EC-057",
+"file": "IN-078",
+"tipo": "risposta",
+"parti": [
+"il sintonizzatore cerca una voce e ne trova cento con il risuonatore addosso il coro intero copre ogni eco per sentirne una sola dovrei posarlo"
+]
+},
+{
 "id": "AR-004",
 "file": "SM-104",
 "tipo": "risposta",
 "parti": [
 "è parte del casco"
 ]
+},
+{
+"id": "RE-002",
+"file": "CO-008",
+"tipo": "risposta",
+"parti": [
+"mi servirebbe qualcosa con cui incidere"
+]
 }
 ],
 "muti": [
-[
-"a est c è la gola larga da cui sono salito accanto all imbocco alla base della parete le quattro tacche"
-],
-[
-"a est c è la gola larga da cui sono salito accanto all imbocco alla base della parete qualcuno ha inciso tre tacche orizzontali"
-],
 [
 "a est la strozzatura è chiusa dal nodo di fibre spesso come un tronco dall altra parte si sente un aria che si muove ma di qui non si passa"
 ],
 [
 "a est una strozzatura chiusa da un nodo di fibre spesso come un tronco dall altra parte se tengo ferma la mano sento un aria che si muove"
-],
-[
-"a mani nude non viene è cresciuto insieme alla parete ci vorrebbe la taglierina"
 ],
 [
 "abbasso gli occhi sul visore",
@@ -1670,9 +2133,6 @@
 ],
 [
 "cerco un angolo libero in basso dove il fregio lascia un palmo di pietra nuda con la taglierina incido una riga mia storta accanto alla loro precisione una grafia umana fra simboli piegati fino all ultima molecola dice soltanto nella mia lingua che sono passato di qui e che ho capito sotto le loro navi sembra ancora più storta"
-],
-[
-"chi ha fatto le prime tre veniva da dove vengo io e non so altro"
 ],
 [
 "chiudo gli occhi quando li riapro appena la figura si sta raccogliendo i bordi rientrano la luce si stringe in un punto e il punto scende piano sul sostegno al centro della stanza lì adesso c è il seme che avevo dato alla porta la luce ci entra dentro e si spegne"
@@ -1833,13 +2293,7 @@
 "il brusio nella mano sale di colpo e l arnese tira verso le pareti come se le voci volessero tornarci"
 ],
 [
-"il brusio se mi concentro su una voce ne arrivano altre dieci a coprirla"
-],
-[
 "il buio beve anche la luce del faro che qui arriva a pochi passi le pareti si avvicinano verso il centro come una strozzatura e lasciano lo spazio appena per passare"
-],
-[
-"il campo da tenere e qualcuno che dice che non tiene più il resto è coro"
 ],
 [
 "il campo di stasi non si rompe per aprirla serve la sua chiave"
@@ -1870,15 +2324,6 @@
 ],
 [
 "il cristallo è trasparente adesso e dentro una trama di filamenti luminosi si accende e si spegne sempre con lo stesso ritmo è tiepido e ha l aria di un pezzo da montare in qualche macchina"
-],
-[
-"il cuore del relitto sotto la sua luce fredda a ovest dove c era la grande porta adesso si apre il passaggio verso il ponte a nord e a sud gli altri passaggi giù il montacarichi a nordest gli alloggi a est la gola larga verso il vestibolo accanto all imbocco alla base della parete le quattro tacche"
-],
-[
-"il cuore del relitto sotto la sua luce fredda a ovest dove c era la grande porta adesso si apre il passaggio verso il ponte a nord e a sud gli altri passaggi giù il montacarichi a nordest gli alloggi a est la gola larga verso il vestibolo accanto all imbocco alla base della parete le tre tacche"
-],
-[
-"il cuore del relitto un corridoio immenso le pareti curve che salgono fino a perdersi nel buio nessuna lampada eppure le pareti stesse fanno una luce fredda azzurrina l aria non si muove a nord e a sud si aprono due passaggi a ovest il corridoio finisce contro una parete più scura delle altre segnata da un diagramma di stelle un montacarichi scende giù verso il settore tecnico e a nordest una porta socchiusa dà su un silenzio più raccolto"
 ],
 [
 "il faro al massimo li chiama tutti"
@@ -1914,9 +2359,6 @@
 "il groviglio mi si stringe davanti verso la luce così non passo"
 ],
 [
-"il mio segno è già lì quattro tacche adesso"
-],
-[
 "il mio segno è già lì sul vetro della capsula più vicina"
 ],
 [
@@ -1924,13 +2366,7 @@
 "un uomo su una nave che nessun uomo ha costruito"
 ],
 [
-"il multiscanner misura i solchi la punta che li ha fatti era una punta da carotatore attrezzatura terrestre di serie un modello di un secolo e mezzo fa chi ha inciso qui veniva da dove vengo io"
-],
-[
 "il multiscanner registra confronta e non trova niente da segnalare"
-],
-[
-"il multiscanner rinuncia a capire cosa sia dice soltanto che dentro ci sono registrazioni una quantità che non sa contare una sopra l altra"
 ],
 [
 "il multiscanner sta sulla spalla della tuta e la tuta non ce l ho addosso"
@@ -1983,9 +2419,6 @@
 "non aspetta risposta la domanda gira su se stessa consumata il sintonizzatore la tiene agganciata potrei provare a risponderle"
 ],
 [
-"il sintonizzatore cerca una voce e ne trova cento con il risuonatore addosso il coro intero copre ogni eco per sentirne una sola dovrei posarlo"
-],
-[
 "il sintonizzatore fischia",
 "poi più piano",
 "il sintonizzatore resta agganciato più del dovuto come se sotto ci fosse altro"
@@ -2009,17 +2442,6 @@
 ],
 [
 "il sintonizzatore scorre le frequenze e torna a zero lì non è rimasta impressa nessuna voce le voci restano soltanto in certe cose e devo trovare quelle giuste"
-],
-[
-"il sintonizzatore separa il brusio in fili e due restano una voce che chiede con urgenza di tenere il campo",
-"e un altra più bassa che risponde a chi non la ascolta",
-"poi le voci tornano a sovrapporsi e il resto è coro"
-],
-[
-"il sintonizzatore si accende da solo prima che io lo tocchi aggancia una voce una sola bassa che tiene un ritmo che le altre hanno perso dice una parola poi un altra con la pazienza di chi legge un elenco e per ogni parola il traduttore della tuta scrive la stessa riga",
-"nome proprio intraducibile",
-"poi la scrive ancora e ancora cerco l interruttore e premo niente premo di nuovo cerco il canale per chiuderlo a mano e sul bordo del visore compare una riga che non ho mai visto su un visore",
-"la voce va avanti e la cifra dell aria scende con lei poi com era venuta si interrompe a metà di un nome e il sintonizzatore mi torna in mano muto"
 ],
 [
 "il sintonizzatore torna sull eco già nota ma non si ferma la frequenza scende sotto la soglia di prima e dal fondo viene su un secondo strato più nudo lo xeno botanico con un filo di voce più fermo"
@@ -2085,9 +2507,6 @@
 ],
 [
 "l ultima eco di questo cristallo l ho già estratta non c è altro"
-],
-[
-"l ultimo lembo si stacca e l arnese mi cade nel palmo più leggero di quanto pensassi e tiepido il brusio adesso viene da lì dalla mia mano sul bordo del visore la cifra scende di un punto poi di un altro e non smette"
 ],
 [
 "l ultimo pilastro si accende per intero e la sua luce ambrata arriva fino alle pareti la cifra smette di scendere il terminale si sveglia sullo schermo scorre una riga sola e la matrice la rende al primo colpo",
@@ -2170,9 +2589,6 @@
 "la gola larga è crollata di là non c è più niente"
 ],
 [
-"la gola scende a scatti si stringe fino a sfiorarmi le spalle poi si riallarga senza una regola come se fosse cresciuta per conto suo qui le venature non sono spente del tutto dove passa il guanto una corre di un verde stanco per un palmo e si riaddormenta il brusio è più forte e dal basso sale un freddo diverso umido su si torna al vestibolo la gola continua a scendere"
-],
-[
 "la grande porta è sigillata finché nei tre incavi alla sua base mancano le chiavi di qui non passo"
 ],
 [
@@ -2240,9 +2656,6 @@
 ],
 [
 "la tuta non cede corrente a nessuno"
-],
-[
-"la tuta non mi lascia ascoltare niente che non sia il mio fiato mi serve una ricarica"
 ],
 [
 "la tuta riapre i canali secondari e mi restituisce il faro"
@@ -2375,12 +2788,6 @@
 ],
 [
 "mi serve il sintonizzatore di frequenza"
-],
-[
-"mi serve il sintonizzatore di frequenza per separare il brusio in voci"
-],
-[
-"mi servirebbe qualcosa con cui incidere"
 ],
 [
 "mi siedo la schiena trova una parete le gambe si allungano da sole"
@@ -2558,9 +2965,6 @@
 "quando il ponte non ha energia la cupola è soltanto nera"
 ],
 [
-"quattro tacche adesso tre di chi è passato prima di me e una mia"
-],
-[
 "questo proiettore fa soltanto scintille nel suo meccanismo è incastrato un disco di pietra scura pesante che lo blocca"
 ],
 [
@@ -2585,12 +2989,6 @@
 "atlante delle acque perdute",
 "canti per chi resta",
 "soltanto i titoli ma sono così tanti e così diversi che qui dentro dev esserci tutto quello che ricordavano"
-],
-[
-"regolo la taglierina al minimo e con un gesto lento incido una quarta linea accanto alle tre il materiale resiste poi cede in un solco netto e sottile quattro tacche"
-],
-[
-"regolo la taglierina al minimo e incido il bordo della nicchia dove l arnese si salda alla parete il brusio si alza di colpo e per un istante una voce si stacca dalle altre chiede qualcosa in fretta a qualcuno poi rientra nel coro servono altri due tagli"
 ],
 [
 "regolo la taglierina al minimo e mi chino accanto a lui accanto alle sue due lettere incido le mie w ed e piano perché dentro il guanto la mano mi trema non mi chiedo perché lo faccio ho paura che chiedendomelo la mano si fermi"
@@ -2623,16 +3021,10 @@
 "scene incise con una precisione che fa male agli occhi la prima la più consumata tre soli a triangolo sopra un orizzonte il più grande in alto e sotto una folla che guarda in su poi semi di luce piantati su un mondo fertile navi immense in partenza l ultima le creature entrano nelle navi e nessuna si volta indietro la storia di un esodo con i suoi glifi accanto a ogni scena"
 ],
 [
-"secondo taglio la parete cede come cartilagine nella cuffia le voci adesso sono tante e vicine e una sembra contare ne manca uno"
-],
-[
 "seduto contro la base della colonna le gambe allungate il casco calato sul petto l aria secca della serra non l ha disfatto l ha seccato come le felci dentro il casco c è ancora una faccia tesa sugli zigomi di uno che a vederlo vivo avrei detto sui trentacinque anni nella destra stringe una punta da carotatore sul petto ha una placca graffiata a mano alla cintura la scatola nera della tuta spenta e un metro di cavo di sicurezza tranciato di netto come il mio"
 ],
 [
 "seguo la rotta all indietro partendo da casa attraversa un altra galassia fino a un ammasso denso e luminoso il punto d origine non lascia dubbi un sistema trino tre soli che girano l uno intorno all altro spenti la culla della loro civiltà il mio sole non l hanno scelto a caso accanto c è un annotazione che la matrice rende così proto fertile candidato primario classe giardino"
-],
-[
-"sembrano cresciute con una trama fine come d osso o di madreperla senza una saldatura è da lì dentro che viene la luce azzurrina"
 ],
 [
 "sfioro appena non succede niente"
@@ -2741,9 +3133,6 @@
 "tiepido sotto il coperchio i germogli si piegano appena verso il guanto"
 ],
 [
-"tre tacche orizzontali parallele alla base della parete accanto all imbocco troppo regolari per essere usura qualcuno le ha fatte apposta forse per segnare un posto già visto e non perdersi"
-],
-[
 "un apparecchio portatile un display a frequenza d onda e due manopole di calibrazione un rilevatore di anomalie ascolta gli echi che restano impressi nella materia"
 ],
 [
@@ -2843,13 +3232,7 @@
 "una punta da carotatore di quelle che servono a staccare campioni di roccia stretta ancora nella destra le dita attorno al manico le ha chiuse il freddo e non le ha più riaperte"
 ],
 [
-"una punta da carotatore terrestre di un secolo e mezzo fa"
-],
-[
 "una rete fine sotto la superficie accesa di una luce fredda che va avanti a me"
-],
-[
-"una rete fine sotto la superficie dove la tocco si accende"
 ],
 [
 "una rete fine sotto la superficie spenta"
@@ -2895,9 +3278,6 @@
 "una teca di contenimento alta un metro sigillata dentro sospeso in un campo di stasi un seme pulsa di una luce verde gentile l unica cosa viva qui alla base un pannello con tre simboli botanici e un incavo rettangolare vuoto la chiave che ci andava qualcuno l ha tenuta da un altra parte"
 ],
 [
-"una venatura si accende sotto il guanto verde e mi corre davanti per un palmo giù per la gola come se mi indicasse la strada poi si spegne"
-],
-[
 "uno strumento portatile dal disegno elegante intatto un rigeneratore di tessuti a risonanza la punta è di cristallo"
 ],
 [
@@ -2917,9 +3297,6 @@
 ],
 [
 "è già aperto"
-],
-[
-"è già staccato"
 ],
 [
 "è il mio"

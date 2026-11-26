@@ -8,8 +8,9 @@
 //!   finito, e poi la loro pausa; le prese che nel testo vengono dopo una di loro (`poi`) aspettano a loro volta che
 //!   tutte tacciano. Una presa `poi` sa anche dopo quante voci asciutte (Yusuf, L.V.) sta nel testo: entra dopo
 //!   quella, e la voce che segue aspetta lei (le battute di Yusuf con il racconto in mezzo, documento 41, §5).
-//!   E dopo quante parti della voce di servizio: il computer di bordo e la tuta parlano in mezzo al racconto, dove
-//!   sta il loro testo (la scansione lunga; l’autore, 24 novembre 2026: «va sistemato»).
+//!   E dopo quante battute della nave e di servizio: il computer di bordo, la tuta e le voci della nave parlano in
+//!   mezzo al racconto, dove sta il loro testo (la scansione lunga; l’autore, 24 novembre 2026: «va sistemato»; il
+//!   coro delle gole, 26 novembre).
 //! - Un comando nuovo lo fa tacere di colpo (`zitto`): il testo resta. F2 ridice le prese dell’ultimo turno.
 //! - Passando con il mouse sopra una risposta di un dialogo, William la dice (`anteprima`): mai sopra chi sta
 //!   parlando; un’anteprima può prendere il posto di un’altra.
@@ -39,8 +40,8 @@ pub struct Racconto {
     lettore: Lettore,
     /// le prese che vengono prima delle altre voci, e quelle che vengono dopo
     fila: Vec<Pezzo>,
-    /// le prese che vengono dopo una voce, ognuna con quante voci asciutte, e quante parti della voce di servizio,
-    /// stanno prima di lei nel testo
+    /// le prese che vengono dopo una voce, ognuna con quante voci asciutte, e quante battute della nave e di
+    /// servizio, stanno prima di lei nel testo
     poi: Vec<(Pezzo, u8, u8)>,
     /// le prese dell’ultimo turno, per F2
     ultime: Vec<Pezzo>,
@@ -97,9 +98,9 @@ impl Racconto {
         self.poi.first().map(|p| p.1)
     }
 
-    /// Dopo quante parti della voce di servizio entra la prossima presa che aspetta una voce (niente, se non ne
-    /// aspetta nessuna: allora la fila della nave non le deve cedere il passo).
-    pub fn soglia_servizio(&self) -> Option<u8> {
+    /// Dopo quante battute della nave e di servizio entra la prossima presa che aspetta una voce (niente, se non ne
+    /// aspetta nessuna: allora la loro fila non le deve cedere il passo).
+    pub fn soglia_nave(&self) -> Option<u8> {
         self.poi.first().map(|p| p.2).filter(|n| *n > 0)
     }
 
@@ -171,8 +172,8 @@ impl Racconto {
 
     /// Fa andare il tempo, una volta per blocco. `altri`: un’altra voce parla (la nave, la radio, l’Anziano), e le
     /// prese che vengono dopo di lei aspettano. `asciutte`: quante battute della fila di Yusuf e di L.V. sono finite
-    /// nel turno; la presa che ne aspetta di più aspetta. `servizio`: lo stesso per le parti della voce di servizio.
-    pub fn passo(&mut self, dt: f32, altri: bool, asciutte: u8, servizio: u8) {
+    /// nel turno; la presa che ne aspetta di più aspetta. `nave`: lo stesso per le battute della nave e di servizio.
+    pub fn passo(&mut self, dt: f32, altri: bool, asciutte: u8, nave: u8) {
         self.lettore.passo(dt);
         let parla = self.lettore.vivo();
         if self.parlava && !parla {
@@ -189,7 +190,7 @@ impl Racconto {
                     self.parlava = true;
                 }
             } else if let Some(&(_, n, s)) = self.poi.first() {
-                if altri || n > asciutte || s > servizio {
+                if altri || n > asciutte || s > nave {
                     self.attesa = self.attesa.max(PAUSA);
                 } else {
                     self.attesa -= dt;
@@ -336,7 +337,7 @@ mod prove {
         // sia finita una parte di servizio, la terza che ne siano finite due
         let mut r = racconto_con(&[(w(0), 1.0), (w(1), 1.0), (w(2), 1.0)]);
         r.turno(&[w(0)], &[(w(1), 0, 1), (w(2), 0, 2)], SUBITO);
-        assert_eq!(r.soglia_servizio(), Some(1));
+        assert_eq!(r.soglia_nave(), Some(1));
         let blocco = (SR * 0.01) as usize;
         let mut sentito = Vec::new();
         // nessun’altra voce suona, ma di parti di servizio non ne è finita nessuna: parla solo la prima presa
@@ -358,7 +359,7 @@ mod prove {
         // una presa che non aspetta la voce di servizio non le chiede il passo
         let mut r = racconto_con(&[(w(1), 1.0)]);
         r.turno(&[], &[(w(1), 1, 0)], SUBITO);
-        assert_eq!(r.soglia_servizio(), None);
+        assert_eq!(r.soglia_nave(), None);
         assert_eq!(r.soglia(), Some(1));
     }
 

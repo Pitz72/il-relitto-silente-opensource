@@ -160,9 +160,24 @@ def racconto():
         scansione = json.loads(ponte.rel_comando("analizza la nave aliena"))["suono"]["eventi"]
         w = next((e for e in scansione if e["evento"] == "racconto"), {})
         voci = [b for e in scansione if e["evento"] == "voci" for b in e["battute"]]
-        atteso = {"prese": ["SM-030-p1"], "poi": ["SM-030-p2", "SM-030-p3"], "dopo_servizio": [1, 2]}
+        atteso = {"prese": ["SM-030-p1"], "poi": ["SM-030-p2", "SM-030-p3"], "dopo_nave": [1, 2]}
         if {k: w.get(k) for k in atteso} != atteso or [b[:5] for b in voci] != ["SV-11", "SV-04", "SV-17"]:
             problemi.append(f"la scansione lunga: William e il computer non sono nell'ordine del testo ({w}, {voci})")
+        ponte.rel_avvia(1)
+    # il coro delle gole: la stessa cosa con due voci della nave in mezzo al racconto (documento 41, §5)
+    if any(z["id"] == "IN-079" and z.get("file_parti") for z in tabella["pezzi"]):
+        ponte.rel_avvia(1)
+        coro = None
+        for c in json.loads(ponte.rel_percorso(os.path.join(QUI, "tutto.txt")))["comandi"]:
+            turno = json.loads(ponte.rel_comando(c))["suono"]["eventi"]
+            if c == "sintonizza le gole" and any(e["evento"] == "voci" for e in turno):
+                coro = turno
+                break
+        w = next((e for e in coro or [] if e["evento"] == "racconto"), {})
+        voci = [b for e in coro or [] if e["evento"] == "voci" for b in e["battute"]]
+        atteso = {"prese": ["IN-079-p1"], "poi": ["IN-079-p2", "IN-079-p3"], "dopo_nave": [1, 2]}
+        if {k: w.get(k) for k in atteso} != atteso or [b[:6] for b in voci] != ["NV-12c", "NV-03b"]:
+            problemi.append(f"il coro delle gole: William e le voci non sono nell'ordine del testo ({w}, {voci})")
         ponte.rel_avvia(1)
     return problemi
 

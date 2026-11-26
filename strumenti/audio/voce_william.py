@@ -21,9 +21,9 @@
 # Una presa uguale a un'altra («uguale» nel copione) non ha un file suo: suona quella. Una presa che non c'è resta
 # muta: il testo c'è, la voce no, come nel Viaggiatore.
 #
-# Le prese con la voce di servizio in mezzo (documento 41, §5; l'autore, 24 novembre 2026: «la questione […] voce
-# William e Computer, va sistemato»). Nel testo William si ferma, parla il computer di bordo o la tuta, e William
-# riprende; Leonardo le legge in una presa sola, lasciando una pausa dove parla l'altra voce. La presa si lavora
+# Le prese con un'altra voce in mezzo (documento 41, §5; l'autore, 24 novembre 2026: «la questione […] voce
+# William e Computer, va sistemato»). Nel testo William si ferma, parla il computer di bordo, la tuta o (dal 26
+# novembre) una voce della nave, e William riprende; Leonardo le legge in una presa sola, lasciando una pausa dove parla l'altra voce. La presa si lavora
 # intera, come le altre, e poi si divide in quelle pause (`TAGLI`): WI-<SIGLA>-p1.mp3, -p2… Niente si toglie alla
 # presa: i tagli cadono nel silenzio, e a ogni parte restano i suoi capi (il respiro compreso). Nel gioco entrano le
 # parti, ognuna dove sta il suo testo, e l'altra voce parla in mezzo. Il file intero resta accanto, fuori dal gioco.
@@ -59,16 +59,20 @@ PICCO_DB = -1.5
 VOCE_DB, RESPIRO_DB, RESPIRO_S = -40.0, -66.0, 1.0
 TESTA, CODA = 0.06, 0.12
 
-# I tagli delle prese con la voce di servizio in mezzo: per sigla, i secondi (nel file di Leonardo) a metà della pausa
+# I tagli delle prese con la voce di servizio o della nave in mezzo: per sigla, i secondi (nel file di Leonardo) a metà della pausa
 # che lui ha lasciato dove parla l'altra voce. Uno per ogni punto del testo in cui la voce di servizio sta fra due pezzi
-# di William. Scelti con `--pause` e verificati con Whisper (large-v3), parola per parola:
+# di William (la voce di servizio o quella della nave stanno nella stessa fila del motore). Scelti con `--pause` e verificati con Whisper (large-v3), parola per parola:
 #   SM-030  «…se la prende comoda.» 7,36 | 8,93 «Il calcolo parte…»;  «…si arrende e scrive.» 16,02 | 18,32 «Una cosa…»
 #   IN-010  «…rinuncia e scrive di nuovo.» 8,50 | 9,82 «Poi, a tre passi da me…»
+#   IN-079  «…di tenere il campo» 8,26 | 9,36 «e un'altra…»;  «…non la ascolta.» 13,44 | 15,66 «Poi le voci…»
+#   IN-084  «…su un visore.» 36,12 | 39,20 «La voce va avanti…»
 # Una presa con un'altra voce in mezzo e senza tagli suona intera, come prima (`SM-048`, con Yusuf: approvata così
 # dall'autore il 17 novembre 2026).
 TAGLI = {
     "SM-030": [8.41, 17.57],
     "IN-010": [9.49],
+    "IN-079": [9.50, 14.84],
+    "IN-084": [37.96],
 }
 # le voci degli altri che nel testo stanno fra due pezzi di William (gli spazi e le etichette non sono voci)
 NON_VOCI = ("spazio", "etichetta")

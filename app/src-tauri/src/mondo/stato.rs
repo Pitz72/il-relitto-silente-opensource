@@ -96,9 +96,9 @@ pub struct EventoGioco {
     pub poi: Vec<String>,
     /// per ogni presa «poi», quante voci asciutte (Yusuf, L.V.) stanno prima di lei nel testo (documento 41, §5)
     pub dopo_voci: Vec<u8>,
-    /// per ogni presa «poi», quante parti della voce di servizio stanno prima di lei nel testo: il computer di bordo
-    /// e la tuta parlano in mezzo al racconto (la scansione lunga, documento 41, §5)
-    pub dopo_servizio: Vec<u8>,
+    /// per ogni presa «poi», quante battute della nave e di servizio stanno prima di lei nel testo: il computer di
+    /// bordo, la tuta e le voci della nave parlano in mezzo al racconto (documento 41, §5)
+    pub dopo_nave: Vec<u8>,
 }
 
 impl EventoGioco {

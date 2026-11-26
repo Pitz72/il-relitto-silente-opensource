@@ -3,7 +3,7 @@
 //! il nome del loro file in `audio/musica-ia/WI/`. Una presa che non è ancora arrivata ha la sua sigla e
 //! nessun file: resta muta. In fondo, le parti delle prese con la voce di servizio in mezzo (`-p1`, `-p2`…).
 
-pub const PRESE: [(&str, &str); 621] = [
+pub const PRESE: [(&str, &str); 626] = [
     ("SM-001", "WI-SM-001.mp3"),
     ("SM-002", "WI-SM-002.mp3"),
     ("SM-003", "WI-SM-003.mp3"),
@@ -622,6 +622,11 @@ pub const PRESE: [(&str, &str); 621] = [
     ("RE-011", "WI-RE-011.mp3"),
     ("IN-010-p1", "WI-IN-010-p1.mp3"),
     ("IN-010-p2", "WI-IN-010-p2.mp3"),
+    ("IN-079-p1", "WI-IN-079-p1.mp3"),
+    ("IN-079-p2", "WI-IN-079-p2.mp3"),
+    ("IN-079-p3", "WI-IN-079-p3.mp3"),
+    ("IN-084-p1", "WI-IN-084-p1.mp3"),
+    ("IN-084-p2", "WI-IN-084-p2.mp3"),
     ("SM-030-p1", "WI-SM-030-p1.mp3"),
     ("SM-030-p2", "WI-SM-030-p2.mp3"),
     ("SM-030-p3", "WI-SM-030-p3.mp3"),
